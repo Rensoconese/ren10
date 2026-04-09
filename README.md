@@ -1,4 +1,4 @@
-# RenDS
+# Ren10(DS)
 
 A vanilla, accessible, atomic design system. No framework required.
 
