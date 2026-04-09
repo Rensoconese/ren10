@@ -1,0 +1,218 @@
+/* ============================================
+   RenDS — Field Component (Input + Label + Error)
+   ============================================
+   Wraps any form control with label, description,
+   and error message — all properly wired with ARIA.
+
+   Works as pure CSS classes OR as <ren-field>.
+
+   Structure:
+   .ren-field
+     .ren-field-label       (label element)
+     .ren-field-control     (input/select/textarea wrapper)
+     .ren-field-description (helper text)
+     .ren-field-error       (error message)
+   ============================================ */
+
+/* ─── Field Container ─── */
+.ren-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ─── Label ─── */
+.ren-field-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--color-text);
+}
+
+/* Required indicator */
+.ren-field-label[data-required]::after {
+  content: '*';
+  color: var(--color-danger);
+  font-weight: var(--weight-bold);
+}
+
+/* ─── Input / Control ─── */
+.ren-input {
+  display: block;
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: var(--stroke-1) solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    background-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ren-input:hover:not(:disabled):not(:focus) {
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-input:focus {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-input:disabled {
+  background-color: var(--color-input-disabled-bg);
+  color: var(--color-input-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.ren-input::placeholder {
+  color: var(--color-input-placeholder);
+  opacity: 1;
+}
+
+/* ─── Textarea ─── */
+textarea.ren-input {
+  field-sizing: content;  /* Auto-grow with content — no JS needed */
+  min-height: calc(var(--touch-min) * 2);
+  max-height: 20rem;      /* Prevent runaway growth */
+  resize: vertical;
+}
+
+/* ─── Select ─── */
+select.ren-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-inline-end: var(--space-10);
+}
+
+/* ─── Input Sizes ─── */
+.ren-input-sm {
+  min-height: var(--size-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.ren-input-lg {
+  min-height: var(--size-xl);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-lg);
+}
+
+/* ─── Input with icon ─── */
+.ren-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ren-input-icon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  display: flex;
+}
+
+.ren-input-icon + .ren-input,
+.ren-input-wrapper > .ren-input:has(+ .ren-input-icon) {
+  padding-inline-start: calc(var(--space-3) + var(--icon-lg) + var(--space-2));
+}
+
+.ren-input-icon-end {
+  position: absolute;
+  right: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  display: flex;
+}
+
+/* ─── Description ─── */
+.ren-field-description {
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+}
+
+/* ─── Error Message ─── */
+.ren-field-error {
+  font-size: var(--caption-size);
+  color: var(--color-danger);
+  line-height: var(--leading-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Error state on input */
+.ren-field[data-invalid] .ren-input,
+.ren-input[aria-invalid="true"],
+.ren-input-error {
+  border-color: var(--color-input-error-border);
+}
+
+.ren-field[data-invalid] .ren-input:focus,
+.ren-input[aria-invalid="true"]:focus,
+.ren-input-error:focus {
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.15);
+  border-color: var(--color-input-error-border);
+}
+
+/* Error state on label */
+.ren-field[data-invalid] .ren-field-label {
+  color: var(--color-danger);
+}
+
+/* ─── Success state ─── */
+.ren-field[data-valid] .ren-input,
+.ren-input-success {
+  border-color: var(--color-success);
+}
+
+.ren-field[data-valid] .ren-input:focus,
+.ren-input-success:focus {
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.15);
+}
+
+/* ─── Modern Validation (no JS needed) ─── */
+/* Only show validation state AFTER user interaction */
+.ren-input:user-invalid {
+  border-color: var(--color-input-error-border);
+}
+
+.ren-input:user-invalid:focus {
+  box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.15);
+  border-color: var(--color-input-error-border);
+}
+
+.ren-input:user-valid {
+  border-color: var(--color-success);
+}
+
+.ren-input:user-valid:focus {
+  box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.15);
+}
+
+/* Show/hide error and success messages based on validation */
+.ren-field:has(.ren-input:user-invalid) .ren-field-label {
+  color: var(--color-danger);
+}
+
+.ren-field:has(.ren-input:user-invalid) .ren-field-error {
+  display: flex;
+}
+
+.ren-field:has(.ren-input:user-valid) .ren-field-error {
+  display: none;
+}

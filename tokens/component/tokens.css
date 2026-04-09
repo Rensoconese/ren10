@@ -1,0 +1,594 @@
+/* ============================================
+   RenDS — Component-Level Tokens
+   ============================================
+   Each component exposes its own --ren-{component}-*
+   custom properties. These default to semantic tokens
+   but can be overridden per-component or per-theme.
+
+   This is the "Appearance API" layer — the formal
+   contract for theming individual components.
+
+   Usage:
+     .my-theme .ren-btn {
+       --ren-btn-bg: hotpink;
+       --ren-btn-radius: 999px;
+     }
+
+   Constraint-driven: only the properties that matter
+   are exposed. No "change everything" escape hatch.
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   BUTTON
+   ═══════════════════════════════════════════════ */
+.ren-btn {
+  --ren-btn-height:       var(--size-lg);
+  --ren-btn-padding-x:    var(--space-4);
+  --ren-btn-padding-y:    var(--space-2);
+  --ren-btn-font-size:    var(--label-lg-size);
+  --ren-btn-font-weight:  var(--label-lg-weight);
+  --ren-btn-radius:       var(--radius-md);
+  --ren-btn-gap:          var(--space-2);
+  --ren-btn-border-width: var(--stroke-1);
+
+  /* Primary colors (default) */
+  --ren-btn-bg:           var(--color-accent);
+  --ren-btn-bg-hover:     var(--color-accent-hover);
+  --ren-btn-bg-active:    var(--color-accent-active);
+  --ren-btn-color:        var(--color-on-accent);
+  --ren-btn-border-color: transparent;
+
+  /* Focus ring */
+  --ren-btn-ring-color:   var(--color-accent);
+  --ren-btn-ring-offset:  2px;
+  --ren-btn-ring-width:   2px;
+
+  /* Motion */
+  --ren-btn-duration:     var(--duration-fast);
+  --ren-btn-easing:       var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   CARD
+   ═══════════════════════════════════════════════ */
+.ren-card {
+  --ren-card-bg:            var(--color-surface-raised);
+  --ren-card-border-color:  var(--color-border);
+  --ren-card-border-width:  var(--stroke-1);
+  --ren-card-radius:        var(--radius-lg);
+  --ren-card-padding:       var(--space-5);
+  --ren-card-shadow:        none;
+  --ren-card-header-gap:    var(--space-1);
+  --ren-card-gap:           0;
+}
+
+/* ═══════════════════════════════════════════════
+   INPUT / FIELD
+   ═══════════════════════════════════════════════ */
+.ren-field input,
+.ren-field textarea,
+.ren-field select {
+  --ren-field-height:        var(--size-lg);
+  --ren-field-padding-x:     var(--space-3);
+  --ren-field-padding-y:     var(--space-2);
+  --ren-field-font-size:     var(--body-size);
+  --ren-field-radius:        var(--radius-md);
+  --ren-field-border-color:  var(--color-border);
+  --ren-field-border-width:  var(--stroke-1);
+  --ren-field-bg:            var(--color-surface);
+  --ren-field-color:         var(--color-text);
+  --ren-field-placeholder:   var(--color-text-muted);
+  --ren-field-focus-color:   var(--color-accent);
+  --ren-field-error-color:   var(--color-danger);
+  --ren-field-success-color: var(--color-success);
+}
+
+/* ═══════════════════════════════════════════════
+   BADGE
+   ═══════════════════════════════════════════════ */
+.ren-badge {
+  --ren-badge-height:      var(--size-xs);
+  --ren-badge-padding-x:   var(--space-2);
+  --ren-badge-font-size:   var(--caption-sm-size);
+  --ren-badge-font-weight: var(--weight-semibold);
+  --ren-badge-radius:      var(--radius-full);
+  --ren-badge-bg:          var(--color-fill);
+  --ren-badge-color:       var(--color-text);
+}
+
+/* ═══════════════════════════════════════════════
+   TAG
+   ═══════════════════════════════════════════════ */
+.ren-tag {
+  --ren-tag-height:       var(--size-sm);
+  --ren-tag-padding-x:    var(--space-3);
+  --ren-tag-font-size:    var(--label-sm-size);
+  --ren-tag-font-weight:  var(--label-weight);
+  --ren-tag-radius:       var(--radius-md);
+  --ren-tag-bg:           var(--color-fill);
+  --ren-tag-color:        var(--color-text);
+  --ren-tag-border-color: var(--color-border);
+  --ren-tag-gap:          var(--space-1);
+}
+
+/* ═══════════════════════════════════════════════
+   BANNER / ALERT
+   ═══════════════════════════════════════════════ */
+.ren-banner {
+  --ren-banner-padding:      var(--space-4);
+  --ren-banner-radius:       var(--radius-lg);
+  --ren-banner-border-width: var(--stroke-1);
+  --ren-banner-gap:          var(--space-3);
+  --ren-banner-icon-size:    var(--icon-lg);
+  --ren-banner-bg:           var(--color-info-subtle);
+  --ren-banner-border-color: var(--color-info);
+  --ren-banner-color:        var(--color-text);
+}
+
+/* ═══════════════════════════════════════════════
+   DIALOG
+   ═══════════════════════════════════════════════ */
+.ren-dialog,
+.ren-alert-dialog {
+  --ren-dialog-width:        min(90vw, 500px);
+  --ren-dialog-padding:      var(--space-6);
+  --ren-dialog-radius:       var(--radius-xl);
+  --ren-dialog-bg:           var(--color-surface-overlay);
+  --ren-dialog-border-color: var(--color-border);
+  --ren-dialog-shadow:       var(--shadow-xl);
+  --ren-dialog-gap:          var(--space-4);
+  --ren-dialog-backdrop:     rgba(0, 0, 0, 0.5);
+
+  /* Motion */
+  --ren-dialog-duration:     var(--duration-normal);
+  --ren-dialog-easing:       var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   SHEET
+   ═══════════════════════════════════════════════ */
+.ren-sheet {
+  --ren-sheet-width:      320px;
+  --ren-sheet-bg:         var(--color-surface-overlay);
+  --ren-sheet-border:     var(--color-border);
+  --ren-sheet-radius:     0;
+  --ren-sheet-shadow:     var(--shadow-xl);
+  --ren-sheet-padding:    var(--space-6);
+  --ren-sheet-backdrop:   rgba(0, 0, 0, 0.5);
+
+  /* Motion */
+  --ren-sheet-duration:   var(--duration-normal);
+  --ren-sheet-easing:     var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   TOOLTIP
+   ═══════════════════════════════════════════════ */
+.ren-tooltip {
+  --ren-tooltip-bg:        var(--color-text);
+  --ren-tooltip-color:     var(--color-text-inverted);
+  --ren-tooltip-font-size: var(--caption-sm-size);
+  --ren-tooltip-padding-x: var(--space-3);
+  --ren-tooltip-padding-y: var(--space-1);
+  --ren-tooltip-radius:    var(--radius-md);
+  --ren-tooltip-shadow:    var(--shadow-sm);
+
+  /* Motion */
+  --ren-tooltip-duration:  var(--duration-fast);
+  --ren-tooltip-easing:    var(--ease-out);
+  --ren-tooltip-delay:     500ms;
+}
+
+/* ═══════════════════════════════════════════════
+   POPOVER
+   ═══════════════════════════════════════════════ */
+.ren-popover {
+  --ren-popover-width:        280px;
+  --ren-popover-bg:           var(--color-surface-overlay);
+  --ren-popover-border-color: var(--color-border);
+  --ren-popover-radius:       var(--radius-lg);
+  --ren-popover-shadow:       var(--shadow-lg);
+  --ren-popover-padding:      var(--space-4);
+
+  /* Motion */
+  --ren-popover-duration:     var(--duration-normal);
+  --ren-popover-easing:       var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   TABS
+   ═══════════════════════════════════════════════ */
+.ren-tabs {
+  --ren-tabs-height:         var(--size-lg);
+  --ren-tabs-font-size:      var(--label-size);
+  --ren-tabs-font-weight:    var(--label-weight);
+  --ren-tabs-color:          var(--color-text-muted);
+  --ren-tabs-active-color:   var(--color-text);
+  --ren-tabs-indicator-color:var(--color-accent);
+  --ren-tabs-border-color:   var(--color-border);
+  --ren-tabs-gap:            0;
+
+  /* Motion */
+  --ren-tabs-duration:       var(--duration-fast);
+  --ren-tabs-easing:         var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   CHECKBOX & SWITCH
+   ═══════════════════════════════════════════════ */
+.ren-checkbox {
+  --ren-checkbox-size:        1.25rem;
+  --ren-checkbox-radius:      var(--radius-sm);
+  --ren-checkbox-border:      var(--color-border-strong);
+  --ren-checkbox-checked-bg:  var(--color-accent);
+  --ren-checkbox-checked-color: var(--color-on-accent);
+  --ren-checkbox-gap:         var(--space-2);
+
+  /* Motion */
+  --ren-checkbox-duration:    var(--duration-normal);
+  --ren-checkbox-easing:      var(--ease-spring);
+}
+
+.ren-switch {
+  --ren-switch-width:       3.1875rem;  /* 51px Apple HIG */
+  --ren-switch-height:      1.9375rem;  /* 31px Apple HIG */
+  --ren-switch-thumb-size:  1.6875rem;  /* 27px */
+  --ren-switch-bg:          var(--color-fill);
+  --ren-switch-checked-bg:  var(--color-success);
+  --ren-switch-thumb-color: var(--white);
+
+  /* Motion */
+  --ren-switch-duration:    var(--duration-normal);
+  --ren-switch-easing:      var(--ease-snappy);
+}
+
+/* ═══════════════════════════════════════════════
+   SLIDER
+   ═══════════════════════════════════════════════ */
+.ren-slider {
+  --ren-slider-track-height:  6px;
+  --ren-slider-track-radius:  var(--radius-full);
+  --ren-slider-track-bg:      var(--color-fill);
+  --ren-slider-fill-color:    var(--color-accent);
+  --ren-slider-thumb-size:    20px;
+  --ren-slider-thumb-bg:      var(--color-surface);
+  --ren-slider-thumb-border:  var(--color-accent);
+  --ren-slider-thumb-shadow:  var(--shadow-sm);
+
+  /* Motion */
+  --ren-slider-duration:      var(--duration-fast);
+  --ren-slider-easing:        var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   TOGGLE GROUP
+   ═══════════════════════════════════════════════ */
+.ren-toggle-group {
+  --ren-toggle-height:       var(--size-lg);
+  --ren-toggle-padding-x:    var(--space-4);
+  --ren-toggle-font-size:    var(--label-size);
+  --ren-toggle-font-weight:  var(--label-weight);
+  --ren-toggle-radius:       var(--radius-md);
+  --ren-toggle-bg:           var(--color-fill);
+  --ren-toggle-active-bg:    var(--color-surface);
+  --ren-toggle-active-color: var(--color-text);
+  --ren-toggle-color:        var(--color-text-muted);
+}
+
+/* ═══════════════════════════════════════════════
+   AVATAR
+   ═══════════════════════════════════════════════ */
+.ren-avatar {
+  --ren-avatar-size:     var(--avatar-md);
+  --ren-avatar-radius:   var(--radius-full);
+  --ren-avatar-bg:       var(--color-fill);
+  --ren-avatar-color:    var(--color-text-muted);
+  --ren-avatar-font-size:var(--label-size);
+  --ren-avatar-border:   2px solid var(--color-surface);
+}
+
+/* ═══════════════════════════════════════════════
+   BREADCRUMB
+   ═══════════════════════════════════════════════ */
+.ren-breadcrumb {
+  --ren-breadcrumb-font-size:  var(--label-size);
+  --ren-breadcrumb-color:      var(--color-text-muted);
+  --ren-breadcrumb-active-color: var(--color-text);
+  --ren-breadcrumb-separator:  '›';
+  --ren-breadcrumb-gap:        var(--space-2);
+}
+
+/* ═══════════════════════════════════════════════
+   PAGINATION
+   ═══════════════════════════════════════════════ */
+.ren-pagination {
+  --ren-pagination-size:        var(--size-lg);
+  --ren-pagination-font-size:   var(--label-size);
+  --ren-pagination-radius:      var(--radius-md);
+  --ren-pagination-gap:         var(--space-1);
+  --ren-pagination-bg:          transparent;
+  --ren-pagination-hover-bg:    var(--color-fill);
+  --ren-pagination-active-bg:   var(--color-accent);
+  --ren-pagination-active-color:var(--color-on-accent);
+}
+
+/* ═══════════════════════════════════════════════
+   PROGRESS
+   ═══════════════════════════════════════════════ */
+.ren-progress {
+  --ren-progress-height:     8px;
+  --ren-progress-radius:     var(--radius-full);
+  --ren-progress-bg:         var(--color-fill);
+  --ren-progress-fill:       var(--color-accent);
+
+  /* Motion */
+  --ren-progress-duration:   var(--duration-normal);
+  --ren-progress-easing:     var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   SPINNER
+   ═══════════════════════════════════════════════ */
+.ren-spinner {
+  --ren-spinner-size:   1.25rem;
+  --ren-spinner-width:  2px;
+  --ren-spinner-color:  var(--color-accent);
+  --ren-spinner-speed:  0.75s;
+}
+
+/* ═══════════════════════════════════════════════
+   SKELETON
+   ═══════════════════════════════════════════════ */
+.ren-skeleton {
+  --ren-skeleton-bg:      var(--color-fill);
+  --ren-skeleton-shine:   var(--color-surface);
+  --ren-skeleton-radius:  var(--radius-md);
+  --ren-skeleton-speed:   1.5s;
+}
+
+/* ═══════════════════════════════════════════════
+   SEPARATOR
+   ═══════════════════════════════════════════════ */
+.ren-separator {
+  --ren-separator-color:  var(--color-border);
+  --ren-separator-width:  var(--stroke-1);
+  --ren-separator-margin: var(--space-4);
+}
+
+/* ═══════════════════════════════════════════════
+   LINK
+   ═══════════════════════════════════════════════ */
+.ren-link {
+  --ren-link-color:       var(--color-text-link);
+  --ren-link-hover-color: var(--color-text-link-hover);
+  --ren-link-underline:   1px;
+  --ren-link-font-weight: inherit;
+}
+
+/* ═══════════════════════════════════════════════
+   NAV
+   ═══════════════════════════════════════════════ */
+.ren-nav {
+  --ren-nav-height:       3.5rem;
+  --ren-nav-bg:           var(--color-surface);
+  --ren-nav-border:       var(--color-border);
+  --ren-nav-padding-x:    var(--space-4);
+  --ren-nav-link-color:   var(--color-text-muted);
+  --ren-nav-link-active:  var(--color-text);
+  --ren-nav-gap:          var(--space-6);
+}
+
+/* ═══════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════ */
+.ren-sidebar {
+  --ren-sidebar-width:         260px;
+  --ren-sidebar-collapsed-width: 60px;
+  --ren-sidebar-bg:            var(--color-surface-sunken);
+  --ren-sidebar-border:        var(--color-border);
+  --ren-sidebar-item-height:   var(--size-lg);
+  --ren-sidebar-item-radius:   var(--radius-md);
+  --ren-sidebar-item-padding:  var(--space-2) var(--space-3);
+  --ren-sidebar-active-bg:     var(--color-accent-subtle);
+  --ren-sidebar-active-color:  var(--color-accent);
+
+  /* Motion */
+  --ren-sidebar-duration:      var(--duration-normal);
+  --ren-sidebar-easing:        var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   COMMAND
+   ═══════════════════════════════════════════════ */
+.ren-command {
+  --ren-command-width:      min(95vw, 560px);
+  --ren-command-max-height: 340px;
+  --ren-command-radius:     var(--radius-xl);
+  --ren-command-bg:         var(--color-surface-overlay);
+  --ren-command-border:     var(--color-border);
+  --ren-command-shadow:     var(--shadow-xl);
+  --ren-command-item-height:var(--size-lg);
+  --ren-command-item-radius:var(--radius-md);
+}
+
+/* ═══════════════════════════════════════════════
+   TABLE
+   ═══════════════════════════════════════════════ */
+.ren-table,
+ren-table {
+  --ren-table-header-bg:    var(--color-surface-sunken);
+  --ren-table-header-color: var(--color-text-muted);
+  --ren-table-header-weight:var(--weight-semibold);
+  --ren-table-header-size:  var(--label-sm-size);
+  --ren-table-row-height:   var(--size-lg);
+  --ren-table-cell-padding: var(--space-3);
+  --ren-table-border-color: var(--color-border-muted);
+  --ren-table-stripe-bg:    var(--color-surface-sunken);
+  --ren-table-hover-bg:     var(--color-fill);
+  --ren-table-selected-bg:  var(--color-accent-subtle);
+}
+
+/* ═══════════════════════════════════════════════
+   MENU
+   ═══════════════════════════════════════════════ */
+.ren-menu {
+  --ren-menu-width:        200px;
+  --ren-menu-padding:      var(--space-1);
+  --ren-menu-radius:       var(--radius-lg);
+  --ren-menu-bg:           var(--color-surface-overlay);
+  --ren-menu-border:       var(--color-border);
+  --ren-menu-shadow:       var(--shadow-lg);
+  --ren-menu-item-height:  var(--size-md);
+  --ren-menu-item-padding: var(--space-2) var(--space-3);
+  --ren-menu-item-radius:  var(--radius-sm);
+  --ren-menu-item-hover-bg:var(--color-fill);
+  --ren-menu-danger-color: var(--color-danger);
+
+  /* Motion */
+  --ren-menu-duration:     var(--duration-fast);
+  --ren-menu-easing:       var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   CALENDAR
+   ═══════════════════════════════════════════════ */
+.ren-calendar {
+  --ren-calendar-width:       280px;
+  --ren-calendar-day-size:    var(--size-md);
+  --ren-calendar-radius:      var(--radius-lg);
+  --ren-calendar-bg:          var(--color-surface);
+  --ren-calendar-border:      var(--color-border);
+  --ren-calendar-today-bg:    var(--color-accent-subtle);
+  --ren-calendar-selected-bg: var(--color-accent);
+  --ren-calendar-selected-color: var(--color-on-accent);
+  --ren-calendar-range-bg:    var(--color-accent-subtle);
+}
+
+/* ═══════════════════════════════════════════════
+   TOAST
+   ═══════════════════════════════════════════════ */
+.ren-toast {
+  --ren-toast-width:       360px;
+  --ren-toast-padding:     var(--space-4);
+  --ren-toast-radius:      var(--radius-lg);
+  --ren-toast-bg:          var(--color-surface-raised);
+  --ren-toast-border:      var(--color-border);
+  --ren-toast-shadow:      var(--shadow-lg);
+  --ren-toast-gap:         var(--space-3);
+  --ren-toast-duration:    5000ms;
+
+  /* Motion */
+  --ren-toast-anim-duration: var(--duration-normal);
+  --ren-toast-easing:        var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   DROPZONE
+   ═══════════════════════════════════════════════ */
+.ren-dropzone {
+  --ren-dropzone-padding:      var(--space-8);
+  --ren-dropzone-radius:       var(--radius-lg);
+  --ren-dropzone-border-color: var(--color-border-strong);
+  --ren-dropzone-border-style: dashed;
+  --ren-dropzone-border-width: 2px;
+  --ren-dropzone-bg:           transparent;
+  --ren-dropzone-hover-bg:     var(--color-accent-subtle);
+  --ren-dropzone-hover-border: var(--color-accent);
+}
+
+/* ═══════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════ */
+.ren-empty-state {
+  --ren-empty-padding:     var(--space-10);
+  --ren-empty-icon-size:   3rem;
+  --ren-empty-gap:         var(--space-3);
+  --ren-empty-title-size:  var(--title-sm-size);
+  --ren-empty-desc-color:  var(--color-text-muted);
+  --ren-empty-max-width:   24rem;
+}
+
+/* ═══════════════════════════════════════════════
+   COLLAPSIBLE / ACCORDION
+   ═══════════════════════════════════════════════ */
+.ren-collapsible,
+.ren-accordion {
+  --ren-collapse-radius:       var(--radius-lg);
+  --ren-collapse-border:       var(--color-border);
+  --ren-collapse-bg:           var(--color-surface);
+  --ren-collapse-padding:      var(--space-4);
+  --ren-collapse-trigger-font: var(--label-lg-size);
+  --ren-collapse-trigger-weight: var(--weight-semibold);
+
+  /* Motion */
+  --ren-collapse-duration:       var(--duration-normal);
+  --ren-collapse-easing:         var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   TOOLBAR
+   ═══════════════════════════════════════════════ */
+.ren-toolbar {
+  --ren-toolbar-height:      var(--size-lg);
+  --ren-toolbar-padding:     var(--space-1);
+  --ren-toolbar-radius:      var(--radius-lg);
+  --ren-toolbar-bg:          var(--color-surface-raised);
+  --ren-toolbar-border:      var(--color-border);
+  --ren-toolbar-item-size:   var(--size-md);
+  --ren-toolbar-item-radius: var(--radius-sm);
+  --ren-toolbar-item-hover:  var(--color-fill);
+  --ren-toolbar-active-bg:   var(--color-accent-subtle);
+}
+
+/* ═══════════════════════════════════════════════
+   COLOR PICKER
+   ═══════════════════════════════════════════════ */
+.ren-color-picker {
+  --ren-cp-width:       280px;
+  --ren-cp-radius:      var(--radius-lg);
+  --ren-cp-bg:          var(--color-surface-overlay);
+  --ren-cp-shadow:      var(--shadow-lg);
+  --ren-cp-swatch-size: 24px;
+  --ren-cp-handle-size: 16px;
+  --ren-cp-track-height:12px;
+}
+
+/* ═══════════════════════════════════════════════
+   CAROUSEL
+   ═══════════════════════════════════════════════ */
+.ren-carousel {
+  --ren-carousel-gap:        var(--space-4);
+  --ren-carousel-radius:     var(--radius-lg);
+  --ren-carousel-arrow-size: var(--size-lg);
+  --ren-carousel-dot-size:   8px;
+  --ren-carousel-dot-active: var(--color-accent);
+  --ren-carousel-dot-color:  var(--color-fill);
+
+  /* Motion */
+  --ren-carousel-duration:   var(--duration-normal);
+  --ren-carousel-easing:     var(--ease-out);
+}
+
+/* ═══════════════════════════════════════════════
+   KBD
+   ═══════════════════════════════════════════════ */
+.ren-kbd {
+  --ren-kbd-bg:          var(--color-surface-sunken);
+  --ren-kbd-border:      var(--color-border-strong);
+  --ren-kbd-color:       var(--color-text);
+  --ren-kbd-font-size:   var(--caption-sm-size);
+  --ren-kbd-font-family: var(--font-mono);
+  --ren-kbd-padding:     var(--space-0-5) var(--space-2);
+  --ren-kbd-radius:      var(--radius-sm);
+}
+
+/* ═══════════════════════════════════════════════
+   ICON
+   ═══════════════════════════════════════════════ */
+.ren-icon {
+  --ren-icon-size:       var(--size-md);
+  --ren-icon-color:      var(--color-text);
+  --ren-icon-fill:       currentColor;
+}
+
+/* (accordion + carousel duplicates removed — defined above) */

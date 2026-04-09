@@ -1,0 +1,18 @@
+/* ============================================
+   RenDS — Primitive Border Radius Tokens
+   ============================================
+   Based on Apple HIG corner radius patterns.
+   Consistent rounding across all components.
+   ============================================ */
+
+:root {
+  --radius-none: 0;
+  --radius-xs:   0.125rem;  /* 2px  — subtle */
+  --radius-sm:   0.25rem;   /* 4px  — small controls */
+  --radius-md:   0.5rem;    /* 8px  — standard (Apple default) */
+  --radius-lg:   0.75rem;   /* 12px — cards, modals */
+  --radius-xl:   1rem;      /* 16px — large panels */
+  --radius-2xl:  1.25rem;   /* 20px — sheets */
+  --radius-3xl:  1.5rem;    /* 24px — large sheets */
+  --radius-full: 9999px;    /* pill / circle */
+}

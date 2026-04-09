@@ -1,0 +1,224 @@
+/* ============================================
+   RenDS — Constraint-Driven Design Principles
+   ============================================
+   Inspired by Stripe's design philosophy:
+   "Less is more. Fewer options, better defaults."
+
+   This document defines the INTENTIONAL limitations
+   of the design system and WHY they exist.
+
+   Import this file for the utility classes.
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 1: LIMITED VARIANTS
+   ═══════════════════════════════════════════════
+
+   Every component has a fixed set of variants.
+   Adding new variants requires design review.
+
+   Button:
+   - 5 variants: primary, secondary, ghost, danger, outline
+   - 3 sizes: sm, md, lg
+   - WHY: 15 combinations is enough for any UI.
+     More variants = more decisions = slower design.
+
+   Card:
+   - 4 variants: default, elevated, outline, ghost
+   - WHY: Cards are containers. They shouldn't
+     compete for attention — the content should.
+
+   Badge:
+   - Semantic only: success, warning, danger, info, neutral
+   - WHY: Badges communicate status. Custom colors
+     break the shared language of your UI.
+
+   Banner:
+   - 4 types: info, success, warning, danger
+   - WHY: Matches severity levels. No "custom" banner
+     because every alert must map to a severity.
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 2: PREDICTABLE SIZING
+   ═══════════════════════════════════════════════
+
+   All interactive elements follow the same size scale:
+     sm  = 32px
+     md  = 36px
+     lg  = 44px (default, Apple HIG touch target)
+     xl  = 52px
+
+   WHY:
+   - Consistent vertical rhythm across components
+   - Button, input, select, tag all align when side-by-side
+   - 44px default guarantees mobile usability
+   - No "custom height" — use the scale or don't
+
+   Spacing follows 8pt grid:
+     4, 8, 12, 16, 20, 24, 32, 40, 48...
+   WHY: Reduces bikeshedding ("should it be 13px or 15px?")
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 3: SEMANTIC-FIRST COLORS
+   ═══════════════════════════════════════════════
+
+   Components use semantic tokens, never primitives.
+
+   ✓ var(--color-accent)        — the action color
+   ✓ var(--color-danger)        — destructive actions
+   ✓ var(--color-text)          — primary text
+   ✓ var(--color-surface-raised)— elevated surfaces
+
+   ✗ var(--blue-500)            — NEVER in components
+   ✗ #3b82f6                    — NEVER hardcoded
+   ✗ var(--my-custom-blue)      — NEVER ad-hoc tokens
+
+   WHY:
+   - Theme switching works automatically
+   - Dark mode is free (light-dark() function)
+   - Consistent meaning: accent always = primary action
+   - Component tokens (--ren-btn-bg) override semantic
+     tokens, NOT primitive tokens
+
+   Color usage rules:
+   - Max 1 accent color per screen section
+   - Status colors only for status (not decoration)
+   - Surface hierarchy: surface < raised < overlay
+   - Text hierarchy: text > secondary > muted > faint
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 4: TYPOGRAPHY HIERARCHY
+   ═══════════════════════════════════════════════
+
+   4 levels of text, not more:
+
+   1. DISPLAY  — hero sections, marketing, 1 per page
+   2. TITLE    — section headings (h1-h3)
+   3. BODY     — content text, descriptions
+   4. CAPTION  — secondary info, metadata, labels
+
+   WHY:
+   - 4 levels is enough visual hierarchy
+   - More levels = more inconsistency
+   - Dynamic Type scales all 4 proportionally
+   - Bold variants exist within each level
+
+   Font weight rules:
+   - Regular (400) for body text
+   - Medium (500) for UI labels, buttons
+   - Semibold (600) for headings, emphasis
+   - Bold (700) for display only
+   - NEVER thin (100) or black (900) in UI
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 5: MINIMAL MOTION
+   ═══════════════════════════════════════════════
+
+   Motion serves function, not decoration.
+
+   3 duration tiers:
+     fast   = 100ms — micro-interactions (hover, press)
+     normal = 200ms — state changes (open/close, toggle)
+     slow   = 300ms — layout shifts (sheet, page transition)
+
+   WHY:
+   - Faster feels more responsive
+   - No "500ms dramatic entrance" — it slows users down
+   - prefers-reduced-motion: reduce → instant or crossfade
+   - EVERY animation must have a reduced-motion fallback
+
+   Allowed easing:
+   - ease-out for entrances (fast start, gentle stop)
+   - ease-in for exits (gentle start, fast out)
+   - cubic-bezier(0.32, 0.72, 0, 1) for spring-like
+   - NEVER linear (feels mechanical)
+   - NEVER ease-in-out for UI (too slow at both ends)
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 6: ACCESSIBLE BY DEFAULT
+   ═══════════════════════════════════════════════
+
+   Accessibility is not an enhancement — it's baseline.
+
+   Non-negotiable rules:
+   - 44px minimum touch target (Apple HIG)
+   - Focus-visible on EVERY interactive element
+   - Color is NEVER the only indicator (+ icon or text)
+   - 4.5:1 contrast for text, 3:1 for large/UI
+   - All form fields have visible labels (no placeholder-only)
+   - Dialog traps focus, Escape closes
+   - Roving tabindex for composite widgets (toolbar, menu)
+   - Skip link on every page
+
+   WHY: Not doing this isn't an option. Period.
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   PRINCIPLE 7: NATIVE FIRST
+   ═══════════════════════════════════════════════
+
+   Use browser APIs before custom JS.
+
+   RenDS preference order:
+   1. Pure CSS (no JS)
+      → Checkbox, Radio, Switch, Progress, Separator,
+        Badge, Card, Link, Banner, Breadcrumb, Pagination,
+        Tag, Skeleton, Spinner, Empty State
+
+   2. Native HTML elements
+      → <dialog> for modals/sheets
+      → <details>/<summary> for collapsible/accordion
+      → <input type="range"> for slider
+      → <input type="color"> for basic color
+
+   3. Popover API
+      → Tooltip, Popover, Menu, Select, Combobox,
+        Hover Card, Date Picker, Color Picker, Context Menu
+
+   4. Minimal JS (< 100 lines)
+      → Keyboard navigation, focus management,
+        drag tracking, scroll snap observers
+
+   5. Web Components (custom elements)
+      → Only when encapsulation is needed
+      → Shadow DOM ONLY for truly isolated widgets
+
+   WHY: Less JS = faster load, fewer bugs, better a11y.
+   The browser already solved most UI problems.
+
+   ═══════════════════════════════════════════════ */
+
+/* ─── Constraint utilities ─── */
+
+/* Force consistent interactive sizing */
+.constraint-touch   { min-height: var(--touch-min); min-width: var(--touch-min); }
+.constraint-size-sm { height: var(--size-sm); }
+.constraint-size-md { height: var(--size-md); }
+.constraint-size-lg { height: var(--size-lg); }
+
+/* Force reading width */
+.constraint-prose   { max-width: var(--width-prose); }
+.constraint-narrow  { max-width: var(--width-sm); }
+.constraint-medium  { max-width: var(--width-lg); }
+.constraint-wide    { max-width: var(--width-4xl); }
+
+/* Force spacing rhythm */
+.constraint-gap-tight  { gap: var(--space-2); }
+.constraint-gap-normal { gap: var(--space-4); }
+.constraint-gap-loose  { gap: var(--space-6); }
+
+/* Force font hierarchy */
+.constraint-text-primary   { color: var(--color-text); }
+.constraint-text-secondary { color: var(--color-text-secondary); }
+.constraint-text-muted     { color: var(--color-text-muted); }

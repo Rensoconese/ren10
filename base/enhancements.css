@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RenDS — Progressive Enhancements
+   ═══════════════════════════════════════════════════════════════════════════
+   Modern CSS features applied via @supports for capable browsers.
+   These are non-essential enhancements — everything works without them.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ═══ VIEW TRANSITIONS ═══
+   Opt-in view transitions for smooth page-level state changes.
+   Usage: Add `view-transition-name` to elements you want to animate.
+   ─────────────────────────────────────────────────────────────────────── */
+
+@supports (view-transition-name: none) {
+  /* Enable cross-document view transitions */
+  @view-transition {
+    navigation: auto;
+  }
+
+  /* Default transition for page root */
+  :root {
+    view-transition-name: root;
+  }
+
+  /* Utility classes for named view transitions */
+  .ren-vt-hero { view-transition-name: hero; }
+  .ren-vt-header { view-transition-name: header; }
+  .ren-vt-nav { view-transition-name: nav; }
+  .ren-vt-main { view-transition-name: main; }
+  .ren-vt-sidebar { view-transition-name: sidebar; }
+
+  /* Default view transition animation timing */
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: var(--duration-normal, 200ms);
+    animation-timing-function: var(--ease-out, ease-out);
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(*),
+    ::view-transition-new(*) {
+      animation-duration: 0.01ms;
+    }
+  }
+}
+
+/* ═══ SCROLL-DRIVEN ANIMATIONS ═══
+   Utility classes for scroll-linked animations without JavaScript.
+   ─────────────────────────────────────────────────────────────────────── */
+
+@supports (animation-timeline: scroll()) {
+  /* Scroll progress indicator — a thin bar at the top of the page */
+  .ren-scroll-progress {
+    position: fixed;
+    top: 0;
+    inset-inline: 0;
+    height: 3px;
+    background: var(--color-accent, #3b82f6);
+    transform-origin: left;
+    z-index: 9999;
+    animation: ren-scale-x linear both;
+    animation-timeline: scroll(root);
+  }
+
+  @keyframes ren-scale-x {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  /* Reveal on scroll — fade + slide up when element enters viewport */
+  .ren-scroll-reveal {
+    opacity: 0;
+    transform: translateY(var(--space-6, 1.5rem));
+    animation: ren-scroll-reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 100%;
+  }
+
+  @keyframes ren-scroll-reveal {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Parallax effect — subtle vertical shift on scroll */
+  .ren-scroll-parallax {
+    animation: ren-parallax linear both;
+    animation-timeline: view();
+  }
+
+  @keyframes ren-parallax {
+    from { transform: translateY(calc(var(--space-8, 2rem) * -1)); }
+    to { transform: translateY(var(--space-8, 2rem)); }
+  }
+
+  /* Fade in on scroll — simple opacity reveal */
+  .ren-scroll-fade {
+    opacity: 0;
+    animation: ren-scroll-fade-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+
+  @keyframes ren-scroll-fade-in {
+    to { opacity: 1; }
+  }
+
+  /* Respect reduced motion for all scroll animations */
+  @media (prefers-reduced-motion: reduce) {
+    .ren-scroll-progress,
+    .ren-scroll-reveal,
+    .ren-scroll-parallax,
+    .ren-scroll-fade {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+  }
+}

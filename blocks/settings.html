@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — RenDS Block</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+    .settings-layout { max-width: 900px; margin: 0 auto; padding: var(--space-6); }
+    .settings-nav { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--color-border); margin-bottom: var(--space-6); }
+    .settings-nav a { padding: var(--space-2) var(--space-4); text-decoration: none; color: var(--color-text-muted); font-size: var(--text-sm); font-weight: var(--weight-medium); border-bottom: 2px solid transparent; margin-bottom: -1px; min-height: var(--touch-min); display: flex; align-items: center; }
+    .settings-nav a.active { color: var(--color-text); border-bottom-color: var(--color-accent); }
+    .settings-section { margin-bottom: var(--space-8); }
+    .settings-section h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0 0 var(--space-1); }
+    .settings-section p { color: var(--color-text-muted); font-size: var(--text-sm); margin: 0 0 var(--space-4); }
+    .settings-row { display: flex; justify-content: space-between; align-items: center; padding: var(--space-4) 0; border-bottom: 1px solid var(--color-border-muted); }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row-label { font-weight: var(--weight-medium); }
+    .settings-row-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-1); }
+  </style>
+</head>
+<body>
+  <div class="settings-layout">
+    <!-- Header -->
+    <div style="margin-bottom: var(--space-6);">
+      <h1 style="font-size: var(--text-2xl); font-weight: var(--weight-bold); margin: 0 0 var(--space-1);">Settings</h1>
+      <p style="color: var(--color-text-muted); margin: 0;">Manage your account preferences</p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <nav class="settings-nav">
+      <a href="#" class="active">Profile</a>
+      <a href="#">Account</a>
+      <a href="#">Notifications</a>
+      <a href="#">Appearance</a>
+      <a href="#">Billing</a>
+    </nav>
+
+    <!-- Profile Section -->
+    <div class="settings-section">
+      <h3>Profile</h3>
+      <p>Your public profile information</p>
+
+      <div class="ren-card">
+        <div class="ren-card-body" style="display: flex; flex-direction: column; gap: var(--space-5);">
+          <!-- Avatar -->
+          <div style="display: flex; align-items: center; gap: var(--space-4);">
+            <div class="ren-avatar ren-avatar-xl" style="background: var(--color-accent); color: var(--color-on-accent); display: flex; align-items: center; justify-content: center; font-size: var(--text-xl); font-weight: var(--weight-bold);">R</div>
+            <div>
+              <button class="ren-btn ren-btn-secondary ren-btn-sm">Change avatar</button>
+              <p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">JPG, PNG or GIF. Max 2MB.</p>
+            </div>
+          </div>
+
+          <!-- Fields -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="ren-field">
+              <label>First name</label>
+              <input type="text" value="Ren">
+            </div>
+            <div class="ren-field">
+              <label>Last name</label>
+              <input type="text" value="Soconese">
+            </div>
+          </div>
+
+          <div class="ren-field">
+            <label>Email</label>
+            <input type="email" value="rensoconese@gmail.com">
+          </div>
+
+          <div class="ren-field">
+            <label>Bio</label>
+            <textarea placeholder="Tell us about yourself..." rows="3" style="field-sizing: content;"></textarea>
+          </div>
+        </div>
+        <div class="ren-card-footer">
+          <button class="ren-btn ren-btn-secondary">Cancel</button>
+          <button class="ren-btn ren-btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications Section -->
+    <div class="settings-section">
+      <h3>Notifications</h3>
+      <p>Choose what you want to be notified about</p>
+
+      <div class="ren-card">
+        <div class="ren-card-body" style="padding: 0;">
+          <div class="settings-row" style="padding: var(--space-4) var(--space-5);">
+            <div>
+              <div class="settings-row-label">Email notifications</div>
+              <div class="settings-row-desc">Receive updates about your account via email</div>
+            </div>
+            <label class="ren-switch">
+              <input type="checkbox" checked>
+              <span class="ren-switch-track"></span>
+            </label>
+          </div>
+          <div class="settings-row" style="padding: var(--space-4) var(--space-5);">
+            <div>
+              <div class="settings-row-label">Push notifications</div>
+              <div class="settings-row-desc">Receive push notifications on your devices</div>
+            </div>
+            <label class="ren-switch">
+              <input type="checkbox">
+              <span class="ren-switch-track"></span>
+            </label>
+          </div>
+          <div class="settings-row" style="padding: var(--space-4) var(--space-5);">
+            <div>
+              <div class="settings-row-label">Marketing emails</div>
+              <div class="settings-row-desc">Receive tips, product updates, and inspiration</div>
+            </div>
+            <label class="ren-switch">
+              <input type="checkbox">
+              <span class="ren-switch-track"></span>
+            </label>
+          </div>
+          <div class="settings-row" style="padding: var(--space-4) var(--space-5);">
+            <div>
+              <div class="settings-row-label">Security alerts</div>
+              <div class="settings-row-desc">Get notified about suspicious activity</div>
+            </div>
+            <label class="ren-switch">
+              <input type="checkbox" checked>
+              <span class="ren-switch-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="settings-section">
+      <h3>Danger zone</h3>
+      <p>Irreversible actions on your account</p>
+
+      <div class="ren-card" data-status="danger">
+        <div class="ren-card-body">
+          <div class="settings-row" style="border: none; padding: 0;">
+            <div>
+              <div class="settings-row-label">Delete account</div>
+              <div class="settings-row-desc">Permanently remove your account and all data. This action cannot be undone.</div>
+            </div>
+            <button class="ren-btn ren-btn-danger ren-btn-sm">Delete account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

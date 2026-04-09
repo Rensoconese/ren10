@@ -1,0 +1,132 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RenDS — Registered Custom Properties (CSS Houdini @property)
+   ═══════════════════════════════════════════════════════════════════════════
+   @property tells the browser the *type* of a custom property, enabling:
+   - Smooth transitions/animations on custom properties
+   - Proper inheritance behavior
+   - Type-safe fallback values
+
+   Without @property, the browser treats custom properties as opaque strings,
+   so `transition: --color-accent 200ms` silently does nothing.
+   With @property, the browser knows it's a <color> and can interpolate it.
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Color Tokens ───
+   Enables smooth color transitions when theme/mode changes */
+
+@property --color-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #3b82f6;
+}
+
+@property --color-accent-hover {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2563eb;
+}
+
+@property --color-surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+@property --color-surface-raised {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+@property --color-text {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #0a0a0a;
+}
+
+@property --color-text-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #737373;
+}
+
+@property --color-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e5e5e5;
+}
+
+@property --color-focus-ring {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #3b82f6;
+}
+
+/* ─── Duration Tokens ───
+   Enables smooth transitions between duration values */
+
+@property --duration-fast {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 100ms;
+}
+
+@property --duration-normal {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 150ms;
+}
+
+@property --duration-moderate {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 250ms;
+}
+
+@property --duration-slow {
+  syntax: '<time>';
+  inherits: true;
+  initial-value: 300ms;
+}
+
+/* ─── Spacing Tokens ───
+   Enables smooth spacing animations */
+
+@property --space-1 {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0.25rem;
+}
+
+@property --space-2 {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0.5rem;
+}
+
+@property --space-4 {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 1rem;
+}
+
+/* ─── Radius Tokens ───
+   Enables smooth border-radius animations */
+
+@property --radius-sm {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0.25rem;
+}
+
+@property --radius-md {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0.5rem;
+}
+
+@property --radius-lg {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0.75rem;
+}

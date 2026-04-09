@@ -1,0 +1,204 @@
+.ren-scroll-area {
+  position: relative;
+  overflow: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-fill-active) transparent;
+
+  transition: scrollbar-color var(--duration-normal) var(--ease-default);
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-fill-active);
+    border-radius: var(--radius-full);
+    border: 2px solid transparent;
+    background-clip: content-box;
+
+    transition: background-color var(--duration-normal) var(--ease-default);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-fill-hover);
+    background-clip: content-box;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Hover state for standard scrollbar */
+  &:hover {
+    scrollbar-color: var(--color-fill-hover) transparent;
+  }
+
+  /* Variants */
+  &.-auto {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Show on scroll */
+    &:is(:hover, :focus-within) {
+      scrollbar-width: thin;
+      scrollbar-color: var(--color-fill-active) transparent;
+
+      &::-webkit-scrollbar {
+        display: block;
+      }
+    }
+  }
+
+  &.-always {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-fill-active) transparent;
+
+    &::-webkit-scrollbar {
+      display: block;
+    }
+  }
+
+  &.-hidden {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* Direction variants */
+  &.-x {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  &.-y {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  /* Fade edges for smooth content transitions */
+  &.-fade {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        var(--color-surface) 0%,
+        transparent 100%
+      );
+
+      z-index: 10;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+
+      pointer-events: none;
+      background: linear-gradient(
+        to top,
+        var(--color-surface) 0%,
+        transparent 100%
+      );
+
+      z-index: 10;
+    }
+  }
+
+  /* Horizontal fade */
+  &.-fade-x {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 20px;
+
+      pointer-events: none;
+      background: linear-gradient(
+        to right,
+        var(--color-surface) 0%,
+        transparent 100%
+      );
+
+      z-index: 10;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 20px;
+
+      pointer-events: none;
+      background: linear-gradient(
+        to left,
+        var(--color-surface) 0%,
+        transparent 100%
+      );
+
+      z-index: 10;
+    }
+  }
+
+  /* Max-height with custom property */
+  &[--scroll-max] {
+    max-height: var(--scroll-max, 20rem);
+  }
+
+  /* Smooth scrolling behavior */
+  scroll-behavior: smooth;
+
+  @media (prefers-reduced-motion: reduce) {
+    scroll-behavior: auto;
+  }
+}
+
+/* Utility class for common heights */
+.ren-scroll-area-sm {
+  max-height: 12rem;
+}
+
+.ren-scroll-area-md {
+  max-height: 20rem;
+}
+
+.ren-scroll-area-lg {
+  max-height: 30rem;
+}
+
+.ren-scroll-area-xl {
+  max-height: 40rem;
+}
+
+.ren-scroll-area-full {
+  height: 100%;
+  max-height: none;
+}

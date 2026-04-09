@@ -1,0 +1,183 @@
+/* ============================================
+   RenDS — Banner / Alert Component
+   ============================================
+   Inline messages for success, warning, error, info.
+   CSS-only. No JS needed (dismiss is optional JS).
+
+   Different from Toast: Banner is inline, persistent,
+   part of the page flow. Toast is ephemeral overlay.
+
+   Usage:
+     <div class="ren-banner" role="status">
+       <span class="ren-banner-icon">ℹ</span>
+       <div class="ren-banner-content">
+         <strong class="ren-banner-title">Info</strong>
+         <p class="ren-banner-message">Your changes have been saved.</p>
+       </div>
+     </div>
+
+     <div class="ren-banner ren-banner-danger" role="alert">
+       <span class="ren-banner-icon">!</span>
+       <div class="ren-banner-content">
+         <strong class="ren-banner-title">Error</strong>
+         <p class="ren-banner-message">Could not save changes.</p>
+       </div>
+       <button class="ren-banner-dismiss" aria-label="Dismiss">&times;</button>
+     </div>
+
+   Simple (no title):
+     <div class="ren-banner ren-banner-success" role="status">
+       <span class="ren-banner-icon">✓</span>
+       <p class="ren-banner-message">File uploaded successfully.</p>
+     </div>
+   ============================================ */
+
+/* ─── Base Banner ─── */
+.ren-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--body-size);
+  line-height: var(--leading-normal);
+  /* Default: info */
+  background-color: var(--color-info-subtle);
+  border: var(--stroke-1) solid color-mix(in oklch, var(--color-info), transparent 70%);
+  color: var(--color-text);
+}
+
+/* ─── Icon ─── */
+.ren-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: var(--text-base);
+  margin-top: 1px;
+}
+
+/* ─── Content ─── */
+.ren-banner-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ren-banner-title {
+  display: block;
+  font-weight: var(--weight-semibold);
+  font-size: var(--label-size, var(--text-sm));
+  margin-bottom: var(--space-1);
+}
+
+.ren-banner-message {
+  font-size: var(--caption-size, var(--text-sm));
+  color: var(--color-text-secondary);
+}
+
+/* Title-only (no message) */
+.ren-banner-title:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Actions (buttons inside banner) ─── */
+.ren-banner-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+/* ─── Dismiss button ─── */
+.ren-banner-dismiss {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-lg);
+  line-height: 1;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.ren-banner-dismiss:hover {
+  color: var(--color-text);
+}
+
+.ren-banner-dismiss:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ─── Variants ─── */
+
+.ren-banner-success {
+  background-color: var(--color-success-subtle);
+  border-color: color-mix(in oklch, var(--color-success), transparent 70%);
+}
+
+.ren-banner-warning {
+  background-color: var(--color-warning-subtle);
+  border-color: color-mix(in oklch, var(--color-warning), transparent 70%);
+}
+
+.ren-banner-danger {
+  background-color: var(--color-danger-subtle);
+  border-color: color-mix(in oklch, var(--color-danger), transparent 70%);
+}
+
+.ren-banner-neutral {
+  background-color: var(--color-surface-sunken);
+  border-color: var(--color-border);
+}
+
+/* ─── Compact variant (less padding, single line) ─── */
+.ren-banner-compact {
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  gap: var(--space-2);
+}
+
+.ren-banner-compact .ren-banner-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: var(--text-sm);
+}
+
+/* ─── Full-width variant (no border-radius, for page top) ─── */
+.ren-banner-full {
+  border-radius: 0;
+  border-inline-start: none;
+  border-inline-end: none;
+}
+
+/* ─── Dismiss animation ─── */
+.ren-banner[data-dismissing] {
+  animation: ren-banner-dismiss var(--duration-normal) var(--ease-out) forwards;
+}
+
+@keyframes ren-banner-dismiss {
+  to {
+    opacity: 0;
+    height: 0;
+    padding-block: 0;
+    margin-block: 0;
+    overflow: hidden;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ren-banner[data-dismissing] {
+    animation: none;
+    display: none;
+  }
+}

@@ -1,0 +1,137 @@
+/* ============================================
+   RenDS — Radio Button & Radio Group Components
+   ============================================
+   Custom-styled radio buttons and radio groups
+   built on native <input type="radio">.
+
+   Preserves native semantics and accessibility.
+   Custom visuals via CSS only.
+
+   Usage:
+     <div class="ren-radio-group" role="radiogroup">
+       <label class="ren-radio">
+         <input type="radio" name="option" value="a">
+         <span class="ren-radio-control"></span>
+         <span>Option A</span>
+       </label>
+       <label class="ren-radio">
+         <input type="radio" name="option" value="b">
+         <span class="ren-radio-control"></span>
+         <span>Option B</span>
+       </label>
+     </div>
+   ============================================ */
+
+/* ═══════════════════════════════
+   RADIO BUTTON
+   ═══════════════════════════════ */
+
+.ren-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  font-size: var(--body-size);
+  font-weight: var(--weight-regular);
+  color: var(--color-text);
+  user-select: none;
+  /* Ensure touch target */
+  min-height: var(--touch-min);
+}
+
+/* Hide native radio visually but keep accessible */
+.ren-radio > input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Custom radio visual */
+.ren-radio-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;   /* 20px */
+  height: 1.25rem;
+  flex-shrink: 0;
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
+}
+
+/* Radio dot (hidden by default) */
+.ren-radio-control::after {
+  content: '';
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--color-on-accent);
+  border-radius: var(--radius-full);
+  transform: scale(0);
+  transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+/* ─── States ─── */
+
+/* Checked */
+.ren-radio > input:checked + .ren-radio-control {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.ren-radio > input:checked + .ren-radio-control::after {
+  transform: scale(1);
+}
+
+/* Hover */
+.ren-radio:hover > .ren-radio-control {
+  border-color: var(--color-accent);
+}
+
+.ren-radio:hover > input:checked + .ren-radio-control {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+/* Focus */
+.ren-radio > input:focus-visible + .ren-radio-control {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}
+
+/* Active / Press */
+.ren-radio:active > .ren-radio-control {
+  transform: scale(0.9);
+}
+
+/* Disabled */
+.ren-radio:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════
+   RADIO GROUP
+   ═══════════════════════════════ */
+
+.ren-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ren-radio-group-horizontal {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-4);
+}

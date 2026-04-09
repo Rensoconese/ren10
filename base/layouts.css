@@ -1,0 +1,344 @@
+/* ============================================
+   RenDS — Layout Primitives
+   ============================================
+   Composable layout patterns based on
+   Every Layout (Heydon Pickering & Andy Bell).
+
+   These are the building blocks for any layout.
+   Each solves ONE specific layout problem.
+   ============================================ */
+
+/* ─── Stack ───
+   Vertical flow with consistent spacing.
+   The most common layout pattern.
+
+   Usage:
+   <div class="ren-stack">
+     <p>First</p>
+     <p>Second</p>
+     <p>Third</p>
+   </div>
+
+   Custom gap: style="--stack-gap: var(--space-6)"
+*/
+.ren-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-4));
+}
+
+/* Stack variants */
+.ren-stack-xs { --stack-gap: var(--space-1); }
+.ren-stack-sm { --stack-gap: var(--space-2); }
+.ren-stack-md { --stack-gap: var(--space-4); }
+.ren-stack-lg { --stack-gap: var(--space-6); }
+.ren-stack-xl { --stack-gap: var(--space-8); }
+
+/* ─── Cluster ───
+   Horizontal wrapping items with gap.
+   For tags, buttons, inline elements.
+
+   Usage:
+   <div class="ren-cluster">
+     <span>Tag 1</span>
+     <span>Tag 2</span>
+     <span>Tag 3</span>
+   </div>
+*/
+.ren-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--space-3));
+  align-items: var(--cluster-align, center);
+}
+
+/* ─── Row ───
+   Horizontal non-wrapping flex.
+   For inline layouts that shouldn't wrap.
+
+   Usage:
+   <div class="ren-row">
+     <span>Left</span>
+     <span>Right</span>
+   </div>
+*/
+.ren-row {
+  display: flex;
+  align-items: var(--row-align, center);
+  gap: var(--row-gap, var(--space-3));
+}
+
+/* Push last child to the end */
+.ren-row-spread {
+  display: flex;
+  align-items: center;
+  gap: var(--row-gap, var(--space-3));
+  justify-content: space-between;
+}
+
+/* ─── Center ───
+   Horizontally centered content with max-width.
+   The classic content container.
+
+   Usage:
+   <main class="ren-center">
+     <h1>Content</h1>
+     <p>Centered with comfortable reading width.</p>
+   </main>
+*/
+.ren-center {
+  max-width: var(--center-width, var(--width-5xl));
+  margin-inline: auto;
+  padding-inline: var(--center-padding, var(--space-4));
+}
+
+/* Center variants */
+.ren-center-narrow { --center-width: var(--width-2xl); }
+.ren-center-prose  { --center-width: var(--width-prose); }
+.ren-center-wide   { --center-width: var(--width-7xl); }
+
+/* ─── Sidebar Layout ───
+   Content + sidebar. Sidebar has intrinsic width,
+   content fills remaining space.
+   Stacks on narrow screens.
+
+   Usage:
+   <div class="ren-with-sidebar">
+     <aside>Sidebar content</aside>
+     <main>Main content</main>
+   </div>
+*/
+/* NOTE: For a CSS Grid-based sidebar with animation support,
+   see .ren-sidebar-grid in grid.css. This flexbox version
+   remains for simple sidebar-content layouts. */
+.ren-with-sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sidebar-gap, var(--space-6));
+}
+
+.ren-with-sidebar > :first-child {
+  flex-basis: var(--sidebar-width, 16rem);
+  flex-grow: 1;
+}
+
+.ren-with-sidebar > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: var(--sidebar-content-min, 50%);
+}
+
+/* ─── Grid ───
+   Auto-responsive grid.
+   Items automatically wrap based on min-width.
+
+   Usage:
+   <div class="ren-grid">
+     <div>Card 1</div>
+     <div>Card 2</div>
+     <div>Card 3</div>
+   </div>
+
+   Custom min: style="--grid-min: 300px"
+*/
+/* NOTE: For the full CSS Grid system (12-col, subgrid, bento, etc.),
+   see grid.css. This is the simple auto-responsive grid. */
+.ren-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--grid-min, 15rem)), 1fr)
+  );
+  gap: var(--grid-gap, var(--space-4));
+}
+
+/* Grid with explicit columns */
+.ren-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.ren-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.ren-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* Responsive: stack on mobile */
+@media (max-width: 639px) {
+  .ren-grid-2,
+  .ren-grid-3,
+  .ren-grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Cover ───
+   Vertically centered content in full viewport.
+   For hero sections, login pages, etc.
+
+   Usage:
+   <div class="ren-cover">
+     <header>Top</header>
+     <main>Centered content</main>
+     <footer>Bottom</footer>
+   </div>
+*/
+.ren-cover {
+  display: flex;
+  flex-direction: column;
+  min-height: var(--cover-height, 100dvh);
+  padding: var(--space-4);
+}
+
+.ren-cover h1,
+.ren-cover h2,
+.ren-cover h3 {
+  text-wrap: balance;
+}
+
+.ren-cover > * {
+  margin-block: var(--space-4);
+}
+
+.ren-cover > :first-child:not(.ren-cover-center) {
+  margin-block-start: 0;
+}
+
+.ren-cover > :last-child:not(.ren-cover-center) {
+  margin-block-end: 0;
+}
+
+.ren-cover > .ren-cover-center,
+.ren-cover > :nth-child(2):not(:last-child) {
+  margin-block: auto;
+}
+
+/* ─── Frame ───
+   Aspect ratio container.
+
+   Usage:
+   <div class="ren-frame">
+     <img src="photo.jpg" alt="...">
+   </div>
+*/
+.ren-frame {
+  aspect-ratio: var(--frame-ratio, 16 / 9);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ren-frame > img,
+.ren-frame > video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ren-frame-square { --frame-ratio: 1; }
+.ren-frame-video  { --frame-ratio: 16 / 9; }
+.ren-frame-photo  { --frame-ratio: 4 / 3; }
+
+/* ─── Switcher ───
+   Horizontal when space allows, vertical when not.
+   Like flexbox wrap but with a threshold.
+
+   Usage:
+   <div class="ren-switcher">
+     <div>First</div>
+     <div>Second</div>
+     <div>Third</div>
+   </div>
+*/
+.ren-switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--switcher-gap, var(--space-4));
+}
+
+.ren-switcher > * {
+  flex-grow: 1;
+  flex-basis: calc((var(--switcher-threshold, 30rem) - 100%) * 999);
+}
+
+/* ─── Reel ───
+   Horizontal scroll container (carousel base).
+
+   Usage:
+   <div class="ren-reel">
+     <div>Item 1</div>
+     <div>Item 2</div>
+     <div>Item 3</div>
+   </div>
+*/
+.ren-reel {
+  display: flex;
+  gap: var(--reel-gap, var(--space-4));
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding: var(--reel-gap, var(--space-4));
+  -webkit-overflow-scrolling: touch;
+}
+
+.ren-reel > * {
+  flex: 0 0 var(--reel-item-width, auto);
+  scroll-snap-align: start;
+}
+
+/* Hide scrollbar but keep functionality */
+.ren-reel-hidden-scroll {
+  scrollbar-width: none;
+}
+
+.ren-reel-hidden-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Container Query Utilities ───
+   Make any element a container for responsive children.
+   Components inside adapt to their container, not the viewport.
+
+   Usage:
+   <div class="ren-container">
+     <div class="ren-container-responsive">
+       Adapts based on container width
+     </div>
+   </div>
+*/
+.ren-container {
+  container-type: inline-size;
+}
+
+.ren-container-name {
+  container-type: inline-size;
+  container-name: var(--container-name);
+}
+
+/* Common responsive patterns using container queries */
+@container (max-width: 30rem) {
+  .ren-cq-stack {
+    flex-direction: column;
+  }
+
+  .ren-cq-hide {
+    display: none;
+  }
+
+  .ren-cq-full {
+    width: 100%;
+  }
+}
+
+@container (min-width: 30rem) {
+  .ren-cq-row {
+    flex-direction: row;
+  }
+}
+
+@container (min-width: 45rem) {
+  .ren-cq-grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 60rem) {
+  .ren-cq-grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

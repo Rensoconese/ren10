@@ -1,0 +1,27 @@
+/* ============================================
+   RenDS — Design System Foundation
+   ============================================
+   The complete foundation layer.
+   Import this single file to get everything.
+
+   Usage:
+   @import './rends/index.css';
+
+   Or in HTML:
+   <link rel="stylesheet" href="rends/index.css">
+
+   Cascade Layers (in priority order, lowest → highest):
+   - reset:      Browser normalization
+   - tokens:     Design tokens (primitives, semantic, component)
+   - base:       Classless styles, utilities, layouts
+   - components: All RenDS component styles
+   - utilities:  High-priority utility overrides
+
+   Any CSS written OUTSIDE a layer automatically wins
+   over all RenDS styles — making overrides effortless.
+   ============================================ */
+
+@layer reset, tokens, base, components, utilities;
+
+@import './tokens/index.css' layer(tokens);
+@import './base/index.css' layer(base);

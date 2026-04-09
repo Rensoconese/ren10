@@ -1,0 +1,285 @@
+/**
+ * RenDS — <ren-accordion> Component
+ * ═══════════════════════════════════
+ * CSS-first accordion using native <details><summary>
+ *
+ * Features:
+ *   - Smooth height animation using ::details-content
+ *   - Chevron rotation on open state
+ *   - Multiple variants: default, bordered, flush
+ *   - Reduced motion support
+ *   - Dark mode support (via semantic tokens)
+ *   - Fallback for browsers without ::details-content support
+ */
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ACCORDION CONTAINER */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-top: 1px solid var(--color-border);
+
+  /* Default variant: divider lines between items */
+  & > details {
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* TRIGGER / SUMMARY ELEMENT */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion-trigger,
+.ren-accordion > details > summary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  font-weight: var(--label-lg-weight);
+  font-size: var(--label-lg-size);
+  line-height: 1.4;
+  color: var(--color-text);
+  background-color: transparent;
+  border: none;
+  min-height: var(--size-lg);
+  width: 100%;
+  text-align: start;
+  user-select: none;
+  list-style: none;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out);
+
+  /* Remove default browser marker */
+  &::marker {
+    display: none;
+  }
+
+  /* Chevron icon via ::after pseudo-element */
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-inline-start: var(--space-3);
+    flex-shrink: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transition: transform var(--duration-normal) var(--ease-out);
+  }
+
+  /* Hover state */
+  &:hover {
+    background-color: var(--color-fill);
+  }
+
+  /* Active state */
+  &:active {
+    background-color: var(--color-fill-active);
+  }
+
+  /* Focus ring */
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+
+  /* Disabled state */
+  &:disabled,
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* OPEN STATE — ROTATE CHEVRON */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion > details[open] > summary::after {
+  transform: rotate(180deg);
+}
+
+/* Fallback for custom markup */
+.ren-accordion-trigger[aria-expanded="true"]::after {
+  transform: rotate(180deg);
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* CONTENT ANIMATION — MODERN APPROACH */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion > details {
+  /* Modern: use ::details-content for height animation */
+  & > .ren-accordion-content {
+    padding: 0 var(--space-4) var(--space-4);
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    overflow: hidden;
+
+    /* Browsers with ::details-content support */
+    @supports selector(::-webkit-details-content) {
+      height: 0;
+      overflow: hidden;
+      transition:
+        height var(--duration-normal) var(--ease-out),
+        opacity var(--duration-normal) var(--ease-out);
+    }
+
+    /* Also try Chrome/V8 syntax (may vary by engine) */
+    @supports selector(::details-content) {
+      height: 0;
+      overflow: hidden;
+      transition:
+        height var(--duration-normal) var(--ease-out),
+        opacity var(--duration-normal) var(--ease-out);
+    }
+  }
+
+  /* Fallback for browsers without ::details-content: use opacity + max-height */
+  & > .ren-accordion-content {
+    opacity: 0;
+    max-height: 0;
+    transition:
+      opacity var(--duration-normal) var(--ease-out),
+      max-height var(--duration-normal) var(--ease-out);
+  }
+
+  /* When details is open */
+  &[open] > .ren-accordion-content {
+    opacity: 1;
+    max-height: 1000px; /* Reasonable fallback limit */
+
+    /* Modern: animate to auto height with ::details-content */
+    @supports selector(::details-content) {
+      height: auto;
+    }
+  }
+
+  /* Entry animation starting point (for ::details-content) */
+  @starting-style {
+    &[open] > .ren-accordion-content {
+      opacity: 0;
+      max-height: 0;
+    }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* CONTENT ELEMENT */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion-content {
+  padding: 0 var(--space-4) var(--space-4);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* Hide custom content via hidden attribute (for non-details markup) */
+.ren-accordion-content[hidden] {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* VARIANT: BORDERED */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion-bordered {
+  border-top: none;
+
+  & > details,
+  & .ren-accordion-item {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+    overflow: hidden;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  & > details > summary,
+  & .ren-accordion-trigger {
+    padding: var(--space-4) var(--space-4);
+  }
+
+  & > details > .ren-accordion-content,
+  & .ren-accordion-content {
+    padding: 0 var(--space-4) var(--space-4);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* VARIANT: FLUSH (no borders, minimal spacing) */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+.ren-accordion-flush {
+  border-top: none;
+
+  & > details,
+  & .ren-accordion-item {
+    border-bottom: none;
+    padding: var(--space-2) 0;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  & > details > summary,
+  & .ren-accordion-trigger {
+    padding: var(--space-3) 0;
+  }
+
+  & > details > .ren-accordion-content,
+  & .ren-accordion-content {
+    padding: 0 0 var(--space-3);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* REDUCED MOTION */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-accordion-trigger::after,
+  .ren-accordion > details > summary::after {
+    transition: none;
+  }
+
+  .ren-accordion > details > .ren-accordion-content {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/* ACCESSIBILITY SUPPORT */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+/* Ensure proper contrast for focus states */
+.ren-accordion > details > summary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+/* Dark mode: tokens will auto-adjust via CSS variables */
+@media (prefers-color-scheme: dark) {
+  /* Tokens like --color-text, --color-border, etc. should already be defined
+     in the design system's color token reset. No additional changes needed. */
+}

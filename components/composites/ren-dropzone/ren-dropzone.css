@@ -1,0 +1,183 @@
+/* ============================================
+   RenDS — DropZone Component
+   ============================================
+   Drag & drop file upload area.
+   Minimal JS for drag events — CSS handles visuals.
+
+   Uses native drag events, no library needed.
+
+   Usage:
+     <div class="ren-dropzone" data-accept=".jpg,.png,.pdf" data-max-size="5MB">
+       <div class="ren-dropzone-content">
+         <span class="ren-dropzone-icon">↑</span>
+         <p class="ren-dropzone-title">Drop files here</p>
+         <p class="ren-dropzone-description">or click to browse</p>
+       </div>
+       <input type="file" class="ren-dropzone-input" multiple accept=".jpg,.png,.pdf">
+     </div>
+   ============================================ */
+
+.ren-dropzone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 10rem;
+  padding: var(--space-6);
+  border: 2px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-sunken);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.ren-dropzone:hover {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-subtle);
+}
+
+/* Drag over state (set via JS: element.dataset.dragover = true) */
+.ren-dropzone[data-dragover] {
+  border-color: var(--color-accent);
+  background-color: var(--color-accent-subtle);
+  border-style: solid;
+}
+
+.ren-dropzone:focus-within {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}
+
+/* Hidden file input covers entire dropzone */
+.ren-dropzone-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Content */
+.ren-dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  pointer-events: none;
+}
+
+.ren-dropzone-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  font-size: var(--text-xl);
+  color: var(--color-text-muted);
+  background-color: var(--color-fill);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-1);
+}
+
+.ren-dropzone[data-dragover] .ren-dropzone-icon {
+  color: var(--color-accent);
+  background-color: color-mix(in oklch, var(--color-accent), transparent 85%);
+}
+
+.ren-dropzone-title {
+  font-size: var(--body-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.ren-dropzone-description {
+  font-size: var(--caption-size, var(--text-sm));
+  color: var(--color-text-muted);
+}
+
+/* ─── File list (after upload) ─── */
+.ren-dropzone-files {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  margin-top: var(--space-3);
+}
+
+.ren-dropzone-file {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface-raised);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--caption-size, var(--text-sm));
+}
+
+.ren-dropzone-file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ren-dropzone-file-size {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.ren-dropzone-file-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-base);
+}
+
+.ren-dropzone-file-remove:hover {
+  color: var(--color-danger);
+}
+
+/* ─── Compact variant ─── */
+.ren-dropzone-compact {
+  min-height: auto;
+  padding: var(--space-3) var(--space-4);
+  flex-direction: row;
+  gap: var(--space-3);
+}
+
+.ren-dropzone-compact .ren-dropzone-content {
+  flex-direction: row;
+}
+
+.ren-dropzone-compact .ren-dropzone-icon {
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--text-base);
+  margin-bottom: 0;
+}
+
+/* ─── Disabled ─── */
+.ren-dropzone[aria-disabled="true"],
+.ren-dropzone:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ─── Error state ─── */
+.ren-dropzone[data-error] {
+  border-color: var(--color-danger);
+}

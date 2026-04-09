@@ -1,0 +1,277 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   REN DIALOG / MODAL COMPONENT
+   Native <dialog> element enhancement with CSS animations and modern APIs
+   Uses @starting-style, transition-behavior: allow-discrete, and CSS nesting
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ═══ DIALOG CONTAINER ═══ */
+.ren-dialog {
+  /* Structure */
+  margin: auto;
+  padding: 0;
+  border: none;
+
+  /* Sizing */
+  max-width: var(--dialog-max-width, 32rem);
+  max-height: 85dvh;
+  width: 90vw;
+  overflow: auto;
+
+  /* Appearance */
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+
+  /* Smooth scrolling for body overflow */
+  scrollbar-gutter: stable;
+
+  /* ═══ ANIMATION STATES ═══ */
+  opacity: 1;
+  transform: scale(1) translateY(0);
+
+  transition:
+    opacity var(--duration-moderate) var(--ease-default),
+    transform var(--duration-moderate) var(--ease-default),
+    overlay var(--duration-moderate) allow-discrete,
+    display var(--duration-moderate) allow-discrete;
+
+  /* ═══ ENTRY ANIMATION (CSS Transitions instead of keyframes) ═══ */
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+
+  /* ═══ BACKDROP STYLING ═══ */
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+
+    transition:
+      background-color var(--duration-slow) var(--ease-default),
+      backdrop-filter var(--duration-slow) var(--ease-default),
+      overlay var(--duration-slow) allow-discrete,
+      display var(--duration-slow) allow-discrete;
+
+    /* ═══ BACKDROP ENTRY ANIMATION ═══ */
+    @starting-style {
+      background-color: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+    }
+  }
+
+  /* ═══ OPEN STATE ═══ */
+  &[open] {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+
+    &::backdrop {
+      background-color: var(--color-overlay);
+      backdrop-filter: blur(4px);
+    }
+  }
+
+  /* ═══ REDUCED MOTION ═══ */
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    &::backdrop {
+      transition: none;
+    }
+  }
+}
+
+/* ═══ DIALOG HEADER ═══ */
+.ren-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ═══ DIALOG TITLE ═══ */
+.ren-dialog-title {
+  margin: 0;
+  font-size: 1.25rem; /* ~20px */
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ═══ DIALOG DESCRIPTION ═══ */
+.ren-dialog-description {
+  margin: 0;
+  margin-top: var(--space-2);
+  font-size: 0.875rem; /* caption */
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* ═══ DIALOG BODY ═══ */
+.ren-dialog-body {
+  padding: var(--space-6);
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0; /* Allow flex shrinking */
+
+  /* ═══ SCROLLBAR STYLING ═══ */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--color-border-hover);
+    }
+  }
+}
+
+/* ═══ DIALOG FOOTER ═══ */
+.ren-dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ═══ CLOSE BUTTON ═══ */
+.ren-dialog-close {
+  margin-inline-start: auto;
+  padding: var(--space-2);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+
+  /* Transitions */
+  transition:
+    background-color var(--duration-200) var(--ease-out),
+    color var(--duration-200) var(--ease-out);
+
+  &:hover {
+    background-color: var(--color-background-hover);
+    color: var(--color-text);
+  }
+
+  &:active {
+    background-color: var(--color-background-active);
+  }
+
+  &:focus {
+    outline: var(--ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--ring-offset-width);
+  }
+
+  & svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* ═══ SIZE VARIANTS ═══ */
+
+/* Small dialog (24rem) */
+.ren-dialog-sm {
+  --dialog-max-width: 24rem;
+}
+
+/* Medium dialog (32rem) - DEFAULT */
+.ren-dialog-md {
+  --dialog-max-width: 32rem;
+}
+
+/* Large dialog (42rem) */
+.ren-dialog-lg {
+  --dialog-max-width: 42rem;
+}
+
+/* Extra Large dialog (56rem) */
+.ren-dialog-xl {
+  --dialog-max-width: 56rem;
+}
+
+/* Full width dialog (95dvw) */
+.ren-dialog-full {
+  max-width: 95dvw;
+  max-height: 95dvh;
+  width: 95dvw;
+}
+
+/* ═══ ALERT DIALOG VARIANT ═══ */
+.ren-alert-dialog {
+  /* No additional styling needed - alert behavior handled in JS */
+}
+
+/* ═══ MOBILE RESPONSIVE ═══ */
+@media (max-width: 640px) {
+  .ren-dialog {
+    max-width: 100%;
+    max-height: 100dvh;
+    width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+
+    /* ═══ BOTTOM SHEET ANIMATION (Mobile) ═══ */
+    &[data-mobile-sheet] {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+
+      transform: translateY(100%);
+      transition:
+        transform var(--duration-slow) var(--ease-default),
+        opacity var(--duration-slow) var(--ease-default),
+        overlay var(--duration-slow) allow-discrete,
+        display var(--duration-slow) allow-discrete;
+
+      @starting-style {
+        transform: translateY(100%);
+      }
+
+      &[open] {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  .ren-dialog-header,
+  .ren-dialog-body,
+  .ren-dialog-footer {
+    padding: var(--space-4);
+  }
+
+  .ren-dialog-title {
+    font-size: 1.125rem;
+  }
+}
+
+/* ═══ WEB COMPONENT CONTAINER ═══ */
+ren-dialog {
+  display: contents;
+}
+
+.ren-dialog-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

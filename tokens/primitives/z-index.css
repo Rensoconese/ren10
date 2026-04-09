@@ -1,0 +1,22 @@
+/* ============================================
+   RenDS — Primitive Z-Index Tokens
+   ============================================
+   Layering system. Uses defined levels to
+   prevent z-index wars.
+
+   Convention: each layer has a clear purpose.
+   ============================================ */
+
+:root {
+  --z-behind:    -1;
+  --z-base:       0;
+  --z-raised:     1;     /* slightly above siblings */
+  --z-dropdown:  10;     /* dropdown menus */
+  --z-sticky:    20;     /* sticky headers, navbars */
+  --z-overlay:   30;     /* overlays, backdrops */
+  --z-modal:     40;     /* modals, dialogs */
+  --z-popover:   50;     /* popovers, floating elements */
+  --z-toast:     60;     /* toast notifications */
+  --z-tooltip:   70;     /* tooltips (always on top) */
+  --z-max:     9999;     /* escape hatch (use sparingly) */
+}

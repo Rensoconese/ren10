@@ -1,0 +1,222 @@
+/* ============================================
+   RenDS — Content Guidelines (as CSS comments)
+   ============================================
+   This file documents the writing conventions
+   for UI text in RenDS components. It serves
+   as a reference for designers and developers.
+
+   Import this file if you want the utility
+   classes — the guidelines are in comments.
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   1. VOICE & TONE
+   ═══════════════════════════════════════════════
+
+   RenDS UI text is:
+   ✓ Clear — say what you mean in the fewest words
+   ✓ Direct — use active voice, address the user as "you"
+   ✓ Helpful — guide the user to the next action
+   ✓ Respectful — avoid blaming, don't say "you failed"
+
+   RenDS UI text is NOT:
+   ✗ Clever — no puns, inside jokes, or trendy slang
+   ✗ Verbose — no "please be advised that..."
+   ✗ Technical — no jargon unless the audience expects it
+   ✗ Passive-aggressive — no "Are you sure?" for normal actions
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   2. COMPONENT TEXT PATTERNS
+   ═══════════════════════════════════════════════
+
+   BUTTONS
+   ─────────────────────────────────
+   ✓ Use verbs: "Save", "Delete", "Send"
+   ✓ Be specific: "Save changes" > "Save"
+   ✓ Primary action first, cancel second
+   ✗ Never: "OK", "Yes/No", "Click here"
+   ✗ Never: All caps for emphasis (use weight instead)
+
+   Pattern:
+     Primary: [Verb] + [Object]  → "Create project"
+     Danger:  [Verb] + [Object]  → "Delete account"
+     Cancel:  "Cancel" (always lowercase-first)
+
+   Max length: 3 words preferred, 5 max
+
+   FORM LABELS
+   ─────────────────────────────────
+   ✓ Sentence case: "Email address"
+   ✓ No colons: "Full name" not "Full name:"
+   ✓ Required: mark optional fields, not required ones
+   ✓ Placeholder: show format "jane@example.com"
+   ✗ Placeholder as label: always use a visible label
+
+   FORM ERRORS (validation)
+   ─────────────────────────────────
+   ✓ Say what went wrong + how to fix it
+   ✓ "Enter a valid email" not "Invalid email"
+   ✓ Position below the field, not in a toast
+   ✗ "Error!" — never just the word error
+   ✗ Red text alone — always pair with icon or border
+
+   Pattern: [What to do] + [Why/How]
+     "Enter at least 8 characters"
+     "Choose a date in the future"
+     "This email is already registered. Try signing in."
+
+   EMPTY STATES
+   ─────────────────────────────────
+   ✓ Explain what belongs here
+   ✓ Provide a clear CTA to create/add
+   ✓ Use illustration or icon for warmth
+   ✗ "Nothing here" — too vague
+   ✗ "No data" — too technical
+
+   Pattern: [What this area is] + [How to populate it]
+     Title: "No projects yet"
+     Description: "Create your first project to get started."
+     Action: "Create project"
+
+   CONFIRMATION DIALOGS (Alert Dialog)
+   ─────────────────────────────────
+   ✓ Title: state the action as question or statement
+   ✓ Body: explain consequences clearly
+   ✓ Actions: match the title verb
+   ✗ "Are you sure?" — too vague
+   ✗ "Yes/No" — always use specific verb buttons
+
+   Pattern:
+     Title: "Delete this project?"
+     Body: "This will permanently remove the project and all its files."
+     Actions: "Cancel" / "Delete project"
+
+   TOAST / NOTIFICATIONS
+   ─────────────────────────────────
+   ✓ Past tense for completed actions: "Project saved"
+   ✓ Present tense for ongoing: "Saving project..."
+   ✓ Include undo when destructive: "Item deleted. Undo"
+   ✓ Auto-dismiss success (3-5s), persist errors
+   ✗ "Success!" — too generic
+   ✗ "Error occurred" — too vague
+
+   TOOLTIPS
+   ─────────────────────────────────
+   ✓ 1 sentence max, no period
+   ✓ Describe what the control does, not what it is
+   ✓ Use for icon-only buttons
+   ✗ Don't repeat visible label text
+   Max: 60 characters
+
+   BANNERS / ALERTS
+   ─────────────────────────────────
+   Title (optional): bold, 2-4 words
+   Description: 1-2 sentences with action
+   ✓ Info: neutral guidance
+   ✓ Success: confirm completed action
+   ✓ Warning: preventive, before something happens
+   ✓ Danger: something already went wrong
+
+   NAV / BREADCRUMBS
+   ─────────────────────────────────
+   ✓ 1-2 word labels: "Dashboard", "Settings"
+   ✓ Match the page title exactly
+   ✓ Current page is last, not linked
+   ✗ "Home > Products > ..." — use › or / separator
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   3. FORMATTING RULES
+   ═══════════════════════════════════════════════
+
+   CAPITALIZATION
+   ✓ Sentence case everywhere (titles, labels, buttons)
+   ✓ Exception: proper nouns, acronyms (API, URL)
+   ✗ Title Case For Every Word
+   ✗ ALL CAPS (use font-weight: semibold instead)
+
+   PUNCTUATION
+   ✓ No periods on: labels, buttons, headings, toasts
+   ✓ Periods on: descriptions, body text, error messages
+   ✓ Use contractions: "can't", "won't", "you'll"
+   ✗ Exclamation marks (except celebrations)
+
+   NUMBERS
+   ✓ Use digits: "3 items" not "three items"
+   ✓ Abbreviate large: "1.2K" not "1,200"
+   ✓ Use system locale for decimals/thousands
+   ✓ Dates: "Apr 3, 2026" or relative "2 hours ago"
+
+   TERMINOLOGY
+   ✓ "Sign in" not "Log in"
+   ✓ "Sign out" not "Log out"
+   ✓ "Select" not "Choose" (for lists/dropdowns)
+   ✓ "Enter" not "Type" (for text fields)
+   ✓ "Remove" for reversible, "Delete" for permanent
+   ✓ "Turn on/off" not "Enable/Disable" (for switches)
+
+   ═══════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════
+   4. ACCESSIBILITY TEXT
+   ═══════════════════════════════════════════════
+
+   ARIA LABELS
+   ─────────────────────────────────
+   ✓ Describe the action, not the icon
+     aria-label="Close dialog" not aria-label="X"
+   ✓ Include context when repeated
+     aria-label="Delete project Alpha"
+   ✓ Use aria-describedby for extra detail
+
+   SCREEN READER ANNOUNCEMENTS
+   ─────────────────────────────────
+   ✓ "3 items selected" (live region)
+   ✓ "Form submitted successfully" (polite)
+   ✓ "Error: email is required" (assertive)
+
+   ALT TEXT
+   ─────────────────────────────────
+   ✓ Describe what the image shows, not what it is
+     "Bar chart showing sales growth" not "chart.png"
+   ✓ Decorative images: alt=""
+   ✓ Max 125 characters
+
+   ═══════════════════════════════════════════════ */
+
+/* ─── Utility: max-width for readable text ─── */
+.content-prose {
+  max-width: var(--width-prose); /* 65ch */
+  line-height: var(--leading-relaxed);
+}
+
+/* ─── Utility: truncate long text ─── */
+.content-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.content-line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.content-line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ─── Utility: semantic text colors for content ─── */
+.content-muted    { color: var(--color-text-muted); }
+.content-success  { color: var(--color-success); }
+.content-warning  { color: var(--color-warning); }
+.content-danger   { color: var(--color-danger); }
+.content-info     { color: var(--color-info); }

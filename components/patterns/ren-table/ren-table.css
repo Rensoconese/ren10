@@ -1,0 +1,544 @@
+/**
+ * RenDS — Data Table Organism
+ * ============================
+ *
+ * A comprehensive, accessible data table component supporting:
+ * - Sortable columns with directional indicators
+ * - Row selection with multi-select and shift+click range selection
+ * - Client-side pagination with configurable page size
+ * - Keyboard navigation (arrow keys, Enter, Space)
+ * - Column resizing via drag handle
+ * - Pinned/sticky columns and headers
+ * - Multiple density variants (compact, comfortable)
+ * - Loading states with skeleton shimmer
+ * - Empty state messaging
+ * - Responsive horizontal scrolling
+ * - Search/filter toolbar integration
+ * - Full ARIA support for accessibility
+ *
+ * @example
+ * <ren-table data-page-size="10">
+ *   <div class="ren-table-toolbar">
+ *     <input class="ren-input ren-input-sm" placeholder="Search..." data-table-search>
+ *   </div>
+ *   <div class="ren-table-wrapper">
+ *     <table class="ren-table">
+ *       <thead class="ren-table-header">
+ *         <tr>
+ *           <th class="ren-th ren-table-select"><input type="checkbox" aria-label="Select all"></th>
+ *           <th class="ren-th ren-th-sortable" data-column="name">Name</th>
+ *         </tr>
+ *       </thead>
+ *       <tbody class="ren-table-body">
+ *         <tr class="ren-tr" data-row-id="1">
+ *           <td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row"></td>
+ *           <td class="ren-td">John Doe</td>
+ *         </tr>
+ *       </tbody>
+ *     </table>
+ *   </div>
+ *   <div class="ren-table-pagination"></div>
+ * </ren-table>
+ */
+
+/* ===== Base Table Structure ===== */
+
+ren-table {
+  container-type: inline-size;
+  container-name: ren-table;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.ren-table-wrapper {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--duration-normal) var(--ease-out);
+
+    &:hover {
+      background-color: var(--color-text-muted);
+    }
+  }
+}
+
+.ren-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-surface);
+  font-size: var(--body-size);
+  color: var(--color-text);
+}
+
+/* ===== Header Styles ===== */
+
+.ren-table-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-surface-raised);
+}
+
+.ren-table-header tr {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ren-th {
+  padding: var(--space-3) var(--space-4);
+  text-align: start;
+  font-weight: var(--label-weight);
+  font-size: var(--label-size);
+  color: var(--color-text);
+  user-select: none;
+  white-space: nowrap;
+  background-color: var(--color-surface-raised);
+  border-inline-end: 1px solid var(--color-border);
+  height: 44px;
+  display: table-cell;
+  vertical-align: middle;
+
+  &:last-child {
+    border-inline-end: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+}
+
+.ren-th-sortable {
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background-color: var(--color-fill);
+  }
+
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-inline-start: var(--space-2);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none"><path d="M3 8L6 5l3 3M3 4L6 7l3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.4;
+    transition: opacity var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+    vertical-align: middle;
+    color: var(--color-text-muted);
+  }
+
+  &[data-sort="asc"]::after {
+    opacity: 1;
+    transform: scaleY(1);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none"><path d="M6 2v6M3 5l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  }
+
+  &[data-sort="desc"]::after {
+    opacity: 1;
+    transform: scaleY(-1);
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" fill="none"><path d="M6 2v6M3 5l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  }
+}
+
+.ren-th-resize {
+  position: absolute;
+  inset-inline-end: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  cursor: col-resize;
+  user-select: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  transition: background-color var(--duration-fast) var(--ease-out);
+
+  &:hover,
+  &:active {
+    background-color: var(--color-accent);
+  }
+}
+
+/* Pinned columns */
+.ren-th-pinned {
+  position: sticky;
+  z-index: 11;
+}
+
+/* ===== Body & Row Styles ===== */
+
+.ren-table-body {
+  background-color: var(--color-surface);
+}
+
+.ren-tr {
+  border-bottom: var(--stroke-1) solid var(--color-border);
+  transition: background-color var(--duration-fast) var(--ease-out);
+  height: 44px;
+
+  &:nth-child(even) {
+    background-color: var(--color-fill);
+  }
+
+  &:hover {
+    background-color: var(--color-fill-hover);
+  }
+
+  &[aria-selected="true"] {
+    background-color: var(--color-accent-subtle);
+
+    .ren-td {
+      background-color: var(--color-accent-subtle);
+    }
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -1px;
+  }
+}
+
+.ren-td {
+  padding: var(--space-3) var(--space-4);
+  border-inline-end: 1px solid var(--color-border);
+  color: var(--color-text);
+  vertical-align: middle;
+  height: 44px;
+
+  &:last-child {
+    border-inline-end: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+  }
+}
+
+/* Pinned column cells */
+.ren-td-pinned {
+  position: sticky;
+  z-index: 9;
+  background-color: inherit;
+}
+
+/* ===== Selection Styles ===== */
+
+.ren-table-select {
+  width: var(--space-10);
+  padding: var(--space-3);
+  text-align: center;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--color-accent);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition: background-color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out);
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-accent);
+    }
+
+    &:checked {
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
+      color: var(--color-on-accent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* ===== Pagination ===== */
+
+.ren-table-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  gap: var(--space-4);
+
+  &:empty {
+    display: none;
+  }
+}
+
+.ren-table-pagination-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--body-size);
+  color: var(--color-text);
+}
+
+.ren-table-pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ren-table-pagination-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  padding: var(--space-2);
+  background-color: var(--color-fill);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  font-size: var(--body-size);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out),
+              border-color var(--duration-fast) var(--ease-out);
+  user-select: none;
+  min-width: 44px;
+  min-height: 44px;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-fill-hover);
+    border-color: var(--color-accent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--color-fill);
+  }
+}
+
+/* ===== Toolbar Styles ===== */
+
+.ren-table-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.ren-table-toolbar-search {
+  flex: 1;
+  min-width: 200px;
+  max-width: 300px;
+}
+
+/* ===== Empty State ===== */
+
+.ren-table-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10);
+  gap: var(--space-4);
+  text-align: center;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  min-height: 200px;
+
+  .ren-table-empty-icon {
+    font-size: 40px;
+    opacity: 0.4;
+  }
+
+  .ren-table-empty-title {
+    font-size: var(--label-size);
+    font-weight: var(--label-weight);
+    color: var(--color-text);
+  }
+
+  .ren-table-empty-description {
+    font-size: var(--caption-size);
+    color: var(--color-text-muted);
+    max-width: 300px;
+  }
+}
+
+/* ===== Loading State ===== */
+
+ren-table[data-loading] {
+  .ren-table-body {
+    position: relative;
+  }
+
+  .ren-tr {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.ren-table-loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  z-index: 20;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ===== Density Variants ===== */
+
+.ren-table-compact {
+  .ren-th,
+  .ren-td {
+    padding: var(--space-2) var(--space-3);
+    height: 32px;
+  }
+
+  .ren-tr {
+    height: 32px;
+  }
+}
+
+.ren-table-comfortable {
+  .ren-th,
+  .ren-td {
+    padding: var(--space-4) var(--space-5);
+    height: 56px;
+  }
+
+  .ren-tr {
+    height: 56px;
+  }
+}
+
+/* ===== Responsive Design (Container Query) ===== */
+
+@container ren-table (max-width: 600px) {
+  .ren-table {
+    min-width: 600px;
+  }
+
+  .ren-table-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .ren-table-pagination-info {
+    width: 100%;
+  }
+
+  .ren-table-pagination-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ren-table-toolbar {
+    flex-direction: column;
+  }
+
+  .ren-table-toolbar-search {
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* ===== Accessibility ===== */
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  .ren-th {
+    border: 1px solid var(--color-text);
+  }
+
+  .ren-td {
+    border: var(--stroke-1) solid var(--color-text);
+  }
+
+  .ren-th-sortable:hover {
+    background-color: var(--color-text);
+    color: var(--color-surface);
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ren-tr,
+  .ren-th-sortable,
+  .ren-table-pagination-button,
+  .ren-table-select input[type="checkbox"] {
+    transition: none;
+  }
+
+  .ren-table-loading-overlay {
+    animation: none;
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Dark mode support (if light/dark theming is used) */
+@media (prefers-color-scheme: dark) {
+  .ren-table {
+    /* Uses CSS custom properties from design tokens */
+    /* No additional overrides needed if tokens are properly defined */
+  }
+}

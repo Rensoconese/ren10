@@ -1,0 +1,199 @@
+/* ============================================
+   RenDS — Modern CSS Reset
+   ============================================
+   A sensible, modern reset that:
+   - Removes default margins/padding
+   - Sets box-sizing: border-box globally
+   - Normalizes typography
+   - Improves image defaults
+   - Sets accessible defaults (focus, motion)
+   - Preserves semantic meaning
+
+   Based on: Andy Bell's Modern Reset + Josh Comeau's
+   Custom Reset + Apple HIG accessibility standards.
+   ============================================ */
+
+/* ═══ RTL SUPPORT ═══ */
+:root {
+  /* Detected from html[dir] or auto from browser */
+}
+
+[dir="rtl"] {
+  direction: rtl;
+}
+
+/* ─── Box Model ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ─── Enable height: auto transitions ───
+   Allows CSS to animate to/from height: auto,
+   enabling smooth accordion/collapsible animations
+   without JavaScript. */
+:root {
+  interpolate-size: allow-keywords;
+}
+
+/* ─── Remove default margins ─── */
+* {
+  margin: 0;
+}
+
+/* ─── Prevent font-size inflation on mobile ─── */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* ─── Core body defaults ─── */
+body {
+  min-height: 100dvh;
+  line-height: var(--leading-normal, 1.5);
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: var(--body-size, 1rem);
+  color: var(--color-text, #000);
+  background-color: var(--color-surface, #fff);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ─── Typography reset ─── */
+h1, h2, h3, h4, h5, h6 {
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p,
+li,
+figcaption {
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+/* ─── Remove list styles on lists with role ─── */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+  padding: 0;
+}
+
+/* ─── Links ─── */
+a {
+  color: inherit;
+  text-decoration-skip-ink: auto;
+}
+
+/* ─── Media defaults ─── */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ─── Inherit fonts for form controls ─── */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* ─── Textarea ─── */
+textarea {
+  field-sizing: content;
+  min-height: 3lh;  /* At least 3 lines */
+  resize: vertical;
+}
+
+/* ─── Button reset ─── */
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* ─── Table ─── */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ─── Remove fieldset defaults ─── */
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+/* ─── Remove summary triangle in webkit ─── */
+summary {
+  cursor: pointer;
+}
+
+/* ─── Dialog reset ─── */
+dialog {
+  padding: 0;
+  border: none;
+  color: inherit;
+  background-color: inherit;
+}
+
+/* ─── Horizontal rule ─── */
+hr {
+  border: none;
+  border-top: 1px solid var(--color-separator, #e5e5ea);
+  height: 0;
+}
+
+/* ─── Focus visible ───
+   Only show focus ring on keyboard navigation.
+   Uses the system's focus ring color. */
+:focus-visible {
+  outline: var(--focus-ring-width, 2px) solid var(--color-focus-ring, #007AFF);
+  outline-offset: var(--focus-ring-offset, 2px);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ─── Smooth scroll (only if no motion preference) ─── */
+@media (prefers-reduced-motion: no-preference) {
+  html:focus-within {
+    scroll-behavior: smooth;
+  }
+}
+
+/* ─── Selection ─── */
+::selection {
+  background-color: var(--color-selection-bg, #D1E9FF);
+  color: var(--color-selection-text, #000);
+}
+
+/* ─── Scrollbar ─── */
+* {
+  scrollbar-color: var(--color-fill-active, #C7C7CC) transparent;
+  scrollbar-width: thin;
+}
+
+/* ─── Reduced motion: instant everything ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

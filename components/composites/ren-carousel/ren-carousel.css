@@ -1,0 +1,514 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   RenDS — <ren-carousel> Web Component
+   ═══════════════════════════════════════════════════════════════════════════
+   Accessible carousel/slider with scroll-snap, keyboard nav, autoplay, and dots.
+
+   Features:
+   - CSS scroll-snap for performant sliding
+   - Configurable slides-per-view (1, 2, 3, 4)
+   - Fade or slide transitions
+   - Touch-friendly swipe support
+   - Keyboard navigation (Arrow keys)
+   - Optional autoplay with progress indicator
+   - Responsive via container queries
+   - Respects prefers-reduced-motion
+   ═════════════════════════════════════════════════════════════════════════ */
+
+/* ═══ CAROUSEL OUTER CONTAINER ═══ */
+.ren-carousel {
+  container-type: inline-size;
+  container-name: ren-carousel;
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ═══ VIEWPORT (SCROLL CONTAINER) ═══ */
+.ren-carousel-viewport {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  touch-action: pan-x pinch-zoom; /* Prevent vertical scroll interference during horizontal swipe */
+}
+
+/* Hide scrollbar in Chrome, Safari, and Opera */
+.ren-carousel-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Container for slides with flexbox */
+.ren-carousel-viewport {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+/* ═══ INDIVIDUAL SLIDES ═══ */
+.ren-carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  height: auto;
+}
+
+/* Ensure slide content can be sized */
+.ren-carousel-slide > * {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ═══ SLIDES-PER-VIEW VARIANTS ═══ */
+
+/* 2 slides visible (50% each) */
+.ren-carousel-2 .ren-carousel-slide {
+  flex: 0 0 50%;
+  min-width: 50%;
+}
+
+/* 3 slides visible (33.33% each) */
+.ren-carousel-3 .ren-carousel-slide {
+  flex: 0 0 calc(100% / 3);
+  min-width: calc(100% / 3);
+}
+
+/* 4 slides visible (25% each) */
+.ren-carousel-4 .ren-carousel-slide {
+  flex: 0 0 25%;
+  min-width: 25%;
+}
+
+/* Responsive: stack to 1 or 2 on narrow screens via container queries */
+@supports (container-type: inline-size) {
+  @container (max-width: 640px) {
+    .ren-carousel-2 .ren-carousel-slide,
+    .ren-carousel-3 .ren-carousel-slide,
+    .ren-carousel-4 .ren-carousel-slide {
+      flex: 0 0 100%;
+      min-width: 100%;
+    }
+  }
+
+  @container (max-width: 1024px) and (min-width: 641px) {
+    .ren-carousel-3 .ren-carousel-slide,
+    .ren-carousel-4 .ren-carousel-slide {
+      flex: 0 0 50%;
+      min-width: 50%;
+    }
+  }
+}
+
+/* ═══ FADE TRANSITION VARIANT ═══ */
+.ren-carousel-fade {
+  position: relative;
+}
+
+.ren-carousel-fade .ren-carousel-viewport {
+  scroll-behavior: auto;
+}
+
+.ren-carousel-fade .ren-carousel-slide {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  opacity: 0;
+  transition: opacity var(--duration-normal) var(--ease-out);
+  pointer-events: none;
+}
+
+.ren-carousel-fade .ren-carousel-slide[aria-current="true"] {
+  position: relative;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ═══ NAVIGATION ARROWS ═══ */
+.ren-carousel-prev,
+.ren-carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+
+  width: var(--touch-min);
+  height: var(--touch-min);
+  min-width: 44px;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(0, 0, 0, 0.4);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  color: white;
+  font-size: 20px;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    opacity var(--duration-normal) var(--ease-out);
+}
+
+/* Arrow positioning */
+.ren-carousel-prev {
+  left: var(--space-3);
+}
+
+.ren-carousel-next {
+  right: var(--space-3);
+}
+
+/* Arrow chevron using ::before pseudo-element */
+.ren-carousel-prev::before {
+  content: '‹';
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.ren-carousel-next::before {
+  content: '›';
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Hover state — increase opacity */
+.ren-carousel-prev:hover:not(:disabled),
+.ren-carousel-next:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Active/focus state */
+.ren-carousel-prev:focus-visible,
+.ren-carousel-next:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Hidden arrows at boundaries */
+.ren-carousel[data-at-start] .ren-carousel-prev,
+.ren-carousel[data-at-end] .ren-carousel-next {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Disabled state */
+.ren-carousel-prev:disabled,
+.ren-carousel-next:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ═══ PROGRESSIVE ENHANCEMENT: CSS-ONLY SCROLL BUTTONS ═══
+   Modern browsers support ::scroll-button() pseudo-elements for native
+   scroll container navigation without JavaScript.
+   When supported, these replace the JS-generated arrow buttons. */
+
+@supports selector(::scroll-button(inline-start)) {
+  .ren-carousel-viewport {
+    /* Enable native scroll buttons */
+    overflow-x: auto;
+  }
+
+  .ren-carousel-viewport::scroll-button(inline-start),
+  .ren-carousel-viewport::scroll-button(inline-end) {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+    width: var(--touch-min, 44px);
+    height: var(--touch-min, 44px);
+    min-width: 44px;
+    min-height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: var(--radius-full, 9999px);
+    cursor: pointer;
+    color: white;
+
+    transition:
+      background-color var(--duration-normal, 200ms) var(--ease-out, ease-out),
+      opacity var(--duration-normal, 200ms) var(--ease-out, ease-out);
+  }
+
+  .ren-carousel-viewport::scroll-button(inline-start) {
+    content: '‹';
+    left: var(--space-3, 0.75rem);
+  }
+
+  .ren-carousel-viewport::scroll-button(inline-end) {
+    content: '›';
+    right: var(--space-3, 0.75rem);
+  }
+
+  .ren-carousel-viewport::scroll-button(inline-start):hover,
+  .ren-carousel-viewport::scroll-button(inline-end):hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  /* Hide JS-generated arrows when native scroll buttons are available */
+  .ren-carousel .ren-carousel-prev,
+  .ren-carousel .ren-carousel-next {
+    display: none;
+  }
+}
+
+/* ═══ PAGINATION DOTS ═══ */
+.ren-carousel-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: 0;
+  list-style: none;
+}
+
+.ren-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-border);
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+  padding: 0;
+  margin: 0;
+}
+
+/* Active dot */
+.ren-carousel-dot[aria-current="true"] {
+  background-color: var(--color-accent);
+  transform: scale(1.25);
+}
+
+/* Hover state */
+.ren-carousel-dot:hover:not([aria-current="true"]) {
+  background-color: var(--color-border);
+  opacity: 0.7;
+}
+
+/* Focus visible */
+.ren-carousel-dot:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-full);
+}
+
+/* ═══ AUTOPLAY PROGRESS BAR ═══ */
+.ren-carousel-dot[aria-current="true"]::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 2px;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  opacity: 0;
+}
+
+/* Show progress bar when autoplay is active */
+.ren-carousel[data-autoplay] .ren-carousel-dot[aria-current="true"]::after {
+  opacity: 1;
+  animation: carousel-progress linear forwards;
+}
+
+@keyframes carousel-progress {
+  from {
+    width: 0;
+  }
+  to {
+    width: 6px;
+  }
+}
+
+/* Dynamic progress bar timing — controlled by JS */
+.ren-carousel[data-autoplay-duration] .ren-carousel-dot[aria-current="true"]::after {
+  animation-duration: inherit;
+}
+
+/* ═══ CAROUSEL COUNTER ═══ */
+.ren-carousel-counter {
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ren-carousel-counter-current {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+/* ═══ ACCESSIBILITY & ANIMATIONS ═══ */
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .ren-carousel-viewport {
+    scroll-behavior: auto;
+  }
+
+  .ren-carousel-slide,
+  .ren-carousel-dot,
+  .ren-carousel-prev,
+  .ren-carousel-next {
+    transition: none;
+    animation: none;
+  }
+
+  .ren-carousel[data-autoplay] .ren-carousel-dot[aria-current="true"]::after {
+    animation: none;
+    width: 6px;
+    opacity: 1;
+  }
+}
+
+/* ═══ FOCUS VISIBLE FOR KEYBOARD NAVIGATION ═══ */
+.ren-carousel-slide:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* ═══ RESPONSIVE ADJUSTMENTS (Container Queries) ═══ */
+
+/* Compact carousel */
+@container ren-carousel (max-width: 480px) {
+  .ren-carousel {
+    gap: var(--space-2);
+  }
+
+  .ren-carousel-prev,
+  .ren-carousel-next {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .ren-carousel-prev {
+    left: var(--space-2);
+  }
+
+  .ren-carousel-next {
+    right: var(--space-2);
+  }
+
+  .ren-carousel-dots {
+    gap: var(--space-1);
+  }
+
+  .ren-carousel-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .ren-carousel-dot[aria-current="true"] {
+    transform: scale(1.1);
+  }
+}
+
+/* Wide carousel — hover reveal arrows */
+@container ren-carousel (min-width: 768px) {
+  .ren-carousel-prev,
+  .ren-carousel-next {
+    opacity: 0.6;
+  }
+
+  .ren-carousel:hover .ren-carousel-prev:not(:disabled),
+  .ren-carousel:hover .ren-carousel-next:not(:disabled) {
+    opacity: 1;
+  }
+}
+
+/* ═══ UTILITY CLASSES ═══ */
+
+/* Carousel without dots */
+.ren-carousel-no-dots .ren-carousel-dots {
+  display: none;
+}
+
+/* Carousel without arrows */
+.ren-carousel-no-arrows .ren-carousel-prev,
+.ren-carousel-no-arrows .ren-carousel-next {
+  display: none;
+}
+
+/* Carousel without counter */
+.ren-carousel-no-counter .ren-carousel-counter {
+  display: none;
+}
+
+/* Full width slides (1 per view) */
+.ren-carousel-full .ren-carousel-slide {
+  flex: 0 0 100%;
+  min-width: 100%;
+}
+
+/* Draggable appearance */
+.ren-carousel-viewport {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ren-carousel-slide {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Touch feedback */
+.ren-carousel-slide {
+  cursor: grab;
+}
+
+.ren-carousel-slide:active {
+  cursor: grabbing;
+}
+
+/* ═══ LOADING STATE ═══ */
+.ren-carousel[aria-busy="true"] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ═══ SEMANTIC HTML ADJUSTMENTS ═══ */
+.ren-carousel[role="group"],
+.ren-carousel[role="region"] {
+  /* Already defined above, this is for clarity */
+}
+
+/* Ensure images in slides maintain aspect ratio */
+.ren-carousel-slide img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Video in carousel */
+.ren-carousel-slide video {
+  width: 100%;
+  height: auto;
+  display: block;
+}

@@ -1,0 +1,188 @@
+/* ============================================
+   RenDS — Appearance API
+   ============================================
+   The formal theming contract for RenDS.
+
+   3 layers of customization:
+
+   Layer 1: Global tokens (affects everything)
+     Change --color-accent, --radius-md, --font-sans
+     to rebrand the entire system in one go.
+
+   Layer 2: Semantic overrides (affects groups)
+     Change --color-surface-raised to affect all
+     cards, dialogs, popovers, sheets at once.
+
+   Layer 3: Component tokens (surgical)
+     Change --ren-btn-radius to only affect buttons.
+
+   Usage:
+     1. Import this file
+     2. Create a theme with [data-theme="my-theme"]
+     3. Override any tokens at any layer
+
+   Or use presets:
+     <html data-theme="ocean">
+     <html data-theme="forest">
+     <html data-theme="sunset">
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   THEME: OCEAN — Cool blue, professional
+   ═══════════════════════════════════════════════ */
+[data-theme="ocean"] {
+  /* Layer 1: Global */
+  --color-accent:        light-dark(#0066CC, #4DA3FF);
+  --color-accent-hover:  light-dark(#0052A3, #6BB3FF);
+  --color-accent-active: light-dark(#003D7A, #8AC4FF);
+  --color-accent-subtle: light-dark(#E6F0FF, #001A33);
+
+  /* Layer 2: Surfaces */
+  --color-surface:        light-dark(#F8FAFC, #0A0F1A);
+  --color-surface-raised: light-dark(#FFFFFF, #111827);
+  --color-surface-sunken: light-dark(#F1F5F9, #060A12);
+
+  /* Layer 3: Specific overrides */
+  --ren-nav-bg:     light-dark(#0066CC, #0A0F1A);
+  --ren-nav-link-color: light-dark(rgba(255,255,255,0.8), rgba(255,255,255,0.7));
+  --ren-nav-link-active: #FFFFFF;
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: FOREST — Green, organic
+   ═══════════════════════════════════════════════ */
+[data-theme="forest"] {
+  --color-accent:        light-dark(#16A34A, #4ADE80);
+  --color-accent-hover:  light-dark(#15803D, #86EFAC);
+  --color-accent-active: light-dark(#166534, #BBF7D0);
+  --color-accent-subtle: light-dark(#F0FDF4, #052E16);
+
+  --color-surface:        light-dark(#FAFDF7, #0A120A);
+  --color-surface-raised: light-dark(#FFFFFF, #111F11);
+  --color-surface-sunken: light-dark(#F0F5EC, #060D06);
+
+  --radius-md:  0.375rem;  /* slightly less rounded */
+  --radius-lg:  0.625rem;
+  --radius-xl:  0.875rem;
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: SUNSET — Warm orange/amber
+   ═══════════════════════════════════════════════ */
+[data-theme="sunset"] {
+  --color-accent:        light-dark(#EA580C, #FB923C);
+  --color-accent-hover:  light-dark(#C2410C, #FDBA74);
+  --color-accent-active: light-dark(#9A3412, #FED7AA);
+  --color-accent-subtle: light-dark(#FFF7ED, #431407);
+
+  --color-surface:        light-dark(#FFFBF5, #120E0A);
+  --color-surface-raised: light-dark(#FFFFFF, #1C1610);
+  --color-surface-sunken: light-dark(#FEF3E2, #0D0A06);
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: ROSE — Pink/magenta, playful
+   ═══════════════════════════════════════════════ */
+[data-theme="rose"] {
+  --color-accent:        light-dark(#E11D48, #FB7185);
+  --color-accent-hover:  light-dark(#BE123C, #FDA4AF);
+  --color-accent-active: light-dark(#9F1239, #FECDD3);
+  --color-accent-subtle: light-dark(#FFF1F2, #4C0519);
+
+  --color-surface:        light-dark(#FFFBFC, #120A0C);
+  --color-surface-raised: light-dark(#FFFFFF, #1C1012);
+  --color-surface-sunken: light-dark(#FEF2F3, #0D0608);
+
+  --radius-md:  0.75rem;   /* more rounded */
+  --radius-lg:  1rem;
+  --radius-xl:  1.25rem;
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: SLATE — Monochrome, minimal
+   ═══════════════════════════════════════════════ */
+[data-theme="slate"] {
+  --color-accent:        light-dark(#334155, #CBD5E1);
+  --color-accent-hover:  light-dark(#1E293B, #E2E8F0);
+  --color-accent-active: light-dark(#0F172A, #F1F5F9);
+  --color-accent-subtle: light-dark(#F8FAFC, #0F172A);
+  --color-on-accent:     light-dark(#FFFFFF, #0F172A);
+
+  --radius-md:  0.25rem;   /* sharp corners */
+  --radius-lg:  0.375rem;
+  --radius-xl:  0.5rem;
+  --radius-2xl: 0.625rem;
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: PURPLE — Vibrant purple, creative
+   ═══════════════════════════════════════════════ */
+[data-theme="purple"] {
+  --color-accent:        light-dark(#7C3AED, #A78BFA);
+  --color-accent-hover:  light-dark(#6D28D9, #C4B5FD);
+  --color-accent-active: light-dark(#5B21B6, #DDD6FE);
+  --color-accent-subtle: light-dark(#F5F3FF, #2E1065);
+
+  --color-surface:        light-dark(#FAFAFF, #0C0A14);
+  --color-surface-raised: light-dark(#FFFFFF, #15121E);
+  --color-surface-sunken: light-dark(#F3F0FF, #08060E);
+}
+
+/* ═══════════════════════════════════════════════
+   DARK MODE OVERRIDE
+   ═══════════════════════════════════════════════
+   [data-theme="dark"] forces dark regardless of OS
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+/* ═══════════════════════════════════════════════
+   SHAPE PRESETS (combine with any color theme)
+   ═══════════════════════════════════════════════ */
+[data-shape="sharp"] {
+  --radius-sm:  0;
+  --radius-md:  0.125rem;
+  --radius-lg:  0.25rem;
+  --radius-xl:  0.375rem;
+  --radius-2xl: 0.5rem;
+}
+
+[data-shape="rounded"] {
+  --radius-sm:  0.5rem;
+  --radius-md:  0.75rem;
+  --radius-lg:  1rem;
+  --radius-xl:  1.25rem;
+  --radius-2xl: 1.5rem;
+}
+
+[data-shape="pill"] {
+  --radius-sm:  var(--radius-full);
+  --radius-md:  var(--radius-full);
+  --radius-lg:  var(--radius-full);
+  --radius-xl:  var(--radius-full);
+  --radius-2xl: var(--radius-full);
+}
+
+/* ═══════════════════════════════════════════════
+   DENSITY PRESETS (combine with any theme)
+   ═══════════════════════════════════════════════ */
+[data-density="compact"] {
+  --size-sm:  1.5rem;
+  --size-md:  2rem;
+  --size-lg:  2.5rem;
+  --size-xl:  3rem;
+  --space-unit: 0.375rem;
+}
+
+[data-density="comfortable"] {
+  --size-sm:  2.25rem;
+  --size-md:  2.75rem;
+  --size-lg:  3.25rem;
+  --size-xl:  3.75rem;
+  --space-unit: 0.625rem;
+}

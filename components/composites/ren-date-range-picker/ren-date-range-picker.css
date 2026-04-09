@@ -1,0 +1,423 @@
+/* ═══ REN DATE RANGE PICKER WEB COMPONENT ═══
+   A composable date range picker with dual calendars,
+   preset shortcuts, and an input trigger with popover dropdown.
+   Built on top of RenCalendar for consistent behavior.
+
+   Usage:
+     <ren-date-range-picker
+       placeholder="Select date range"
+       format="short"
+       locale="en-US"
+       presets="last7,last30,thisMonth,lastMonth"
+     ></ren-date-range-picker>
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ═══ BASE WRAPPER ═══ */
+.ren-date-range-picker {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+/* ═══ TRIGGER BUTTON ═══ */
+.ren-date-range-trigger {
+  anchor-name: --ren-date-range-anchor;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--body-size);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  min-height: var(--touch-min);
+
+  &:hover:not([disabled]) {
+    border-color: var(--color-border-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
+
+  &[disabled] {
+    background: var(--color-fill);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /* ═══ CALENDAR ICON ═══ */
+  &::after {
+    content: '📅';
+    font-size: 1.25em;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+}
+
+/* ═══ TRIGGER VALUE DISPLAY ═══ */
+.ren-date-range-value {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ren-date-range-start,
+.ren-date-range-end {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ren-date-range-separator {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+/* ═══ EMPTY STATE ═══ */
+.ren-date-range-trigger.ren-date-range-empty {
+  color: var(--color-text-muted);
+
+  .ren-date-range-value {
+    display: none;
+  }
+
+  &::before {
+    content: attr(data-placeholder);
+    color: var(--color-text-muted);
+    flex: 1;
+  }
+}
+
+/* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
+.ren-date-range-dropdown {
+  position-anchor: --ren-date-range-anchor;
+  position: absolute;
+  inset-block-start: anchor(bottom);
+  inset-inline-start: anchor(left);
+  margin-top: var(--space-2);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+
+  /* ═══ POPOVER API ═══ */
+  &[popover] {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  &:popover-open {
+    animation: ren-date-range-popup-in var(--duration-normal) var(--ease-out) both;
+  }
+
+  /* ═══ FALLBACK POSITIONING (no anchor support) ═══ */
+  @supports not (inset-block-start: anchor(bottom)) {
+    position: fixed;
+    top: auto;
+    left: auto;
+  }
+
+  /* ═══ VIEWPORT EDGE HANDLING ═══ */
+  @supports (position-try-fallbacks: flip-block) {
+    position-try-fallbacks: flip-block;
+  }
+}
+
+/* ═══ ANIMATION: POPUP IN ═══ */
+@starting-style {
+  .ren-date-range-dropdown:popover-open {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+@keyframes ren-date-range-popup-in {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ═══ DROPDOWN INNER WRAPPER ═══ */
+.ren-date-range-inner {
+  container-type: inline-size;
+  container-name: ren-date-range;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+/* ═══ PRESETS SIDEBAR ═══ */
+.ren-date-range-presets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.ren-date-range-preset {
+  display: block;
+  width: 100%;
+  padding: var(--space-1-5) var(--space-3);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  text-align: start;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    background: var(--color-fill);
+  }
+
+  &:active {
+    background: var(--color-fill-active);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &[aria-selected="true"] {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    font-weight: var(--weight-semibold);
+  }
+}
+
+/* ═══ DUAL CALENDAR LAYOUT ═══ */
+.ren-date-range-calendars {
+  display: flex;
+  gap: 0;
+  padding: var(--space-3);
+}
+
+.ren-date-range-calendars > .ren-calendar {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  flex: 1;
+}
+
+/* ═══ DIVIDER BETWEEN CALENDARS ═══ */
+.ren-date-range-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--color-border);
+  margin-block: var(--space-2);
+  flex-shrink: 0;
+}
+
+/* ═══ FOOTER WITH ACTIONS ═══ */
+.ren-date-range-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.ren-date-range-summary {
+  font-size: var(--label-size);
+  color: var(--color-text-secondary);
+}
+
+.ren-date-range-summary strong {
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+.ren-date-range-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.ren-date-range-cancel,
+.ren-date-range-apply {
+  padding: var(--space-1-5) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+.ren-date-range-cancel {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+
+  &:hover {
+    background: var(--color-fill);
+    border-color: var(--color-border-strong);
+  }
+}
+
+.ren-date-range-apply {
+  background: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  color: var(--color-on-accent);
+
+  &:hover {
+    background: var(--color-accent-hover);
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ═══ DISABLED STATE ═══ */
+.ren-date-range-picker[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ═══ ERROR STATE ═══ */
+.ren-date-range-picker.ren-date-range-error {
+  .ren-date-range-trigger {
+    border-color: var(--color-danger);
+
+    &:focus-visible {
+      outline-color: var(--color-danger);
+    }
+  }
+}
+
+/* ═══ SUCCESS STATE ═══ */
+.ren-date-range-picker.ren-date-range-success {
+  .ren-date-range-trigger {
+    border-color: var(--color-success);
+
+    &:focus-visible {
+      outline-color: var(--color-success);
+    }
+  }
+}
+
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-date-range-dropdown:popover-open {
+    animation: none;
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .ren-date-range-dropdown {
+    transition: none;
+  }
+}
+
+/* ═══ COMPACT LAYOUT (Container Query) ═══
+   Stacks calendars vertically and makes presets
+   horizontal when the dropdown is narrow —
+   works in sidebars, modals, or small viewports. */
+@container ren-date-range (max-width: 500px) {
+  .ren-date-range-calendars {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .ren-date-range-divider {
+    width: 100%;
+    height: 1px;
+    margin-inline: var(--space-2);
+    margin-block: 0;
+  }
+
+  .ren-date-range-presets {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .ren-date-range-preset {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+}
+
+/* ═══ MOBILE BOTTOM SHEET (Media Query) ═══
+   Fixed positioning requires viewport awareness,
+   so this stays as a media query. */
+@media (max-width: 680px) {
+  .ren-date-range-dropdown {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    max-width: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 85vh;
+    overflow-y: auto;
+
+    &:popover-open {
+      animation: ren-date-range-mobile-in var(--duration-normal) var(--ease-out) both;
+    }
+  }
+
+  @starting-style {
+    .ren-date-range-dropdown:popover-open {
+      translate: 0 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes ren-date-range-mobile-in {
+    from {
+      translate: 0 100%;
+      opacity: 0;
+    }
+
+    to {
+      translate: 0 0;
+      opacity: 1;
+    }
+  }
+}
+
+/* ═══ FORM INTEGRATION ═══ */
+.ren-date-range-picker {
+  input[type='hidden'] {
+    display: none;
+  }
+}

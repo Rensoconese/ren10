@@ -1,0 +1,145 @@
+/* ============================================
+   RenDS — Dynamic Type Scale
+   ============================================
+   Apple HIG-inspired adaptive typography system.
+   4 size categories that respond to user preference
+   using CSS clamp() for fluid scaling.
+
+   Categories:
+     1. xSmall  — compact UI (dense data, toolbars)
+     2. Default — standard experience
+     3. Large   — comfortable reading
+     4. xLarge  — accessibility, low vision
+
+   Usage:
+     <html data-type-scale="large">
+     OR auto via prefers-contrast / prefers-reduced-motion
+
+   Each scale adjusts: base size, min touch target,
+   spacing multiplier, and line-height.
+   ============================================ */
+
+/* ─── Default Scale (base) ─── */
+:root,
+[data-type-scale="default"] {
+  --type-scale-factor:     1;
+  --type-base:             1rem;        /* 16px */
+  --type-min-target:       2.75rem;     /* 44px */
+  --type-spacing-factor:   1;
+  --type-leading-factor:   1;
+
+  /* Fluid sizes using clamp() */
+  --type-display:   clamp(1.75rem, 1.5rem + 1.25vw, 2.125rem);   /* 28–34px */
+  --type-title:     clamp(1.25rem, 1.125rem + 0.625vw, 1.375rem); /* 20–22px */
+  --type-headline:  clamp(1rem, 0.9375rem + 0.3125vw, 1.0625rem); /* 16–17px */
+  --type-body:      1rem;                                           /* 16px */
+  --type-callout:   0.9375rem;                                      /* 15px */
+  --type-subhead:   0.875rem;                                       /* 14px */
+  --type-footnote:  0.8125rem;                                      /* 13px */
+  --type-caption:   0.75rem;                                        /* 12px */
+  --type-caption2:  0.6875rem;                                      /* 11px */
+}
+
+/* ─── xSmall — Compact / Dense UI ─── */
+[data-type-scale="xsmall"] {
+  --type-scale-factor:     0.85;
+  --type-base:             0.875rem;    /* 14px */
+  --type-min-target:       2.5rem;      /* 40px — still touch-friendly */
+  --type-spacing-factor:   0.85;
+  --type-leading-factor:   0.95;
+
+  --type-display:   clamp(1.5rem, 1.25rem + 1.25vw, 1.75rem);
+  --type-title:     clamp(1.0625rem, 1rem + 0.3125vw, 1.125rem);
+  --type-headline:  0.9375rem;
+  --type-body:      0.875rem;
+  --type-callout:   0.8125rem;
+  --type-subhead:   0.75rem;
+  --type-footnote:  0.6875rem;
+  --type-caption:   0.625rem;
+  --type-caption2:  0.5625rem;
+}
+
+/* ─── Large — Comfortable Reading ─── */
+[data-type-scale="large"] {
+  --type-scale-factor:     1.15;
+  --type-base:             1.125rem;    /* 18px */
+  --type-min-target:       3rem;        /* 48px */
+  --type-spacing-factor:   1.15;
+  --type-leading-factor:   1.1;
+
+  --type-display:   clamp(2rem, 1.75rem + 1.25vw, 2.5rem);
+  --type-title:     clamp(1.375rem, 1.25rem + 0.625vw, 1.625rem);
+  --type-headline:  1.1875rem;
+  --type-body:      1.125rem;
+  --type-callout:   1.0625rem;
+  --type-subhead:   1rem;
+  --type-footnote:  0.9375rem;
+  --type-caption:   0.875rem;
+  --type-caption2:  0.8125rem;
+}
+
+/* ─── xLarge — Accessibility / Low Vision ─── */
+[data-type-scale="xlarge"] {
+  --type-scale-factor:     1.35;
+  --type-base:             1.375rem;    /* 22px */
+  --type-min-target:       3.5rem;      /* 56px */
+  --type-spacing-factor:   1.3;
+  --type-leading-factor:   1.2;
+
+  --type-display:   clamp(2.5rem, 2rem + 2.5vw, 3.25rem);
+  --type-title:     clamp(1.75rem, 1.5rem + 1.25vw, 2.125rem);
+  --type-headline:  1.5rem;
+  --type-body:      1.375rem;
+  --type-callout:   1.25rem;
+  --type-subhead:   1.1875rem;
+  --type-footnote:  1.125rem;
+  --type-caption:   1.0625rem;
+  --type-caption2:  1rem;
+}
+
+/* ─── Auto: respect OS accessibility settings ─── */
+@media (prefers-contrast: more) {
+  :root:not([data-type-scale]) {
+    --type-scale-factor:   1.15;
+    --type-base:           1.125rem;
+    --type-min-target:     3rem;
+    --type-spacing-factor: 1.15;
+    --type-leading-factor: 1.1;
+  }
+}
+
+/* ─── Adaptive spacing that scales with type ─── */
+:root {
+  --type-space-xs:  calc(var(--space-1) * var(--type-spacing-factor));
+  --type-space-sm:  calc(var(--space-2) * var(--type-spacing-factor));
+  --type-space-md:  calc(var(--space-3) * var(--type-spacing-factor));
+  --type-space-lg:  calc(var(--space-4) * var(--type-spacing-factor));
+  --type-space-xl:  calc(var(--space-6) * var(--type-spacing-factor));
+  --type-space-2xl: calc(var(--space-8) * var(--type-spacing-factor));
+}
+
+/* ─── Adaptive line-height ─── */
+:root {
+  --type-leading-tight:   calc(1.2 * var(--type-leading-factor));
+  --type-leading-snug:    calc(1.375 * var(--type-leading-factor));
+  --type-leading-normal:  calc(1.5 * var(--type-leading-factor));
+  --type-leading-relaxed: calc(1.625 * var(--type-leading-factor));
+}
+
+/* ─── Utility classes for type roles ─── */
+.type-display  { font-size: var(--type-display);  font-weight: var(--weight-bold);     line-height: var(--type-leading-tight); letter-spacing: var(--tracking-tight); }
+.type-title    { font-size: var(--type-title);    font-weight: var(--weight-semibold); line-height: var(--type-leading-snug); }
+.type-headline { font-size: var(--type-headline); font-weight: var(--weight-semibold); line-height: var(--type-leading-snug); }
+.type-body     { font-size: var(--type-body);     font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }
+.type-callout  { font-size: var(--type-callout);  font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }
+.type-subhead  { font-size: var(--type-subhead);  font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }
+.type-footnote { font-size: var(--type-footnote); font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }
+.type-caption  { font-size: var(--type-caption);  font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }
+.type-caption2 { font-size: var(--type-caption2); font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }
+
+/* ─── Bold variants ─── */
+.type-body-bold     { font-size: var(--type-body);     font-weight: var(--weight-semibold); line-height: var(--type-leading-normal); }
+.type-callout-bold  { font-size: var(--type-callout);  font-weight: var(--weight-semibold); line-height: var(--type-leading-normal); }
+.type-subhead-bold  { font-size: var(--type-subhead);  font-weight: var(--weight-semibold); line-height: var(--type-leading-normal); }
+.type-footnote-bold { font-size: var(--type-footnote); font-weight: var(--weight-semibold); line-height: var(--type-leading-normal); }
+.type-caption-bold  { font-size: var(--type-caption);  font-weight: var(--weight-semibold); line-height: var(--type-leading-normal); }

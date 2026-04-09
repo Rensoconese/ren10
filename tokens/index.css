@@ -1,0 +1,12 @@
+/* ============================================
+   RenDS — Design Tokens
+   ============================================
+   Import order matters:
+   1. Primitives (raw values)
+   2. Semantic (meaningful mappings)
+   ============================================ */
+
+@import './registered-properties.css';
+@import './primitives/index.css';
+@import './semantic/index.css';
+@import './component/tokens.css';

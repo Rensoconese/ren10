@@ -1,0 +1,152 @@
+/* ============================================
+   RenDS — Tag / Chip Component
+   ============================================
+   Interactive badge with optional dismiss button.
+   CSS-only (dismiss needs minimal JS).
+
+   Different from Badge: Tag is interactive,
+   dismissable, and represents user-selected items.
+
+   Usage:
+     <span class="ren-tag">
+       HTML
+     </span>
+
+     <span class="ren-tag ren-tag-removable">
+       React
+       <button class="ren-tag-dismiss" aria-label="Remove React">&times;</button>
+     </span>
+
+     <span class="ren-tag ren-tag-clickable" tabindex="0" role="button">
+       Filter: Active
+     </span>
+   ============================================ */
+
+.ren-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.25em 0.65em;
+  font-size: var(--caption-size, var(--text-sm));
+  font-weight: var(--weight-medium);
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-fill);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  user-select: none;
+  max-width: 100%;
+}
+
+/* Tag text truncation */
+.ren-tag > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Dismiss button ─── */
+.ren-tag-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.1em;
+  height: 1.1em;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-full);
+  font-size: 1.1em;
+  line-height: 1;
+  flex-shrink: 0;
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+}
+
+.ren-tag-dismiss:hover {
+  color: var(--color-text);
+  background-color: var(--color-fill-hover);
+}
+
+.ren-tag-dismiss:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: 1px;
+}
+
+/* ─── Clickable / Selectable ─── */
+.ren-tag-clickable {
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.ren-tag-clickable:hover {
+  background-color: var(--color-fill-hover);
+  border-color: var(--color-border-strong);
+}
+
+.ren-tag-clickable:active {
+  background-color: var(--color-fill-active);
+}
+
+.ren-tag-clickable:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}
+
+/* Selected state */
+.ren-tag-clickable[aria-pressed="true"],
+.ren-tag-clickable[data-selected] {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+/* ─── Color variants ─── */
+.ren-tag-primary {
+  background-color: var(--color-accent-subtle);
+  border-color: color-mix(in oklch, var(--color-accent), transparent 70%);
+  color: var(--color-accent);
+}
+
+.ren-tag-success {
+  background-color: var(--color-success-subtle);
+  border-color: color-mix(in oklch, var(--color-success), transparent 70%);
+  color: var(--green-700);
+}
+
+.ren-tag-warning {
+  background-color: var(--color-warning-subtle);
+  border-color: color-mix(in oklch, var(--color-warning), transparent 70%);
+  color: var(--orange-700);
+}
+
+.ren-tag-danger {
+  background-color: var(--color-danger-subtle);
+  border-color: color-mix(in oklch, var(--color-danger), transparent 70%);
+  color: var(--red-600);
+}
+
+/* ─── Size variants ─── */
+.ren-tag-sm {
+  padding: 0.1em 0.45em;
+  font-size: var(--text-xs);
+  gap: 0.15em;
+}
+
+.ren-tag-lg {
+  padding: 0.35em 0.8em;
+  font-size: var(--body-size);
+}
+
+/* ─── Tag group ─── */
+.ren-tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}

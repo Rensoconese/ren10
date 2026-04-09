@@ -1,0 +1,538 @@
+/* ============================================
+   RenDS — Classless Base Styles
+   ============================================
+   Beautiful defaults for semantic HTML.
+   No classes needed — just write good HTML
+   and it looks great automatically.
+
+   Inspired by Pico CSS philosophy + Apple HIG.
+   ============================================ */
+
+/* ─── Headings ─── */
+h1 {
+  font-size: var(--display-md-size);
+  font-weight: var(--display-md-weight);
+  line-height: var(--display-md-leading);
+  letter-spacing: var(--display-md-tracking, var(--tracking-tight));
+  color: var(--color-text);
+  margin-block: var(--space-8) var(--space-4);
+}
+
+h2 {
+  font-size: var(--title-lg-size);
+  font-weight: var(--title-lg-weight);
+  line-height: var(--title-lg-leading);
+  color: var(--color-text);
+  margin-block: var(--space-6) var(--space-3);
+}
+
+h3 {
+  font-size: var(--title-md-size);
+  font-weight: var(--title-md-weight);
+  line-height: var(--title-md-leading);
+  color: var(--color-text);
+  margin-block: var(--space-5) var(--space-2);
+}
+
+h4 {
+  font-size: var(--title-sm-size);
+  font-weight: var(--title-sm-weight);
+  line-height: var(--title-sm-leading);
+  color: var(--color-text);
+  margin-block: var(--space-4) var(--space-2);
+}
+
+h5 {
+  font-size: var(--headline-size);
+  font-weight: var(--headline-weight);
+  line-height: var(--headline-leading);
+  color: var(--color-text);
+  margin-block: var(--space-4) var(--space-2);
+}
+
+h6 {
+  font-size: var(--body-size);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
+  margin-block: var(--space-3) var(--space-2);
+}
+
+/* First heading: no top margin */
+:is(h1, h2, h3, h4, h5, h6):first-child {
+  margin-block-start: 0;
+}
+
+/* ─── Paragraphs ─── */
+p {
+  color: var(--color-text);
+  margin-block: var(--space-3);
+}
+
+p:first-child {
+  margin-block-start: 0;
+}
+
+p:last-child {
+  margin-block-end: 0;
+}
+
+/* ─── Links ─── */
+a:not([class]) {
+  color: var(--color-text-link);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+  transition: color var(--duration-normal) var(--ease-out);
+}
+
+a:not([class]):hover {
+  color: var(--color-text-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+a:not([class]):active {
+  opacity: 0.8;
+}
+
+/* ─── Strong / Bold ─── */
+strong, b {
+  font-weight: var(--weight-semibold);
+}
+
+/* ─── Emphasis ─── */
+em, i {
+  font-style: italic;
+}
+
+/* ─── Small ─── */
+small {
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+}
+
+/* ─── Mark ─── */
+mark {
+  background-color: var(--yellow-100);
+  color: var(--color-text);
+  padding-inline: var(--space-1);
+  border-radius: var(--radius-xs);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) mark {
+    background-color: var(--yellow-800);
+  }
+}
+
+[data-theme="dark"] mark {
+  background-color: var(--yellow-800);
+}
+
+/* ─── Code (inline) ─── */
+code:not(pre code) {
+  font-family: var(--code-family);
+  font-size: var(--code-size);
+  background-color: var(--color-fill);
+  color: var(--color-text);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  font-weight: var(--weight-medium);
+}
+
+/* ─── Code Blocks ─── */
+pre {
+  font-family: var(--code-family);
+  font-size: var(--text-sm);
+  line-height: var(--leading-relaxed);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin-block: var(--space-4);
+  border: 1px solid var(--color-border);
+  tab-size: 2;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+}
+
+/* ─── Kbd ─── */
+kbd {
+  font-family: var(--code-family);
+  font-size: var(--caption-size);
+  font-weight: var(--weight-medium);
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text);
+  border: 1px solid var(--color-border-strong);
+  border-bottom-width: 2px;
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+/* ─── Blockquote ─── */
+blockquote {
+  border-inline-start: 3px solid var(--color-accent);
+  padding-inline-start: var(--space-4);
+  margin-inline: 0;
+  margin-block: var(--space-4);
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
+blockquote > p {
+  color: inherit;
+}
+
+/* ─── Lists ─── */
+ul, ol {
+  padding-inline-start: var(--space-6);
+  margin-block: var(--space-3);
+}
+
+li {
+  margin-block: var(--space-1);
+  color: var(--color-text);
+}
+
+li::marker {
+  color: var(--color-text-muted);
+}
+
+/* Nested lists */
+:is(ul, ol) :is(ul, ol) {
+  margin-block: var(--space-1);
+}
+
+/* Description lists */
+dl {
+  margin-block: var(--space-3);
+}
+
+dt {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin-block-start: var(--space-2);
+}
+
+dd {
+  margin-inline-start: var(--space-4);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Horizontal Rule ─── */
+hr {
+  margin-block: var(--space-6);
+  border-top-color: var(--color-separator);
+}
+
+/* ─── Figure / Figcaption ─── */
+figure {
+  margin-inline: 0;
+  margin-block: var(--space-4);
+}
+
+figcaption {
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  margin-block-start: var(--space-2);
+  text-align: center;
+}
+
+/* ─── Table ─── */
+table {
+  width: 100%;
+  margin-block: var(--space-4);
+  font-size: var(--text-sm);
+}
+
+thead {
+  border-block-end: 2px solid var(--color-border-strong);
+}
+
+th {
+  font-weight: var(--weight-semibold);
+  text-align: start;
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text);
+}
+
+td {
+  padding: var(--space-2) var(--space-3);
+  color: var(--color-text-secondary);
+  border-block-end: 1px solid var(--color-border);
+}
+
+tbody tr:hover {
+  background-color: var(--color-fill);
+}
+
+/* ─── Forms (native) ─── */
+label {
+  display: block;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--color-text);
+  margin-block-end: var(--space-1);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
+select,
+textarea {
+  display: block;
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    background-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):hover,
+select:hover,
+textarea:hover {
+  background-color: var(--color-input-bg-hover);
+}
+
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  background-color: var(--color-input-bg-hover);
+}
+
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: var(--color-input-disabled-bg);
+  color: var(--color-input-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+::placeholder {
+  color: var(--color-input-placeholder);
+  opacity: 1;
+}
+
+/* ─── Select ─── */
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-inline-end: var(--space-10);
+}
+
+/* ─── Buttons (native) ─── */
+button:not([class]),
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--label-lg-size);
+  font-weight: var(--label-lg-weight);
+  color: var(--color-on-accent);
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+  user-select: none;
+}
+
+button:not([class]):hover,
+input[type="submit"]:hover,
+input[type="reset"]:hover,
+input[type="button"]:hover {
+  background-color: var(--color-accent-hover);
+}
+
+button:not([class]):active,
+input[type="submit"]:active,
+input[type="reset"]:active,
+input[type="button"]:active {
+  background-color: var(--color-accent-active);
+  transform: scale(0.98);
+}
+
+button:not([class]):disabled,
+input[type="submit"]:disabled {
+  background-color: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ─── Checkbox & Radio ─── */
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+/* ─── Range ─── */
+input[type="range"] {
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+/* ─── File ─── */
+input[type="file"] {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+input[type="file"]::file-selector-button {
+  font: inherit;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  padding: var(--space-1) var(--space-3);
+  margin-inline-end: var(--space-3);
+  background-color: var(--color-fill);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--duration-normal) var(--ease-out);
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: var(--color-fill-hover);
+}
+
+/* ─── Progress ─── */
+progress {
+  width: 100%;
+  height: 0.5rem;
+  appearance: none;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background-color: var(--color-fill);
+}
+
+progress::-webkit-progress-bar {
+  background-color: var(--color-fill);
+  border-radius: var(--radius-full);
+}
+
+progress::-webkit-progress-value {
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+progress::-moz-progress-bar {
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+}
+
+/* ─── Meter ─── */
+meter {
+  width: 100%;
+  height: 0.5rem;
+}
+
+/* ─── Details / Summary (Accordion) ─── */
+details {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-block: var(--space-2);
+}
+
+details[open] {
+  padding-block-end: var(--space-4);
+}
+
+summary {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  padding: var(--space-1) 0;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+summary::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-inline-end: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(-45deg);
+  transition: transform var(--duration-normal) var(--ease-out);
+  flex-shrink: 0;
+}
+
+details[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+details[open] > summary {
+  margin-block-end: var(--space-3);
+  padding-block-end: var(--space-3);
+  border-block-end: 1px solid var(--color-border);
+}
+
+/* ─── Dialog (native) ─── */
+dialog {
+  background-color: var(--color-surface-overlay);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-6);
+  max-width: min(600px, 90vw);
+  width: 100%;
+  color: var(--color-text);
+}
+
+dialog::backdrop {
+  background-color: var(--color-overlay);
+}
+
+/* ─── Abbr ─── */
+abbr[title] {
+  text-decoration: underline dotted;
+  cursor: help;
+}
+
+/* ─── Address ─── */
+address {
+  font-style: normal;
+  color: var(--color-text-secondary);
+}
+
+/* ─── Sup / Sub ─── */
+sup, sub {
+  font-size: 0.75em;
+}

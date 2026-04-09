@@ -1,0 +1,1073 @@
+/* ============================================================================
+   RENDS GRID SYSTEM
+   ============================================================================
+   A production-ready, vanilla CSS Grid implementation with fluid scaling,
+   responsive breakpoints, and advanced layout patterns.
+
+   Design philosophy:
+   - Mobile-first responsive design with sensible defaults
+   - Flexible use of CSS custom properties for runtime configuration
+   - Modern patterns: RAM (Repeat Auto-fit Minmax), Holy Albatross, Pancake Stack
+   - Accessibility-first with proper nesting and progressive enhancement
+   - No dependencies—pure CSS Grid with @supports fallbacks
+
+   Table of Contents:
+   1. Grid Custom Properties (CSS Variables)
+   2. Page Grid — Full-Bleed Layout System
+   3. Column Grid — 12-Column Explicit System
+   4. RAM Pattern — Auto-Responsive Grid
+   5. Pancake Stack — Header/Main/Footer Layout
+   6. Sidebar Grid — Two-Column with Collapse
+   7. Holy Albatross — Binary Layout Switch
+   8. Bento Grid — Irregular Apple-Style Layout
+   9. Subgrid Utilities — Cross-Component Alignment
+   10. Quantity Queries — Content-Driven Responsiveness
+   11. Performance Utilities — Optimization & Containment
+   12. Accessibility — Reading Flow & Semantics
+   13. Animation Utilities — Grid-Based Transitions
+   14. Modular Grid — Müller-Brockmann System
+   ============================================================================ */
+
+/* ============================================================================
+   1. GRID CUSTOM PROPERTIES
+   ============================================================================
+
+   Core grid configuration. These are the foundational variables that control
+   spacing, sizing, and responsive behavior across all grid components.
+
+   Usage: Customize these at :root or override per-breakpoint or per-component
+   to create responsive behavior without media queries.
+
+   Properties:
+   - --grid-columns: Number of columns for 12-column grid (for explicit grids)
+   - --grid-gutter: Gap between items (fluid with clamp)
+   - --grid-margin: Page margins (fluid, scales with viewport)
+   - --grid-max-width: Maximum width constraint for page content
+   - --grid-min-item: Minimum item size for RAM auto-fit pattern
+
+   ============================================================================ */
+
+:root {
+  /* Column count for explicit grid systems */
+  --grid-columns: 12;
+
+  /* Fluid gutters scale from 1rem at mobile to 1.5rem at desktop */
+  --grid-gutter: clamp(1rem, 3vw, 1.5rem);
+
+  /* Fluid page margins scale from 1rem mobile to 3rem desktop */
+  --grid-margin: clamp(1rem, 5vw, 3rem);
+
+  /* Maximum content width (map to --width-xl if available) */
+  --grid-max-width: var(--width-xl, 1280px);
+
+  /* Minimum item size for responsive auto-fit grids (RAM pattern) */
+  --grid-min-item: 15rem;
+
+  /* Pancake layout height (full viewport by default) */
+  --pancake-height: 100dvh;
+
+  /* Sidebar defaults */
+  --sidebar-min: 15rem;
+  --sidebar-max: 25%;
+
+  /* Bento grid tiling */
+  --bento-cols: 12;
+  --bento-row: 6rem;
+
+  /* Holy Albatross breakpoint and column count */
+  --albatross-bp: 40rem;
+  --albatross-cols: 3;
+
+  /* Modular grid tiling */
+  --mod-cols: 6;
+  --mod-row: 4.5rem;
+
+  /* Auto-grid configuration */
+  --auto-grid-min: var(--grid-min-item);
+  --auto-grid-gap: var(--grid-gutter);
+  --auto-grid-placement: auto-fill;
+
+  /* Ease function for animations */
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+/* ============================================================================
+   2. PAGE GRID — Full-Bleed Layout System
+   ============================================================================
+
+   Ryan Mulligan/Josh Comeau full-bleed layout pattern with five named zones:
+
+   [full-start] [feature-start] [popout-start] [content-start] [content-end]
+               [popout-end] [feature-end] [full-end]
+
+   This allows content to break out of the main constrained width, enabling:
+   - Constrained default content (grid-column: content)
+   - Full-width breakout (grid-column: full)
+   - Feature-width popout (grid-column: feature)
+   - Medium breakout (grid-column: popout)
+
+   Example HTML:
+   ```html
+   <main class="ren-page-grid">
+     <article>Regular width</article>
+     <figure class="ren-full-bleed">Full width image</figure>
+     <p>Back to regular width</p>
+     <aside class="ren-feature">Featured sidebar</aside>
+   </main>
+   ```
+
+   ============================================================================ */
+
+.ren-page-grid {
+  --_gap: var(--grid-margin);
+  --_full: minmax(var(--_gap), 1fr);
+  --_feature: minmax(0, 5rem);
+  --_popout: minmax(0, 2rem);
+  --_content: min(var(--grid-max-width), 100% - var(--_gap) * 2);
+
+  display: grid;
+  grid-template-columns:
+    [full-start] var(--_full)
+    [feature-start] var(--_feature)
+    [popout-start] var(--_popout)
+    [content-start] var(--_content) [content-end]
+    var(--_popout) [popout-end]
+    var(--_feature) [feature-end]
+    var(--_full) [full-end];
+  row-gap: var(--grid-gutter);
+
+  /* Default: all children sit in content zone */
+  > * {
+    grid-column: content;
+  }
+
+  /* Zone-specific children use named areas */
+  > .ren-full-bleed {
+    grid-column: full;
+  }
+
+  > .ren-feature {
+    grid-column: feature;
+  }
+
+  > .ren-popout {
+    grid-column: popout;
+  }
+
+  /* Responsive: reduce feature/popout on smaller screens */
+  @media (max-width: 768px) {
+    --_feature: minmax(0, 1rem);
+    --_popout: 0;
+  }
+}
+
+/* ============================================================================
+   PROSE GRID — Narrower full-bleed for typography-focused content
+
+   Constrains content to readable prose width (65ch) while allowing full-width
+   images and breakout elements.
+
+   Example:
+   ```html
+   <article class="ren-prose-grid">
+     <h1>Article Title</h1>
+     <figure class="ren-full-bleed"><img src="..." /></figure>
+     <p>Article body text...</p>
+   </article>
+   ```
+   ============================================================================ */
+
+.ren-prose-grid {
+  --grid-max-width: var(--width-prose, 65ch);
+  display: grid;
+  grid-template-columns:
+    [full-start] var(--_full)
+    [feature-start] minmax(0, 2rem)
+    [popout-start] minmax(0, 1rem)
+    [content-start] min(var(--width-prose, 65ch), 100% - var(--_gap) * 2) [content-end]
+    minmax(0, 1rem) [popout-end]
+    minmax(0, 2rem) [feature-end]
+    var(--_full) [full-end];
+  row-gap: var(--grid-gutter);
+
+  > * {
+    grid-column: content;
+  }
+
+  > .ren-full-bleed {
+    grid-column: full;
+  }
+
+  > .ren-feature {
+    grid-column: feature;
+  }
+}
+
+/* ============================================================================
+   3. COLUMN GRID — Explicit 12-Column System
+   ============================================================================
+
+   Traditional column-based grid layout using CSS Grid's `repeat()` function.
+   Provides explicit column sizing and span utilities at desktop, tablet, and
+   mobile breakpoints.
+
+   Features:
+   - 12-column default (customizable via --grid-columns)
+   - Explicit span classes (.ren-col-1 through .ren-col-12)
+   - Start/end column placement (.ren-col-start-1, etc.)
+   - Responsive overrides at standard breakpoints
+
+   Example HTML:
+   ```html
+   <div class="ren-col-grid">
+     <article class="ren-col-8 ren-col-md-12">Main content</article>
+     <aside class="ren-col-4 ren-col-md-12">Sidebar</aside>
+     <div class="ren-col-start-2 ren-col-10">Offset column</div>
+   </div>
+   ```
+
+   Mobile: Full width (single column)
+   Tablet (768px): Responsive overrides via .ren-col-md-*
+   Desktop (1024px): Full 12-column grid with .ren-col-lg-*
+
+   ============================================================================ */
+
+.ren-col-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+  gap: var(--grid-gutter);
+}
+
+/* Explicit column span utilities: .ren-col-1 through .ren-col-12 */
+.ren-col-1 { grid-column: span 1; }
+.ren-col-2 { grid-column: span 2; }
+.ren-col-3 { grid-column: span 3; }
+.ren-col-4 { grid-column: span 4; }
+.ren-col-5 { grid-column: span 5; }
+.ren-col-6 { grid-column: span 6; }
+.ren-col-7 { grid-column: span 7; }
+.ren-col-8 { grid-column: span 8; }
+.ren-col-9 { grid-column: span 9; }
+.ren-col-10 { grid-column: span 10; }
+.ren-col-11 { grid-column: span 11; }
+.ren-col-12 { grid-column: span 12; }
+
+/* Column start positioning: .ren-col-start-1 through .ren-col-start-12 */
+.ren-col-start-1 { grid-column-start: 1; }
+.ren-col-start-2 { grid-column-start: 2; }
+.ren-col-start-3 { grid-column-start: 3; }
+.ren-col-start-4 { grid-column-start: 4; }
+.ren-col-start-5 { grid-column-start: 5; }
+.ren-col-start-6 { grid-column-start: 6; }
+.ren-col-start-7 { grid-column-start: 7; }
+.ren-col-start-8 { grid-column-start: 8; }
+.ren-col-start-9 { grid-column-start: 9; }
+.ren-col-start-10 { grid-column-start: 10; }
+.ren-col-start-11 { grid-column-start: 11; }
+.ren-col-start-12 { grid-column-start: 12; }
+
+/* Tablet breakpoint: 768px — Medium sizes */
+@media (min-width: 768px) {
+  .ren-col-md-1 { grid-column: span 1; }
+  .ren-col-md-2 { grid-column: span 2; }
+  .ren-col-md-3 { grid-column: span 3; }
+  .ren-col-md-4 { grid-column: span 4; }
+  .ren-col-md-5 { grid-column: span 5; }
+  .ren-col-md-6 { grid-column: span 6; }
+  .ren-col-md-7 { grid-column: span 7; }
+  .ren-col-md-8 { grid-column: span 8; }
+  .ren-col-md-9 { grid-column: span 9; }
+  .ren-col-md-10 { grid-column: span 10; }
+  .ren-col-md-11 { grid-column: span 11; }
+  .ren-col-md-12 { grid-column: span 12; }
+
+  .ren-col-md-start-1 { grid-column-start: 1; }
+  .ren-col-md-start-2 { grid-column-start: 2; }
+  .ren-col-md-start-3 { grid-column-start: 3; }
+  .ren-col-md-start-4 { grid-column-start: 4; }
+  .ren-col-md-start-5 { grid-column-start: 5; }
+  .ren-col-md-start-6 { grid-column-start: 6; }
+  .ren-col-md-start-7 { grid-column-start: 7; }
+  .ren-col-md-start-8 { grid-column-start: 8; }
+  .ren-col-md-start-9 { grid-column-start: 9; }
+  .ren-col-md-start-10 { grid-column-start: 10; }
+  .ren-col-md-start-11 { grid-column-start: 11; }
+  .ren-col-md-start-12 { grid-column-start: 12; }
+}
+
+/* Desktop breakpoint: 1024px — Large sizes */
+@media (min-width: 1024px) {
+  .ren-col-lg-1 { grid-column: span 1; }
+  .ren-col-lg-2 { grid-column: span 2; }
+  .ren-col-lg-3 { grid-column: span 3; }
+  .ren-col-lg-4 { grid-column: span 4; }
+  .ren-col-lg-5 { grid-column: span 5; }
+  .ren-col-lg-6 { grid-column: span 6; }
+  .ren-col-lg-7 { grid-column: span 7; }
+  .ren-col-lg-8 { grid-column: span 8; }
+  .ren-col-lg-9 { grid-column: span 9; }
+  .ren-col-lg-10 { grid-column: span 10; }
+  .ren-col-lg-11 { grid-column: span 11; }
+  .ren-col-lg-12 { grid-column: span 12; }
+
+  .ren-col-lg-start-1 { grid-column-start: 1; }
+  .ren-col-lg-start-2 { grid-column-start: 2; }
+  .ren-col-lg-start-3 { grid-column-start: 3; }
+  .ren-col-lg-start-4 { grid-column-start: 4; }
+  .ren-col-lg-start-5 { grid-column-start: 5; }
+  .ren-col-lg-start-6 { grid-column-start: 6; }
+  .ren-col-lg-start-7 { grid-column-start: 7; }
+  .ren-col-lg-start-8 { grid-column-start: 8; }
+  .ren-col-lg-start-9 { grid-column-start: 9; }
+  .ren-col-lg-start-10 { grid-column-start: 10; }
+  .ren-col-lg-start-11 { grid-column-start: 11; }
+  .ren-col-lg-start-12 { grid-column-start: 12; }
+}
+
+/* ============================================================================
+   4. RAM PATTERN — Auto-Responsive Grid (Repeat Auto-fit Minmax)
+   ============================================================================
+
+   The Responsive Auto-responsive Multipurpose (RAM) pattern creates a grid that
+   automatically adjusts the number of columns based on available space, without
+   media queries. Uses `repeat(auto-fill/auto-fit, minmax(min(100%, X), 1fr))`.
+
+   Key formula: The `min(100%, Xpx)` protects against overflow when items are
+   smaller than container width.
+
+   Variants:
+   - .ren-auto-grid: Default (15rem minimum item size)
+   - .ren-auto-grid-sm: Smaller items (10rem minimum)
+   - .ren-auto-grid-lg: Larger items (20rem minimum)
+
+   Example HTML:
+   ```html
+   <!-- Default: cards that reflow from 1→2→3+ columns naturally -->
+   <div class="ren-auto-grid">
+     <article class="ren-card">Item 1</article>
+     <article class="ren-card">Item 2</article>
+     <article class="ren-card">Item 3</article>
+   </div>
+
+   <!-- Small items: badges, tags, etc. -->
+   <div class="ren-auto-grid-sm">
+     <span class="ren-badge">React</span>
+     <span class="ren-badge">CSS</span>
+   </div>
+
+   <!-- Large items: featured cards -->
+   <div class="ren-auto-grid-lg">
+     <section class="ren-featured">Featured 1</section>
+     <section class="ren-featured">Featured 2</section>
+   </div>
+   ```
+
+   Note: Customize --auto-grid-min and --auto-grid-gap at component level
+   for bespoke behavior without creating new classes.
+
+   ============================================================================ */
+
+.ren-auto-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    var(--auto-grid-placement, auto-fill),
+    minmax(min(100%, var(--auto-grid-min, var(--grid-min-item))), 1fr)
+  );
+  gap: var(--auto-grid-gap, var(--grid-gutter));
+}
+
+/* Small variant: 10rem minimum item size for compact layouts */
+.ren-auto-grid-sm {
+  --auto-grid-min: 10rem;
+  display: grid;
+  grid-template-columns: repeat(
+    var(--auto-grid-placement, auto-fill),
+    minmax(min(100%, 10rem), 1fr)
+  );
+  gap: var(--auto-grid-gap, var(--grid-gutter));
+}
+
+/* Large variant: 20rem minimum item size for prominent components */
+.ren-auto-grid-lg {
+  --auto-grid-min: 20rem;
+  display: grid;
+  grid-template-columns: repeat(
+    var(--auto-grid-placement, auto-fill),
+    minmax(min(100%, 20rem), 1fr)
+  );
+  gap: var(--auto-grid-gap, var(--grid-gutter));
+}
+
+/* ============================================================================
+   5. PANCAKE STACK — Header/Main/Footer Layout
+   ============================================================================
+
+   Simple but powerful: a three-row grid that stretches main content to fill
+   available vertical space. Perfect for applications, full-page layouts, etc.
+
+   Pattern:
+   - header: auto (shrinks to content)
+   - main: 1fr (fills available space)
+   - footer: auto (shrinks to content)
+   - Total minimum height: 100dvh (dynamic viewport height)
+
+   Example HTML:
+   ```html
+   <div class="ren-pancake">
+     <header>Navigation</header>
+     <main>Page content</main>
+     <footer>Footer</footer>
+   </div>
+   ```
+
+   Customize with:
+   - --pancake-height: Change minimum height (default: 100dvh)
+   - Add margins/padding to rows as needed
+
+   ============================================================================ */
+
+.ren-pancake {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: var(--pancake-height, 100dvh);
+
+  & > header {
+    grid-row: 1;
+  }
+
+  & > main {
+    grid-row: 2;
+  }
+
+  & > footer {
+    grid-row: 3;
+  }
+}
+
+/* ============================================================================
+   6. SIDEBAR GRID — Two-Column with Collapse Animation
+   ============================================================================
+
+   A responsive two-column layout with an optional sidebar that can collapse
+   using the CSS Grid `0fr` trick for smooth animation without JavaScript.
+
+   Structure:
+   - [sidebar-min, sidebar-max] | 1fr
+   - Left column (sidebar) is flex: 15rem → 25%
+   - Right column fills remaining space
+
+   Example HTML:
+   ```html
+   <div class="ren-sidebar-grid">
+     <aside class="ren-sidebar">
+       <nav>Navigation</nav>
+     </aside>
+     <main>Main content</main>
+   </div>
+
+   <!-- Collapsed sidebar version -->
+   <div class="ren-sidebar-grid" data-collapsed>
+     <aside class="ren-sidebar">Sidebar</aside>
+     <main>Main content (full width)</main>
+   </div>
+   ```
+
+   The `data-collapsed` attribute triggers grid-template-columns change to `0fr 1fr`,
+   and the first child gets overflow: hidden to animate the collapse.
+
+   Customize with:
+   - --sidebar-min: Minimum sidebar width (default: 15rem)
+   - --sidebar-max: Maximum sidebar width (default: 25%)
+
+   ============================================================================ */
+
+.ren-sidebar-grid {
+  display: grid;
+  grid-template-columns:
+    minmax(var(--sidebar-min, 15rem), var(--sidebar-max, 25%))
+    1fr;
+  gap: var(--grid-gutter);
+  transition: grid-template-columns var(--duration-normal) var(--ease-out);
+
+  & > :first-child {
+    transition: min-width var(--duration-normal) var(--ease-out);
+  }
+
+  /* Collapsed state: sidebar collapses to 0fr with overflow hidden */
+  &[data-collapsed] {
+    grid-template-columns: 0fr 1fr;
+
+    & > :first-child {
+      overflow: hidden;
+      min-width: 0;
+    }
+  }
+
+  /* Mobile: Stack sidebar above content */
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+
+    &[data-collapsed] {
+      grid-template-columns: 1fr;
+
+      & > :first-child {
+        overflow: hidden;
+        max-height: 0;
+      }
+    }
+  }
+}
+
+/* ============================================================================
+   7. HOLY ALBATROSS — Binary Layout Switch (Heydon Pickering)
+   ============================================================================
+
+   The Holy Albatross pattern automatically switches between one and two columns
+   at a natural breakpoint WITHOUT media queries. Uses the container's own size
+   to determine layout.
+
+   Formula:
+   ```
+   minmax(
+     clamp(
+       100% / cols - gap,
+       (breakpoint - 100%) * 999,
+       100%
+     ),
+     1fr
+   )
+   ```
+
+   When container is narrower than breakpoint, items wrap to one per line.
+   When wider, items flow into multiple columns naturally.
+
+   Example HTML:
+   ```html
+   <!-- Default: 3 columns, switches at 40rem -->
+   <div class="ren-albatross">
+     <article>Item 1</article>
+     <article>Item 2</article>
+     <article>Item 3</article>
+     <article>Item 4</article>
+     <article>Item 5</article>
+   </div>
+
+   <!-- Custom breakpoint -->
+   <div class="ren-albatross" style="--albatross-bp: 50rem; --albatross-cols: 2;">
+     <div>Two columns that switch at 50rem</div>
+   </div>
+   ```
+
+   Customize with:
+   - --albatross-bp: Breakpoint width (default: 40rem)
+   - --albatross-cols: Number of columns (default: 3)
+
+   ============================================================================ */
+
+.ren-albatross {
+  display: grid;
+  gap: var(--grid-gutter);
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(
+      clamp(
+        calc(100% / var(--albatross-cols, 3) - var(--grid-gutter)),
+        (var(--albatross-bp, 40rem) - 100%) * 999,
+        100%
+      ),
+      1fr
+    )
+  );
+}
+
+/* ============================================================================
+   8. BENTO GRID — Irregular Apple-Style Layout
+   ============================================================================
+
+   An irregular grid for showcasing content with varied tile sizes. Combines
+   fixed row height (--bento-row) with flexible columns and responsive
+   column counts.
+
+   Example HTML:
+   ```html
+   <div class="ren-bento">
+     <div class="ren-tile-main">Main featured tile (2x2)</div>
+     <div class="ren-tile-small">Small 1</div>
+     <div class="ren-tile-small">Small 2</div>
+     <div class="ren-tile-medium">Medium (1x2)</div>
+     <div class="ren-tile-small">Small 3</div>
+   </div>
+   ```
+
+   Responsive behavior:
+   - < 600px: 4 columns (mobile)
+   - 600–899px: 6 columns (tablet)
+   - ≥ 900px: 12 columns (desktop)
+
+   Tile span utilities:
+   - .ren-tile-main: 2x2 (4 cells)
+   - .ren-tile-medium: 1x2 (2 cells)
+   - .ren-tile-small: 1x1 (1 cell)
+   - Custom: grid-column: span N; grid-row: span M;
+
+   Customize with:
+   - --bento-cols: Number of columns
+   - --bento-row: Row height in px/rem
+
+   ============================================================================ */
+
+.ren-bento {
+  display: grid;
+  grid-template-columns: repeat(var(--bento-cols, 12), minmax(0, 1fr));
+  grid-auto-rows: var(--bento-row, 6rem);
+  gap: var(--grid-gutter);
+
+  /* Tile size variants */
+  .ren-tile-main {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .ren-tile-medium {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+
+  .ren-tile-small {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  /* Tablet: 6 columns */
+  @media (max-width: 899px) {
+    --bento-cols: 6;
+
+    & .ren-tile-main {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+
+  /* Mobile: 4 columns */
+  @media (max-width: 599px) {
+    --bento-cols: 4;
+
+    & .ren-tile-main {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+
+    & .ren-tile-medium {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+  }
+}
+
+/* ============================================================================
+   9. SUBGRID UTILITIES — Cross-Component Alignment
+   ============================================================================
+
+   CSS Grid subgrid allows child grids to inherit the parent grid's row and
+   column tracks for perfect alignment across nested components. Essential
+   for design systems with consistent component alignment.
+
+   Three utilities:
+   - .ren-subgrid: Inherit columns only
+   - .ren-subgrid-rows: Inherit rows only
+   - .ren-subgrid-both: Inherit both rows and columns
+
+   Example: Perfectly aligned card grid
+   ```html
+   <div class="ren-card-grid">
+     <article class="ren-card">
+       <img /> <!-- spans row 1 -->
+       <h2 />  <!-- spans row 2 -->
+       <p />   <!-- spans row 3 (1fr) -->
+       <footer /> <!-- spans row 4 -->
+     </article>
+   </div>
+   ```
+
+   This ensures all cards have equal internal spacing and alignment.
+
+   @supports fallback: Browsers without subgrid support fall back to grid
+   with explicit sizing.
+
+   ============================================================================ */
+
+.ren-subgrid {
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+.ren-subgrid-rows {
+  display: grid;
+  grid-template-rows: subgrid;
+}
+
+.ren-subgrid-both {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+}
+
+/* Fallback for browsers without subgrid support */
+@supports not (grid-template-columns: subgrid) {
+  .ren-subgrid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+  }
+
+  .ren-subgrid-rows {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .ren-subgrid-both {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns, 12), 1fr);
+    grid-template-rows: auto 1fr auto;
+  }
+}
+
+/* ============================================================================
+   Card Grid with Subgrid Alignment
+
+   A grid system for cards where all cards maintain aligned internal sections
+   (image, title, body, footer) regardless of content length.
+
+   Example:
+   ```html
+   <div class="ren-card-grid">
+     <article class="ren-card">
+       <img src="..." />
+       <h3>Title</h3>
+       <p>Description...</p>
+       <footer><button>Action</button></footer>
+     </article>
+   </div>
+   ```
+   ============================================================================ */
+
+.ren-card-grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(100%, var(--grid-min-item)), 1fr)
+  );
+  grid-template-rows: repeat(4, auto auto 1fr auto);
+  gap: var(--grid-gutter);
+
+  & > * {
+    grid-row: span 4;
+    display: grid;
+    grid-template-rows: subgrid;
+  }
+}
+
+/* Fallback for browsers without subgrid */
+@supports not (grid-template-rows: subgrid) {
+  .ren-card-grid {
+    grid-template-rows: auto;
+
+    & > * {
+      grid-row: auto;
+      grid-template-rows: auto;
+    }
+  }
+}
+
+/* ============================================================================
+   10. QUANTITY QUERIES — Content-Driven Responsiveness
+   ============================================================================
+
+   Using `:has()` pseudo-class, the grid adapts its layout based on the
+   number of direct children. No media queries needed—pure content-driven
+   responsive design.
+
+   Behavior:
+   - 1 item: 1 column (100% width)
+   - 2 items: 2 columns
+   - 3 items: 3 columns
+   - 4+ items: Auto-fill with RAM pattern (auto-responsive)
+
+   Example HTML:
+   ```html
+   <!-- Automatically 1 column (1 item) -->
+   <section class="ren-quantity-grid">
+     <article>Single article</article>
+   </section>
+
+   <!-- Automatically 2 columns (2 items) -->
+   <section class="ren-quantity-grid">
+     <article>Left</article>
+     <article>Right</article>
+   </section>
+
+   <!-- Automatically 3 columns (3 items) -->
+   <section class="ren-quantity-grid">
+     <article>First</article>
+     <article>Second</article>
+     <article>Third</article>
+   </section>
+
+   <!-- Automatically reflowing (4+ items) -->
+   <section class="ren-quantity-grid">
+     <article>1</article>
+     <article>2</article>
+     <article>3</article>
+     <article>4</article>
+     <article>5</article>
+   </section>
+   ```
+
+   No classes needed! Layout is entirely content-driven.
+
+   ============================================================================ */
+
+.ren-quantity-grid {
+  --_min: var(--grid-min-item);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--grid-gutter);
+
+  /* 2 items: 2 columns */
+  &:has(> :nth-child(2)) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* 3 items: 3 columns */
+  &:has(> :nth-child(3)) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* 4+ items: Auto-responsive (RAM pattern) */
+  &:has(> :nth-last-child(n + 5)) {
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(min(100%, var(--_min)), 1fr)
+    );
+  }
+
+  /* On tablets: reduce to 2 columns */
+  @media (max-width: 1024px) {
+    &:has(> :nth-child(3)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &:has(> :nth-last-child(n + 4)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* On mobile: always 1 column */
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================================
+   11. PERFORMANCE UTILITIES — Optimization & Containment
+   ============================================================================
+
+   CSS features for rendering optimization:
+   - content-visibility: Skip rendering of offscreen content
+   - contain: Isolate element's layout/styling/paint from siblings
+
+   These dramatically improve performance for long lists and large grids.
+
+   Example:
+   ```html
+   <!-- Long list of cards—only visible ones render -->
+   <div class="ren-auto-grid">
+     <article class="ren-lazy-section">Item 1</article>
+     <article class="ren-lazy-section">Item 2</article>
+     <!-- ... 100 more items ... -->
+     <article class="ren-lazy-section">Item 102</article>
+   </div>
+   ```
+
+   Or use .ren-contain for layout isolation:
+   ```html
+   <div class="ren-contain">Styles/layout won't leak out</div>
+   ```
+
+   ============================================================================ */
+
+.ren-lazy-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--lazy-height, 600px);
+}
+
+.ren-contain {
+  contain: layout style paint;
+}
+
+/* ============================================================================
+   12. ACCESSIBILITY — Reading Flow & Semantic Grid
+   ============================================================================
+
+   CSS Grid can disrupt logical reading order. The reading-flow property
+   (when supported) ensures keyboard navigation follows visual layout.
+
+   Example:
+   ```html
+   <div class="ren-grid-reading-flow">
+     <!-- Content in visual order, keyboard will follow -->
+   </div>
+   ```
+
+   Progressive enhancement: On browsers without reading-flow, standard
+   keyboard navigation applies.
+
+   ============================================================================ */
+
+@supports (reading-flow: grid-rows) {
+  .ren-grid-reading-flow {
+    reading-flow: grid-rows;
+  }
+}
+
+/* Ensure proper focus handling in grids */
+.ren-col-grid,
+.ren-auto-grid,
+.ren-page-grid,
+.ren-sidebar-grid {
+  & :focus-visible {
+    outline: 2px solid var(--color-focus, #4F46E5);
+    outline-offset: 2px;
+  }
+}
+
+/* ============================================================================
+   13. GRID ANIMATION UTILITIES — Transitions & Reveal Patterns
+   ============================================================================
+
+   Smooth animations for grid layout changes:
+   - Grid track transitions for expanding/collapsing
+   - The `0fr` trick for smooth show/hide
+   - Duration and easing from design tokens
+
+   Example: Animated sidebar toggle
+   ```html
+   <div class="ren-sidebar-grid ren-grid-animate" data-collapsed>
+     <aside>Sidebar</aside>
+     <main>Content</main>
+   </div>
+   ```
+
+   The transition applies only to grid-template-columns, making the animation
+   smooth and performant.
+
+   ============================================================================ */
+
+.ren-grid-animate {
+  transition: grid-template-columns var(--duration-normal) var(--ease-out);
+
+  & > * {
+    transition: min-width var(--duration-normal) var(--ease-out);
+  }
+}
+
+/* Animation reveal pattern: gradually show/hide grid items */
+.ren-grid-item-reveal {
+  animation: gridItemReveal var(--duration-normal) var(--ease-out) both;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+@keyframes gridItemReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================================
+   14. MODULAR GRID — Müller-Brockmann System
+   ============================================================================
+
+   A baseline grid system combining both rows and columns for strict
+   geometric alignment. Based on the Swiss graphic design tradition.
+
+   Properties:
+   - --mod-cols: Number of columns (default: 6)
+   - --mod-row: Row height in rem/px (default: 4.5rem)
+
+   All content aligns to the baseline grid.
+
+   Example HTML:
+   ```html
+   <!-- Standard 6-column × 4.5rem modular grid -->
+   <div class="ren-modular-grid">
+     <section>Section 1</section>
+     <section>Section 2</section>
+     <!-- ... -->
+   </div>
+
+   <!-- 4-column, custom row height -->
+   <div class="ren-modular-grid" style="--mod-cols: 4; --mod-row: 6rem;">
+     <div>Item 1</div>
+   </div>
+   ```
+
+   ============================================================================ */
+
+.ren-modular-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--mod-cols, 6), 1fr);
+  grid-auto-rows: var(--mod-row, 4.5rem);
+  gap: var(--grid-gutter);
+
+  /* Responsive: reduce columns on mobile */
+  @media (max-width: 768px) {
+    --mod-cols: 4;
+  }
+
+  @media (max-width: 640px) {
+    --mod-cols: 2;
+  }
+}
+
+/* ============================================================================
+   END OF GRID SYSTEM
+   ============================================================================
+
+   Summary of available components:
+
+   Layout Patterns:
+   • .ren-page-grid — Full-bleed content zones (content/popout/feature/full)
+   • .ren-prose-grid — Narrower prose-optimized full-bleed
+   • .ren-col-grid — 12-column explicit grid system
+   • .ren-auto-grid — Responsive auto-fit pattern (RAM)
+   • .ren-sidebar-grid — Two-column with collapsible sidebar
+   • .ren-pancake — Header/main/footer stretching layout
+   • .ren-albatross — Binary layout switch without media queries
+   • .ren-bento — Irregular Apple-style grid
+   • .ren-quantity-grid — Content-driven column count
+   • .ren-modular-grid — Müller-Brockmann baseline grid
+
+   Advanced:
+   • .ren-subgrid — Inherit parent columns for alignment
+   • .ren-card-grid — Card grid with subgrid internal alignment
+   • .ren-lazy-section — Performance optimization (content-visibility)
+   • .ren-contain — Layout containment for isolation
+   • .ren-grid-animate — Smooth layout transitions
+
+   All grids use:
+   • CSS custom properties for theming and runtime configuration
+   • CSS Nesting for organization
+   • min(100%, X) overflow protection
+   • clamp() for fluid scaling
+   • @supports fallbacks for newer features
+   • Responsive breakpoints: 640px, 768px, 1024px
+
+   ============================================================================ */

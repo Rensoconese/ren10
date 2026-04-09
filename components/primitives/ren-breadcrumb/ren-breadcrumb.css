@@ -1,0 +1,94 @@
+/* ============================================
+   RenDS — Breadcrumb Component
+   ============================================
+   Hierarchical navigation trail.
+   CSS-only. No JS needed.
+
+   Uses semantic <nav> + <ol> for accessibility.
+   Screen readers announce "Breadcrumb" navigation.
+
+   Usage:
+     <nav aria-label="Breadcrumb" class="ren-breadcrumb">
+       <ol>
+         <li><a href="/">Home</a></li>
+         <li><a href="/products">Products</a></li>
+         <li><a href="/products/shoes" aria-current="page">Shoes</a></li>
+       </ol>
+     </nav>
+
+   With custom separator:
+     <nav aria-label="Breadcrumb" class="ren-breadcrumb"
+          style="--breadcrumb-separator: '/'">
+       ...
+     </nav>
+   ============================================ */
+
+.ren-breadcrumb {
+  --breadcrumb-separator: '\203A';  /* › */
+}
+
+.ren-breadcrumb > ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: var(--caption-size, var(--text-sm));
+}
+
+.ren-breadcrumb > ol > li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--color-text-muted);
+}
+
+/* Separator */
+.ren-breadcrumb > ol > li + li::before {
+  content: var(--breadcrumb-separator);
+  color: var(--color-text-faint);
+  font-size: 1.1em;
+  margin-inline-end: var(--space-1);
+}
+
+/* Links */
+.ren-breadcrumb a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: var(--space-1) 0;
+  border-radius: var(--radius-sm);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.ren-breadcrumb a:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.ren-breadcrumb a:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Current page (last item) */
+.ren-breadcrumb [aria-current="page"] {
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  pointer-events: none;
+}
+
+/* ─── Truncated (for deep paths) ─── */
+.ren-breadcrumb-truncated > ol > li:not(:first-child):not(:last-child):not(:nth-last-child(2)) {
+  display: none;
+}
+
+/* Show ellipsis in place of hidden items */
+.ren-breadcrumb-truncated > ol > li:nth-child(2)::after {
+  content: '…';
+  color: var(--color-text-faint);
+  padding: 0 var(--space-1);
+}

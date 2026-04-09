@@ -1,0 +1,318 @@
+/* ============================================
+   RenDS — Form Validation System Organism
+   ============================================
+   Multi-step form with field validation,
+   error summaries, and accessibility features.
+
+   Includes:
+   - Form container with field stack layout
+   - Section grouping and horizontal rows
+   - Error summary boxes (CSS shown/hidden)
+   - Multi-step progress indicators
+   - Loading/submitting states
+   - Responsive design
+
+   Light DOM — no Shadow DOM.
+   ============================================ */
+
+/* ─── Form Container ─── */
+.ren-form {
+  container-type: inline-size;
+  container-name: ren-form;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Submitting state — disable interactions */
+.ren-form[data-submitting] {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ─── Error Summary ─── */
+.ren-form-error-summary {
+  padding: var(--space-4);
+  background-color: var(--color-danger-subtle);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  transition: all var(--duration-moderate) var(--ease-out);
+}
+
+.ren-form-error-summary[hidden],
+.ren-form-error-summary:not([data-has-errors]) {
+  display: none;
+}
+
+.ren-form-error-summary strong {
+  display: block;
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--color-danger);
+  margin-bottom: var(--space-2);
+}
+
+.ren-form-error-summary ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ren-form-error-summary li {
+  font-size: var(--caption-size);
+  color: var(--color-danger);
+  line-height: var(--leading-normal);
+}
+
+.ren-form-error-summary a {
+  color: var(--color-danger);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ren-form-error-summary a:hover {
+  text-decoration: none;
+}
+
+/* ─── Success Message ─── */
+.ren-form-success {
+  padding: var(--space-4);
+  background-color: var(--color-success-subtle);
+  border: 1px solid var(--color-success);
+  border-radius: var(--radius-md);
+  font-size: var(--body-sm-size);
+  color: var(--color-success);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  transition: all var(--duration-moderate) var(--ease-out);
+}
+
+.ren-form-success[hidden] {
+  display: none;
+}
+
+/* ─── Form Sections ─── */
+.ren-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ren-form-section-title {
+  font-size: var(--title-sm-size);
+  font-weight: var(--title-sm-weight);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  line-height: var(--title-sm-leading);
+}
+
+/* ─── Form Row (Horizontal Layout) ─── */
+.ren-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.ren-form-row > .ren-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* Stack on narrow containers */
+@container ren-form (max-width: 480px) {
+  .ren-form-row {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .ren-form-row > .ren-field {
+    min-width: 100%;
+    flex: none;
+  }
+}
+
+/* ─── Form Actions ─── */
+.ren-form-actions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.ren-form-actions button {
+  white-space: nowrap;
+}
+
+@container ren-form (max-width: 480px) {
+  .ren-form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .ren-form-actions button {
+    width: 100%;
+  }
+}
+
+/* ─── Multi-Step Progress Indicator ─── */
+.ren-form-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.ren-form-step {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Step circle */
+.ren-form-step::before {
+  content: attr(data-step);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  transition: all var(--duration-normal) var(--ease-out);
+  border: 2px solid transparent;
+}
+
+/* Step label */
+.ren-form-step-label {
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: all var(--duration-normal) var(--ease-out);
+}
+
+/* Divider between steps */
+.ren-form-step:not(:last-child)::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background-color: var(--color-border);
+  min-width: 1rem;
+  transition: background-color var(--duration-normal) var(--ease-out);
+}
+
+/* Active step */
+.ren-form-step[data-active] {
+  /* Step circle */
+}
+
+.ren-form-step[data-active]::before {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-subtle);
+}
+
+.ren-form-step[data-active] .ren-form-step-label {
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+
+/* Completed step */
+.ren-form-step[data-completed] {
+  /* Step circle */
+}
+
+.ren-form-step[data-completed]::before {
+  background-color: var(--color-success);
+  color: var(--color-on-success);
+  border-color: var(--color-success);
+  content: '✓';
+  font-size: 1.25rem;
+  font-weight: var(--weight-bold);
+}
+
+.ren-form-step[data-completed] .ren-form-step-label {
+  color: var(--color-text-muted);
+}
+
+/* Divider after completed step is colored */
+.ren-form-step[data-completed]:not(:last-child)::after {
+  background-color: var(--color-success);
+}
+
+/* ─── Disabled step ─── */
+.ren-form-step[data-disabled] {
+  pointer-events: none;
+}
+
+.ren-form-step[data-disabled]::before {
+  background-color: var(--color-fill);
+  color: var(--color-text-faint);
+  opacity: 0.5;
+}
+
+.ren-form-step[data-disabled] .ren-form-step-label {
+  color: var(--color-text-faint);
+  opacity: 0.5;
+}
+
+/* Stack steps vertically on narrow containers */
+@container ren-form (max-width: 360px) {
+  .ren-form-progress {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .ren-form-step:not(:last-child)::after {
+    content: '';
+    width: 2px;
+    height: 1.5rem;
+    background-color: var(--color-border);
+    min-width: 0;
+  }
+}
+
+/* ─── Smooth focus management ─── */
+.ren-form:has(.ren-field[data-invalid]) {
+  scroll-behavior: smooth;
+}
+
+/* ─── Animation for error entry ─── */
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ren-form-error-summary[data-has-errors] {
+  animation: slideInError var(--duration-moderate) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-form-error-summary[data-has-errors],
+  .ren-form-step::before,
+  .ren-form-step-label,
+  .ren-form-step:not(:last-child)::after {
+    animation: none;
+    transition: none;
+  }
+}

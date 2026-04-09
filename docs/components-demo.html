@@ -1,0 +1,3504 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenDS — Component Showcase</title>
+
+  <!--
+    NOTE: This page uses @import statements in CSS files which only work with a web server.
+    For local testing, use: python -m http.server 8000
+    Then open: http://localhost:8000/rends/docs/components-demo.html
+  -->
+
+  <!-- Main design system CSS -->
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+
+  <!-- Fallback links for when opened directly (without @import support) -->
+  <link rel="stylesheet" href="../tokens/primitives/colors.css">
+  <link rel="stylesheet" href="../tokens/primitives/typography.css">
+  <link rel="stylesheet" href="../tokens/primitives/spacing.css">
+  <link rel="stylesheet" href="../tokens/primitives/radius.css">
+  <link rel="stylesheet" href="../tokens/primitives/shadows.css">
+  <link rel="stylesheet" href="../tokens/primitives/sizing.css">
+  <link rel="stylesheet" href="../tokens/primitives/motion.css">
+  <link rel="stylesheet" href="../tokens/primitives/z-index.css">
+  <link rel="stylesheet" href="../tokens/semantic/colors.css">
+  <link rel="stylesheet" href="../tokens/semantic/typography.css">
+  <link rel="stylesheet" href="../base/reset.css">
+  <link rel="stylesheet" href="../base/semantics.css">
+  <link rel="stylesheet" href="../base/utilities.css">
+  <link rel="stylesheet" href="../base/layouts.css">
+
+  <!-- New components (Phase 2-3) -->
+  <link rel="stylesheet" href="../components/primitives/ren-card/ren-card.css">
+  <link rel="stylesheet" href="../components/primitives/ren-link/ren-link.css">
+  <link rel="stylesheet" href="../components/primitives/ren-banner/ren-banner.css">
+  <link rel="stylesheet" href="../components/primitives/ren-breadcrumb/ren-breadcrumb.css">
+  <link rel="stylesheet" href="../components/primitives/ren-pagination/ren-pagination.css">
+  <link rel="stylesheet" href="../components/primitives/ren-tag/ren-tag.css">
+  <link rel="stylesheet" href="../components/composites/ren-collapsible/ren-collapsible.css">
+  <link rel="stylesheet" href="../components/composites/ren-toolbar/ren-toolbar.css">
+  <link rel="stylesheet" href="../components/composites/ren-dropzone/ren-dropzone.css">
+  <link rel="stylesheet" href="../components/composites/ren-alert-dialog/ren-alert-dialog.css">
+  <link rel="stylesheet" href="../components/composites/ren-context-menu/ren-context-menu.css">
+  <link rel="stylesheet" href="../components/patterns/ren-empty-state/ren-empty-state.css">
+  <link rel="stylesheet" href="../components/patterns/ren-ai/ren-ai.css">
+  <link rel="stylesheet" href="../tokens/semantic/dynamic-type.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       DEMO PAGE SPECIFIC STYLES
+       ═══════════════════════════════════════════════════════════ */
+
+    body {
+      color: var(--color-text);
+      background-color: var(--color-surface);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: var(--space-6);
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--space-6);
+      min-height: 100vh;
+    }
+
+    /* Sticky sidebar navigation */
+    .demo-sidebar {
+      position: sticky;
+      top: var(--space-6);
+      height: fit-content;
+      max-height: calc(100vh - var(--space-12));
+      overflow-y: auto;
+      border-right: 1px solid var(--color-border);
+      padding-right: var(--space-4);
+    }
+
+    .demo-sidebar nav {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .demo-sidebar a {
+      display: block;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: background-color var(--duration-normal) var(--ease-out);
+    }
+
+    .demo-sidebar a:hover {
+      background-color: var(--color-fill);
+      color: var(--color-text);
+    }
+
+    .demo-sidebar a:target,
+    .demo-sidebar a.active {
+      background-color: var(--color-accent);
+      color: var(--color-on-accent);
+    }
+
+    .demo-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-8);
+    }
+
+    /* Header with theme toggle */
+    .demo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      margin: calc(var(--space-6) * -1) calc(var(--space-6) * -1) var(--space-4);
+      background: var(--color-surface-sunken);
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .demo-header h1 {
+      margin: 0;
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+    }
+
+    .demo-theme-toggle {
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-fill);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      cursor: pointer;
+      min-height: var(--size-lg);
+      transition: background-color var(--duration-normal) var(--ease-out);
+    }
+
+    .demo-theme-toggle:hover {
+      background-color: var(--color-fill-hover);
+    }
+
+    /* Section styling */
+    .demo-section {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      scroll-margin-top: 120px;
+    }
+
+    .demo-section > h2:first-child {
+      margin: 0;
+      margin-bottom: var(--space-2);
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+    }
+
+    .demo-description {
+      margin: 0;
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-normal);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-4);
+      align-items: start;
+    }
+
+    .demo-item {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .demo-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+    }
+
+    /* Color swatches */
+    .color-swatch {
+      width: 100%;
+      height: 60px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    /* Typography samples */
+    .typography-sample {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3);
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-md);
+    }
+
+    .typography-sample h1 { margin: 0; font-size: var(--text-5xl); }
+    .typography-sample h2 { margin: 0; font-size: var(--text-4xl); }
+    .typography-sample h3 { margin: 0; font-size: var(--text-3xl); }
+    .typography-sample h4 { margin: 0; font-size: var(--text-2xl); }
+    .typography-sample h5 { margin: 0; font-size: var(--text-xl); }
+    .typography-sample h6 { margin: 0; font-size: var(--text-lg); }
+    .typography-sample .body { margin: 0; font-size: var(--text-base); }
+    .typography-sample .caption { margin: 0; font-size: var(--text-sm); }
+    .typography-sample .label { margin: 0; font-size: var(--text-xs); }
+
+    /* Grid for variants */
+    .demo-variants {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--space-3);
+    }
+
+    /* Form field demo */
+    .demo-form-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-4);
+      margin-top: var(--space-3);
+    }
+
+    /* Horizontal layout for separator demo */
+    .demo-flex-row {
+      display: flex;
+      gap: var(--space-4);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Separator vertical */
+    .separator-vertical {
+      width: 1px;
+      height: 40px;
+      background: var(--color-separator);
+    }
+
+    /* Avatar group */
+    .avatar-group {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    /* Spinner demo */
+    .spinner-demo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+    }
+
+    /* Skeleton demo */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .ren-skeleton {
+      background: var(--color-fill);
+      border-radius: var(--radius-md);
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .skeleton-text {
+      width: 100%;
+      height: 16px;
+    }
+
+    .skeleton-heading {
+      width: 80%;
+      height: 24px;
+      margin-bottom: var(--space-2);
+    }
+
+    .skeleton-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+
+    .skeleton-rectangle {
+      width: 100%;
+      height: 100px;
+    }
+
+    /* Icon demo */
+    .icon-demo {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Dialog demo buttons */
+    .demo-dialog-trigger {
+      cursor: pointer;
+    }
+
+    /* Tabs demo */
+    .tabs-demo {
+      margin-top: var(--space-3);
+    }
+
+    /* Accordion demo */
+    .accordion-demo {
+      margin-top: var(--space-3);
+    }
+
+    /* Toast demo buttons */
+    .toast-button {
+      margin: var(--space-1);
+    }
+
+    /* Layout showcase */
+    .layout-demo {
+      border: 2px dashed var(--color-border);
+      padding: var(--space-4);
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-md);
+    }
+
+    .layout-demo-item {
+      padding: var(--space-3);
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+      border-radius: var(--radius-md);
+      text-align: center;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-sidebar {
+        display: none;
+      }
+
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="ren-skip-link">Skip to main content</a>
+
+  <main id="main">
+    <!-- Sidebar Navigation -->
+    <aside class="demo-sidebar">
+      <div class="demo-label">Components</div>
+      <nav aria-label="Component sections">
+        <a href="#typography">Typography</a>
+        <a href="#colors">Colors</a>
+        <a href="#buttons">Buttons</a>
+        <a href="#badges">Badges</a>
+        <a href="#separators">Separators</a>
+        <a href="#avatars">Avatars</a>
+        <a href="#spinners">Spinners</a>
+        <a href="#skeletons">Skeletons</a>
+        <a href="#kbd">Keyboard Keys</a>
+        <a href="#icons">Icons</a>
+        <a href="#form-fields">Form Fields</a>
+        <a href="#checkbox">Checkbox</a>
+        <a href="#switch">Switch</a>
+        <a href="#radio">Radio</a>
+        <a href="#progress">Progress</a>
+        <a href="#tabs">Tabs</a>
+        <a href="#accordion">Accordion</a>
+        <a href="#dialog">Dialog</a>
+        <a href="#toast">Toast</a>
+        <a href="#layouts">Layouts</a>
+        <a href="#number-field">Number Field (Stepper)</a>
+        <a href="#input-otp">Input OTP</a>
+        <a href="#data-table">Data Table</a>
+        <a href="#form-validation">Form Validation</a>
+        <a href="#multi-step-form">Multi-Step Form</a>
+
+        <div class="demo-label" style="margin-top: var(--space-4);">Phase 2–3</div>
+        <a href="#cards">Cards</a>
+        <a href="#links">Links</a>
+        <a href="#banners">Banners</a>
+        <a href="#breadcrumbs">Breadcrumbs</a>
+        <a href="#pagination">Pagination</a>
+        <a href="#tags">Tags</a>
+        <a href="#collapsible">Collapsible</a>
+        <a href="#toolbar">Toolbar</a>
+        <a href="#dropzone">DropZone</a>
+        <a href="#empty-state">Empty State</a>
+        <a href="#alert-dialog">Alert Dialog</a>
+        <a href="#context-menu">Context Menu</a>
+
+        <div class="demo-label" style="margin-top: var(--space-4);">Advanced</div>
+        <a href="#tooltip">Tooltip</a>
+        <a href="#popover">Popover</a>
+        <a href="#sheet">Sheet</a>
+        <a href="#hover-card">Hover Card</a>
+        <a href="#combobox">Combobox</a>
+        <a href="#slider">Slider</a>
+        <a href="#toggle-group">Toggle Group</a>
+        <a href="#scroll-area">Scroll Area</a>
+        <a href="#color-picker">Color Picker</a>
+        <a href="#calendar">Calendar</a>
+        <a href="#date-picker">Date Picker</a>
+        <a href="#carousel">Carousel</a>
+        <a href="#custom-select">Custom Select</a>
+        <a href="#menu">Menu</a>
+        <a href="#menubar">Menubar</a>
+        <a href="#nav">Nav</a>
+        <a href="#sidebar">Sidebar</a>
+        <a href="#command">Command Palette</a>
+
+        <div class="demo-label" style="margin-top: var(--space-4);">System</div>
+        <a href="#dynamic-type">Dynamic Type</a>
+        <a href="#appearance-api">Appearance API</a>
+        <a href="#ai-patterns">AI Patterns</a>
+      </nav>
+    </aside>
+
+    <!-- Content -->
+    <div class="demo-content">
+      <!-- Header with theme toggle -->
+      <div class="demo-header">
+        <h1>RenDS Components</h1>
+        <button class="demo-theme-toggle" onclick="toggleTheme()">
+          <span id="theme-label">🌙 Dark</span>
+        </button>
+      </div>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TYPOGRAPHY
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="typography" class="demo-section">
+        <h2>Typography</h2>
+        <p class="demo-description">Type hierarchy with system font stack. All sizes maintain proper line heights and weights.</p>
+
+        <div class="typography-sample">
+          <h1>Display Large (h1)</h1>
+          <h2>Display Medium (h2)</h2>
+          <h3>Display Small (h3)</h3>
+          <h4>Title Large (h4)</h4>
+          <h5>Title Medium (h5)</h5>
+          <h6>Title Small (h6)</h6>
+          <p class="body">Body text (16px). This is the default paragraph size used throughout the system. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          <p class="caption">Caption (13px). Small text for footnotes and supplementary information.</p>
+          <p class="label">Label (11px). The smallest size for labels, badges, and captions.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           COLORS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="colors" class="demo-section">
+        <h2>Colors</h2>
+        <p class="demo-description">Semantic color tokens with built-in dark mode support. Based on Apple HIG with accessible contrast ratios (WCAG 2.1 AA).</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Status Colors</h3>
+          <div class="demo-grid">
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-accent);"></div>
+              <div class="demo-label">Accent</div>
+            </div>
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-success);"></div>
+              <div class="demo-label">Success</div>
+            </div>
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-warning);"></div>
+              <div class="demo-label">Warning</div>
+            </div>
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-danger);"></div>
+              <div class="demo-label">Danger</div>
+            </div>
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-info);"></div>
+              <div class="demo-label">Info</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Surface Colors</h3>
+          <div class="demo-grid">
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-surface); border: 2px solid var(--color-border);"></div>
+              <div class="demo-label">Surface</div>
+            </div>
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-surface-sunken);"></div>
+              <div class="demo-label">Sunken</div>
+            </div>
+            <div class="demo-item">
+              <div class="color-swatch" style="background: var(--color-surface-raised);"></div>
+              <div class="demo-label">Raised</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           BUTTONS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="buttons" class="demo-section">
+        <h2>Buttons</h2>
+        <p class="demo-description">Multi-variant button component with sizes, states, and accessibility features.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Variants</h3>
+          <div class="demo-variants">
+            <button class="ren-btn ren-btn-primary">Primary</button>
+            <button class="ren-btn ren-btn-secondary">Secondary</button>
+            <button class="ren-btn ren-btn-ghost">Ghost</button>
+            <button class="ren-btn ren-btn-outline">Outline</button>
+            <button class="ren-btn ren-btn-danger">Danger</button>
+            <button class="ren-btn ren-btn-link">Link</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Sizes</h3>
+          <div class="demo-variants">
+            <button class="ren-btn ren-btn-sm">Small</button>
+            <button class="ren-btn ren-btn-md">Medium</button>
+            <button class="ren-btn ren-btn-lg">Large</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">States</h3>
+          <div class="demo-variants">
+            <button class="ren-btn ren-btn-primary">Normal</button>
+            <button class="ren-btn ren-btn-primary" disabled>Disabled</button>
+            <button class="ren-btn ren-btn-primary ren-loading">Loading</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Icons</h3>
+          <div class="demo-variants">
+            <button class="ren-btn ren-btn-primary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+              Add Item
+            </button>
+            <button class="ren-btn ren-btn-secondary">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Button Group</h3>
+          <div style="display: inline-flex; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden;">
+            <button class="ren-btn ren-btn-secondary" style="border-radius: 0; border-right: 1px solid var(--color-border);">Left</button>
+            <button class="ren-btn ren-btn-secondary" style="border-radius: 0; border-right: 1px solid var(--color-border);">Center</button>
+            <button class="ren-btn ren-btn-secondary" style="border-radius: 0;">Right</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           BADGES
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="badges" class="demo-section">
+        <h2>Badges</h2>
+        <p class="demo-description">Small contextual labels for status, tags, or counters.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Variants</h3>
+          <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+            <span class="ren-badge">Default</span>
+            <span class="ren-badge ren-badge-primary">Primary</span>
+            <span class="ren-badge ren-badge-secondary">Secondary</span>
+            <span class="ren-badge ren-badge-success">Success</span>
+            <span class="ren-badge ren-badge-warning">Warning</span>
+            <span class="ren-badge ren-badge-danger">Danger</span>
+            <span class="ren-badge ren-badge-info">Info</span>
+            <span class="ren-badge ren-badge-outline">Outline</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Dot</h3>
+          <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+            <span class="ren-badge ren-badge-success">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
+              Active
+            </span>
+            <span class="ren-badge ren-badge-warning">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
+              Pending
+            </span>
+            <span class="ren-badge ren-badge-danger">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
+              Inactive
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SEPARATORS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="separators" class="demo-section">
+        <h2>Separators</h2>
+        <p class="demo-description">Horizontal and vertical dividers, with optional labels.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Horizontal</h3>
+          <div style="border-bottom: 1px solid var(--color-separator); margin: var(--space-3) 0;"></div>
+          <p style="margin: 0; color: var(--color-text-secondary); font-size: var(--text-sm);">Separator without label</p>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Label</h3>
+          <div class="ren-divider">Or continue with</div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Vertical</h3>
+          <div class="demo-flex-row">
+            <span>Item 1</span>
+            <div class="separator-vertical"></div>
+            <span>Item 2</span>
+            <div class="separator-vertical"></div>
+            <span>Item 3</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           AVATARS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="avatars" class="demo-section">
+        <h2>Avatars</h2>
+        <p class="demo-description">Profile images, initials, and status indicators.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Sizes</h3>
+          <div class="avatar-group">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--color-border);" alt="Avatar XS">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--color-border);" alt="Avatar SM">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-border);" alt="Avatar MD">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--color-border);" alt="Avatar LG">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 56px; height: 56px; border-radius: 50%; border: 2px solid var(--color-border);" alt="Avatar XL">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--color-border);" alt="Avatar 2XL">
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Initials</h3>
+          <div class="avatar-group">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-accent); color: var(--color-on-accent); display: flex; align-items: center; justify-content: center; font-size: var(--text-xs); font-weight: var(--weight-semibold); border: 2px solid var(--color-border);">JD</div>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-success); color: var(--color-on-accent); display: flex; align-items: center; justify-content: center; font-size: var(--text-xs); font-weight: var(--weight-semibold); border: 2px solid var(--color-border);">AB</div>
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-warning); color: white; display: flex; align-items: center; justify-content: center; font-size: var(--text-xs); font-weight: var(--weight-semibold); border: 2px solid var(--color-border);">CD</div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Square Variant</h3>
+          <div class="avatar-group">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Crect x='2' y='2' width='20' height='20'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: var(--radius-md); border: 2px solid var(--color-border);">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%2334C759'%3E%3Crect x='2' y='2' width='20' height='20'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: var(--radius-md); border: 2px solid var(--color-border);">
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Status Indicator</h3>
+          <div class="avatar-group">
+            <div style="position: relative; width: 40px; height: 40px;">
+              <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-border);">
+              <div style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: var(--color-success); border: 2px solid var(--color-surface); border-radius: 50%;"></div>
+            </div>
+            <div style="position: relative; width: 40px; height: 40px;">
+              <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-border);">
+              <div style="position: absolute; bottom: 0; right: 0; width: 12px; height: 12px; background: var(--color-warning); border: 2px solid var(--color-surface); border-radius: 50%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Avatar Group (Stack)</h3>
+          <div style="display: flex; margin-left: -8px;">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23007AFF'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-surface); margin-left: -8px;">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%2334C759'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-surface); margin-left: -8px;">
+            <img alt="" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 24 24' fill='%23FF9500'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--color-surface); margin-left: -8px;">
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SPINNERS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="spinners" class="demo-section">
+        <h2>Spinners</h2>
+        <p class="demo-description">Loading indicators in various sizes.</p>
+
+        <div class="demo-variants">
+          <div>
+            <div class="spinner-demo" style="font-size: 12px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2a10 10 0 0110 10"/>
+              </svg>
+            </div>
+            <div class="demo-label" style="margin-top: var(--space-1);">XS</div>
+          </div>
+          <div>
+            <div class="spinner-demo" style="font-size: 16px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2a10 10 0 0110 10"/>
+              </svg>
+            </div>
+            <div class="demo-label" style="margin-top: var(--space-1);">SM</div>
+          </div>
+          <div>
+            <div class="spinner-demo" style="font-size: 24px;">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2a10 10 0 0110 10"/>
+              </svg>
+            </div>
+            <div class="demo-label" style="margin-top: var(--space-1);">MD</div>
+          </div>
+          <div>
+            <div class="spinner-demo" style="font-size: 32px;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 2a10 10 0 0110 10"/>
+              </svg>
+            </div>
+            <div class="demo-label" style="margin-top: var(--space-1);">LG</div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Light Variant</h3>
+          <div style="padding: var(--space-4); background: var(--color-accent); border-radius: var(--radius-md); display: inline-block;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="animation: spin 1s linear infinite;">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a10 10 0 0110 10"/>
+            </svg>
+          </div>
+        </div>
+
+        <style>
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+        </style>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SKELETONS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="skeletons" class="demo-section">
+        <h2>Skeletons</h2>
+        <p class="demo-description">Placeholder content for loading states.</p>
+
+        <div class="demo-form-group">
+          <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+            <div class="demo-label">Text</div>
+            <div class="ren-skeleton skeleton-text"></div>
+            <div class="ren-skeleton skeleton-text" style="width: 90%;"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+            <div class="demo-label">Heading</div>
+            <div class="ren-skeleton skeleton-heading"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+            <div class="demo-label">Circle</div>
+            <div class="ren-skeleton skeleton-circle"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+            <div class="demo-label">Rectangle</div>
+            <div class="ren-skeleton skeleton-rectangle"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           KEYBOARD KEYS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="kbd" class="demo-section">
+        <h2>Keyboard Keys</h2>
+        <p class="demo-description">Semantic HTML for keyboard shortcuts and commands.</p>
+
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+          <kbd style="padding: var(--space-1) var(--space-2); background: var(--color-fill); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-xs); font-family: var(--font-mono);">Ctrl</kbd>
+          <span style="color: var(--color-text-muted);">+</span>
+          <kbd style="padding: var(--space-1) var(--space-2); background: var(--color-fill); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-xs); font-family: var(--font-mono);">C</kbd>
+
+          <span style="margin-left: var(--space-4); color: var(--color-text-secondary);">|</span>
+
+          <kbd style="padding: var(--space-1) var(--space-2); background: var(--color-fill); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-xs); font-family: var(--font-mono);">Shift</kbd>
+          <span style="color: var(--color-text-muted);">+</span>
+          <kbd style="padding: var(--space-1) var(--space-2); background: var(--color-fill); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-xs); font-family: var(--font-mono);">Cmd</kbd>
+          <span style="color: var(--color-text-muted);">+</span>
+          <kbd style="padding: var(--space-1) var(--space-2); background: var(--color-fill); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-xs); font-family: var(--font-mono);">S</kbd>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           ICONS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="icons" class="demo-section">
+        <h2>Icons</h2>
+        <p class="demo-description">SVG icons with size, color, and animation utilities via <code>.ren-icon</code> classes.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Sizes</h3>
+          <div class="demo-variants">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+              <span class="ren-icon ren-icon-xs">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              </span>
+              <div class="demo-label">xs (12px)</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+              <span class="ren-icon ren-icon-sm">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              </span>
+              <div class="demo-label">sm (16px)</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+              <span class="ren-icon ren-icon-md">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              </span>
+              <div class="demo-label">md (20px)</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+              <span class="ren-icon ren-icon-lg">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              </span>
+              <div class="demo-label">lg (24px)</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+              <span class="ren-icon ren-icon-xl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              </span>
+              <div class="demo-label">xl (32px)</div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
+              <span class="ren-icon ren-icon-2xl">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              </span>
+              <div class="demo-label">2xl (48px)</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Color Variants</h3>
+          <div class="demo-variants">
+            <span class="ren-icon ren-icon-lg ren-icon-primary">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            </span>
+            <span class="ren-icon ren-icon-lg ren-icon-success">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+            </span>
+            <span class="ren-icon ren-icon-lg ren-icon-warning">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+            </span>
+            <span class="ren-icon ren-icon-lg ren-icon-danger">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            </span>
+            <span class="ren-icon ren-icon-lg ren-icon-muted">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Spinning Icon</h3>
+          <span class="ren-icon ren-icon-xl ren-icon-primary ren-icon-spin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" opacity="0.25"/><path d="M12 2a10 10 0 0110 10"/></svg>
+          </span>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           FORM FIELDS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="form-fields" class="demo-section">
+        <h2>Form Fields</h2>
+        <p class="demo-description">Input, textarea, select fields with validation states.</p>
+
+        <div class="demo-form-group">
+          <div class="ren-field">
+            <label class="ren-field-label" data-required>Text Input</label>
+            <input class="ren-input" type="text" placeholder="Enter text...">
+            <small class="ren-field-description">Helper text goes here</small>
+          </div>
+
+          <div class="ren-field">
+            <label class="ren-field-label">Email Input</label>
+            <input class="ren-input" type="email" placeholder="email@example.com">
+          </div>
+
+          <div class="ren-field">
+            <label class="ren-field-label">Small Input</label>
+            <input class="ren-input ren-input-sm" type="text" placeholder="Small input">
+          </div>
+
+          <div class="ren-field">
+            <label class="ren-field-label">Large Input</label>
+            <input class="ren-input ren-input-lg" type="text" placeholder="Large input">
+          </div>
+
+          <div class="ren-field">
+            <label class="ren-field-label">Disabled Input</label>
+            <input class="ren-input" type="text" placeholder="Disabled" disabled>
+          </div>
+
+          <div class="ren-field">
+            <label class="ren-field-label">Select</label>
+            <select class="ren-input">
+              <option>Choose an option</option>
+              <option>Option 1</option>
+              <option>Option 2</option>
+              <option>Option 3</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Textarea</h3>
+          <div class="ren-field">
+            <label class="ren-field-label">Message</label>
+            <textarea class="ren-input" placeholder="Enter your message here..." rows="4"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CHECKBOX
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="checkbox" class="demo-section">
+        <h2>Checkbox</h2>
+        <p class="demo-description">Custom-styled checkboxes with accessibility.</p>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <label class="ren-checkbox">
+            <input type="checkbox" checked>
+            <span class="ren-checkbox-control"></span>
+            <span>Checked option</span>
+          </label>
+
+          <label class="ren-checkbox">
+            <input type="checkbox">
+            <span class="ren-checkbox-control"></span>
+            <span>Unchecked option</span>
+          </label>
+
+          <label class="ren-checkbox">
+            <input type="checkbox" disabled checked>
+            <span class="ren-checkbox-control"></span>
+            <span>Disabled checked</span>
+          </label>
+
+          <label class="ren-checkbox">
+            <input type="checkbox" disabled>
+            <span class="ren-checkbox-control"></span>
+            <span>Disabled unchecked</span>
+          </label>
+
+          <div>
+            <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Group</h3>
+            <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+              <label class="ren-checkbox">
+                <input type="checkbox" name="fruits" value="apple">
+                <span class="ren-checkbox-control"></span>
+                <span>Apple</span>
+              </label>
+              <label class="ren-checkbox">
+                <input type="checkbox" name="fruits" value="banana" checked>
+                <span class="ren-checkbox-control"></span>
+                <span>Banana</span>
+              </label>
+              <label class="ren-checkbox">
+                <input type="checkbox" name="fruits" value="orange">
+                <span class="ren-checkbox-control"></span>
+                <span>Orange</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SWITCH (TOGGLE)
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="switch" class="demo-section">
+        <h2>Switch (Toggle)</h2>
+        <p class="demo-description">Binary toggle control for on/off states.</p>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <label class="ren-switch">
+            <input type="checkbox" role="switch" checked>
+            <span class="ren-switch-track"></span>
+            <span>Notifications</span>
+          </label>
+
+          <label class="ren-switch">
+            <input type="checkbox" role="switch">
+            <span class="ren-switch-track"></span>
+            <span>Dark mode</span>
+          </label>
+
+          <label class="ren-switch">
+            <input type="checkbox" role="switch" disabled checked>
+            <span class="ren-switch-track"></span>
+            <span>Disabled (on)</span>
+          </label>
+
+          <label class="ren-switch">
+            <input type="checkbox" role="switch" disabled>
+            <span class="ren-switch-track"></span>
+            <span>Disabled (off)</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           RADIO
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="radio" class="demo-section">
+        <h2>Radio Buttons</h2>
+        <p class="demo-description">Single-select from multiple options.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Vertical Group</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+            <label class="ren-radio">
+              <input type="radio" name="size" value="small" checked>
+              <span class="ren-radio-control"></span>
+              <span>Small</span>
+            </label>
+            <label class="ren-radio">
+              <input type="radio" name="size" value="medium">
+              <span class="ren-radio-control"></span>
+              <span>Medium</span>
+            </label>
+            <label class="ren-radio">
+              <input type="radio" name="size" value="large">
+              <span class="ren-radio-control"></span>
+              <span>Large</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Horizontal Group</h3>
+          <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+            <label class="ren-radio">
+              <input type="radio" name="color" value="red" checked>
+              <span class="ren-radio-control"></span>
+              <span>Red</span>
+            </label>
+            <label class="ren-radio">
+              <input type="radio" name="color" value="green">
+              <span class="ren-radio-control"></span>
+              <span>Green</span>
+            </label>
+            <label class="ren-radio">
+              <input type="radio" name="color" value="blue">
+              <span class="ren-radio-control"></span>
+              <span>Blue</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Disabled</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+            <label class="ren-radio">
+              <input type="radio" name="disabled-group" disabled checked>
+              <span class="ren-radio-control"></span>
+              <span>Disabled (selected)</span>
+            </label>
+            <label class="ren-radio">
+              <input type="radio" name="disabled-group" disabled>
+              <span class="ren-radio-control"></span>
+              <span>Disabled (unselected)</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           PROGRESS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="progress" class="demo-section">
+        <h2>Progress</h2>
+        <p class="demo-description">Visual progress indicators with various values and states.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Values</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+            <div>
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: var(--weight-medium);">25%</label>
+              <progress class="ren-progress" value="25" max="100" style="width: 100%;"></progress>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: var(--weight-medium);">50%</label>
+              <progress class="ren-progress" value="50" max="100" style="width: 100%;"></progress>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: var(--weight-medium);">75%</label>
+              <progress class="ren-progress" value="75" max="100" style="width: 100%;"></progress>
+            </div>
+            <div>
+              <label style="display: block; margin-bottom: var(--space-2); font-size: var(--text-sm); font-weight: var(--weight-medium);">100% (Complete)</label>
+              <progress class="ren-progress" value="100" max="100" style="width: 100%;"></progress>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Status Colors</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+            <progress class="ren-progress" value="60" max="100" style="width: 100%; --progress-color: var(--color-success);"></progress>
+            <progress class="ren-progress" value="60" max="100" style="width: 100%; --progress-color: var(--color-warning);"></progress>
+            <progress class="ren-progress" value="60" max="100" style="width: 100%; --progress-color: var(--color-danger);"></progress>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TABS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="tabs" class="demo-section">
+        <h2>Tabs</h2>
+        <p class="demo-description">Tabbed interface for organizing content.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Underline (Default)</h3>
+          <div role="tablist" class="ren-tabs" style="display: flex; border-bottom: 1px solid var(--color-border); gap: var(--space-4); margin-bottom: var(--space-3);">
+            <button role="tab" aria-selected="true" style="padding: var(--space-3); border-bottom: 2px solid var(--color-accent); color: var(--color-text); background: none; border: none; cursor: pointer; font-weight: var(--weight-medium);">Tab 1</button>
+            <button role="tab" aria-selected="false" style="padding: var(--space-3); border-bottom: 2px solid transparent; color: var(--color-text-secondary); background: none; border: none; cursor: pointer; font-weight: var(--weight-medium);">Tab 2</button>
+            <button role="tab" aria-selected="false" style="padding: var(--space-3); border-bottom: 2px solid transparent; color: var(--color-text-secondary); background: none; border: none; cursor: pointer; font-weight: var(--weight-medium);">Tab 3</button>
+          </div>
+          <p style="margin: 0; padding: var(--space-3); background: var(--color-surface-sunken); border-radius: var(--radius-md);">Content for Tab 1</p>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Pills Style</h3>
+          <div role="tablist" style="display: flex; gap: var(--space-2); margin-bottom: var(--space-3);">
+            <button role="tab" aria-selected="true" style="padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); background: var(--color-accent); color: var(--color-on-accent); border: none; cursor: pointer; font-weight: var(--weight-medium); font-size: var(--text-sm);">Tab 1</button>
+            <button role="tab" aria-selected="false" style="padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); background: var(--color-fill); color: var(--color-text); border: none; cursor: pointer; font-weight: var(--weight-medium); font-size: var(--text-sm);">Tab 2</button>
+            <button role="tab" aria-selected="false" style="padding: var(--space-2) var(--space-3); border-radius: var(--radius-full); background: var(--color-fill); color: var(--color-text); border: none; cursor: pointer; font-weight: var(--weight-medium); font-size: var(--text-sm);">Tab 3</button>
+          </div>
+          <p style="margin: 0; padding: var(--space-3); background: var(--color-surface-sunken); border-radius: var(--radius-md);">Content for Tab 1</p>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Enclosed Style</h3>
+          <div role="tablist" style="display: flex; gap: var(--space-0); margin-bottom: var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden;">
+            <button role="tab" aria-selected="true" style="flex: 1; padding: var(--space-3); background: var(--color-accent); color: var(--color-on-accent); border: none; cursor: pointer; font-weight: var(--weight-medium); border-right: 1px solid var(--color-border);">Tab 1</button>
+            <button role="tab" aria-selected="false" style="flex: 1; padding: var(--space-3); background: transparent; color: var(--color-text); border: none; cursor: pointer; font-weight: var(--weight-medium); border-right: 1px solid var(--color-border);">Tab 2</button>
+            <button role="tab" aria-selected="false" style="flex: 1; padding: var(--space-3); background: transparent; color: var(--color-text); border: none; cursor: pointer; font-weight: var(--weight-medium);">Tab 3</button>
+          </div>
+          <p style="margin: 0; padding: var(--space-3); background: var(--color-surface-sunken); border-radius: var(--radius-md);">Content for Tab 1</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           ACCORDION
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="accordion" class="demo-section">
+        <h2>Accordion</h2>
+        <p class="demo-description">Collapsible sections using <code>.ren-accordion</code> with native <code>&lt;details&gt;</code>.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Default</h3>
+          <div class="ren-accordion">
+            <details>
+              <summary class="ren-accordion-trigger">What is RenDS?</summary>
+              <div class="ren-accordion-content">
+                <p>RenDS is a vanilla, accessible, atomic design system. No framework required. Built with Web Components, CSS custom properties, and modern web standards.</p>
+              </div>
+            </details>
+            <details>
+              <summary class="ren-accordion-trigger">How does theming work?</summary>
+              <div class="ren-accordion-content">
+                <p>RenDS uses a 3-layer token system: primitives, semantic, and component tokens. Apply a theme with <code>data-theme="ocean"</code> on any parent element.</p>
+              </div>
+            </details>
+            <details>
+              <summary class="ren-accordion-trigger">Is it accessible?</summary>
+              <div class="ren-accordion-content">
+                <p>Yes. All components follow WAI-ARIA patterns, support keyboard navigation, focus management, and screen readers. WCAG 2.1 AA compliant.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Open by Default</h3>
+          <div class="ren-accordion">
+            <details open>
+              <summary class="ren-accordion-trigger">This item starts open</summary>
+              <div class="ren-accordion-content">
+                <p>Multiple items can be open simultaneously. Each <code>&lt;details&gt;</code> element manages its own state natively.</p>
+              </div>
+            </details>
+            <details>
+              <summary class="ren-accordion-trigger">This one starts closed</summary>
+              <div class="ren-accordion-content">
+                <p>Click to expand. The chevron rotates smoothly with CSS transitions.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           DIALOG / MODAL
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="dialog" class="demo-section">
+        <h2>Dialog (Modal)</h2>
+        <p class="demo-description">Modal dialog using <code>.ren-dialog</code> with native <code>&lt;dialog&gt;</code> element. Animated entry/exit, backdrop blur, focus trap.</p>
+
+        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+          <button class="ren-btn ren-btn-primary" onclick="document.getElementById('dialog-1').showModal()">Open Dialog</button>
+          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('dialog-2').showModal()">Open Alert Dialog</button>
+        </div>
+
+        <!-- Dialog 1: Standard -->
+        <dialog id="dialog-1" class="ren-dialog" aria-labelledby="dialog-1-title">
+          <div class="ren-dialog-header">
+            <h3 id="dialog-1-title" class="ren-dialog-title">Edit Profile</h3>
+            <button class="ren-dialog-close" onclick="this.closest('dialog').close()" aria-label="Close">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="ren-dialog-body">
+            <p style="color: var(--color-text-secondary);">This is a modal dialog with the <code>.ren-dialog</code> class. It has animated entry/exit via <code>@starting-style</code> and backdrop blur.</p>
+            <div class="ren-field" style="margin-top: var(--space-3);">
+              <label class="ren-field-label">Display Name</label>
+              <input type="text" class="ren-field-input" placeholder="Enter your name" value="Ren">
+            </div>
+          </div>
+          <div class="ren-dialog-footer">
+            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Save</button>
+          </div>
+        </dialog>
+
+        <!-- Dialog 2: Alert Dialog -->
+        <dialog id="dialog-2" class="ren-alert-dialog" aria-labelledby="dialog-2-title">
+          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-danger">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <h3 id="dialog-2-title" class="ren-alert-dialog-title">Delete item?</h3>
+          <p class="ren-alert-dialog-description">This action cannot be undone. The item and all associated data will be permanently removed.</p>
+          <div class="ren-alert-dialog-actions">
+            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">Cancel</button>
+            <button class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">Delete</button>
+          </div>
+        </dialog>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TOAST
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="toast" class="demo-section">
+        <h2>Toast Notifications</h2>
+        <p class="demo-description">Temporary feedback messages using <code>.ren-toast</code> with viewport positioning and auto-dismiss.</p>
+
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+          <button class="ren-btn ren-btn-primary" onclick="showToast('success', 'Changes saved', 'Your profile has been updated successfully.')">Success</button>
+          <button class="ren-btn ren-btn-primary" onclick="showToast('info', 'New update', 'Version 2.0 is now available.')">Info</button>
+          <button class="ren-btn ren-btn-primary" onclick="showToast('warning', 'Storage almost full', 'You have used 90% of your storage quota.')">Warning</button>
+          <button class="ren-btn ren-btn-primary" onclick="showToast('error', 'Upload failed', 'The file could not be uploaded. Please try again.')">Error</button>
+        </div>
+
+        <!-- Toast viewport (proper RenDS component) -->
+        <div id="toast-viewport" class="ren-toast-viewport" data-position="bottom-right"></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           LAYOUTS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="layouts" class="demo-section">
+        <h2>Layout Primitives</h2>
+        <p class="demo-description">Utilidades de layout reutilizables. No son componentes visuales, son helpers invisibles que controlan cómo se distribuyen los elementos.</p>
+
+        <!-- Stack -->
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Stack</h3>
+          <p class="demo-description">Apila elementos verticalmente con espaciado uniforme. Ideal para formularios, listas de cards, secciones de contenido.</p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6);">
+            <!-- Ejemplo: Card de perfil -->
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Card de perfil con <code>.ren-stack-sm</code></p>
+              <div class="ren-stack-sm" style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--color-accent);"></div>
+                <strong>Ren Soconese</strong>
+                <p style="color: var(--color-text-secondary); font-size: var(--text-sm);">Design System Developer</p>
+                <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+                  <span class="ren-badge" data-variant="info">CSS</span>
+                  <span class="ren-badge" data-variant="success">A11y</span>
+                  <span class="ren-badge" data-variant="warning">Web Components</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ejemplo: Mini formulario -->
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Formulario con <code>.ren-stack</code></p>
+              <form onsubmit="event.preventDefault()" class="ren-stack" style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
+                <div class="ren-field">
+                  <label class="ren-field-label">Nombre</label>
+                  <input type="text" class="ren-field-input" placeholder="Tu nombre">
+                </div>
+                <div class="ren-field">
+                  <label class="ren-field-label">Email</label>
+                  <input type="email" class="ren-field-input" placeholder="email@ejemplo.com">
+                </div>
+                <button class="ren-button" data-variant="primary">Enviar</button>
+              </form>
+            </div>
+
+            <!-- Ejemplo: Variantes de espaciado -->
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Variantes de gap</p>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3);">
+                <div>
+                  <p style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin-bottom: var(--space-1);">stack-xs</p>
+                  <div class="ren-stack-xs" style="padding: var(--space-2); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.7;"></div>
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.5;"></div>
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.3;"></div>
+                  </div>
+                </div>
+                <div>
+                  <p style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin-bottom: var(--space-1);">stack-md</p>
+                  <div class="ren-stack-md" style="padding: var(--space-2); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.7;"></div>
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.5;"></div>
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.3;"></div>
+                  </div>
+                </div>
+                <div>
+                  <p style="font-size: var(--text-xs); color: var(--color-text-tertiary); margin-bottom: var(--space-1);">stack-xl</p>
+                  <div class="ren-stack-xl" style="padding: var(--space-2); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.7;"></div>
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.5;"></div>
+                    <div style="height: 8px; background: var(--color-accent); border-radius: var(--radius-sm); opacity: 0.3;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cluster -->
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Cluster</h3>
+          <p class="demo-description">Agrupa elementos en horizontal y los wrappea cuando no entran. Ideal para tags, botones, chips.</p>
+          <div class="ren-cluster layout-demo">
+            <span class="ren-badge" data-variant="info">HTML</span>
+            <span class="ren-badge" data-variant="success">CSS</span>
+            <span class="ren-badge" data-variant="warning">JS</span>
+            <span class="ren-badge" data-variant="danger">A11y</span>
+            <span class="ren-badge" data-variant="info">Tokens</span>
+          </div>
+          <div class="ren-cluster" style="margin-top: var(--space-3);">
+            <button class="ren-button" data-variant="primary" data-size="sm">Guardar</button>
+            <button class="ren-button" data-variant="outline" data-size="sm">Cancelar</button>
+            <button class="ren-button" data-variant="ghost" data-size="sm">Descartar</button>
+          </div>
+        </div>
+
+        <!-- Row -->
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Row</h3>
+          <p class="demo-description">Fila horizontal que NO wrappea. Para layouts inline que deben mantenerse en una línea (navs, toolbars, headers).</p>
+          <div class="ren-row layout-demo" style="padding: var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg);">
+            <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0;"></div>
+            <div style="flex: 1;">
+              <strong style="font-size: var(--text-sm);">Ren Soconese</strong>
+              <p style="font-size: var(--text-xs); color: var(--color-text-secondary);">Online</p>
+            </div>
+            <button class="ren-button" data-variant="ghost" data-size="sm">...</button>
+          </div>
+        </div>
+
+        <!-- Center -->
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Center</h3>
+          <p class="demo-description">Centra contenido con ancho máximo. Para contenedores de texto, artículos, páginas de contenido.</p>
+          <div class="ren-center layout-demo" style="min-height: 120px; background: var(--color-surface-sunken); border-radius: var(--radius-lg);">
+            <p style="text-align: center; color: var(--color-text-secondary); font-size: var(--text-sm);">El contenido se centra horizontalmente<br>con un max-width controlado.</p>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Grid</h3>
+          <p class="demo-description">Grid responsive que se adapta automáticamente. Las cards se redistribuyen según el espacio disponible.</p>
+          <div class="ren-grid" style="--grid-min: 150px;">
+            <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
+              <div style="font-size: var(--text-2xl);">🎨</div>
+              <strong style="font-size: var(--text-sm);">Tokens</strong>
+            </div>
+            <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
+              <div style="font-size: var(--text-2xl);">🧩</div>
+              <strong style="font-size: var(--text-sm);">Primitivos</strong>
+            </div>
+            <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
+              <div style="font-size: var(--text-2xl);">🏗️</div>
+              <strong style="font-size: var(--text-sm);">Composites</strong>
+            </div>
+            <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
+              <div style="font-size: var(--text-2xl);">📐</div>
+              <strong style="font-size: var(--text-sm);">Patterns</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           NUMBER FIELD (STEPPER)
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="number-field" class="demo-section">
+        <h2>Number Field (Stepper)</h2>
+        <p class="demo-description">Input field with increment/decrement buttons for numeric values, supporting min/max bounds and different sizes.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Basic Stepper</h3>
+          <ren-number-field min="0" max="100" value="50" step="1" style="width: 200px;"></ren-number-field>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Min/Max Bounds</h3>
+          <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Range 0-50</p>
+              <ren-number-field min="0" max="50" value="25" step="1" style="width: 200px;"></ren-number-field>
+            </div>
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Range 10-100</p>
+              <ren-number-field min="10" max="100" value="50" step="5" style="width: 200px;"></ren-number-field>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Different Sizes</h3>
+          <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-end;">
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Small</p>
+              <ren-number-field min="0" max="100" value="25" style="width: 160px; --field-height: 32px;"></ren-number-field>
+            </div>
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Default</p>
+              <ren-number-field min="0" max="100" value="50" style="width: 200px;"></ren-number-field>
+            </div>
+            <div>
+              <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Large</p>
+              <ren-number-field min="0" max="100" value="75" style="width: 240px; --field-height: 48px;"></ren-number-field>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Disabled State</h3>
+          <ren-number-field min="0" max="100" value="50" disabled style="width: 200px;"></ren-number-field>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           INPUT OTP
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="input-otp" class="demo-section">
+        <h2>Input OTP</h2>
+        <p class="demo-description">One-time password input with auto-focus and paste support for different code lengths and types.</p>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">6-Digit Numeric OTP</h3>
+          <ren-otp length="6" type="numeric" style="display: inline-flex; gap: var(--space-2);"></ren-otp>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">4-Digit Numeric OTP</h3>
+          <ren-otp length="4" type="numeric" style="display: inline-flex; gap: var(--space-2);"></ren-otp>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Alphanumeric OTP</h3>
+          <ren-otp length="6" type="alphanumeric" style="display: inline-flex; gap: var(--space-2);"></ren-otp>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Disabled State</h3>
+          <ren-otp length="6" type="numeric" disabled style="display: inline-flex; gap: var(--space-2);"></ren-otp>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           DATA TABLE
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="data-table" class="demo-section">
+        <h2>Data Table</h2>
+        <p class="demo-description">Interactive data table with sorting, multi-select, and pagination capabilities.</p>
+
+        <div style="overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-md);">
+          <ren-table data-page-size="5">
+            <div class="ren-table-wrapper">
+              <table class="ren-table">
+                <thead class="ren-table-header">
+                  <tr>
+                    <th class="ren-th ren-table-select"><input type="checkbox" title="Select all rows"></th>
+                    <th class="ren-th ren-th-sortable" data-column="name">Name</th>
+                    <th class="ren-th ren-th-sortable" data-column="email">Email</th>
+                    <th class="ren-th ren-th-sortable" data-column="role">Role</th>
+                    <th class="ren-th ren-th-sortable" data-column="status">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="ren-table-body">
+                  <tr class="ren-tr" data-row-id="1">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">John Doe</td>
+                    <td class="ren-td">john.doe@company.com</td>
+                    <td class="ren-td">Manager</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="2">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">Jane Smith</td>
+                    <td class="ren-td">jane.smith@company.com</td>
+                    <td class="ren-td">Developer</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="3">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">Mike Johnson</td>
+                    <td class="ren-td">mike.johnson@company.com</td>
+                    <td class="ren-td">Designer</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-warning">Pending</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="4">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">Sarah Williams</td>
+                    <td class="ren-td">sarah.williams@company.com</td>
+                    <td class="ren-td">Analyst</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="5">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">Robert Brown</td>
+                    <td class="ren-td">robert.brown@company.com</td>
+                    <td class="ren-td">Manager</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-danger">Inactive</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="6">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">Emily Davis</td>
+                    <td class="ren-td">emily.davis@company.com</td>
+                    <td class="ren-td">Developer</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="7">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">David Martinez</td>
+                    <td class="ren-td">david.martinez@company.com</td>
+                    <td class="ren-td">Designer</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td>
+                  </tr>
+                  <tr class="ren-tr" data-row-id="8">
+                    <td class="ren-td ren-table-select"><input type="checkbox" title="Select row"></td>
+                    <td class="ren-td">Lisa Anderson</td>
+                    <td class="ren-td">lisa.anderson@company.com</td>
+                    <td class="ren-td">Analyst</td>
+                    <td class="ren-td"><span class="ren-badge ren-badge-warning">Pending</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="ren-table-pagination" style="padding: var(--space-3); border-top: 1px solid var(--color-border); background: var(--color-surface-raised);"></div>
+          </ren-table>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           FORM VALIDATION
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="form-validation" class="demo-section">
+        <h2>Form Validation</h2>
+        <p class="demo-description">Multi-section form with field validation, error summaries, and submission handling.</p>
+
+        <ren-form data-validate="onTouched" data-steps="2">
+          <form class="ren-form" style="max-width: 600px;">
+            <!-- Error Summary -->
+            <div class="ren-form-error-summary" hidden style="background: var(--color-danger-light); border: 1px solid var(--color-danger); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-4);">
+              <strong style="display: block; margin-bottom: var(--space-2);">Please fix the following errors:</strong>
+              <ul style="margin: 0; padding-left: var(--space-4); font-size: var(--text-sm);">
+              </ul>
+            </div>
+
+            <!-- Progress Indicator -->
+            <div class="ren-form-progress" style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); justify-content: space-between;">
+              <div class="ren-form-step" data-step="1" data-active style="flex: 1; text-align: center; padding: var(--space-2); border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-on-accent);">
+                <span class="ren-form-step-label" style="font-weight: var(--weight-semibold);">Account</span>
+              </div>
+              <div class="ren-form-step" data-step="2" style="flex: 1; text-align: center; padding: var(--space-2); border-radius: var(--radius-md); background: var(--color-fill); color: var(--color-text-secondary);">
+                <span class="ren-form-step-label" style="font-weight: var(--weight-semibold);">Profile</span>
+              </div>
+            </div>
+
+            <!-- Section 1: Account -->
+            <div class="ren-form-section">
+              <h3 style="font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-3);">Account Information</h3>
+
+              <div class="ren-field" data-rules="required|email" style="margin-bottom: var(--space-4);">
+                <label class="ren-field-label" style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Email <span style="color: var(--color-danger);">*</span></label>
+                <input class="ren-input" type="email" name="email" placeholder="john@example.com" required style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+                <span class="ren-field-error" hidden style="display: block; color: var(--color-danger); font-size: var(--text-sm); margin-top: var(--space-1);"></span>
+              </div>
+
+              <div class="ren-field" data-rules="required|min:8" style="margin-bottom: var(--space-4);">
+                <label class="ren-field-label" style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Password <span style="color: var(--color-danger);">*</span></label>
+                <input class="ren-input" type="password" name="password" placeholder="At least 8 characters" required style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+                <span class="ren-field-error" hidden style="display: block; color: var(--color-danger); font-size: var(--text-sm); margin-top: var(--space-1);"></span>
+              </div>
+
+              <div class="ren-field" data-rules="required|match:password" style="margin-bottom: var(--space-4);">
+                <label class="ren-field-label" style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Confirm Password <span style="color: var(--color-danger);">*</span></label>
+                <input class="ren-input" type="password" name="confirmPassword" placeholder="Must match password" required style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+                <span class="ren-field-error" hidden style="display: block; color: var(--color-danger); font-size: var(--text-sm); margin-top: var(--space-1);"></span>
+              </div>
+            </div>
+
+            <!-- Section 2: Profile -->
+            <div class="ren-form-section" hidden>
+              <h3 style="font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-3);">Profile Information</h3>
+
+              <div class="ren-field" data-rules="required" style="margin-bottom: var(--space-4);">
+                <label class="ren-field-label" style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Full Name <span style="color: var(--color-danger);">*</span></label>
+                <input class="ren-input" type="text" name="fullName" placeholder="John Doe" required style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+                <span class="ren-field-error" hidden style="display: block; color: var(--color-danger); font-size: var(--text-sm); margin-top: var(--space-1);"></span>
+              </div>
+
+              <div class="ren-field" style="margin-bottom: var(--space-4);">
+                <label class="ren-field-label" style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Company</label>
+                <input class="ren-input" type="text" name="company" placeholder="Your company" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+              </div>
+
+              <label class="ren-checkbox" style="margin-bottom: var(--space-4);">
+                <input type="checkbox" name="subscribe">
+                <span class="ren-checkbox-control"></span>
+                <span>Subscribe to newsletter</span>
+              </label>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="ren-form-actions" style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+              <button type="button" class="ren-btn ren-btn-secondary" onclick="previousStep()">Previous</button>
+              <button type="submit" class="ren-btn ren-btn-primary">Submit</button>
+              <button type="button" class="ren-btn ren-btn-secondary" onclick="resetForm()">Cancel</button>
+            </div>
+          </form>
+        </ren-form>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MULTI-STEP FORM
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="multi-step-form" class="demo-section">
+        <h2>Multi-Step Form</h2>
+        <p class="demo-description">Three-step form wizard with progress indicator and navigation controls.</p>
+
+        <div style="max-width: 600px; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-6);">
+          <!-- Progress Bar -->
+          <div style="margin-bottom: var(--space-6);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-3);">
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--color-accent); color: var(--color-on-accent); display: flex; align-items: center; justify-content: center; font-weight: var(--weight-semibold); margin: 0 auto var(--space-2);">1</div>
+                <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">Personal</span>
+              </div>
+              <div style="flex: 1; background: var(--color-border); height: 2px; margin-top: 18px;"></div>
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--color-fill); color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; font-weight: var(--weight-semibold); margin: 0 auto var(--space-2);">2</div>
+                <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">Address</span>
+              </div>
+              <div style="flex: 1; background: var(--color-border); height: 2px; margin-top: 18px;"></div>
+              <div style="text-align: center;">
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: var(--color-fill); color: var(--color-text-secondary); display: flex; align-items: center; justify-content: center; font-weight: var(--weight-semibold); margin: 0 auto var(--space-2);">3</div>
+                <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">Confirm</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 1: Personal Information -->
+          <div class="form-step" style="display: block;">
+            <h3 style="font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-3);">Personal Information</h3>
+
+            <div style="margin-bottom: var(--space-4);">
+              <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">First Name</label>
+              <input type="text" placeholder="John" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+            </div>
+
+            <div style="margin-bottom: var(--space-4);">
+              <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Last Name</label>
+              <input type="text" placeholder="Doe" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+            </div>
+
+            <div style="margin-bottom: var(--space-4);">
+              <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Email</label>
+              <input type="email" placeholder="john@example.com" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+            </div>
+          </div>
+
+          <!-- Step 2: Address Information (hidden) -->
+          <div class="form-step" style="display: none;">
+            <h3 style="font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-3);">Address Information</h3>
+
+            <div style="margin-bottom: var(--space-4);">
+              <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Street Address</label>
+              <input type="text" placeholder="123 Main Street" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+              <div>
+                <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">City</label>
+                <input type="text" placeholder="New York" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+              </div>
+              <div>
+                <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">ZIP Code</label>
+                <input type="text" placeholder="10001" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+              </div>
+            </div>
+
+            <div style="margin-bottom: var(--space-4);">
+              <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Country</label>
+              <input type="text" placeholder="United States" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+            </div>
+          </div>
+
+          <!-- Step 3: Review/Confirm (hidden) -->
+          <div class="form-step" style="display: none;">
+            <h3 style="font-size: var(--text-lg); margin: var(--space-4) 0 var(--space-3);">Review Your Information</h3>
+
+            <div style="background: var(--color-fill); border-radius: var(--radius-md); padding: var(--space-3); margin-bottom: var(--space-4);">
+              <div style="margin-bottom: var(--space-3);">
+                <span style="display: block; font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-1);">Name</span>
+                <span style="display: block; font-weight: var(--weight-semibold);">John Doe</span>
+              </div>
+              <div style="margin-bottom: var(--space-3);">
+                <span style="display: block; font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-1);">Email</span>
+                <span style="display: block; font-weight: var(--weight-semibold);">john@example.com</span>
+              </div>
+              <div>
+                <span style="display: block; font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-1);">Address</span>
+                <span style="display: block; font-weight: var(--weight-semibold);">123 Main Street, New York, 10001, United States</span>
+              </div>
+            </div>
+
+            <label class="ren-checkbox" style="margin-bottom: var(--space-4);">
+              <input type="checkbox" checked>
+              <span class="ren-checkbox-control"></span>
+              <span>I confirm this information is correct</span>
+            </label>
+          </div>
+
+          <!-- Navigation -->
+          <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+            <button class="ren-btn ren-btn-secondary" onclick="prevStep()" id="prev-btn" style="display: none;">Previous</button>
+            <button class="ren-btn ren-btn-primary" onclick="nextStep()" id="next-btn">Next</button>
+            <button class="ren-btn ren-btn-success" onclick="submitForm()" id="submit-btn" style="display: none;">Complete</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CARDS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="cards" class="demo-section">
+        <h2>Cards</h2>
+        <p class="demo-description">Flexible content containers with multiple variants. Support headers, footers, images, status accents, and interactive states.</p>
+
+        <h3>Basic Card</h3>
+        <div class="ren-card" style="max-width: 360px;">
+          <div class="ren-card-header">
+            <h4 style="margin:0;">Project Update</h4>
+            <p style="margin:0; color: var(--color-text-muted); font-size: var(--text-sm);">Last updated 2 hours ago</p>
+          </div>
+          <div class="ren-card-body">
+            <p style="margin:0;">The new dashboard is ready for review. All components have been tested and documented.</p>
+          </div>
+          <div class="ren-card-footer">
+            <button class="ren-btn ren-btn-secondary ren-btn-sm">Dismiss</button>
+            <button class="ren-btn ren-btn-primary ren-btn-sm">View Details</button>
+          </div>
+        </div>
+
+        <h3>Card Variants</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); max-width: 720px;">
+          <div class="ren-card ren-card-elevated">
+            <div class="ren-card-body">
+              <strong>Elevated</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Raised shadow for emphasis</p>
+            </div>
+          </div>
+          <div class="ren-card ren-card-outline">
+            <div class="ren-card-body">
+              <strong>Outline</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Subtle border, no shadow</p>
+            </div>
+          </div>
+          <div class="ren-card ren-card-ghost">
+            <div class="ren-card-body">
+              <strong>Ghost</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Transparent background</p>
+            </div>
+          </div>
+        </div>
+
+        <h3>Interactive & Status</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); max-width: 720px;">
+          <div class="ren-card ren-card-interactive" tabindex="0">
+            <div class="ren-card-body">
+              <strong>Interactive</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Hover me — lifts on hover</p>
+            </div>
+          </div>
+          <div class="ren-card" data-status="success">
+            <div class="ren-card-body">
+              <strong>Success</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Top accent border</p>
+            </div>
+          </div>
+          <div class="ren-card" data-status="danger">
+            <div class="ren-card-body">
+              <strong>Danger</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Error state accent</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           LINKS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="links" class="demo-section">
+        <h2>Links</h2>
+        <p class="demo-description">Styled anchor links with semantic variants: default, muted, plain, external, nav, and skip.</p>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: 400px;">
+          <div>
+            <a href="#" class="ren-link">Default link</a>
+            <span style="margin-left: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted);">.ren-link</span>
+          </div>
+          <div>
+            <a href="#" class="ren-link ren-link-muted">Muted link</a>
+            <span style="margin-left: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted);">.ren-link-muted</span>
+          </div>
+          <div>
+            <a href="#" class="ren-link ren-link-plain">Plain link (no underline)</a>
+            <span style="margin-left: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted);">.ren-link-plain</span>
+          </div>
+          <div>
+            <a href="https://example.com" class="ren-link ren-link-external" target="_blank" rel="noopener">External link</a>
+            <span style="margin-left: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted);">.ren-link-external ↗</span>
+          </div>
+          <div>
+            <a href="#" class="ren-link ren-link-nav" aria-current="page">Nav link (active)</a>
+            <span style="margin-left: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted);">.ren-link-nav</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           BANNERS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="banners" class="demo-section">
+        <h2>Banners</h2>
+        <p class="demo-description">Inline alert messages with icon, content, and optional dismiss button. Variants for info, success, warning, and danger.</p>
+
+        <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: 600px;">
+          <div class="ren-banner">
+            <span class="ren-banner-icon">ℹ️</span>
+            <div class="ren-banner-content">
+              <strong class="ren-banner-title">Information</strong>
+              <p class="ren-banner-description">Your account settings have been updated successfully.</p>
+            </div>
+            <button class="ren-banner-dismiss" aria-label="Dismiss">&times;</button>
+          </div>
+
+          <div class="ren-banner ren-banner-success">
+            <span class="ren-banner-icon">✓</span>
+            <div class="ren-banner-content">
+              <strong class="ren-banner-title">Success</strong>
+              <p class="ren-banner-description">Payment processed. You'll receive a confirmation email shortly.</p>
+            </div>
+          </div>
+
+          <div class="ren-banner ren-banner-warning">
+            <span class="ren-banner-icon">⚠</span>
+            <div class="ren-banner-content">
+              <strong class="ren-banner-title">Warning</strong>
+              <p class="ren-banner-description">Your subscription expires in 3 days. Renew to avoid service interruption.</p>
+            </div>
+          </div>
+
+          <div class="ren-banner ren-banner-danger">
+            <span class="ren-banner-icon">✕</span>
+            <div class="ren-banner-content">
+              <strong class="ren-banner-title">Error</strong>
+              <p class="ren-banner-description">Unable to connect to the server. Please check your network and try again.</p>
+            </div>
+          </div>
+
+          <h3>Compact</h3>
+          <div class="ren-banner ren-banner-compact ren-banner-warning">
+            <span class="ren-banner-icon">⚠</span>
+            <div class="ren-banner-content">
+              <p class="ren-banner-description">Disk space running low — 92% used.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           BREADCRUMBS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="breadcrumbs" class="demo-section">
+        <h2>Breadcrumbs</h2>
+        <p class="demo-description">Semantic navigation trail using <code>&lt;nav&gt;</code> + <code>&lt;ol&gt;</code>. Custom separator via CSS variable.</p>
+
+        <h3>Default</h3>
+        <nav aria-label="Breadcrumb" class="ren-breadcrumb">
+          <ol>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#" aria-current="page">Headphones</a></li>
+          </ol>
+        </nav>
+
+        <h3>Custom Separator</h3>
+        <nav aria-label="Breadcrumb" class="ren-breadcrumb" style="--breadcrumb-separator: '/';">
+          <ol>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#" aria-current="page">Profile</a></li>
+          </ol>
+        </nav>
+
+        <h3>Truncated (middle items collapsed)</h3>
+        <nav aria-label="Breadcrumb" class="ren-breadcrumb ren-breadcrumb-truncated">
+          <ol>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">…</a></li>
+            <li><a href="#">Category</a></li>
+            <li><a href="#" aria-current="page">Current Page</a></li>
+          </ol>
+        </nav>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           PAGINATION
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="pagination" class="demo-section">
+        <h2>Pagination</h2>
+        <p class="demo-description">Page navigation with 44px touch targets, current page indicator, and disabled states.</p>
+
+        <h3>Default</h3>
+        <nav aria-label="Pagination" class="ren-pagination">
+          <a href="#" class="ren-pagination-item ren-pagination-prev" aria-label="Previous page">‹</a>
+          <a href="#" class="ren-pagination-item">1</a>
+          <a href="#" class="ren-pagination-item ren-pagination-current" aria-current="page">2</a>
+          <a href="#" class="ren-pagination-item">3</a>
+          <span class="ren-pagination-ellipsis">…</span>
+          <a href="#" class="ren-pagination-item">12</a>
+          <a href="#" class="ren-pagination-item ren-pagination-next" aria-label="Next page">›</a>
+        </nav>
+
+        <h3>Simple</h3>
+        <nav aria-label="Pagination" class="ren-pagination ren-pagination-simple">
+          <a href="#" class="ren-pagination-item ren-pagination-prev">‹ Prev</a>
+          <span class="ren-pagination-info">Page 2 of 12</span>
+          <a href="#" class="ren-pagination-item ren-pagination-next">Next ›</a>
+        </nav>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TAGS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="tags" class="demo-section">
+        <h2>Tags</h2>
+        <p class="demo-description">Interactive labels with dismiss, selectable state (aria-pressed), and color variants.</p>
+
+        <h3>Basic Tags</h3>
+        <div class="ren-tag-group">
+          <span class="ren-tag">Design</span>
+          <span class="ren-tag">Frontend</span>
+          <span class="ren-tag">CSS</span>
+        </div>
+
+        <h3>Dismissible</h3>
+        <div class="ren-tag-group">
+          <span class="ren-tag">
+            React
+            <button class="ren-tag-dismiss" aria-label="Remove React">&times;</button>
+          </span>
+          <span class="ren-tag">
+            TypeScript
+            <button class="ren-tag-dismiss" aria-label="Remove TypeScript">&times;</button>
+          </span>
+          <span class="ren-tag">
+            Node.js
+            <button class="ren-tag-dismiss" aria-label="Remove Node.js">&times;</button>
+          </span>
+        </div>
+
+        <h3>Selectable</h3>
+        <div class="ren-tag-group">
+          <button class="ren-tag ren-tag-clickable" aria-pressed="true">Selected</button>
+          <button class="ren-tag ren-tag-clickable" aria-pressed="false">Not Selected</button>
+          <button class="ren-tag ren-tag-clickable" aria-pressed="false">Option C</button>
+        </div>
+
+        <h3>Color Variants</h3>
+        <div class="ren-tag-group">
+          <span class="ren-tag ren-tag-success">Success</span>
+          <span class="ren-tag ren-tag-warning">Warning</span>
+          <span class="ren-tag ren-tag-danger">Danger</span>
+          <span class="ren-tag ren-tag-info">Info</span>
+        </div>
+
+        <h3>Sizes</h3>
+        <div class="ren-tag-group" style="align-items: center;">
+          <span class="ren-tag ren-tag-sm">Small</span>
+          <span class="ren-tag">Default</span>
+          <span class="ren-tag ren-tag-lg">Large</span>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           COLLAPSIBLE
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="collapsible" class="demo-section">
+        <h2>Collapsible</h2>
+        <p class="demo-description">Native <code>&lt;details&gt;/&lt;summary&gt;</code> with animated height transitions. Zero JavaScript — uses <code>interpolate-size: allow-keywords</code>.</p>
+
+        <div style="max-width: 500px; display: flex; flex-direction: column; gap: var(--space-3);">
+          <details class="ren-collapsible">
+            <summary class="ren-collapsible-trigger">What is RenDS?</summary>
+            <div class="ren-collapsible-content">
+              <p>RenDS is a vanilla HTML/CSS/JS design system with zero framework dependencies. It uses modern browser APIs like the Popover API, <code>&lt;dialog&gt;</code>, and CSS <code>@starting-style</code> for rich interactions with minimal JavaScript.</p>
+            </div>
+          </details>
+
+          <details class="ren-collapsible">
+            <summary class="ren-collapsible-trigger">How is this different from an accordion?</summary>
+            <div class="ren-collapsible-content">
+              <p>A collapsible is a single expandable section. An accordion is a group of collapsibles where only one can be open at a time (using the <code>name</code> attribute on <code>&lt;details&gt;</code>).</p>
+            </div>
+          </details>
+
+          <details class="ren-collapsible ren-collapsible-ghost" open>
+            <summary class="ren-collapsible-trigger">Ghost variant (no border)</summary>
+            <div class="ren-collapsible-content">
+              <p>This variant removes the border and background, useful for inline expandable sections within other content.</p>
+            </div>
+          </details>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TOOLBAR
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="toolbar" class="demo-section">
+        <h2>Toolbar</h2>
+        <p class="demo-description">WAI-ARIA Toolbar with roving tabindex. Arrow keys navigate items, Home/End jump to first/last.</p>
+
+        <h3>Text Formatting Toolbar</h3>
+        <div class="ren-toolbar" role="toolbar" aria-label="Text formatting" id="demo-toolbar-1">
+          <button class="ren-toolbar-item" aria-pressed="true" title="Bold"><strong>B</strong></button>
+          <button class="ren-toolbar-item" aria-pressed="false" title="Italic"><em>I</em></button>
+          <button class="ren-toolbar-item" aria-pressed="false" title="Underline"><u>U</u></button>
+          <div class="ren-toolbar-separator" role="separator"></div>
+          <button class="ren-toolbar-item" title="Align Left">⫷</button>
+          <button class="ren-toolbar-item" title="Align Center">☰</button>
+          <button class="ren-toolbar-item" title="Align Right">⫸</button>
+        </div>
+
+        <h3>Ghost Variant</h3>
+        <div class="ren-toolbar ren-toolbar-ghost" role="toolbar" aria-label="Actions" id="demo-toolbar-2">
+          <button class="ren-toolbar-item" title="Cut">✂</button>
+          <button class="ren-toolbar-item" title="Copy">📋</button>
+          <button class="ren-toolbar-item" title="Paste">📌</button>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           DROPZONE
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="dropzone" class="demo-section">
+        <h2>DropZone</h2>
+        <p class="demo-description">Drag-and-drop file upload area. Dispatches <code>ren-files-added</code> custom event with the dropped files.</p>
+
+        <div class="ren-dropzone" id="demo-dropzone" style="max-width: 500px;">
+          <input type="file" class="ren-dropzone-input" multiple accept="image/*,.pdf,.doc,.docx">
+          <div class="ren-dropzone-content">
+            <div class="ren-dropzone-icon">📁</div>
+            <p class="ren-dropzone-title">Drag files here or click to browse</p>
+            <p class="ren-dropzone-hint">Supports images, PDFs, and documents up to 10 MB</p>
+          </div>
+        </div>
+
+        <h3>Compact</h3>
+        <div class="ren-dropzone ren-dropzone-compact" style="max-width: 500px;">
+          <input type="file" class="ren-dropzone-input" multiple>
+          <div class="ren-dropzone-content">
+            <span class="ren-dropzone-icon">📎</span>
+            <p class="ren-dropzone-title">Drop files or <a href="#" class="ren-link">browse</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           EMPTY STATE
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="empty-state" class="demo-section">
+        <h2>Empty State</h2>
+        <p class="demo-description">Reusable pattern for no-data states in tables, lists, and cards. CSS-only, no JS needed.</p>
+
+        <h3>Full Empty State</h3>
+        <div style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); max-width: 500px;">
+          <div class="ren-empty-state">
+            <div class="ren-empty-state-icon">📦</div>
+            <h3 class="ren-empty-state-title">No products yet</h3>
+            <p class="ren-empty-state-description">Add your first product to start managing your inventory.</p>
+            <div class="ren-empty-state-actions">
+              <button class="ren-btn ren-btn-primary">Add Product</button>
+              <button class="ren-btn ren-btn-secondary">Import CSV</button>
+            </div>
+          </div>
+        </div>
+
+        <h3>Compact (inline)</h3>
+        <div style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); max-width: 500px;">
+          <div class="ren-empty-state ren-empty-state-compact">
+            <div class="ren-empty-state-icon">🔍</div>
+            <p class="ren-empty-state-description">No results match your search.</p>
+          </div>
+        </div>
+
+        <h3>Bordered (for inside cards)</h3>
+        <div style="max-width: 500px;">
+          <div class="ren-empty-state ren-empty-state-bordered">
+            <div class="ren-empty-state-icon">📝</div>
+            <h3 class="ren-empty-state-title">No notes</h3>
+            <p class="ren-empty-state-description">Start writing to capture your thoughts.</p>
+            <div class="ren-empty-state-actions">
+              <button class="ren-btn ren-btn-sm">New Note</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           ALERT DIALOG
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="alert-dialog" class="demo-section">
+        <h2>Alert Dialog</h2>
+        <p class="demo-description">Confirmation dialog using native <code>&lt;dialog&gt;</code>. Blocks interaction — requires explicit confirm/cancel. No outside-click dismiss.</p>
+
+        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+          <button class="ren-btn ren-btn-danger" onclick="document.getElementById('demo-alert-danger').showModal()">
+            Delete Item
+          </button>
+          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-alert-warning').showModal()">
+            Unsaved Changes
+          </button>
+        </div>
+
+        <!-- Danger Alert Dialog -->
+        <dialog class="ren-alert-dialog" id="demo-alert-danger" aria-label="Delete confirmation">
+          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-danger">🗑</div>
+          <h2 class="ren-alert-dialog-title">Delete this item?</h2>
+          <p class="ren-alert-dialog-description">
+            This action cannot be undone. The item and all its data will be permanently removed.
+          </p>
+          <div class="ren-alert-dialog-actions">
+            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">Cancel</button>
+            <button class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">Delete</button>
+          </div>
+        </dialog>
+
+        <!-- Warning Alert Dialog -->
+        <dialog class="ren-alert-dialog" id="demo-alert-warning" aria-label="Unsaved changes warning">
+          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-warning">⚠</div>
+          <h2 class="ren-alert-dialog-title">Unsaved changes</h2>
+          <p class="ren-alert-dialog-description">
+            You have unsaved changes. Do you want to save before leaving?
+          </p>
+          <div class="ren-alert-dialog-actions">
+            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('discard')">Discard</button>
+            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close('save')">Save Changes</button>
+          </div>
+        </dialog>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CONTEXT MENU
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="context-menu" class="demo-section">
+        <h2>Context Menu</h2>
+        <p class="demo-description">Right-click menu using the Popover API. Positioned at cursor via JS. Keyboard navigable (Arrow keys, Escape, Enter).</p>
+
+        <div data-context="demo-ctx-menu"
+             style="max-width: 500px; min-height: 160px; border: 2px dashed var(--color-border); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); cursor: context-menu; user-select: none;">
+          Right-click anywhere in this area
+        </div>
+
+        <div id="demo-ctx-menu" class="ren-context-menu" popover>
+          <button class="ren-menu-item">✂️ Cut</button>
+          <button class="ren-menu-item">📋 Copy</button>
+          <button class="ren-menu-item">📌 Paste</button>
+          <hr class="ren-menu-separator">
+          <button class="ren-menu-item">🔄 Refresh</button>
+          <button class="ren-menu-item">ℹ️ Properties</button>
+          <hr class="ren-menu-separator">
+          <button class="ren-menu-item ren-menu-item-danger">🗑 Delete</button>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TOOLTIP
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="tooltip" class="demo-section">
+        <h2>Tooltip</h2>
+        <p class="demo-description">Popover API-based tooltips with arrow positioning. Triggered on hover/focus via JS.</p>
+
+        <div style="display: flex; gap: var(--space-6); flex-wrap: wrap; align-items: center; padding: var(--space-6) 0;">
+          <button class="ren-btn ren-btn-secondary"
+                  style="anchor-name: --tip-top;"
+                  id="tip-trigger-top"
+                  aria-describedby="tip-top">
+            Hover me (top)
+          </button>
+          <div class="ren-tooltip" id="tip-top" popover data-side="top"
+               style="position-anchor: --tip-top;">
+            Tooltip on top
+            <span class="ren-tooltip-arrow"></span>
+          </div>
+
+          <button class="ren-btn ren-btn-secondary"
+                  style="anchor-name: --tip-bottom;"
+                  id="tip-trigger-bottom"
+                  aria-describedby="tip-bottom">
+            Hover me (bottom)
+          </button>
+          <div class="ren-tooltip" id="tip-bottom" popover data-side="bottom"
+               style="position-anchor: --tip-bottom;">
+            Tooltip on bottom
+            <span class="ren-tooltip-arrow"></span>
+          </div>
+
+          <button class="ren-btn ren-btn-secondary"
+                  style="anchor-name: --tip-right;"
+                  id="tip-trigger-right"
+                  aria-describedby="tip-right">
+            Hover me (right)
+          </button>
+          <div class="ren-tooltip" id="tip-right" popover data-side="right"
+               style="position-anchor: --tip-right;">
+            Tooltip on right
+            <span class="ren-tooltip-arrow"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           POPOVER
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="popover" class="demo-section">
+        <h2>Popover</h2>
+        <p class="demo-description">Rich content popover using the Popover API with anchor positioning. Supports header, body, footer, and arrow.</p>
+
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; padding: var(--space-4) 0;">
+          <button class="ren-btn ren-btn-primary"
+                  popovertarget="demo-popover-1"
+                  style="anchor-name: --pop-1;">
+            Open Popover
+          </button>
+          <div class="ren-popover" id="demo-popover-1" popover
+               data-side="bottom" style="position-anchor: --pop-1;">
+            <div class="ren-popover-header">
+              <strong>Dimensions</strong>
+            </div>
+            <div class="ren-popover-body">
+              <div style="display: grid; grid-template-columns: auto 1fr; gap: var(--space-2) var(--space-4); font-size: var(--text-sm);">
+                <label>Width</label>
+                <input type="text" value="320px" style="padding: var(--space-1) var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: inherit;">
+                <label>Height</label>
+                <input type="text" value="auto" style="padding: var(--space-1) var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: inherit;">
+              </div>
+            </div>
+            <div class="ren-popover-footer">
+              <button class="ren-btn ren-btn-sm ren-btn-primary" popovertarget="demo-popover-1" popovertargetaction="hide">Apply</button>
+            </div>
+            <span class="ren-popover-arrow"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SHEET
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="sheet" class="demo-section">
+        <h2>Sheet</h2>
+        <p class="demo-description">Slide-in panel using <code>&lt;dialog&gt;</code>. Supports left, right, top, bottom sides with size variants.</p>
+
+        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-right').showModal()">
+            Open Right Sheet
+          </button>
+          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-left').showModal()">
+            Open Left Sheet
+          </button>
+          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-bottom').showModal()">
+            Open Bottom Sheet
+          </button>
+        </div>
+
+        <dialog class="ren-sheet" id="demo-sheet-right" data-side="right" aria-label="Edit profile">
+          <div class="ren-sheet-header">
+            <h3 class="ren-sheet-title">Edit Profile</h3>
+            <button class="ren-sheet-close" onclick="this.closest('dialog').close()" aria-label="Close">&times;</button>
+          </div>
+          <div class="ren-sheet-body">
+            <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+              <div>
+                <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Name</label>
+                <input type="text" value="Ren" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+              </div>
+              <div>
+                <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2);">Email</label>
+                <input type="email" value="ren@example.com" style="width: 100%; padding: var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: inherit;">
+              </div>
+            </div>
+          </div>
+          <div class="ren-sheet-footer">
+            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Save</button>
+          </div>
+        </dialog>
+
+        <dialog class="ren-sheet" id="demo-sheet-left" data-side="left" aria-label="Navigation menu">
+          <div class="ren-sheet-header">
+            <h3 class="ren-sheet-title">Navigation</h3>
+            <button class="ren-sheet-close" onclick="this.closest('dialog').close()" aria-label="Close">&times;</button>
+          </div>
+          <div class="ren-sheet-body">
+            <nav aria-label="Sheet navigation" style="display: flex; flex-direction: column; gap: var(--space-1);">
+              <a href="#" style="padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); background: var(--color-fill); text-decoration: none; color: var(--color-text);">Dashboard</a>
+              <a href="#" style="padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); text-decoration: none; color: var(--color-text);">Projects</a>
+              <a href="#" style="padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); text-decoration: none; color: var(--color-text);">Settings</a>
+            </nav>
+          </div>
+        </dialog>
+
+        <dialog class="ren-sheet" id="demo-sheet-bottom" data-side="bottom" aria-label="Filter results">
+          <div class="ren-sheet-handle"></div>
+          <div class="ren-sheet-header">
+            <h3 class="ren-sheet-title">Filter Results</h3>
+          </div>
+          <div class="ren-sheet-body">
+            <p style="color: var(--color-text-muted);">Apply filters to narrow down your search results.</p>
+            <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-top: var(--space-3);">
+              <button class="ren-tag ren-tag-clickable" aria-pressed="true">Active</button>
+              <button class="ren-tag ren-tag-clickable" aria-pressed="false">Archived</button>
+              <button class="ren-tag ren-tag-clickable" aria-pressed="false">Draft</button>
+            </div>
+          </div>
+          <div class="ren-sheet-footer">
+            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Reset</button>
+            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Apply Filters</button>
+          </div>
+        </dialog>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           HOVER CARD
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="hover-card" class="demo-section">
+        <h2>Hover Card</h2>
+        <p class="demo-description">Rich content preview on hover using the Popover API with anchor positioning. Great for user profiles, link previews.</p>
+
+        <p>
+          Hover over
+          <a href="#" class="ren-link ren-hover-card-trigger"
+             style="anchor-name: --hc-user;" id="hc-trigger-1">@rensoconese</a>
+          to see their profile card.
+        </p>
+        <div class="ren-hover-card" id="hc-card-1" popover
+             style="position-anchor: --hc-user;">
+          <div class="ren-hover-card-header">
+            <div style="display: flex; align-items: center; gap: var(--space-3);">
+              <div class="ren-avatar ren-avatar-md" style="background: var(--color-accent); color: var(--color-on-accent); display: flex; align-items: center; justify-content: center; font-weight: var(--weight-bold);">R</div>
+              <div>
+                <strong>Ren Soconese</strong>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">@rensoconese</p>
+              </div>
+            </div>
+          </div>
+          <div class="ren-hover-card-body">
+            <p style="margin: 0; font-size: var(--text-sm);">Creator of RenDS — a vanilla design system with zero dependencies.</p>
+          </div>
+          <div class="ren-hover-card-footer" style="font-size: var(--text-sm); color: var(--color-text-muted);">
+            45 components · Joined 2024
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           COMBOBOX
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="combobox" class="demo-section">
+        <h2>Combobox</h2>
+        <p class="demo-description">Searchable dropdown with type-ahead filtering. Uses Popover API for the dropdown and <code>aria-selected</code> for selection.</p>
+
+        <div style="max-width: 320px;">
+          <div class="ren-combobox" id="demo-combobox">
+            <input type="text" class="ren-combobox-input" placeholder="Search framework..." aria-label="Search framework"
+                   style="anchor-name: --cb-1;">
+            <button class="ren-combobox-clear" aria-label="Clear" style="display: none;">&times;</button>
+            <div class="ren-combobox-content" popover style="position-anchor: --cb-1;">
+              <div class="ren-combobox-group">
+                <div class="ren-combobox-group-label">Popular</div>
+                <button class="ren-combobox-item" aria-selected="false">React</button>
+                <button class="ren-combobox-item" aria-selected="false">Vue</button>
+                <button class="ren-combobox-item" aria-selected="false">Svelte</button>
+              </div>
+              <div class="ren-combobox-group">
+                <div class="ren-combobox-group-label">Other</div>
+                <button class="ren-combobox-item" aria-selected="false">Angular</button>
+                <button class="ren-combobox-item" aria-selected="false">Solid</button>
+                <button class="ren-combobox-item" aria-selected="false">Qwik</button>
+              </div>
+              <div class="ren-combobox-empty" style="display: none;">No results found</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SLIDER
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="slider" class="demo-section">
+        <h2>Slider</h2>
+        <p class="demo-description">Native <code>&lt;input type="range"&gt;</code> with custom styling. Supports sizes, colors, vertical mode, and marks.</p>
+
+        <div style="max-width: 400px; display: flex; flex-direction: column; gap: var(--space-5);">
+          <div class="ren-slider">
+            <div style="display: flex; justify-content: space-between;">
+              <label class="ren-slider-label">Volume</label>
+              <span class="ren-slider-value" id="slider-val-1">50</span>
+            </div>
+            <div class="ren-slider-track">
+              <input type="range" min="0" max="100" value="50" style="--value: 50%;"
+                     oninput="this.style.setProperty('--value', this.value + '%'); document.getElementById('slider-val-1').textContent = this.value;">
+            </div>
+          </div>
+
+          <div class="ren-slider ren-slider-success">
+            <div style="display: flex; justify-content: space-between;">
+              <label class="ren-slider-label">Brightness</label>
+              <span class="ren-slider-value">75%</span>
+            </div>
+            <div class="ren-slider-track">
+              <input type="range" min="0" max="100" value="75" style="--value: 75%;">
+            </div>
+          </div>
+
+          <div class="ren-slider ren-slider-sm">
+            <label class="ren-slider-label">Small</label>
+            <div class="ren-slider-track">
+              <input type="range" min="0" max="100" value="30" style="--value: 30%;">
+            </div>
+          </div>
+
+          <div class="ren-slider ren-slider-lg ren-slider-warning">
+            <label class="ren-slider-label">Large (warning)</label>
+            <div class="ren-slider-track">
+              <input type="range" min="0" max="100" value="90" style="--value: 90%;">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           TOGGLE GROUP
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="toggle-group" class="demo-section">
+        <h2>Toggle Group</h2>
+        <p class="demo-description">Segmented control with <code>aria-pressed</code> or <code>data-state="on"</code>. Outline, size, and vertical variants.</p>
+
+        <h3>Default</h3>
+        <div class="ren-toggle-group" role="group" aria-label="View mode">
+          <button class="ren-toggle-group-item" aria-pressed="true">Grid</button>
+          <button class="ren-toggle-group-item" aria-pressed="false">List</button>
+          <button class="ren-toggle-group-item" aria-pressed="false">Board</button>
+        </div>
+
+        <h3>Outline</h3>
+        <div class="ren-toggle-group ren-toggle-group-outline" role="group" aria-label="Alignment">
+          <button class="ren-toggle-group-item" aria-pressed="true">Left</button>
+          <button class="ren-toggle-group-item" aria-pressed="false">Center</button>
+          <button class="ren-toggle-group-item" aria-pressed="false">Right</button>
+        </div>
+
+        <h3>Sizes</h3>
+        <div style="display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start;">
+          <div class="ren-toggle-group ren-toggle-group-sm" role="group" aria-label="Small toggle">
+            <button class="ren-toggle-group-item" aria-pressed="true">S</button>
+            <button class="ren-toggle-group-item" aria-pressed="false">M</button>
+            <button class="ren-toggle-group-item" aria-pressed="false">L</button>
+          </div>
+          <div class="ren-toggle-group ren-toggle-group-lg" role="group" aria-label="Large toggle">
+            <button class="ren-toggle-group-item" aria-pressed="false">Monthly</button>
+            <button class="ren-toggle-group-item" aria-pressed="true">Annual</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SCROLL AREA
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="scroll-area" class="demo-section">
+        <h2>Scroll Area</h2>
+        <p class="demo-description">Custom-styled scrollbar container with size presets, auto-hide, fade gradients, and direction control.</p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4); max-width: 700px;">
+          <div>
+            <h3>Vertical (200px)</h3>
+            <div class="ren-scroll-area ren-scroll-area-sm" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3);">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+            </div>
+          </div>
+
+          <div>
+            <h3>With Fade</h3>
+            <div class="ren-scroll-area ren-scroll-area-sm ren-scroll-area-fade" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3);">
+              <p>This scroll area has fade gradients at the top and bottom edges to visually hint at more content.</p>
+              <p>Scroll down to see the fade effect in action.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <p>Ut enim ad minim veniam, quis nostrud exercitation.</p>
+              <p>Duis aute irure dolor in reprehenderit in voluptate.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           COLOR PICKER
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="color-picker" class="demo-section">
+        <h2>Color Picker</h2>
+        <p class="demo-description">Full-featured color picker with saturation canvas, hue/alpha sliders, HEX/RGB/HSL inputs, eyedropper, and preset swatches. Uses Popover API.</p>
+
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-start;">
+          <div class="ren-color-picker" id="demo-color-picker">
+            <button class="ren-color-picker-trigger"
+                    popovertarget="demo-cp-dropdown"
+                    style="anchor-name: --cp-1;"
+                    aria-expanded="false">
+              <span class="ren-color-picker-trigger-swatch" style="background: #6366f1;"></span>
+              <span class="ren-color-picker-trigger-value">#6366f1</span>
+            </button>
+            <div class="ren-color-picker-dropdown" id="demo-cp-dropdown" popover
+                 style="position-anchor: --cp-1;">
+              <div class="ren-color-picker-saturation" style="background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, #6366f1); height: 150px; border-radius: var(--radius-md); position: relative; cursor: crosshair;">
+                <div class="ren-color-picker-saturation-handle" style="position: absolute; width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.3); top: 30%; right: 20%; transform: translate(50%, -50%);"></div>
+              </div>
+              <div style="padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-3);">
+                <div class="ren-color-picker-hue" style="height: 12px; border-radius: 6px; background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); position: relative; cursor: pointer;">
+                  <div class="ren-color-picker-hue-handle" style="position: absolute; width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.3); top: 50%; left: 65%; transform: translate(-50%, -50%);"></div>
+                </div>
+                <div class="ren-color-picker-inputs" style="display: flex; gap: var(--space-2);">
+                  <input type="text" class="ren-color-picker-hex-input" value="#6366f1" style="flex: 1; padding: var(--space-1) var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: monospace; font-size: var(--text-sm);">
+                </div>
+                <div class="ren-color-picker-swatches" style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #ef4444; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #f59e0b; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #10b981; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #6366f1; border: 1px solid var(--color-border); cursor: pointer;" aria-selected="true"></button>
+                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #ec4899; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #8b5cf6; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CALENDAR
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="calendar" class="demo-section">
+        <h2>Calendar</h2>
+        <p class="demo-description">Accessible calendar grid with keyboard navigation (arrow keys). Supports selected dates, ranges, today highlight, and outside days.</p>
+
+        <div style="display: flex; gap: var(--space-6); flex-wrap: wrap; align-items: flex-start;">
+          <div class="ren-calendar" role="grid" aria-label="April 2026" id="demo-calendar">
+            <div class="ren-calendar-header">
+              <button class="ren-calendar-nav" aria-label="Previous month">‹</button>
+              <div class="ren-calendar-title">April 2026</div>
+              <button class="ren-calendar-nav" aria-label="Next month">›</button>
+            </div>
+            <div class="ren-calendar-weekdays">
+              <span class="ren-calendar-weekday">Su</span>
+              <span class="ren-calendar-weekday">Mo</span>
+              <span class="ren-calendar-weekday">Tu</span>
+              <span class="ren-calendar-weekday">We</span>
+              <span class="ren-calendar-weekday">Th</span>
+              <span class="ren-calendar-weekday">Fr</span>
+              <span class="ren-calendar-weekday">Sa</span>
+            </div>
+            <div class="ren-calendar-grid">
+              <button class="ren-calendar-day" data-outside disabled>29</button>
+              <button class="ren-calendar-day" data-outside disabled>30</button>
+              <button class="ren-calendar-day" data-outside disabled>31</button>
+              <button class="ren-calendar-day">1</button>
+              <button class="ren-calendar-day">2</button>
+              <button class="ren-calendar-day" data-today aria-selected="true">3</button>
+              <button class="ren-calendar-day">4</button>
+              <button class="ren-calendar-day">5</button>
+              <button class="ren-calendar-day">6</button>
+              <button class="ren-calendar-day">7</button>
+              <button class="ren-calendar-day">8</button>
+              <button class="ren-calendar-day">9</button>
+              <button class="ren-calendar-day">10</button>
+              <button class="ren-calendar-day">11</button>
+              <button class="ren-calendar-day">12</button>
+              <button class="ren-calendar-day">13</button>
+              <button class="ren-calendar-day">14</button>
+              <button class="ren-calendar-day">15</button>
+              <button class="ren-calendar-day">16</button>
+              <button class="ren-calendar-day">17</button>
+              <button class="ren-calendar-day">18</button>
+              <button class="ren-calendar-day">19</button>
+              <button class="ren-calendar-day">20</button>
+              <button class="ren-calendar-day">21</button>
+              <button class="ren-calendar-day">22</button>
+              <button class="ren-calendar-day">23</button>
+              <button class="ren-calendar-day">24</button>
+              <button class="ren-calendar-day">25</button>
+              <button class="ren-calendar-day">26</button>
+              <button class="ren-calendar-day">27</button>
+              <button class="ren-calendar-day">28</button>
+              <button class="ren-calendar-day">29</button>
+              <button class="ren-calendar-day">30</button>
+              <button class="ren-calendar-day" data-outside disabled>1</button>
+              <button class="ren-calendar-day" data-outside disabled>2</button>
+            </div>
+          </div>
+
+          <div class="ren-calendar ren-calendar-sm" role="grid" aria-label="April 2026 small">
+            <div class="ren-calendar-header">
+              <button class="ren-calendar-nav" aria-label="Previous month">‹</button>
+              <div class="ren-calendar-title">Apr 2026</div>
+              <button class="ren-calendar-nav" aria-label="Next month">›</button>
+            </div>
+            <div class="ren-calendar-weekdays">
+              <span class="ren-calendar-weekday">S</span>
+              <span class="ren-calendar-weekday">M</span>
+              <span class="ren-calendar-weekday">T</span>
+              <span class="ren-calendar-weekday">W</span>
+              <span class="ren-calendar-weekday">T</span>
+              <span class="ren-calendar-weekday">F</span>
+              <span class="ren-calendar-weekday">S</span>
+            </div>
+            <div class="ren-calendar-grid">
+              <button class="ren-calendar-day" data-outside disabled>29</button>
+              <button class="ren-calendar-day" data-outside disabled>30</button>
+              <button class="ren-calendar-day" data-outside disabled>31</button>
+              <button class="ren-calendar-day">1</button>
+              <button class="ren-calendar-day">2</button>
+              <button class="ren-calendar-day" data-today>3</button>
+              <button class="ren-calendar-day">4</button>
+              <button class="ren-calendar-day">5</button>
+              <button class="ren-calendar-day">6</button>
+              <button class="ren-calendar-day">7</button>
+              <button class="ren-calendar-day">8</button>
+              <button class="ren-calendar-day">9</button>
+              <button class="ren-calendar-day">10</button>
+              <button class="ren-calendar-day">11</button>
+              <button class="ren-calendar-day ren-calendar-day-range-start" aria-selected="true">12</button>
+              <button class="ren-calendar-day ren-calendar-day-in-range">13</button>
+              <button class="ren-calendar-day ren-calendar-day-in-range">14</button>
+              <button class="ren-calendar-day ren-calendar-day-in-range">15</button>
+              <button class="ren-calendar-day ren-calendar-day-range-end" aria-selected="true">16</button>
+              <button class="ren-calendar-day">17</button>
+              <button class="ren-calendar-day">18</button>
+              <button class="ren-calendar-day">19</button>
+              <button class="ren-calendar-day">20</button>
+              <button class="ren-calendar-day">21</button>
+              <button class="ren-calendar-day">22</button>
+              <button class="ren-calendar-day">23</button>
+              <button class="ren-calendar-day">24</button>
+              <button class="ren-calendar-day">25</button>
+              <button class="ren-calendar-day">26</button>
+              <button class="ren-calendar-day">27</button>
+              <button class="ren-calendar-day">28</button>
+              <button class="ren-calendar-day">29</button>
+              <button class="ren-calendar-day">30</button>
+              <button class="ren-calendar-day" data-outside disabled>1</button>
+              <button class="ren-calendar-day" data-outside disabled>2</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           DATE PICKER
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="date-picker" class="demo-section">
+        <h2>Date Picker</h2>
+        <p class="demo-description">Trigger button that opens a calendar in a popover. Supports presets, range mode, and validation states.</p>
+
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-start;">
+          <div class="ren-date-picker" id="demo-date-picker">
+            <button class="ren-date-picker-trigger"
+                    popovertarget="demo-dp-dropdown"
+                    style="anchor-name: --dp-1;">
+              <span class="ren-date-picker-value">April 3, 2026</span>
+            </button>
+            <div class="ren-date-picker-dropdown" id="demo-dp-dropdown" popover
+                 style="position-anchor: --dp-1;">
+              <div class="ren-date-picker-presets">
+                <button class="ren-date-picker-preset">Today</button>
+                <button class="ren-date-picker-preset">Tomorrow</button>
+                <button class="ren-date-picker-preset">Next Week</button>
+                <button class="ren-date-picker-preset">Next Month</button>
+              </div>
+              <div style="padding: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); text-align: center;">
+                Calendar component renders here
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-date-picker ren-date-picker-empty">
+            <button class="ren-date-picker-trigger" disabled>
+              <span class="ren-date-picker-value" data-placeholder>Select a date</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CAROUSEL
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="carousel" class="demo-section">
+        <h2>Carousel</h2>
+        <p class="demo-description">CSS scroll-snap carousel with arrow navigation, dot indicators, and optional autoplay. Touch-friendly, keyboard accessible.</p>
+
+        <div class="ren-carousel" style="max-width: 500px;" id="demo-carousel" aria-label="Image gallery">
+          <div class="ren-carousel-viewport">
+            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, var(--color-accent), #8b5cf6); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
+              Slide 1
+            </div>
+            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, #10b981, #06b6d4); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
+              Slide 2
+            </div>
+            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, #f59e0b, #ef4444); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
+              Slide 3
+            </div>
+          </div>
+          <button class="ren-carousel-prev" aria-label="Previous slide">‹</button>
+          <button class="ren-carousel-next" aria-label="Next slide">›</button>
+          <div class="ren-carousel-dots">
+            <button class="ren-carousel-dot" aria-current="true" aria-label="Slide 1"></button>
+            <button class="ren-carousel-dot" aria-label="Slide 2"></button>
+            <button class="ren-carousel-dot" aria-label="Slide 3"></button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           CUSTOM SELECT
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="custom-select" class="demo-section">
+        <h2>Custom Select</h2>
+        <p class="demo-description">Popover-based select with search, groups, multi-select chips, and keyboard navigation. Replaces native <code>&lt;select&gt;</code>.</p>
+
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-start;">
+          <div style="max-width: 280px;">
+            <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2); font-size: var(--text-sm);">Country</label>
+            <div class="ren-select" id="demo-select-1">
+              <button class="ren-select-trigger"
+                      popovertarget="demo-sel-1"
+                      style="anchor-name: --sel-1;"
+                      aria-expanded="false">
+                <span class="ren-select-value">Argentina</span>
+                <span class="ren-select-icon"></span>
+              </button>
+              <div class="ren-select-content" id="demo-sel-1" popover role="listbox"
+                   style="position-anchor: --sel-1;">
+                <div class="ren-select-group">
+                  <div class="ren-select-label">South America</div>
+                  <button class="ren-select-item" aria-selected="true" role="option">Argentina</button>
+                  <button class="ren-select-item" aria-selected="false" role="option">Brazil</button>
+                  <button class="ren-select-item" aria-selected="false" role="option">Chile</button>
+                </div>
+                <div class="ren-select-separator"></div>
+                <div class="ren-select-group">
+                  <div class="ren-select-label">North America</div>
+                  <button class="ren-select-item" aria-selected="false" role="option">USA</button>
+                  <button class="ren-select-item" aria-selected="false" role="option">Canada</button>
+                  <button class="ren-select-item" aria-selected="false" role="option">Mexico</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="max-width: 280px;">
+            <label style="display: block; font-weight: var(--weight-semibold); margin-bottom: var(--space-2); font-size: var(--text-sm);">Tags (multi)</label>
+            <div class="ren-select" id="demo-select-multi">
+              <button class="ren-select-trigger"
+                      popovertarget="demo-sel-multi"
+                      style="anchor-name: --sel-multi;"
+                      aria-expanded="false">
+                <span class="ren-select-value" style="display: flex; gap: var(--space-1); flex-wrap: wrap;">
+                  <span class="ren-select-chip">Design <button class="ren-select-chip-remove">&times;</button></span>
+                  <span class="ren-select-chip">Code <button class="ren-select-chip-remove">&times;</button></span>
+                </span>
+                <span class="ren-select-icon"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MENU
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="menu" class="demo-section">
+        <h2>Menu</h2>
+        <p class="demo-description">Dropdown menu with items, groups, separators, checkboxes, radio items, and shortcuts. Popover API-based.</p>
+
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+          <div>
+            <button class="ren-btn ren-btn-secondary"
+                    popovertarget="demo-menu-1"
+                    style="anchor-name: --menu-1;">
+              Actions ▾
+            </button>
+            <div class="ren-menu" id="demo-menu-1" popover
+                 style="position-anchor: --menu-1;">
+              <div class="ren-menu-label">File</div>
+              <button class="ren-menu-item">
+                <span class="ren-menu-item-icon">📄</span>
+                New File
+                <span class="ren-menu-item-shortcut">⌘N</span>
+              </button>
+              <button class="ren-menu-item">
+                <span class="ren-menu-item-icon">📂</span>
+                Open
+                <span class="ren-menu-item-shortcut">⌘O</span>
+              </button>
+              <div class="ren-menu-separator"></div>
+              <button class="ren-menu-item">
+                <span class="ren-menu-item-icon">💾</span>
+                Save
+                <span class="ren-menu-item-shortcut">⌘S</span>
+              </button>
+              <div class="ren-menu-separator"></div>
+              <div class="ren-menu-label">View</div>
+              <button class="ren-menu-checkbox-item" aria-checked="true">Show Sidebar</button>
+              <button class="ren-menu-checkbox-item" aria-checked="false">Show Minimap</button>
+              <div class="ren-menu-separator"></div>
+              <button class="ren-menu-item ren-menu-item-danger">
+                <span class="ren-menu-item-icon">🗑</span>
+                Delete Project
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           MENUBAR
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="menubar" class="demo-section">
+        <h2>Menubar</h2>
+        <p class="demo-description">Application-level menu bar (File, Edit, View). ARIA Menubar pattern with keyboard navigation.</p>
+
+        <div class="ren-menubar" role="menubar" style="max-width: 500px;">
+          <button class="ren-menubar-trigger"
+                  popovertarget="demo-mb-file"
+                  style="anchor-name: --mb-file;"
+                  aria-expanded="false">File</button>
+          <div class="ren-menubar-menu" id="demo-mb-file" popover
+               style="position-anchor: --mb-file;">
+            <button class="ren-menubar-item">New Tab <span class="ren-menubar-shortcut">⌘T</span></button>
+            <button class="ren-menubar-item">New Window <span class="ren-menubar-shortcut">⌘N</span></button>
+            <div class="ren-menubar-separator"></div>
+            <button class="ren-menubar-item">Print <span class="ren-menubar-shortcut">⌘P</span></button>
+          </div>
+
+          <button class="ren-menubar-trigger"
+                  popovertarget="demo-mb-edit"
+                  style="anchor-name: --mb-edit;"
+                  aria-expanded="false">Edit</button>
+          <div class="ren-menubar-menu" id="demo-mb-edit" popover
+               style="position-anchor: --mb-edit;">
+            <button class="ren-menubar-item">Undo <span class="ren-menubar-shortcut">⌘Z</span></button>
+            <button class="ren-menubar-item">Redo <span class="ren-menubar-shortcut">⇧⌘Z</span></button>
+            <div class="ren-menubar-separator"></div>
+            <button class="ren-menubar-item">Cut <span class="ren-menubar-shortcut">⌘X</span></button>
+            <button class="ren-menubar-item">Copy <span class="ren-menubar-shortcut">⌘C</span></button>
+            <button class="ren-menubar-item">Paste <span class="ren-menubar-shortcut">⌘V</span></button>
+          </div>
+
+          <button class="ren-menubar-trigger"
+                  popovertarget="demo-mb-view"
+                  style="anchor-name: --mb-view;"
+                  aria-expanded="false">View</button>
+          <div class="ren-menubar-menu" id="demo-mb-view" popover
+               style="position-anchor: --mb-view;">
+            <button class="ren-menubar-checkbox" aria-checked="true">Toolbar</button>
+            <button class="ren-menubar-checkbox" aria-checked="true">Sidebar</button>
+            <button class="ren-menubar-checkbox" aria-checked="false">Status Bar</button>
+            <div class="ren-menubar-separator"></div>
+            <div class="ren-menubar-label">Zoom</div>
+            <button class="ren-menubar-radio" aria-checked="false">50%</button>
+            <button class="ren-menubar-radio" aria-checked="true">100%</button>
+            <button class="ren-menubar-radio" aria-checked="false">150%</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           NAV
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="nav" class="demo-section">
+        <h2>Nav</h2>
+        <p class="demo-description">Responsive navigation bar with brand, links, actions, and mobile hamburger. Sticky and transparent variants.</p>
+
+        <div style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; max-width: 700px;">
+          <nav class="ren-nav" style="position: relative;" aria-label="Demo navigation">
+            <div class="ren-nav-brand">
+              <strong>RenDS</strong>
+            </div>
+            <div class="ren-nav-links">
+              <a href="#" class="ren-nav-link" aria-current="page">Home</a>
+              <a href="#" class="ren-nav-link">Components</a>
+              <a href="#" class="ren-nav-link">Docs</a>
+              <a href="#" class="ren-nav-link">Examples</a>
+            </div>
+            <div class="ren-nav-actions">
+              <button class="ren-btn ren-btn-sm ren-btn-primary">Get Started</button>
+            </div>
+          </nav>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           SIDEBAR
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="sidebar" class="demo-section">
+        <h2>Sidebar</h2>
+        <p class="demo-description">Collapsible sidebar layout with icon-only collapsed mode, sections, dividers, and mobile drawer overlay.</p>
+
+        <div style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; max-width: 700px; height: 350px;">
+          <div class="ren-sidebar-layout" style="position: relative; height: 100%;">
+            <aside class="ren-sidebar" style="position: relative;">
+              <div class="ren-sidebar-header">
+                <strong>RenDS</strong>
+                <button class="ren-sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+              </div>
+              <nav class="ren-sidebar-content" aria-label="Sidebar navigation">
+                <div class="ren-sidebar-nav">
+                  <div class="ren-sidebar-section">
+                    <div class="ren-sidebar-section-label">Main</div>
+                    <a href="#" class="ren-sidebar-item active" aria-current="page">
+                      <span class="ren-sidebar-item-icon">🏠</span>
+                      <span class="ren-sidebar-item-text">Dashboard</span>
+                    </a>
+                    <a href="#" class="ren-sidebar-item">
+                      <span class="ren-sidebar-item-icon">📦</span>
+                      <span class="ren-sidebar-item-text">Components</span>
+                    </a>
+                    <a href="#" class="ren-sidebar-item">
+                      <span class="ren-sidebar-item-icon">🎨</span>
+                      <span class="ren-sidebar-item-text">Tokens</span>
+                    </a>
+                  </div>
+                  <div class="ren-sidebar-divider"></div>
+                  <div class="ren-sidebar-section">
+                    <div class="ren-sidebar-section-label">Settings</div>
+                    <a href="#" class="ren-sidebar-item">
+                      <span class="ren-sidebar-item-icon">⚙️</span>
+                      <span class="ren-sidebar-item-text">General</span>
+                    </a>
+                    <a href="#" class="ren-sidebar-item">
+                      <span class="ren-sidebar-item-icon">👤</span>
+                      <span class="ren-sidebar-item-text">Profile</span>
+                    </a>
+                  </div>
+                </div>
+              </nav>
+              <div class="ren-sidebar-footer">
+                <a href="#" class="ren-sidebar-item">
+                  <span class="ren-sidebar-item-icon">🚪</span>
+                  <span class="ren-sidebar-item-text">Logout</span>
+                </a>
+              </div>
+            </aside>
+            <div class="ren-sidebar-main" style="padding: var(--space-4); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+              Main content area
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           COMMAND PALETTE
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="command" class="demo-section">
+        <h2>Command Palette</h2>
+        <p class="demo-description">Searchable command menu (⌘K pattern) with grouped items, keyboard shortcuts, and descriptions. Uses fixed modal with backdrop blur.</p>
+
+        <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-command').style.display='flex'">
+          Open Command Palette <kbd class="ren-kbd" style="margin-left: var(--space-2);">⌘K</kbd>
+        </button>
+
+        <div class="ren-command" id="demo-command" style="display: none;" onclick="if(event.target===this)this.style.display='none'">
+          <div style="background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg); width: min(95vw, 560px); max-height: 400px; display: flex; flex-direction: column; box-shadow: var(--shadow-xl);">
+            <div class="ren-command-input-wrapper">
+              <input type="text" class="ren-command-input" placeholder="Type a command or search..." autofocus
+                     style="width: 100%; padding: var(--space-3) var(--space-4); border: none; background: transparent; font-size: var(--text-base); font-family: inherit; outline: none; color: var(--color-text);">
+              <kbd class="ren-command-kbd" style="position: absolute; right: var(--space-3); top: 50%; transform: translateY(-50%); font-size: var(--text-xs); color: var(--color-text-muted);">ESC</kbd>
+            </div>
+            <div class="ren-command-list" style="overflow-y: auto; padding: var(--space-2);">
+              <div class="ren-command-group">
+                <div class="ren-command-group-heading">Suggestions</div>
+                <button class="ren-command-item" data-highlighted>
+                  <span class="ren-command-item-icon">📅</span>
+                  <div class="ren-command-item-content">
+                    <span class="ren-command-item-title">Calendar</span>
+                    <span class="ren-command-item-description">Open the calendar view</span>
+                  </div>
+                </button>
+                <button class="ren-command-item">
+                  <span class="ren-command-item-icon">🔍</span>
+                  <div class="ren-command-item-content">
+                    <span class="ren-command-item-title">Search</span>
+                    <span class="ren-command-item-description">Search across all components</span>
+                  </div>
+                  <span class="ren-command-item-shortcut">⌘F</span>
+                </button>
+              </div>
+              <div class="ren-command-separator"></div>
+              <div class="ren-command-group">
+                <div class="ren-command-group-heading">Settings</div>
+                <button class="ren-command-item">
+                  <span class="ren-command-item-icon">👤</span>
+                  <div class="ren-command-item-content">
+                    <span class="ren-command-item-title">Profile</span>
+                  </div>
+                </button>
+                <button class="ren-command-item">
+                  <span class="ren-command-item-icon">🎨</span>
+                  <div class="ren-command-item-content">
+                    <span class="ren-command-item-title">Theme</span>
+                    <span class="ren-command-item-description">Toggle light/dark mode</span>
+                  </div>
+                </button>
+              </div>
+            </div>
+            <div class="ren-command-footer" style="padding: var(--space-2) var(--space-3); border-top: 1px solid var(--color-border); display: flex; gap: var(--space-3); font-size: var(--text-xs); color: var(--color-text-muted);">
+              <span class="ren-command-footer-hint">↑↓ Navigate</span>
+              <span class="ren-command-footer-hint">↵ Select</span>
+              <span class="ren-command-footer-hint">Esc Close</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           DYNAMIC TYPE
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="dynamic-type" class="demo-section">
+        <h2>Dynamic Type</h2>
+        <p class="demo-description">Apple HIG-inspired adaptive typography with 4 size scales: xSmall, Default, Large, xLarge. Set <code>data-type-scale</code> on any container.</p>
+
+        <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap: wrap;">
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','xsmall')">xSmall</button>
+          <button class="ren-btn ren-btn-sm ren-btn-primary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','default')">Default</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','large')">Large</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','xlarge')">xLarge</button>
+        </div>
+
+        <div id="type-demo" data-type-scale="default"
+             style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-5); max-width: 550px;">
+          <p class="type-display" style="margin-bottom: var(--space-3);">Display</p>
+          <p class="type-title" style="margin-bottom: var(--space-2);">Title — Section headings</p>
+          <p class="type-headline" style="margin-bottom: var(--space-2);">Headline — Emphasized body</p>
+          <p class="type-body" style="margin-bottom: var(--space-2);">Body — Default content text used for paragraphs and descriptions.</p>
+          <p class="type-callout" style="margin-bottom: var(--space-2);">Callout — Slightly smaller, secondary content</p>
+          <p class="type-subhead" style="margin-bottom: var(--space-2);">Subhead — Supporting information</p>
+          <p class="type-footnote" style="margin-bottom: var(--space-2);">Footnote — Fine print and metadata</p>
+          <p class="type-caption">Caption — Smallest readable text</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           APPEARANCE API
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="appearance-api" class="demo-section">
+        <h2>Appearance API</h2>
+        <p class="demo-description">Theme the entire system by setting <code>data-theme</code>, <code>data-shape</code>, and <code>data-density</code> attributes. 6 color presets + shape + density combos.</p>
+
+        <h3>Color Themes</h3>
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='light'" style="background: #3b82f6; color: white; border: none;">Default</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='ocean'" style="background: #0066CC; color: white; border: none;">Ocean</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='forest'" style="background: #16A34A; color: white; border: none;">Forest</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='sunset'" style="background: #EA580C; color: white; border: none;">Sunset</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='rose'" style="background: #E11D48; color: white; border: none;">Rose</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='slate'" style="background: #334155; color: white; border: none;">Slate</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='purple'" style="background: #7C3AED; color: white; border: none;">Purple</button>
+        </div>
+
+        <h3>Shape</h3>
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.shape">Default</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='sharp'">Sharp</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='rounded'">Rounded</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='pill'">Pill</button>
+        </div>
+
+        <h3>Density</h3>
+        <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.density">Default</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.density='compact'">Compact</button>
+          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.density='comfortable'">Comfortable</button>
+        </div>
+
+        <h3>Preview</h3>
+        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: flex-start; max-width: 600px;">
+          <div class="ren-card" style="flex: 1; min-width: 200px;">
+            <div class="ren-card-header">
+              <strong>Sample Card</strong>
+              <p style="margin:0; font-size: var(--text-sm); color: var(--color-text-muted);">Theme preview</p>
+            </div>
+            <div class="ren-card-body">
+              <p style="margin:0 0 var(--space-3);">These components respond to the theme, shape, and density settings above.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+                <button class="ren-btn ren-btn-primary ren-btn-sm">Primary</button>
+                <button class="ren-btn ren-btn-secondary ren-btn-sm">Secondary</button>
+                <span class="ren-badge">Badge</span>
+              </div>
+            </div>
+          </div>
+          <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: var(--space-2);">
+            <div class="ren-banner ren-banner-compact" style="font-size: var(--text-sm);">
+              <span class="ren-banner-icon">ℹ️</span>
+              <div class="ren-banner-content"><p class="ren-banner-description">Themed banner</p></div>
+            </div>
+            <div class="ren-tag-group">
+              <span class="ren-tag">Tag A</span>
+              <span class="ren-tag ren-tag-success">Tag B</span>
+            </div>
+            <button class="ren-btn ren-btn-secondary" style="align-self: flex-start;" onclick="document.documentElement.removeAttribute('data-theme'); delete document.documentElement.dataset.shape; delete document.documentElement.dataset.density;">
+              Reset All
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           AI PATTERNS
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="ai-patterns" class="demo-section">
+        <h2>AI Patterns</h2>
+        <p class="demo-description">Carbon for AI-inspired components for AI-generated content: messages, citations, streaming indicators, confidence, and prompt input.</p>
+
+        <h3>AI Slug</h3>
+        <p>This response was generated by <span class="ren-ai-slug">AI</span></p>
+
+        <h3>AI Message (complete)</h3>
+        <div class="ren-ai-message" style="max-width: 550px;">
+          <div class="ren-ai-message-header">
+            <span class="ren-ai-slug">AI</span>
+            <span style="color: var(--color-text-muted); font-size: var(--text-sm);">Just now</span>
+          </div>
+          <div class="ren-ai-message-content">
+            <p>RenDS is a vanilla design system with <strong>45 components</strong> built using CSS custom properties, the Popover API, and native HTML elements like <code>&lt;dialog&gt;</code> and <code>&lt;details&gt;</code>.</p>
+            <p>It follows Apple HIG guidelines with 44px touch targets and supports automatic dark mode via the <code>light-dark()</code> function. <a href="#" class="ren-ai-citation">1</a></p>
+          </div>
+          <div class="ren-ai-sources">
+            <a href="#" class="ren-ai-source">
+              <span class="ren-ai-source-number">1</span>
+              <div>
+                <div class="ren-ai-source-title">RenDS Documentation</div>
+                <div class="ren-ai-source-url">rends/docs/components-demo.html</div>
+              </div>
+            </a>
+          </div>
+          <div class="ren-ai-message-footer">
+            <div class="ren-ai-confidence" data-level="high">
+              <div class="ren-ai-confidence-bar"><div class="ren-ai-confidence-fill"></div></div>
+              High confidence
+            </div>
+            <div class="ren-ai-actions" style="margin-left: auto;">
+              <button class="ren-ai-action" title="Copy">📋</button>
+              <button class="ren-ai-action" title="Regenerate">🔄</button>
+              <div class="ren-ai-action-thumbs">
+                <button class="ren-ai-action" title="Good response">👍</button>
+                <button class="ren-ai-action" title="Bad response">👎</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3>AI Streaming</h3>
+        <div class="ren-ai-message ren-ai-streaming" style="max-width: 550px;">
+          <div class="ren-ai-message-header">
+            <span class="ren-ai-slug">AI</span>
+          </div>
+          <div class="ren-ai-message-content">
+            <p>Analyzing your codebase for potential optimizations. I've found several areas where performance can be improved</p>
+          </div>
+        </div>
+
+        <h3>AI Typing Indicator</h3>
+        <div class="ren-ai-typing">
+          <div class="ren-ai-typing-dots">
+            <span></span><span></span><span></span>
+          </div>
+          AI is thinking...
+        </div>
+
+        <h3>AI Skeleton (loading)</h3>
+        <div class="ren-ai-skeleton" style="max-width: 550px;">
+          <div class="ren-ai-skeleton-line"></div>
+          <div class="ren-ai-skeleton-line"></div>
+          <div class="ren-ai-skeleton-line"></div>
+          <div class="ren-ai-skeleton-line"></div>
+        </div>
+
+        <h3>Confidence Levels</h3>
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+          <div class="ren-ai-confidence" data-level="high">
+            <div class="ren-ai-confidence-bar"><div class="ren-ai-confidence-fill"></div></div>
+            High
+          </div>
+          <div class="ren-ai-confidence" data-level="medium">
+            <div class="ren-ai-confidence-bar"><div class="ren-ai-confidence-fill"></div></div>
+            Medium
+          </div>
+          <div class="ren-ai-confidence" data-level="low">
+            <div class="ren-ai-confidence-bar"><div class="ren-ai-confidence-fill"></div></div>
+            Low
+          </div>
+        </div>
+
+        <h3>AI Prompt Input</h3>
+        <div class="ren-ai-prompt" style="max-width: 550px;">
+          <textarea class="ren-ai-prompt-input" placeholder="Ask AI anything..." rows="1"></textarea>
+          <button class="ren-ai-prompt-send" aria-label="Send">↑</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Component imports -->
+  <script type="module">
+    // Import new components
+    import { RenNumberField } from '../components/composites/ren-number-field/ren-number-field.js';
+    import { RenOtp } from '../components/composites/ren-otp/ren-otp.js';
+    import { RenTable } from '../components/patterns/ren-table/ren-table.js';
+    import { RenForm } from '../components/patterns/ren-form/ren-form.js';
+    import { initToolbar } from '../components/composites/ren-toolbar/ren-toolbar.js';
+    import { initDropZone } from '../components/composites/ren-dropzone/ren-dropzone.js';
+    import { initContextMenu } from '../components/composites/ren-context-menu/ren-context-menu.js';
+
+    // Init new interactive components
+    initToolbar(document.getElementById('demo-toolbar-1'));
+    initToolbar(document.getElementById('demo-toolbar-2'));
+    initDropZone(document.getElementById('demo-dropzone'));
+    initContextMenu('demo-ctx-menu');
+
+    // Tooltip hover behavior
+    document.querySelectorAll('[id^="tip-trigger-"]').forEach(trigger => {
+      const tipId = trigger.getAttribute('aria-describedby');
+      const tip = document.getElementById(tipId);
+      if (!tip) return;
+      let timeout;
+      trigger.addEventListener('mouseenter', () => { clearTimeout(timeout); tip.showPopover(); });
+      trigger.addEventListener('mouseleave', () => { timeout = setTimeout(() => tip.hidePopover(), 100); });
+      trigger.addEventListener('focus', () => tip.showPopover());
+      trigger.addEventListener('blur', () => tip.hidePopover());
+    });
+
+    // Hover Card behavior
+    const hcTrigger = document.getElementById('hc-trigger-1');
+    const hcCard = document.getElementById('hc-card-1');
+    if (hcTrigger && hcCard) {
+      let hcTimeout;
+      hcTrigger.addEventListener('mouseenter', () => { clearTimeout(hcTimeout); hcCard.showPopover(); });
+      hcTrigger.addEventListener('mouseleave', () => { hcTimeout = setTimeout(() => hcCard.hidePopover(), 200); });
+      hcCard.addEventListener('mouseenter', () => clearTimeout(hcTimeout));
+      hcCard.addEventListener('mouseleave', () => { hcTimeout = setTimeout(() => hcCard.hidePopover(), 200); });
+    }
+
+    // Carousel basic behavior
+    const carouselViewport = document.querySelector('#demo-carousel .ren-carousel-viewport');
+    if (carouselViewport) {
+      document.querySelector('#demo-carousel .ren-carousel-prev')?.addEventListener('click', () => {
+        carouselViewport.scrollBy({ left: -carouselViewport.offsetWidth, behavior: 'smooth' });
+      });
+      document.querySelector('#demo-carousel .ren-carousel-next')?.addEventListener('click', () => {
+        carouselViewport.scrollBy({ left: carouselViewport.offsetWidth, behavior: 'smooth' });
+      });
+    }
+
+    // Register components
+    if (!customElements.get('ren-number-field')) {
+      customElements.define('ren-number-field', RenNumberField);
+    }
+    if (!customElements.get('ren-otp')) {
+      customElements.define('ren-otp', RenOtp);
+    }
+    if (!customElements.get('ren-table')) {
+      customElements.define('ren-table', RenTable);
+    }
+    if (!customElements.get('ren-form')) {
+      customElements.define('ren-form', RenForm);
+    }
+  </script>
+
+  <script>
+    // Multi-step form navigation
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    function showStep(step) {
+      const steps = document.querySelectorAll('.form-step');
+      steps.forEach((s, index) => {
+        s.style.display = index + 1 === step ? 'block' : 'none';
+      });
+
+      // Update button visibility
+      document.getElementById('prev-btn').style.display = step > 1 ? 'inline-flex' : 'none';
+      document.getElementById('next-btn').style.display = step < totalSteps ? 'inline-flex' : 'none';
+      document.getElementById('submit-btn').style.display = step === totalSteps ? 'inline-flex' : 'none';
+    }
+
+    function nextStep() {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    }
+
+    function prevStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function submitForm() {
+      showToast('success', 'Form submitted successfully!');
+      currentStep = 1;
+      showStep(1);
+    }
+
+    // Form validation helpers
+    function previousStep() {
+      showToast('info', 'Previous step clicked');
+    }
+
+    function resetForm() {
+      showToast('info', 'Form reset');
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+
+      // Update button label
+      const label = document.getElementById('theme-label');
+      label.textContent = newTheme === 'light' ? '🌙 Dark' : '☀️ Light';
+
+      // Save preference
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme preference
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('theme');
+      if (saved) {
+        document.documentElement.setAttribute('data-theme', saved);
+        const label = document.getElementById('theme-label');
+        label.textContent = saved === 'light' ? '🌙 Dark' : '☀️ Light';
+      }
+    });
+
+    // Dialog helpers
+    // Close ren-dialog on backdrop click
+    document.querySelectorAll('dialog.ren-dialog').forEach(dialog => {
+      dialog.addEventListener('click', (e) => {
+        if (e.target === dialog) dialog.close();
+      });
+    });
+
+    // Toast notifications using ren-toast classes
+    const toastIcons = {
+      success: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+      info: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>',
+      warning: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+      error: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6m0-6l6 6"/></svg>'
+    };
+
+    function showToast(type, title, description) {
+      const viewport = document.getElementById('toast-viewport');
+      const toast = document.createElement('div');
+      toast.className = 'ren-toast';
+      toast.setAttribute('data-variant', type);
+      toast.setAttribute('role', 'status');
+      toast.setAttribute('aria-live', 'polite');
+
+      toast.innerHTML = `
+        <span class="ren-toast-icon">${toastIcons[type] || ''}</span>
+        <div class="ren-toast-content">
+          <p class="ren-toast-title">${title}</p>
+          ${description ? `<p class="ren-toast-description">${description}</p>` : ''}
+        </div>
+        <button class="ren-toast-close" onclick="dismissToast(this.parentElement)" aria-label="Dismiss">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      `;
+
+      viewport.appendChild(toast);
+
+      setTimeout(() => dismissToast(toast), 5000);
+    }
+
+    function dismissToast(toast) {
+      if (!toast || !toast.parentElement) return;
+      toast.setAttribute('data-closing', '');
+      toast.addEventListener('animationend', () => toast.remove(), { once: true });
+      setTimeout(() => toast.remove(), 300); // fallback
+    }
+  </script>
+</body>
+</html>

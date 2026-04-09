@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenDS — Create Your Theme</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Noto+Serif:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --sidebar-bg: #1c1c1e;
+      --sidebar-card: rgba(38,38,40,0.92);
+      --sidebar-border: rgba(255,255,255,0.08);
+      --sidebar-text: #f5f5f7;
+      --sidebar-text-secondary: rgba(255,255,255,0.55);
+      --sidebar-hover: rgba(255,255,255,0.06);
+      --sidebar-active: rgba(255,255,255,0.10);
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { font-size: 16px; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #09090b;
+      color: #1c1c1e;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* ═══ LAYOUT ═══ */
+    .app {
+      display: flex;
+      min-height: 100vh;
+      padding: 0.75rem;
+      gap: 0.75rem;
+    }
+
+    /* ═══ SIDEBAR ═══ */
+    .sidebar {
+      width: 220px;
+      min-width: 220px;
+      position: sticky;
+      top: 0.75rem;
+      height: calc(100vh - 1.5rem);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-card {
+      background: var(--sidebar-bg);
+      border-radius: 16px;
+      border: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    .sidebar-header {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--sidebar-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .sidebar-header span {
+      color: var(--sidebar-text);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .sidebar-header button {
+      background: none; border: none; color: var(--sidebar-text-secondary); cursor: pointer; padding: 4px;
+    }
+
+    .sidebar-body {
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+    .sidebar-body::-webkit-scrollbar { width: 4px; }
+    .sidebar-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+
+    .sidebar-footer {
+      padding: 0.75rem;
+      border-top: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.375rem;
+    }
+
+    /* ─── Picker Row ─── */
+    .picker-section {
+      border-bottom: 1px solid var(--sidebar-border);
+    }
+    .picker-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.625rem 1rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .picker-row:hover { background: var(--sidebar-hover); }
+    .picker-row .picker-label {
+      font-size: 0.6875rem;
+      color: var(--sidebar-text-secondary);
+      line-height: 1.3;
+    }
+    .picker-row .picker-value {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--sidebar-text);
+      line-height: 1.3;
+    }
+    .picker-row .picker-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .picker-row .picker-text-icon {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--sidebar-text-secondary);
+      flex-shrink: 0;
+    }
+
+    /* ─── Dropdown ─── */
+    .picker-dropdown {
+      display: none;
+      position: absolute;
+      left: calc(100% + 8px);
+      top: 0;
+      min-width: 200px;
+      max-height: 340px;
+      overflow-y: auto;
+      background: #2a2a2c;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+      z-index: 200;
+      padding: 0.375rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.15) transparent;
+    }
+    .picker-dropdown.open { display: block; }
+    .picker-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      padding: 0.5rem 0.625rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.12s;
+      font-size: 0.8125rem;
+      color: var(--sidebar-text);
+    }
+    .picker-dropdown-item:hover { background: var(--sidebar-hover); }
+    .picker-dropdown-item.active { background: var(--sidebar-active); }
+    .picker-dropdown-item .dd-swatch {
+      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid rgba(255,255,255,0.15);
+    }
+    .picker-dropdown-item .dd-check {
+      margin-left: auto;
+      opacity: 0;
+      color: var(--sidebar-text);
+    }
+    .picker-dropdown-item.active .dd-check { opacity: 1; }
+    .picker-dropdown-sep {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin: 0.25rem 0.5rem;
+    }
+
+    /* ─── Sidebar Buttons ─── */
+    .sidebar-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid var(--sidebar-border);
+      background: transparent;
+      color: var(--sidebar-text);
+      transition: all 0.15s;
+    }
+    .sidebar-btn:hover { background: var(--sidebar-hover); }
+    .sidebar-btn.primary {
+      background: var(--sidebar-text);
+      color: var(--sidebar-bg);
+      border-color: var(--sidebar-text);
+      font-weight: 600;
+    }
+    .sidebar-btn.primary:hover { opacity: 0.9; }
+
+    /* ═══ PREVIEW ═══ */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      border-radius: 16px;
+      padding: 1rem;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--density-gap, 0.75rem);
+      padding: 0;
+    }
+
+    /* Preview cards — real app mockups */
+    .p-card {
+      border-radius: var(--r, 12px);
+      border: 1px solid var(--border);
+      background: var(--surface-raised);
+      overflow: hidden;
+      font-family: var(--font-body);
+    }
+    .p-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem 0;
+    }
+    .p-card-head h3 {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      font-family: var(--font-heading);
+      color: var(--text);
+    }
+    .p-card-head .p-card-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .p-card-head .p-badge {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+    }
+    .p-card-body {
+      padding: var(--density-padding, 1rem 1.25rem);
+    }
+    .p-card-body .card-stack {
+      display: flex;
+      flex-direction: column;
+      gap: var(--density-gap, 0.75rem);
+    }
+
+    /* ═══ THEME VARIABLES ═══
+       ALL theme variables are set exclusively by applyTheme() in JS
+       as inline styles on .main. No CSS defaults here — this avoids
+       specificity conflicts where CSS defaults could override JS values.
+       The only non-theme properties stay here (layout etc). */
+
+    /* ─── Common demo elements ─── */
+    .d-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.375rem;
+      padding: 0.5rem 1rem;
+      border-radius: var(--r, 8px);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      font-family: var(--font-body);
+      cursor: default;
+      border: 1px solid transparent;
+      transition: all 0.15s;
+    }
+    .d-btn.primary { background: var(--accent); color: var(--on-accent); }
+    .d-btn.secondary { background: var(--fill); color: var(--text); border-color: var(--border); }
+    .d-btn.outline { background: transparent; color: var(--text); border-color: var(--border); }
+    .d-btn.ghost { background: transparent; color: var(--text); }
+    .d-btn.danger { background: var(--danger); color: #fff; }
+    .d-btn.sm { padding: 0.25rem 0.625rem; font-size: 0.75rem; }
+    .d-btn.lg { padding: 0.625rem 1.5rem; font-size: 0.9375rem; }
+
+    .d-input {
+      width: 100%;
+      height: 2.25rem;
+      padding: 0 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--r, 8px);
+      background: var(--input-bg, var(--surface-raised));
+      color: var(--text);
+      font-size: 0.8125rem;
+      font-family: var(--font-body);
+    }
+    .d-input::placeholder { color: var(--text-muted); }
+
+    .d-select {
+      width: 100%;
+      height: 2.25rem;
+      padding: 0 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--r, 8px);
+      background: var(--input-bg, var(--surface-raised));
+      color: var(--text);
+      font-size: 0.8125rem;
+      font-family: var(--font-body);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+    }
+
+    .d-textarea {
+      width: 100%;
+      min-height: 4rem;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: var(--r, 8px);
+      background: var(--input-bg, var(--surface-raised));
+      color: var(--text);
+      font-size: 0.8125rem;
+      font-family: var(--font-body);
+      resize: vertical;
+    }
+
+    .d-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .d-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+    }
+
+    .d-progress {
+      width: 100%;
+      height: 6px;
+      background: var(--fill);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    .d-progress-bar {
+      height: 100%;
+      border-radius: 9999px;
+      transition: width 0.3s;
+    }
+
+    .d-avatar {
+      width: 2rem; height: 2rem;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .d-separator {
+      height: 1px;
+      background: var(--border);
+      margin: 0.75rem 0;
+    }
+
+    .d-switch {
+      appearance: none;
+      width: 2.5rem;
+      height: 1.25rem;
+      border-radius: 9999px;
+      background: var(--fill-hover);
+      cursor: default;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .d-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: calc(1.25rem - 4px);
+      height: calc(1.25rem - 4px);
+      border-radius: 50%;
+      background: white;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .d-switch:checked { background: var(--accent); }
+    .d-switch:checked::after { transform: translateX(1.25rem); }
+
+    .d-checkbox {
+      appearance: none;
+      width: 1rem; height: 1rem;
+      border: 1.5px solid var(--border-strong);
+      border-radius: calc(var(--r, 8px) * 0.35);
+      cursor: default;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .d-checkbox:checked { background: var(--accent); border-color: var(--accent); }
+    .d-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 45%;
+      width: 5px; height: 8px;
+      border: solid white; border-width: 0 2px 2px 0;
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    /* Table */
+    .d-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    .d-table th {
+      text-align: left; padding: 0.5rem 0.75rem; font-weight: 500;
+      color: var(--text-muted); font-size: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .d-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); color: var(--text); }
+    .d-table tr:last-child td { border-bottom: none; }
+
+    /* Tabs */
+    .d-tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+    .d-tab {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: default;
+      position: relative;
+      font-family: var(--font-body);
+    }
+    .d-tab.active { color: var(--text); }
+    .d-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 1px 1px 0 0;
+    }
+
+    /* ─── Toast ─── */
+    .copied-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1c1c1e;
+      color: #f5f5f7;
+      padding: 0.625rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 999;
+    }
+    .copied-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* Dark mode handled entirely via CSS vars set by applyTheme() */
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .app { flex-direction: column; }
+      .sidebar { width: 100%; min-width: auto; position: relative; top: 0; height: auto; }
+      .sidebar-card { border-radius: 12px; }
+      .picker-dropdown { left: 0; top: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-header">
+          <span>Menu</span>
+          <button onclick="document.querySelector('.sidebar-body').scrollTo(0,0)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="sidebar-body">
+          <!-- Base Color -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('base-color')">
+              <div>
+                <div class="picker-label">Base Color</div>
+                <div class="picker-value" id="val-base-color">Zinc</div>
+              </div>
+              <div class="picker-icon" id="swatch-base-color" style="background:#71717a;"></div>
+            </div>
+            <div class="picker-dropdown" id="dd-base-color"></div>
+          </div>
+
+          <!-- Theme (Accent) -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('theme')">
+              <div>
+                <div class="picker-label">Theme</div>
+                <div class="picker-value" id="val-theme">Blue</div>
+              </div>
+              <div class="picker-icon" id="swatch-theme" style="background:#007AFF;"></div>
+            </div>
+            <div class="picker-dropdown" id="dd-theme"></div>
+          </div>
+
+          <!-- Chart Color -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('chart-color')">
+              <div>
+                <div class="picker-label">Chart Color</div>
+                <div class="picker-value" id="val-chart-color">Blue</div>
+              </div>
+              <div class="picker-icon" id="swatch-chart-color" style="background:#007AFF;"></div>
+            </div>
+            <div class="picker-dropdown" id="dd-chart-color"></div>
+          </div>
+
+          <!-- Heading -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('heading')">
+              <div>
+                <div class="picker-label">Heading</div>
+                <div class="picker-value" id="val-heading">Inter</div>
+              </div>
+              <span class="picker-text-icon">Aa</span>
+            </div>
+            <div class="picker-dropdown" id="dd-heading"></div>
+          </div>
+
+          <!-- Font -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('font')">
+              <div>
+                <div class="picker-label">Font</div>
+                <div class="picker-value" id="val-font">Inter</div>
+              </div>
+              <span class="picker-text-icon">Aa</span>
+            </div>
+            <div class="picker-dropdown" id="dd-font"></div>
+          </div>
+
+          <!-- Icon Library -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('icon-lib')">
+              <div>
+                <div class="picker-label">Icon Library</div>
+                <div class="picker-value" id="val-icon-lib">Lucide</div>
+              </div>
+              <span class="picker-text-icon" style="font-size:1rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              </span>
+            </div>
+            <div class="picker-dropdown" id="dd-icon-lib"></div>
+          </div>
+
+          <!-- Radius -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('radius')">
+              <div>
+                <div class="picker-label">Radius</div>
+                <div class="picker-value" id="val-radius">Default</div>
+              </div>
+              <span class="picker-text-icon" style="font-size:1rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              </span>
+            </div>
+            <div class="picker-dropdown" id="dd-radius"></div>
+          </div>
+
+          <!-- Density / Spacing -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('density')">
+              <div>
+                <div class="picker-label">Spacing</div>
+                <div class="picker-value" id="val-density">Default</div>
+              </div>
+              <span class="picker-text-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+              </span>
+            </div>
+            <div class="picker-dropdown" id="dd-density"></div>
+          </div>
+
+          <!-- Mode -->
+          <div class="picker-section">
+            <div class="picker-row" onclick="toggleDropdown('mode')">
+              <div>
+                <div class="picker-label">Mode</div>
+                <div class="picker-value" id="val-mode">Light</div>
+              </div>
+              <span class="picker-text-icon" id="mode-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+              </span>
+            </div>
+            <div class="picker-dropdown" id="dd-mode"></div>
+          </div>
+        </div>
+
+        <div class="sidebar-footer">
+          <button class="sidebar-btn" onclick="toggleCode()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            Copy CSS
+          </button>
+          <button class="sidebar-btn" onclick="randomize()">Shuffle</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ═══ PREVIEW ═══ -->
+    <main class="main" id="preview-main">
+      <div class="preview-grid" id="preview-grid">
+        <!-- JS renders preview cards here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- CSS Modal -->
+  <div id="css-modal" style="display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:2rem;" onclick="if(event.target===this)closeCssModal()">
+    <div style="max-width:640px; margin:0 auto; background:#1c1c1e; border-radius:16px; border:1px solid rgba(255,255,255,0.1); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 4rem);">
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:1rem 1.25rem; border-bottom:1px solid rgba(255,255,255,0.08);">
+        <span style="color:#f5f5f7; font-size:0.875rem; font-weight:600;">Generated CSS</span>
+        <div style="display:flex;gap:0.5rem;">
+          <button onclick="copyCss()" style="background:rgba(255,255,255,0.1);border:none;color:#f5f5f7;padding:0.375rem 0.75rem;border-radius:8px;font-size:0.75rem;font-weight:500;cursor:pointer;">Copy</button>
+          <button onclick="closeCssModal()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <pre id="css-output" style="flex:1;overflow:auto;padding:1.25rem;color:#e5e5e7;font-family:'JetBrains Mono',monospace;font-size:0.75rem;line-height:1.7;margin:0;"></pre>
+    </div>
+  </div>
+
+  <div class="copied-toast" id="copied-toast">Copied to clipboard</div>
+
+  <script>
+    // ═══════════════════════════════════════════
+    // DATA
+    // ═══════════════════════════════════════════
+
+    const BASE_COLORS = [
+      { name: 'Zinc',    swatch: '#71717a', values: { 50:'#fafafa',100:'#f4f4f5',200:'#e4e4e7',300:'#d4d4d8',400:'#a1a1aa',500:'#71717a',600:'#52525b',700:'#3f3f46',800:'#27272a',900:'#18181b',950:'#09090b' }},
+      { name: 'Slate',   swatch: '#64748b', values: { 50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a',950:'#020617' }},
+      { name: 'Neutral', swatch: '#737373', values: { 50:'#fafafa',100:'#f5f5f5',200:'#e5e5e5',300:'#d4d4d4',400:'#a3a3a3',500:'#737373',600:'#525252',700:'#404040',800:'#262626',900:'#171717',950:'#0a0a0a' }},
+      { name: 'Stone',   swatch: '#78716c', values: { 50:'#fafaf9',100:'#f5f5f4',200:'#e7e5e4',300:'#d6d3d1',400:'#a8a29e',500:'#78716c',600:'#57534e',700:'#44403c',800:'#292524',900:'#1c1917',950:'#0c0a09' }},
+      { name: 'Olive',   swatch: '#6b7260', values: { 50:'#f8f9f6',100:'#f0f1ed',200:'#dfe1d9',300:'#c5c9bb',400:'#9fa393',500:'#6b7260',600:'#555b4b',700:'#43483c',800:'#2e3128',900:'#1d1f19',950:'#0e0f0c' }},
+    ];
+
+    const THEMES = [
+      { name: 'Blue',    h: 221, s: 100, l: 50, hex: '#007AFF' },
+      { name: 'Indigo',  h: 243, s: 75,  l: 59, hex: '#6366F1' },
+      { name: 'Violet',  h: 263, s: 70,  l: 50, hex: '#8B5CF6' },
+      { name: 'Purple',  h: 271, s: 76,  l: 53, hex: '#A855F7' },
+      { name: 'Pink',    h: 340, s: 82,  l: 52, hex: '#EC4899' },
+      { name: 'Rose',    h: 350, s: 89,  l: 60, hex: '#F43F5E' },
+      { name: 'Red',     h: 0,   s: 84,  l: 60, hex: '#EF4444' },
+      { name: 'Orange',  h: 25,  s: 95,  l: 53, hex: '#F97316' },
+      { name: 'Amber',   h: 38,  s: 92,  l: 50, hex: '#F59E0B' },
+      { name: 'Green',   h: 142, s: 71,  l: 45, hex: '#22C55E' },
+      { name: 'Emerald', h: 160, s: 84,  l: 39, hex: '#10B981' },
+      { name: 'Teal',    h: 172, s: 66,  l: 50, hex: '#14B8A6' },
+      { name: 'Cyan',    h: 189, s: 94,  l: 43, hex: '#06B6D4' },
+      { name: 'Sky',     h: 199, s: 89,  l: 48, hex: '#0EA5E9' },
+    ];
+
+    // Chart colors reuse themes + base grays + special palettes
+    const CHART_THEMES = [
+      ...THEMES,
+      ...BASE_COLORS.map(bc => ({ name: bc.name, hex: bc.swatch, isBase: true })),
+    ];
+
+    const FONTS = [
+      { name: 'Inter',           family: "'Inter', sans-serif" },
+      { name: 'DM Sans',        family: "'DM Sans', sans-serif" },
+      { name: 'Plus Jakarta',   family: "'Plus Jakarta Sans', sans-serif" },
+      { name: 'Space Grotesk',  family: "'Space Grotesk', sans-serif" },
+      { name: 'Outfit',         family: "'Outfit', sans-serif" },
+      { name: 'Geist',          family: "'Geist', sans-serif" },
+      { name: 'Manrope',        family: "'Manrope', sans-serif" },
+      { name: 'Raleway',        family: "'Raleway', sans-serif" },
+      { name: 'Montserrat',     family: "'Montserrat', sans-serif" },
+    ];
+
+    const HEADING_FONTS = [
+      { name: 'Inherit',          family: null },
+      { name: 'Playfair Display', family: "'Playfair Display', serif" },
+      { name: 'Lora',             family: "'Lora', serif" },
+      { name: 'Merriweather',     family: "'Merriweather', serif" },
+      { name: 'Noto Serif',       family: "'Noto Serif', serif" },
+      { name: 'Roboto Slab',      family: "'Roboto Slab', serif" },
+      ...FONTS,
+    ];
+
+    const RADII = [
+      { name: 'None',    value: '0px',    label: '0' },
+      { name: 'Small',   value: '6px',    label: '6' },
+      { name: 'Default', value: '10px',   label: '10' },
+      { name: 'Large',   value: '14px',   label: '14' },
+      { name: 'Full',    value: '9999px', label: '∞' },
+    ];
+
+    const ICON_LIBS = [
+      { name: 'Lucide', value: 'lucide' },
+      { name: 'None', value: 'none' },
+    ];
+
+    const DENSITIES = [
+      { name: 'Compact', scale: 0.875, gap: '0.5rem', padding: '0.75rem 1rem' },
+      { name: 'Default', scale: 1, gap: '0.75rem', padding: '1rem 1.25rem' },
+      { name: 'Comfortable', scale: 1.125, gap: '1rem', padding: '1.25rem 1.5rem' },
+    ];
+
+    // ═══════════════════════════════════════════
+    // STATE
+    // ═══════════════════════════════════════════
+
+    let state = {
+      baseColor: BASE_COLORS[0],
+      theme: THEMES[0],
+      chartColor: THEMES[0],
+      font: FONTS[0],
+      fontHeading: HEADING_FONTS[0],
+      radius: RADII[2],
+      density: DENSITIES[1],
+      iconLib: 'lucide',
+      mode: 'light',
+    };
+
+    let openDropdown = null;
+
+    // ═══════════════════════════════════════════
+    // DROPDOWN LOGIC
+    // ═══════════════════════════════════════════
+
+    function toggleDropdown(id) {
+      const dd = document.getElementById('dd-' + id);
+      if (openDropdown && openDropdown !== dd) {
+        openDropdown.classList.remove('open');
+      }
+      dd.classList.toggle('open');
+      openDropdown = dd.classList.contains('open') ? dd : null;
+    }
+
+    document.addEventListener('click', (e) => {
+      if (openDropdown && !e.target.closest('.picker-section')) {
+        openDropdown.classList.remove('open');
+        openDropdown = null;
+      }
+    });
+
+    // ═══════════════════════════════════════════
+    // RENDER DROPDOWNS
+    // ═══════════════════════════════════════════
+
+    function renderDropdowns() {
+      // Base Color
+      const ddBase = document.getElementById('dd-base-color');
+      ddBase.innerHTML = BASE_COLORS.map(bc =>
+        `<div class="picker-dropdown-item ${state.baseColor.name === bc.name ? 'active' : ''}"
+              onclick="selectBaseColor('${bc.name}')">
+          <div class="dd-swatch" style="background:${bc.swatch};"></div>
+          ${bc.name}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+
+      // Theme
+      const ddTheme = document.getElementById('dd-theme');
+      ddTheme.innerHTML =
+        BASE_COLORS.map(bc =>
+          `<div class="picker-dropdown-item ${state.theme.name === bc.name ? 'active' : ''}"
+                onclick="selectThemeByBase('${bc.name}')">
+            <div class="dd-swatch" style="background:${bc.swatch};"></div>
+            ${bc.name}
+            <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>`
+        ).join('') +
+        '<div class="picker-dropdown-sep"></div>' +
+        THEMES.map(t =>
+          `<div class="picker-dropdown-item ${state.theme.name === t.name ? 'active' : ''}"
+                onclick="selectTheme('${t.name}')">
+            <div class="dd-swatch" style="background:${t.hex};"></div>
+            ${t.name}
+            <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>`
+        ).join('');
+
+      // Chart Color
+      const ddChart = document.getElementById('dd-chart-color');
+      ddChart.innerHTML =
+        BASE_COLORS.map(bc =>
+          `<div class="picker-dropdown-item ${state.chartColor.name === bc.name ? 'active' : ''}"
+                onclick="selectChartByBase('${bc.name}')">
+            <div class="dd-swatch" style="background:${bc.swatch};"></div>
+            ${bc.name}
+            <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>`
+        ).join('') +
+        '<div class="picker-dropdown-sep"></div>' +
+        THEMES.map(t =>
+          `<div class="picker-dropdown-item ${state.chartColor.name === t.name ? 'active' : ''}"
+                onclick="selectChartColor('${t.name}')">
+            <div class="dd-swatch" style="background:${t.hex};"></div>
+            ${t.name}
+            <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>`
+        ).join('');
+
+      // Heading
+      const ddHeading = document.getElementById('dd-heading');
+      ddHeading.innerHTML = HEADING_FONTS.map(f =>
+        `<div class="picker-dropdown-item ${state.fontHeading.name === f.name ? 'active' : ''}"
+              onclick="selectHeadingFont('${f.name}')"
+              style="font-family:${f.family || state.font.family};">
+          ${f.name}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+
+      // Font
+      const ddFont = document.getElementById('dd-font');
+      ddFont.innerHTML = FONTS.map(f =>
+        `<div class="picker-dropdown-item ${state.font.name === f.name ? 'active' : ''}"
+              onclick="selectFont('${f.name}')"
+              style="font-family:${f.family};">
+          ${f.name}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+
+      // Icon Library
+      const ddIcon = document.getElementById('dd-icon-lib');
+      ddIcon.innerHTML = ICON_LIBS.map(lib =>
+        `<div class="picker-dropdown-item ${state.iconLib === lib.value ? 'active' : ''}"
+              onclick="selectIconLib('${lib.value}')">
+          ${lib.name}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+
+      // Radius
+      const ddRadius = document.getElementById('dd-radius');
+      ddRadius.innerHTML = RADII.map(r =>
+        `<div class="picker-dropdown-item ${state.radius.name === r.name ? 'active' : ''}"
+              onclick="selectRadius('${r.name}')">
+          ${r.name}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+
+      // Density
+      const ddDensity = document.getElementById('dd-density');
+      ddDensity.innerHTML = DENSITIES.map(d =>
+        `<div class="picker-dropdown-item ${state.density.name === d.name ? 'active' : ''}"
+              onclick="selectDensity('${d.name}')">
+          ${d.name}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+
+      // Mode
+      const ddMode = document.getElementById('dd-mode');
+      ddMode.innerHTML = ['Light', 'Dark'].map(m =>
+        `<div class="picker-dropdown-item ${state.mode === m.toLowerCase() ? 'active' : ''}"
+              onclick="selectMode('${m.toLowerCase()}')">
+          ${m}
+          <svg class="dd-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>`
+      ).join('');
+    }
+
+    // ═══════════════════════════════════════════
+    // ACTIONS
+    // ═══════════════════════════════════════════
+
+    function selectBaseColor(name) {
+      state.baseColor = BASE_COLORS.find(bc => bc.name === name);
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectTheme(name) {
+      state.theme = THEMES.find(t => t.name === name) || state.theme;
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectThemeByBase(name) {
+      const bc = BASE_COLORS.find(b => b.name === name);
+      if (bc) {
+        // Create a "theme" from the base color
+        state.theme = { name: bc.name, h: 0, s: 0, l: 45, hex: bc.swatch, isBase: true };
+      }
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectChartColor(name) {
+      state.chartColor = THEMES.find(t => t.name === name) || state.chartColor;
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectChartByBase(name) {
+      const bc = BASE_COLORS.find(b => b.name === name);
+      if (bc) {
+        state.chartColor = { name: bc.name, hex: bc.swatch, isBase: true };
+      }
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectFont(name) {
+      state.font = FONTS.find(f => f.name === name);
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectHeadingFont(name) {
+      state.fontHeading = HEADING_FONTS.find(f => f.name === name);
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectRadius(name) {
+      state.radius = RADII.find(r => r.name === name);
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectIconLib(value) {
+      state.iconLib = value;
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectDensity(name) {
+      state.density = DENSITIES.find(d => d.name === name);
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function selectMode(mode) {
+      state.mode = mode;
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeDropdown();
+    }
+
+    function closeDropdown() {
+      if (openDropdown) {
+        openDropdown.classList.remove('open');
+        openDropdown = null;
+      }
+    }
+
+    function updateSidebarValues() {
+      document.getElementById('val-base-color').textContent = state.baseColor.name;
+      document.getElementById('swatch-base-color').style.background = state.baseColor.swatch;
+      document.getElementById('val-theme').textContent = state.theme.name;
+      document.getElementById('swatch-theme').style.background = state.theme.hex;
+      document.getElementById('val-chart-color').textContent = state.chartColor.name;
+      document.getElementById('swatch-chart-color').style.background = state.chartColor.hex;
+      document.getElementById('val-heading').textContent = state.fontHeading.name;
+      document.getElementById('val-font').textContent = state.font.name;
+      document.getElementById('val-icon-lib').textContent = state.iconLib === 'lucide' ? 'Lucide' : 'None';
+      document.getElementById('val-radius').textContent = state.radius.name;
+      document.getElementById('val-density').textContent = state.density.name;
+      document.getElementById('val-mode').textContent = state.mode === 'light' ? 'Light' : 'Dark';
+    }
+
+    // ═══════════════════════════════════════════
+    // APPLY THEME
+    // ═══════════════════════════════════════════
+
+    function applyTheme() {
+      const preview = document.getElementById('preview-main');
+      const g = state.baseColor.values;
+      const c = state.theme;
+      const d = state.density;
+
+      // Radius
+      const rad = state.radius.value;
+      const rPx = rad === '9999px' ? '16px' : rad;
+
+      // Font
+      const headingFamily = state.fontHeading.family || state.font.family;
+
+      // Gray scale — base color tints EVERYTHING, not just page bg
+      let surface, surfaceRaised, surfaceSunken, text, textSec, textMuted;
+      let fill, fillHover, border, borderStrong, pageBg, inputBg;
+      if (state.mode === 'light') {
+        pageBg = g[50];
+        surface = g[50]; surfaceRaised = '#ffffff'; surfaceSunken = g[100];
+        text = g[950]; textSec = g[600]; textMuted = g[400];
+        fill = g[100]; fillHover = g[200]; border = g[200]; borderStrong = g[300];
+        inputBg = '#ffffff';
+      } else {
+        pageBg = g[950];
+        surface = g[950]; surfaceRaised = g[900]; surfaceSunken = g[950];
+        text = 'rgba(255,255,255,0.92)'; textSec = g[400]; textMuted = g[500];
+        fill = g[800]; fillHover = g[700]; border = g[800]; borderStrong = g[700];
+        inputBg = g[900];
+      }
+
+      // Accent — with improved contrast
+      let accent, accentHover, accentSubtle, onAccent, accentFg;
+      if (c.isBase) {
+        if (state.mode === 'light') {
+          accent = g[900]; accentHover = g[800]; accentSubtle = g[100]; onAccent = '#fff'; accentFg = g[900];
+        } else {
+          accent = g[200]; accentHover = g[300]; accentSubtle = g[800]; onAccent = g[950]; accentFg = g[200];
+        }
+      } else {
+        if (state.mode === 'dark') {
+          const ds = Math.round(c.s * 0.75), dl = Math.min(c.l + 18, 85);
+          accent = `hsl(${c.h},${ds}%,${dl}%)`; accentHover = `hsl(${c.h},${Math.round(c.s*0.7)}%,${Math.min(dl+6,90)}%)`;
+          accentSubtle = `hsl(${c.h},${Math.round(c.s*0.3)}%,18%)`;
+          onAccent = dl > 60 ? '#000' : '#fff';
+          // For text on subtle bg in dark, use lighter accent for readability
+          accentFg = `hsl(${c.h},${ds}%,${Math.min(dl + 5, 88)}%)`;
+        } else {
+          accent = `hsl(${c.h},${c.s}%,${c.l}%)`; accentHover = `hsl(${c.h},${c.s}%,${Math.max(c.l-8,10)}%)`;
+          accentSubtle = `hsl(${c.h},${Math.round(c.s * 0.6)}%,95%)`;
+          onAccent = c.l > 55 ? '#000' : '#fff';
+          // For text on subtle bg, use darker accent for better contrast
+          accentFg = `hsl(${c.h},${Math.round(c.s * 0.9)}%,${Math.max(c.l - 12, 25)}%)`;
+        }
+      }
+
+      // Semantic
+      const success = state.mode === 'dark' ? '#6ee7a0' : '#22c55e';
+      const warning = state.mode === 'dark' ? '#fbbf5e' : '#f59e0b';
+      const danger  = state.mode === 'dark' ? '#f87171' : '#ef4444';
+
+      // Chart colors
+      let charts = [];
+      const cc = state.chartColor;
+      if (cc.isBase) {
+        const stops = state.mode === 'light' ? [300,400,500,600,700] : [700,500,400,300,200];
+        charts = stops.map(s => g[s]);
+      } else {
+        const hue = cc.h || 221, sat = cc.s || 80;
+        const hues = [hue, (hue+140)%360, (hue+50)%360, (hue+200)%360, (hue+280)%360];
+        const l = state.mode === 'dark' ? 65 : 50;
+        charts = hues.map(h => `hsl(${h},${sat}%,${l}%)`);
+      }
+
+      // Write ALL variables via a <style> tag — avoids inline vs CSS specificity issues
+      let styleEl = document.getElementById('theme-vars');
+      if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = 'theme-vars';
+        document.head.appendChild(styleEl);
+      }
+      styleEl.textContent = `
+        #preview-main {
+          --r: ${rPx};
+          --font-body: ${state.font.family};
+          --font-heading: ${headingFamily};
+          --surface: ${surface};
+          --surface-raised: ${surfaceRaised};
+          --surface-sunken: ${surfaceSunken};
+          --text: ${text};
+          --text-secondary: ${textSec};
+          --text-muted: ${textMuted};
+          --fill: ${fill};
+          --fill-hover: ${fillHover};
+          --border: ${border};
+          --border-strong: ${borderStrong};
+          --accent: ${accent};
+          --accent-hover: ${accentHover};
+          --accent-subtle: ${accentSubtle};
+          --accent-fg: ${accentFg};
+          --on-accent: ${onAccent};
+          --success: ${success};
+          --warning: ${warning};
+          --danger: ${danger};
+          --chart-1: ${charts[0]};
+          --chart-2: ${charts[1]};
+          --chart-3: ${charts[2]};
+          --chart-4: ${charts[3]};
+          --chart-5: ${charts[4]};
+          --input-bg: ${inputBg};
+          --density-scale: ${d.scale};
+          --density-gap: ${d.gap};
+          --density-padding: ${d.padding};
+          background: ${pageBg};
+        }
+      `;
+
+      // Dark class
+      preview.classList.toggle('dark-preview', state.mode === 'dark');
+
+      // Re-render preview cards
+      renderPreview();
+    }
+
+    // ═══════════════════════════════════════════
+    // PREVIEW CARDS
+    // ═══════════════════════════════════════════
+
+    // Component sections for navigation
+    const SECTIONS = [
+      { id: 'all', label: 'All' },
+      { id: 'cards', label: 'Cards' },
+      { id: 'typography', label: 'Typography' },
+      { id: 'forms', label: 'Forms' },
+      { id: 'data', label: 'Data Display' },
+      { id: 'components', label: 'Components' },
+    ];
+    let activeSection = 'all';
+
+    function selectSection(id) {
+      activeSection = id;
+      renderPreview();
+    }
+
+    function renderPreview() {
+      const grid = document.getElementById('preview-grid');
+
+      // Navigation tabs
+      const tabs = SECTIONS.map(s =>
+        `<button class="d-tab ${activeSection === s.id ? 'active' : ''}"
+                onclick="selectSection('${s.id}')"
+                style="cursor:pointer;">${s.label}</button>`
+      ).join('');
+
+      const navBar = `<div style="grid-column: 1 / -1; margin-bottom:0.25rem;">
+        <div class="d-tabs" style="border-color:var(--border);">${tabs}</div>
+      </div>`;
+
+      // Build cards based on active section
+      let cards = '';
+      const s = activeSection;
+      if (s === 'all' || s === 'cards') {
+        cards += cardContributionHistory() + cardSavingsTargets() + cardRecentTransactions();
+      }
+      if (s === 'all' || s === 'typography') {
+        cards += cardTypography();
+      }
+      if (s === 'all' || s === 'forms') {
+        cards += cardBuyInvestment() + cardPayoutThreshold();
+      }
+      if (s === 'all' || s === 'data') {
+        cards += cardDataTable() + cardNavigation();
+      }
+      if (s === 'all' || s === 'components') {
+        cards += cardComponents() + cardAccountSettings() + cardDistributeTrack();
+      }
+
+      grid.innerHTML = navBar + cards;
+
+      if (state.iconLib === 'lucide') {
+        try { lucide.createIcons(); } catch(e) {}
+      }
+    }
+
+    function cardContributionHistory() {
+      const months = ['Dec','Jan','Feb','Mar','Apr','May'];
+      const data = [28, 38, 52, 72, 55, 68];
+      const max = 80;
+      const barH = 80;
+      const bars = data.map((v, i) => {
+        const h = (v / max) * barH;
+        const x = 16 + i * 50;
+        return `<rect x="${x}" y="${barH - h + 10}" width="30" height="${h}" rx="4" fill="var(--chart-1)" opacity="${i === data.length - 1 ? 1 : 0.6}"/>
+                <text x="${x+15}" y="${barH + 26}" text-anchor="middle" fill="var(--text-muted)" font-size="10" font-family="var(--font-body)">${months[i]}</text>`;
+      }).join('');
+
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <div>
+            <h3>Contribution History</h3>
+            <p class="p-card-sub">Last 6 months of activity</p>
+          </div>
+          <span class="d-badge" style="background:var(--accent-subtle);color:var(--accent-fg);">+12% vs last month</span>
+        </div>
+        <div class="p-card-body">
+          <svg viewBox="0 0 320 110" style="width:100%;height:auto;">${bars}</svg>
+        </div>
+      </div>`;
+    }
+
+    function cardSavingsTargets() {
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <h3>Savings Targets</h3>
+          <span class="d-badge" style="background:var(--accent);color:var(--on-accent);">New Goal</span>
+        </div>
+        <div class="p-card-body">
+          <div class="card-stack">
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.25rem;">
+                <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Retirement</span>
+              </div>
+              <div style="font-size:1.75rem;font-weight:700;font-family:var(--font-heading);color:var(--text);">$420,000</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;">
+                <div class="d-progress" style="flex:1;"><div class="d-progress-bar" style="width:65%;background:var(--accent);"></div></div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">$273,000</span>
+              </div>
+            </div>
+            <div class="d-separator"></div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.25rem;">
+                <span style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">Real Estate</span>
+              </div>
+              <div style="font-size:1.75rem;font-weight:700;font-family:var(--font-heading);color:var(--text);">$85,000</div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-top:0.5rem;">
+                <div class="d-progress" style="flex:1;"><div class="d-progress-bar" style="width:32%;background:var(--chart-2);"></div></div>
+                <span style="font-size:0.75rem;color:var(--text-muted);">$27,200</span>
+              </div>
+            </div>
+            <p style="font-size:0.75rem;color:var(--text-muted);">You have not met your targets for this year.</p>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardRecentTransactions() {
+      const txns = [
+        { name: 'Blue Bottle Coffee', cat: 'Food & Drink', date: 'Today, 10:24 AM', amount: '-$6.50', icon: 'coffee' },
+        { name: 'Whole Foods Market', cat: 'Groceries', date: 'Yesterday', amount: '-$142.30', icon: 'shopping-cart' },
+        { name: 'Stripe Payout', cat: 'Income', date: 'Oct 12', amount: '+$4,200.00', color: 'var(--success)', icon: 'credit-card' },
+        { name: 'Uber Technologies', cat: 'Transport', date: 'Oct 11', amount: '-$24.10', icon: 'car' },
+        { name: 'Netflix Subscription', cat: 'Entertainment', date: 'Oct 10', amount: '-$19.99', icon: 'tv' },
+      ];
+      const rows = txns.map(t => `
+        <div style="display:flex;align-items:center;gap:0.75rem;padding:0.625rem 0;border-bottom:1px solid var(--border);">
+          <div class="d-avatar" style="background:var(--fill);color:var(--text-secondary);">
+            <i data-lucide="${t.icon}" style="width:14px;height:14px;"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:0.8125rem;font-weight:500;color:var(--text);">${t.name}</div>
+            <div style="font-size:0.6875rem;color:var(--text-muted);">${t.cat}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.8125rem;font-weight:600;color:${t.color || 'var(--text)'};">${t.amount}</div>
+            <div style="font-size:0.6875rem;color:var(--text-muted);">${t.date}</div>
+          </div>
+        </div>
+      `).join('');
+
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <div>
+            <h3>Recent Transactions</h3>
+            <p class="p-card-sub">Your latest account activity.</p>
+          </div>
+          <button class="d-btn secondary sm">View All</button>
+        </div>
+        <div class="p-card-body" style="padding-top:0.5rem;">
+          ${rows}
+        </div>
+      </div>`;
+    }
+
+    function cardBuyInvestment() {
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <h3>Buy Investment</h3>
+        </div>
+        <div class="p-card-body">
+          <div class="card-stack">
+            <div>
+              <label class="d-label">Amount to Invest</label>
+              <input class="d-input" value="$ 1,000.00" readonly>
+            </div>
+            <div>
+              <label class="d-label">Order Type</label>
+              <select class="d-select"><option>Market Order</option></select>
+            </div>
+            <div style="font-size:0.75rem;color:var(--text-muted);display:flex;flex-direction:column;gap:0.25rem;">
+              <div style="display:flex;justify-content:space-between;"><span>Estimated Shares</span><span style="color:var(--text);">1.95</span></div>
+              <div style="display:flex;justify-content:space-between;"><span>Buying Power</span><span style="color:var(--text);">$12,450.00</span></div>
+            </div>
+            <button class="d-btn primary" style="width:100%;justify-content:center;">Review Order</button>
+            <p style="font-size:0.6875rem;color:var(--text-muted);text-align:center;">Trades are typically executed within minutes during market hours.</p>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardPayoutThreshold() {
+      return `<div class="p-card">
+        <div class="p-card-head" style="align-items:flex-start;">
+          <div>
+            <h3>Payout Threshold</h3>
+            <p class="p-card-sub">Set the minimum balance before a payout is triggered.</p>
+          </div>
+        </div>
+        <div class="p-card-body">
+          <div class="card-stack">
+            <div>
+              <label class="d-label">Preferred Currency</label>
+              <select class="d-select"><option>USD — United States Dollar</option></select>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.375rem;">
+                <span style="font-size:0.8125rem;font-weight:500;color:var(--text);">Minimum Payout Amount</span>
+                <span style="font-size:1.25rem;font-weight:700;font-family:var(--font-heading);color:var(--text);">$2500.00</span>
+              </div>
+              <input type="range" style="width:100%;accent-color:var(--accent);" value="50">
+              <div style="display:flex;justify-content:space-between;font-size:0.6875rem;color:var(--text-muted);margin-top:0.125rem;">
+                <span>$50 (MIN)</span><span>$10,000 (MAX)</span>
+              </div>
+            </div>
+            <div>
+              <label class="d-label">Notes</label>
+              <textarea class="d-textarea" placeholder="Add any notes for this payout configuration..." readonly></textarea>
+            </div>
+            <button class="d-btn primary" style="width:100%;justify-content:center;">Save Threshold</button>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardDistributeTrack() {
+      return `<div class="p-card">
+        <div class="p-card-body" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--density-gap, 0.75rem);padding:2rem 1.25rem;">
+          <div style="width:48px;height:48px;border-radius:12px;border:1.5px dashed var(--border-strong);display:flex;align-items:center;justify-content:center;color:var(--text-muted);">
+            <i data-lucide="plus" style="width:20px;height:20px;"></i>
+          </div>
+          <div>
+            <h3 style="font-size:0.9375rem;font-weight:600;font-family:var(--font-heading);color:var(--text);">Distribute Track</h3>
+            <p style="font-size:0.8125rem;color:var(--text-muted);margin-top:0.25rem;">Upload your first master to start reaching listeners on Spotify, Apple Music, and more.</p>
+          </div>
+          <button class="d-btn primary">Create Release</button>
+        </div>
+      </div>`;
+    }
+
+    function cardAccountSettings() {
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <h3>Preferences</h3>
+        </div>
+        <div class="p-card-body">
+          <div class="card-stack">
+            <p style="font-size:0.8125rem;color:var(--text-muted);">Manage your account settings and notifications.</p>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div><span style="font-size:0.8125rem;font-weight:500;color:var(--text);">Default Currency</span></div>
+              <select class="d-select" style="width:auto;min-width:100px;"><option>USD</option></select>
+            </div>
+            <div class="d-separator"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <span style="font-size:0.8125rem;font-weight:500;color:var(--text);">Email Notifications</span>
+                <p style="font-size:0.75rem;color:var(--text-muted);">Receive transaction alerts</p>
+              </div>
+              <input type="checkbox" class="d-switch" checked>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <span style="font-size:0.8125rem;font-weight:500;color:var(--text);">Two-Factor Auth</span>
+                <p style="font-size:0.75rem;color:var(--text-muted);">Extra layer of security</p>
+              </div>
+              <input type="checkbox" class="d-switch">
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardNavigation() {
+      const items = [
+        { label: 'Dashboard', icon: 'layout-dashboard', active: true },
+        { label: 'Transactions', icon: 'arrow-left-right' },
+        { label: 'Investments', icon: 'trending-up' },
+        { label: 'Profile', icon: 'user' },
+        { label: 'Billing', icon: 'credit-card' },
+        { label: 'Notifications', icon: 'bell' },
+        { label: 'Security', icon: 'shield' },
+      ];
+      const rows = items.map(it => `
+        <div style="display:flex;align-items:center;gap:0.5rem;padding:0.375rem 0.625rem;border-radius:var(--r, 8px);
+          ${it.active ? 'background:var(--accent);color:var(--on-accent);font-weight:500;' : 'color:var(--text-secondary);'}
+          font-size:0.8125rem;cursor:default;">
+          <i data-lucide="${it.icon}" style="width:14px;height:14px;"></i>
+          ${it.label}
+        </div>
+      `).join('');
+
+      return `<div class="p-card">
+        <div class="p-card-body" style="display:flex;gap:1.5rem;">
+          <div style="display:flex;flex-direction:column;gap:0.125rem;min-width:140px;">
+            <div style="font-size:0.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.625rem;margin-bottom:0.25rem;">Overview</div>
+            ${rows.slice(0, 3)}
+            <div style="font-size:0.6875rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;padding:0.25rem 0.625rem;margin-top:0.5rem;margin-bottom:0.25rem;">Account</div>
+            ${rows.slice(3)}
+          </div>
+          <div style="flex:1;border-left:1px solid var(--border);padding-left:1.25rem;">
+            <div style="font-size:0.75rem;color:var(--text-muted);margin-bottom:0.25rem;">Home &gt; Payments</div>
+            <h3 style="font-size:1rem;font-weight:600;font-family:var(--font-heading);color:var(--text);margin-bottom:0.75rem;">Change transfer limit</h3>
+            <p style="font-size:0.8125rem;color:var(--text-muted);margin-bottom:1rem;">Adjust how much you can send from your balance.</p>
+            <div class="card-stack">
+              <div>
+                <label class="d-label">Amount to Transfer</label>
+                <input class="d-input" value="$ 1,200.00" readonly>
+              </div>
+              <div>
+                <label class="d-label">From Account</label>
+                <select class="d-select"><option>Main Checking (...8402) — $12,450.00</option></select>
+              </div>
+              <button class="d-btn primary" style="align-self:flex-start;">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardComponents() {
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <h3>Components</h3>
+        </div>
+        <div class="p-card-body">
+          <div class="card-stack" style="gap:1.25rem;">
+            <!-- Buttons -->
+            <div>
+              <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.625rem;font-weight:600;">Buttons</div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;">
+                <button class="d-btn primary">Primary</button>
+                <button class="d-btn secondary">Secondary</button>
+                <button class="d-btn outline">Outline</button>
+                <button class="d-btn ghost">Ghost</button>
+                <button class="d-btn danger">Danger</button>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin-top:0.625rem;">
+                <button class="d-btn primary sm">Small</button>
+                <button class="d-btn primary">Default</button>
+                <button class="d-btn primary lg">Large</button>
+              </div>
+            </div>
+            <div class="d-separator"></div>
+            <!-- Badges -->
+            <div>
+              <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.625rem;font-weight:600;">Badges</div>
+              <div style="display:flex;flex-wrap:wrap;gap:0.5rem;">
+                <span class="d-badge" style="background:var(--accent);color:var(--on-accent);">Accent</span>
+                <span class="d-badge" style="background:var(--accent-subtle);color:var(--accent-fg);">Subtle</span>
+                <span class="d-badge" style="background:transparent;border:1px solid var(--border);color:var(--text-secondary);">Outline</span>
+                <span class="d-badge" style="background:rgba(34,197,94,0.12);color:var(--success);">Success</span>
+                <span class="d-badge" style="background:rgba(245,158,11,0.12);color:var(--warning);">Warning</span>
+                <span class="d-badge" style="background:rgba(239,68,68,0.12);color:var(--danger);">Error</span>
+              </div>
+            </div>
+            <div class="d-separator"></div>
+            <!-- Controls -->
+            <div>
+              <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.625rem;font-weight:600;">Controls</div>
+              <div class="card-stack" style="gap:0.625rem;">
+                <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:var(--text);cursor:default;">
+                  <input type="checkbox" class="d-checkbox" checked> Enable notifications
+                </label>
+                <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.8125rem;color:var(--text);cursor:default;">
+                  <input type="checkbox" class="d-checkbox"> Dark mode by default
+                </label>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                  <span style="font-size:0.8125rem;color:var(--text);">Auto-save</span>
+                  <input type="checkbox" class="d-switch" checked>
+                </div>
+              </div>
+            </div>
+            <div class="d-separator"></div>
+            <!-- Avatars -->
+            <div>
+              <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.625rem;font-weight:600;">Avatars</div>
+              <div style="display:flex;gap:0.5rem;align-items:center;">
+                <div class="d-avatar" style="background:var(--accent);color:var(--on-accent);width:1.75rem;height:1.75rem;font-size:0.625rem;">RS</div>
+                <div class="d-avatar" style="background:var(--chart-2);color:#fff;">AB</div>
+                <div class="d-avatar" style="background:var(--chart-3);color:#fff;width:2.5rem;height:2.5rem;font-size:0.875rem;">CD</div>
+                <div class="d-avatar" style="background:var(--chart-4);color:#fff;">EF</div>
+                <div class="d-avatar" style="background:var(--chart-5);color:#fff;width:1.75rem;height:1.75rem;font-size:0.625rem;">GH</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardTypography() {
+      const headingFont = state.fontHeading.family || state.font.family;
+      return `<div class="p-card" style="grid-column: span 2;">
+        <div class="p-card-head">
+          <h3>Typography</h3>
+          <span style="font-size:0.75rem;color:var(--text-muted);">${state.font.name}${state.fontHeading.name !== 'Inherit' ? ' / ' + state.fontHeading.name : ''}</span>
+        </div>
+        <div class="p-card-body">
+          <div class="card-stack" style="gap:1.5rem;">
+            <!-- Heading Scale -->
+            <div>
+              <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.75rem;font-weight:600;">Heading Scale</div>
+              <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                <div style="display:flex;align-items:baseline;gap:1rem;">
+                  <span style="font-size:0.6875rem;color:var(--text-muted);width:2rem;flex-shrink:0;font-family:var(--font-mono);">h1</span>
+                  <span style="font-size:2rem;font-weight:700;font-family:${headingFont};color:var(--text);line-height:1.2;">The quick brown fox</span>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:1rem;">
+                  <span style="font-size:0.6875rem;color:var(--text-muted);width:2rem;flex-shrink:0;font-family:var(--font-mono);">h2</span>
+                  <span style="font-size:1.5rem;font-weight:600;font-family:${headingFont};color:var(--text);line-height:1.3;">The quick brown fox jumps</span>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:1rem;">
+                  <span style="font-size:0.6875rem;color:var(--text-muted);width:2rem;flex-shrink:0;font-family:var(--font-mono);">h3</span>
+                  <span style="font-size:1.25rem;font-weight:600;font-family:${headingFont};color:var(--text);line-height:1.3;">The quick brown fox jumps over</span>
+                </div>
+                <div style="display:flex;align-items:baseline;gap:1rem;">
+                  <span style="font-size:0.6875rem;color:var(--text-muted);width:2rem;flex-shrink:0;font-family:var(--font-mono);">h4</span>
+                  <span style="font-size:1.125rem;font-weight:600;font-family:${headingFont};color:var(--text);line-height:1.4;">The quick brown fox jumps over the lazy dog</span>
+                </div>
+              </div>
+            </div>
+            <div class="d-separator"></div>
+            <!-- Body Text -->
+            <div style="display:flex;gap:2rem;flex-wrap:wrap;">
+              <div style="flex:1;min-width:200px;">
+                <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-weight:600;">Body</div>
+                <p style="font-size:0.9375rem;line-height:1.65;color:var(--text);font-family:var(--font-body);">
+                  Designers love packing quirky glyphs into test phrases. This is a preview of the body typography styles applied to your design system.
+                </p>
+                <p style="font-size:0.8125rem;line-height:1.6;color:var(--text-secondary);font-family:var(--font-body);margin-top:0.5rem;">
+                  Secondary text uses a slightly muted color to establish visual hierarchy while maintaining readability across all base colors.
+                </p>
+              </div>
+              <div style="flex:1;min-width:200px;">
+                <div style="font-size:0.6875rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.5rem;font-weight:600;">Small &amp; Mono</div>
+                <p style="font-size:0.75rem;line-height:1.5;color:var(--text-muted);font-family:var(--font-body);">Caption text — used for labels, timestamps, and metadata. Should remain readable even at small sizes.</p>
+                <div style="margin-top:0.75rem;padding:0.75rem;border-radius:var(--r, 8px);background:var(--fill);font-family:var(--font-mono);font-size:0.75rem;color:var(--text-secondary);line-height:1.6;">
+                  <code>const theme = rends.create({<br>&nbsp;&nbsp;base: '${state.baseColor.name.toLowerCase()}',<br>&nbsp;&nbsp;accent: '${state.theme.name.toLowerCase()}'<br>});</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function cardDataTable() {
+      const rows = [
+        { id: 'INV-001', status: 'Paid', method: 'Credit Card', amount: '$250.00' },
+        { id: 'INV-002', status: 'Pending', method: 'PayPal', amount: '$150.00' },
+        { id: 'INV-003', status: 'Unpaid', method: 'Bank Transfer', amount: '$350.00' },
+        { id: 'INV-004', status: 'Paid', method: 'Credit Card', amount: '$450.00' },
+        { id: 'INV-005', status: 'Paid', method: 'PayPal', amount: '$550.00' },
+      ];
+      const statusColors = { Paid: 'var(--success)', Pending: 'var(--warning)', Unpaid: 'var(--danger)' };
+      const tbody = rows.map(r => `
+        <tr>
+          <td style="font-weight:500;">${r.id}</td>
+          <td><span class="d-badge" style="background:${statusColors[r.status]}20;color:${statusColors[r.status]};">${r.status}</span></td>
+          <td>${r.method}</td>
+          <td style="text-align:right;font-weight:600;">${r.amount}</td>
+        </tr>
+      `).join('');
+
+      return `<div class="p-card">
+        <div class="p-card-head">
+          <h3>Invoices</h3>
+          <span style="font-size:0.75rem;color:var(--text-muted);">A list of recent invoices.</span>
+        </div>
+        <div class="p-card-body" style="padding-left:0;padding-right:0;padding-bottom:0;">
+          <table class="d-table">
+            <thead>
+              <tr><th>Invoice</th><th>Status</th><th>Method</th><th style="text-align:right;">Amount</th></tr>
+            </thead>
+            <tbody>${tbody}</tbody>
+          </table>
+        </div>
+      </div>`;
+    }
+
+    // ═══════════════════════════════════════════
+    // CSS GENERATION
+    // ═══════════════════════════════════════════
+
+    function generateCSS() {
+      const c = state.theme;
+      const g = state.baseColor;
+      const gv = g.values;
+      const desatS = c.isBase ? 0 : Math.round(c.s * 0.75);
+      const darkL = c.isBase ? 75 : Math.min(c.l + 18, 85);
+
+      const accentLight = c.isBase ? gv[900] : `hsl(${c.h}, ${c.s}%, ${c.l}%)`;
+      const accentDark = c.isBase ? gv[200] : `hsl(${c.h}, ${desatS}%, ${darkL}%)`;
+
+      return `/* ═══════════════════════════════════════════
+   RenDS Custom Theme
+   Generated by RenDS Create
+   Base: ${g.name} | Theme: ${c.name} | Radius: ${state.radius.name}
+   ═══════════════════════════════════════════ */
+
+:root {
+  color-scheme: light dark;
+
+  /* ── Accent: ${c.name} ── */
+  --color-accent:        light-dark(${accentLight}, ${accentDark});
+  --color-on-accent:     light-dark(${c.isBase || c.l <= 55 ? '#fff' : '#000'}, ${c.isBase ? gv[950] : (darkL > 60 ? '#000' : '#fff')});
+  --color-accent-subtle: light-dark(${c.isBase ? gv[100] : `hsl(${c.h}, ${c.s}%, 96%)`}, ${c.isBase ? gv[800] : `hsl(${c.h}, ${Math.round(c.s*0.3)}%, 18%)`});
+
+  /* ── Base: ${g.name} ── */
+  --color-surface:        light-dark(${gv[50]}, ${gv[950]});
+  --color-surface-raised: light-dark(#ffffff, ${gv[900]});
+  --color-surface-sunken: light-dark(${gv[100]}, ${gv[950]});
+  --color-input-bg:       light-dark(#ffffff, ${gv[900]});
+  --color-text:           light-dark(${gv[950]}, rgba(255,255,255, 0.87));
+  --color-text-secondary: light-dark(${gv[500]}, ${gv[400]});
+  --color-text-muted:     light-dark(${gv[400]}, ${gv[500]});
+  --color-border:         light-dark(${gv[200]}, ${gv[800]});
+  --color-border-strong:  light-dark(${gv[300]}, ${gv[700]});
+
+  /* ── Radius: ${state.radius.name} ── */
+  --radius: ${state.radius.value};
+
+  /* ── Fonts ── */
+  --font-sans: ${state.font.family};
+  --font-heading: ${state.fontHeading.family || state.font.family};
+
+  /* ── Chart: ${state.chartColor.name} ── */
+${(() => {
+  const cc = state.chartColor;
+  if (cc.isBase) {
+    return `  --chart-1: light-dark(${gv[300]}, ${gv[700]});
+  --chart-2: light-dark(${gv[400]}, ${gv[500]});
+  --chart-3: light-dark(${gv[500]}, ${gv[400]});
+  --chart-4: light-dark(${gv[600]}, ${gv[300]});
+  --chart-5: light-dark(${gv[700]}, ${gv[200]});`;
+  } else {
+    const hue = cc.h, sat = cc.s;
+    const hues = [hue, (hue+140)%360, (hue+50)%360, (hue+200)%360, (hue+280)%360];
+    return hues.map((h, i) => `  --chart-${i+1}: light-dark(hsl(${h}, ${sat}%, 50%), hsl(${h}, ${Math.round(sat*0.75)}%, 65%));`).join('\n');
+  }
+})()}
+
+  /* ── Density: ${state.density.name} ── */
+  --density-scale: ${state.density.scale};
+  --density-gap: ${state.density.gap};
+  --density-padding: ${state.density.padding};
+}${state.iconLib === 'lucide' ? `
+
+/* ── Icons: Lucide ──
+   npm i lucide | <i data-lucide="home"></i> */` : ''}`;
+    }
+
+    function toggleCode() {
+      document.getElementById('css-modal').style.display = 'flex';
+      document.getElementById('css-output').textContent = generateCSS();
+    }
+
+    function closeCssModal() {
+      document.getElementById('css-modal').style.display = 'none';
+    }
+
+    function copyCss() {
+      navigator.clipboard.writeText(generateCSS()).then(() => {
+        showToast('Copied to clipboard');
+      });
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('copied-toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2000);
+    }
+
+    function randomize() {
+      state.baseColor = BASE_COLORS[Math.floor(Math.random() * BASE_COLORS.length)];
+      state.theme = THEMES[Math.floor(Math.random() * THEMES.length)];
+      state.chartColor = THEMES[Math.floor(Math.random() * THEMES.length)];
+      state.font = FONTS[Math.floor(Math.random() * FONTS.length)];
+      state.fontHeading = HEADING_FONTS[Math.floor(Math.random() * HEADING_FONTS.length)];
+      state.radius = RADII[Math.floor(Math.random() * RADII.length)];
+      state.density = DENSITIES[Math.floor(Math.random() * DENSITIES.length)];
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+    }
+
+    // ═══════════════════════════════════════════
+    // INIT
+    // ═══════════════════════════════════════════
+
+    function init() {
+      renderDropdowns();
+      updateSidebarValues();
+      applyTheme();
+    }
+
+    init();
+  </script>
+</body>
+</html>

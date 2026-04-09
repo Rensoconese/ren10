@@ -1,0 +1,190 @@
+/* ============================================
+   RenDS — Progress Bar & Meter Components
+   ============================================
+   Progress indicators and meter displays.
+   CSS-only, works with <progress> and <meter>.
+
+   Supports multiple sizes, colors, and states.
+   Includes indeterminate animations.
+
+   Usage:
+     <div class="ren-progress">
+       <div class="ren-progress-bar" style="width: 65%"></div>
+     </div>
+
+     <div class="ren-progress ren-progress-lg ren-progress-success">
+       <div class="ren-progress-bar" style="width: 85%"></div>
+     </div>
+
+     <meter class="ren-meter" value="6" min="0" max="10"></meter>
+   ============================================ */
+
+/* ═══════════════════════════════
+   PROGRESS BAR
+   ═══════════════════════════════ */
+
+.ren-progress {
+  display: flex;
+  width: 100%;
+  height: 0.5rem;   /* default / md */
+  background-color: var(--color-fill);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.ren-progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-normal) var(--ease-out);
+}
+
+/* ─── Sizes ─── */
+
+.ren-progress-sm {
+  height: 0.25rem;
+}
+
+.ren-progress-lg {
+  height: 0.75rem;
+}
+
+.ren-progress-xl {
+  height: 1rem;
+}
+
+/* ─── Color Variants ─── */
+
+.ren-progress-success .ren-progress-bar {
+  background-color: var(--color-success);
+}
+
+.ren-progress-warning .ren-progress-bar {
+  background-color: var(--color-warning);
+}
+
+.ren-progress-danger .ren-progress-bar {
+  background-color: var(--color-danger);
+}
+
+.ren-progress-info .ren-progress-bar {
+  background-color: var(--color-info);
+}
+
+/* ─── Indeterminate Animation ─── */
+
+.ren-progress-indeterminate .ren-progress-bar {
+  width: 30% !important;
+  animation: ren-progress-slide 1.5s var(--ease-out) infinite;
+}
+
+@keyframes ren-progress-slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(500%);
+  }
+  100% {
+    transform: translateX(500%);
+  }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .ren-progress-indeterminate .ren-progress-bar {
+    animation: none;
+    width: 50% !important;
+  }
+
+  .ren-progress-bar {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════
+   PROGRESS LABELS
+   ═══════════════════════════════ */
+
+.ren-progress-label {
+  display: block;
+  font-size: var(--label-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+}
+
+.ren-progress-value {
+  display: block;
+  font-size: var(--label-size);
+  font-weight: var(--weight-regular);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-1);
+  text-align: end;
+}
+
+/* ═══════════════════════════════
+   METER ELEMENT
+   ═══════════════════════════════ */
+
+.ren-meter {
+  display: block;
+  width: 100%;
+  height: 0.5rem;
+  border: none;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background-color: var(--color-fill);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* Webkit browsers (Chrome, Safari) */
+.ren-meter::-webkit-meter-inner-element {
+  border-radius: var(--radius-full);
+}
+
+.ren-meter::-webkit-meter-bar {
+  background-color: var(--color-fill);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: none;
+}
+
+.ren-meter::-webkit-meter-optimum-value {
+  background-color: var(--color-success);
+  border-radius: var(--radius-full);
+}
+
+.ren-meter::-webkit-meter-suboptimum-value {
+  background-color: var(--color-warning);
+  border-radius: var(--radius-full);
+}
+
+.ren-meter::-webkit-meter-even-less-good-value {
+  background-color: var(--color-danger);
+  border-radius: var(--radius-full);
+}
+
+/* Firefox */
+.ren-meter::-moz-meter-bar {
+  background: var(--color-success);
+  border-radius: var(--radius-full);
+  border: none;
+}
+
+/* ─── Meter Sizes ─── */
+
+.ren-meter-sm {
+  height: 0.25rem;
+}
+
+.ren-meter-lg {
+  height: 0.75rem;
+}
+
+.ren-meter-xl {
+  height: 1rem;
+}

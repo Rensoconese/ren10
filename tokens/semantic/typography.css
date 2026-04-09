@@ -1,0 +1,94 @@
+/* ============================================
+   RenDS — Semantic Typography Tokens
+   ============================================
+   Named text styles combining size, weight,
+   line-height, and tracking for each role.
+
+   Based on Apple HIG type hierarchy.
+   ============================================ */
+
+:root {
+  /* ─── Display — Hero and page titles ─── */
+  --display-lg-size:     var(--text-5xl);
+  --display-lg-weight:   var(--weight-bold);
+  --display-lg-leading:  var(--leading-tight);
+  --display-lg-tracking: var(--tracking-tight);
+
+  --display-md-size:     var(--text-4xl);
+  --display-md-weight:   var(--weight-bold);
+  --display-md-leading:  var(--leading-tight);
+  --display-md-tracking: var(--tracking-tight);
+
+  --display-sm-size:     var(--text-3xl);
+  --display-sm-weight:   var(--weight-semibold);
+  --display-sm-leading:  var(--leading-tight);
+  --display-sm-tracking: var(--tracking-tight);
+
+  /* ─── Title — Section headings ─── */
+  --title-lg-size:       var(--text-2xl);
+  --title-lg-weight:     var(--weight-semibold);
+  --title-lg-leading:    var(--leading-snug);
+
+  --title-md-size:       var(--text-xl);
+  --title-md-weight:     var(--weight-semibold);
+  --title-md-leading:    var(--leading-snug);
+
+  --title-sm-size:       var(--text-lg);
+  --title-sm-weight:     var(--weight-semibold);
+  --title-sm-leading:    var(--leading-snug);
+
+  /* ─── Headline — Emphasized body ─── */
+  --headline-size:       var(--text-md);
+  --headline-weight:     var(--weight-semibold);
+  --headline-leading:    var(--leading-snug);
+
+  /* ─── Body — Default content ─── */
+  --body-lg-size:        var(--text-md);
+  --body-lg-weight:      var(--weight-regular);
+  --body-lg-leading:     var(--leading-normal);
+
+  --body-size:           var(--text-base);
+  --body-weight:         var(--weight-regular);
+  --body-leading:        var(--leading-normal);
+
+  --body-sm-size:        var(--text-sm);
+  --body-sm-weight:      var(--weight-regular);
+  --body-sm-leading:     var(--leading-normal);
+
+  /* ─── Label — UI controls, buttons ─── */
+  --label-lg-size:       var(--text-base);
+  --label-lg-weight:     var(--weight-medium);
+
+  --label-size:          var(--text-sm);
+  --label-weight:        var(--weight-medium);
+
+  --label-sm-size:       var(--text-xs);
+  --label-sm-weight:     var(--weight-medium);
+
+  /* ─── Caption — Small secondary text ─── */
+  --caption-size:        var(--text-sm);
+  --caption-weight:      var(--weight-regular);
+  --caption-leading:     var(--leading-normal);
+
+  --caption-sm-size:     var(--text-xs);
+  --caption-sm-weight:   var(--weight-regular);
+
+  /* ─── Code — Monospace ─── */
+  --code-size:           0.875em; /* relative to parent */
+  --code-weight:         var(--weight-regular);
+  --code-family:         var(--font-mono);
+
+  /* ─── Aliases (compatibility) ─── */
+  --label-md-size:       var(--label-size);
+  --label-md-weight:     var(--label-weight);
+  --font-size-body:      var(--body-size);
+  --font-size-body-sm:   var(--body-sm-size);
+  --font-size-caption:   var(--caption-size);
+  --font-size-label:     var(--label-size);
+  --font-size-xs:        var(--text-xs);
+  --font-weight-semibold:var(--weight-semibold);
+  --line-height-body:    var(--body-leading);
+  --line-height-caption: var(--caption-leading);
+  --leading-5:           var(--leading-normal);
+  --size-body-sm:        var(--body-sm-size);
+}

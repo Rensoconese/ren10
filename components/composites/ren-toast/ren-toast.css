@@ -1,0 +1,366 @@
+/**
+ * RenDS — Toast Notification System CSS
+ * =====================================
+ * Styles for notification toasts with animations,
+ * positioning, variants, and responsive behavior.
+ */
+
+/* ═══ VIEWPORT CONTAINER ═══ */
+.ren-toast-viewport {
+  position: fixed;
+  z-index: var(--z-toast, 9999);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-height: 100dvh;
+  overflow: hidden;
+  pointer-events: none;
+  max-width: min(420px, calc(100vw - 2rem));
+}
+
+/* Position variants */
+.ren-toast-viewport[data-position="top-right"] {
+  top: var(--space-4);
+  right: var(--space-4);
+  flex-direction: column;
+}
+
+.ren-toast-viewport[data-position="top-left"] {
+  top: var(--space-4);
+  left: var(--space-4);
+  flex-direction: column;
+}
+
+.ren-toast-viewport[data-position="top-center"] {
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column;
+}
+
+.ren-toast-viewport[data-position="bottom-right"] {
+  bottom: var(--space-4);
+  right: var(--space-4);
+  flex-direction: column-reverse;
+}
+
+.ren-toast-viewport[data-position="bottom-left"] {
+  bottom: var(--space-4);
+  left: var(--space-4);
+  flex-direction: column-reverse;
+}
+
+.ren-toast-viewport[data-position="bottom-center"] {
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column-reverse;
+}
+
+/* ═══ TOAST CONTAINER ═══ */
+.ren-toast {
+  pointer-events: auto;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-width: 20rem;
+  max-width: 100%;
+  position: relative;
+  overflow: hidden;
+  animation: ren-toast-fade-in var(--duration-normal) var(--ease-out);
+}
+
+.ren-toast[data-closing] {
+  animation: ren-toast-fade-out var(--duration-normal) var(--ease-in);
+  opacity: 0;
+}
+
+/* Slide-in animations by position */
+.ren-toast-viewport[data-position="top-right"] .ren-toast,
+.ren-toast-viewport[data-position="bottom-right"] .ren-toast {
+  animation: ren-toast-slide-in-right var(--duration-normal) var(--ease-out);
+}
+
+.ren-toast-viewport[data-position="top-right"] .ren-toast[data-closing],
+.ren-toast-viewport[data-position="bottom-right"] .ren-toast[data-closing] {
+  animation: ren-toast-slide-out-right var(--duration-normal) var(--ease-in);
+}
+
+.ren-toast-viewport[data-position="top-left"] .ren-toast,
+.ren-toast-viewport[data-position="bottom-left"] .ren-toast {
+  animation: ren-toast-slide-in-left var(--duration-normal) var(--ease-out);
+}
+
+.ren-toast-viewport[data-position="top-left"] .ren-toast[data-closing],
+.ren-toast-viewport[data-position="bottom-left"] .ren-toast[data-closing] {
+  animation: ren-toast-slide-out-left var(--duration-normal) var(--ease-in);
+}
+
+.ren-toast-viewport[data-position="top-center"] .ren-toast,
+.ren-toast-viewport[data-position="bottom-center"] .ren-toast {
+  animation: ren-toast-fade-in var(--duration-normal) var(--ease-out);
+}
+
+/* ═══ TOAST CONTENT STRUCTURE ═══ */
+.ren-toast-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ren-toast-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ren-toast-title {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.ren-toast-description {
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+  margin-bottom: 0;
+  margin-inline: 0;
+}
+
+.ren-toast-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.ren-toast-close {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  font-size: 18px;
+  line-height: 1;
+  transition: background-color var(--duration-fast) var(--ease-in-out),
+              color var(--duration-fast) var(--ease-in-out);
+}
+
+.ren-toast-close:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.ren-toast-close:active {
+  background-color: var(--color-surface-active);
+}
+
+/* ═══ TOAST VARIANTS ═══ */
+/* Success */
+.ren-toast-success {
+  border-inline-start: 3px solid var(--color-success);
+}
+
+.ren-toast-success .ren-toast-icon {
+  color: var(--color-success);
+}
+
+/* Error / Danger */
+.ren-toast-error,
+.ren-toast-danger {
+  border-inline-start: 3px solid var(--color-danger);
+}
+
+.ren-toast-error .ren-toast-icon,
+.ren-toast-danger .ren-toast-icon {
+  color: var(--color-danger);
+}
+
+/* Warning */
+.ren-toast-warning {
+  border-inline-start: 3px solid var(--color-warning);
+}
+
+.ren-toast-warning .ren-toast-icon {
+  color: var(--color-warning);
+}
+
+/* Info */
+.ren-toast-info {
+  border-inline-start: 3px solid var(--color-info);
+}
+
+.ren-toast-info .ren-toast-icon {
+  color: var(--color-info);
+}
+
+/* Loading */
+.ren-toast-loading .ren-toast-icon {
+  animation: ren-spinner-rotate 0.8s linear infinite;
+}
+
+/* ═══ PROGRESS BAR ═══ */
+.ren-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--color-accent);
+  transition: width linear;
+}
+
+/* ═══ SWIPE STATE ═══ */
+.ren-toast[data-swiping] {
+  transition: none;
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes ren-toast-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ren-toast-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ren-toast-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes ren-toast-slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes ren-toast-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ren-toast-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ren-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-toast,
+  .ren-toast[data-closing],
+  .ren-toast-viewport[data-position="top-right"] .ren-toast,
+  .ren-toast-viewport[data-position="bottom-right"] .ren-toast,
+  .ren-toast-viewport[data-position="top-left"] .ren-toast,
+  .ren-toast-viewport[data-position="bottom-left"] .ren-toast,
+  .ren-toast-viewport[data-position="top-center"] .ren-toast,
+  .ren-toast-viewport[data-position="bottom-center"] .ren-toast {
+    animation: ren-toast-fade-in var(--duration-fast) var(--ease-in-out) !important;
+  }
+
+  .ren-toast[data-closing] {
+    animation: ren-toast-fade-out var(--duration-fast) var(--ease-in-out) !important;
+  }
+
+  .ren-toast-loading .ren-toast-icon {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 640px) {
+  .ren-toast-viewport {
+    max-width: calc(100vw - 1rem);
+    bottom: var(--space-3);
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto;
+  }
+
+  .ren-toast-viewport[data-position="top-right"],
+  .ren-toast-viewport[data-position="top-left"],
+  .ren-toast-viewport[data-position="top-center"] {
+    bottom: auto;
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto;
+    transform: none;
+  }
+
+  .ren-toast-viewport[data-position="bottom-right"],
+  .ren-toast-viewport[data-position="bottom-left"],
+  .ren-toast-viewport[data-position="bottom-center"] {
+    bottom: var(--space-3);
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto;
+    transform: none;
+  }
+
+  .ren-toast {
+    min-width: unset;
+    width: 100%;
+  }
+}

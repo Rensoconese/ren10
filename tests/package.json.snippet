@@ -1,0 +1,46 @@
+{
+  "comment": "Add these sections to your project's package.json",
+  "devDependencies-to-add": {
+    "@playwright/test": "^1.40.0",
+    "axe-core": "^4.8.0",
+    "axe-playwright": "^1.2.3"
+  },
+  "scripts-to-add": {
+    "test": "playwright test",
+    "test:visual": "playwright test tests/visual/visual.spec.js",
+    "test:a11y": "playwright test tests/a11y/a11y.spec.js",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:headed": "playwright test --headed",
+    "test:update-snapshots": "playwright test tests/visual/visual.spec.js --update-snapshots",
+    "test:report": "playwright show-report",
+    "test:mobile": "playwright test --project='Mobile Light'",
+    "test:tablet": "playwright test --project='Tablet Light'",
+    "test:desktop": "playwright test --project='Desktop Light'",
+    "test:dark": "playwright test --project='Desktop Dark'",
+    "test:chrome": "playwright test --project='Desktop Chrome'",
+    "test:firefox": "playwright test --project='Firefox Desktop Light'",
+    "test:safari": "playwright test --project='Safari Desktop Light'",
+    "test:ci": "playwright test tests/ --reporter=html,json,junit"
+  },
+  "full-example": {
+    "name": "rends-design-system",
+    "version": "1.0.0",
+    "description": "RenDS Design System",
+    "scripts": {
+      "test": "playwright test",
+      "test:visual": "playwright test tests/visual/visual.spec.js",
+      "test:a11y": "playwright test tests/a11y/a11y.spec.js",
+      "test:ui": "playwright test --ui",
+      "test:debug": "playwright test --debug",
+      "test:headed": "playwright test --headed",
+      "test:update-snapshots": "playwright test tests/visual/visual.spec.js --update-snapshots",
+      "test:report": "playwright show-report"
+    },
+    "devDependencies": {
+      "@playwright/test": "^1.40.0",
+      "axe-core": "^4.8.0",
+      "axe-playwright": "^1.2.3"
+    }
+  }
+}

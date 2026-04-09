@@ -1,0 +1,293 @@
+/* ============================================
+   RenDS — Button Component
+   ============================================
+   Accessible, multi-variant button.
+   Works as pure CSS classes OR as <ren-button>.
+
+   Variants: primary, secondary, ghost, danger, outline
+   Sizes: sm, md (default), lg
+   States: hover, active, disabled, loading
+
+   Touch target: 44px minimum (Apple HIG)
+   ============================================ */
+
+/* ─── Base Button ─── */
+.ren-btn {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  /* Sizing — default md */
+  min-height: var(--size-lg);        /* 44px touch target */
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--label-lg-size);
+  font-weight: var(--label-lg-weight);
+  line-height: 1;
+
+  /* Appearance */
+  border: var(--stroke-1) solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  text-decoration: none;
+
+  /* Transition */
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    opacity var(--duration-normal) var(--ease-out);
+}
+
+/* Active press effect */
+.ren-btn:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: scale(0.97);
+}
+
+/* ─── Variants ─── */
+
+/* Primary (default) */
+.ren-btn,
+.ren-btn-primary {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  border-color: var(--color-accent);
+}
+
+.ren-btn:hover:not(:disabled):not([aria-disabled="true"]),
+.ren-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.ren-btn:active:not(:disabled):not([aria-disabled="true"]),
+.ren-btn-primary:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-accent-active);
+  border-color: var(--color-accent-active);
+}
+
+/* Secondary */
+.ren-btn-secondary {
+  background-color: var(--color-fill);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.ren-btn-secondary:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-fill-hover);
+}
+
+.ren-btn-secondary:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-fill-active);
+}
+
+/* Ghost (no background) */
+.ren-btn-ghost {
+  background-color: transparent;
+  color: var(--color-text);
+  border-color: transparent;
+}
+
+.ren-btn-ghost:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-fill);
+}
+
+.ren-btn-ghost:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-fill-hover);
+}
+
+/* Outline */
+.ren-btn-outline {
+  background-color: transparent;
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.ren-btn-outline:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-accent-subtle);
+}
+
+.ren-btn-outline:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+/* Danger */
+.ren-btn-danger {
+  background-color: var(--color-danger);
+  color: var(--color-on-danger);
+  border-color: var(--color-danger);
+}
+
+.ren-btn-danger:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--red-500);
+  border-color: var(--red-500);
+}
+
+.ren-btn-danger:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--red-600);
+  border-color: var(--red-600);
+}
+
+/* Link style */
+.ren-btn-link {
+  background-color: transparent;
+  color: var(--color-text-link);
+  border-color: transparent;
+  padding-inline: var(--space-1);
+  min-height: auto;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.ren-btn-link:hover:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+/* ─── Sizes ─── */
+
+.ren-btn-sm {
+  min-height: var(--size-sm);       /* 32px */
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--label-size);
+  border-radius: var(--radius-sm);
+  gap: var(--space-1);
+}
+
+.ren-btn-lg {
+  min-height: var(--size-xl);       /* 52px */
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--body-size);
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Icon Button (square) ─── */
+.ren-btn-icon {
+  min-width: var(--size-lg);        /* 44px */
+  padding: 0;
+  aspect-ratio: 1;
+}
+
+.ren-btn-icon.ren-btn-sm {
+  min-width: var(--size-sm);
+  min-height: var(--size-sm);
+}
+
+.ren-btn-icon.ren-btn-lg {
+  min-width: var(--size-xl);
+  min-height: var(--size-xl);
+}
+
+/* ─── Full Width ─── */
+.ren-btn-full {
+  width: 100%;
+}
+
+/* ─── Button Group ─── */
+.ren-btn-group {
+  display: inline-flex;
+}
+
+.ren-btn-group > .ren-btn {
+  border-radius: 0;
+}
+
+.ren-btn-group > .ren-btn:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+.ren-btn-group > .ren-btn:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.ren-btn-group > .ren-btn + .ren-btn {
+  margin-inline-start: calc(var(--stroke-1) * -1);
+}
+
+/* ─── States ─── */
+
+/* Disabled */
+.ren-btn:disabled,
+.ren-btn[aria-disabled="true"] {
+  background-color: var(--color-disabled-bg);
+  color: var(--color-disabled-text);
+  border-color: var(--color-disabled-bg);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Loading */
+.ren-btn[data-loading] {
+  position: relative;
+  color: transparent !important;
+  pointer-events: none;
+}
+
+.ren-btn[data-loading]::after {
+  content: '';
+  position: absolute;
+  width: 1.2em;
+  height: 1.2em;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: var(--radius-full);
+  animation: ren-btn-spin 600ms linear infinite;
+  /* Restore color since parent is transparent */
+  color: var(--color-on-accent);
+}
+
+.ren-btn-secondary[data-loading]::after,
+.ren-btn-ghost[data-loading]::after,
+.ren-btn-outline[data-loading]::after {
+  color: var(--color-text);
+}
+
+@keyframes ren-btn-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-btn[data-loading]::after {
+    animation-duration: 1.5s;
+  }
+  .ren-btn:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
+}
+
+/* ─── Custom Accent (color-mix pattern) ───
+   Use a single --btn-accent color and derive hover/active automatically.
+   Example: <button class="ren-btn ren-btn-accent" style="--btn-accent: #8B5CF6">Purple</button>
+*/
+.ren-btn-accent {
+  --_hover: color-mix(in oklch, var(--btn-accent, var(--color-accent)), black 12%);
+  --_active: color-mix(in oklch, var(--btn-accent, var(--color-accent)), black 22%);
+  --_subtle: color-mix(in oklch, var(--btn-accent, var(--color-accent)), white 90%);
+
+  background-color: var(--btn-accent, var(--color-accent));
+  color: var(--color-on-accent);
+  border-color: var(--btn-accent, var(--color-accent));
+}
+
+.ren-btn-accent:hover:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--_hover);
+  border-color: var(--_hover);
+}
+
+.ren-btn-accent:active:not(:disabled):not([aria-disabled="true"]) {
+  background-color: var(--_active);
+  border-color: var(--_active);
+}
+
+/* ─── Focus ─── */
+.ren-btn:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}

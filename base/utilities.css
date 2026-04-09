@@ -1,0 +1,296 @@
+/* ============================================
+   RenDS — Utility Classes
+   ============================================
+   Minimal, essential utilities that are hard
+   to achieve with just semantic HTML.
+
+   Naming: .ren-{utility}
+   ============================================ */
+
+/* ─── Screen Reader Only ───
+   Visually hidden but accessible to screen readers.
+   Essential for a11y labels, skip links, etc. */
+.ren-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Becomes visible on focus (skip links) */
+.ren-sr-only-focusable:focus,
+.ren-sr-only-focusable:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ─── Not Screen Reader ───
+   Hide from screen readers but visible */
+.ren-not-sr[aria-hidden="true"] {
+  speak: never;
+}
+
+/* ─── Focus Ring ───
+   Explicit focus ring for custom components */
+.ren-focus-ring:focus-visible {
+  outline: var(--ring-width, 2px) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width, 2px);
+}
+
+/* ─── Skip Link ───
+   Accessibility skip navigation link */
+.ren-skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: var(--z-max);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: top var(--duration-normal) var(--ease-out);
+}
+
+.ren-skip-link:focus {
+  top: var(--space-4);
+}
+
+/* ─── Truncate Text ─── */
+.ren-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Truncate with line clamp */
+.ren-line-clamp-1 { -webkit-line-clamp: 1; }
+.ren-line-clamp-2 { -webkit-line-clamp: 2; }
+.ren-line-clamp-3 { -webkit-line-clamp: 3; }
+
+.ren-line-clamp-1,
+.ren-line-clamp-2,
+.ren-line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ─── Color Scheme ───
+   Force light/dark on specific sections */
+.ren-light { color-scheme: light; }
+.ren-dark  { color-scheme: dark;  }
+
+/* ─── Disabled state ─── */
+.ren-disabled,
+[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ─── Loading state ─── */
+.ren-loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.ren-loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-surface);
+  opacity: 0.7;
+  border-radius: inherit;
+}
+
+/* ─── Divider ───
+   Semantic separator with text */
+.ren-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--caption-size);
+}
+
+.ren-divider::before,
+.ren-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-separator);
+}
+
+/* Empty divider (no text) */
+.ren-divider:empty::before {
+  flex: 1;
+}
+.ren-divider:empty::after {
+  display: none;
+}
+
+/* ─── Responsive ─── */
+.ren-hide-mobile {
+  @media (max-width: 639px) { display: none !important; }
+}
+
+.ren-hide-desktop {
+  @media (min-width: 640px) { display: none !important; }
+}
+
+/* ─── Transitions ─── */
+.ren-transition {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: var(--duration-normal);
+  transition-timing-function: var(--ease-out);
+}
+
+.ren-transition-fast {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-out);
+}
+
+/* ─── FOUC Prevention for Custom Elements ───
+   Styles applied before Web Components register.
+   Uses :not(:defined) to target unregistered elements.
+   Prevents flash of unstyled content (FOUC). */
+
+ren-accordion:not(:defined),
+ren-dialog:not(:defined),
+ren-select:not(:defined),
+ren-tabs:not(:defined),
+ren-toast:not(:defined),
+ren-popover:not(:defined),
+ren-tooltip:not(:defined),
+ren-menu:not(:defined),
+ren-combobox:not(:defined),
+ren-calendar:not(:defined),
+ren-date-picker:not(:defined),
+ren-date-range-picker:not(:defined),
+ren-color-picker:not(:defined),
+ren-slider:not(:defined),
+ren-carousel:not(:defined),
+ren-sheet:not(:defined),
+ren-hover-card:not(:defined),
+ren-context-menu:not(:defined),
+ren-toolbar:not(:defined),
+ren-toggle-group:not(:defined),
+ren-number-field:not(:defined),
+ren-otp:not(:defined),
+ren-dropzone:not(:defined),
+ren-alert-dialog:not(:defined),
+ren-nav:not(:defined),
+ren-sidebar:not(:defined),
+ren-table:not(:defined),
+ren-form:not(:defined),
+ren-menubar:not(:defined),
+ren-command:not(:defined),
+ren-field:not(:defined),
+ren-button:not(:defined),
+ren-radio:not(:defined) {
+  opacity: 0;
+  transition: opacity var(--duration-fast, 150ms) var(--ease-out, ease-out);
+}
+
+/* Reveal once defined */
+ren-accordion:defined,
+ren-dialog:defined,
+ren-select:defined,
+ren-tabs:defined,
+ren-toast:defined,
+ren-popover:defined,
+ren-tooltip:defined,
+ren-menu:defined,
+ren-combobox:defined,
+ren-calendar:defined,
+ren-date-picker:defined,
+ren-date-range-picker:defined,
+ren-color-picker:defined,
+ren-slider:defined,
+ren-carousel:defined,
+ren-sheet:defined,
+ren-hover-card:defined,
+ren-context-menu:defined,
+ren-toolbar:defined,
+ren-toggle-group:defined,
+ren-number-field:defined,
+ren-otp:defined,
+ren-dropzone:defined,
+ren-alert-dialog:defined,
+ren-nav:defined,
+ren-sidebar:defined,
+ren-table:defined,
+ren-form:defined,
+ren-menubar:defined,
+ren-command:defined,
+ren-field:defined,
+ren-button:defined,
+ren-radio:defined {
+  opacity: 1;
+}
+
+/* ─── Data State Helpers (Radix-inspired) ───
+   Standardized state selectors for components */
+
+/* Open/Closed States */
+[data-state="open"]    { --state: open; }
+[data-state="closed"]  { --state: closed; }
+
+/* Active/Inactive States */
+[data-state="active"]   { --state: active; }
+[data-state="inactive"] { --state: inactive; }
+
+/* Checked/Unchecked States */
+[data-state="checked"]      { --state: checked; }
+[data-state="unchecked"]    { --state: unchecked; }
+[data-state="indeterminate"] { --state: indeterminate; }
+
+/* On/Off States */
+[data-state="on"]  { --state: on; }
+[data-state="off"] { --state: off; }
+
+/* Loading States */
+[data-state="loading"] { --state: loading; }
+[data-state="loaded"]  { --state: loaded; }
+
+/* Error State */
+[data-state="error"] { --state: error; }
+
+/* Interaction States */
+[data-state="dragging"] { --state: dragging; }
+
+/* Validation States */
+[data-state="valid"]   { --state: valid; }
+[data-state="invalid"] { --state: invalid; }
+
+/* Disabled State */
+[data-disabled] {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Highlighted State */
+[data-highlighted] { }
+
+/* Orientation States */
+[data-orientation="horizontal"] { --orientation: horizontal; }
+[data-orientation="vertical"]   { --orientation: vertical; }
+
+/* Hide closed elements */
+[data-state="closed"]:not([data-keep]) {
+  display: none;
+}

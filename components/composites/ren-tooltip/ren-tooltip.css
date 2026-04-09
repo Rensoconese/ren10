@@ -1,0 +1,152 @@
+/* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
+.ren-tooltip {
+  background: var(--color-gray-900, #1a1a1a);
+  color: white;
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--size-caption, 0.75rem);
+  max-width: 15rem;
+  pointer-events: none;
+  z-index: var(--z-tooltip, 2000);
+  word-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
+  margin: 0;
+
+  /* Anchor positioning (modern browsers) */
+  position-anchor: --tooltip-anchor;
+
+  /* Default: above the trigger with automatic fallback */
+  inset-area: top span-all;
+  margin-bottom: var(--space-1);
+
+  /* Automatic flip when near viewport edges */
+  position-try-fallbacks: flip-block;
+
+  /* Smooth transitions */
+  opacity: 0;
+  transform: translateY(4px) scale(0.95);
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out),
+    overlay var(--duration-normal) var(--ease-out) allow-discrete,
+    display var(--duration-normal) var(--ease-out) allow-discrete;
+}
+
+/* ═══ TOOLTIP OPEN STATE ═══ */
+.ren-tooltip:popover-open,
+.ren-tooltip.ren-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ═══ TOOLTIP OPEN WITH @starting-style ═══ */
+@starting-style {
+  .ren-tooltip:popover-open {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+}
+
+/* ═══ TOOLTIP ARROW/CARET ═══ */
+.ren-tooltip-arrow {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-gray-900, #1a1a1a);
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+/* ═══ PLACEMENT VARIANTS ═══ */
+/* Bottom */
+.ren-tooltip[data-side="bottom"] {
+  & .ren-tooltip-arrow {
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
+/* Top (default) */
+.ren-tooltip[data-side="top"],
+.ren-tooltip:not([data-side]) {
+  & .ren-tooltip-arrow {
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(225deg);
+  }
+}
+
+/* Right */
+.ren-tooltip[data-side="right"] {
+  & .ren-tooltip-arrow {
+    right: -3px;
+    top: 50%;
+    transform: translateY(-50%) rotate(315deg);
+  }
+}
+
+/* Left */
+.ren-tooltip[data-side="left"] {
+  & .ren-tooltip-arrow {
+    left: -3px;
+    top: 50%;
+    transform: translateY(-50%) rotate(135deg);
+  }
+}
+
+/* ═══ RESPECTS MOTION PREFERENCES ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-tooltip {
+    transition: opacity var(--duration-normal), transform var(--duration-normal),
+                overlay var(--duration-normal) allow-discrete,
+                display var(--duration-normal) allow-discrete;
+  }
+
+  @starting-style {
+    .ren-tooltip:popover-open {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+}
+
+/* ═══ FALLBACK FOR BROWSERS WITHOUT ANCHOR POSITIONING ═══ */
+@supports not (anchor-name: --x) {
+  .ren-tooltip {
+    position: absolute;
+    inset: auto auto auto auto;
+  }
+
+  .ren-tooltip-trigger {
+    position: relative;
+  }
+
+  /* Fallback animations */
+  .ren-tooltip {
+    animation: ren-tooltip-fallback-open var(--duration-normal) var(--ease-out);
+  }
+
+  .ren-tooltip:popover-open,
+  .ren-tooltip.ren-open {
+    animation: ren-tooltip-fallback-open var(--duration-normal) var(--ease-out);
+  }
+
+  @keyframes ren-tooltip-fallback-open {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ren-tooltip {
+      animation: none;
+    }
+  }
+}

@@ -1,0 +1,128 @@
+/* ============================================
+   RenDS — Pagination Component
+   ============================================
+   Page navigation for lists/tables.
+   CSS-only. No JS needed for styling.
+
+   Semantic <nav> + links for accessibility.
+   44px touch targets on all interactive elements.
+
+   Usage (simple):
+     <nav aria-label="Pagination" class="ren-pagination">
+       <a href="?p=1" class="ren-pagination-prev" aria-label="Previous page">&lsaquo;</a>
+       <a href="?p=1" class="ren-pagination-item">1</a>
+       <a href="?p=2" class="ren-pagination-item" aria-current="page">2</a>
+       <a href="?p=3" class="ren-pagination-item">3</a>
+       <a href="?p=3" class="ren-pagination-next" aria-label="Next page">&rsaquo;</a>
+     </nav>
+
+   Usage (minimal — just prev/next):
+     <nav aria-label="Pagination" class="ren-pagination ren-pagination-simple">
+       <a href="?p=1" class="ren-pagination-prev">Previous</a>
+       <span class="ren-pagination-info">Page 2 of 10</span>
+       <a href="?p=3" class="ren-pagination-next">Next</a>
+     </nav>
+   ============================================ */
+
+.ren-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ─── Page items ─── */
+.ren-pagination-item,
+.ren-pagination-prev,
+.ren-pagination-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--label-size, var(--text-sm));
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  border: var(--stroke-1) solid transparent;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+  user-select: none;
+}
+
+.ren-pagination-item:hover,
+.ren-pagination-prev:hover,
+.ren-pagination-next:hover {
+  background-color: var(--color-fill);
+}
+
+.ren-pagination-item:active,
+.ren-pagination-prev:active,
+.ren-pagination-next:active {
+  background-color: var(--color-fill-hover);
+}
+
+.ren-pagination-item:focus-visible,
+.ren-pagination-prev:focus-visible,
+.ren-pagination-next:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}
+
+/* Current page */
+.ren-pagination-item[aria-current="page"] {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  pointer-events: none;
+}
+
+/* Disabled prev/next */
+.ren-pagination-prev[aria-disabled="true"],
+.ren-pagination-next[aria-disabled="true"],
+.ren-pagination-prev:disabled,
+.ren-pagination-next:disabled {
+  color: var(--color-disabled-text);
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* Ellipsis */
+.ren-pagination-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  user-select: none;
+}
+
+/* ─── Simple variant (prev + info + next) ─── */
+.ren-pagination-simple {
+  gap: var(--space-2);
+}
+
+.ren-pagination-info {
+  font-size: var(--caption-size, var(--text-sm));
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  padding: 0 var(--space-2);
+}
+
+/* ─── Compact variant (smaller touch targets) ─── */
+.ren-pagination-compact .ren-pagination-item,
+.ren-pagination-compact .ren-pagination-prev,
+.ren-pagination-compact .ren-pagination-next {
+  min-width: var(--size-sm);
+  min-height: var(--size-sm);
+  padding: var(--space-1);
+  font-size: var(--caption-size, var(--text-sm));
+}
+
+/* ─── Centered (for standalone pagination) ─── */
+.ren-pagination-centered {
+  justify-content: center;
+}

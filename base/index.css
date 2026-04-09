@@ -1,0 +1,20 @@
+/* ============================================
+   RenDS — Base Layer
+   ============================================
+   Import order:
+   1. Reset (normalize browser defaults)
+   2. Classless (style semantic HTML)
+   3. Utilities (essential helper classes)
+   4. Layouts (composable layout primitives)
+
+   Note: When imported via index.css, this entire
+   file lives inside @layer base. The reset is
+   promoted to @layer reset for lowest priority.
+   ============================================ */
+
+@import './reset.css' layer(reset);
+@import './classless.css';
+@import './utilities.css';
+@import './layouts.css';
+@import './grid.css';
+@import './enhancements.css';

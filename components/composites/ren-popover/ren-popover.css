@@ -1,0 +1,175 @@
+/* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
+.ren-popover {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-4);
+  max-width: 20rem;
+  z-index: var(--z-popover, 1000);
+  pointer-events: auto;
+  margin: 0;
+  border-top: none;
+
+  /* Anchor positioning (modern browsers) */
+  position-anchor: --popover-anchor;
+
+  /* Default: below the trigger with automatic fallback */
+  inset-area: bottom span-all;
+  margin-top: var(--space-2);
+
+  /* Automatic flip when near viewport edges */
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+
+  /* Smooth transitions */
+  opacity: 0;
+  transform: translateY(-4px) scale(0.95);
+  transition:
+    opacity var(--duration-moderate) var(--ease-out),
+    transform var(--duration-moderate) var(--ease-out),
+    overlay var(--duration-moderate) var(--ease-out) allow-discrete,
+    display var(--duration-moderate) var(--ease-out) allow-discrete;
+}
+
+/* ═══ POPOVER OPEN STATE ═══ */
+.ren-popover:popover-open,
+.ren-popover.ren-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ═══ POPOVER OPEN WITH @starting-style ═══ */
+@starting-style {
+  .ren-popover:popover-open {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.95);
+  }
+}
+
+/* ═══ POPOVER ARROW/CARET ═══ */
+.ren-popover-arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  border: inherit;
+  border-top: none;
+  border-inline-start: none;
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+/* ═══ PLACEMENT VARIANTS ═══ */
+/* Bottom (default) */
+.ren-popover[data-side="bottom"],
+.ren-popover:not([data-side]) {
+  & .ren-popover-arrow {
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
+/* Top */
+.ren-popover[data-side="top"] {
+  & .ren-popover-arrow {
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(225deg);
+  }
+}
+
+/* Right */
+.ren-popover[data-side="right"] {
+  & .ren-popover-arrow {
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(315deg);
+  }
+}
+
+/* Left */
+.ren-popover[data-side="left"] {
+  & .ren-popover-arrow {
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(135deg);
+  }
+}
+
+/* ═══ POPOVER SECTIONS ═══ */
+.ren-popover-header {
+  margin-bottom: var(--space-2);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.ren-popover-body {
+  color: var(--color-text-secondary);
+  font-size: var(--size-body-sm);
+  line-height: 1.5;
+}
+
+.ren-popover-footer {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ═══ RESPECTS MOTION PREFERENCES ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-popover {
+    transition: opacity var(--duration-normal), transform var(--duration-normal),
+                overlay var(--duration-normal) allow-discrete,
+                display var(--duration-normal) allow-discrete;
+  }
+
+  @starting-style {
+    .ren-popover:popover-open {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+}
+
+/* ═══ FALLBACK FOR BROWSERS WITHOUT ANCHOR POSITIONING ═══ */
+@supports not (anchor-name: --x) {
+  .ren-popover {
+    position: absolute;
+    inset: auto auto auto auto;
+  }
+
+  [data-popover-trigger],
+  .ren-popover-trigger {
+    position: relative;
+  }
+
+  /* Fallback animations */
+  .ren-popover {
+    animation: ren-popover-fallback-open var(--duration-moderate) var(--ease-out);
+  }
+
+  .ren-popover:popover-open,
+  .ren-popover.ren-open {
+    animation: ren-popover-fallback-open var(--duration-moderate) var(--ease-out);
+  }
+
+  @keyframes ren-popover-fallback-open {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ren-popover {
+      animation: none;
+    }
+  }
+}

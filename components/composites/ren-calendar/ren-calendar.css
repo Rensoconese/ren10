@@ -1,0 +1,352 @@
+/* ═══ REN CALENDAR WEB COMPONENT ═══
+   A fully accessible, keyboard-navigable calendar component
+   with support for single, range, and multiple date selection.
+   Uses ARIA grid pattern with roving tabindex for keyboard navigation.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ═══ BASE CONTAINER ═══ */
+.ren-calendar {
+  container-type: inline-size;
+  container-name: ren-calendar;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-4);
+  font-family: inherit;
+}
+
+/* ═══ HEADER WITH NAVIGATION ═══ */
+.ren-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-4);
+  gap: var(--space-2);
+}
+
+/* ═══ MONTH/YEAR TITLE ═══ */
+.ren-calendar-title {
+  font-size: var(--body-size);
+  font-weight: var(--label-weight);
+  color: var(--color-text);
+  flex: 1;
+  text-align: center;
+  min-width: 150px;
+  white-space: nowrap;
+}
+
+/* ═══ NAVIGATION BUTTONS ═══ */
+.ren-calendar-nav {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.ren-calendar-nav button {
+  width: var(--touch-min);
+  height: var(--touch-min);
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--duration-fast) var(--ease-out);
+  position: relative;
+
+  &:hover {
+    background: var(--color-fill);
+  }
+
+  &:active {
+    background: var(--color-fill-active);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* ═══ CHEVRON ICONS (::before for prev, ::after for next) ═══ */
+  &::before {
+    content: '‹';
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+  &.ren-calendar-next::before {
+    content: '›';
+  }
+}
+
+/* ═══ WEEKDAY HEADERS ═══ */
+.ren-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.ren-calendar-weekday {
+  padding: var(--space-2) var(--space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ═══ CALENDAR GRID ═══ */
+.ren-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-1);
+  role: grid;
+}
+
+/* ═══ INDIVIDUAL DAY BUTTON ═══ */
+.ren-calendar-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  min-height: var(--touch-min);
+  width: 100%;
+  aspect-ratio: 1;
+  padding: var(--space-0-5);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--body-size);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
+
+  /* ═══ DEFAULT STATE ═══ */
+  &:not([disabled]):hover {
+    background: var(--color-fill);
+  }
+
+  &:not([disabled]):active {
+    background: var(--color-fill-active);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  /* ═══ SELECTED DATE ═══ */
+  &[aria-selected="true"] {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: 600;
+  }
+
+  /* ═══ TODAY INDICATOR ═══ */
+  &[data-today] {
+    background: var(--color-accent-subtle);
+    color: var(--color-accent);
+    font-weight: 600;
+    box-shadow: inset 0 0 0 2px var(--color-accent);
+  }
+
+  &[data-today][aria-selected="true"] {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    box-shadow: none;
+  }
+
+  /* ═══ OUTSIDE MONTH DATES ═══ */
+  &[data-outside] {
+    color: var(--color-text-faint);
+    pointer-events: none;
+  }
+
+  /* ═══ DISABLED DATES ═══ */
+  &[disabled] {
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  /* ═══ RANGE START ═══ */
+  &.ren-calendar-day-range-start {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-md);
+
+    &::after {
+      content: '';
+      position: absolute;
+      right: -4px;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background: var(--color-accent-subtle);
+      z-index: -1;
+    }
+  }
+
+  /* ═══ RANGE END ═══ */
+  &.ren-calendar-day-range-end {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    border-radius: var(--radius-md);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      background: var(--color-accent-subtle);
+      z-index: -1;
+    }
+  }
+
+  /* ═══ IN RANGE ═══ */
+  &.ren-calendar-day-in-range {
+    background: var(--color-accent-subtle);
+    color: var(--color-text);
+    border-radius: 0;
+  }
+}
+
+/* ═══ ANIMATION FOR MONTH TRANSITIONS ═══ */
+@keyframes ren-calendar-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ren-calendar-grid {
+  animation: ren-calendar-fade-in var(--duration-normal) var(--ease-out);
+}
+
+/* ═══ REDUCED MOTION SUPPORT ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-calendar-grid {
+    animation: none;
+  }
+
+  .ren-calendar-nav button,
+  .ren-calendar-day {
+    transition: none;
+  }
+}
+
+/* ═══ SIZE VARIANT: SMALL ═══ */
+.ren-calendar-sm {
+  padding: var(--space-3);
+
+  .ren-calendar-header {
+    margin-bottom: var(--space-3);
+  }
+
+  .ren-calendar-title {
+    font-size: var(--label-size);
+  }
+
+  .ren-calendar-nav button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .ren-calendar-weekday {
+    font-size: var(--caption-size);
+  }
+
+  .ren-calendar-day {
+    font-size: var(--label-size);
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+
+/* ═══ SIZE VARIANT: LARGE ═══ */
+.ren-calendar-lg {
+  padding: var(--space-6);
+
+  .ren-calendar-header {
+    margin-bottom: var(--space-6);
+    gap: var(--space-4);
+  }
+
+  .ren-calendar-title {
+    font-size: 1.25rem;
+  }
+
+  .ren-calendar-nav button {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+    font-size: 1.25rem;
+  }
+
+  .ren-calendar-weekdays {
+    margin-bottom: var(--space-4);
+  }
+
+  .ren-calendar-grid {
+    gap: var(--space-2);
+  }
+
+  .ren-calendar-day {
+    font-size: 1.125rem;
+    min-width: 52px;
+    min-height: 52px;
+  }
+}
+
+/* ═══ DARK MODE SUPPORT ═══ */
+@media (prefers-color-scheme: dark) {
+  .ren-calendar {
+    /* ═══ USES CSS VARIABLES - AUTO ADAPTS ═══ */
+  }
+}
+
+/* ═══ COMPACT LAYOUT (Container Query) ═══ */
+@container ren-calendar (max-width: 320px) {
+  .ren-calendar {
+    padding: var(--space-3);
+  }
+
+  .ren-calendar-grid {
+    gap: var(--space-0-5);
+  }
+
+  .ren-calendar-day {
+    min-width: 32px;
+    min-height: 32px;
+    font-size: var(--label-size);
+  }
+
+  .ren-calendar-nav button {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+}

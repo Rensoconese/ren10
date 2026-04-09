@@ -1,0 +1,113 @@
+/* ============================================
+   RenDS — Collapsible Component
+   ============================================
+   Expand/collapse content panel.
+   Uses native <details>/<summary> — ZERO JS.
+
+   CSS-only animation with interpolate-size.
+
+   Different from Accordion: standalone, no group
+   exclusivity. For single expand/collapse sections.
+
+   Usage:
+     <details class="ren-collapsible">
+       <summary>Click to expand</summary>
+       <div class="ren-collapsible-content">
+         Hidden content here
+       </div>
+     </details>
+
+   Open by default:
+     <details class="ren-collapsible" open>
+       ...
+     </details>
+   ============================================ */
+
+/* Enable height animation on details */
+.ren-collapsible {
+  interpolate-size: allow-keywords;
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+/* Summary (trigger) */
+.ren-collapsible > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--body-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  cursor: pointer;
+  user-select: none;
+  list-style: none; /* Remove default marker */
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+/* Remove default marker in WebKit */
+.ren-collapsible > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Custom chevron */
+.ren-collapsible > summary::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border: solid var(--color-text-muted);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  flex-shrink: 0;
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.ren-collapsible[open] > summary::after {
+  transform: rotate(-135deg);
+}
+
+.ren-collapsible > summary:hover {
+  background-color: var(--color-fill);
+}
+
+.ren-collapsible > summary:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+/* Content area */
+.ren-collapsible-content {
+  padding: 0 var(--space-4) var(--space-4);
+  font-size: var(--body-size);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
+}
+
+/* ─── Ghost variant (no border) ─── */
+.ren-collapsible-ghost {
+  border: none;
+}
+
+.ren-collapsible-ghost > summary {
+  padding-inline: 0;
+}
+
+.ren-collapsible-ghost .ren-collapsible-content {
+  padding-inline: 0;
+}
+
+/* ─── Animate open/close ─── */
+/* Uses CSS content-visibility for animation */
+.ren-collapsible .ren-collapsible-content {
+  content-visibility: visible;
+}
+
+/* Reduced motion — no animation */
+@media (prefers-reduced-motion: reduce) {
+  .ren-collapsible > summary::after {
+    transition: none;
+  }
+}

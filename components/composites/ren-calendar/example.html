@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenDS Calendar & Date Picker Examples</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="ren-calendar.css">
+  <link rel="stylesheet" href="../ren-date-picker/ren-date-picker.css">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    h1, h2 {
+      color: var(--color-text);
+      margin-bottom: 1rem;
+    }
+
+    .example-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+
+    .example-item {
+      padding: 1.5rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    .example-label {
+      font-size: var(--label-size);
+      font-weight: var(--label-weight);
+      margin-bottom: 0.5rem;
+      color: var(--color-text-muted);
+    }
+
+    code {
+      background: var(--color-fill);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>RenDS Calendar & Date Picker Components</h1>
+
+  <!-- Calendar Examples -->
+  <div class="example-section">
+    <h2>Calendar Component</h2>
+    <p>Fully accessible calendar with keyboard navigation and multiple selection modes.</p>
+
+    <div class="example-grid">
+      <!-- Single Selection -->
+      <div class="example-item">
+        <div class="example-label">Single Date Selection</div>
+        <ren-calendar
+          value="2026-03-31"
+          mode="single"
+          locale="en-US"
+        ></ren-calendar>
+      </div>
+
+      <!-- Range Selection -->
+      <div class="example-item">
+        <div class="example-label">Date Range Selection</div>
+        <ren-calendar
+          mode="range"
+          locale="en-US"
+        ></ren-calendar>
+      </div>
+
+      <!-- Multiple Selection -->
+      <div class="example-item">
+        <div class="example-label">Multiple Dates Selection</div>
+        <ren-calendar
+          mode="multiple"
+          locale="en-US"
+        ></ren-calendar>
+      </div>
+
+      <!-- Small Variant -->
+      <div class="example-item">
+        <div class="example-label">Small Variant</div>
+        <ren-calendar
+          class="ren-calendar-sm"
+          value="2026-03-31"
+          mode="single"
+        ></ren-calendar>
+      </div>
+
+      <!-- Large Variant -->
+      <div class="example-item">
+        <div class="example-label">Large Variant</div>
+        <ren-calendar
+          class="ren-calendar-lg"
+          value="2026-03-31"
+          mode="single"
+        ></ren-calendar>
+      </div>
+
+      <!-- Different Locale -->
+      <div class="example-item">
+        <div class="example-label">Spanish Locale</div>
+        <ren-calendar
+          value="2026-03-31"
+          mode="single"
+          locale="es-ES"
+          first-day="1"
+        ></ren-calendar>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Picker Examples -->
+  <div class="example-section">
+    <h2>Date Picker Component</h2>
+    <p>Composable date picker with input field and popover dropdown.</p>
+
+    <div class="example-grid">
+      <!-- Single Date Picker -->
+      <div class="example-item">
+        <div class="example-label">Single Date Picker</div>
+        <ren-date-picker
+          placeholder="Select a date"
+          format="long"
+          mode="single"
+        ></ren-date-picker>
+      </div>
+
+      <!-- Range Date Picker -->
+      <div class="example-item">
+        <div class="example-label">Range Date Picker</div>
+        <ren-date-picker
+          placeholder="Select date range"
+          format="medium"
+          mode="range"
+        ></ren-date-picker>
+      </div>
+
+      <!-- Disabled State -->
+      <div class="example-item">
+        <div class="example-label">Disabled Date Picker</div>
+        <ren-date-picker
+          placeholder="This is disabled"
+          disabled
+        ></ren-date-picker>
+      </div>
+
+      <!-- Pre-filled Value -->
+      <div class="example-item">
+        <div class="example-label">Pre-filled Value</div>
+        <ren-date-picker
+          placeholder="Select a date"
+          value="2026-03-31"
+          format="short"
+        ></ren-date-picker>
+      </div>
+
+      <!-- Different Locale -->
+      <div class="example-item">
+        <div class="example-label">French Locale</div>
+        <ren-date-picker
+          placeholder="Sélectionner une date"
+          locale="fr-FR"
+        ></ren-date-picker>
+      </div>
+
+      <!-- With Min/Max -->
+      <div class="example-item">
+        <div class="example-label">With Date Constraints</div>
+        <ren-date-picker
+          placeholder="Select date (Mar 15 - Apr 15)"
+          min="2026-03-15"
+          max="2026-04-15"
+        ></ren-date-picker>
+      </div>
+    </div>
+  </div>
+
+  <!-- Usage Examples -->
+  <div class="example-section">
+    <h2>Usage Examples</h2>
+
+    <h3>Calendar with Event Listener</h3>
+    <div class="example-item" style="margin-bottom: 1rem;">
+      <ren-calendar id="demo-calendar" mode="single"></ren-calendar>
+      <p id="demo-result" style="margin-top: 1rem; font-size: var(--label-size); color: var(--color-text-muted);">
+        Selected: <code>None</code>
+      </p>
+    </div>
+
+    <h3>Date Picker with Event Listener</h3>
+    <div class="example-item">
+      <ren-date-picker id="demo-picker" placeholder="Pick a date"></ren-date-picker>
+      <p id="demo-picker-result" style="margin-top: 1rem; font-size: var(--label-size); color: var(--color-text-muted);">
+        Selected: <code>None</code>
+      </p>
+    </div>
+  </div>
+
+  <script type="module">
+    // Import the components
+    import { RenCalendar } from './ren-calendar.js';
+    import { RenDatePicker } from '../ren-date-picker/ren-date-picker.js';
+
+    // Demo: Calendar event listener
+    const demoCalendar = document.getElementById('demo-calendar');
+    const demoResult = document.getElementById('demo-result');
+
+    if (demoCalendar) {
+      demoCalendar.addEventListener('ren-date-select', (e) => {
+        const date = e.detail.date;
+        demoResult.innerHTML = `Selected: <code>${date ? date.toLocaleDateString() : 'None'}</code>`;
+      });
+    }
+
+    // Demo: Date Picker event listener
+    const demoPicker = document.getElementById('demo-picker');
+    const demoPickerResult = document.getElementById('demo-picker-result');
+
+    if (demoPicker) {
+      demoPicker.addEventListener('ren-change', (e) => {
+        demoPickerResult.innerHTML = `Selected: <code>${e.detail.value || 'None'}</code> - Formatted: <code>${e.detail.formattedValue || 'None'}</code>`;
+      });
+    }
+  </script>
+</body>
+</html>

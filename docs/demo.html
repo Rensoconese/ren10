@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenDS — Foundation Demo</title>
+  <link rel="stylesheet" href="../index.css">
+  <style>
+    /* Demo-only styles */
+    .demo-section {
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      margin-block: var(--space-4);
+    }
+    .demo-section > h3:first-child { margin-block-start: 0; }
+
+    .color-swatch {
+      width: 3rem;
+      height: 3rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--color-border);
+    }
+
+    .token-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+      gap: var(--space-2);
+    }
+
+    .demo-label {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      text-align: center;
+      margin-top: var(--space-1);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip Link -->
+  <a href="#main" class="ren-skip-link">Saltar al contenido</a>
+
+  <!-- Header -->
+  <header style="background: var(--color-surface-sunken); padding: var(--space-4);">
+    <div class="ren-center ren-row-spread">
+      <strong style="font-size: var(--text-xl);">RenDS</strong>
+      <nav aria-label="Navegación principal">
+        <div class="ren-cluster" style="--cluster-gap: var(--space-4);">
+          <a href="#tokens">Tokens</a>
+          <a href="#typography">Tipografía</a>
+          <a href="#forms">Forms</a>
+          <a href="#layouts">Layouts</a>
+        </div>
+      </nav>
+      <button onclick="toggleTheme()" style="background: var(--color-fill); color: var(--color-text); padding: var(--space-1) var(--space-3); border-radius: var(--radius-md); font-size: var(--text-sm); min-height: var(--size-sm);">
+        Toggle Dark Mode
+      </button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main id="main" class="ren-center ren-stack-lg" style="padding-block: var(--space-8);">
+
+    <h1>RenDS Foundation Demo</h1>
+    <p>Todo lo que ves acá usa <strong>cero clases de componente</strong>. Es HTML semántico + los tokens y estilos base del design system. Dark mode incluido.</p>
+
+    <!-- ═══ COLORS ═══ -->
+    <section id="tokens" class="demo-section">
+      <h3>Color Tokens</h3>
+
+      <h4>Accent & Status</h4>
+      <div class="ren-cluster">
+        <div>
+          <div class="color-swatch" style="background: var(--color-accent);"></div>
+          <div class="demo-label">accent</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-success);"></div>
+          <div class="demo-label">success</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-warning);"></div>
+          <div class="demo-label">warning</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-danger);"></div>
+          <div class="demo-label">danger</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-info);"></div>
+          <div class="demo-label">info</div>
+        </div>
+      </div>
+
+      <h4>Surfaces</h4>
+      <div class="ren-cluster">
+        <div>
+          <div class="color-swatch" style="background: var(--color-surface); border: 2px solid var(--color-border);"></div>
+          <div class="demo-label">surface</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-surface-raised);  border: 2px solid var(--color-border);"></div>
+          <div class="demo-label">raised</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-surface-sunken);"></div>
+          <div class="demo-label">sunken</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-fill);"></div>
+          <div class="demo-label">fill</div>
+        </div>
+        <div>
+          <div class="color-swatch" style="background: var(--color-fill-hover);"></div>
+          <div class="demo-label">fill-hover</div>
+        </div>
+      </div>
+
+      <h4>Text</h4>
+      <div class="ren-stack-sm">
+        <p style="color: var(--color-text);">Text primary — contenido principal</p>
+        <p style="color: var(--color-text-secondary);">Text secondary — contenido secundario</p>
+        <p style="color: var(--color-text-muted);">Text muted — labels, placeholders</p>
+        <p style="color: var(--color-text-faint);">Text faint — contenido deshabilitado</p>
+      </div>
+    </section>
+
+    <!-- ═══ TYPOGRAPHY ═══ -->
+    <section id="typography" class="demo-section">
+      <h3>Tipografía</h3>
+      <p>Todos los estilos se aplican automáticamente a los tags HTML semánticos:</p>
+
+      <div class="ren-stack">
+        <h1 style="margin: 0;">h1 — Display Medium (28px)</h1>
+        <h2 style="margin: 0;">h2 — Title Large (22px)</h2>
+        <h3 style="margin: 0;">h3 — Title Medium (20px)</h3>
+        <h4 style="margin: 0;">h4 — Title Small (18px)</h4>
+        <h5 style="margin: 0;">h5 — Headline (17px)</h5>
+        <h6 style="margin: 0;">h6 — Body Semibold (16px)</h6>
+        <p>Body — Texto normal de párrafo (16px). Este es el tamaño predeterminado para contenido legible. El line-height es 1.5 para máxima legibilidad.</p>
+        <p><small>Small / Caption — Texto auxiliar (13px)</small></p>
+      </div>
+
+      <h4>Elementos de texto</h4>
+      <p>Texto con <strong>strong/bold</strong>, <em>emphasis/italic</em>, <code>inline code</code>, <kbd>Cmd</kbd> + <kbd>K</kbd>, <mark>highlighted text</mark>, <a href="#">links</a>, y <abbr title="Abreviatura">abbr</abbr>.</p>
+
+      <h4>Blockquote</h4>
+      <blockquote>
+        <p>The interface should step back and let user content take center stage.</p>
+        <p>— Apple Human Interface Guidelines</p>
+      </blockquote>
+
+      <h4>Code Block</h4>
+      <pre><code>/* Import RenDS foundation */
+@import './rends/index.css';
+
+/* That's it. Write semantic HTML. */</code></pre>
+    </section>
+
+    <!-- ═══ LISTS ═══ -->
+    <section class="demo-section">
+      <h3>Listas</h3>
+      <div class="ren-grid" style="--grid-min: 20rem;">
+        <div>
+          <h4>Unordered</h4>
+          <ul>
+            <li>Accesibilidad primero</li>
+            <li>HTML semántico</li>
+            <li>Progressive enhancement
+              <ul>
+                <li>Funciona sin JS</li>
+                <li>Mejora con JS</li>
+              </ul>
+            </li>
+            <li>Framework-agnostic</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Ordered</h4>
+          <ol>
+            <li>Design Tokens</li>
+            <li>CSS Base</li>
+            <li>Web Components</li>
+            <li>JS Utilities</li>
+          </ol>
+        </div>
+        <div>
+          <h4>Description</h4>
+          <dl>
+            <dt>RenDS</dt>
+            <dd>Design system vanilla accesible</dd>
+            <dt>Capa 1</dt>
+            <dd>Tokens CSS custom properties</dd>
+            <dt>Capa 2</dt>
+            <dd>Classless + utilities</dd>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ TABLE ═══ -->
+    <section class="demo-section">
+      <h3>Tabla</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Valor Light</th>
+            <th>Valor Dark</th>
+            <th>Uso</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>--color-accent</code></td>
+            <td>#007AFF</td>
+            <td>#0A84FF</td>
+            <td>Acción principal</td>
+          </tr>
+          <tr>
+            <td><code>--color-surface</code></td>
+            <td>#FFFFFF</td>
+            <td>#000000</td>
+            <td>Background base</td>
+          </tr>
+          <tr>
+            <td><code>--touch-min</code></td>
+            <td colspan="2">44px</td>
+            <td>Touch target mínimo</td>
+          </tr>
+          <tr>
+            <td><code>--radius-md</code></td>
+            <td colspan="2">8px</td>
+            <td>Border radius standard</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ═══ FORMS ═══ -->
+    <section id="forms" class="demo-section">
+      <h3>Formularios (nativos)</h3>
+      <p>Sin clases. Solo HTML semántico con los estilos base.</p>
+
+      <form onsubmit="event.preventDefault()" class="ren-stack">
+        <div>
+          <label for="name">Nombre</label>
+          <input type="text" id="name" placeholder="Tu nombre completo">
+        </div>
+
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="nombre@ejemplo.com">
+        </div>
+
+        <div>
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" placeholder="Mínimo 8 caracteres">
+        </div>
+
+        <div>
+          <label for="country">País</label>
+          <select id="country">
+            <option value="">Seleccionar...</option>
+            <option>Argentina</option>
+            <option>Chile</option>
+            <option>Colombia</option>
+            <option>México</option>
+            <option>España</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="bio">Biografía</label>
+          <textarea id="bio" rows="3" placeholder="Contanos sobre vos..."></textarea>
+        </div>
+
+        <div>
+          <label for="file">Archivo</label>
+          <input type="file" id="file">
+        </div>
+
+        <fieldset>
+          <legend><strong>Preferencias</strong></legend>
+          <div class="ren-stack-sm" style="margin-top: var(--space-2);">
+            <label style="display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-regular);">
+              <input type="checkbox" checked> Recibir notificaciones
+            </label>
+            <label style="display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-regular);">
+              <input type="checkbox"> Modo desarrollador
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend><strong>Plan</strong></legend>
+          <div class="ren-stack-sm" style="margin-top: var(--space-2);">
+            <label style="display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-regular);">
+              <input type="radio" name="plan" value="free" checked> Free
+            </label>
+            <label style="display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-regular);">
+              <input type="radio" name="plan" value="pro"> Pro
+            </label>
+          </div>
+        </fieldset>
+
+        <div>
+          <label for="range">Volumen: <output id="range-val">50</output></label>
+          <input type="range" id="range" min="0" max="100" value="50"
+            oninput="document.getElementById('range-val').textContent=this.value">
+        </div>
+
+        <div>
+          <label>Progreso</label>
+          <progress value="65" max="100">65%</progress>
+        </div>
+
+        <div class="ren-cluster">
+          <button type="submit">Guardar</button>
+          <button type="reset" style="background: var(--color-fill); color: var(--color-text);">Reset</button>
+          <button disabled>Deshabilitado</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ═══ DETAILS/ACCORDION ═══ -->
+    <section class="demo-section">
+      <h3>Accordion (nativo con details/summary)</h3>
+      <div class="ren-stack-sm">
+        <details>
+          <summary>¿Qué es RenDS?</summary>
+          <p>Un design system vanilla, accesible y atómico que sirve como punto de partida para cualquier proyecto. Sin frameworks, sin dependencias.</p>
+        </details>
+        <details>
+          <summary>¿Necesito React?</summary>
+          <p>No. RenDS es 100% vanilla HTML, CSS y JavaScript. Los Web Components funcionan en cualquier framework o sin ninguno.</p>
+        </details>
+        <details open>
+          <summary>¿Cómo maneja dark mode?</summary>
+          <p>Automáticamente con <code>prefers-color-scheme</code>, o manualmente con <code>data-theme="dark"</code> en el <code>&lt;html&gt;</code>.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- ═══ DIALOG ═══ -->
+    <section class="demo-section">
+      <h3>Dialog (nativo)</h3>
+      <button onclick="document.getElementById('demo-dialog').showModal()">
+        Abrir Dialog
+      </button>
+
+      <dialog id="demo-dialog">
+        <div class="ren-stack">
+          <h2 style="margin: 0;">Dialog Nativo</h2>
+          <p>Este dialog usa el elemento <code>&lt;dialog&gt;</code> nativo del browser. Focus trapping, backdrop, y Escape para cerrar — todo gratis.</p>
+          <div class="ren-cluster" style="justify-content: flex-end;">
+            <button onclick="this.closest('dialog').close()" style="background: var(--color-fill); color: var(--color-text);">
+              Cancelar
+            </button>
+            <button onclick="this.closest('dialog').close()">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </dialog>
+    </section>
+
+    <!-- ═══ LAYOUTS ═══ -->
+    <section id="layouts" class="demo-section">
+      <h3>Layout Primitives</h3>
+
+      <h4>Stack</h4>
+      <div class="ren-stack-sm" style="padding: var(--space-3); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+        <div style="padding: var(--space-2); background: var(--color-accent-subtle); border-radius: var(--radius-sm);">Item 1</div>
+        <div style="padding: var(--space-2); background: var(--color-accent-subtle); border-radius: var(--radius-sm);">Item 2</div>
+        <div style="padding: var(--space-2); background: var(--color-accent-subtle); border-radius: var(--radius-sm);">Item 3</div>
+      </div>
+
+      <h4>Cluster</h4>
+      <div class="ren-cluster" style="padding: var(--space-3); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+        <span style="padding: var(--space-1) var(--space-3); background: var(--color-accent); color: var(--color-on-accent); border-radius: var(--radius-full); font-size: var(--text-sm);">HTML</span>
+        <span style="padding: var(--space-1) var(--space-3); background: var(--color-success); color: var(--color-on-success); border-radius: var(--radius-full); font-size: var(--text-sm);">CSS</span>
+        <span style="padding: var(--space-1) var(--space-3); background: var(--color-warning); color: var(--color-on-warning); border-radius: var(--radius-full); font-size: var(--text-sm);">JS</span>
+        <span style="padding: var(--space-1) var(--space-3); background: var(--color-danger); color: var(--color-on-danger); border-radius: var(--radius-full); font-size: var(--text-sm);">A11y</span>
+        <span style="padding: var(--space-1) var(--space-3); background: var(--color-info); color: var(--color-on-info); border-radius: var(--radius-full); font-size: var(--text-sm);">Tokens</span>
+      </div>
+
+      <h4>Grid (auto-responsive)</h4>
+      <div class="ren-grid" style="--grid-min: 12rem;">
+        <div style="padding: var(--space-4); background: var(--color-surface-sunken); border-radius: var(--radius-md); text-align: center;">Card 1</div>
+        <div style="padding: var(--space-4); background: var(--color-surface-sunken); border-radius: var(--radius-md); text-align: center;">Card 2</div>
+        <div style="padding: var(--space-4); background: var(--color-surface-sunken); border-radius: var(--radius-md); text-align: center;">Card 3</div>
+        <div style="padding: var(--space-4); background: var(--color-surface-sunken); border-radius: var(--radius-md); text-align: center;">Card 4</div>
+      </div>
+
+      <h4>Sidebar</h4>
+      <div class="ren-with-sidebar">
+        <aside style="padding: var(--space-4); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+          <strong>Sidebar</strong>
+          <p><small>Ancho intrínseco, se stackea en mobile.</small></p>
+        </aside>
+        <main style="padding: var(--space-4); background: var(--color-surface-sunken); border-radius: var(--radius-md);">
+          <strong>Contenido Principal</strong>
+          <p>Llena el espacio restante. Min-width 50% para prevenir que se comprima demasiado.</p>
+        </main>
+      </div>
+
+      <h4>Switcher</h4>
+      <div class="ren-switcher" style="--switcher-threshold: 25rem;">
+        <div style="padding: var(--space-4); background: var(--color-accent-subtle); border-radius: var(--radius-md); text-align: center;">Auto 1</div>
+        <div style="padding: var(--space-4); background: var(--color-accent-subtle); border-radius: var(--radius-md); text-align: center;">Auto 2</div>
+        <div style="padding: var(--space-4); background: var(--color-accent-subtle); border-radius: var(--radius-md); text-align: center;">Auto 3</div>
+      </div>
+    </section>
+
+    <!-- ═══ SHADOWS ═══ -->
+    <section class="demo-section">
+      <h3>Elevation / Shadows</h3>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-6);">
+        <div style="padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-xs); min-width: 5rem; text-align: center;">
+          <small>xs</small>
+        </div>
+        <div style="padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); min-width: 5rem; text-align: center;">
+          <small>sm</small>
+        </div>
+        <div style="padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-md); min-width: 5rem; text-align: center;">
+          <small>md</small>
+        </div>
+        <div style="padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 5rem; text-align: center;">
+          <small>lg</small>
+        </div>
+        <div style="padding: var(--space-4); background: var(--color-surface); border-radius: var(--radius-md); box-shadow: var(--shadow-xl); min-width: 5rem; text-align: center;">
+          <small>xl</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ SPACING ═══ -->
+    <section class="demo-section">
+      <h3>Spacing Scale (8pt grid)</h3>
+      <div class="ren-stack-sm">
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-1</code>
+          <div style="height: var(--space-4); width: var(--space-1); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small class="ren-truncate">4px</small>
+        </div>
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-2</code>
+          <div style="height: var(--space-4); width: var(--space-2); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small>8px</small>
+        </div>
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-4</code>
+          <div style="height: var(--space-4); width: var(--space-4); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small>16px</small>
+        </div>
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-6</code>
+          <div style="height: var(--space-4); width: var(--space-6); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small>24px</small>
+        </div>
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-8</code>
+          <div style="height: var(--space-4); width: var(--space-8); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small>32px</small>
+        </div>
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-12</code>
+          <div style="height: var(--space-4); width: var(--space-12); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small>48px</small>
+        </div>
+        <div class="ren-row" style="--row-gap: var(--space-3);">
+          <code style="min-width: 7ch;">--space-16</code>
+          <div style="height: var(--space-4); width: var(--space-16); background: var(--color-accent); border-radius: var(--radius-xs);"></div>
+          <small>64px</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ UTILITIES ═══ -->
+    <section class="demo-section">
+      <h3>Utilities</h3>
+
+      <h4>Divider con texto</h4>
+      <div class="ren-divider">o continuar con</div>
+
+      <h4 style="margin-top: var(--space-4);">Truncate</h4>
+      <p class="ren-truncate" style="max-width: 20rem;">Este texto es muy largo y se va a truncar con ellipsis cuando no quepa en su contenedor.</p>
+
+      <h4>Line Clamp</h4>
+      <p class="ren-line-clamp-2" style="max-width: 20rem;">
+        Este texto tiene múltiples líneas pero solo se mostrarán las primeras dos
+        líneas gracias a line-clamp. El resto del contenido se oculta con ellipsis
+        de forma automática y elegante.
+      </p>
+
+      <h4>Screen Reader Only</h4>
+      <p>El siguiente texto solo es visible para screen readers: <span class="ren-sr-only">Este texto es invisible visualmente pero lo leen los screen readers.</span> (inspeccioná el DOM para verlo)</p>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer style="padding: var(--space-6); text-align: center; border-top: 1px solid var(--color-separator);">
+    <p><small>RenDS v0.1.0 — Design System Foundation</small></p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme');
+      html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    }
+  </script>
+
+</body>
+</html>

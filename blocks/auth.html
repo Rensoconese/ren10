@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Auth — RenDS Block</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; min-height: 100vh; background: var(--color-surface-sunken); color: var(--color-text); font-family: var(--font-sans); }
+    .auth-layout { display: grid; grid-template-columns: 1fr 1fr; min-height: 100vh; }
+    .auth-hero { background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 70%, #7C3AED)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-8); color: white; }
+    .auth-form-side { display: flex; align-items: center; justify-content: center; padding: var(--space-6); }
+    .auth-form-container { width: 100%; max-width: 400px; }
+    .auth-divider { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-5) 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+    .auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: var(--color-border); }
+    .auth-social { display: flex; gap: var(--space-3); }
+    .auth-social button { flex: 1; }
+    @media (max-width: 768px) {
+      .auth-layout { grid-template-columns: 1fr; }
+      .auth-hero { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-layout">
+    <!-- Hero Side -->
+    <div class="auth-hero">
+      <div style="text-align: center; max-width: 400px;">
+        <h1 style="font-size: var(--text-4xl); font-weight: var(--weight-bold); margin: 0 0 var(--space-4);">RenDS</h1>
+        <p style="font-size: var(--text-lg); opacity: 0.9; line-height: var(--leading-relaxed);">The vanilla design system that respects the browser. Zero dependencies, maximum power.</p>
+        <div style="margin-top: var(--space-8); display: flex; gap: var(--space-4); justify-content: center; font-size: var(--text-sm); opacity: 0.8;">
+          <span>45+ Components</span>
+          <span>·</span>
+          <span>CSS-first</span>
+          <span>·</span>
+          <span>Accessible</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Side -->
+    <div class="auth-form-side">
+      <div class="auth-form-container">
+        <!-- Sign In Form -->
+        <div id="signin-form">
+          <h2 style="font-size: var(--text-2xl); font-weight: var(--weight-bold); margin: 0 0 var(--space-1);">Welcome back</h2>
+          <p style="color: var(--color-text-muted); margin: 0 0 var(--space-6);">Sign in to your account</p>
+
+          <form onsubmit="return false;" style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div class="ren-field">
+              <label>Email</label>
+              <input type="email" placeholder="ren@example.com" required>
+            </div>
+
+            <div class="ren-field">
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <label>Password</label>
+                <a href="#" class="ren-link" style="font-size: var(--text-sm);">Forgot password?</a>
+              </div>
+              <input type="password" placeholder="••••••••" required>
+            </div>
+
+            <label class="ren-checkbox" style="font-size: var(--text-sm);">
+              <input type="checkbox">
+              <span class="ren-checkbox-control"></span>
+              <span>Remember me for 30 days</span>
+            </label>
+
+            <button type="submit" class="ren-btn ren-btn-primary" style="width: 100%;">Sign in</button>
+          </form>
+
+          <div class="auth-divider">or continue with</div>
+
+          <div class="auth-social">
+            <button class="ren-btn ren-btn-secondary">Google</button>
+            <button class="ren-btn ren-btn-secondary">GitHub</button>
+          </div>
+
+          <p style="text-align: center; margin-top: var(--space-5); font-size: var(--text-sm); color: var(--color-text-muted);">
+            Don't have an account?
+            <a href="#" class="ren-link" onclick="document.getElementById('signin-form').style.display='none'; document.getElementById('signup-form').style.display='block';">Create one</a>
+          </p>
+        </div>
+
+        <!-- Sign Up Form (hidden by default) -->
+        <div id="signup-form" style="display: none;">
+          <h2 style="font-size: var(--text-2xl); font-weight: var(--weight-bold); margin: 0 0 var(--space-1);">Create account</h2>
+          <p style="color: var(--color-text-muted); margin: 0 0 var(--space-6);">Get started for free</p>
+
+          <form onsubmit="return false;" style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+              <div class="ren-field">
+                <label>First name</label>
+                <input type="text" placeholder="Ren" required>
+              </div>
+              <div class="ren-field">
+                <label>Last name</label>
+                <input type="text" placeholder="Soconese" required>
+              </div>
+            </div>
+
+            <div class="ren-field">
+              <label>Email</label>
+              <input type="email" placeholder="ren@example.com" required>
+            </div>
+
+            <div class="ren-field">
+              <label>Password</label>
+              <input type="password" placeholder="At least 8 characters" required minlength="8">
+            </div>
+
+            <label class="ren-checkbox" style="font-size: var(--text-sm);">
+              <input type="checkbox" required>
+              <span class="ren-checkbox-control"></span>
+              <span>I agree to the <a href="#" class="ren-link">Terms</a> and <a href="#" class="ren-link">Privacy Policy</a></span>
+            </label>
+
+            <button type="submit" class="ren-btn ren-btn-primary" style="width: 100%;">Create account</button>
+          </form>
+
+          <p style="text-align: center; margin-top: var(--space-5); font-size: var(--text-sm); color: var(--color-text-muted);">
+            Already have an account?
+            <a href="#" class="ren-link" onclick="document.getElementById('signup-form').style.display='none'; document.getElementById('signin-form').style.display='block';">Sign in</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

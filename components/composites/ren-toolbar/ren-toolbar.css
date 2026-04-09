@@ -1,0 +1,122 @@
+/* ============================================
+   RenDS — Toolbar Component
+   ============================================
+   Grouped actions with roving tabindex pattern.
+   CSS-only for layout. JS only for keyboard nav.
+
+   Follows WAI-ARIA Toolbar pattern:
+   - Arrow keys move between items
+   - Tab moves focus in/out of toolbar
+   - Home/End go to first/last item
+
+   Usage:
+     <div class="ren-toolbar" role="toolbar" aria-label="Formatting">
+       <button class="ren-toolbar-item" tabindex="0">Bold</button>
+       <button class="ren-toolbar-item" tabindex="-1">Italic</button>
+       <button class="ren-toolbar-item" tabindex="-1">Underline</button>
+       <div class="ren-toolbar-separator" role="separator"></div>
+       <button class="ren-toolbar-item" tabindex="-1">Left</button>
+       <button class="ren-toolbar-item" tabindex="-1">Center</button>
+       <button class="ren-toolbar-item" tabindex="-1">Right</button>
+     </div>
+
+   Note: Set tabindex="0" on first item, "-1" on rest.
+   ren-toolbar.js handles roving tabindex automatically.
+   ============================================ */
+
+.ren-toolbar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  background-color: var(--color-surface-sunken);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+/* ─── Toolbar Items ─── */
+.ren-toolbar-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--size-sm);
+  min-height: var(--size-sm);
+  padding: var(--space-1) var(--space-2);
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-size: var(--caption-size, var(--text-sm));
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.ren-toolbar-item:hover {
+  background-color: var(--color-fill-hover);
+}
+
+.ren-toolbar-item:active {
+  background-color: var(--color-fill-active);
+}
+
+.ren-toolbar-item:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: -1px;
+}
+
+/* Active / Pressed state */
+.ren-toolbar-item[aria-pressed="true"],
+.ren-toolbar-item[data-active] {
+  background-color: var(--color-surface-raised, var(--color-surface));
+  box-shadow: var(--shadow-xs);
+  color: var(--color-accent);
+}
+
+/* Disabled */
+.ren-toolbar-item:disabled,
+.ren-toolbar-item[aria-disabled="true"] {
+  color: var(--color-disabled-text);
+  cursor: not-allowed;
+}
+
+/* ─── Separator ─── */
+.ren-toolbar-separator {
+  width: 1px;
+  height: 1.25rem;
+  background-color: var(--color-border);
+  margin-inline: var(--space-1);
+  flex-shrink: 0;
+}
+
+/* ─── Icon-only items ─── */
+.ren-toolbar-item-icon {
+  min-width: var(--size-sm);
+  padding: var(--space-1);
+  aspect-ratio: 1;
+}
+
+/* ─── Variants ─── */
+
+/* Ghost — no background on container */
+.ren-toolbar-ghost {
+  background: none;
+  border: none;
+  padding: 0;
+  gap: var(--space-1);
+}
+
+/* Vertical toolbar */
+.ren-toolbar-vertical {
+  flex-direction: column;
+}
+
+.ren-toolbar-vertical .ren-toolbar-separator {
+  width: auto;
+  height: 1px;
+  align-self: stretch;
+  margin-block: var(--space-1);
+  margin-inline: 0;
+}

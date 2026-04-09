@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — RenDS Block</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--space-4); }
+    .stat-number { font-size: var(--text-3xl); font-weight: var(--weight-bold); line-height: 1; }
+    .stat-label { font-size: var(--text-sm); color: var(--color-text-muted); margin-top: var(--space-1); }
+    .stat-change { font-size: var(--text-sm); font-weight: var(--weight-medium); margin-top: var(--space-2); }
+    .stat-change.up { color: var(--color-success); }
+    .stat-change.down { color: var(--color-danger); }
+    .chart-placeholder { height: 200px; background: var(--color-surface-sunken); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); }
+    .activity-item { display: flex; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-muted); }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-dot { width: 8px; height: 8px; border-radius: var(--radius-full); margin-top: 6px; flex-shrink: 0; }
+    .activity-time { font-size: var(--text-sm); color: var(--color-text-muted); }
+  </style>
+</head>
+<body>
+  <div class="ren-sidebar-layout" style="min-height: 100vh;">
+    <!-- Sidebar -->
+    <aside class="ren-sidebar" style="position: fixed; height: 100vh;">
+      <div class="ren-sidebar-header">
+        <strong style="font-size: var(--text-lg);">RenDS</strong>
+      </div>
+      <nav class="ren-sidebar-content">
+        <div class="ren-sidebar-nav">
+          <div class="ren-sidebar-section">
+            <a href="#" class="ren-sidebar-item active" aria-current="page">
+              <span class="ren-sidebar-item-icon">📊</span>
+              <span class="ren-sidebar-item-text">Dashboard</span>
+            </a>
+            <a href="#" class="ren-sidebar-item">
+              <span class="ren-sidebar-item-icon">📦</span>
+              <span class="ren-sidebar-item-text">Products</span>
+            </a>
+            <a href="#" class="ren-sidebar-item">
+              <span class="ren-sidebar-item-icon">👥</span>
+              <span class="ren-sidebar-item-text">Customers</span>
+            </a>
+            <a href="#" class="ren-sidebar-item">
+              <span class="ren-sidebar-item-icon">🧾</span>
+              <span class="ren-sidebar-item-text">Orders</span>
+            </a>
+          </div>
+          <div class="ren-sidebar-divider"></div>
+          <div class="ren-sidebar-section">
+            <div class="ren-sidebar-section-label">Settings</div>
+            <a href="#" class="ren-sidebar-item">
+              <span class="ren-sidebar-item-icon">⚙️</span>
+              <span class="ren-sidebar-item-text">General</span>
+            </a>
+            <a href="#" class="ren-sidebar-item">
+              <span class="ren-sidebar-item-icon">🔔</span>
+              <span class="ren-sidebar-item-text">Notifications</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+      <div class="ren-sidebar-footer">
+        <a href="#" class="ren-sidebar-item">
+          <span class="ren-sidebar-item-icon">👤</span>
+          <span class="ren-sidebar-item-text">Ren</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="ren-sidebar-main" style="margin-left: 260px; padding: var(--space-6);">
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+        <div>
+          <h1 style="font-size: var(--text-2xl); font-weight: var(--weight-bold); margin: 0;">Dashboard</h1>
+          <p style="color: var(--color-text-muted); margin: var(--space-1) 0 0;">Welcome back, Ren</p>
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="ren-btn ren-btn-secondary ren-btn-sm">Export</button>
+          <button class="ren-btn ren-btn-primary ren-btn-sm">+ Add Product</button>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="dashboard-grid" style="margin-bottom: var(--space-6);">
+        <div class="ren-card">
+          <div class="ren-card-body">
+            <div class="stat-number">$12,430</div>
+            <div class="stat-label">Total Revenue</div>
+            <div class="stat-change up">↑ 12.5% from last month</div>
+          </div>
+        </div>
+        <div class="ren-card">
+          <div class="ren-card-body">
+            <div class="stat-number">1,243</div>
+            <div class="stat-label">Orders</div>
+            <div class="stat-change up">↑ 8.2% from last month</div>
+          </div>
+        </div>
+        <div class="ren-card">
+          <div class="ren-card-body">
+            <div class="stat-number">892</div>
+            <div class="stat-label">Customers</div>
+            <div class="stat-change up">↑ 3.1% from last month</div>
+          </div>
+        </div>
+        <div class="ren-card">
+          <div class="ren-card-body">
+            <div class="stat-number">$10.04</div>
+            <div class="stat-label">Avg. Order Value</div>
+            <div class="stat-change down">↓ 1.8% from last month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6);">
+        <div class="ren-card">
+          <div class="ren-card-header">
+            <strong>Revenue Overview</strong>
+          </div>
+          <div class="ren-card-body">
+            <div class="chart-placeholder">📈 Chart renders here</div>
+          </div>
+        </div>
+
+        <div class="ren-card">
+          <div class="ren-card-header">
+            <strong>Recent Activity</strong>
+          </div>
+          <div class="ren-card-body">
+            <div class="activity-item">
+              <span class="activity-dot" style="background: var(--color-success);"></span>
+              <div>
+                <div>New order <strong>#1234</strong></div>
+                <div class="activity-time">2 min ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-dot" style="background: var(--color-accent);"></span>
+              <div>
+                <div>Customer <strong>Ana López</strong> signed up</div>
+                <div class="activity-time">15 min ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-dot" style="background: var(--color-warning);"></span>
+              <div>
+                <div>Product <strong>"Headphones Pro"</strong> low stock</div>
+                <div class="activity-time">1 hour ago</div>
+              </div>
+            </div>
+            <div class="activity-item">
+              <span class="activity-dot" style="background: var(--color-success);"></span>
+              <div>
+                <div>Payment received <strong>$284.00</strong></div>
+                <div class="activity-time">3 hours ago</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="ren-card">
+        <div class="ren-card-header" style="display: flex; justify-content: space-between; align-items: center;">
+          <strong>Recent Orders</strong>
+          <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm);">View all →</a>
+        </div>
+        <div class="ren-card-body" style="padding: 0;">
+          <table style="width: 100%; border-collapse: collapse; font-size: var(--text-sm);">
+            <thead>
+              <tr style="background: var(--color-surface-sunken);">
+                <th style="text-align: left; padding: var(--space-3); font-weight: var(--weight-semibold); color: var(--color-text-muted);">Order</th>
+                <th style="text-align: left; padding: var(--space-3); font-weight: var(--weight-semibold); color: var(--color-text-muted);">Customer</th>
+                <th style="text-align: left; padding: var(--space-3); font-weight: var(--weight-semibold); color: var(--color-text-muted);">Status</th>
+                <th style="text-align: right; padding: var(--space-3); font-weight: var(--weight-semibold); color: var(--color-text-muted);">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--color-border-muted);">
+                <td style="padding: var(--space-3);">#1234</td>
+                <td style="padding: var(--space-3);">Ana López</td>
+                <td style="padding: var(--space-3);"><span class="ren-badge ren-badge-success">Completed</span></td>
+                <td style="padding: var(--space-3); text-align: right;">$284.00</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border-muted);">
+                <td style="padding: var(--space-3);">#1233</td>
+                <td style="padding: var(--space-3);">Carlos Ruiz</td>
+                <td style="padding: var(--space-3);"><span class="ren-badge ren-badge-warning">Pending</span></td>
+                <td style="padding: var(--space-3); text-align: right;">$152.50</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--color-border-muted);">
+                <td style="padding: var(--space-3);">#1232</td>
+                <td style="padding: var(--space-3);">María García</td>
+                <td style="padding: var(--space-3);"><span class="ren-badge ren-badge-success">Completed</span></td>
+                <td style="padding: var(--space-3); text-align: right;">$430.00</td>
+              </tr>
+              <tr>
+                <td style="padding: var(--space-3);">#1231</td>
+                <td style="padding: var(--space-3);">Diego Torres</td>
+                <td style="padding: var(--space-3);"><span class="ren-badge ren-badge-danger">Cancelled</span></td>
+                <td style="padding: var(--space-3); text-align: right;">$89.99</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+/* ============================================
+   RenDS — Primitive Shadow Tokens
+   ============================================
+   Soft, Apple-style layered shadows.
+   Each level uses two shadows for realism:
+   one for ambient occlusion, one for key light.
+
+   NOTE: The actual --shadow-xs through --shadow-2xl
+   values are defined in semantic/colors.css using
+   light-dark() color tokens for automatic dark mode.
+   This file defines shadow-independent primitives only.
+   ============================================ */
+
+:root {
+  /* ─── Shadow Reset ─── */
+  --shadow-none: none;
+
+  /* ─── Inset Shadow ─── */
+  --shadow-inset-color: light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.3));
+  --shadow-inset: inset 0 2px 4px var(--shadow-inset-color);
+
+  /* ─── Ring Shadow (for focus, borders) ─── */
+  /* Used as: box-shadow: var(--ring-offset), var(--ring); */
+  --ring-width: 2px;
+  --ring-color: var(--blue-500);
+  --ring-offset-width: 2px;
+  --ring-offset-color: light-dark(var(--white), var(--black));
+}

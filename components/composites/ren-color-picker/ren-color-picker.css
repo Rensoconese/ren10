@@ -1,0 +1,563 @@
+/* ═══════════════════════════════════════════════════════════════════
+   RenDS — Color Picker Composite Component
+   ═══════════════════════════════════════════════════════════════════
+   A fully accessible, feature-rich color picker with support for:
+   - HSV color model (internal) with conversion to/from HEX, RGB, HSL
+   - Saturation/brightness canvas area
+   - Hue slider
+   - Optional alpha/opacity slider
+   - Text inputs for manual color entry
+   - Preset color swatches
+   - EyeDropper API integration (when available)
+   - Keyboard navigation and ARIA labels
+   - Smooth animations with @starting-style support
+
+   Structure:
+   .ren-color-picker (container)
+     .ren-color-picker-trigger (button showing current color)
+     [popover] .ren-color-picker-dropdown
+       .ren-color-picker-saturation (canvas area for S/B)
+         .ren-color-picker-saturation-handle (circular cursor)
+       .ren-color-picker-hue (horizontal rainbow slider)
+         .ren-color-picker-hue-handle (thumb)
+       .ren-color-picker-alpha (opacity slider, optional)
+         .ren-color-picker-alpha-handle (thumb)
+       .ren-color-picker-preview (color display swatch)
+       .ren-color-picker-inputs
+         .ren-color-picker-hex-input
+         .ren-color-picker-channel (R/G/B or H/S/L)
+       .ren-color-picker-swatches (preset colors, optional)
+       .ren-color-picker-format-toggle (HEX/RGB/HSL switcher)
+       .ren-color-picker-eyedropper (screen picker, optional)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══ COLOR PICKER CONTAINER ═══ */
+.ren-color-picker {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font-family: inherit;
+}
+
+/* ═══ TRIGGER BUTTON (Shows Current Color) ═══ */
+.ren-color-picker-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    background-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ren-color-picker-trigger:hover:not(:disabled) {
+  background-color: var(--color-input-bg);
+  border-color: var(--color-input-border-focus);
+}
+
+.ren-color-picker-trigger:focus-visible {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-trigger[aria-expanded="true"] {
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Trigger swatch (small colored square) */
+.ren-color-picker-trigger-swatch {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: #ffffff;
+  background-image: repeating-conic-gradient(
+    var(--color-border) 0deg 90deg,
+    transparent 90deg 180deg
+  ) 50% / 4px 4px;
+}
+
+/* Trigger value text */
+.ren-color-picker-trigger-value {
+  flex: 1;
+  text-align: start;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+}
+
+/* ═══ DROPDOWN CONTAINER (Popover) ═══ */
+.ren-color-picker-dropdown {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: auto;
+  max-width: 300px;
+  padding: var(--space-4);
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+
+  /* Popover API defaults */
+  &:popover-open {
+    animation: ren-color-picker-open var(--duration-normal) var(--ease-out);
+  }
+
+  @supports (animation-timeline: view()) {
+    &:popover-open {
+      animation: ren-color-picker-open var(--duration-normal) var(--ease-out);
+      transition-behavior: allow-discrete;
+    }
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+  }
+}
+
+@keyframes ren-color-picker-open {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ═══ SATURATION/BRIGHTNESS AREA ═══ */
+.ren-color-picker-saturation {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  max-width: 240px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: crosshair;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Canvas for saturation/brightness */
+.ren-color-picker-saturation-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+}
+
+/* Saturation handle (circular cursor) */
+.ren-color-picker-saturation-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+/* ═══ HUE SLIDER ═══ */
+.ren-color-picker-hue {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    #ff0000 0%,
+    #ffff00 16.67%,
+    #00ff00 33.33%,
+    #00ffff 50%,
+    #0000ff 66.67%,
+    #ff00ff 83.33%,
+    #ff0000 100%
+  );
+  overflow: hidden;
+}
+
+/* Hue slider handle/thumb */
+.ren-color-picker-hue-handle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+/* ═══ ALPHA SLIDER (Optional) ═══ */
+.ren-color-picker-alpha {
+  position: relative;
+  width: 100%;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  cursor: pointer;
+  overflow: hidden;
+
+  /* Checkerboard pattern for transparency */
+  background-image: repeating-conic-gradient(
+    var(--color-border) 0deg 90deg,
+    transparent 90deg 180deg
+  );
+  background-size: 8px 8px;
+  background-position: 0 0;
+}
+
+/* Gradient overlay for alpha */
+.ren-color-picker-alpha-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+}
+
+/* Alpha slider handle/thumb */
+.ren-color-picker-alpha-handle {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+/* ═══ COLOR PREVIEW SWATCH ═══ */
+.ren-color-picker-preview {
+  display: flex;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.ren-color-picker-preview-swatch {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+
+  /* Checkerboard for transparency */
+  background-image: repeating-conic-gradient(
+    var(--color-border) 0deg 90deg,
+    transparent 90deg 180deg
+  );
+  background-size: 4px 4px;
+  background-position: 0 0;
+}
+
+.ren-color-picker-preview-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+.ren-color-picker-preview-label {
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--label-weight);
+}
+
+.ren-color-picker-preview-value {
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  color: var(--color-text);
+  margin-top: var(--space-1);
+}
+
+/* ═══ TEXT INPUTS SECTION ═══ */
+.ren-color-picker-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+/* Hex input field */
+.ren-color-picker-hex-input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ren-color-picker-hex-input:focus {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-hex-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Channel inputs container (RGB or HSL) */
+.ren-color-picker-channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-2);
+}
+
+/* Individual channel input */
+.ren-color-picker-channel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ren-color-picker-channel-label {
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--label-weight);
+}
+
+.ren-color-picker-channel-input {
+  padding: var(--space-2) var(--space-2);
+  font-size: var(--body-size);
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  text-align: center;
+  transition:
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ren-color-picker-channel-input:focus {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-channel-input::-webkit-outer-spin-button,
+.ren-color-picker-channel-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ren-color-picker-channel-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* ═══ FORMAT TOGGLE BUTTON ═══ */
+.ren-color-picker-format-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--label-size);
+  font-family: var(--font-mono);
+  color: var(--color-text);
+  background-color: var(--color-fill);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ren-color-picker-format-toggle:hover {
+  background-color: var(--color-fill-hover);
+  border-color: var(--color-border);
+}
+
+.ren-color-picker-format-toggle:focus-visible {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-format-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══ EYEDROPPER BUTTON ═══ */
+.ren-color-picker-eyedropper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--label-size);
+  color: var(--color-text);
+  background-color: var(--color-fill);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-normal) var(--ease-out),
+    border-color var(--duration-normal) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.ren-color-picker-eyedropper:hover {
+  background-color: var(--color-fill-hover);
+  border-color: var(--color-border);
+}
+
+.ren-color-picker-eyedropper:focus-visible {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-eyedropper:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ren-color-picker-eyedropper-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
+/* ═══ PRESETS/SWATCHES GRID ═══ */
+.ren-color-picker-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: var(--space-2);
+  padding: var(--space-2);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.ren-color-picker-swatch {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+  background-image: repeating-conic-gradient(
+    var(--color-border) 0deg 90deg,
+    transparent 90deg 180deg
+  );
+  background-size: 4px 4px;
+  background-position: 0 0;
+}
+
+.ren-color-picker-swatch:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-input-focus-ring);
+}
+
+.ren-color-picker-swatch:hover {
+  transform: scale(1.05);
+  border-color: var(--color-border);
+}
+
+.ren-color-picker-swatch[aria-selected="true"] {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
+}
+
+.ren-color-picker-swatch-color {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+}
+
+/* ═══ CONTROLS ROW (Format + Eyedropper) ═══ */
+.ren-color-picker-controls {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.ren-color-picker-controls-left {
+  flex: 1;
+  display: flex;
+  gap: var(--space-2);
+}
+
+.ren-color-picker-controls-right {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* ═══ DISABLED STATE ═══ */
+.ren-color-picker[disabled],
+.ren-color-picker-trigger[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ═══ ANIMATIONS & TRANSITIONS ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-color-picker-dropdown,
+  .ren-color-picker-trigger,
+  .ren-color-picker-hex-input,
+  .ren-color-picker-channel-input,
+  .ren-color-picker-format-toggle,
+  .ren-color-picker-swatch {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

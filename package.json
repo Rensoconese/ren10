@@ -1,0 +1,62 @@
+{
+  "name": "rends",
+  "version": "0.1.0",
+  "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
+  "author": "Ren",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Rensoconese/ren10.git"
+  },
+  "homepage": "https://github.com/Rensoconese/ren10#readme",
+  "type": "module",
+  "main": "index.css",
+  "bin": {
+    "rends": "./cli/index.js"
+  },
+  "files": [
+    "index.css",
+    "tokens/",
+    "base/",
+    "components/",
+    "utils/",
+    "cli/"
+  ],
+  "exports": {
+    ".": {
+      "import": "./index.css"
+    },
+    "./components/*": {
+      "import": "./components/*.js"
+    },
+    "./tokens/*": {
+      "import": "./tokens/*.css"
+    },
+    "./base/*": {
+      "import": "./base/*.css"
+    },
+    "./utils": {
+      "import": "./utils/index.js"
+    }
+  },
+  "sideEffects": [
+    "*.css",
+    "./components/**/*.js"
+  ],
+  "scripts": {
+    "lint:css": "stylelint 'components/**/*.css' 'base/**/*.css' 'tokens/**/*.css'",
+    "lint:js": "eslint 'components/**/*.js' 'utils/**/*.js' 'cli/**/*.js'",
+    "lint": "npm run lint:css && npm run lint:js",
+    "build": "node scripts/build.js",
+    "watch": "node scripts/build.js --watch"
+  },
+  "keywords": [
+    "design-system",
+    "css",
+    "web-components",
+    "accessible",
+    "vanilla",
+    "a11y",
+    "tokens"
+  ]
+}
