@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenDS — Primitive Zero Reference</title>
+
+  <!-- RenDS foundation -->
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+
+  <style>
+    /* ═══════════════════════════════════════════════
+       Primitive Zero Reference — Page scaffolding
+       ═══════════════════════════════════════════════
+       Intentionally minimal. Almost everything on this
+       page is styled by RenDS itself (classless.css)
+       so the page eats its own dog food. */
+
+    body {
+      color: var(--color-text);
+      background-color: var(--color-surface);
+      margin: 0;
+    }
+
+    .page {
+      display: grid;
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: var(--space-8);
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: var(--space-6);
+      min-height: 100vh;
+    }
+
+    /* Sticky side nav */
+    .toc {
+      position: sticky;
+      top: var(--space-6);
+      align-self: start;
+      height: fit-content;
+      max-height: calc(100vh - var(--space-12));
+      overflow-y: auto;
+      border-inline-end: 1px solid var(--color-border);
+      padding-inline-end: var(--space-4);
+      font-size: var(--text-sm);
+    }
+
+    .toc h3 {
+      font-size: var(--caption-size);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--color-text-muted);
+      margin-block: var(--space-4) var(--space-2);
+    }
+
+    .toc ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc li {
+      margin-block: 0;
+    }
+
+    .toc a {
+      display: block;
+      padding: var(--space-1) var(--space-2);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+    }
+
+    .toc a:hover {
+      background-color: var(--color-fill);
+      color: var(--color-text);
+    }
+
+    /* Main content */
+    .content {
+      min-width: 0;
+    }
+
+    .hero {
+      padding-block: var(--space-6) var(--space-8);
+      border-block-end: 1px solid var(--color-border);
+      margin-block-end: var(--space-8);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: var(--caption-size);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--color-accent);
+      margin-block-end: var(--space-2);
+    }
+
+    /* Section */
+    section {
+      margin-block-end: var(--space-10);
+    }
+
+    section > h2 {
+      padding-block-end: var(--space-2);
+      border-block-end: 2px solid var(--color-accent);
+      margin-block-end: var(--space-6);
+    }
+
+    /* Each element documentation card */
+    .element {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+      padding: var(--space-5);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      margin-block-end: var(--space-4);
+    }
+
+    .element-header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-block-end: var(--space-3);
+      border-block-end: 1px solid var(--color-border);
+      margin-block-end: 0;
+    }
+
+    .element-title {
+      font-family: var(--code-family);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    .element-purpose {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin: 0;
+      text-align: end;
+      flex: 1;
+    }
+
+    .element-render {
+      padding: var(--space-4);
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-md);
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+    }
+
+    .element-render > * {
+      width: 100%;
+    }
+
+    .element-code {
+      font-family: var(--code-family);
+      font-size: var(--text-sm);
+      background: var(--color-surface-sunken);
+      padding: var(--space-3);
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin: 0;
+      line-height: var(--leading-relaxed);
+    }
+
+    .graduate {
+      grid-column: 1 / -1;
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      padding-block-start: var(--space-3);
+      border-block-start: 1px dashed var(--color-border);
+      margin-block-start: 0;
+    }
+
+    .graduate::before {
+      content: "↗ ";
+      color: var(--color-accent);
+      font-weight: var(--weight-semibold);
+    }
+
+    .graduate code {
+      font-size: 0.9em;
+    }
+
+    /* Full-width element (takes the full row) */
+    .element.wide {
+      grid-template-columns: 1fr;
+    }
+
+    .element.wide .element-render,
+    .element.wide .element-code {
+      grid-column: 1 / -1;
+    }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+      .toc {
+        position: static;
+        border-inline-end: none;
+        border-block-end: 1px solid var(--color-border);
+        padding-inline-end: 0;
+        padding-block-end: var(--space-4);
+        margin-block-end: var(--space-4);
+        max-height: none;
+      }
+      .element {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- ───────────── TABLE OF CONTENTS ───────────── -->
+  <aside class="toc" aria-label="Tabla de contenidos">
+    <h3>Primitive Zero</h3>
+    <ul>
+      <li><a href="#intro">Introducción</a></li>
+    </ul>
+
+    <h3>Categorías</h3>
+    <ul>
+      <li><a href="#text">Texto &amp; Tipografía</a></li>
+      <li><a href="#lists">Listas</a></li>
+      <li><a href="#tables">Tablas</a></li>
+      <li><a href="#forms">Formularios</a></li>
+      <li><a href="#interactive">Interactivos</a></li>
+      <li><a href="#multimedia">Multimedia</a></li>
+      <li><a href="#structure">Estructura</a></li>
+      <li><a href="#combos">Combinaciones</a></li>
+    </ul>
+  </aside>
+
+  <!-- ───────────── MAIN CONTENT ───────────── -->
+  <main class="content">
+
+    <div class="hero" id="intro">
+      <span class="eyebrow">Layer 1 · Foundation</span>
+      <h1>Primitive Zero</h1>
+      <p class="lead" role="doc-subtitle">La capa más baja del design system: cada etiqueta HTML semántica estilizada globalmente con tokens, sin necesidad de clases.</p>
+      <p>Un <code>&lt;blockquote&gt;</code> se ve bien porque RenDS lo viste. Un <code>&lt;kbd&gt;</code> tiene su identidad tipográfica. Un <code>&lt;details&gt;</code> funciona como accordion básico. El diseñador debe conocer estas etiquetas como vocabulario base — RenDS garantiza que cada una tenga tipografía, color, forma y medidas accesibles por defecto.</p>
+
+      <details>
+        <summary>¿Cuándo una etiqueta "sube" de Primitive Zero a Primitive (con clase)?</summary>
+        <p>Cuando necesita <strong>una o más</strong> de estas cosas: <strong>(a)</strong> variantes — un <code>&lt;button&gt;</code> que también sea ghost, secondary, danger; <strong>(b)</strong> sub-elementos — un Card con header, body y footer; <strong>(c)</strong> API de tokens pública — <code>--ren-{componente}-*</code>; <strong>(d)</strong> JavaScript para accesibilidad — focus trap, roving tabindex, coordinación entre items.</p>
+        <p>Si la etiqueta HTML nativa + classless es suficiente, se queda acá.</p>
+      </details>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         TEXT & TYPOGRAPHY
+         ═══════════════════════════════════════════ -->
+    <section id="text">
+      <h2>Texto &amp; Tipografía</h2>
+
+      <!-- HEADINGS -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;h1&gt; — &lt;h6&gt;</h3>
+          <p class="element-purpose">Jerarquía de encabezados con escala tipográfica Display → Headline.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <h1>Heading 1</h1>
+            <h2>Heading 2</h2>
+            <h3>Heading 3</h3>
+            <h4>Heading 4</h4>
+            <h5>Heading 5</h5>
+            <h6>Heading 6</h6>
+          </div>
+        </div>
+        <pre class="element-code">&lt;h1&gt;Heading 1&lt;/h1&gt;
+&lt;h2&gt;Heading 2&lt;/h2&gt;
+&lt;h3&gt;Heading 3&lt;/h3&gt;</pre>
+        <p class="graduate">Usan tokens <code>--display-*</code>, <code>--title-*</code> y <code>--headline-*</code>. Incluyen <code>text-wrap: balance</code> para mejor rasgado. Primer heading pierde margin-top automáticamente.</p>
+      </article>
+
+      <!-- PARAGRAPH + LEAD -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;p&gt;</h3>
+          <p class="element-purpose">Párrafo de texto. Variante "lead" via <code>role="doc-subtitle"</code>.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <p role="doc-subtitle">Este es un lead paragraph, para subtítulos o intros.</p>
+            <p>Y este es un párrafo normal, con <code>text-wrap: pretty</code> y márgenes verticales con tokens de espaciado.</p>
+          </div>
+        </div>
+        <pre class="element-code">&lt;p role="doc-subtitle"&gt;Lead paragraph&lt;/p&gt;
+&lt;p&gt;Párrafo normal.&lt;/p&gt;</pre>
+      </article>
+
+      <!-- LINK -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;a&gt;</h3>
+          <p class="element-purpose">Enlace. Selector <code>a:not([class])</code> — no pisa ren-link.</p>
+        </header>
+        <div class="element-render">
+          <p>Esto es un <a href="#intro">enlace interno</a> dentro de texto.</p>
+        </div>
+        <pre class="element-code">&lt;a href="/ruta"&gt;Texto del enlace&lt;/a&gt;</pre>
+        <p class="graduate">Para enlaces con variantes (subtle, destructive, standalone) o iconografía, usar el primitivo <code>ren-link</code>.</p>
+      </article>
+
+      <!-- STRONG + EM -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;strong&gt; &lt;em&gt; &lt;b&gt; &lt;i&gt;</h3>
+          <p class="element-purpose">Énfasis fuerte (semibold) y suave (italic).</p>
+        </header>
+        <div class="element-render">
+          <p>Texto con <strong>énfasis fuerte</strong>, con <em>énfasis suave</em>, y también <b>negrita pura</b> o <i>itálica pura</i>.</p>
+        </div>
+        <pre class="element-code">&lt;strong&gt;énfasis fuerte&lt;/strong&gt;
+&lt;em&gt;énfasis suave&lt;/em&gt;</pre>
+      </article>
+
+      <!-- SMALL -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;small&gt;</h3>
+          <p class="element-purpose">Texto secundario / legal. Caption size + muted.</p>
+        </header>
+        <div class="element-render">
+          <p>Precio: $99 <small>+ IVA. Pagos en 12 cuotas sin interés.</small></p>
+        </div>
+        <pre class="element-code">$99 &lt;small&gt;+ IVA&lt;/small&gt;</pre>
+      </article>
+
+      <!-- MARK -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;mark&gt;</h3>
+          <p class="element-purpose">Texto resaltado (highlight amarillo).</p>
+        </header>
+        <div class="element-render">
+          <p>Buscamos la palabra <mark>encontrada</mark> en este texto.</p>
+        </div>
+        <pre class="element-code">la palabra &lt;mark&gt;encontrada&lt;/mark&gt; aquí</pre>
+      </article>
+
+      <!-- TIME -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;time&gt;</h3>
+          <p class="element-purpose">Fecha / hora semántica. Tabular-nums para alineación en columnas.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <p>Publicado <time datetime="2026-04-16">16 de abril de 2026</time></p>
+            <p><time>2026-04-16</time> · <time>14:30</time></p>
+            <p><time>2026-03-11</time> · <time>09:05</time></p>
+          </div>
+        </div>
+        <pre class="element-code">&lt;time datetime="2026-04-16"&gt;16 abr 2026&lt;/time&gt;</pre>
+      </article>
+
+      <!-- CODE -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;code&gt;</h3>
+          <p class="element-purpose">Código inline. Mono font + pill sutil.</p>
+        </header>
+        <div class="element-render">
+          <p>Ejecutá <code>npm install</code> para instalar las dependencias.</p>
+        </div>
+        <pre class="element-code">ejecutá &lt;code&gt;npm install&lt;/code&gt;</pre>
+      </article>
+
+      <!-- PRE -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;pre&gt;</h3>
+          <p class="element-purpose">Bloque de código preformateado. Mono + overflow-x + tab-size.</p>
+        </header>
+        <div class="element-render">
+          <pre><code>function hello(name) {
+  return `Hola, ${name}`;
+}</code></pre>
+        </div>
+        <pre class="element-code">&lt;pre&gt;&lt;code&gt;function hello(name) {
+  return `Hola, ${name}`;
+}&lt;/code&gt;&lt;/pre&gt;</pre>
+      </article>
+
+      <!-- KBD -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;kbd&gt;</h3>
+          <p class="element-purpose">Tecla de teclado. Efecto "3D" con border-bottom 2px.</p>
+        </header>
+        <div class="element-render">
+          <p>Presioná <kbd>Cmd</kbd> + <kbd>K</kbd> para abrir la búsqueda.</p>
+        </div>
+        <pre class="element-code">&lt;kbd&gt;Cmd&lt;/kbd&gt; + &lt;kbd&gt;K&lt;/kbd&gt;</pre>
+      </article>
+
+      <!-- SAMP -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;samp&gt;</h3>
+          <p class="element-purpose">Output de programa. Mono + muted para diferenciar de &lt;code&gt;.</p>
+        </header>
+        <div class="element-render">
+          <p>El resultado fue: <samp>added 1 package in 2s</samp></p>
+        </div>
+        <pre class="element-code">Resultado: &lt;samp&gt;added 1 package&lt;/samp&gt;</pre>
+      </article>
+
+      <!-- VAR -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;var&gt;</h3>
+          <p class="element-purpose">Variable matemática / programática. Italic + tabular-nums.</p>
+        </header>
+        <div class="element-render">
+          <p>La fórmula es <var>E</var> = <var>mc</var>², donde <var>c</var> = 299.792.458 m/s.</p>
+        </div>
+        <pre class="element-code">&lt;var&gt;E&lt;/var&gt; = &lt;var&gt;mc&lt;/var&gt;²</pre>
+      </article>
+
+      <!-- BLOCKQUOTE + CITE -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;blockquote&gt; + &lt;cite&gt;</h3>
+          <p class="element-purpose">Cita larga con borde de acento. &lt;cite&gt; adentro se trata como firma.</p>
+        </header>
+        <div class="element-render">
+          <blockquote>
+            <p>La simplicidad es la sofisticación última.</p>
+            <cite>Leonardo da Vinci</cite>
+          </blockquote>
+        </div>
+        <pre class="element-code">&lt;blockquote&gt;
+  &lt;p&gt;La simplicidad es...&lt;/p&gt;
+  &lt;cite&gt;Leonardo da Vinci&lt;/cite&gt;
+&lt;/blockquote&gt;</pre>
+        <p class="graduate">Combinación contextual: cuando <code>&lt;cite&gt;</code> vive dentro de <code>&lt;blockquote&gt;</code>, se transforma en block con em-dash prefix automático.</p>
+      </article>
+
+      <!-- Q -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;q&gt;</h3>
+          <p class="element-purpose">Cita inline. Italic + secondary color + comillas nativas.</p>
+        </header>
+        <div class="element-render">
+          <p>Como dice Ada: <q>el único error real es no aprender del error</q>.</p>
+        </div>
+        <pre class="element-code">&lt;q&gt;el único error real&lt;/q&gt;</pre>
+      </article>
+
+      <!-- DEL + INS -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;del&gt; + &lt;ins&gt;</h3>
+          <p class="element-purpose">Edit tracking: eliminado y agregado. Forman diff visual juntos.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <p>El precio pasó de <del>$99</del> <ins>$79</ins>.</p>
+            <p>Claude <del>debería</del> <ins>debe</ins> escribir <del>código claro</del> <ins>código legible</ins>.</p>
+          </div>
+        </div>
+        <pre class="element-code">precio pasó de &lt;del&gt;$99&lt;/del&gt; &lt;ins&gt;$79&lt;/ins&gt;</pre>
+        <p class="graduate">Combinación contextual: <code>&lt;del&gt;</code> y <code>&lt;ins&gt;</code> adyacentes forman un diff visual (rojo subtle + verde subtle). Ideal para changelogs, ediciones, AI suggestions.</p>
+      </article>
+
+      <!-- ABBR -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;abbr&gt;</h3>
+          <p class="element-purpose">Abreviatura con tooltip. Underline dotted + cursor help.</p>
+        </header>
+        <div class="element-render">
+          <p>La <abbr title="Organización Mundial de la Salud">OMS</abbr> publicó un nuevo reporte.</p>
+        </div>
+        <pre class="element-code">&lt;abbr title="..."&gt;OMS&lt;/abbr&gt;</pre>
+      </article>
+
+      <!-- SUB + SUP -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;sub&gt; &lt;sup&gt;</h3>
+          <p class="element-purpose">Subíndice y superíndice. 75% de tamaño.</p>
+        </header>
+        <div class="element-render">
+          <p>H<sub>2</sub>O, E = mc<sup>2</sup>, 10<sup>-9</sup></p>
+        </div>
+        <pre class="element-code">H&lt;sub&gt;2&lt;/sub&gt;O
+mc&lt;sup&gt;2&lt;/sup&gt;</pre>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         LISTS
+         ═══════════════════════════════════════════ -->
+    <section id="lists">
+      <h2>Listas</h2>
+
+      <!-- UL -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;ul&gt;</h3>
+          <p class="element-purpose">Lista no ordenada. Disc → circle → square en anidados.</p>
+        </header>
+        <div class="element-render">
+          <ul>
+            <li>Primer item</li>
+            <li>Segundo item con una sub-lista
+              <ul>
+                <li>Sub-item uno</li>
+                <li>Sub-item dos</li>
+              </ul>
+            </li>
+            <li>Tercer item</li>
+          </ul>
+        </div>
+        <pre class="element-code">&lt;ul&gt;
+  &lt;li&gt;Item&lt;/li&gt;
+  &lt;li&gt;Item con sub
+    &lt;ul&gt;&lt;li&gt;sub&lt;/li&gt;&lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</pre>
+      </article>
+
+      <!-- OL -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;ol&gt;</h3>
+          <p class="element-purpose">Lista ordenada. Decimales, tabular-nums en los marcadores.</p>
+        </header>
+        <div class="element-render">
+          <ol>
+            <li>Instalá las dependencias</li>
+            <li>Corré el build</li>
+            <li>Deployá a producción</li>
+          </ol>
+        </div>
+        <pre class="element-code">&lt;ol&gt;
+  &lt;li&gt;Paso uno&lt;/li&gt;
+  &lt;li&gt;Paso dos&lt;/li&gt;
+&lt;/ol&gt;</pre>
+      </article>
+
+      <!-- DL -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;dl&gt; + &lt;dt&gt; + &lt;dd&gt;</h3>
+          <p class="element-purpose">Lista de definiciones. &lt;dt&gt; semibold, &lt;dd&gt; indented + muted.</p>
+        </header>
+        <div class="element-render">
+          <dl>
+            <dt>Primitive Zero</dt>
+            <dd>Capa fundacional donde cada etiqueta HTML recibe estilo global vía classless.css.</dd>
+            <dt>Primitive</dt>
+            <dd>Componente atómico con clase <code>ren-*</code>, variantes y API de tokens pública.</dd>
+            <dt>Composed</dt>
+            <dd>Componente compuesto de varios primitives. Ejemplo: Card usa surface, text y button.</dd>
+          </dl>
+        </div>
+        <pre class="element-code">&lt;dl&gt;
+  &lt;dt&gt;Término&lt;/dt&gt;
+  &lt;dd&gt;Definición asociada al término.&lt;/dd&gt;
+&lt;/dl&gt;</pre>
+        <p class="graduate">Útil para glosarios, specs y documentación técnica. &lt;dt&gt; puede tener múltiples &lt;dd&gt; (un término con varias definiciones).</p>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         TABLES
+         ═══════════════════════════════════════════ -->
+    <section id="tables">
+      <h2>Tablas</h2>
+
+      <!-- TABLE básica -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;table&gt; + &lt;thead&gt; + &lt;tbody&gt;</h3>
+          <p class="element-purpose">Tabla de datos. Bordes sutiles, zebra rows opcional, tabular-nums.</p>
+        </header>
+        <div class="element-render">
+          <table>
+            <thead>
+              <tr>
+                <th>Componente</th>
+                <th>Capa</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>ren-button</td>
+                <td>Primitive</td>
+                <td>Stable</td>
+              </tr>
+              <tr>
+                <td>ren-card</td>
+                <td>Composed</td>
+                <td>Beta</td>
+              </tr>
+              <tr>
+                <td>ren-dialog</td>
+                <td>Primitive</td>
+                <td>RC</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pre class="element-code">&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;&lt;th&gt;Col&lt;/th&gt;&lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;&lt;td&gt;Valor&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;</pre>
+        <p class="graduate">Para tablas interactivas (sorting, sticky headers, row selection, pagination) graduar a <code>ren-table</code>.</p>
+      </article>
+
+      <!-- CAPTION + TFOOT -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;caption&gt; + &lt;tfoot&gt;</h3>
+          <p class="element-purpose">Título accesible de la tabla y fila de totales.</p>
+        </header>
+        <div class="element-render">
+          <table>
+            <caption>Ventas Q1 2026 por región</caption>
+            <thead>
+              <tr>
+                <th>Región</th>
+                <th>Unidades</th>
+                <th>Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Norte</td><td>1.240</td><td>$124.000</td></tr>
+              <tr><td>Sur</td><td>890</td><td>$89.000</td></tr>
+              <tr><td>Este</td><td>1.510</td><td>$151.000</td></tr>
+              <tr><td>Oeste</td><td>720</td><td>$72.000</td></tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>Total</td>
+                <td>4.360</td>
+                <td>$436.000</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <pre class="element-code">&lt;table&gt;
+  &lt;caption&gt;Título&lt;/caption&gt;
+  &lt;thead&gt;...&lt;/thead&gt;
+  &lt;tbody&gt;...&lt;/tbody&gt;
+  &lt;tfoot&gt;
+    &lt;tr&gt;&lt;td&gt;Total&lt;/td&gt;&lt;/tr&gt;
+  &lt;/tfoot&gt;
+&lt;/table&gt;</pre>
+        <p class="graduate">El &lt;caption&gt; es crítico para accesibilidad — lectores de pantalla lo leen antes que el contenido. Siempre presente en tablas de datos.</p>
+      </article>
+
+      <!-- TH scope (bonus) -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;th scope&gt;</h3>
+          <p class="element-purpose">Encabezados de fila vs columna. <code>scope="row"</code> y <code>scope="col"</code>.</p>
+        </header>
+        <div class="element-render">
+          <table>
+            <thead>
+              <tr>
+                <td></td>
+                <th scope="col">Free</th>
+                <th scope="col">Pro</th>
+                <th scope="col">Enterprise</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Usuarios</th>
+                <td>1</td>
+                <td>10</td>
+                <td>Ilimitados</td>
+              </tr>
+              <tr>
+                <th scope="row">Soporte</th>
+                <td>Comunidad</td>
+                <td>Email</td>
+                <td>24/7</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <pre class="element-code">&lt;th scope="col"&gt;Columna&lt;/th&gt;
+&lt;th scope="row"&gt;Fila&lt;/th&gt;</pre>
+        <p class="graduate">Tablas comparativas y matrices deben usar <code>scope</code> para que lectores de pantalla asocien cada celda con sus headers.</p>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         FORMS
+         ═══════════════════════════════════════════ -->
+    <section id="forms">
+      <h2>Formularios</h2>
+
+      <!-- LABEL + INPUT -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;label&gt; + &lt;input&gt;</h3>
+          <p class="element-purpose">Par base. Label block, input full-width, focus ring accent.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label for="pz-name">Nombre completo</label>
+            <input id="pz-name" type="text" placeholder="Ada Lovelace">
+          </div>
+        </div>
+        <pre class="element-code">&lt;label for="name"&gt;Nombre&lt;/label&gt;
+&lt;input id="name" type="text"&gt;</pre>
+        <p class="graduate">Para inputs con prefix/suffix, iconos internos o validación visual custom, graduar a <code>ren-field</code>.</p>
+      </article>
+
+      <!-- INPUT types -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;input type="..."&gt;</h3>
+          <p class="element-purpose">Variantes nativas: text, email, password, number, date, search, tel, url.</p>
+        </header>
+        <div class="element-render">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+            <div>
+              <label for="pz-email">Email</label>
+              <input id="pz-email" type="email" placeholder="ada@example.com">
+            </div>
+            <div>
+              <label for="pz-pass">Password</label>
+              <input id="pz-pass" type="password" value="secret123">
+            </div>
+            <div>
+              <label for="pz-num">Cantidad</label>
+              <input id="pz-num" type="number" value="42" min="0" max="100">
+            </div>
+            <div>
+              <label for="pz-date">Fecha</label>
+              <input id="pz-date" type="date" value="2026-04-17">
+            </div>
+            <div>
+              <label for="pz-search">Buscar</label>
+              <input id="pz-search" type="search" placeholder="Buscar…">
+            </div>
+            <div>
+              <label for="pz-tel">Teléfono</label>
+              <input id="pz-tel" type="tel" placeholder="+54 11 5555-1234">
+            </div>
+          </div>
+        </div>
+        <pre class="element-code">&lt;input type="email"&gt;
+&lt;input type="password"&gt;
+&lt;input type="number" min="0" max="100"&gt;
+&lt;input type="date"&gt;
+&lt;input type="search"&gt;
+&lt;input type="tel"&gt;</pre>
+      </article>
+
+      <!-- CHECKBOX + RADIO -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">checkbox + radio</h3>
+          <p class="element-purpose">Controles inline con accent-color vía tokens.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label style="display:inline-flex;align-items:center;gap:var(--space-2);margin-inline-end:var(--space-4);">
+              <input type="checkbox" checked> Newsletter
+            </label>
+            <label style="display:inline-flex;align-items:center;gap:var(--space-2);">
+              <input type="checkbox"> Push notifications
+            </label>
+            <div style="margin-block-start:var(--space-3);">
+              <label style="display:inline-flex;align-items:center;gap:var(--space-2);margin-inline-end:var(--space-4);">
+                <input type="radio" name="pz-plan" checked> Plan Free
+              </label>
+              <label style="display:inline-flex;align-items:center;gap:var(--space-2);">
+                <input type="radio" name="pz-plan"> Plan Pro
+              </label>
+            </div>
+          </div>
+        </div>
+        <pre class="element-code">&lt;input type="checkbox"&gt;
+&lt;input type="radio" name="plan"&gt;</pre>
+        <p class="graduate">Para grupos con estados visuales elaborados (chip-like, card selection) graduar a <code>ren-toggle-group</code>.</p>
+      </article>
+
+      <!-- TEXTAREA -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;textarea&gt;</h3>
+          <p class="element-purpose">Texto multilínea. Resize vertical, min-height 4 líneas.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label for="pz-msg">Mensaje</label>
+            <textarea id="pz-msg" rows="3" placeholder="Contame qué pensás…"></textarea>
+          </div>
+        </div>
+        <pre class="element-code">&lt;textarea rows="3"&gt;&lt;/textarea&gt;</pre>
+      </article>
+
+      <!-- SELECT -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;select&gt;</h3>
+          <p class="element-purpose">Dropdown nativo con chevron SVG integrado.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label for="pz-country">País</label>
+            <select id="pz-country">
+              <option>Argentina</option>
+              <option>Brasil</option>
+              <option>Chile</option>
+              <option>Uruguay</option>
+            </select>
+          </div>
+        </div>
+        <pre class="element-code">&lt;select&gt;
+  &lt;option&gt;Uno&lt;/option&gt;
+  &lt;option&gt;Dos&lt;/option&gt;
+&lt;/select&gt;</pre>
+        <p class="graduate">Para combobox con búsqueda, multi-select o renders custom, graduar a <code>ren-select</code>.</p>
+      </article>
+
+      <!-- FIELDSET + LEGEND -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;fieldset&gt; + &lt;legend&gt;</h3>
+          <p class="element-purpose">Agrupa campos relacionados. Legend en body-size con color de texto.</p>
+        </header>
+        <div class="element-render">
+          <form>
+            <fieldset>
+              <legend>Dirección de envío</legend>
+              <label for="pz-street">Calle</label>
+              <input id="pz-street" type="text" placeholder="Av. Siempre Viva 742">
+              <label for="pz-city" style="margin-top:var(--space-3)">Ciudad</label>
+              <input id="pz-city" type="text" placeholder="Springfield">
+            </fieldset>
+          </form>
+        </div>
+        <pre class="element-code">&lt;fieldset&gt;
+  &lt;legend&gt;Título del grupo&lt;/legend&gt;
+  &lt;label&gt;...&lt;/label&gt;
+  &lt;input&gt;
+&lt;/fieldset&gt;</pre>
+        <p class="graduate">Semánticamente crítico para forms largos — lectores de pantalla anuncian el legend antes de cada input del grupo.</p>
+      </article>
+
+      <!-- BUTTON -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;button&gt;</h3>
+          <p class="element-purpose">Button base estilizado. Variante por defecto: accent filled.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <button type="button">Primary action</button>
+            <button type="button" disabled>Disabled</button>
+          </div>
+        </div>
+        <pre class="element-code">&lt;button&gt;Primary action&lt;/button&gt;
+&lt;button disabled&gt;Disabled&lt;/button&gt;</pre>
+        <p class="graduate">Para secondary, ghost, destructive, icon-only, loading states, graduar a <code>ren-button</code>.</p>
+      </article>
+
+      <!-- OUTPUT -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;output&gt;</h3>
+          <p class="element-purpose">Resultado calculado en un form. Mono + tabular-nums.</p>
+        </header>
+        <div class="element-render">
+          <form oninput="pzResult.value = parseInt(pzA.value) + parseInt(pzB.value)">
+            <label for="pzA">A</label>
+            <input type="number" id="pzA" value="42" style="max-width:120px">
+            <label for="pzB" style="margin-top:var(--space-2)">B</label>
+            <input type="number" id="pzB" value="58" style="max-width:120px">
+            <p style="margin-top:var(--space-2)">Suma: <output name="pzResult" for="pzA pzB">100</output></p>
+          </form>
+        </div>
+        <pre class="element-code">&lt;output name="result"&gt;100&lt;/output&gt;</pre>
+      </article>
+
+      <!-- PROGRESS -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;progress&gt;</h3>
+          <p class="element-purpose">Progreso determinado. Full-width por defecto.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label>Upload<br>
+              <progress value="70" max="100"></progress>
+            </label>
+          </div>
+        </div>
+        <pre class="element-code">&lt;progress value="70" max="100"&gt;&lt;/progress&gt;</pre>
+      </article>
+
+      <!-- METER -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;meter&gt;</h3>
+          <p class="element-purpose">Medida escalar con rangos óptimo/sub-óptimo/crítico. Colores automáticos.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label>Espacio óptimo (30%)<br>
+              <meter value="0.3" min="0" max="1" low="0.4" high="0.7" optimum="0.2"></meter>
+            </label>
+            <label style="display:block;margin-top:var(--space-3)">Espacio subóptimo (55%)<br>
+              <meter value="0.55" min="0" max="1" low="0.4" high="0.7" optimum="0.2"></meter>
+            </label>
+            <label style="display:block;margin-top:var(--space-3)">Espacio crítico (90%)<br>
+              <meter value="0.9" min="0" max="1" low="0.4" high="0.7" optimum="0.2"></meter>
+            </label>
+          </div>
+        </div>
+        <pre class="element-code">&lt;meter value="0.3" min="0" max="1"
+  low="0.4" high="0.7" optimum="0.2"&gt;
+&lt;/meter&gt;</pre>
+        <p class="graduate">Diferencia clave vs <code>&lt;progress&gt;</code>: meter mide una cantidad estática (uso de disco, rating), progress un proceso en curso (upload, install).</p>
+      </article>
+
+      <!-- DATALIST -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;datalist&gt;</h3>
+          <p class="element-purpose">Autocomplete nativo. Input free-text + sugerencias.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <label for="pz-browser">Browser</label>
+            <input id="pz-browser" list="pz-browsers" placeholder="Chrome, Firefox…">
+            <datalist id="pz-browsers">
+              <option value="Chrome">
+              <option value="Firefox">
+              <option value="Safari">
+              <option value="Edge">
+              <option value="Arc">
+            </datalist>
+          </div>
+        </div>
+        <pre class="element-code">&lt;input list="browsers"&gt;
+&lt;datalist id="browsers"&gt;
+  &lt;option value="Chrome"&gt;
+  &lt;option value="Firefox"&gt;
+&lt;/datalist&gt;</pre>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         INTERACTIVE
+         ═══════════════════════════════════════════ -->
+    <section id="interactive">
+      <h2>Interactivos</h2>
+
+      <!-- DETAILS + SUMMARY -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;details&gt; + &lt;summary&gt;</h3>
+          <p class="element-purpose">Accordion nativo. Abre/cierra con click, sin JS.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <details>
+              <summary>¿Qué es Primitive Zero?</summary>
+              <p>Es la capa 1 del design system — cada etiqueta HTML semántica recibe estilo base vía tokens, sin clases. Ver intro de esta página para el detalle completo.</p>
+            </details>
+            <details open>
+              <summary>¿Cuándo graduar a un Primitive?</summary>
+              <p>Cuando necesitás variantes, sub-elementos, API de tokens pública, o JS para accesibilidad.</p>
+            </details>
+          </div>
+        </div>
+        <pre class="element-code">&lt;details&gt;
+  &lt;summary&gt;Título clicable&lt;/summary&gt;
+  &lt;p&gt;Contenido expandible.&lt;/p&gt;
+&lt;/details&gt;</pre>
+        <p class="graduate">Para acordeones con múltiples items sincronizados (uno a la vez) o animaciones custom, graduar a <code>ren-accordion</code>.</p>
+      </article>
+
+      <!-- DIALOG -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;dialog&gt;</h3>
+          <p class="element-purpose">Modal nativo. Backdrop automático, focus trap nativo, ESC para cerrar.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <button type="button" onclick="document.getElementById('pz-dialog').showModal()">Abrir dialog</button>
+            <dialog id="pz-dialog">
+              <h3>Dialog nativo</h3>
+              <p>Este es un &lt;dialog&gt; con <code>showModal()</code>. Tiene backdrop, focus trap y ESC automáticos.</p>
+              <form method="dialog">
+                <button>Cerrar</button>
+              </form>
+            </dialog>
+          </div>
+        </div>
+        <pre class="element-code">&lt;dialog id="my-dialog"&gt;
+  &lt;h3&gt;Título&lt;/h3&gt;
+  &lt;p&gt;Contenido&lt;/p&gt;
+  &lt;form method="dialog"&gt;
+    &lt;button&gt;Cerrar&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  dialog.showModal();
+&lt;/script&gt;</pre>
+        <p class="graduate">Para stacking de dialogs, transitions y variantes (drawer, sheet) graduar a <code>ren-dialog</code>.</p>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         MULTIMEDIA
+         ═══════════════════════════════════════════ -->
+    <section id="multimedia">
+      <h2>Multimedia</h2>
+
+      <!-- IMG -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;img&gt;</h3>
+          <p class="element-purpose">Imagen responsiva. <code>max-width:100%; height:auto</code> por defecto.</p>
+        </header>
+        <div class="element-render">
+          <img src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'&gt;&lt;rect width='400' height='200' fill='%23007AFF'/&gt;&lt;text x='50%25' y='50%25' fill='white' font-size='24' text-anchor='middle' dominant-baseline='middle' font-family='system-ui'&gt;400 × 200 placeholder&lt;/text&gt;&lt;/svg&gt;" alt="Imagen placeholder 400x200">
+        </div>
+        <pre class="element-code">&lt;img src="..." alt="Descripción"&gt;</pre>
+      </article>
+
+      <!-- FIGURE + FIGCAPTION -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;figure&gt; + &lt;figcaption&gt;</h3>
+          <p class="element-purpose">Imagen con pie semántico. Margin reset, figcaption en caption-size.</p>
+        </header>
+        <div class="element-render">
+          <figure>
+            <img src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 150'&gt;&lt;rect width='400' height='150' fill='%2334C759'/&gt;&lt;text x='50%25' y='50%25' fill='white' font-size='20' text-anchor='middle' dominant-baseline='middle' font-family='system-ui'&gt;Figure image&lt;/text&gt;&lt;/svg&gt;" alt="Gráfico de ejemplo">
+            <figcaption>Figura 1. Crecimiento Q1 2026 por región.</figcaption>
+          </figure>
+        </div>
+        <pre class="element-code">&lt;figure&gt;
+  &lt;img src="..." alt="..."&gt;
+  &lt;figcaption&gt;Pie de foto&lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+      </article>
+
+      <!-- VIDEO -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;video&gt;</h3>
+          <p class="element-purpose">Player nativo full-width con aspect-ratio 16/9.</p>
+        </header>
+        <div class="element-render">
+          <video controls poster="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 450'&gt;&lt;rect width='800' height='450' fill='%231C1C1E'/&gt;&lt;text x='50%25' y='50%25' fill='white' font-size='32' text-anchor='middle' dominant-baseline='middle' font-family='system-ui'&gt;Video placeholder&lt;/text&gt;&lt;/svg&gt;">
+            <source src="" type="video/mp4">
+            Tu navegador no soporta video.
+          </video>
+        </div>
+        <pre class="element-code">&lt;video controls poster="cover.jpg"&gt;
+  &lt;source src="video.mp4" type="video/mp4"&gt;
+&lt;/video&gt;</pre>
+      </article>
+
+      <!-- AUDIO -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;audio&gt;</h3>
+          <p class="element-purpose">Player nativo full-width, consistente con &lt;video&gt;.</p>
+        </header>
+        <div class="element-render">
+          <audio controls>
+            <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+            Tu navegador no soporta audio.
+          </audio>
+        </div>
+        <pre class="element-code">&lt;audio controls&gt;
+  &lt;source src="song.mp3" type="audio/mp3"&gt;
+&lt;/audio&gt;</pre>
+      </article>
+
+      <!-- IFRAME -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;iframe&gt;</h3>
+          <p class="element-purpose">Aspect-ratio 16/9 por defecto, full-width del contenedor.</p>
+        </header>
+        <div class="element-render">
+          <iframe src="about:blank" title="Demo iframe"></iframe>
+        </div>
+        <pre class="element-code">&lt;iframe src="https://…" title="..."&gt;&lt;/iframe&gt;</pre>
+        <p class="graduate">En producción sería un YouTube embed, Google Maps, etc. El aspect-ratio asegura que no colapse sin width/height inline.</p>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         STRUCTURE (landmarks)
+         ═══════════════════════════════════════════ -->
+    <section id="structure">
+      <h2>Estructura</h2>
+
+      <p>Los elementos de landmark (<code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;article&gt;</code>, <code>&lt;section&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>) son <strong>contenedores semánticos puros</strong>. Primitive Zero no les aplica estilo visual (background, border, padding) — sólo reset de márgenes y flujo. El diseñador los usa como anclas para <code>skip links</code>, accesibilidad con screen readers, y scoping de estilos.</p>
+
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">Landmarks semánticos</h3>
+          <p class="element-purpose">Contenedores sin estilo visual. Estructura pura.</p>
+        </header>
+        <div class="element-render">
+          <div style="font-size:var(--text-sm);line-height:1.7">
+            <code>&lt;header&gt;</code> — Cabecera de la página o sección<br>
+            <code>&lt;nav&gt;</code> — Menú de navegación principal<br>
+            <code>&lt;main&gt;</code> — Contenido principal único (uno por página)<br>
+            <code>&lt;article&gt;</code> — Contenido auto-contenido (post, card)<br>
+            <code>&lt;section&gt;</code> — Agrupación temática con heading<br>
+            <code>&lt;aside&gt;</code> — Contenido relacionado pero secundario<br>
+            <code>&lt;footer&gt;</code> — Pie de página o sección
+          </div>
+        </div>
+        <pre class="element-code">&lt;body&gt;
+  &lt;header&gt;…&lt;/header&gt;
+  &lt;nav&gt;…&lt;/nav&gt;
+  &lt;main&gt;
+    &lt;article&gt;
+      &lt;section&gt;…&lt;/section&gt;
+    &lt;/article&gt;
+    &lt;aside&gt;…&lt;/aside&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;…&lt;/footer&gt;
+&lt;/body&gt;</pre>
+        <p class="graduate">Estos elementos <strong>nunca</strong> se gradúan a primitives — son estructura, no componentes. Para layouts complejos (sidebar + main + panel) graduar a layouts (<code>ren-layout-*</code>) u owners CSS (grid areas).</p>
+      </article>
+
+      <!-- HR -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;hr&gt;</h3>
+          <p class="element-purpose">Separador temático. Usa <code>--color-border</code>.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <p>Primer bloque de contenido.</p>
+            <hr>
+            <p>Segundo bloque tras el separador.</p>
+          </div>
+        </div>
+        <pre class="element-code">&lt;p&gt;…&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;…&lt;/p&gt;</pre>
+      </article>
+
+      <!-- ADDRESS -->
+      <article class="element">
+        <header class="element-header">
+          <h3 class="element-title">&lt;address&gt;</h3>
+          <p class="element-purpose">Info de contacto. Italic reset, display block.</p>
+        </header>
+        <div class="element-render">
+          <address>
+            RenDS Team<br>
+            <a href="mailto:team@rends.dev">team@rends.dev</a><br>
+            Buenos Aires, Argentina
+          </address>
+        </div>
+        <pre class="element-code">&lt;address&gt;
+  &lt;a href="mailto:…"&gt;…&lt;/a&gt;
+&lt;/address&gt;</pre>
+      </article>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CONTEXTUAL COMBOS
+         ═══════════════════════════════════════════ -->
+    <section id="combos">
+      <h2>Combinaciones contextuales</h2>
+
+      <p>Primitive Zero no se limita a estilar etiquetas individuales — también define el <strong>comportamiento visual de combinaciones semánticas comunes</strong>. Un <code>&lt;cite&gt;</code> dentro de un <code>&lt;blockquote&gt;</code> cambia su rol (firma) y por ende su forma (block con em-dash). Estas reglas viven en classless.css y se activan automáticamente.</p>
+
+      <!-- blockquote > cite -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;blockquote&gt; &gt; &lt;cite&gt;</h3>
+          <p class="element-purpose">Cita dentro de blockquote = firma. Block + em-dash prefix.</p>
+        </header>
+        <div class="element-render">
+          <blockquote>
+            <p>Design is not just what it looks like and feels like. Design is how it works.</p>
+            <cite>Steve Jobs, The New York Times, 2003</cite>
+          </blockquote>
+        </div>
+        <pre class="element-code">&lt;blockquote&gt;
+  &lt;p&gt;…&lt;/p&gt;
+  &lt;cite&gt;Steve Jobs&lt;/cite&gt;  /* firma automática */
+&lt;/blockquote&gt;
+
+/* vs. cite standalone */
+Mi libro favorito es &lt;cite&gt;El nombre del viento&lt;/cite&gt;.</pre>
+      </article>
+
+      <!-- del + ins -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;del&gt; + &lt;ins&gt;</h3>
+          <p class="element-purpose">Diff visual. Adyacentes = changelog / edit track.</p>
+        </header>
+        <div class="element-render">
+          <div>
+            <p>El precio pasó de <del>$99</del> <ins>$79</ins>.</p>
+            <p>Claude <del>debería</del> <ins>debe</ins> escribir <del>código claro</del> <ins>código legible y claro</ins>.</p>
+          </div>
+        </div>
+        <pre class="element-code">precio: &lt;del&gt;$99&lt;/del&gt; &lt;ins&gt;$79&lt;/ins&gt;
+
+/* combinator: del + ins
+   rojo subtle + verde subtle = diff visual */</pre>
+      </article>
+
+      <!-- fieldset + legend -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;fieldset&gt; &gt; &lt;legend&gt;</h3>
+          <p class="element-purpose">Grupo de campos. Legend flotando sobre border del fieldset.</p>
+        </header>
+        <div class="element-render">
+          <form>
+            <fieldset>
+              <legend>Preferencias</legend>
+              <label style="display:inline-flex;gap:var(--space-2);margin-inline-end:var(--space-4)"><input type="checkbox" checked> Newsletter</label>
+              <label style="display:inline-flex;gap:var(--space-2)"><input type="checkbox"> Push</label>
+            </fieldset>
+          </form>
+        </div>
+        <pre class="element-code">&lt;fieldset&gt;
+  &lt;legend&gt;Título del grupo&lt;/legend&gt;
+  … inputs …
+&lt;/fieldset&gt;</pre>
+      </article>
+
+      <!-- table > caption -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;table&gt; &gt; &lt;caption&gt;</h3>
+          <p class="element-purpose">Caption como título accesible sobre la tabla.</p>
+        </header>
+        <div class="element-render">
+          <table>
+            <caption>Releases recientes</caption>
+            <thead>
+              <tr><th>Versión</th><th>Fecha</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>v3.1.0</td><td><time>2026-04-16</time></td></tr>
+              <tr><td>v3.0.9</td><td><time>2026-03-11</time></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre class="element-code">&lt;table&gt;
+  &lt;caption&gt;Título&lt;/caption&gt;
+  &lt;thead&gt;…&lt;/thead&gt;
+  &lt;tbody&gt;…&lt;/tbody&gt;
+&lt;/table&gt;</pre>
+      </article>
+
+      <!-- pre > code > samp -->
+      <article class="element wide">
+        <header class="element-header">
+          <h3 class="element-title">&lt;pre&gt; &gt; &lt;code&gt; + &lt;samp&gt;</h3>
+          <p class="element-purpose">Bloque de código con output mixto. Samp anulado en pre para no competir.</p>
+        </header>
+        <div class="element-render">
+          <pre><code>$ git status
+<samp>On branch main
+nothing to commit, working tree clean</samp>
+
+$ npm install rends
+<samp>added 1 package in 2s</samp></code></pre>
+        </div>
+        <pre class="element-code">&lt;pre&gt;&lt;code&gt;$ git status
+&lt;samp&gt;On branch main
+nothing to commit, working tree clean&lt;/samp&gt;
+&lt;/code&gt;&lt;/pre&gt;</pre>
+      </article>
+
+    </section>
+
+  </main>
+
+</div>
+
+</body>
+</html>

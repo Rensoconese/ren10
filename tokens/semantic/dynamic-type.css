@@ -30,6 +30,7 @@
 
   /* Fluid sizes using clamp() */
   --type-display:   clamp(1.75rem, 1.5rem + 1.25vw, 2.125rem);   /* 28–34px */
+  --type-lead:      clamp(1.125rem, 1.0625rem + 0.3125vw, 1.25rem); /* 18–20px */
   --type-title:     clamp(1.25rem, 1.125rem + 0.625vw, 1.375rem); /* 20–22px */
   --type-headline:  clamp(1rem, 0.9375rem + 0.3125vw, 1.0625rem); /* 16–17px */
   --type-body:      1rem;                                           /* 16px */
@@ -49,6 +50,7 @@
   --type-leading-factor:   0.95;
 
   --type-display:   clamp(1.5rem, 1.25rem + 1.25vw, 1.75rem);
+  --type-lead:      1rem;
   --type-title:     clamp(1.0625rem, 1rem + 0.3125vw, 1.125rem);
   --type-headline:  0.9375rem;
   --type-body:      0.875rem;
@@ -68,6 +70,7 @@
   --type-leading-factor:   1.1;
 
   --type-display:   clamp(2rem, 1.75rem + 1.25vw, 2.5rem);
+  --type-lead:      clamp(1.25rem, 1.1875rem + 0.3125vw, 1.375rem);
   --type-title:     clamp(1.375rem, 1.25rem + 0.625vw, 1.625rem);
   --type-headline:  1.1875rem;
   --type-body:      1.125rem;
@@ -87,6 +90,7 @@
   --type-leading-factor:   1.2;
 
   --type-display:   clamp(2.5rem, 2rem + 2.5vw, 3.25rem);
+  --type-lead:      clamp(1.5rem, 1.375rem + 0.625vw, 1.75rem);
   --type-title:     clamp(1.75rem, 1.5rem + 1.25vw, 2.125rem);
   --type-headline:  1.5rem;
   --type-body:      1.375rem;
@@ -128,6 +132,7 @@
 
 /* ─── Utility classes for type roles ─── */
 .type-display  { font-size: var(--type-display);  font-weight: var(--weight-bold);     line-height: var(--type-leading-tight); letter-spacing: var(--tracking-tight); }
+.type-lead     { font-size: var(--type-lead);     font-weight: var(--weight-regular);  line-height: var(--type-leading-relaxed); color: var(--color-text-secondary); }
 .type-title    { font-size: var(--type-title);    font-weight: var(--weight-semibold); line-height: var(--type-leading-snug); }
 .type-headline { font-size: var(--type-headline); font-weight: var(--weight-semibold); line-height: var(--type-leading-snug); }
 .type-body     { font-size: var(--type-body);     font-weight: var(--weight-regular);  line-height: var(--type-leading-normal); }

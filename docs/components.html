@@ -63,8 +63,7 @@
       display: grid;
       grid-template-columns: 240px 1fr;
       gap: var(--space-6);
-      max-width: 1400px;
-      margin: 0 auto;
+      width: 100%;
       padding: var(--space-6);
       min-height: 100vh;
     }
@@ -271,8 +270,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 40px;
-      height: 40px;
+      min-width: 48px;
+      min-height: 48px;
     }
 
     /* Skeleton demo */
@@ -453,7 +452,7 @@
       <div class="demo-header">
         <h1>RenDS Components</h1>
         <button class="demo-theme-toggle" onclick="toggleTheme()">
-          <span id="theme-label">🌙 Dark</span>
+          <span id="theme-label"><svg id="theme-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> Dark</span>
         </button>
       </div>
 
@@ -550,10 +549,18 @@
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Sizes</h3>
-          <div class="demo-variants">
+          <div style="display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap;">
             <button class="ren-btn ren-btn-sm">Small</button>
-            <button class="ren-btn ren-btn-md">Medium</button>
+            <button class="ren-btn">Medium</button>
             <button class="ren-btn ren-btn-lg">Large</button>
+          </div>
+        </div>
+
+        <div>
+          <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Full Width</h3>
+          <button class="ren-btn ren-btn-full">Full Width Button</button>
+          <div style="margin-top: var(--space-2);">
+            <button class="ren-btn ren-btn-secondary ren-btn-full">Secondary Full Width</button>
           </div>
         </div>
 
@@ -562,7 +569,7 @@
           <div class="demo-variants">
             <button class="ren-btn ren-btn-primary">Normal</button>
             <button class="ren-btn ren-btn-primary" disabled>Disabled</button>
-            <button class="ren-btn ren-btn-primary ren-loading">Loading</button>
+            <button class="ren-btn ren-btn-primary" data-loading>Loading</button>
           </div>
         </div>
 
@@ -585,10 +592,10 @@
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Button Group</h3>
-          <div style="display: inline-flex; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden;">
-            <button class="ren-btn ren-btn-secondary" style="border-radius: 0; border-right: 1px solid var(--color-border);">Left</button>
-            <button class="ren-btn ren-btn-secondary" style="border-radius: 0; border-right: 1px solid var(--color-border);">Center</button>
-            <button class="ren-btn ren-btn-secondary" style="border-radius: 0;">Right</button>
+          <div class="ren-btn-group">
+            <button class="ren-btn ren-btn-secondary">Left</button>
+            <button class="ren-btn ren-btn-secondary">Center</button>
+            <button class="ren-btn ren-btn-secondary">Right</button>
           </div>
         </div>
       </section>
@@ -732,59 +739,43 @@
 
         <div class="demo-variants">
           <div>
-            <div class="spinner-demo" style="font-size: 12px;">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 2a10 10 0 0110 10"/>
-              </svg>
+            <div class="spinner-demo">
+              <div class="ren-spinner ren-spinner-xs"></div>
             </div>
             <div class="demo-label" style="margin-top: var(--space-1);">XS</div>
           </div>
           <div>
-            <div class="spinner-demo" style="font-size: 16px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 2a10 10 0 0110 10"/>
-              </svg>
+            <div class="spinner-demo">
+              <div class="ren-spinner ren-spinner-sm"></div>
             </div>
             <div class="demo-label" style="margin-top: var(--space-1);">SM</div>
           </div>
           <div>
-            <div class="spinner-demo" style="font-size: 24px;">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 2a10 10 0 0110 10"/>
-              </svg>
+            <div class="spinner-demo">
+              <div class="ren-spinner"></div>
             </div>
             <div class="demo-label" style="margin-top: var(--space-1);">MD</div>
           </div>
           <div>
-            <div class="spinner-demo" style="font-size: 32px;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 2a10 10 0 0110 10"/>
-              </svg>
+            <div class="spinner-demo">
+              <div class="ren-spinner ren-spinner-lg"></div>
             </div>
             <div class="demo-label" style="margin-top: var(--space-1);">LG</div>
+          </div>
+          <div>
+            <div class="spinner-demo">
+              <div class="ren-spinner ren-spinner-xl"></div>
+            </div>
+            <div class="demo-label" style="margin-top: var(--space-1);">XL</div>
           </div>
         </div>
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Light Variant</h3>
           <div style="padding: var(--space-4); background: var(--color-accent); border-radius: var(--radius-md); display: inline-block;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" style="animation: spin 1s linear infinite;">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M12 2a10 10 0 0110 10"/>
-            </svg>
+            <div class="ren-spinner ren-spinner-light"></div>
           </div>
         </div>
-
-        <style>
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-        </style>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════
@@ -846,40 +837,40 @@
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Sizes</h3>
-          <div class="demo-variants">
+          <div style="display: flex; gap: var(--space-6); align-items: flex-end; flex-wrap: wrap;">
             <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
               <span class="ren-icon ren-icon-xs">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </span>
               <div class="demo-label">xs (12px)</div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
               <span class="ren-icon ren-icon-sm">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </span>
               <div class="demo-label">sm (16px)</div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
               <span class="ren-icon ren-icon-md">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </span>
               <div class="demo-label">md (20px)</div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
               <span class="ren-icon ren-icon-lg">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </span>
               <div class="demo-label">lg (24px)</div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
               <span class="ren-icon ren-icon-xl">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </span>
               <div class="demo-label">xl (32px)</div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; gap: var(--space-2);">
               <span class="ren-icon ren-icon-2xl">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               </span>
               <div class="demo-label">2xl (48px)</div>
             </div>
@@ -952,10 +943,29 @@
           <div class="ren-field">
             <label class="ren-field-label">Select</label>
             <select class="ren-input">
-              <option>Choose an option</option>
-              <option>Option 1</option>
-              <option>Option 2</option>
-              <option>Option 3</option>
+              <option value="" disabled selected hidden>Choose a framework</option>
+              <optgroup label="Frontend">
+                <option>React</option>
+                <option>Vue</option>
+                <option>Svelte</option>
+              </optgroup>
+              <optgroup label="Backend">
+                <option>Node.js</option>
+                <option>Django</option>
+                <option>Rails</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div class="ren-field">
+            <label class="ren-field-label">Select (simple)</label>
+            <select class="ren-input">
+              <option value="" disabled selected hidden>Choose a color</option>
+              <option>Red</option>
+              <option>Green</option>
+              <option>Blue</option>
+              <option>Purple</option>
+              <option disabled>Yellow (unavailable)</option>
             </select>
           </div>
         </div>
@@ -1440,19 +1450,19 @@
           <p class="demo-description">Grid responsive que se adapta automáticamente. Las cards se redistribuyen según el espacio disponible.</p>
           <div class="ren-grid" style="--grid-min: 150px;">
             <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
-              <div style="font-size: var(--text-2xl);">🎨</div>
+              <div style="font-size: var(--text-2xl);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
               <strong style="font-size: var(--text-sm);">Tokens</strong>
             </div>
             <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
-              <div style="font-size: var(--text-2xl);">🧩</div>
+              <div style="font-size: var(--text-2xl);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 14c-1.5-2-2.5-5-2-8 0-4.4 3.1-8 7-8s7 3.6 7 8c0 3-1 6-2.5 8M3 13l6 6M17 9l-4 5"/></svg></div>
               <strong style="font-size: var(--text-sm);">Primitivos</strong>
             </div>
             <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
-              <div style="font-size: var(--text-2xl);">🏗️</div>
+              <div style="font-size: var(--text-2xl);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="8" rx="1"/><path d="M17 14v7"/><path d="M7 14v7"/><path d="M17 3v3"/><path d="M7 3v3"/><path d="M10 14 2.3 6.3"/><path d="m14 6 7.7 7.7"/><path d="M8 6h8"/></svg></div>
               <strong style="font-size: var(--text-sm);">Composites</strong>
             </div>
             <div style="padding: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); text-align: center;">
-              <div style="font-size: var(--text-2xl);">📐</div>
+              <div style="font-size: var(--text-2xl);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6l15 15M21 6l-15 15"/></svg></div>
               <strong style="font-size: var(--text-sm);">Patterns</strong>
             </div>
           </div>
@@ -1919,7 +1929,7 @@
 
         <div style="display: flex; flex-direction: column; gap: var(--space-3); max-width: 600px;">
           <div class="ren-banner">
-            <span class="ren-banner-icon">ℹ️</span>
+            <span class="ren-banner-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
             <div class="ren-banner-content">
               <strong class="ren-banner-title">Information</strong>
               <p class="ren-banner-description">Your account settings have been updated successfully.</p>
@@ -1928,7 +1938,7 @@
           </div>
 
           <div class="ren-banner ren-banner-success">
-            <span class="ren-banner-icon">✓</span>
+            <span class="ren-banner-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg></span>
             <div class="ren-banner-content">
               <strong class="ren-banner-title">Success</strong>
               <p class="ren-banner-description">Payment processed. You'll receive a confirmation email shortly.</p>
@@ -1936,7 +1946,7 @@
           </div>
 
           <div class="ren-banner ren-banner-warning">
-            <span class="ren-banner-icon">⚠</span>
+            <span class="ren-banner-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
             <div class="ren-banner-content">
               <strong class="ren-banner-title">Warning</strong>
               <p class="ren-banner-description">Your subscription expires in 3 days. Renew to avoid service interruption.</p>
@@ -1944,7 +1954,7 @@
           </div>
 
           <div class="ren-banner ren-banner-danger">
-            <span class="ren-banner-icon">✕</span>
+            <span class="ren-banner-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg></span>
             <div class="ren-banner-content">
               <strong class="ren-banner-title">Error</strong>
               <p class="ren-banner-description">Unable to connect to the server. Please check your network and try again.</p>
@@ -1953,7 +1963,7 @@
 
           <h3>Compact</h3>
           <div class="ren-banner ren-banner-compact ren-banner-warning">
-            <span class="ren-banner-icon">⚠</span>
+            <span class="ren-banner-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></span>
             <div class="ren-banner-content">
               <p class="ren-banner-description">Disk space running low — 92% used.</p>
             </div>
@@ -2128,9 +2138,9 @@
 
         <h3>Ghost Variant</h3>
         <div class="ren-toolbar ren-toolbar-ghost" role="toolbar" aria-label="Actions" id="demo-toolbar-2">
-          <button class="ren-toolbar-item" title="Cut">✂</button>
-          <button class="ren-toolbar-item" title="Copy">📋</button>
-          <button class="ren-toolbar-item" title="Paste">📌</button>
+          <button class="ren-toolbar-item" title="Cut"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg></button>
+          <button class="ren-toolbar-item" title="Copy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></button>
+          <button class="ren-toolbar-item" title="Paste"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
         </div>
       </section>
 
@@ -2144,7 +2154,7 @@
         <div class="ren-dropzone" id="demo-dropzone" style="max-width: 500px;">
           <input type="file" class="ren-dropzone-input" multiple accept="image/*,.pdf,.doc,.docx">
           <div class="ren-dropzone-content">
-            <div class="ren-dropzone-icon">📁</div>
+            <div class="ren-dropzone-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
             <p class="ren-dropzone-title">Drag files here or click to browse</p>
             <p class="ren-dropzone-hint">Supports images, PDFs, and documents up to 10 MB</p>
           </div>
@@ -2154,7 +2164,7 @@
         <div class="ren-dropzone ren-dropzone-compact" style="max-width: 500px;">
           <input type="file" class="ren-dropzone-input" multiple>
           <div class="ren-dropzone-content">
-            <span class="ren-dropzone-icon">📎</span>
+            <span class="ren-dropzone-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5H6a2 2 0 0 0-2 2v11a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-1m-6-6l8.5-8.5a2.12 2.12 0 1 1 3 3L11 10"/></svg></span>
             <p class="ren-dropzone-title">Drop files or <a href="#" class="ren-link">browse</a></p>
           </div>
         </div>
@@ -2170,7 +2180,7 @@
         <h3>Full Empty State</h3>
         <div style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); max-width: 500px;">
           <div class="ren-empty-state">
-            <div class="ren-empty-state-icon">📦</div>
+            <div class="ren-empty-state-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
             <h3 class="ren-empty-state-title">No products yet</h3>
             <p class="ren-empty-state-description">Add your first product to start managing your inventory.</p>
             <div class="ren-empty-state-actions">
@@ -2183,7 +2193,7 @@
         <h3>Compact (inline)</h3>
         <div style="border: 1px solid var(--color-border); border-radius: var(--radius-lg); max-width: 500px;">
           <div class="ren-empty-state ren-empty-state-compact">
-            <div class="ren-empty-state-icon">🔍</div>
+            <div class="ren-empty-state-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
             <p class="ren-empty-state-description">No results match your search.</p>
           </div>
         </div>
@@ -2191,7 +2201,7 @@
         <h3>Bordered (for inside cards)</h3>
         <div style="max-width: 500px;">
           <div class="ren-empty-state ren-empty-state-bordered">
-            <div class="ren-empty-state-icon">📝</div>
+            <div class="ren-empty-state-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
             <h3 class="ren-empty-state-title">No notes</h3>
             <p class="ren-empty-state-description">Start writing to capture your thoughts.</p>
             <div class="ren-empty-state-actions">
@@ -2219,7 +2229,7 @@
 
         <!-- Danger Alert Dialog -->
         <dialog class="ren-alert-dialog" id="demo-alert-danger" aria-label="Delete confirmation">
-          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-danger">🗑</div>
+          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></div>
           <h2 class="ren-alert-dialog-title">Delete this item?</h2>
           <p class="ren-alert-dialog-description">
             This action cannot be undone. The item and all its data will be permanently removed.
@@ -2232,7 +2242,7 @@
 
         <!-- Warning Alert Dialog -->
         <dialog class="ren-alert-dialog" id="demo-alert-warning" aria-label="Unsaved changes warning">
-          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-warning">⚠</div>
+          <div class="ren-alert-dialog-icon ren-alert-dialog-icon-warning"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div>
           <h2 class="ren-alert-dialog-title">Unsaved changes</h2>
           <p class="ren-alert-dialog-description">
             You have unsaved changes. Do you want to save before leaving?
@@ -2257,14 +2267,14 @@
         </div>
 
         <div id="demo-ctx-menu" class="ren-context-menu" popover>
-          <button class="ren-menu-item">✂️ Cut</button>
-          <button class="ren-menu-item">📋 Copy</button>
-          <button class="ren-menu-item">📌 Paste</button>
+          <button class="ren-menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg> Cut</button>
+          <button class="ren-menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg> Copy</button>
+          <button class="ren-menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg> Paste</button>
           <hr class="ren-menu-separator">
-          <button class="ren-menu-item">🔄 Refresh</button>
-          <button class="ren-menu-item">ℹ️ Properties</button>
+          <button class="ren-menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg> Refresh</button>
+          <button class="ren-menu-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg> Properties</button>
           <hr class="ren-menu-separator">
-          <button class="ren-menu-item ren-menu-item-danger">🗑 Delete</button>
+          <button class="ren-menu-item ren-menu-item-danger"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg> Delete</button>
         </div>
       </section>
 
@@ -2898,18 +2908,18 @@
                  style="position-anchor: --menu-1;">
               <div class="ren-menu-label">File</div>
               <button class="ren-menu-item">
-                <span class="ren-menu-item-icon">📄</span>
+                <span class="ren-menu-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/></svg></span>
                 New File
                 <span class="ren-menu-item-shortcut">⌘N</span>
               </button>
               <button class="ren-menu-item">
-                <span class="ren-menu-item-icon">📂</span>
+                <span class="ren-menu-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
                 Open
                 <span class="ren-menu-item-shortcut">⌘O</span>
               </button>
               <div class="ren-menu-separator"></div>
               <button class="ren-menu-item">
-                <span class="ren-menu-item-icon">💾</span>
+                <span class="ren-menu-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
                 Save
                 <span class="ren-menu-item-shortcut">⌘S</span>
               </button>
@@ -2919,7 +2929,7 @@
               <button class="ren-menu-checkbox-item" aria-checked="false">Show Minimap</button>
               <div class="ren-menu-separator"></div>
               <button class="ren-menu-item ren-menu-item-danger">
-                <span class="ren-menu-item-icon">🗑</span>
+                <span class="ren-menu-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></span>
                 Delete Project
               </button>
             </div>
@@ -3023,15 +3033,15 @@
                   <div class="ren-sidebar-section">
                     <div class="ren-sidebar-section-label">Main</div>
                     <a href="#" class="ren-sidebar-item active" aria-current="page">
-                      <span class="ren-sidebar-item-icon">🏠</span>
+                      <span class="ren-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
                       <span class="ren-sidebar-item-text">Dashboard</span>
                     </a>
                     <a href="#" class="ren-sidebar-item">
-                      <span class="ren-sidebar-item-icon">📦</span>
+                      <span class="ren-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span>
                       <span class="ren-sidebar-item-text">Components</span>
                     </a>
                     <a href="#" class="ren-sidebar-item">
-                      <span class="ren-sidebar-item-icon">🎨</span>
+                      <span class="ren-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></span>
                       <span class="ren-sidebar-item-text">Tokens</span>
                     </a>
                   </div>
@@ -3039,11 +3049,11 @@
                   <div class="ren-sidebar-section">
                     <div class="ren-sidebar-section-label">Settings</div>
                     <a href="#" class="ren-sidebar-item">
-                      <span class="ren-sidebar-item-icon">⚙️</span>
+                      <span class="ren-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span>
                       <span class="ren-sidebar-item-text">General</span>
                     </a>
                     <a href="#" class="ren-sidebar-item">
-                      <span class="ren-sidebar-item-icon">👤</span>
+                      <span class="ren-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                       <span class="ren-sidebar-item-text">Profile</span>
                     </a>
                   </div>
@@ -3051,7 +3061,7 @@
               </nav>
               <div class="ren-sidebar-footer">
                 <a href="#" class="ren-sidebar-item">
-                  <span class="ren-sidebar-item-icon">🚪</span>
+                  <span class="ren-sidebar-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V6a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v14"/><line x1="2" y1="4" x2="22" y2="4"/><circle cx="12" cy="11" r="1"/></svg></span>
                   <span class="ren-sidebar-item-text">Logout</span>
                 </a>
               </div>
@@ -3085,14 +3095,14 @@
               <div class="ren-command-group">
                 <div class="ren-command-group-heading">Suggestions</div>
                 <button class="ren-command-item" data-highlighted>
-                  <span class="ren-command-item-icon">📅</span>
+                  <span class="ren-command-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
                   <div class="ren-command-item-content">
                     <span class="ren-command-item-title">Calendar</span>
                     <span class="ren-command-item-description">Open the calendar view</span>
                   </div>
                 </button>
                 <button class="ren-command-item">
-                  <span class="ren-command-item-icon">🔍</span>
+                  <span class="ren-command-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
                   <div class="ren-command-item-content">
                     <span class="ren-command-item-title">Search</span>
                     <span class="ren-command-item-description">Search across all components</span>
@@ -3104,13 +3114,13 @@
               <div class="ren-command-group">
                 <div class="ren-command-group-heading">Settings</div>
                 <button class="ren-command-item">
-                  <span class="ren-command-item-icon">👤</span>
+                  <span class="ren-command-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
                   <div class="ren-command-item-content">
                     <span class="ren-command-item-title">Profile</span>
                   </div>
                 </button>
                 <button class="ren-command-item">
-                  <span class="ren-command-item-icon">🎨</span>
+                  <span class="ren-command-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></span>
                   <div class="ren-command-item-content">
                     <span class="ren-command-item-title">Theme</span>
                     <span class="ren-command-item-description">Toggle light/dark mode</span>
@@ -3205,7 +3215,7 @@
           </div>
           <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: var(--space-2);">
             <div class="ren-banner ren-banner-compact" style="font-size: var(--text-sm);">
-              <span class="ren-banner-icon">ℹ️</span>
+              <span class="ren-banner-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></span>
               <div class="ren-banner-content"><p class="ren-banner-description">Themed banner</p></div>
             </div>
             <div class="ren-tag-group">
@@ -3254,11 +3264,11 @@
               High confidence
             </div>
             <div class="ren-ai-actions" style="margin-left: auto;">
-              <button class="ren-ai-action" title="Copy">📋</button>
-              <button class="ren-ai-action" title="Regenerate">🔄</button>
+              <button class="ren-ai-action" title="Copy"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg></button>
+              <button class="ren-ai-action" title="Regenerate"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg></button>
               <div class="ren-ai-action-thumbs">
-                <button class="ren-ai-action" title="Good response">👍</button>
-                <button class="ren-ai-action" title="Bad response">👎</button>
+                <button class="ren-ai-action" title="Good response"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9V5a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5a2 2 0 0 0-2-2h-2.5a1 1 0 0 1-.8-.4l-1.9-2.3a1 1 0 0 0-.9-.3z"/></svg></button>
+                <button class="ren-ai-action" title="Bad response"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4M10 1v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/></svg></button>
               </div>
             </div>
           </div>
@@ -3437,7 +3447,9 @@
 
       // Update button label
       const label = document.getElementById('theme-label');
-      label.textContent = newTheme === 'light' ? '🌙 Dark' : '☀️ Light';
+      const moonSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      const sunSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+      label.innerHTML = newTheme === 'light' ? moonSVG + ' Dark' : sunSVG + ' Light';
 
       // Save preference
       localStorage.setItem('theme', newTheme);
@@ -3449,7 +3461,9 @@
       if (saved) {
         document.documentElement.setAttribute('data-theme', saved);
         const label = document.getElementById('theme-label');
-        label.textContent = saved === 'light' ? '🌙 Dark' : '☀️ Light';
+        const moonSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+        const sunSVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+        label.innerHTML = saved === 'light' ? moonSVG + ' Dark' : sunSVG + ' Light';
       }
     });
 

@@ -1,0 +1,125 @@
+/* ============================================
+   RenDS — Modular Type Scale Definitions
+   ============================================
+   Ratios from musical intervals, matching the
+   Type Scale Node in holistic-rust.
+
+   Usage:
+     <html data-type-ratio="major-third">
+     OR set --type-ratio in :root
+
+   The active ratio is used by typography.css to
+   compute --text-* sizes from base × ratio^step.
+
+   Available ratios:
+     minor-second  (1.067)  — Subtle, almost equal
+     major-second  (1.125)  — Gentle progression
+     minor-third   (1.200)  — Compact, readable ★
+     major-third   (1.250)  — Classic web ★ (default)
+     perfect-fourth(1.333)  — Bold contrast ★
+     aug-fourth    (1.414)  — √2, musical
+     perfect-fifth (1.500)  — High contrast
+     minor-sixth   (1.600)  — Editorial
+     golden-ratio  (1.618)  — φ, dramatic
+     major-sixth   (1.667)  — Very dramatic
+     octave        (2.000)  — Extreme contrast
+   ============================================ */
+
+/* ─── Ratio Custom Properties ─── */
+:root,
+[data-type-ratio="major-third"] {
+  --type-ratio:     1.250;
+  --type-ratio-name: 'Major Third';
+}
+
+[data-type-ratio="minor-second"] {
+  --type-ratio:     1.067;
+  --type-ratio-name: 'Minor Second';
+}
+
+[data-type-ratio="major-second"] {
+  --type-ratio:     1.125;
+  --type-ratio-name: 'Major Second';
+}
+
+[data-type-ratio="minor-third"] {
+  --type-ratio:     1.200;
+  --type-ratio-name: 'Minor Third';
+}
+
+[data-type-ratio="perfect-fourth"] {
+  --type-ratio:     1.333;
+  --type-ratio-name: 'Perfect Fourth';
+}
+
+[data-type-ratio="aug-fourth"] {
+  --type-ratio:     1.414;
+  --type-ratio-name: 'Aug. Fourth';
+}
+
+[data-type-ratio="perfect-fifth"] {
+  --type-ratio:     1.500;
+  --type-ratio-name: 'Perfect Fifth';
+}
+
+[data-type-ratio="minor-sixth"] {
+  --type-ratio:     1.600;
+  --type-ratio-name: 'Minor Sixth';
+}
+
+[data-type-ratio="golden-ratio"] {
+  --type-ratio:     1.618;
+  --type-ratio-name: 'Golden Ratio';
+}
+
+[data-type-ratio="major-sixth"] {
+  --type-ratio:     1.667;
+  --type-ratio-name: 'Major Sixth';
+}
+
+[data-type-ratio="octave"] {
+  --type-ratio:     2.000;
+  --type-ratio-name: 'Octave';
+}
+
+/* ─── Base Size ─── */
+:root {
+  --type-base-px: 16;  /* base in px, for JS interop */
+}
+
+/* ─── Computed Scale Steps ───
+   step  0 = base         (1rem)
+   step -1 = base / ratio
+   step -2 = base / ratio²
+   step  1 = base × ratio
+   step  2 = base × ratio²
+   ...and so on.
+
+   CSS can't do pow(), so we pre-compute with
+   calc() chains. For accurate modular scales,
+   use the JS generator (cli/type-scale.js) or
+   the holistic-rust Type Scale Node.
+
+   The --text-* tokens in typography.css remain the
+   canonical sizes. This file provides the ratio
+   and the --scale-step-* alternatives for projects
+   that want a pure modular scale.
+   ============================================ */
+
+:root {
+  /* Steps computed from --type-ratio via calc() chains.
+     These approximate pow(ratio, step) using repeated multiplication.
+     For ratios that need exact values, use the CLI generator. */
+
+  --scale-step--2: calc(1rem / var(--type-ratio) / var(--type-ratio));
+  --scale-step--1: calc(1rem / var(--type-ratio));
+  --scale-step-0:  1rem;
+  --scale-step-1:  calc(1rem * var(--type-ratio));
+  --scale-step-2:  calc(1rem * var(--type-ratio) * var(--type-ratio));
+  --scale-step-3:  calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+  --scale-step-4:  calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+  --scale-step-5:  calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+  --scale-step-6:  calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+  --scale-step-7:  calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+  --scale-step-8:  calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
+}

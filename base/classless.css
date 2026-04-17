@@ -77,6 +77,18 @@ p:last-child {
   margin-block-end: 0;
 }
 
+/* ─── Lead Paragraph ───
+   Introductory / subtitle paragraph.
+   Triggered by ARIA doc-subtitle role or .lead class. */
+p[role="doc-subtitle"],
+:is(h1, h2, h3) + p.lead {
+  font-size: var(--lead-size);
+  font-weight: var(--lead-weight);
+  line-height: var(--lead-leading);
+  letter-spacing: var(--lead-tracking);
+  color: var(--color-text-secondary);
+}
+
 /* ─── Links ─── */
 a:not([class]) {
   color: var(--color-text-link);
@@ -111,6 +123,14 @@ small {
   color: var(--color-text-muted);
 }
 
+/* ─── Time ───
+   Semantic date/time. Tabular numerals so dates and
+   times align vertically in lists, tables, logs. */
+time {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
 /* ─── Mark ─── */
 mark {
   background-color: var(--yellow-100);
@@ -127,6 +147,41 @@ mark {
 
 [data-theme="dark"] mark {
   background-color: var(--yellow-800);
+}
+
+/* ─── Del / Ins ───
+   Semantic edit tracking. Del = removed, Ins = added.
+   Styled with muted/subtle color fills so that, together,
+   they form a lightweight visual "diff" — useful for
+   changelogs, AI edit suggestions, revision views.
+   No classes required: any <del> or <ins> in the page
+   picks up the treatment automatically. */
+del {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--color-danger);
+  background-color: var(--color-danger-subtle);
+  color: var(--color-text);
+  padding-inline: 0.15em;
+  border-radius: var(--radius-xs);
+}
+
+ins {
+  /* No underline: the green subtle fill is enough to signal
+     "added". Keeping underline would duplicate the signal
+     and conflict with <a> underlines. */
+  text-decoration: none;
+  background-color: var(--color-success-subtle);
+  color: var(--color-text);
+  padding-inline: 0.15em;
+  border-radius: var(--radius-xs);
+}
+
+/* Diff pair: when del and ins sit adjacent, they read as
+   "this → that". A small gap makes the intent scannable. */
+del + ins,
+ins + del {
+  margin-inline-start: 0.25em;
 }
 
 /* ─── Code (inline) ─── */
@@ -176,6 +231,39 @@ kbd {
   white-space: nowrap;
 }
 
+/* ─── Samp ───
+   Sample output from a program. Monospace like <code>,
+   but muted color so it reads as output vs. input code. */
+samp {
+  font-family: var(--code-family);
+  font-size: var(--code-size);
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface-sunken);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+}
+
+/* Inside <pre>, strip the pill treatment so samp
+   blends into block formatting */
+pre samp {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* ─── Var ───
+   Mathematical/programmatic variable. Italic is the
+   classic convention. Inherits font-family from context
+   so it blends into prose, and tabular-nums keeps any
+   numeric subscripts/exponents aligned. */
+var {
+  font-style: italic;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
 /* ─── Blockquote ─── */
 blockquote {
   border-inline-start: 3px solid var(--color-accent);
@@ -188,6 +276,37 @@ blockquote {
 
 blockquote > p {
   color: inherit;
+}
+
+/* ─── Cite ───
+   Reference to a creative work, author, or source.
+   Standalone: italic + muted. Inside a blockquote, it
+   gets an em-dash prefix and separates from the quote. */
+cite {
+  font-style: italic;
+  color: var(--color-text-secondary);
+}
+
+blockquote > cite,
+blockquote > footer > cite,
+blockquote > p + cite {
+  display: block;
+  font-style: normal;
+  font-size: var(--caption-size);
+  color: var(--color-text-secondary);
+  margin-block-start: var(--space-2);
+}
+
+blockquote > cite::before,
+blockquote > footer > cite::before,
+blockquote > p + cite::before {
+  content: "— ";
+}
+
+/* ─── Q (inline quote) ─── */
+q {
+  font-style: italic;
+  color: var(--color-text-secondary);
 }
 
 /* ─── Lists ─── */
@@ -252,8 +371,23 @@ table {
   font-size: var(--text-sm);
 }
 
+caption {
+  caption-side: top;
+  font-size: var(--label-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  text-align: start;
+  padding-block-end: var(--space-2);
+}
+
 thead {
   border-block-end: 2px solid var(--color-border-strong);
+}
+
+tfoot {
+  border-block-start: 2px solid var(--color-border-strong);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
 }
 
 th {
@@ -280,6 +414,28 @@ label {
   font-weight: var(--label-weight);
   color: var(--color-text);
   margin-block-end: var(--space-1);
+}
+
+/* ─── Fieldset & Legend ───
+   Native HTML grouping for related form controls.
+   Reset removes the browser default; Primitive Zero
+   re-introduces a subtle group with the legend acting
+   as a proper sub-heading. */
+fieldset {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  margin-block: var(--space-4);
+  min-inline-size: 0; /* prevent fieldset min-width quirk */
+}
+
+legend {
+  padding-inline: var(--space-2);
+  margin-inline-start: calc(var(--space-2) * -1);
+  font-size: var(--body-size);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  line-height: var(--leading-normal);
 }
 
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]),
@@ -330,12 +486,141 @@ textarea:disabled {
 }
 
 /* ─── Select ─── */
+
+/* Fallback: appearance: none + SVG chevron (all browsers) */
 select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right var(--space-3) center;
   padding-inline-end: var(--space-10);
+}
+
+/* Modern: appearance: base-select (Chrome 135+, Edge 135+)
+   Enables full CSS control over the dropdown picker.
+   BOTH select and ::picker(select) must opt in.
+   Ref: Vanilla Web v3, Ch. 3 — Firtman / Open UI spec */
+@supports (appearance: base-select) {
+  /* ── Opt-in ── */
+  select,
+  select::picker(select) {
+    appearance: base-select;
+  }
+
+  /* ── Trigger button ── */
+  select {
+    display: flex;
+    align-items: center;
+    background-image: none;
+    padding-inline-end: var(--space-3);
+  }
+
+  /* Arrow pushed to far right */
+  select::picker-icon {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    margin-inline-start: auto;
+    padding-inline-start: var(--space-3);
+    transition: rotate var(--duration-fast) var(--ease-out);
+  }
+
+  select:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  /* Hide native checkmark — we use ::after instead */
+  option::checkmark {
+    display: none;
+  }
+
+  /* ── Dropdown popover ── */
+  select::picker(select) {
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.06);
+    padding: var(--space-1);
+    margin-block-start: var(--space-1);
+    overflow: clip;
+  }
+
+  /* ── Options ── */
+  option {
+    display: flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    border-radius: 4px;
+    color: var(--color-text);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  option + option {
+    margin-block-start: 1px;
+  }
+
+  option:hover {
+    background: light-dark(var(--gray-50), var(--gray-800));
+  }
+
+  option:focus-visible,
+  option:active {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    background: light-dark(var(--gray-50), var(--gray-800));
+  }
+
+  option:checked:not(:disabled) {
+    background: light-dark(var(--blue-50), var(--blue-900));
+    color: light-dark(var(--blue-700), var(--blue-200));
+    font-weight: var(--weight-medium);
+  }
+
+  option:checked:not(:disabled)::after {
+    content: "✓";
+    margin-inline-start: auto;
+    color: light-dark(var(--blue-600), var(--blue-300));
+    font-weight: var(--weight-bold);
+  }
+
+  option:checked:hover {
+    background: light-dark(var(--blue-100), var(--blue-800));
+  }
+
+  option:disabled {
+    color: light-dark(var(--gray-500), var(--gray-400));
+    cursor: not-allowed;
+  }
+
+  /* Hide placeholder option from dropdown */
+  option[hidden] {
+    display: none;
+  }
+
+  /* ── Optgroups ── */
+  optgroup {
+    padding: var(--space-1) 0;
+    padding-inline-start: 0;
+  }
+
+  optgroup:not(:first-of-type) {
+    border-block-start: 1px solid var(--color-border);
+    margin-block-start: var(--space-2);
+    padding-block-start: var(--space-2);
+  }
+
+  optgroup > legend,
+  optgroup > label {
+    padding: var(--space-1) var(--space-3);
+    margin-inline-start: var(--space-3);
+  }
+
+  /* ── Open state on trigger — no double ring ── */
+  select:open {
+    border-color: var(--color-input-border-focus);
+    box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  }
 }
 
 /* ─── Buttons (native) ─── */
@@ -425,6 +710,18 @@ input[type="file"]::file-selector-button:hover {
   background-color: var(--color-fill-hover);
 }
 
+/* ─── Output ───
+   Form-associated element for showing a calculated
+   result. Tabular numerics so values align vertically
+   when stacked; medium weight to read as "result". */
+output {
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
 /* ─── Progress ─── */
 progress {
   width: 100%;
@@ -451,10 +748,71 @@ progress::-moz-progress-bar {
   border-radius: var(--radius-full);
 }
 
-/* ─── Meter ─── */
+/* ─── Meter ───
+   Semantic gauge: renders with different colors based on
+   value vs. low/high/optimum attributes.
+     - optimum range  → success
+     - sub-optimum    → warning
+     - far from opt.  → danger
+   Browsers require vendor-prefixed pseudo-elements. */
 meter {
   width: 100%;
   height: 0.5rem;
+  appearance: none;
+  border: none;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background-color: var(--color-fill);
+}
+
+/* Accessibility note:
+   The semantic --color-success/warning/danger tokens are
+   tuned for text and icons on surface backgrounds. On the
+   meter's gray track they drop below the 3:1 UI contrast
+   minimum in light mode. We use light-dark() to swap to
+   darker variants on light backgrounds, keeping the Apple
+   -400 tones on dark backgrounds where they pop. */
+
+/* WebKit (Chrome, Safari, Edge) */
+meter::-webkit-meter-bar {
+  background-color: var(--color-fill);
+  border: none;
+  border-radius: var(--radius-full);
+}
+
+meter::-webkit-meter-optimum-value {
+  background-color: light-dark(var(--green-600), var(--green-400));
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+meter::-webkit-meter-suboptimum-value {
+  background-color: light-dark(var(--orange-600), var(--orange-400));
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+meter::-webkit-meter-even-less-good-value {
+  background-color: light-dark(var(--red-500), var(--red-400));
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--ease-out);
+}
+
+/* Firefox */
+meter::-moz-meter-bar {
+  border-radius: var(--radius-full);
+}
+
+meter:-moz-meter-optimum::-moz-meter-bar {
+  background-color: light-dark(var(--green-600), var(--green-400));
+}
+
+meter:-moz-meter-sub-optimum::-moz-meter-bar {
+  background-color: light-dark(var(--orange-600), var(--orange-400));
+}
+
+meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+  background-color: light-dark(var(--red-500), var(--red-400));
 }
 
 /* ─── Details / Summary (Accordion) ─── */
@@ -518,6 +876,29 @@ dialog {
 
 dialog::backdrop {
   background-color: var(--color-overlay);
+}
+
+/* ─── Iframe ───
+   Embedded content (YouTube, Vimeo, maps, etc.).
+   16:9 aspect-ratio is the web's de facto video default,
+   so an <iframe> "just works" without a wrapper. If the
+   content isn't video, override aspect-ratio locally. */
+iframe {
+  display: block;
+  max-width: 100%;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-sunken);
+}
+
+/* ─── Audio ───
+   Native audio player. Full width matches the <video>
+   treatment in reset.css for consistent media blocks. */
+audio {
+  display: block;
+  width: 100%;
 }
 
 /* ─── Abbr ─── */

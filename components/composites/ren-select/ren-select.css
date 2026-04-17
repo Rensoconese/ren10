@@ -132,9 +132,10 @@
   border: var(--stroke-1) solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  padding-block: var(--space-1);
+  padding-block: var(--space-2);
   max-height: 15rem;
   overflow-y: auto;
+  overflow-x: hidden;
   overscroll-behavior: contain;
   z-index: var(--z-dropdown, 1000);
 
@@ -231,7 +232,8 @@
 
 /* ═══ SELECT GROUP ═══ */
 .ren-select-group {
-  display: contents;
+  display: block;
+  padding-block: var(--space-1);
 }
 
 /* ═══ SELECT GROUP LABEL ═══ */

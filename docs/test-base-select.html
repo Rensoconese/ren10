@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>base-select test</title>
+  <style>
+    body { font-family: system-ui; padding: 2rem; background: #f5f5f5; }
+    h2 { margin-top: 2rem; }
+
+    /* ─── Test 1: Minimal base-select ─── */
+    /* BOTH select and ::picker(select) must opt in */
+    .test-select,
+    .test-select::picker(select) {
+      appearance: base-select;
+    }
+
+    .test-select {
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      background: white;
+      min-width: 200px;
+    }
+
+    .test-select::picker-icon {
+      color: #666;
+      font-size: 0.75em;
+      margin-inline-start: 0.5rem;
+    }
+
+    .test-select::checkmark {
+      display: none;
+    }
+
+    .test-select::picker(select) {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+      padding: 4px;
+    }
+
+    .test-select option {
+      padding: 8px 12px;
+      border-radius: 6px;
+    }
+
+    .test-select option:hover {
+      background-color: #f0f0f0;
+    }
+
+    .test-select option:checked {
+      background-color: #eef2ff;
+      color: #4338ca;
+      font-weight: 500;
+    }
+
+    .test-select option:disabled {
+      color: #999;
+      opacity: 0.6;
+    }
+
+    .test-select:open {
+      border-color: #4f46e5;
+      outline: 3px solid #818cf8;
+    }
+
+    .test-select:open::picker-icon {
+      rotate: 180deg;
+    }
+
+    /* ─── Test 2: With RenDS index.css ─── */
+
+    /* ─── Debug info ─── */
+    .status {
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    .status.supported { background: #d1fae5; color: #065f46; }
+    .status.unsupported { background: #fee2e2; color: #991b1b; }
+  </style>
+</head>
+<body>
+  <h1>appearance: base-select — Test Page</h1>
+
+  <div id="status" class="status">Checking...</div>
+
+  <h2>Test 1: Pure CSS (no RenDS)</h2>
+  <p>If this dropdown has a <strong>red border</strong> and purple checked option, base-select works.</p>
+
+  <select class="test-select">
+    <option value="" disabled selected>Choose a color</option>
+    <option>Red</option>
+    <option>Green</option>
+    <option>Blue</option>
+    <option>Purple</option>
+    <option disabled>Yellow (unavailable)</option>
+  </select>
+
+  <h2>Test 2: Pure CSS with optgroup</h2>
+  <select class="test-select">
+    <option value="" disabled selected>Choose a framework</option>
+    <optgroup label="Frontend">
+      <option>React</option>
+      <option>Vue</option>
+      <option>Svelte</option>
+    </optgroup>
+    <optgroup label="Backend">
+      <option>Node.js</option>
+      <option>Django</option>
+      <option>Rails</option>
+    </optgroup>
+  </select>
+
+  <h2>Test 3: With RenDS styles</h2>
+  <p>This uses the actual RenDS CSS. Compare with Test 1.</p>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+
+  <div class="ren-field" style="max-width: 300px;">
+    <label class="ren-field-label">RenDS Select</label>
+    <select class="ren-input">
+      <option value="" disabled selected>Choose a color</option>
+      <option>Red</option>
+      <option>Green</option>
+      <option>Blue</option>
+    </select>
+  </div>
+
+  <script>
+    const el = document.getElementById('status');
+    const supported = CSS.supports('appearance', 'base-select');
+    el.textContent = supported
+      ? '✅ Your browser supports appearance: base-select'
+      : '❌ Your browser does NOT support appearance: base-select';
+    el.className = 'status ' + (supported ? 'supported' : 'unsupported');
+
+    // Also log Chrome version
+    const match = navigator.userAgent.match(/Chrome\/(\d+)/);
+    if (match) {
+      el.textContent += ` (Chrome ${match[1]})`;
+    }
+  </script>
+</body>
+</html>

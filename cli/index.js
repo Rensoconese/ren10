@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from './registry.js';
+import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RENDS_ROOT = path.resolve(__dirname, '..');
@@ -90,13 +91,41 @@ async function cmdInit() {
     error('rends/ directory already exists');
   }
 
+  // Parse --scale flag
+  const scaleIdx = args.indexOf('--scale');
+  const scaleKey = scaleIdx !== -1 ? args[scaleIdx + 1] : null;
+
+  // Parse --base flag (base font size in px)
+  const baseIdx = args.indexOf('--base');
+  const basePx = baseIdx !== -1 ? parseFloat(args[baseIdx + 1]) : 16;
+
+  // Parse --fluid flag
+  const useFluid = args.includes('--fluid');
+
+  if (scaleKey && !RATIOS[scaleKey]) {
+    const available = listRatios().map(r => `  ${c.cyan}${r.key.padEnd(18)}${c.reset}${r.name} (${r.value})`).join('\n');
+    error(`Unknown scale ratio: "${scaleKey}"\n\nAvailable ratios:\n${available}`);
+  }
+
   // Create directory structure
   fs.mkdirSync(rendsDir, { recursive: true });
 
   // Copy tokens
   const tokensDir = path.join(rendsDir, 'tokens');
   copyDir(path.join(RENDS_ROOT, 'tokens'), tokensDir);
-  success('Created rends/tokens/');
+
+  // If a scale was specified, regenerate typography.css with modular scale
+  if (scaleKey) {
+    const typographyCSS = generateTypeScaleCSS({
+      base: basePx,
+      ratio: scaleKey,
+      fluid: useFluid,
+    });
+    fs.writeFileSync(path.join(tokensDir, 'primitives', 'typography.css'), typographyCSS);
+    success(`Created rends/tokens/ with ${c.bold}${RATIOS[scaleKey].name}${c.reset} scale (${RATIOS[scaleKey].value})`);
+  } else {
+    success('Created rends/tokens/');
+  }
 
   // Copy base
   const baseDir = path.join(rendsDir, 'base');
@@ -137,6 +166,35 @@ async function cmdInit() {
   console.log(`  ${c.cyan}npx rends add button${c.reset}`);
   console.log(`  ${c.cyan}npx rends add dialog${c.reset}`);
   console.log(`  ${c.cyan}npx rends add --all${c.reset}\n`);
+
+  if (scaleKey) {
+    console.log(`${c.dim}Type scale: ${RATIOS[scaleKey].name} (${RATIOS[scaleKey].value})${c.reset}`);
+    console.log(`${c.dim}Base size:  ${basePx}px${c.reset}`);
+    if (useFluid) console.log(`${c.dim}Fluid:      enabled${c.reset}`);
+    console.log();
+  }
+}
+
+/**
+ * Command: rends scales
+ * List all available type scale ratios
+ */
+async function cmdScales() {
+  const ratios = listRatios();
+  console.log(`\n${c.bold}Available Type Scale Ratios${c.reset}\n`);
+  console.log(`${c.dim}Use with: npx rends init --scale <ratio>${c.reset}\n`);
+
+  ratios.forEach(r => {
+    const marker = r.key === 'major-third' ? ` ${c.yellow}← default${c.reset}` : '';
+    const recommended = ['minor-third', 'major-third', 'perfect-fourth'].includes(r.key) ? ` ${c.green}★${c.reset}` : '';
+    console.log(`  ${c.cyan}${r.key.padEnd(18)}${c.reset}${r.name.padEnd(16)} ${c.dim}(${r.value})${c.reset}${recommended}${marker}`);
+  });
+
+  console.log(`\n${c.dim}★ = recommended for web${c.reset}\n`);
+  console.log(`${c.bold}Examples:${c.reset}`);
+  console.log(`  ${c.cyan}npx rends init --scale minor-third${c.reset}`);
+  console.log(`  ${c.cyan}npx rends init --scale perfect-fourth --base 18${c.reset}`);
+  console.log(`  ${c.cyan}npx rends init --scale major-third --fluid${c.reset}\n`);
 }
 
 /**
@@ -374,6 +432,9 @@ async function main() {
       case 'list':
         await cmdList();
         break;
+      case 'scales':
+        await cmdScales();
+        break;
       case '--help':
       case '-h':
       case 'help':
@@ -410,15 +471,24 @@ ${c.bold}Commands:${c.reset}
   add <component>   Add a component to your project
   add --all         Add all components at once
   list              List all available components
+  scales            List available type scale ratios
   help, -h          Show this help message
   version, -v       Show version
 
+${c.bold}Init Options:${c.reset}
+  --scale <ratio>   Use a modular type scale (e.g., major-third, perfect-fourth)
+  --base <px>       Base font size in px (default: 16)
+  --fluid           Generate fluid clamp() values for responsive typography
+
 ${c.bold}Examples:${c.reset}
   npx rends init
+  npx rends init --scale perfect-fourth
+  npx rends init --scale minor-third --base 18 --fluid
   npx rends add button
   npx rends add dialog
   npx rends add --all
   npx rends list
+  npx rends scales
 
 ${c.bold}Docs:${c.reset}
   https://github.com/rends

@@ -15,7 +15,9 @@
 
 /* ─── Base Link ─── */
 .ren-link {
+  display: inline;
   color: var(--color-text-link);
+  background: none;
   text-decoration: underline;
   text-decoration-color: color-mix(in oklch, var(--color-text-link), transparent 60%);
   text-underline-offset: 0.15em;
@@ -30,7 +32,9 @@
 
 .ren-link:hover {
   color: var(--color-text-link-hover);
-  text-decoration-color: var(--color-text-link-hover);
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--color-text-link-hover), transparent 30%);
   text-decoration-thickness: 2px;
 }
 

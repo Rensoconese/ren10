@@ -42,6 +42,12 @@
   --headline-weight:     var(--weight-semibold);
   --headline-leading:    var(--leading-snug);
 
+  /* ─── Lead — Introductory / emphasized paragraph ─── */
+  --lead-size:           var(--text-xl);
+  --lead-weight:         var(--weight-regular);
+  --lead-leading:        var(--leading-relaxed);
+  --lead-tracking:       var(--tracking-normal);
+
   /* ─── Body — Default content ─── */
   --body-lg-size:        var(--text-md);
   --body-lg-weight:      var(--weight-regular);

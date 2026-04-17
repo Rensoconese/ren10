@@ -76,8 +76,8 @@
     outline-offset: 2px;
   }
 
-  /* ═══ CHEVRON ICONS (::before for prev, ::after for next) ═══ */
-  &::before {
+  /* ═══ CHEVRON ICONS ═══ */
+  &.ren-calendar-prev::before {
     content: '‹';
     font-size: 1.5em;
     font-weight: bold;
@@ -85,6 +85,8 @@
 
   &.ren-calendar-next::before {
     content: '›';
+    font-size: 1.5em;
+    font-weight: bold;
   }
 }
 
@@ -111,7 +113,6 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: var(--space-1);
-  role: grid;
 }
 
 /* ═══ INDIVIDUAL DAY BUTTON ═══ */

@@ -96,6 +96,126 @@ select.ren-input {
   padding-inline-end: var(--space-10);
 }
 
+@supports (appearance: base-select) {
+  /* ── Opt-in ── */
+  select.ren-input,
+  select.ren-input::picker(select) {
+    appearance: base-select;
+  }
+
+  /* ── Trigger ── */
+  select.ren-input {
+    display: flex;
+    align-items: center;
+    background-image: none;
+    padding-inline-end: var(--space-3);
+  }
+
+  select.ren-input::picker-icon {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    margin-inline-start: auto;
+    padding-inline-start: var(--space-3);
+    transition: rotate var(--duration-fast) var(--ease-out);
+  }
+
+  select.ren-input:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  select.ren-input option::checkmark {
+    display: none;
+  }
+
+  /* ── Dropdown ── */
+  select.ren-input::picker(select) {
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.06);
+    padding: var(--space-1);
+    margin-block-start: var(--space-1);
+    overflow: clip;
+  }
+
+  /* ── Options ── */
+  select.ren-input option {
+    display: flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    border-radius: 4px;
+    color: var(--color-text);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  select.ren-input option + option {
+    margin-block-start: 1px;
+  }
+
+  select.ren-input option:hover {
+    background: light-dark(var(--gray-50), var(--gray-800));
+  }
+
+  select.ren-input option:focus-visible,
+  select.ren-input option:active {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    background: light-dark(var(--gray-50), var(--gray-800));
+  }
+
+  select.ren-input option:checked:not(:disabled) {
+    background: light-dark(var(--blue-50), var(--blue-900));
+    color: light-dark(var(--blue-700), var(--blue-200));
+    font-weight: var(--weight-medium);
+  }
+
+  select.ren-input option:checked:not(:disabled)::after {
+    content: "✓";
+    margin-inline-start: auto;
+    color: light-dark(var(--blue-600), var(--blue-300));
+    font-weight: var(--weight-bold);
+  }
+
+  select.ren-input option:checked:hover {
+    background: light-dark(var(--blue-100), var(--blue-800));
+  }
+
+  select.ren-input option:disabled {
+    color: light-dark(var(--gray-500), var(--gray-400));
+    cursor: not-allowed;
+  }
+
+  select.ren-input option[hidden] {
+    display: none;
+  }
+
+  /* ── Optgroups ── */
+  select.ren-input optgroup {
+    padding: var(--space-1) 0;
+    padding-inline-start: 0;
+  }
+
+  select.ren-input optgroup:not(:first-of-type) {
+    border-block-start: 1px solid var(--color-border);
+    margin-block-start: var(--space-2);
+    padding-block-start: var(--space-2);
+  }
+
+  select.ren-input optgroup > legend,
+  select.ren-input optgroup > label {
+    padding: var(--space-1) var(--space-3);
+    margin-inline-start: var(--space-3);
+  }
+
+  /* ── Open state ── */
+  select.ren-input:open {
+    border-color: var(--color-input-border-focus);
+    box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  }
+}
+
 /* ─── Input Sizes ─── */
 .ren-input-sm {
   min-height: var(--size-sm);

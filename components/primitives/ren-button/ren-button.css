@@ -52,20 +52,20 @@
 /* ─── Variants ─── */
 
 /* Primary (default) */
-.ren-btn,
+.ren-btn:not(.ren-btn-secondary):not(.ren-btn-ghost):not(.ren-btn-outline):not(.ren-btn-danger):not(.ren-btn-link):not(.ren-btn-accent),
 .ren-btn-primary {
   background-color: var(--color-accent);
   color: var(--color-on-accent);
   border-color: var(--color-accent);
 }
 
-.ren-btn:hover:not(:disabled):not([aria-disabled="true"]),
+.ren-btn:not(.ren-btn-secondary):not(.ren-btn-ghost):not(.ren-btn-outline):not(.ren-btn-danger):not(.ren-btn-link):not(.ren-btn-accent):hover:not(:disabled):not([aria-disabled="true"]),
 .ren-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
 }
 
-.ren-btn:active:not(:disabled):not([aria-disabled="true"]),
+.ren-btn:not(.ren-btn-secondary):not(.ren-btn-ghost):not(.ren-btn-outline):not(.ren-btn-danger):not(.ren-btn-link):not(.ren-btn-accent):active:not(:disabled):not([aria-disabled="true"]),
 .ren-btn-primary:active:not(:disabled):not([aria-disabled="true"]) {
   background-color: var(--color-accent-active);
   border-color: var(--color-accent-active);
@@ -192,22 +192,32 @@
 /* ─── Button Group ─── */
 .ren-btn-group {
   display: inline-flex;
+  isolation: isolate;  /* contain z-index stacking */
 }
 
 .ren-btn-group > .ren-btn {
   border-radius: 0;
+  position: relative;
 }
 
 .ren-btn-group > .ren-btn:first-child {
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  border-start-start-radius: var(--radius-md);
+  border-end-start-radius: var(--radius-md);
 }
 
 .ren-btn-group > .ren-btn:last-child {
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-start-end-radius: var(--radius-md);
+  border-end-end-radius: var(--radius-md);
 }
 
 .ren-btn-group > .ren-btn + .ren-btn {
   margin-inline-start: calc(var(--stroke-1) * -1);
+}
+
+/* Hovered/focused button rises above siblings so border isn't hidden */
+.ren-btn-group > .ren-btn:hover,
+.ren-btn-group > .ren-btn:focus-visible {
+  z-index: 1;
 }
 
 /* ─── States ─── */

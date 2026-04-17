@@ -68,6 +68,17 @@
   top: var(--space-4);
 }
 
+/* ─── Lead Text ───
+   Introductory paragraph — larger, more relaxed body text.
+   Use for article intros, hero subtitles, or section summaries. */
+.ren-lead {
+  font-size: var(--lead-size);
+  font-weight: var(--lead-weight);
+  line-height: var(--lead-leading);
+  letter-spacing: var(--lead-tracking);
+  color: var(--color-text-secondary);
+}
+
 /* ─── Truncate Text ─── */
 .ren-truncate {
   overflow: hidden;

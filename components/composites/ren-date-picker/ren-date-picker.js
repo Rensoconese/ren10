@@ -52,25 +52,14 @@ export class RenDatePicker extends HTMLElement {
     /* ═══ RENDER COMPONENT ═══ */
     this.render();
 
-    /* ═══ SET UP CALENDAR ═══ */
-    this.calendar = this.querySelector('ren-calendar');
-    if (!this.calendar) {
-      this.calendar = document.createElement('ren-calendar');
-      this.calendar.setAttribute('mode', this.mode);
-      if (this.locale) this.calendar.setAttribute('locale', this.locale);
-      if (minAttr) this.calendar.setAttribute('min', minAttr);
-      if (maxAttr) this.calendar.setAttribute('max', maxAttr);
-      this.dropdown.appendChild(this.calendar);
-    }
-
-    /* ═══ SET UP TRIGGER ═══ */
+    /* ═══ SET UP TRIGGER (must come after render) ═══ */
     this.trigger = this.querySelector('.ren-date-picker-trigger');
     if (this.trigger) {
       this.trigger.addEventListener('click', this.handleTriggerClick);
       this.trigger.addEventListener('keydown', this.handleTriggerKeyDown);
     }
 
-    /* ═══ SET UP DROPDOWN ═══ */
+    /* ═══ SET UP DROPDOWN (must come after render, before calendar) ═══ */
     this.dropdown = this.querySelector('[popover]');
     if (!this.dropdown) {
       this.dropdown = document.createElement('div');
@@ -79,7 +68,8 @@ export class RenDatePicker extends HTMLElement {
       this.appendChild(this.dropdown);
     }
 
-    /* ═══ SETUP CALENDAR IN DROPDOWN ═══ */
+    /* ═══ SET UP CALENDAR (must come after dropdown) ═══ */
+    this.calendar = this.querySelector('ren-calendar');
     if (!this.calendar) {
       this.calendar = document.createElement('ren-calendar');
       this.calendar.setAttribute('mode', this.mode);
@@ -408,11 +398,11 @@ export class RenDatePicker extends HTMLElement {
     }
   }
 
-  get open() {
+  get isOpened() {
     return this.isOpen;
   }
 
-  set open(val) {
+  set isOpened(val) {
     if (val) {
       this.open();
     } else {

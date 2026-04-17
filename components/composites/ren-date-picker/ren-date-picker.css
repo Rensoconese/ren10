@@ -103,12 +103,13 @@
   &[popover] {
     padding: 0;
     margin: 0;
-    border: none;
-    background: transparent;
-    box-shadow: none;
   }
 
   &:popover-open {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
     animation: ren-date-picker-popup-in var(--duration-normal) var(--ease-out) both;
   }
 
