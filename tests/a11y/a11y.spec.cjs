@@ -244,16 +244,13 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
 
   test('icon descriptions should be present', async ({ page }) => {
     // Check for icon elements (using emoji in test page)
-    const iconItems = page.locator('.icon-item').all();
-    const count = await iconItems.length;
+    const iconItems = await page.locator('.icon-item').all();
 
-    if (count > 0) {
-      for (const item of await iconItems) {
-        const title = await item.getAttribute('title');
+    for (const item of iconItems) {
+      const title = await item.getAttribute('title');
 
-        // Icons should have a title attribute for accessibility
-        expect(title).toBeTruthy();
-      }
+      // Icons should have a title attribute for accessibility
+      expect(title).toBeTruthy();
     }
   });
 
@@ -531,10 +528,9 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
 
   test('should provide context for dynamic content', async ({ page }) => {
     // Check for aria-live regions
-    const liveRegions = page.locator('[aria-live]').all();
-    const liveCount = await liveRegions.length;
+    const liveRegions = await page.locator('[aria-live]').all();
 
-    console.log(`Found ${liveCount} live regions`);
+    console.log(`Found ${liveRegions.length} live regions`);
   });
 
   // ========================================
