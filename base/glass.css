@@ -1,0 +1,112 @@
+/* ============================================
+   RenDS — Glass / Materials Utilities
+   ============================================
+   Translucent materials inspired by Apple's
+   Liquid Glass (WWDC 2025). Three tiers of
+   blur, each with light and dark variants via
+   light-dark().
+
+   Usage:
+     <header class="ren-glass-thin">…</header>
+     <nav class="ren-glass-regular">…</nav>
+     <aside class="ren-glass-thick">…</aside>
+
+   Ideal for:
+     - Sticky nav/header over scrolling content
+     - Dialog and popover backgrounds
+     - Sidebars and toolbars
+     - Carousel arrow buttons
+
+   Accessibility:
+     - Text on glass should use --color-text (semantic),
+       not hardcoded. Underlying content may be anything.
+     - For critical text, prefer solid --color-surface.
+     - Glass respects prefers-reduced-transparency — falls
+       back to solid surface.
+
+   Browser support:
+     backdrop-filter: Safari 9+, Firefox 103+, Chrome 76+.
+     Fallback: solid surface with opacity.
+   ============================================ */
+
+:root {
+  /* Blur radii — fine-tunable via overrides */
+  --glass-blur-thin:    8px;
+  --glass-blur-regular: 20px;
+  --glass-blur-thick:   40px;
+
+  /* Saturation boost — makes the blur feel "alive"
+     rather than muddy. Classic Apple trick. */
+  --glass-saturation:   180%;
+
+  /* Surface tint — a small amount of background color
+     so glass has shape even over very busy content. */
+  --glass-tint-light:   rgba(255, 255, 255, 0.55);
+  --glass-tint-dark:    rgba(20, 20, 22, 0.55);
+  --glass-tint:         light-dark(var(--glass-tint-light), var(--glass-tint-dark));
+
+  /* Border — hairline that defines the edge */
+  --glass-border-light: rgba(255, 255, 255, 0.25);
+  --glass-border-dark:  rgba(255, 255, 255, 0.08);
+  --glass-border:       light-dark(var(--glass-border-light), var(--glass-border-dark));
+}
+
+/* ─── Shared base ─── */
+.ren-glass-thin,
+.ren-glass-regular,
+.ren-glass-thick {
+  background-color: var(--glass-tint);
+  border: var(--stroke-1) solid var(--glass-border);
+  /* -webkit- prefix for Safari < 18 */
+  -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-regular));
+          backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-regular));
+}
+
+.ren-glass-thin {
+  -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thin));
+          backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thin));
+  --glass-tint-light: rgba(255, 255, 255, 0.35);
+  --glass-tint-dark:  rgba(20, 20, 22, 0.35);
+}
+
+.ren-glass-thick {
+  -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thick));
+          backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thick));
+  --glass-tint-light: rgba(255, 255, 255, 0.75);
+  --glass-tint-dark:  rgba(20, 20, 22, 0.75);
+}
+
+/* ─── Fallback: browsers without backdrop-filter ─── */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ren-glass-thin,
+  .ren-glass-regular,
+  .ren-glass-thick {
+    background-color: var(--color-surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ─── Reduced transparency (macOS/iOS accessibility) ─── */
+@media (prefers-reduced-transparency: reduce) {
+  .ren-glass-thin,
+  .ren-glass-regular,
+  .ren-glass-thick {
+    background-color: var(--color-surface);
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    border: var(--stroke-1) solid var(--color-border);
+  }
+}
+
+/* ─── Forced colors (Windows high contrast) ─── */
+@media (forced-colors: active) {
+  .ren-glass-thin,
+  .ren-glass-regular,
+  .ren-glass-thick {
+    background-color: Canvas;
+    -webkit-backdrop-filter: none;
+            backdrop-filter: none;
+    border: var(--stroke-1) solid CanvasText;
+  }
+}

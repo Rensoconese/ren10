@@ -12,54 +12,61 @@
    ═════════════════════════════════════════════════════════════════════════ */
 
 /* ─── Color Tokens ───
-   Enables smooth color transitions when theme/mode changes */
+   Enables smooth color transitions when theme/mode changes.
+
+   NOTA sobre hex literals:
+     CSS Houdini @property exige un initial-value resuelto — no acepta
+     var() ni light-dark(). Los hex aquí DEBEN ser literales. Los valores
+     reflejan la paleta RenDS real (Apple HIG) para que el fallback del
+     browser se vea idéntico a los tokens cargados por tokens/semantic/.
+   */
 
 @property --color-accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: #3b82f6;
+  initial-value: #0063D1; /* --blue-600 */
 }
 
 @property --color-accent-hover {
   syntax: '<color>';
   inherits: true;
-  initial-value: #2563eb;
+  initial-value: #004DA3; /* --blue-700 */
 }
 
 @property --color-surface {
   syntax: '<color>';
   inherits: true;
-  initial-value: #ffffff;
+  initial-value: #FFFFFF; /* --white */
 }
 
 @property --color-surface-raised {
   syntax: '<color>';
   inherits: true;
-  initial-value: #ffffff;
+  initial-value: #FFFFFF; /* --white */
 }
 
 @property --color-text {
   syntax: '<color>';
   inherits: true;
-  initial-value: #0a0a0a;
+  initial-value: #000000; /* --black */
 }
 
 @property --color-text-muted {
   syntax: '<color>';
   inherits: true;
-  initial-value: #737373;
+  initial-value: #636366; /* --gray-700 */
 }
 
 @property --color-border {
   syntax: '<color>';
   inherits: true;
-  initial-value: #e5e5e5;
+  initial-value: #E5E5EA; /* --gray-200 */
 }
 
 @property --color-focus-ring {
   syntax: '<color>';
   inherits: true;
-  initial-value: #3b82f6;
+  initial-value: #0063D1; /* --blue-600 */
 }
 
 /* ─── Duration Tokens ───

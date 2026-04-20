@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — RenDS Docs</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Shared top nav */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Docs layout */
+    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-8) var(--space-6); }
+
+    /* Sidebar TOC */
+    .dx-toc { position: sticky; top: 72px; align-self: start; }
+    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-3); }
+    .dx-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); counter-reset: step; }
+    .dx-toc li { counter-increment: step; }
+    .dx-toc a { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-2) 0; color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); border-left: 2px solid transparent; padding-left: var(--space-3); margin-left: calc(var(--space-3) * -1); }
+    .dx-toc a::before { content: counter(step, decimal-leading-zero); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
+    .dx-toc a:hover, .dx-toc a.active { color: var(--color-text); border-left-color: var(--color-accent); }
+
+    /* Content */
+    .dx-content { max-width: 68ch; }
+    .dx-content h1 { font-size: var(--text-5xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
+    .dx-content .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0 0 var(--space-10); }
+    .dx-content section { margin-bottom: var(--space-12); scroll-margin-top: 80px; }
+    .dx-content h2 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); letter-spacing: -0.01em; margin: 0 0 var(--space-3); display: flex; align-items: baseline; gap: var(--space-3); }
+    .dx-content h2::before { content: attr(data-step); font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); font-weight: var(--weight-regular); }
+    .dx-content h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-6) 0 var(--space-2); }
+    .dx-content p { line-height: 1.7; margin: 0 0 var(--space-4); color: var(--color-text-secondary); }
+    .dx-content ul { padding-left: var(--space-5); color: var(--color-text-secondary); line-height: 1.7; }
+    .dx-content ul li { margin-bottom: var(--space-1); }
+    .dx-content code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
+
+    /* Code block */
+    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-4) 0; color: var(--color-text); }
+    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
+    .dx-pre-caption { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); margin-bottom: calc(var(--space-2) * -1); padding-top: var(--space-6); }
+
+    /* File tree */
+    .dx-tree { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.8; color: var(--color-text-secondary); margin: var(--space-4) 0; white-space: pre; }
+
+    /* Callout */
+    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; }
+    .dx-callout p { margin: 0; color: var(--color-text); }
+    .dx-callout strong { color: var(--color-accent-active); }
+
+    /* Next steps */
+    .dx-next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-6); }
+    .dx-next-card { display: block; padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-decoration: none; color: inherit; transition: border-color 150ms; }
+    .dx-next-card:hover { border-color: var(--color-border-strong); }
+    .dx-next-label { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); }
+    .dx-next-title { font-size: var(--text-base); font-weight: var(--weight-semibold); margin: var(--space-1) 0 var(--space-1); }
+    .dx-next-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; }
+
+    @media (max-width: 900px) {
+      .dx-toc { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.6</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Shell -->
+  <div class="dx-shell">
+    <div class="ren-with-sidebar" style="--sidebar-width: 200px; --sidebar-gap: var(--space-10);">
+
+      <!-- TOC -->
+      <aside class="dx-toc" aria-label="On this page">
+        <p class="dx-toc-title">On this page</p>
+        <ol>
+          <li><a href="#install" class="active">Install</a></li>
+          <li><a href="#structure">Project structure</a></li>
+          <li><a href="#first-html">Your first HTML</a></li>
+          <li><a href="#first-component">Your first component</a></li>
+          <li><a href="#theming">Theming basics</a></li>
+          <li><a href="#next">Next steps</a></li>
+        </ol>
+      </aside>
+
+      <!-- Content -->
+      <main class="dx-content">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+            <li aria-current="page">Getting Started</li>
+          </ol>
+        </nav>
+
+        <h1>Getting Started</h1>
+        <p class="lede">Go from an empty folder to a styled, accessible, themeable page in about two minutes. No npm, no build step, no framework.</p>
+
+        <!-- 1. Install -->
+        <section id="install">
+          <h2 data-step="01">Install</h2>
+          <p>RenDS is a folder you copy into your project. There is no package to <code>npm install</code> — you own the source.</p>
+
+          <h3>Option A — Clone the repo</h3>
+          <div class="dx-pre" tabindex="0"><code>git clone https://github.com/rens/rends.git
+cd rends</code></div>
+
+          <h3>Option B — Copy the <code>rends/</code> folder</h3>
+          <p>Drop it into your project anywhere. Most people put it alongside their own source:</p>
+          <div class="dx-tree">my-project/
+├── rends/          ← the design system lives here
+├── index.html
+└── styles.css</div>
+
+          <div class="dx-callout">
+            <p><strong>No build step required.</strong> Open your <code>index.html</code> directly in the browser and it works. CSS Cascade Layers, <code>light-dark()</code>, and container queries do the work that bundlers used to.</p>
+          </div>
+        </section>
+
+        <!-- 2. Structure -->
+        <section id="structure">
+          <h2 data-step="02">Project structure</h2>
+          <p>The important folders inside <code>rends/</code>:</p>
+          <div class="dx-tree">rends/
+├── index.css              ← foundation: tokens + reset + layouts + utilities
+├── tokens/
+│   ├── primitives/        ← raw values (--blue-500, --space-4)
+│   ├── semantic/          ← purpose-based (--color-accent, --color-text)
+│   └── component/         ← per-component (--ren-btn-bg)
+├── base/
+│   ├── reset.css          ← sensible defaults
+│   ├── layouts.css        ← ren-stack, ren-grid, ren-cover, ...
+│   └── utilities.css      ← ren-sr-only, ren-truncate, ...
+├── components/
+│   ├── primitives/        ← 18 components (button, card, field, ...)
+│   ├── composites/        ← 26 components (dialog, select, tabs, ...)
+│   └── patterns/          ← 8 patterns (nav, sidebar, form, table, ...)
+├── themes/
+│   └── appearance.css     ← light/dark + data-theme overrides
+└── cli/
+    └── index.js           ← optional: add components one at a time</div>
+        </section>
+
+        <!-- 3. First HTML -->
+        <section id="first-html">
+          <h2 data-step="03">Your first HTML</h2>
+          <p>Create an <code>index.html</code> and link the foundation + all components. This is the simplest possible setup:</p>
+
+          <p class="dx-pre-caption">index.html</p>
+          <div class="dx-pre" tabindex="0"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Hello, RenDS&lt;/title&gt;
+
+  &lt;!-- Foundation: tokens, reset, layouts, utilities --&gt;
+  &lt;link rel="stylesheet" href="rends/index.css"&gt;
+
+  &lt;!-- All components at once (or pick individual ones) --&gt;
+  &lt;link rel="stylesheet" href="rends/components/index.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;main class="ren-cover"&gt;
+    &lt;div&gt;&lt;/div&gt;
+    &lt;div class="ren-center-narrow"&gt;
+      &lt;h1&gt;Hello, world&lt;/h1&gt;
+      &lt;p&gt;This is your first RenDS page.&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div&gt;&lt;/div&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></div>
+          <p>That's a fully-themed, dark-mode-aware, accessible, centered page. Zero inline styles.</p>
+        </section>
+
+        <!-- 4. First component -->
+        <section id="first-component">
+          <h2 data-step="04">Your first component</h2>
+          <p>Every component has a <code>ren-</code> prefix and follows the same pattern: base class + optional modifiers.</p>
+
+          <div class="dx-pre" tabindex="0"><code>&lt;!-- Buttons --&gt;
+&lt;button class="ren-btn ren-btn-primary"&gt;Save&lt;/button&gt;
+&lt;button class="ren-btn ren-btn-secondary"&gt;Cancel&lt;/button&gt;
+&lt;button class="ren-btn ren-btn-ghost ren-btn-sm"&gt;Dismiss&lt;/button&gt;
+
+&lt;!-- Card with stacked content --&gt;
+&lt;div class="ren-card"&gt;
+  &lt;div class="ren-card-header"&gt;
+    &lt;h3&gt;Weekly report&lt;/h3&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-card-body"&gt;
+    &lt;p&gt;Everything looks great.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-card-footer"&gt;
+    &lt;button class="ren-btn ren-btn-primary"&gt;Open&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></div>
+
+          <h3>Interactive components: add JS</h3>
+          <p>Primitives (button, card, tag, badge...) are CSS-only. For interactive composites like Dialog, Select, or Tooltip, import the JS module:</p>
+          <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/composites/ren-dialog/ren-dialog.js"&gt;&lt;/script&gt;</code></div>
+          <p>Or import everything:</p>
+          <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/index.js"&gt;&lt;/script&gt;</code></div>
+        </section>
+
+        <!-- 5. Theming -->
+        <section id="theming">
+          <h2 data-step="05">Theming basics</h2>
+          <p>RenDS uses <code>color-scheme: light dark</code> and the <code>light-dark()</code> CSS function. Dark mode works out of the box — no class toggles required.</p>
+
+          <h3>Force a theme</h3>
+          <div class="dx-pre" tabindex="0"><code>&lt;html data-theme="dark"&gt; ... &lt;/html&gt;
+&lt;html data-theme="light"&gt; ... &lt;/html&gt;</code></div>
+
+          <h3>Change the accent color</h3>
+          <p>Override the semantic token on <code>:root</code> (or any ancestor):</p>
+          <div class="dx-pre" tabindex="0"><code>:root {
+  --color-accent: hotpink;
+  --color-accent-hover: deeppink;
+}</code></div>
+
+          <h3>Density and shape</h3>
+          <div class="dx-pre" tabindex="0"><code>&lt;html data-density="compact" data-shape="rounded"&gt;</code></div>
+
+          <p>For something more structured, use the <a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Theme Builder</a> to generate a full theme, export it as CSS or a shareable URL, and paste into your project.</p>
+        </section>
+
+        <!-- 6. Next -->
+        <section id="next">
+          <h2 data-step="06">Next steps</h2>
+          <p>You've got the basics. Pick your direction:</p>
+
+          <div class="dx-next-grid">
+            <a href="tokens.html" class="dx-next-card">
+              <div class="dx-next-label">Foundations</div>
+              <div class="dx-next-title">Tokens reference</div>
+              <p class="dx-next-desc">Every color, space, type, and radius value in one place.</p>
+            </a>
+            <a href="layouts.html" class="dx-next-card">
+              <div class="dx-next-label">Structure</div>
+              <div class="dx-next-title">Layout primitives</div>
+              <p class="dx-next-desc">Stack, Grid, Cover, With-sidebar, and friends.</p>
+            </a>
+            <a href="components.html" class="dx-next-card">
+              <div class="dx-next-label">Catalog</div>
+              <div class="dx-next-title">Components showcase</div>
+              <p class="dx-next-desc">Live examples of all 52 components.</p>
+            </a>
+            <a href="../blocks/landing.html" class="dx-next-card">
+              <div class="dx-next-label">Examples</div>
+              <div class="dx-next-title">Page blocks</div>
+              <p class="dx-next-desc">Real screens: auth, dashboard, settings, landing, blog.</p>
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

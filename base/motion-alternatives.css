@@ -1,0 +1,109 @@
+/* ============================================
+   RenDS — Motion Alternatives for Reduced Motion
+   ============================================
+   The reset.css zeroes out transitions and animations
+   when prefers-reduced-motion: reduce is active —
+   which is a safe default. But sometimes a silent
+   instant change feels wrong: a skeleton that never
+   pulses, a toast that appears with no transition,
+   a tab that switches with no signal.
+
+   Apple HIG recommends offering an *alternative*
+   rather than just cutting motion: a dissolve, a
+   brightness blink, a color shift, an opacity pulse.
+
+   This file exposes opt-in utility classes and
+   keyframes that run only under reduced-motion.
+   Use them on elements that need some feedback
+   even when animation is disabled.
+
+   Usage:
+     <div class="ren-motion-dissolve">      <!-- fade on enter -->
+     <div class="ren-motion-highlight">     <!-- brief bg flash -->
+     <div class="ren-motion-pulse">         <!-- gentle opacity pulse -->
+
+   These classes do nothing when reduced-motion is OFF.
+   The main (motion-full) animation lives on the
+   component itself, as usual.
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   DISSOLVE — opacity fade over 250ms
+   Alternative to slide / scale entries.
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-motion-dissolve {
+    animation: ren-dissolve-in 250ms linear both !important;
+  }
+
+  @keyframes ren-dissolve-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   HIGHLIGHT — brief background flash on change
+   Alternative to shake / bounce / scale.
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-motion-highlight {
+    animation: ren-highlight-flash 500ms ease-out both !important;
+  }
+
+  @keyframes ren-highlight-flash {
+    0%   { background-color: var(--color-highlight, var(--color-accent-subtle)); }
+    100% { background-color: transparent; }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   PULSE — gentle opacity cycle for loading states
+   Replaces spinning/shimmering.
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-motion-pulse {
+    animation: ren-pulse-gentle 2s ease-in-out infinite !important;
+  }
+
+  @keyframes ren-pulse-gentle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.55; }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   COLOR-SHIFT — hue transition for state change
+   Alternative to slide or check-mark animations.
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-motion-color-shift {
+    animation: ren-color-shift 300ms ease-out both !important;
+  }
+
+  @keyframes ren-color-shift {
+    from { color: var(--color-text-muted); }
+    to   { color: var(--color-accent); }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   FOCUS-GLOW — brief focus ring pulse for attention
+   Alternative to pointing arrows or jumps.
+   ═══════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-motion-focus-glow {
+    animation: ren-focus-glow 800ms ease-in-out both !important;
+  }
+
+  @keyframes ren-focus-glow {
+    0%   { box-shadow: 0 0 0 0 var(--color-focus-ring); }
+    40%  { box-shadow: 0 0 0 4px var(--color-focus-ring); }
+    100% { box-shadow: 0 0 0 0 var(--color-focus-ring); }
+  }
+}

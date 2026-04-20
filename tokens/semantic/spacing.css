@@ -1,0 +1,94 @@
+/* ============================================
+   RenDS — Semantic Spacing Tokens
+   ============================================
+   Intent-based spacing tokens that sit between
+   primitive scale (--space-1, --space-2, …) and
+   component-specific tokens (--ren-card-padding).
+
+   Use these in custom layouts and one-off compositions
+   so the meaning of the space is visible in the CSS.
+
+   Inspired by Polaris semantic spacing.
+
+   When in doubt:
+     - card / panel padding   → --space-card
+     - form vertical rhythm   → --space-form-gap
+     - section between blocks → --space-section
+     - header / page top      → --space-page
+   ============================================ */
+
+:root {
+  /* ─── Container insets ─────────────────────
+     Padding inside surfaces (cards, panels, dialogs). */
+  --space-card-padding:        var(--space-6);  /* 24 */
+  --space-card-padding-sm:     var(--space-4);  /* 16 */
+  --space-card-padding-lg:     var(--space-8);  /* 32 */
+
+  --space-panel-padding:       var(--space-6);
+  --space-dialog-padding:      var(--space-6);
+  --space-toast-padding:       var(--space-4);
+
+  /* ─── Form rhythm ──────────────────────────
+     Stacking and clustering inside forms. */
+  --space-form-gap:            var(--space-5);  /* 20 — between fields */
+  --space-form-gap-tight:      var(--space-3);  /* 12 */
+  --space-form-gap-loose:      var(--space-8);  /* 32 — between sections */
+
+  --space-field-label-gap:     var(--space-2);  /* label ↔ input */
+  --space-field-helper-gap:    var(--space-1);  /* input ↔ helper text */
+
+  --space-fieldset-gap:        var(--space-6);  /* between fieldsets */
+
+  /* ─── List & menu rhythm ───────────────────
+     Vertical gap between adjacent list rows. */
+  --space-list-gap:            var(--space-2);
+  --space-list-gap-tight:      var(--space-1);
+  --space-menu-item-gap:       var(--space-1);
+
+  /* ─── Inline grouping ──────────────────────
+     For ren-cluster / ren-row content. */
+  --space-inline-tight:        var(--space-2);  /* button + icon */
+  --space-inline:              var(--space-3);  /* default cluster gap */
+  --space-inline-loose:        var(--space-4);  /* spacious cluster */
+
+  /* ─── Section & page rhythm ────────────────
+     Vertical gap between major content blocks. */
+  --space-section:             var(--space-12); /* 48 — between sections */
+  --space-section-lg:          var(--space-16); /* 64 — hero spacing */
+  --space-section-sm:          var(--space-8);  /* 32 — tight sections */
+
+  --space-page-top:            var(--space-12); /* page header below nav */
+  --space-page-bottom:         var(--space-16); /* page footer breathing room */
+
+  /* ─── Stack defaults ───────────────────────
+     Default --gap value for ren-stack utilities.
+     Override per-instance with style="--gap: …" */
+  --space-stack-tight:         var(--space-2);
+  --space-stack:               var(--space-4);
+  --space-stack-loose:         var(--space-6);
+
+  /* ─── Density-aware aliases ────────────────
+     These shift with [data-density] on <html>.
+     Defaults to "comfortable" values. */
+  --space-density-card:        var(--space-card-padding);
+  --space-density-form:        var(--space-form-gap);
+  --space-density-row:         var(--space-3);
+}
+
+/* ─── Density: compact ─── */
+:root[data-density="compact"] {
+  --space-density-card:        var(--space-4);
+  --space-density-form:        var(--space-3);
+  --space-density-row:         var(--space-2);
+  --space-card-padding:        var(--space-4);
+  --space-form-gap:            var(--space-3);
+}
+
+/* ─── Density: spacious ─── */
+:root[data-density="spacious"] {
+  --space-density-card:        var(--space-8);
+  --space-density-form:        var(--space-6);
+  --space-density-row:         var(--space-4);
+  --space-card-padding:        var(--space-8);
+  --space-form-gap:            var(--space-6);
+}

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLI — RenDS Docs</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Shared top nav */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Docs layout */
+    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-8) var(--space-6); }
+
+    /* Sidebar TOC */
+    .dx-toc { position: sticky; top: 72px; align-self: start; }
+    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-3); }
+    .dx-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); counter-reset: step; }
+    .dx-toc li { counter-increment: step; }
+    .dx-toc a { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-2) 0; color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); border-left: 2px solid transparent; padding-left: var(--space-3); margin-left: calc(var(--space-3) * -1); }
+    .dx-toc a::before { content: counter(step, decimal-leading-zero); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
+    .dx-toc a:hover, .dx-toc a.active { color: var(--color-text); border-left-color: var(--color-accent); }
+
+    /* Content */
+    .dx-content { max-width: 68ch; }
+    .dx-content h1 { font-size: var(--text-5xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
+    .dx-content .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0 0 var(--space-10); }
+    .dx-content section { margin-bottom: var(--space-12); scroll-margin-top: 80px; }
+    .dx-content h2 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); letter-spacing: -0.01em; margin: 0 0 var(--space-3); display: flex; align-items: baseline; gap: var(--space-3); }
+    .dx-content h2::before { content: attr(data-step); font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); font-weight: var(--weight-regular); }
+    .dx-content h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-6) 0 var(--space-2); }
+    .dx-content p { line-height: 1.7; margin: 0 0 var(--space-4); color: var(--color-text-secondary); }
+    .dx-content ul { padding-left: var(--space-5); color: var(--color-text-secondary); line-height: 1.7; }
+    .dx-content ul li { margin-bottom: var(--space-1); }
+    .dx-content code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
+
+    /* Code block */
+    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-4) 0; color: var(--color-text); }
+    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
+    .dx-pre-caption { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); margin-bottom: calc(var(--space-2) * -1); padding-top: var(--space-6); }
+
+    /* Terminal block (mimics CLI output) */
+    .dx-term { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.7; margin: var(--space-4) 0; color: var(--color-text-secondary); }
+    .dx-term .ok { color: var(--color-success-strong); }
+    .dx-term .info { color: var(--color-info-strong); }
+    .dx-term .warn { color: var(--color-warning-strong); }
+    .dx-term .err  { color: var(--color-danger-strong); }
+    .dx-term .dim  { color: var(--color-text-muted); }
+    .dx-term .em   { color: var(--color-text); font-weight: var(--weight-semibold); }
+    .dx-term .prompt { color: var(--color-accent-strong); user-select: none; padding-right: var(--space-2); }
+
+    /* File tree */
+    .dx-tree { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.8; color: var(--color-text-secondary); margin: var(--space-4) 0; white-space: pre; }
+
+    /* Callout */
+    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; }
+    .dx-callout p { margin: 0; color: var(--color-text); }
+    .dx-callout strong { color: var(--color-accent-active); }
+
+    /* Reference table */
+    .dx-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
+    .dx-table th, .dx-table td { text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted); vertical-align: top; }
+    .dx-table th { color: var(--color-text-muted); font-weight: var(--weight-semibold); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; }
+    .dx-table td { color: var(--color-text-secondary); }
+    .dx-table td code { font-size: 0.85em; }
+    .dx-table tr:last-child td { border-bottom: none; }
+
+    /* Command card grid */
+    .dx-cmd-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin: var(--space-4) 0; }
+    .dx-cmd-card { padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); }
+    .dx-cmd-card-name { font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-accent-strong); margin-bottom: var(--space-1); }
+    .dx-cmd-card-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; }
+
+    /* Next steps */
+    .dx-next-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-top: var(--space-6); }
+    .dx-next-card { display: block; padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-decoration: none; color: inherit; transition: border-color 150ms; }
+    .dx-next-card:hover { border-color: var(--color-border-strong); }
+    .dx-next-label { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); }
+    .dx-next-title { font-size: var(--text-base); font-weight: var(--weight-semibold); margin: var(--space-1) 0 var(--space-1); }
+    .dx-next-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; }
+
+    @media (max-width: 900px) {
+      .dx-toc { display: none; }
+      .dx-cmd-grid, .dx-next-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.7</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Shell -->
+  <div class="dx-shell">
+    <div class="ren-with-sidebar" style="--sidebar-width: 200px; --sidebar-gap: var(--space-10);">
+
+      <!-- TOC -->
+      <aside class="dx-toc" aria-label="On this page">
+        <p class="dx-toc-title">On this page</p>
+        <ol>
+          <li><a href="#overview" class="active">Overview</a></li>
+          <li><a href="#install">Install &amp; run</a></li>
+          <li><a href="#init">init</a></li>
+          <li><a href="#add">add</a></li>
+          <li><a href="#list">list</a></li>
+          <li><a href="#scales">scales</a></li>
+          <li><a href="#workflows">Workflows</a></li>
+          <li><a href="#troubleshooting">Troubleshooting</a></li>
+          <li><a href="#next">Next steps</a></li>
+        </ol>
+      </aside>
+
+      <!-- Content -->
+      <main class="dx-content">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+            <li aria-current="page">CLI</li>
+          </ol>
+        </nav>
+
+        <h1>CLI</h1>
+        <p class="lede">Scaffold a new project, add components one at a time, and pick a type scale — without leaving the terminal. Five commands, no required flags, no global install.</p>
+
+        <!-- 1. Overview -->
+        <section id="overview">
+          <h2 data-step="01">Overview</h2>
+          <p>The RenDS CLI is a single Node script (<code>cli/index.js</code>) shipped inside the design system folder. It exposes five commands:</p>
+
+          <div class="dx-cmd-grid">
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends init</div>
+              <p class="dx-cmd-card-desc">Scaffold tokens + base into a new <code>rends/</code> folder.</p>
+            </div>
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends add &lt;name&gt;</div>
+              <p class="dx-cmd-card-desc">Copy a component (or all components) into your project.</p>
+            </div>
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends list</div>
+              <p class="dx-cmd-card-desc">Print every component grouped by tier.</p>
+            </div>
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends scales</div>
+              <p class="dx-cmd-card-desc">Print every type scale ratio (minor-third, golden, …).</p>
+            </div>
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends help</div>
+              <p class="dx-cmd-card-desc">Show usage. <code>--version</code> prints the current release.</p>
+            </div>
+          </div>
+
+          <div class="dx-callout">
+            <p><strong>Copy, don't import.</strong> The CLI follows the shadcn/ui model — it copies source files into your project. You own the code, edit it freely, and aren't tied to a package version. There is no runtime dependency on the CLI after files land.</p>
+          </div>
+        </section>
+
+        <!-- 2. Install -->
+        <section id="install">
+          <h2 data-step="02">Install &amp; run</h2>
+          <p>The CLI lives inside the RenDS source tree. There are three equivalent ways to invoke it depending on how you got the code:</p>
+
+          <h3>From a cloned repo</h3>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js &lt;command&gt;</code></div>
+
+          <h3>Via npm script (recommended in your <code>package.json</code>)</h3>
+          <div class="dx-pre" tabindex="0"><code>{
+  "scripts": {
+    "rends": "node rends/cli/index.js"
+  }
+}</code></div>
+          <p>Then call: <code>npm run rends -- add button</code> (the <code>--</code> forwards args to the script).</p>
+
+          <h3>As a global shortcut</h3>
+          <p>Symlink it into your <code>$PATH</code> if you'd rather type <code>rends</code> directly:</p>
+          <div class="dx-pre" tabindex="0"><code>chmod +x rends/cli/index.js
+ln -s "$(pwd)/rends/cli/index.js" /usr/local/bin/rends
+rends --version</code></div>
+
+          <div class="dx-callout">
+            <p><strong>Node 18+ required.</strong> The CLI uses ES modules (<code>import</code>), <code>fileURLToPath</code>, and modern <code>fs</code> APIs. Any current LTS is fine.</p>
+          </div>
+        </section>
+
+        <!-- 3. init -->
+        <section id="init">
+          <h2 data-step="03"><code>init</code></h2>
+          <p>Scaffolds the foundation of a RenDS project: a fresh <code>rends/</code> folder containing tokens, base styles, an empty <code>components/</code> directory with an <code>index.css</code> ready to receive imports, and a top-level <code>index.css</code> that wires it all together.</p>
+
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js init</code></div>
+
+          <p class="dx-pre-caption">terminal output</p>
+          <div class="dx-term"><span class="ok">✓</span> Created rends/tokens/
+<span class="ok">✓</span> Created rends/base/
+<span class="ok">✓</span> Created rends/components/
+<span class="ok">✓</span> Created rends/index.css
+
+<span class="em">Done!</span> Add components with:
+
+  <span class="info">node rends/cli/index.js add button</span>
+  <span class="info">node rends/cli/index.js add dialog</span>
+  <span class="info">node rends/cli/index.js add --all</span></div>
+
+          <h3>Result on disk</h3>
+          <div class="dx-tree">my-project/
+└── rends/
+    ├── index.css           ← @imports tokens, base, components
+    ├── tokens/             ← primitives + semantic + component layers
+    ├── base/               ← reset, layouts, utilities
+    └── components/
+        └── index.css       ← empty, ready for `add`</div>
+
+          <h3>Options</h3>
+          <table class="dx-table">
+            <thead><tr><th>Flag</th><th>Default</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><code>--scale &lt;ratio&gt;</code></td>
+                <td><code>major-third</code></td>
+                <td>Regenerate <code>typography.css</code> with a modular scale. See <a href="#scales" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">scales</a> for the full list.</td>
+              </tr>
+              <tr>
+                <td><code>--base &lt;px&gt;</code></td>
+                <td><code>16</code></td>
+                <td>Base font size in pixels. Every step in the scale is computed from this anchor.</td>
+              </tr>
+              <tr>
+                <td><code>--fluid</code></td>
+                <td>off</td>
+                <td>Wrap each step in <code>clamp()</code> so type scales smoothly between viewport widths.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Examples</h3>
+          <div class="dx-pre" tabindex="0"><code># Defaults: major-third, 16px base, no fluid scaling
+node rends/cli/index.js init
+
+# Tighter scale, larger anchor
+node rends/cli/index.js init --scale minor-third --base 18
+
+# Fluid responsive type
+node rends/cli/index.js init --scale perfect-fourth --fluid</code></div>
+
+          <div class="dx-callout">
+            <p><strong>Refuses to overwrite.</strong> If <code>rends/</code> already exists in the current directory, <code>init</code> exits with an error rather than clobber your work. Delete or rename the folder first.</p>
+          </div>
+        </section>
+
+        <!-- 4. add -->
+        <section id="add">
+          <h2 data-step="04"><code>add</code></h2>
+          <p>Copies one component (or all of them) from the source registry into <code>rends/components/&lt;name&gt;/</code>, pulls in any utility dependencies, and updates <code>components/index.css</code> with the import line. Idempotent at the component level — re-adding throws rather than silently overwriting.</p>
+
+          <h3>Add a single component</h3>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js add button</code></div>
+
+          <p class="dx-pre-caption">terminal output</p>
+          <div class="dx-term"><span class="ok">✓</span> Copied ren-button.css
+<span class="ok">✓</span> Copied ren-button.js
+<span class="ok">✓</span> Updated components/index.css
+
+<span class="em">Usage:</span>
+
+  &lt;ren-button&gt;Click me&lt;/ren-button&gt;
+  &lt;ren-button variant="primary"&gt;Primary&lt;/ren-button&gt;
+  &lt;ren-button variant="secondary" size="sm"&gt;Cancel&lt;/ren-button&gt;</div>
+
+          <h3>Add everything</h3>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js add --all</code></div>
+          <p>Copies every primitive, composite, and pattern. Components that already exist are skipped (a count is reported at the end).</p>
+
+          <h3>What gets copied</h3>
+          <p>Each component ships as a self-contained folder. For <code>ren-field</code> for example:</p>
+          <div class="dx-tree">rends/components/field/
+├── ren-field.css
+└── ren-field.js
+
+rends/utils/
+└── id-generator.js     ← pulled in as a dependency</div>
+
+          <p>Dependencies in <code>rends/utils/</code> are shared across components. The CLI deduplicates — utilities already present are left alone with an <code>ℹ already exists</code> notice.</p>
+
+          <h3>Wiring it up</h3>
+          <p>After <code>add</code>, your <code>components/index.css</code> looks like:</p>
+          <div class="dx-pre" tabindex="0"><code>/* RenDS — Components Layer */
+
+@import './button/ren-button.css';
+@import './field/ren-field.css';
+@import './dialog/ren-dialog.css';</code></div>
+          <p>For interactive components, also load the JS module:</p>
+          <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/dialog/ren-dialog.js"&gt;&lt;/script&gt;</code></div>
+
+          <div class="dx-callout">
+            <p><strong>Unknown component?</strong> The CLI prints the error and points you at <code>rends list</code> for the canonical name list. Names are normalised to lowercase, so <code>add Button</code> works the same as <code>add button</code>.</p>
+          </div>
+        </section>
+
+        <!-- 5. list -->
+        <section id="list">
+          <h2 data-step="05"><code>list</code></h2>
+          <p>Prints every component the CLI knows about, grouped by tier and annotated with a one-line description. Use it to discover what's available and to look up canonical names before <code>add</code>.</p>
+
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js list</code></div>
+
+          <p class="dx-pre-caption">terminal output (excerpt)</p>
+          <div class="dx-term"><span class="em">RenDS Components</span> (52)
+
+<span class="em">PRIMITIVES</span>
+  <span class="info">button</span>              Versatile button with variants, sizes, icon support, loading state
+  <span class="info">field</span>               Form field wrapper with label, error, description
+  <span class="info">checkbox</span>            Checkbox and toggle switch with accessibility
+  <span class="info">badge</span>               Status badge with semantic colors
+  <span class="dim">… 14 more</span>
+
+<span class="em">COMPOSITES</span>
+  <span class="info">dialog</span>              Modal dialog with focus trap and Escape handling
+  <span class="info">select</span>              Accessible custom select with keyboard nav
+  <span class="info">combobox</span>            Filterable select with autocomplete
+  <span class="dim">… 23 more</span>
+
+<span class="em">PATTERNS</span>
+  <span class="info">nav</span>                 Top navigation bar with responsive collapse
+  <span class="info">sidebar</span>             Collapsible sidebar with grouped sections
+  <span class="info">form</span>                Composed form pattern: fields + validation + submit
+  <span class="dim">… 5 more</span></div>
+        </section>
+
+        <!-- 6. scales -->
+        <section id="scales">
+          <h2 data-step="06"><code>scales</code></h2>
+          <p>Lists the modular type scale ratios you can pass to <code>init --scale</code>. Three are marked <code>★</code> as recommended for web; the default is <code>major-third</code>.</p>
+
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js scales</code></div>
+
+          <p class="dx-pre-caption">terminal output</p>
+          <div class="dx-term"><span class="em">Available Type Scale Ratios</span>
+
+<span class="dim">Use with: node rends/cli/index.js init --scale &lt;ratio&gt;</span>
+
+  <span class="info">minor-second</span>      Minor Second   <span class="dim">(1.067)</span>
+  <span class="info">major-second</span>      Major Second   <span class="dim">(1.125)</span>
+  <span class="info">minor-third</span>       Minor Third    <span class="dim">(1.200)</span> <span class="ok">★</span>
+  <span class="info">major-third</span>       Major Third    <span class="dim">(1.250)</span> <span class="ok">★</span> <span class="warn">← default</span>
+  <span class="info">perfect-fourth</span>    Perfect Fourth <span class="dim">(1.333)</span> <span class="ok">★</span>
+  <span class="info">augmented-fourth</span>  Aug. Fourth    <span class="dim">(1.414)</span>
+  <span class="info">perfect-fifth</span>     Perfect Fifth  <span class="dim">(1.500)</span>
+  <span class="info">golden</span>             Golden Ratio   <span class="dim">(1.618)</span>
+
+<span class="dim">★ = recommended for web</span></div>
+
+          <h3>Picking a ratio</h3>
+          <ul>
+            <li><code>minor-third</code> (1.200) — dense UIs, dashboards, data-heavy apps.</li>
+            <li><code>major-third</code> (1.250) — balanced default. Works for most product UIs.</li>
+            <li><code>perfect-fourth</code> (1.333) — editorial / marketing pages with display headlines.</li>
+            <li><code>golden</code> (1.618) — high-impact landing pages where headers should dominate.</li>
+          </ul>
+          <p>Rule of thumb: smaller ratios for information-dense screens, larger for narrative content.</p>
+        </section>
+
+        <!-- 7. Workflows -->
+        <section id="workflows">
+          <h2 data-step="07">Workflows</h2>
+
+          <h3>Greenfield project — minimal</h3>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js init
+node rends/cli/index.js add button
+node rends/cli/index.js add field
+node rends/cli/index.js add dialog</code></div>
+          <p>Three components is enough for an auth screen, a settings panel, and most CRUD flows.</p>
+
+          <h3>Greenfield project — kitchen sink</h3>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js init --scale perfect-fourth --fluid
+node rends/cli/index.js add --all</code></div>
+          <p>Every component, fluid responsive type, no decisions to defer.</p>
+
+          <h3>Adding to an existing RenDS project</h3>
+          <p><code>add</code> is safe to run incrementally. Each call only touches the named component's folder and appends to <code>components/index.css</code>. Re-running <code>add button</code> on a folder that already has it errors out — delete first if you want to re-pull.</p>
+
+          <h3>Custom theme on top</h3>
+          <p>The CLI doesn't generate themes. Use the <a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Theme Builder</a> instead, or hand-edit <code>themes/appearance.css</code>. The CLI only owns the <em>structural</em> scaffold (tokens + base + components).</p>
+        </section>
+
+        <!-- 8. Troubleshooting -->
+        <section id="troubleshooting">
+          <h2 data-step="08">Troubleshooting</h2>
+
+          <h3><code>rends/ directory already exists</code></h3>
+          <p>You ran <code>init</code> in a folder that already has a <code>rends/</code> child. Move or delete it, then re-run. There is no <code>--force</code> flag by design — clobbering a token folder is rarely what you want.</p>
+
+          <h3><code>Unknown component: foo</code></h3>
+          <p>The name doesn't match the registry. Run <code>list</code> to see canonical names. Common slips: <code>buttons</code> (singular only), <code>modal</code> (it's <code>dialog</code>), <code>dropdown</code> (it's <code>menu</code> or <code>combobox</code> depending on what you want).</p>
+
+          <h3><code>Component "X" already exists</code></h3>
+          <p><code>add</code> refuses to overwrite. Either you've already added it (check <code>components/index.css</code>) or there's a stale folder. Delete <code>rends/components/X/</code> and re-run.</p>
+
+          <h3><code>Unknown scale ratio: "X"</code></h3>
+          <p>The ratio name isn't in the catalog. Run <code>scales</code> for the list. Names are kebab-case: <code>perfect-fourth</code>, not <code>perfectFourth</code> or <code>perfect_fourth</code>.</p>
+
+          <h3>Command runs but nothing happens</h3>
+          <p>Check Node version: the CLI requires Node 18+ for ES module support. <code>node --version</code>. Older Node will silently fail on the <code>import</code> at the top of <code>index.js</code>.</p>
+        </section>
+
+        <!-- 9. Next -->
+        <section id="next">
+          <h2 data-step="09">Next steps</h2>
+          <p>You've scaffolded a project and pulled components. Where to go from here:</p>
+
+          <div class="dx-next-grid">
+            <a href="getting-started.html" class="dx-next-card">
+              <div class="dx-next-label">Setup</div>
+              <div class="dx-next-title">Getting Started</div>
+              <p class="dx-next-desc">From an empty folder to a styled, accessible page in two minutes.</p>
+            </a>
+            <a href="tokens.html" class="dx-next-card">
+              <div class="dx-next-label">Foundations</div>
+              <div class="dx-next-title">Tokens reference</div>
+              <p class="dx-next-desc">Every value in the three-tier system: primitives, semantic, component.</p>
+            </a>
+            <a href="components.html" class="dx-next-card">
+              <div class="dx-next-label">Catalog</div>
+              <div class="dx-next-title">Components showcase</div>
+              <p class="dx-next-desc">Live examples of every component you can <code>add</code>.</p>
+            </a>
+            <a href="../create/index.html" class="dx-next-card">
+              <div class="dx-next-label">Tool</div>
+              <div class="dx-next-title">Theme Builder</div>
+              <p class="dx-next-desc">Generate a custom theme, export as CSS / JSON / ZIP, share via URL.</p>
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokens — RenDS Docs</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Shared top nav */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Shell */
+    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-10) var(--space-6); }
+
+    /* Page header */
+    .dx-header { margin-bottom: var(--space-12); max-width: 72ch; }
+    .dx-header h1 { font-size: var(--text-6xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: var(--space-2) 0 var(--space-4); }
+    .dx-header .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0; }
+    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
+
+    /* Section */
+    .dx-section { padding-top: var(--space-10); margin-top: var(--space-10); border-top: 1px solid var(--color-border-muted); scroll-margin-top: 80px; }
+    .dx-section h2 { font-size: var(--text-3xl); letter-spacing: -0.02em; font-weight: var(--weight-bold); margin: 0 0 var(--space-2); }
+    .dx-section > p { color: var(--color-text-muted); line-height: 1.7; margin: 0 0 var(--space-6); max-width: 72ch; }
+    .dx-section h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-8) 0 var(--space-3); }
+    .dx-section h4 { font-size: var(--text-base); font-weight: var(--weight-semibold); margin: var(--space-6) 0 var(--space-2); color: var(--color-text-secondary); }
+    code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
+
+    /* Tier diagram */
+    .dx-tiers { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4); margin: var(--space-6) 0; }
+    .dx-tier { padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-raised); }
+    .dx-tier-num { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+    .dx-tier-name { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-1) 0; }
+    .dx-tier-desc { color: var(--color-text-muted); font-size: var(--text-sm); margin: 0 0 var(--space-3); line-height: 1.55; }
+    .dx-tier code { display: block; background: var(--color-surface-sunken); padding: var(--space-2); border-radius: var(--radius-xs); font-size: var(--text-xs); margin-top: var(--space-1); border: 1px solid var(--color-border-muted); }
+
+    /* Code block */
+    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-4) 0; color: var(--color-text); }
+    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
+
+    /* Color swatches */
+    .dx-swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0; }
+    .dx-swatch { display: block; text-align: left; border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; background: var(--color-surface); }
+    .dx-swatch-color { height: 64px; width: 100%; display: block; }
+    .dx-swatch-meta { padding: var(--space-2) var(--space-3); font-family: var(--font-mono); font-size: var(--text-xs); }
+    .dx-swatch-name { color: var(--color-text); font-weight: var(--weight-medium); }
+    .dx-swatch-hex { color: var(--color-text-muted); display: block; margin-top: 2px; }
+
+    /* Semantic color row */
+    .dx-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
+    .dx-table th, .dx-table td { text-align: left; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-table th { font-weight: var(--weight-semibold); color: var(--color-text-muted); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; }
+    .dx-table td code { font-size: 0.85em; }
+    .dx-sem-dot { display: inline-block; width: 18px; height: 18px; border-radius: var(--radius-xs); vertical-align: -4px; margin-right: var(--space-2); border: 1px solid var(--color-border); }
+
+    /* Space scale visual */
+    .dx-space-row { display: grid; grid-template-columns: 90px 1fr 80px; align-items: center; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-muted); font-size: var(--text-sm); }
+    .dx-space-bar { height: 8px; background: var(--color-accent); border-radius: 2px; }
+    .dx-space-row code { background: none; border: none; padding: 0; color: var(--color-text); font-size: var(--text-sm); }
+    .dx-space-val { color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--text-xs); text-align: right; }
+
+    /* Type samples */
+    .dx-type-row { display: grid; grid-template-columns: 90px 80px 1fr; align-items: baseline; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-muted); }
+    .dx-type-row code { background: none; border: none; padding: 0; font-size: var(--text-sm); }
+    .dx-type-row .type-size { color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--text-xs); }
+    .dx-type-sample { color: var(--color-text); }
+
+    /* Radius samples */
+    .dx-radius-row { display: grid; grid-template-columns: 90px 60px 1fr; align-items: center; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-muted); }
+    .dx-radius-box { width: 44px; height: 44px; background: var(--color-accent-subtle); border: 1px solid var(--color-accent); }
+    .dx-radius-row code { background: none; border: none; padding: 0; font-size: var(--text-sm); }
+
+    /* Live preview panel */
+    .dx-preview { padding: var(--space-6); border: 1px dashed var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); margin: var(--space-4) 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+
+    /* Callout (used for the text-faint policy note) */
+    .dx-callout { border-left: 3px solid var(--color-warning); background: color-mix(in srgb, var(--color-warning) 8%, var(--color-surface)); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-4) 0; max-width: 72ch; }
+    .dx-callout-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-warning-active); margin: 0 0 var(--space-2); }
+    .dx-callout p { margin: 0 0 var(--space-2); color: var(--color-text); }
+    .dx-callout p:last-child { margin-bottom: 0; }
+    .dx-callout code { background: var(--color-surface); }
+
+    @media (max-width: 720px) {
+      .dx-tiers { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.6</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell">
+
+    <!-- Header -->
+    <header class="dx-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+          <li aria-current="page">Tokens</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Foundations</p>
+      <h1>Tokens</h1>
+      <p class="lede">Every visual decision in RenDS comes from a token. Three layers — primitives, semantic, component — each with a job. Understanding this separation is the single biggest unlock for customizing the system.</p>
+    </header>
+
+    <!-- The 3 tiers -->
+    <section class="dx-section" id="tiers" style="margin-top: 0; padding-top: 0; border-top: none;">
+      <h2>The three tiers</h2>
+      <p>Tokens cascade from raw values to concrete component settings. Consume the layer that matches your intent — never reach past it.</p>
+
+      <div class="dx-tiers">
+        <div class="dx-tier">
+          <div class="dx-tier-num">Tier 1 · Raw</div>
+          <div class="dx-tier-name">Primitives</div>
+          <p class="dx-tier-desc">The physical palette. Colors, space scale, type scale, radius sizes. Do <em>not</em> use directly in components.</p>
+          <code>--blue-500<br>--space-4<br>--text-base</code>
+        </div>
+        <div class="dx-tier">
+          <div class="dx-tier-num">Tier 2 · Meaning</div>
+          <div class="dx-tier-name">Semantic</div>
+          <p class="dx-tier-desc">Purpose-based. This is what most components consume. They switch light/dark via <code style="display: inline; background: none; border: none; padding: 0; font-size: inherit;">light-dark()</code>.</p>
+          <code>--color-accent<br>--color-text-muted<br>--color-surface</code>
+        </div>
+        <div class="dx-tier">
+          <div class="dx-tier-num">Tier 3 · Component</div>
+          <div class="dx-tier-name">Component</div>
+          <p class="dx-tier-desc">Per-component override hooks. Default to semantic tokens. This is how you theme without fighting specificity.</p>
+          <code>--ren-btn-bg<br>--ren-card-radius<br>--ren-field-border</code>
+        </div>
+      </div>
+
+      <h4>How they flow</h4>
+      <div class="dx-pre" tabindex="0"><code>/* Tier 1: define the raw value */
+--blue-500: #007AFF;
+
+/* Tier 2: assign meaning */
+--color-accent: light-dark(var(--blue-500), var(--blue-400));
+
+/* Tier 3: wire to a component */
+--ren-btn-bg: var(--color-accent);
+
+/* Component rule consumes the component token */
+.ren-btn-primary { background: var(--ren-btn-bg); }</code></div>
+    </section>
+
+    <!-- Primitives: Colors -->
+    <section class="dx-section" id="colors">
+      <h2>Primitive colors</h2>
+      <p>RenDS ships 11 color scales with 11 steps each (50 → 1000). These are the raw palette. You'll usually reference them through semantic tokens, but they're available when you need them.</p>
+
+      <h3>Blue (accent default)</h3>
+      <div class="dx-swatch-grid">
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #EFF6FF"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-50</span><span class="dx-swatch-hex">#EFF6FF</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #DBEAFE"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-100</span><span class="dx-swatch-hex">#DBEAFE</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #93C5FD"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-300</span><span class="dx-swatch-hex">#93C5FD</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #3B82F6"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-500</span><span class="dx-swatch-hex">#3B82F6</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #2563EB"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-600</span><span class="dx-swatch-hex">#2563EB</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #1D4ED8"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-700</span><span class="dx-swatch-hex">#1D4ED8</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #1E3A8A"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--blue-900</span><span class="dx-swatch-hex">#1E3A8A</span></div></div>
+      </div>
+
+      <h3>Grayscale</h3>
+      <div class="dx-swatch-grid">
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #FAFAFA"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-50</span><span class="dx-swatch-hex">#FAFAFA</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #F5F5F5"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-100</span><span class="dx-swatch-hex">#F5F5F5</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #E5E5E5"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-200</span><span class="dx-swatch-hex">#E5E5E5</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #A3A3A3"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-400</span><span class="dx-swatch-hex">#A3A3A3</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #737373"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-500</span><span class="dx-swatch-hex">#737373</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #525252"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-600</span><span class="dx-swatch-hex">#525252</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #404040"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-700</span><span class="dx-swatch-hex">#404040</span></div></div>
+        <div class="dx-swatch"><span class="dx-swatch-color" style="background: #171717; color: white"></span><div class="dx-swatch-meta"><span class="dx-swatch-name">--gray-900</span><span class="dx-swatch-hex">#171717</span></div></div>
+      </div>
+
+      <h4>Also shipped</h4>
+      <p>Full scales for: <code>--red-*</code>, <code>--orange-*</code>, <code>--yellow-*</code>, <code>--green-*</code>, <code>--teal-*</code>, <code>--indigo-*</code>, <code>--purple-*</code>, <code>--pink-*</code>, <code>--slate-*</code>. Plus <code>--black</code> and <code>--white</code>.</p>
+    </section>
+
+    <!-- Semantic colors -->
+    <section class="dx-section" id="semantic">
+      <h2>Semantic colors</h2>
+      <p>These are the tokens you'll actually use 95% of the time. Each has a purpose, not a shade. Swapping light/dark mode swaps their underlying values — you write the same CSS either way.</p>
+
+      <h3>Content</h3>
+      <table class="dx-table">
+        <thead><tr><th>Token</th><th>Role</th><th>Preview</th></tr></thead>
+        <tbody>
+          <tr><td><code>--color-text</code></td><td>Body text, headings</td><td><span class="dx-sem-dot" style="background: var(--color-text);"></span><span style="color: var(--color-text);">The quick brown fox</span></td></tr>
+          <tr><td><code>--color-text-secondary</code></td><td>Supporting prose</td><td><span class="dx-sem-dot" style="background: var(--color-text-secondary);"></span><span style="color: var(--color-text-secondary);">The quick brown fox</span></td></tr>
+          <tr><td><code>--color-text-muted</code></td><td>Labels, captions, helper</td><td><span class="dx-sem-dot" style="background: var(--color-text-muted);"></span><span style="color: var(--color-text-muted);">The quick brown fox</span></td></tr>
+          <tr><td><code>--color-text-faint</code></td><td>Incidental only &mdash; disabled labels, decorative punctuation. <strong>Not AA &mdash; never use for text that must be read.</strong></td><td><span class="dx-sem-dot" style="background: var(--color-text-faint);"></span><em style="color: var(--color-text-muted); font-style: normal;">(preview omitted &mdash; would fail contrast by design)</em></td></tr>
+          <tr><td><code>--color-text-link</code></td><td>Links</td><td><span class="dx-sem-dot" style="background: var(--color-text-link);"></span><span style="color: var(--color-text-link);">The quick brown fox</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="dx-callout" role="note" aria-label="Policy note for --color-text-faint">
+        <p class="dx-callout-title">Policy: <code>--color-text-faint</code> is <em>incidental</em>, not "text-muted-lite"</p>
+        <p>Use it only for content WCAG 2.1 SC 1.4.3 explicitly exempts: disabled labels (paired with <code>opacity &lt; 1</code>), placeholder hints, decorative punctuation (breadcrumb separators, ellipsis), calendar cells outside the current month.</p>
+        <p><strong>Do not use it</strong> for eyebrows, kickers, captions, table headers, step numbering, help text, footnote references, tooltip content, or anything a user must <em>read</em> to understand the UI. Use <code>--color-text-muted</code> for those &mdash; it's the darkest "secondary" token that still clears AA on every surface.</p>
+        <p>Rule of thumb: if losing the text loses information, it can't be <code>--color-text-faint</code>. See <a href="accessibility.html#contrast">Accessibility &rarr; Color contrast</a>.</p>
+      </div>
+
+      <h3>Surfaces</h3>
+      <table class="dx-table">
+        <thead><tr><th>Token</th><th>Role</th><th>Preview</th></tr></thead>
+        <tbody>
+          <tr><td><code>--color-surface</code></td><td>Page background</td><td><span class="dx-sem-dot" style="background: var(--color-surface);"></span></td></tr>
+          <tr><td><code>--color-surface-raised</code></td><td>Cards, sheets</td><td><span class="dx-sem-dot" style="background: var(--color-surface-raised);"></span></td></tr>
+          <tr><td><code>--color-surface-sunken</code></td><td>Inputs, code blocks</td><td><span class="dx-sem-dot" style="background: var(--color-surface-sunken);"></span></td></tr>
+          <tr><td><code>--color-surface-overlay</code></td><td>Modals, popovers</td><td><span class="dx-sem-dot" style="background: var(--color-surface-overlay);"></span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Intent (status colors)</h3>
+      <table class="dx-table">
+        <thead><tr><th>Token</th><th>Role</th><th>Preview</th></tr></thead>
+        <tbody>
+          <tr><td><code>--color-accent</code></td><td>Brand, primary actions</td><td><span class="dx-sem-dot" style="background: var(--color-accent);"></span></td></tr>
+          <tr><td><code>--color-success</code></td><td>Confirmations, positives</td><td><span class="dx-sem-dot" style="background: var(--color-success);"></span></td></tr>
+          <tr><td><code>--color-warning</code></td><td>Cautions, pending</td><td><span class="dx-sem-dot" style="background: var(--color-warning);"></span></td></tr>
+          <tr><td><code>--color-danger</code></td><td>Errors, destructive</td><td><span class="dx-sem-dot" style="background: var(--color-danger);"></span></td></tr>
+          <tr><td><code>--color-info</code></td><td>Neutral messages</td><td><span class="dx-sem-dot" style="background: var(--color-info);"></span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Borders & fills</h3>
+      <table class="dx-table">
+        <thead><tr><th>Token</th><th>Role</th><th>Preview</th></tr></thead>
+        <tbody>
+          <tr><td><code>--color-border</code></td><td>Default edges</td><td><span class="dx-sem-dot" style="background: var(--color-border);"></span></td></tr>
+          <tr><td><code>--color-border-strong</code></td><td>Emphasis edges</td><td><span class="dx-sem-dot" style="background: var(--color-border-strong);"></span></td></tr>
+          <tr><td><code>--color-border-muted</code></td><td>Dividers, faint edges</td><td><span class="dx-sem-dot" style="background: var(--color-border-muted);"></span></td></tr>
+          <tr><td><code>--color-fill</code></td><td>Hover surfaces</td><td><span class="dx-sem-dot" style="background: var(--color-fill);"></span></td></tr>
+          <tr><td><code>--color-focus-ring</code></td><td>Keyboard focus</td><td><span class="dx-sem-dot" style="background: var(--color-focus-ring);"></span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Spacing -->
+    <section class="dx-section" id="spacing">
+      <h2>Spacing</h2>
+      <p>An 8-point scale with half and quarter steps where real-world density demands them. <code>--space-4</code> (16px) is the canonical "one unit of breathing room".</p>
+
+      <div style="margin-top: var(--space-4);">
+        <div class="dx-space-row"><code>--space-1</code><span><span class="dx-space-bar" style="width: 4px;"></span></span><span class="dx-space-val">4px</span></div>
+        <div class="dx-space-row"><code>--space-2</code><span><span class="dx-space-bar" style="width: 8px;"></span></span><span class="dx-space-val">8px</span></div>
+        <div class="dx-space-row"><code>--space-3</code><span><span class="dx-space-bar" style="width: 12px;"></span></span><span class="dx-space-val">12px</span></div>
+        <div class="dx-space-row"><code>--space-4</code><span><span class="dx-space-bar" style="width: 16px;"></span></span><span class="dx-space-val">16px</span></div>
+        <div class="dx-space-row"><code>--space-5</code><span><span class="dx-space-bar" style="width: 20px;"></span></span><span class="dx-space-val">20px</span></div>
+        <div class="dx-space-row"><code>--space-6</code><span><span class="dx-space-bar" style="width: 24px;"></span></span><span class="dx-space-val">24px</span></div>
+        <div class="dx-space-row"><code>--space-8</code><span><span class="dx-space-bar" style="width: 32px;"></span></span><span class="dx-space-val">32px</span></div>
+        <div class="dx-space-row"><code>--space-10</code><span><span class="dx-space-bar" style="width: 40px;"></span></span><span class="dx-space-val">40px</span></div>
+        <div class="dx-space-row"><code>--space-12</code><span><span class="dx-space-bar" style="width: 48px;"></span></span><span class="dx-space-val">48px</span></div>
+        <div class="dx-space-row"><code>--space-16</code><span><span class="dx-space-bar" style="width: 64px;"></span></span><span class="dx-space-val">64px</span></div>
+        <div class="dx-space-row"><code>--space-24</code><span><span class="dx-space-bar" style="width: 96px;"></span></span><span class="dx-space-val">96px</span></div>
+      </div>
+
+      <p style="margin-top: var(--space-4);">Full range: <code>--space-0</code>, <code>--space-px</code>, <code>--space-0-5</code>, <code>--space-1</code> … <code>--space-64</code>. Half-step <code>--space-1-5</code>, <code>--space-2-5</code>, etc. are also available.</p>
+    </section>
+
+    <!-- Typography -->
+    <section class="dx-section" id="typography">
+      <h2>Type scale</h2>
+      <p>Apple-HIG-inspired scale with <code>--text-base</code> (16px) as the anchor. All sizes are in <code>rem</code> so the user's browser font preference is respected.</p>
+
+      <div style="margin-top: var(--space-4);">
+        <div class="dx-type-row"><code>--text-xs</code><span class="type-size">11px</span><span class="dx-type-sample" style="font-size: var(--text-xs);">The quick brown fox jumps over the lazy dog</span></div>
+        <div class="dx-type-row"><code>--text-sm</code><span class="type-size">13px</span><span class="dx-type-sample" style="font-size: var(--text-sm);">The quick brown fox jumps over the lazy dog</span></div>
+        <div class="dx-type-row"><code>--text-base</code><span class="type-size">16px</span><span class="dx-type-sample" style="font-size: var(--text-base);">The quick brown fox jumps over the lazy dog</span></div>
+        <div class="dx-type-row"><code>--text-md</code><span class="type-size">17px</span><span class="dx-type-sample" style="font-size: var(--text-md);">The quick brown fox jumps over</span></div>
+        <div class="dx-type-row"><code>--text-lg</code><span class="type-size">18px</span><span class="dx-type-sample" style="font-size: var(--text-lg);">The quick brown fox jumps over</span></div>
+        <div class="dx-type-row"><code>--text-xl</code><span class="type-size">20px</span><span class="dx-type-sample" style="font-size: var(--text-xl);">The quick brown fox jumps over</span></div>
+        <div class="dx-type-row"><code>--text-2xl</code><span class="type-size">22px</span><span class="dx-type-sample" style="font-size: var(--text-2xl);">The quick brown fox</span></div>
+        <div class="dx-type-row"><code>--text-3xl</code><span class="type-size">26px</span><span class="dx-type-sample" style="font-size: var(--text-3xl); font-weight: var(--weight-semibold);">The quick brown fox</span></div>
+        <div class="dx-type-row"><code>--text-4xl</code><span class="type-size">28px</span><span class="dx-type-sample" style="font-size: var(--text-4xl); font-weight: var(--weight-semibold);">The quick brown</span></div>
+        <div class="dx-type-row"><code>--text-5xl</code><span class="type-size">34px</span><span class="dx-type-sample" style="font-size: var(--text-5xl); font-weight: var(--weight-bold); letter-spacing: -0.02em;">The quick brown</span></div>
+        <div class="dx-type-row"><code>--text-6xl</code><span class="type-size">40px</span><span class="dx-type-sample" style="font-size: var(--text-6xl); font-weight: var(--weight-bold); letter-spacing: -0.03em;">The quick</span></div>
+      </div>
+
+      <h4>Weights</h4>
+      <p><code>--weight-regular</code>, <code>--weight-medium</code>, <code>--weight-semibold</code>, <code>--weight-bold</code>. Plus <code>--font-sans</code>, <code>--font-mono</code>, <code>--font-serif</code>.</p>
+    </section>
+
+    <!-- Radius -->
+    <section class="dx-section" id="radius">
+      <h2>Radius</h2>
+      <p>Seven steps from <code>--radius-none</code> to <code>--radius-full</code>. Card components default to <code>--radius-lg</code>, inputs to <code>--radius-md</code>, pills to <code>--radius-full</code>.</p>
+
+      <div style="margin-top: var(--space-4);">
+        <div class="dx-radius-row"><code>--radius-xs</code><span class="dx-radius-box" style="border-radius: var(--radius-xs);"></span><span class="type-size">2px</span></div>
+        <div class="dx-radius-row"><code>--radius-sm</code><span class="dx-radius-box" style="border-radius: var(--radius-sm);"></span><span class="type-size">4px</span></div>
+        <div class="dx-radius-row"><code>--radius-md</code><span class="dx-radius-box" style="border-radius: var(--radius-md);"></span><span class="type-size">8px</span></div>
+        <div class="dx-radius-row"><code>--radius-lg</code><span class="dx-radius-box" style="border-radius: var(--radius-lg);"></span><span class="type-size">12px</span></div>
+        <div class="dx-radius-row"><code>--radius-xl</code><span class="dx-radius-box" style="border-radius: var(--radius-xl);"></span><span class="type-size">16px</span></div>
+        <div class="dx-radius-row"><code>--radius-2xl</code><span class="dx-radius-box" style="border-radius: var(--radius-2xl);"></span><span class="type-size">20px</span></div>
+        <div class="dx-radius-row"><code>--radius-full</code><span class="dx-radius-box" style="border-radius: var(--radius-full);"></span><span class="type-size">pill</span></div>
+      </div>
+    </section>
+
+    <!-- Component tokens -->
+    <section class="dx-section" id="component">
+      <h2>Component tokens</h2>
+      <p>Each component exposes <code>--ren-&lt;component&gt;-*</code> custom properties. These are the theming hooks. You never need to fight specificity or use <code>!important</code> — just override the hook on any ancestor.</p>
+
+      <h3>Example: Button</h3>
+      <div class="dx-pre" tabindex="0"><code>/* Defaults (in ren-button.css) */
+.ren-btn {
+  --ren-btn-bg: var(--color-fill);
+  --ren-btn-color: var(--color-text);
+  --ren-btn-border: var(--color-border);
+  --ren-btn-radius: var(--radius-md);
+  --ren-btn-padding-x: var(--space-4);
+  --ren-btn-padding-y: var(--space-2);
+}
+
+.ren-btn-primary {
+  --ren-btn-bg: var(--color-accent);
+  --ren-btn-color: var(--color-on-accent);
+  --ren-btn-border: var(--color-accent);
+}</code></div>
+
+      <h3>Overriding</h3>
+      <p>Scoped to a theme class:</p>
+      <div class="dx-pre" tabindex="0"><code>.brand-orange .ren-btn-primary {
+  --ren-btn-bg: hotpink;
+  --ren-btn-border: hotpink;
+}</code></div>
+
+      <p>Or globally on <code>:root</code>:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --ren-btn-radius: var(--radius-full);  /* all buttons pill-shaped */
+}</code></div>
+
+      <h3>Live preview</h3>
+      <div class="dx-preview">
+        <button class="ren-btn ren-btn-primary">Default</button>
+        <button class="ren-btn ren-btn-primary" style="--ren-btn-bg: hotpink; --ren-btn-border: hotpink;">Hotpink bg</button>
+        <button class="ren-btn ren-btn-primary" style="--ren-btn-radius: var(--radius-full);">Pill radius</button>
+      </div>
+      <p>Every preview above is a real <code>&lt;button class="ren-btn ren-btn-primary"&gt;</code> — the only differences are inline token overrides on the element.</p>
+    </section>
+
+    <!-- Override patterns -->
+    <section class="dx-section" id="override">
+      <h2>Override patterns</h2>
+      <p>Three patterns, in order of recommended reach:</p>
+
+      <h3>1. Override semantic tokens (widest reach)</h3>
+      <p>Change the meaning of "accent" everywhere, instantly:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --color-accent: #8B5CF6;       /* violet brand */
+  --color-accent-hover: #7C3AED;
+}</code></div>
+
+      <h3>2. Override component tokens (component-wide)</h3>
+      <p>Change how all buttons look without touching button CSS:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --ren-btn-radius: var(--radius-full);
+  --ren-btn-padding-x: var(--space-5);
+}</code></div>
+
+      <h3>3. Scope to a theme class (opt-in)</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;section class="brand-rose"&gt;
+  &lt;button class="ren-btn ren-btn-primary"&gt;Only rose here&lt;/button&gt;
+&lt;/section&gt;
+
+&lt;style&gt;
+  .brand-rose {
+    --color-accent: #F43F5E;
+    --color-accent-hover: #E11D48;
+  }
+&lt;/style&gt;</code></div>
+
+      <p style="margin-top: var(--space-6);">For a visual way to explore overrides, open the <a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Theme Builder</a> and play with the sidebar pickers.</p>
+    </section>
+
+  </div>
+
+</body>
+</html>

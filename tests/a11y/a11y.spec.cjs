@@ -19,25 +19,19 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
     // Inject axe-core
     await injectAxe(page);
 
-    // Run axe-core check with WCAG AAA standard
-    // Note: axe-playwright uses checkA11y which reports violations
-    try {
-      await checkA11y(
-        page,
-        null, // entire page
-        {
-          standards: 'wcag21aa', // Using WCAG 2.1 AA (closest to AAA support)
-          detailedReport: true,
-          detailedReportOptions: {
-            html: true,
-          },
+    // Run axe-core check with WCAG 2.1 AA standard (real enforcement after F7.3)
+    await checkA11y(
+      page,
+      null, // entire page
+      {
+        standards: 'wcag21aa',
+        detailedReport: true,
+        detailedReportOptions: {
+          html: true,
         },
-        true // skipFailures = true during initial runs to gather data
-      );
-    } catch (error) {
-      // Capture violations but don't fail test in initial setup
-      console.error('Accessibility violations found:', error.message);
-    }
+      },
+      false // skipFailures = false — enforce real after F7.3 a11y deep-clean
+    );
   });
 
   test('full page should meet minimum contrast requirements', async ({ page }) => {
@@ -47,18 +41,18 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
     const violations = await page.evaluate(async () => {
       // @ts-ignore
       const results = await axe.run({
-        rules: ['color-contrast'],
+        runOnly: { type: 'rule', values: ['color-contrast'] },
       });
       return results.violations;
     });
 
     // Log violations for review
     if (violations.length > 0) {
-      console.log('Contrast violations:', violations);
+      console.log('Contrast violations:', JSON.stringify(violations, null, 2));
     }
 
-    // Report but don't strictly fail (some false positives may occur)
-    expect(violations.length).toBeLessThanOrEqual(10);
+    // Enforce real after F7.4 token audit: zero tolerance for contrast violations.
+    expect(violations.length).toBe(0);
   });
 
   // ========================================
@@ -199,19 +193,15 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
     if (await darkSection.isVisible()) {
       await injectAxe(page);
 
-      // Check contrast in dark mode section
-      try {
-        await checkA11y(
-          page,
-          '[data-theme="dark"]',
-          {
-            standards: 'wcag21aa',
-          },
-          true
-        );
-      } catch (error) {
-        console.log('Dark mode contrast check completed');
-      }
+      // Enforce real after F7.5 cross-theme audit.
+      await checkA11y(
+        page,
+        '[data-theme="dark"]',
+        {
+          standards: 'wcag21aa',
+        },
+        false
+      );
     }
   });
 
@@ -219,18 +209,16 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
     // Check contrast in light theme sections
     await injectAxe(page);
 
-    try {
-      await checkA11y(
-        page,
-        '.theme-light',
-        {
-          standards: 'wcag21aa',
-        },
-        true
-      );
-    } catch (error) {
-      console.log('Light theme contrast check completed');
-    }
+    // Enforce real after F7.5 cross-theme audit. Selector targets the main
+    // container which inherits the page-level light scheme by default.
+    await checkA11y(
+      page,
+      'main',
+      {
+        standards: 'wcag21aa',
+      },
+      false
+    );
   });
 
   // ========================================
@@ -490,11 +478,11 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
       await page.keyboard.press('Tab');
 
       focusedElement = await page.evaluate(() => {
-        const el = document.activeElement as any;
+        const el = document.activeElement;
         return {
           tag: el?.tagName,
           type: el?.type,
-          visible: (el as any)?.offsetParent !== null,
+          visible: el?.offsetParent !== null,
         };
       });
 

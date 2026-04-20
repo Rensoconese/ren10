@@ -19,6 +19,11 @@
 @import './primitives/ren-breadcrumb/ren-breadcrumb.css';
 @import './primitives/ren-pagination/ren-pagination.css';
 @import './primitives/ren-tag/ren-tag.css';
+@import './primitives/ren-separator/ren-separator.css';
+@import './primitives/ren-avatar/ren-avatar.css';
+@import './primitives/ren-spinner/ren-spinner.css';
+@import './primitives/ren-skeleton/ren-skeleton.css';
+@import './primitives/ren-kbd/ren-kbd.css';
 
 /* ─── Composites (Molecules) ─── */
 @import './composites/ren-dialog/ren-dialog.css';

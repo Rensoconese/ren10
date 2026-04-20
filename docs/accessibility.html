@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility — RenDS Docs</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Shared top nav */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Shell */
+    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-10) var(--space-6); }
+    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
+
+    /* Header */
+    .dx-header { margin-bottom: var(--space-10); max-width: 72ch; }
+    .dx-header h1 { font-size: var(--text-6xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: var(--space-2) 0 var(--space-4); }
+    .dx-header .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0; }
+
+    /* Section */
+    .dx-section { padding-top: var(--space-10); margin-top: var(--space-10); border-top: 1px solid var(--color-border-muted); scroll-margin-top: 80px; }
+    .dx-section:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+    .dx-section h2 { font-size: var(--text-3xl); letter-spacing: -0.02em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
+    /* Scoped to direct children only — `.dx-section p` (descendant) was biting <p> inside
+       cards/callouts that had their own intended color (see PHASE-7-12-COMPLETE.md). */
+    .dx-section > p { color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 var(--space-4); max-width: 72ch; }
+    .dx-section h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-8) 0 var(--space-2); }
+    .dx-section ul { max-width: 72ch; padding-left: var(--space-5); line-height: 1.7; color: var(--color-text-secondary); }
+    .dx-section ul li { margin-bottom: var(--space-2); }
+    code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
+
+    /* Key list */
+    .dx-keys { display: grid; grid-template-columns: 160px 1fr; gap: var(--space-3) var(--space-6); max-width: 72ch; margin: var(--space-4) 0; }
+    .dx-key-cell { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+    .dx-kbd { display: inline-block; font-family: var(--font-mono); font-size: var(--text-xs); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-bottom-width: 2px; border-radius: var(--radius-sm); padding: 2px var(--space-2); color: var(--color-text); }
+    .dx-keys-desc { color: var(--color-text-secondary); line-height: 1.55; font-size: var(--text-sm); }
+
+    /* Code block */
+    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-3) 0; color: var(--color-text); }
+    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
+
+    /* Do / Don't cards */
+    .dx-dd { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin: var(--space-6) 0; max-width: 72ch; }
+    .dx-dd-card { padding: var(--space-5); border-radius: var(--radius-md); border: 1px solid; }
+    .dx-do { background: color-mix(in srgb, var(--color-success) 8%, var(--color-surface)); border-color: var(--color-success); }
+    .dx-dont { background: color-mix(in srgb, var(--color-danger) 8%, var(--color-surface)); border-color: var(--color-danger); }
+    .dx-dd-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 var(--space-2); }
+    .dx-do .dx-dd-label { color: var(--color-success); }
+    .dx-dont .dx-dd-label { color: var(--color-danger); }
+    .dx-dd pre { margin: 0; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.5; white-space: pre-wrap; color: var(--color-text); }
+
+    /* Contrast samples */
+    .dx-contrast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-3); margin: var(--space-4) 0; max-width: 72ch; }
+    .dx-contrast-card { padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--color-border); }
+    .dx-contrast-label { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); margin: 0 0 var(--space-2); }
+    .dx-contrast-sample { font-size: var(--text-base); }
+
+    /* Callout */
+    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; max-width: 72ch; }
+    .dx-callout p { margin: 0; color: var(--color-text); }
+    .dx-callout strong { color: var(--color-accent-active); }
+
+    /* Checklist */
+    .dx-check { max-width: 72ch; margin: var(--space-5) 0; padding: var(--space-5) var(--space-6); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+    .dx-check h3 { margin-top: 0; }
+    .dx-check ul { list-style: none; padding-left: 0; margin: 0; }
+    .dx-check li { padding-left: var(--space-6); position: relative; margin-bottom: var(--space-2); line-height: 1.55; font-size: var(--text-sm); color: var(--color-text-secondary); }
+    .dx-check li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--color-success); font-weight: var(--weight-bold); }
+
+    @media (max-width: 720px) {
+      .dx-dd { grid-template-columns: 1fr; }
+      .dx-keys { grid-template-columns: 1fr; gap: var(--space-1); }
+      .dx-keys .dx-keys-desc { margin-bottom: var(--space-3); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.6</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell">
+
+    <!-- Header -->
+    <header class="dx-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+          <li aria-current="page">Accessibility</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Guides</p>
+      <h1>Accessibility</h1>
+      <p class="lede">Accessibility isn't a feature in RenDS — it's one of the three pillars. Every component ships keyboard-navigable, screen-reader-friendly, color-contrast-safe, and motion-sensitive. This page explains what's automatic, what's your job, and how to tell the difference.</p>
+    </header>
+
+    <!-- Baseline -->
+    <section class="dx-section" id="baseline">
+      <p class="dx-kicker">Standards</p>
+      <h2>The baseline</h2>
+      <p>RenDS targets <strong>WCAG 2.1 Level AA</strong> as the minimum and <strong>Level AAA</strong> where the design allows it. In practice that means:</p>
+      <ul>
+        <li>All non-text UI hits 3:1 contrast against the adjacent color.</li>
+        <li>All body text hits 4.5:1 contrast. Large text (18pt+) hits 3:1.</li>
+        <li>Every interactive element is reachable and operable by keyboard alone.</li>
+        <li>Every interactive element has an accessible name (visible label or <code>aria-label</code>).</li>
+        <li>Touch targets are at least 44×44px (Apple HIG).</li>
+        <li>No information is conveyed by color alone.</li>
+      </ul>
+
+      <div class="dx-callout">
+        <p><strong>You inherit the baseline for free</strong> as long as you use RenDS components with the recommended markup. The rules below tell you where to pay attention so you don't lose it.</p>
+      </div>
+    </section>
+
+    <!-- Keyboard nav -->
+    <section class="dx-section" id="keyboard">
+      <p class="dx-kicker">Input</p>
+      <h2>Keyboard navigation</h2>
+      <p>Every interactive component ships with keyboard support that follows <a href="https://www.w3.org/WAI/ARIA/apg/" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">WAI-ARIA Authoring Practices</a>. The common keys:</p>
+
+      <div class="dx-keys">
+        <div class="dx-key-cell"><span class="dx-kbd">Tab</span></div>
+        <div class="dx-keys-desc">Move focus to the next interactive element.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">Shift</span><span>+</span><span class="dx-kbd">Tab</span></div>
+        <div class="dx-keys-desc">Move focus backward.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">Enter</span> / <span class="dx-kbd">Space</span></div>
+        <div class="dx-keys-desc">Activate buttons and toggles. <code>Space</code> only on <code>button</code>, not on links.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">Esc</span></div>
+        <div class="dx-keys-desc">Close dialogs, popovers, menus, tooltips. Always a reliable escape hatch.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">↑</span> / <span class="dx-kbd">↓</span></div>
+        <div class="dx-keys-desc">Move between options in <code>Select</code>, <code>Menu</code>, <code>Listbox</code>, <code>Tabs</code> (vertical), <code>Radio Group</code>.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">←</span> / <span class="dx-kbd">→</span></div>
+        <div class="dx-keys-desc">Move between <code>Tabs</code> (horizontal), <code>Toggle Group</code>, <code>Slider</code> values.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">Home</span> / <span class="dx-kbd">End</span></div>
+        <div class="dx-keys-desc">Jump to first / last option in lists, calendars, sliders.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">Type a letter</span></div>
+        <div class="dx-keys-desc">In <code>Select</code> and <code>Menu</code>: jump to next item starting with that letter.</div>
+      </div>
+
+      <h3>Test yourself</h3>
+      <p>Before shipping a screen: put your mouse down and try to complete every user-facing task with only the keyboard. If you get stuck or lose your focus indicator, something is broken.</p>
+    </section>
+
+    <!-- Focus mgmt -->
+    <section class="dx-section" id="focus">
+      <p class="dx-kicker">Signals</p>
+      <h2>Focus management</h2>
+      <p>RenDS uses <code>:focus-visible</code> — not <code>:focus</code> — so keyboard users see a ring, but mouse-clickers don't get a distracting one after every click. The ring color is <code>--color-focus-ring</code>, which defaults to the accent color.</p>
+
+      <h3>Focus trapping</h3>
+      <p>Modal components (<code>ren-dialog</code>, <code>ren-alert-dialog</code>, <code>ren-sheet</code>) trap focus when open. <kbd>Tab</kbd> cycles inside the modal; <kbd>Esc</kbd> closes it and returns focus to the trigger that opened it. You don't configure this — it just works.</p>
+
+      <h3>Initial focus</h3>
+      <p>When a dialog opens, focus lands on the first focusable element inside. Override with <code>autofocus</code> if the first element isn't the right target:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;dialog class="ren-dialog"&gt;
+  &lt;h2&gt;Delete account?&lt;/h2&gt;
+  &lt;p&gt;This action cannot be undone.&lt;/p&gt;
+  &lt;button class="ren-btn ren-btn-secondary"&gt;Cancel&lt;/button&gt;
+  &lt;button class="ren-btn ren-btn-danger" autofocus&gt;Delete&lt;/button&gt;
+&lt;/dialog&gt;</code></div>
+
+      <h3>Never hide the focus ring</h3>
+      <p>If a focus ring looks wrong on your design, adjust the color, not the visibility.</p>
+
+      <div class="dx-dd">
+        <div class="dx-do">
+          <p class="dx-dd-label">Do</p>
+          <pre>/* Change the ring, keep it visible */
+:root {
+  --color-focus-ring: hotpink;
+}</pre>
+        </div>
+        <div class="dx-dont">
+          <p class="dx-dd-label">Don't</p>
+          <pre>/* Hides focus for keyboard users */
+button:focus,
+button:focus-visible {
+  outline: none;
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARIA & semantics -->
+    <section class="dx-section" id="semantics">
+      <p class="dx-kicker">Markup</p>
+      <h2>ARIA and semantics</h2>
+      <p>The first rule of ARIA is: <strong>don't use ARIA</strong>. Use the right HTML element first — <code>&lt;button&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;dialog&gt;</code>, <code>&lt;details&gt;</code>. RenDS is built around native elements, so most components don't need explicit roles.</p>
+
+      <h3>When you do need ARIA</h3>
+      <ul>
+        <li><strong>Icon-only buttons</strong> need <code>aria-label</code>. No exceptions.</li>
+        <li><strong>Form fields</strong> need an associated <code>&lt;label&gt;</code> — either wrapping the input or using <code>for=</code>/<code>id=</code>.</li>
+        <li><strong>Live regions</strong> (toasts, notifications) need <code>aria-live="polite"</code> or <code>"assertive"</code>. <code>ren-toast</code> handles this.</li>
+        <li><strong>Nav landmarks</strong> need an <code>aria-label</code> when there's more than one <code>&lt;nav&gt;</code> on the page.</li>
+        <li><strong>Current page</strong> in navigation uses <code>aria-current="page"</code>.</li>
+      </ul>
+
+      <div class="dx-dd">
+        <div class="dx-do">
+          <p class="dx-dd-label">Do</p>
+          <pre>&lt;button class="ren-btn" aria-label="Close dialog"&gt;
+  &lt;svg aria-hidden="true"&gt;...&lt;/svg&gt;
+&lt;/button&gt;</pre>
+        </div>
+        <div class="dx-dont">
+          <p class="dx-dd-label">Don't</p>
+          <pre>&lt;button class="ren-btn"&gt;
+  &lt;svg&gt;...&lt;/svg&gt;
+&lt;/button&gt;
+&lt;!-- no accessible name --&gt;</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Touch targets -->
+    <section class="dx-section" id="touch">
+      <p class="dx-kicker">Size</p>
+      <h2>Touch targets</h2>
+      <p>Interactive elements are at least <strong>44×44px</strong> (Apple HIG standard). RenDS exposes this as a token: <code>--touch-min</code>. Every button, link, and tappable element hits this minimum by default.</p>
+
+      <p>If you build your own interactive element, use the token:</p>
+      <div class="dx-pre" tabindex="0"><code>.my-custom-action {
+  min-height: var(--touch-min);
+  min-width: var(--touch-min);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}</code></div>
+
+      <p>On dense data (like a spreadsheet), smaller targets are acceptable if users are primarily on a keyboard/mouse. Don't shrink targets below 32px even then.</p>
+    </section>
+
+    <!-- Contrast -->
+    <section class="dx-section" id="contrast">
+      <p class="dx-kicker">Color</p>
+      <h2>Color contrast</h2>
+      <p>Every semantic color pairing in RenDS has been checked against WCAG. The key combinations:</p>
+
+      <div class="dx-contrast-grid">
+        <div class="dx-contrast-card" style="background: var(--color-surface);">
+          <p class="dx-contrast-label">text on surface</p>
+          <p class="dx-contrast-sample" style="margin: 0; color: var(--color-text);">The quick brown fox jumps over the lazy dog.</p>
+        </div>
+        <div class="dx-contrast-card" style="background: var(--color-surface);">
+          <p class="dx-contrast-label">text-muted on surface</p>
+          <p class="dx-contrast-sample" style="margin: 0; color: var(--color-text-muted);">Supporting caption or helper text.</p>
+        </div>
+        <div class="dx-contrast-card" style="background: var(--color-accent);">
+          <p class="dx-contrast-label" style="color: var(--color-on-accent);">on-accent on accent</p>
+          <p class="dx-contrast-sample" style="margin: 0; color: var(--color-on-accent);">Primary button label.</p>
+        </div>
+        <div class="dx-contrast-card" style="background: var(--color-danger);">
+          <p class="dx-contrast-label" style="color: var(--color-on-danger);">on-danger on danger</p>
+          <p class="dx-contrast-sample" style="margin: 0; color: var(--color-on-danger);">Destructive action label.</p>
+        </div>
+      </div>
+
+      <h3>Never rely on color alone</h3>
+      <p>About 1 in 12 men and 1 in 200 women have some form of color-vision deficiency. If the <em>only</em> difference between two states is hue, your UI is broken for them.</p>
+
+      <div class="dx-dd">
+        <div class="dx-do">
+          <p class="dx-dd-label">Do</p>
+          <pre>&lt;span class="ren-badge ren-badge-danger"&gt;
+  &lt;svg aria-hidden="true"&gt;...&lt;/svg&gt;
+  3 errors
+&lt;/span&gt;</pre>
+        </div>
+        <div class="dx-dont">
+          <p class="dx-dd-label">Don't</p>
+          <pre>&lt;!-- Only color conveys "error" --&gt;
+&lt;span class="ren-badge ren-badge-danger"&gt;
+  3
+&lt;/span&gt;</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reduced motion -->
+    <section class="dx-section" id="motion">
+      <p class="dx-kicker">Motion</p>
+      <h2>Reduced motion</h2>
+      <p>Some users experience vestibular disorders triggered by parallax, scaling, or heavy animation. Every animation in RenDS uses <code>--duration-*</code> tokens which collapse to <code>0ms</code> when <code>prefers-reduced-motion: reduce</code> is set.</p>
+
+      <p>Use the tokens. Don't hardcode durations:</p>
+
+      <div class="dx-dd">
+        <div class="dx-do">
+          <p class="dx-dd-label">Do</p>
+          <pre>.my-thing {
+  transition:
+    transform var(--duration-fast)
+    var(--easing-standard);
+}</pre>
+        </div>
+        <div class="dx-dont">
+          <p class="dx-dd-label">Don't</p>
+          <pre>.my-thing {
+  /* Ignores user preference */
+  transition: transform 200ms ease;
+}</pre>
+        </div>
+      </div>
+
+      <p>For essential feedback that <em>shouldn't</em> disappear in reduced-motion (like a loading spinner), <code>base/motion-alternatives.css</code> swaps rotation for a subtle pulse so the feedback is preserved without spinning.</p>
+    </section>
+
+    <!-- What RenDS does for you -->
+    <section class="dx-section" id="automatic">
+      <p class="dx-kicker">You get these for free</p>
+      <h2>What RenDS handles automatically</h2>
+
+      <div class="dx-check">
+        <h3>Automatic behavior</h3>
+        <ul>
+          <li>Focus rings on <code>:focus-visible</code> (keyboard), not <code>:focus</code> (mouse).</li>
+          <li>Focus trapping inside <code>ren-dialog</code>, <code>ren-alert-dialog</code>, <code>ren-sheet</code>.</li>
+          <li>Focus return to the trigger when a modal closes.</li>
+          <li><kbd>Esc</kbd> closes every overlay component.</li>
+          <li>Arrow-key navigation inside <code>ren-select</code>, <code>ren-menu</code>, <code>ren-tabs</code>, <code>ren-radio-group</code>, <code>ren-slider</code>, <code>ren-calendar</code>.</li>
+          <li>Dark mode via <code>color-scheme: light dark</code> and <code>light-dark()</code>.</li>
+          <li>High-contrast mode respected through semantic tokens.</li>
+          <li><code>prefers-reduced-motion</code> respected via duration tokens.</li>
+          <li>Minimum 44px touch targets on interactive elements.</li>
+          <li><code>aria-live</code> on <code>ren-toast</code>.</li>
+          <li>Proper roles on <code>ren-tabs</code>, <code>ren-menu</code>, <code>ren-breadcrumb</code>.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Your job -->
+    <section class="dx-section" id="your-job">
+      <p class="dx-kicker">You have to…</p>
+      <h2>Your checklist</h2>
+
+      <div class="dx-check">
+        <h3>Before shipping a screen</h3>
+        <ul>
+          <li>Every icon-only button has an <code>aria-label</code>.</li>
+          <li>Every form input has a <code>&lt;label&gt;</code> (visible or <code>ren-sr-only</code>).</li>
+          <li>Every <code>&lt;img&gt;</code> has <code>alt=""</code> (empty for decoration) or a meaningful alt text.</li>
+          <li>Every <code>&lt;nav&gt;</code> landmark has <code>aria-label</code> if there are multiple on the page.</li>
+          <li>The current page in nav uses <code>aria-current="page"</code>.</li>
+          <li>You can tab through the whole screen without the focus ring disappearing.</li>
+          <li>You can complete every task with keyboard only.</li>
+          <li>Form errors are announced, not just color-coded.</li>
+          <li>Headings go in order (h1 → h2 → h3, no jumps).</li>
+          <li>Reading order with CSS turned off still makes sense.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Common mistakes -->
+    <section class="dx-section" id="mistakes">
+      <p class="dx-kicker">Pitfalls</p>
+      <h2>Common mistakes</h2>
+
+      <h3>Using <code>&lt;div onclick=&gt;</code> instead of <code>&lt;button&gt;</code></h3>
+      <p>A <code>div</code> with a click handler is invisible to keyboards and screen readers. Use a <code>button</code>. If you need it to look like a link, style it as one — the semantics and the visual are independent.</p>
+
+      <h3>Removing the focus outline "because it's ugly"</h3>
+      <p>You're hiding critical feedback from everyone who navigates with a keyboard. Change the color or style the ring, don't remove it.</p>
+
+      <h3>Setting <code>tabindex="-1"</code> on something users should reach</h3>
+      <p><code>tabindex="-1"</code> means "don't reach this with Tab". Use it for focus-trap anchors or scripted focus, not to "tidy up" the tab order.</p>
+
+      <h3>Using placeholder as a label</h3>
+      <p>Placeholders disappear when the user types, which drops context and fails for screen readers and low vision users. Always use a real <code>&lt;label&gt;</code>. The placeholder is for <em>examples of input format</em>.</p>
+
+      <h3>Color-only error indication</h3>
+      <p>A red border alone doesn't say "error". Add an icon, an inline message, or a status word. Screen readers should hear the error; low-contrast-vision users should see it.</p>
+
+      <h3>Forgetting <code>aria-hidden="true"</code> on decorative icons</h3>
+      <p>If the icon is decoration and the button already has a text label, mark the icon <code>aria-hidden="true"</code>. Otherwise screen readers read the icon name twice.</p>
+    </section>
+
+    <!-- Further reading -->
+    <section class="dx-section" id="further">
+      <p class="dx-kicker">Resources</p>
+      <h2>Further reading</h2>
+      <ul>
+        <li><a href="https://www.w3.org/WAI/WCAG21/quickref/" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">WCAG 2.1 Quick Reference</a> — the official standard.</li>
+        <li><a href="https://www.w3.org/WAI/ARIA/apg/" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">WAI-ARIA Authoring Practices</a> — keyboard patterns for every common widget.</li>
+        <li><a href="https://inclusive-components.design/" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Inclusive Components</a> by Heydon Pickering — the patterns behind many RenDS components.</li>
+        <li><a href="https://webaim.org/articles/contrast/" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">WebAIM Contrast Guide</a> — why 4.5:1 and what it means.</li>
+      </ul>
+    </section>
+
+  </div>
+
+</body>
+</html>

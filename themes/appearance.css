@@ -25,6 +25,13 @@
      <html data-theme="ocean">
      <html data-theme="forest">
      <html data-theme="sunset">
+
+   NOTA sobre hex literals:
+     Este archivo CONTIENE hex hardcodeados a propósito — los temas son
+     paletas alternativas que redefinen los semantic tokens con sus propios
+     valores. Es el único lugar de RenDS donde literales hex son la fuente
+     correcta (equivalente a tailwind.config.theme.colors). Componentes y
+     base/ NUNCA deben tener hex; siempre tokens.
    ============================================ */
 
 /* ═══════════════════════════════════════════════

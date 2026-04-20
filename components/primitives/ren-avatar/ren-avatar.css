@@ -1,0 +1,90 @@
+/* ============================================
+   RenDS — Avatar
+   ============================================
+   Circular (or square) user image with fallback
+   text, status indicator and group (overlap).
+
+   Usage:
+     <div class="ren-avatar"><img src="…" alt=""></div>
+     <div class="ren-avatar ren-avatar-lg">JD</div>
+
+     <div class="ren-avatar-wrapper">
+       <div class="ren-avatar"><img …></div>
+       <span class="ren-avatar-status"></span>
+     </div>
+
+     <div class="ren-avatar-group">
+       <div class="ren-avatar">…</div>
+       <div class="ren-avatar">…</div>
+     </div>
+   ============================================ */
+
+.ren-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--avatar-md);     /* 40px default */
+  height: var(--avatar-md);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background-color: var(--color-fill);
+  color: var(--color-text-secondary);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.ren-avatar > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ─── Sizes ─── */
+.ren-avatar-xs  { width: var(--avatar-xs);  height: var(--avatar-xs);  font-size: var(--text-xs); }
+.ren-avatar-sm  { width: var(--avatar-sm);  height: var(--avatar-sm);  font-size: var(--text-xs); }
+.ren-avatar-lg  { width: var(--avatar-lg);  height: var(--avatar-lg);  font-size: var(--text-base); }
+.ren-avatar-xl  { width: var(--avatar-xl);  height: var(--avatar-xl);  font-size: var(--text-lg); }
+.ren-avatar-2xl { width: var(--avatar-2xl); height: var(--avatar-2xl); font-size: var(--text-xl); }
+
+/* ─── Square variant ─── */
+.ren-avatar-square {
+  border-radius: var(--radius-md);
+}
+
+/* ─── Status indicator ─── */
+.ren-avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.ren-avatar-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-surface);
+  background-color: var(--color-success);
+}
+
+.ren-avatar-status-offline { background-color: var(--gray-400); }
+.ren-avatar-status-busy    { background-color: var(--color-danger); }
+.ren-avatar-status-away    { background-color: var(--color-warning); }
+
+/* ─── Group (overlapping) ─── */
+.ren-avatar-group {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.ren-avatar-group > .ren-avatar {
+  border: 2px solid var(--color-surface);
+  margin-inline-start: -0.5rem;
+}
+
+.ren-avatar-group > .ren-avatar:last-child {
+  margin-inline-start: 0;
+}

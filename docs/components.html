@@ -377,7 +377,12 @@
   <main id="main">
     <!-- Sidebar Navigation -->
     <aside class="demo-sidebar">
-      <div class="demo-label">Components</div>
+      <div class="demo-label">Foundation</div>
+      <nav aria-label="Foundation">
+        <a href="./primitive-zero.html">Primitive Zero (classless)</a>
+      </nav>
+
+      <div class="demo-label" style="margin-top: var(--space-4);">Components</div>
       <nav aria-label="Component sections">
         <a href="#typography">Typography</a>
         <a href="#colors">Colors</a>
@@ -582,8 +587,8 @@
               </svg>
               Add Item
             </button>
-            <button class="ren-btn ren-btn-secondary">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="ren-btn ren-btn-secondary" aria-label="View activity">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
               </svg>
             </button>
@@ -941,8 +946,8 @@
           </div>
 
           <div class="ren-field">
-            <label class="ren-field-label">Select</label>
-            <select class="ren-input">
+            <label class="ren-field-label" for="demo-select-framework">Select</label>
+            <select class="ren-input" id="demo-select-framework">
               <option value="" disabled selected hidden>Choose a framework</option>
               <optgroup label="Frontend">
                 <option>React</option>
@@ -958,8 +963,8 @@
           </div>
 
           <div class="ren-field">
-            <label class="ren-field-label">Select (simple)</label>
-            <select class="ren-input">
+            <label class="ren-field-label" for="demo-select-color">Select (simple)</label>
+            <select class="ren-input" id="demo-select-color">
               <option value="" disabled selected hidden>Choose a color</option>
               <option>Red</option>
               <option>Green</option>
@@ -2152,7 +2157,7 @@
         <p class="demo-description">Drag-and-drop file upload area. Dispatches <code>ren-files-added</code> custom event with the dropped files.</p>
 
         <div class="ren-dropzone" id="demo-dropzone" style="max-width: 500px;">
-          <input type="file" class="ren-dropzone-input" multiple accept="image/*,.pdf,.doc,.docx">
+          <input type="file" class="ren-dropzone-input" multiple accept="image/*,.pdf,.doc,.docx" aria-label="Upload files">
           <div class="ren-dropzone-content">
             <div class="ren-dropzone-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
             <p class="ren-dropzone-title">Drag files here or click to browse</p>
@@ -2162,7 +2167,7 @@
 
         <h3>Compact</h3>
         <div class="ren-dropzone ren-dropzone-compact" style="max-width: 500px;">
-          <input type="file" class="ren-dropzone-input" multiple>
+          <input type="file" class="ren-dropzone-input" multiple aria-label="Upload files (compact)">
           <div class="ren-dropzone-content">
             <span class="ren-dropzone-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 1.5H6a2 2 0 0 0-2 2v11a6 6 0 0 0 6 6 6 6 0 0 0 6-6v-1m-6-6l8.5-8.5a2.12 2.12 0 1 1 3 3L11 10"/></svg></span>
             <p class="ren-dropzone-title">Drop files or <a href="#" class="ren-link">browse</a></p>
@@ -2512,7 +2517,7 @@
               <span class="ren-slider-value" id="slider-val-1">50</span>
             </div>
             <div class="ren-slider-track">
-              <input type="range" min="0" max="100" value="50" style="--value: 50%;"
+              <input type="range" min="0" max="100" value="50" style="--value: 50%;" aria-label="Volume"
                      oninput="this.style.setProperty('--value', this.value + '%'); document.getElementById('slider-val-1').textContent = this.value;">
             </div>
           </div>
@@ -2523,21 +2528,21 @@
               <span class="ren-slider-value">75%</span>
             </div>
             <div class="ren-slider-track">
-              <input type="range" min="0" max="100" value="75" style="--value: 75%;">
+              <input type="range" min="0" max="100" value="75" style="--value: 75%;" aria-label="Brightness">
             </div>
           </div>
 
           <div class="ren-slider ren-slider-sm">
             <label class="ren-slider-label">Small</label>
             <div class="ren-slider-track">
-              <input type="range" min="0" max="100" value="30" style="--value: 30%;">
+              <input type="range" min="0" max="100" value="30" style="--value: 30%;" aria-label="Small slider">
             </div>
           </div>
 
           <div class="ren-slider ren-slider-lg ren-slider-warning">
             <label class="ren-slider-label">Large (warning)</label>
             <div class="ren-slider-track">
-              <input type="range" min="0" max="100" value="90" style="--value: 90%;">
+              <input type="range" min="0" max="100" value="90" style="--value: 90%;" aria-label="Large slider (warning)">
             </div>
           </div>
         </div>
@@ -2588,7 +2593,7 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-4); max-width: 700px;">
           <div>
             <h3>Vertical (200px)</h3>
-            <div class="ren-scroll-area ren-scroll-area-sm" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3);">
+            <div class="ren-scroll-area ren-scroll-area-sm" tabindex="0" role="region" aria-label="Scrollable text, vertical" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3);">
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
               <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
               <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
@@ -2599,7 +2604,7 @@
 
           <div>
             <h3>With Fade</h3>
-            <div class="ren-scroll-area ren-scroll-area-sm ren-scroll-area-fade" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3);">
+            <div class="ren-scroll-area ren-scroll-area-sm ren-scroll-area-fade" tabindex="0" role="region" aria-label="Scrollable text with fade edges" style="border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3);">
               <p>This scroll area has fade gradients at the top and bottom edges to visually hint at more content.</p>
               <p>Scroll down to see the fade effect in action.</p>
               <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -2636,15 +2641,16 @@
                   <div class="ren-color-picker-hue-handle" style="position: absolute; width: 16px; height: 16px; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.3); top: 50%; left: 65%; transform: translate(-50%, -50%);"></div>
                 </div>
                 <div class="ren-color-picker-inputs" style="display: flex; gap: var(--space-2);">
-                  <input type="text" class="ren-color-picker-hex-input" value="#6366f1" style="flex: 1; padding: var(--space-1) var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: monospace; font-size: var(--text-sm);">
+                  <label class="ren-sr-only" for="demo-picker-hex">Hex value</label>
+                  <input type="text" id="demo-picker-hex" class="ren-color-picker-hex-input" value="#6366f1" style="flex: 1; padding: var(--space-1) var(--space-2); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: monospace; font-size: var(--text-sm);">
                 </div>
-                <div class="ren-color-picker-swatches" style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
-                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #ef4444; border: 1px solid var(--color-border); cursor: pointer;"></button>
-                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #f59e0b; border: 1px solid var(--color-border); cursor: pointer;"></button>
-                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #10b981; border: 1px solid var(--color-border); cursor: pointer;"></button>
-                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #6366f1; border: 1px solid var(--color-border); cursor: pointer;" aria-selected="true"></button>
-                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #ec4899; border: 1px solid var(--color-border); cursor: pointer;"></button>
-                  <button class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #8b5cf6; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                <div class="ren-color-picker-swatches" role="listbox" aria-label="Preset colors" style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
+                  <button role="option" aria-selected="false" aria-label="Red" class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--red-400); border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button role="option" aria-selected="false" aria-label="Orange" class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--orange-400); border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button role="option" aria-selected="false" aria-label="Green" class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--green-500); border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button role="option" aria-selected="true" aria-label="Indigo (selected)" class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #6366f1; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button role="option" aria-selected="false" aria-label="Pink" class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: #ec4899; border: 1px solid var(--color-border); cursor: pointer;"></button>
+                  <button role="option" aria-selected="false" aria-label="Purple" class="ren-color-picker-swatch" style="width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--purple-400); border: 1px solid var(--color-border); cursor: pointer;"></button>
                 </div>
               </div>
             </div>
@@ -2660,7 +2666,7 @@
         <p class="demo-description">Accessible calendar grid with keyboard navigation (arrow keys). Supports selected dates, ranges, today highlight, and outside days.</p>
 
         <div style="display: flex; gap: var(--space-6); flex-wrap: wrap; align-items: flex-start;">
-          <div class="ren-calendar" role="grid" aria-label="April 2026" id="demo-calendar">
+          <div class="ren-calendar" aria-label="April 2026" id="demo-calendar">
             <div class="ren-calendar-header">
               <button class="ren-calendar-nav" aria-label="Previous month">‹</button>
               <div class="ren-calendar-title">April 2026</div>
@@ -2675,46 +2681,46 @@
               <span class="ren-calendar-weekday">Fr</span>
               <span class="ren-calendar-weekday">Sa</span>
             </div>
-            <div class="ren-calendar-grid">
-              <button class="ren-calendar-day" data-outside disabled>29</button>
-              <button class="ren-calendar-day" data-outside disabled>30</button>
-              <button class="ren-calendar-day" data-outside disabled>31</button>
-              <button class="ren-calendar-day">1</button>
-              <button class="ren-calendar-day">2</button>
-              <button class="ren-calendar-day" data-today aria-selected="true">3</button>
-              <button class="ren-calendar-day">4</button>
-              <button class="ren-calendar-day">5</button>
-              <button class="ren-calendar-day">6</button>
-              <button class="ren-calendar-day">7</button>
-              <button class="ren-calendar-day">8</button>
-              <button class="ren-calendar-day">9</button>
-              <button class="ren-calendar-day">10</button>
-              <button class="ren-calendar-day">11</button>
-              <button class="ren-calendar-day">12</button>
-              <button class="ren-calendar-day">13</button>
-              <button class="ren-calendar-day">14</button>
-              <button class="ren-calendar-day">15</button>
-              <button class="ren-calendar-day">16</button>
-              <button class="ren-calendar-day">17</button>
-              <button class="ren-calendar-day">18</button>
-              <button class="ren-calendar-day">19</button>
-              <button class="ren-calendar-day">20</button>
-              <button class="ren-calendar-day">21</button>
-              <button class="ren-calendar-day">22</button>
-              <button class="ren-calendar-day">23</button>
-              <button class="ren-calendar-day">24</button>
-              <button class="ren-calendar-day">25</button>
-              <button class="ren-calendar-day">26</button>
-              <button class="ren-calendar-day">27</button>
-              <button class="ren-calendar-day">28</button>
-              <button class="ren-calendar-day">29</button>
-              <button class="ren-calendar-day">30</button>
-              <button class="ren-calendar-day" data-outside disabled>1</button>
-              <button class="ren-calendar-day" data-outside disabled>2</button>
+            <div class="ren-calendar-grid" role="listbox" aria-label="Days">
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">29</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">30</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">31</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">1</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">2</button>
+              <button role="option" class="ren-calendar-day" data-today aria-selected="true">3</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">4</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">5</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">6</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">7</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">8</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">9</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">10</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">11</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">12</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">13</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">14</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">15</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">16</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">17</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">18</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">19</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">20</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">21</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">22</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">23</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">24</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">25</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">26</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">27</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">28</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">29</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">30</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">1</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">2</button>
             </div>
           </div>
 
-          <div class="ren-calendar ren-calendar-sm" role="grid" aria-label="April 2026 small">
+          <div class="ren-calendar ren-calendar-sm" aria-label="April 2026 small">
             <div class="ren-calendar-header">
               <button class="ren-calendar-nav" aria-label="Previous month">‹</button>
               <div class="ren-calendar-title">Apr 2026</div>
@@ -2729,42 +2735,42 @@
               <span class="ren-calendar-weekday">F</span>
               <span class="ren-calendar-weekday">S</span>
             </div>
-            <div class="ren-calendar-grid">
-              <button class="ren-calendar-day" data-outside disabled>29</button>
-              <button class="ren-calendar-day" data-outside disabled>30</button>
-              <button class="ren-calendar-day" data-outside disabled>31</button>
-              <button class="ren-calendar-day">1</button>
-              <button class="ren-calendar-day">2</button>
-              <button class="ren-calendar-day" data-today>3</button>
-              <button class="ren-calendar-day">4</button>
-              <button class="ren-calendar-day">5</button>
-              <button class="ren-calendar-day">6</button>
-              <button class="ren-calendar-day">7</button>
-              <button class="ren-calendar-day">8</button>
-              <button class="ren-calendar-day">9</button>
-              <button class="ren-calendar-day">10</button>
-              <button class="ren-calendar-day">11</button>
-              <button class="ren-calendar-day ren-calendar-day-range-start" aria-selected="true">12</button>
-              <button class="ren-calendar-day ren-calendar-day-in-range">13</button>
-              <button class="ren-calendar-day ren-calendar-day-in-range">14</button>
-              <button class="ren-calendar-day ren-calendar-day-in-range">15</button>
-              <button class="ren-calendar-day ren-calendar-day-range-end" aria-selected="true">16</button>
-              <button class="ren-calendar-day">17</button>
-              <button class="ren-calendar-day">18</button>
-              <button class="ren-calendar-day">19</button>
-              <button class="ren-calendar-day">20</button>
-              <button class="ren-calendar-day">21</button>
-              <button class="ren-calendar-day">22</button>
-              <button class="ren-calendar-day">23</button>
-              <button class="ren-calendar-day">24</button>
-              <button class="ren-calendar-day">25</button>
-              <button class="ren-calendar-day">26</button>
-              <button class="ren-calendar-day">27</button>
-              <button class="ren-calendar-day">28</button>
-              <button class="ren-calendar-day">29</button>
-              <button class="ren-calendar-day">30</button>
-              <button class="ren-calendar-day" data-outside disabled>1</button>
-              <button class="ren-calendar-day" data-outside disabled>2</button>
+            <div class="ren-calendar-grid" role="listbox" aria-label="Days">
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">29</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">30</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">31</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">1</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">2</button>
+              <button role="option" class="ren-calendar-day" data-today aria-selected="false">3</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">4</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">5</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">6</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">7</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">8</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">9</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">10</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">11</button>
+              <button role="option" class="ren-calendar-day ren-calendar-day-range-start" aria-selected="true">12</button>
+              <button role="option" class="ren-calendar-day ren-calendar-day-in-range" aria-selected="false">13</button>
+              <button role="option" class="ren-calendar-day ren-calendar-day-in-range" aria-selected="false">14</button>
+              <button role="option" class="ren-calendar-day ren-calendar-day-in-range" aria-selected="false">15</button>
+              <button role="option" class="ren-calendar-day ren-calendar-day-range-end" aria-selected="true">16</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">17</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">18</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">19</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">20</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">21</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">22</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">23</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">24</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">25</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">26</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">27</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">28</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">29</button>
+              <button role="option" class="ren-calendar-day" aria-selected="false">30</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">1</button>
+              <button role="option" class="ren-calendar-day" data-outside disabled aria-selected="false">2</button>
             </div>
           </div>
         </div>
@@ -2814,14 +2820,14 @@
         <p class="demo-description">CSS scroll-snap carousel with arrow navigation, dot indicators, and optional autoplay. Touch-friendly, keyboard accessible.</p>
 
         <div class="ren-carousel" style="max-width: 500px;" id="demo-carousel" aria-label="Image gallery">
-          <div class="ren-carousel-viewport">
-            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, var(--color-accent), #8b5cf6); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
+          <div class="ren-carousel-viewport" tabindex="0">
+            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, var(--color-accent), var(--purple-400)); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
               Slide 1
             </div>
-            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, #10b981, #06b6d4); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
+            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, var(--green-500), var(--teal-500)); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
               Slide 2
             </div>
-            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, #f59e0b, #ef4444); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
+            <div class="ren-carousel-slide" style="background: linear-gradient(135deg, var(--orange-400), var(--red-400)); min-height: 200px; display: flex; align-items: center; justify-content: center; color: white; font-size: var(--text-xl); font-weight: var(--weight-bold); border-radius: var(--radius-md);">
               Slide 3
             </div>
           </div>
@@ -2945,46 +2951,46 @@
         <p class="demo-description">Application-level menu bar (File, Edit, View). ARIA Menubar pattern with keyboard navigation.</p>
 
         <div class="ren-menubar" role="menubar" style="max-width: 500px;">
-          <button class="ren-menubar-trigger"
+          <button role="menuitem" class="ren-menubar-trigger"
                   popovertarget="demo-mb-file"
                   style="anchor-name: --mb-file;"
                   aria-expanded="false">File</button>
-          <div class="ren-menubar-menu" id="demo-mb-file" popover
+          <div role="menu" class="ren-menubar-menu" id="demo-mb-file" popover
                style="position-anchor: --mb-file;">
-            <button class="ren-menubar-item">New Tab <span class="ren-menubar-shortcut">⌘T</span></button>
-            <button class="ren-menubar-item">New Window <span class="ren-menubar-shortcut">⌘N</span></button>
+            <button role="menuitem" class="ren-menubar-item">New Tab <span class="ren-menubar-shortcut">⌘T</span></button>
+            <button role="menuitem" class="ren-menubar-item">New Window <span class="ren-menubar-shortcut">⌘N</span></button>
             <div class="ren-menubar-separator"></div>
-            <button class="ren-menubar-item">Print <span class="ren-menubar-shortcut">⌘P</span></button>
+            <button role="menuitem" class="ren-menubar-item">Print <span class="ren-menubar-shortcut">⌘P</span></button>
           </div>
 
-          <button class="ren-menubar-trigger"
+          <button role="menuitem" class="ren-menubar-trigger"
                   popovertarget="demo-mb-edit"
                   style="anchor-name: --mb-edit;"
                   aria-expanded="false">Edit</button>
-          <div class="ren-menubar-menu" id="demo-mb-edit" popover
+          <div role="menu" class="ren-menubar-menu" id="demo-mb-edit" popover
                style="position-anchor: --mb-edit;">
-            <button class="ren-menubar-item">Undo <span class="ren-menubar-shortcut">⌘Z</span></button>
-            <button class="ren-menubar-item">Redo <span class="ren-menubar-shortcut">⇧⌘Z</span></button>
+            <button role="menuitem" class="ren-menubar-item">Undo <span class="ren-menubar-shortcut">⌘Z</span></button>
+            <button role="menuitem" class="ren-menubar-item">Redo <span class="ren-menubar-shortcut">⇧⌘Z</span></button>
             <div class="ren-menubar-separator"></div>
-            <button class="ren-menubar-item">Cut <span class="ren-menubar-shortcut">⌘X</span></button>
-            <button class="ren-menubar-item">Copy <span class="ren-menubar-shortcut">⌘C</span></button>
-            <button class="ren-menubar-item">Paste <span class="ren-menubar-shortcut">⌘V</span></button>
+            <button role="menuitem" class="ren-menubar-item">Cut <span class="ren-menubar-shortcut">⌘X</span></button>
+            <button role="menuitem" class="ren-menubar-item">Copy <span class="ren-menubar-shortcut">⌘C</span></button>
+            <button role="menuitem" class="ren-menubar-item">Paste <span class="ren-menubar-shortcut">⌘V</span></button>
           </div>
 
-          <button class="ren-menubar-trigger"
+          <button role="menuitem" class="ren-menubar-trigger"
                   popovertarget="demo-mb-view"
                   style="anchor-name: --mb-view;"
                   aria-expanded="false">View</button>
-          <div class="ren-menubar-menu" id="demo-mb-view" popover
+          <div role="menu" class="ren-menubar-menu" id="demo-mb-view" popover
                style="position-anchor: --mb-view;">
-            <button class="ren-menubar-checkbox" aria-checked="true">Toolbar</button>
-            <button class="ren-menubar-checkbox" aria-checked="true">Sidebar</button>
-            <button class="ren-menubar-checkbox" aria-checked="false">Status Bar</button>
+            <button role="menuitemcheckbox" class="ren-menubar-checkbox" aria-checked="true">Toolbar</button>
+            <button role="menuitemcheckbox" class="ren-menubar-checkbox" aria-checked="true">Sidebar</button>
+            <button role="menuitemcheckbox" class="ren-menubar-checkbox" aria-checked="false">Status Bar</button>
             <div class="ren-menubar-separator"></div>
             <div class="ren-menubar-label">Zoom</div>
-            <button class="ren-menubar-radio" aria-checked="false">50%</button>
-            <button class="ren-menubar-radio" aria-checked="true">100%</button>
-            <button class="ren-menubar-radio" aria-checked="false">150%</button>
+            <button role="menuitemradio" class="ren-menubar-radio" aria-checked="false">50%</button>
+            <button role="menuitemradio" class="ren-menubar-radio" aria-checked="true">100%</button>
+            <button role="menuitemradio" class="ren-menubar-radio" aria-checked="false">150%</button>
           </div>
         </div>
       </section>
@@ -3173,10 +3179,10 @@
 
         <h3>Color Themes</h3>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='light'" style="background: #3b82f6; color: white; border: none;">Default</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='light'" style="background: #2563eb; color: white; border: none;">Default</button>
           <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='ocean'" style="background: #0066CC; color: white; border: none;">Ocean</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='forest'" style="background: #16A34A; color: white; border: none;">Forest</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='sunset'" style="background: #EA580C; color: white; border: none;">Sunset</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='forest'" style="background: #15803d; color: white; border: none;">Forest</button>
+          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='sunset'" style="background: #c2410c; color: white; border: none;">Sunset</button>
           <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='rose'" style="background: #E11D48; color: white; border: none;">Rose</button>
           <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='slate'" style="background: #334155; color: white; border: none;">Slate</button>
           <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='purple'" style="background: #7C3AED; color: white; border: none;">Purple</button>

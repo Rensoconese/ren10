@@ -1,0 +1,127 @@
+/* ============================================
+   RenDS — Dual Type System (Productive vs Expressive)
+   ============================================
+   Inspired by IBM Carbon's two-scale approach.
+
+   Two type *modes* share the same token API but
+   tune the values for different contexts:
+
+     Productive  — default. Compact, dense, works
+                   for dashboards, tables, settings.
+                   Smaller body, tight leading.
+
+     Expressive  — for marketing, onboarding, hero
+                   pages, documentation. Larger body,
+                   relaxed leading, more tracking on
+                   display text.
+
+   Activate Expressive mode by setting data-type-mode
+   at any level of the tree:
+
+     <html data-type-mode="expressive">
+     <section data-type-mode="expressive">
+     <article data-type-mode="productive">
+
+   Nesting works — deeper attributes override.
+   Scope is local because these are CSS custom properties.
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   PRODUCTIVE (default)
+   ═══════════════════════════════════════════════
+   Optimized for density, scanning, complex UI. */
+
+:root,
+:root[data-type-mode="productive"],
+[data-type-mode="productive"] {
+  /* Body */
+  --body-size:          var(--text-base);    /* 16px */
+  --body-leading:       var(--leading-normal); /* 1.5 */
+  --body-tracking:      var(--tracking-normal);
+
+  --body-lg-size:       var(--text-md);      /* 17px */
+  --body-lg-leading:    var(--leading-normal);
+
+  --body-sm-size:       var(--text-sm);      /* 14px */
+  --body-sm-leading:    var(--leading-normal);
+
+  /* Lead — intro paragraphs */
+  --lead-size:          var(--text-lg);      /* compact lead */
+  --lead-leading:       var(--leading-relaxed);
+  --lead-tracking:      var(--tracking-normal);
+
+  /* Display — page titles */
+  --display-lg-leading: var(--leading-tight);
+  --display-lg-tracking:var(--tracking-tight);
+  --display-md-leading: var(--leading-tight);
+  --display-md-tracking:var(--tracking-tight);
+
+  /* Title — section headings */
+  --title-lg-leading:   var(--leading-snug);
+  --title-md-leading:   var(--leading-snug);
+  --title-sm-leading:   var(--leading-snug);
+
+  /* Weight — productive favors medium for emphasis */
+  --productive-emphasis-weight: var(--weight-semibold);
+}
+
+/* ═══════════════════════════════════════════════
+   EXPRESSIVE
+   ═══════════════════════════════════════════════
+   Optimized for reading, marketing, storytelling. */
+
+:root[data-type-mode="expressive"],
+[data-type-mode="expressive"] {
+  /* Body — 1 step up, more breathing room */
+  --body-size:          var(--text-md);      /* 17px vs 16px */
+  --body-leading:       var(--leading-relaxed); /* 1.625 vs 1.5 */
+  --body-tracking:      var(--tracking-normal);
+
+  --body-lg-size:       var(--text-lg);      /* 19px */
+  --body-lg-leading:    var(--leading-relaxed);
+
+  --body-sm-size:       var(--text-base);    /* 16px vs 14px */
+  --body-sm-leading:    var(--leading-relaxed);
+
+  /* Lead — bigger, airier */
+  --lead-size:          var(--text-2xl);
+  --lead-leading:       var(--leading-relaxed);
+  --lead-tracking:      var(--tracking-normal);
+
+  /* Display — more dramatic, more tracked */
+  --display-lg-leading: var(--leading-none);   /* ultra tight */
+  --display-lg-tracking:var(--tracking-tighter);
+  --display-md-leading: var(--leading-none);
+  --display-md-tracking:var(--tracking-tighter);
+
+  /* Title — a touch more relaxed */
+  --title-lg-leading:   var(--leading-normal);
+  --title-md-leading:   var(--leading-normal);
+  --title-sm-leading:   var(--leading-normal);
+
+  /* Weight — expressive favors bold for display */
+  --productive-emphasis-weight: var(--weight-bold);
+}
+
+/* ═══════════════════════════════════════════════
+   UTILITIES
+   ═══════════════════════════════════════════════
+   Classes to apply the mode without a data attribute,
+   useful for one-off sections inside a page. */
+
+.ren-type-productive { /* alias for readability */ }
+.ren-type-productive[data-type-mode],
+.ren-type-expressive[data-type-mode] {
+  /* no-op: already set via attribute selector above */
+}
+
+.ren-type-expressive {
+  --body-size:          var(--text-md);
+  --body-leading:       var(--leading-relaxed);
+  --body-lg-size:       var(--text-lg);
+  --body-sm-size:       var(--text-base);
+  --lead-size:          var(--text-2xl);
+  --lead-leading:       var(--leading-relaxed);
+  --display-lg-leading: var(--leading-none);
+  --display-lg-tracking:var(--tracking-tighter);
+}

@@ -1,7 +1,7 @@
 /* ═══ MENU CONTAINER ═══ */
 .ren-menu {
-  background: var(--color-surface, #ffffff);
-  border: 1px solid var(--color-border, #e0e0e0);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg, 0.5rem);
   box-shadow: var(--shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.1));
   padding-block: var(--space-1, 0.25rem);
@@ -33,7 +33,7 @@
   gap: var(--space-2, 0.5rem);
   cursor: pointer;
   font-size: var(--size-body, 1rem);
-  color: var(--color-text, #1a1a1a);
+  color: var(--color-text);
   border-radius: var(--radius-sm, 0.25rem);
   min-height: 2rem;
   transition: background-color var(--duration-fast) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
@@ -44,12 +44,12 @@
 
 .ren-menu-item:hover,
 .ren-menu-item[data-highlighted] {
-  background-color: var(--color-fill, #f0f0f0);
-  color: var(--color-text, #1a1a1a);
+  background-color: var(--color-fill);
+  color: var(--color-text);
 }
 
 .ren-menu-item:active {
-  background-color: var(--color-fill-hover, #e8e8e8);
+  background-color: var(--color-fill-hover);
 }
 
 /* ═══ MENU ITEM DISABLED STATE ═══ */
@@ -62,8 +62,8 @@
 /* ═══ MENU ITEM DANGER VARIANT ═══ */
 .ren-menu-item.ren-menu-item-danger:hover,
 .ren-menu-item.ren-menu-item-danger[data-highlighted] {
-  background-color: var(--color-danger-subtle, #ffe8e6);
-  color: var(--color-danger, #d32f2f);
+  background-color: var(--color-danger-subtle);
+  color: var(--color-danger);
 }
 
 /* ═══ MENU ITEM ICON ═══ */
@@ -71,7 +71,7 @@
   flex-shrink: 0;
   width: var(--size-icon-md, 1.25rem);
   height: var(--size-icon-md, 1.25rem);
-  color: var(--color-text-muted, #666666);
+  color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +81,7 @@
 .ren-menu-item-shortcut {
   margin-inline-start: auto;
   font-size: var(--size-caption, 0.75rem);
-  color: var(--color-text-muted, #666666);
+  color: var(--color-text-muted);
   font-family: monospace;
   white-space: nowrap;
   flex-shrink: 0;
@@ -90,14 +90,14 @@
 /* ═══ MENU ITEM DESCRIPTION ═══ */
 .ren-menu-item-description {
   font-size: var(--size-caption, 0.75rem);
-  color: var(--color-text-muted, #666666);
+  color: var(--color-text-muted);
   line-height: 1.3;
 }
 
 /* ═══ MENU SEPARATOR ═══ */
 .ren-menu-separator {
   height: 1px;
-  background: var(--color-border, #e0e0e0);
+  background: var(--color-border);
   margin-block: var(--space-1, 0.25rem);
 }
 
@@ -106,7 +106,7 @@
   padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
   font-size: var(--size-caption, 0.75rem);
   font-weight: 600;
-  color: var(--color-text-muted, #666666);
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -130,7 +130,7 @@
   inset-inline-start: var(--space-3, 0.75rem);
   width: 16px;
   height: 16px;
-  border: 2px solid var(--color-border, #e0e0e0);
+  border: 2px solid var(--color-border);
   border-radius: 2px;
   background: white;
   transition: all var(--duration-fast) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
@@ -143,8 +143,8 @@
 /* ═══ CHECKBOX/RADIO CHECKED STATE ═══ */
 .ren-menu-checkbox-item[aria-checked="true"]::before,
 .ren-menu-radio-item[aria-checked="true"]::before {
-  background: var(--color-accent, #0066cc);
-  border-color: var(--color-accent, #0066cc);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
 }
 
 .ren-menu-checkbox-item[aria-checked="true"]::after,
@@ -252,10 +252,10 @@
 }
 
 .ren-menu::-webkit-scrollbar-thumb {
-  background: var(--color-border, #e0e0e0);
+  background: var(--color-border);
   border-radius: 3px;
 }
 
 .ren-menu::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted, #666666);
+  background: var(--color-text-muted);
 }

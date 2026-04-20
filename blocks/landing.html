@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing — RenDS Block</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Top nav — sticky translucent */
+    .ln-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--color-surface) 75%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+              backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .ln-nav-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+    }
+    .ln-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
+
+    /* Hero */
+    .ln-hero {
+      text-align: center;
+      padding: clamp(var(--space-10), 10vw, var(--space-16)) var(--space-6);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, color-mix(in srgb, var(--color-accent) 12%, transparent), transparent),
+        var(--color-surface);
+    }
+    .ln-hero h1 {
+      font-size: clamp(var(--text-3xl), 6vw, var(--text-6xl));
+      font-weight: var(--weight-bold);
+      line-height: var(--leading-tight);
+      letter-spacing: -0.02em;
+      margin: 0;
+      max-width: 18ch;
+      margin-inline: auto;
+    }
+    .ln-hero-lede {
+      font-size: clamp(var(--text-base), 2.2vw, var(--text-xl));
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      max-width: 58ch;
+      margin-inline: auto;
+    }
+    .ln-hero-gradient {
+      background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 40%, var(--purple-500)));
+      -webkit-background-clip: text;
+              background-clip: text;
+      color: transparent;
+    }
+
+    /* Feature card icon */
+    .ln-feature-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-md);
+      background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+      color: var(--color-accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--text-xl);
+    }
+
+    /* Code preview */
+    .ln-code {
+      background: var(--color-surface-inverse, var(--black));
+      color: var(--gray-200);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      overflow-x: auto;
+      border: 1px solid var(--color-border);
+    }
+    .ln-code .c-comment { color: var(--gray-600); }
+    .ln-code .c-tag     { color: var(--pink-300); }
+    .ln-code .c-attr    { color: var(--purple-300); }
+    .ln-code .c-str     { color: var(--green-300); }
+
+    /* Logo strip */
+    .ln-logos {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(var(--space-4), 4vw, var(--space-10));
+      opacity: 0.55;
+      filter: grayscale(1);
+    }
+    .ln-logos span {
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-sm);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    /* Testimonial */
+    .ln-quote {
+      font-size: clamp(var(--text-lg), 2.4vw, var(--text-2xl));
+      line-height: var(--leading-snug);
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+    }
+
+    /* CTA panel */
+    .ln-cta {
+      border-radius: var(--radius-xl);
+      padding: clamp(var(--space-8), 6vw, var(--space-12));
+      background: linear-gradient(135deg, var(--color-accent), color-mix(in srgb, var(--color-accent) 60%, var(--purple-500)));
+      color: white;
+      text-align: center;
+    }
+    .ln-cta h2 { color: white; }
+    .ln-cta p  { color: rgba(255,255,255,0.85); }
+
+    /* Footer */
+    .ln-footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface-sunken);
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+    }
+    .ln-footer a { color: var(--color-text-secondary); text-decoration: none; }
+    .ln-footer a:hover { color: var(--color-text); }
+
+    @media (max-width: 768px) {
+      .ln-nav-links.desktop { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ TOP NAV ═══ -->
+  <header class="ln-nav">
+    <div class="ren-center-wide" style="padding-block: var(--space-3);">
+      <div class="ren-row-spread">
+        <div class="ren-row">
+          <strong style="font-size: var(--text-lg);">RenDS</strong>
+          <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2);">v0.6</span>
+        </div>
+        <nav class="ln-nav-links desktop ren-cluster" aria-label="Main">
+          <a href="../docs/components.html">Components</a>
+          <a href="../docs/primitive-zero.html">Primitive Zero</a>
+          <a href="../create/">Create</a>
+          <a href="#blocks">Blocks</a>
+          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+        <div class="ren-row">
+          <a href="./auth.html" class="ren-btn ren-btn-ghost ren-btn-sm">Sign in</a>
+          <a href="../create/" class="ren-btn ren-btn-primary ren-btn-sm">Try it</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════ HERO ═══ -->
+  <section class="ln-hero">
+    <div class="ren-center-narrow">
+      <div class="ren-stack-lg" style="align-items: center;">
+        <span class="ren-tag">
+          <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--color-success);"></span>
+          New: RenDS Create theme builder
+        </span>
+        <h1>The vanilla design system <span class="ln-hero-gradient">that respects the browser</span></h1>
+        <p class="ln-hero-lede">
+          45+ accessible components. Zero dependencies. Works with any framework —
+          or none at all. Own your code, ship faster, and never fight the cascade again.
+        </p>
+        <div class="ren-cluster" style="justify-content: center;">
+          <a href="../create/" class="ren-btn ren-btn-primary ren-btn-lg">Start customizing →</a>
+          <a href="../docs/components.html" class="ren-btn ren-btn-secondary ren-btn-lg">Browse components</a>
+        </div>
+        <div class="ren-cluster" style="gap: var(--space-6); color: var(--color-text-muted); font-size: var(--text-sm); justify-content: center;">
+          <span>✓ MIT licensed</span>
+          <span>✓ Copy, don't import</span>
+          <span>✓ WCAG 2.1 AA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ LOGOS ═══ -->
+  <section style="padding: var(--space-8) var(--space-6);">
+    <div class="ren-center-wide">
+      <div class="ren-stack" style="align-items: center;">
+        <p style="color: var(--color-text-muted); font-size: var(--text-sm); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">
+          Trusted by teams shipping to production
+        </p>
+        <div class="ln-logos">
+          <span>Orbit</span>
+          <span>Particle</span>
+          <span>Kernel</span>
+          <span>Linear·ish</span>
+          <span>Monogram</span>
+          <span>Delta Labs</span>
+          <span>Sigma Co</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FEATURES ═══ -->
+  <section id="features" style="padding: var(--space-16) var(--space-6);">
+    <div class="ren-center-wide">
+      <div class="ren-stack-xl">
+        <div class="ren-stack" style="text-align: center; align-items: center;">
+          <span class="ren-tag">Why RenDS</span>
+          <h2 style="font-size: var(--text-4xl); font-weight: var(--weight-bold); margin: 0; max-width: 22ch;">
+            Built on web standards, tuned for craft
+          </h2>
+          <p style="color: var(--color-text-secondary); font-size: var(--text-lg); max-width: 60ch; margin: 0;">
+            Every decision leans on the platform. Cascade Layers, custom properties,
+            <code>light-dark()</code>, <code>:focus-visible</code>, container queries. If the
+            browser can do it, RenDS does it.
+          </p>
+        </div>
+
+        <div class="ren-grid-3">
+          <div class="ren-card">
+            <div class="ren-card-body">
+              <div class="ren-stack">
+                <span class="ln-feature-icon" aria-hidden="true">◐</span>
+                <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Theme-aware tokens</h3>
+                <p style="color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+                  Three layers: primitive → semantic → component. Light/dark via <code>light-dark()</code> — no JS toggle
+                  needed, no FOUC. Write once, render right.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-card">
+            <div class="ren-card-body">
+              <div class="ren-stack">
+                <span class="ln-feature-icon" aria-hidden="true">⌨</span>
+                <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Accessibility baked in</h3>
+                <p style="color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+                  Keyboard support, ARIA, touch targets, forced-colors, reduced-motion alternatives. WCAG AA audited —
+                  AAA where it makes sense.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-card">
+            <div class="ren-card-body">
+              <div class="ren-stack">
+                <span class="ln-feature-icon" aria-hidden="true">⊞</span>
+                <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Atomic by design</h3>
+                <p style="color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+                  Tokens → Primitives → Composites → Patterns. Build upward, never skip a layer. Compose, don't wrestle.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-card">
+            <div class="ren-card-body">
+              <div class="ren-stack">
+                <span class="ln-feature-icon" aria-hidden="true">↯</span>
+                <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Zero build step</h3>
+                <p style="color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+                  Drop a <code>&lt;link&gt;</code> tag and you're shipping. No bundler, no PostCSS pipeline, no
+                  framework lock-in.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-card">
+            <div class="ren-card-body">
+              <div class="ren-stack">
+                <span class="ln-feature-icon" aria-hidden="true">◈</span>
+                <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Copy, don't import</h3>
+                <p style="color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+                  Own the code. The CLI drops component source into your repo so you can tweak, rip, or remix freely.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-card">
+            <div class="ren-card-body">
+              <div class="ren-stack">
+                <span class="ln-feature-icon" aria-hidden="true">≋</span>
+                <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Motion with manners</h3>
+                <p style="color: var(--color-text-secondary); margin: 0; line-height: var(--leading-relaxed);">
+                  Every animation has a reduced-motion alternative — dissolve, highlight, color-shift — never a silent
+                  freeze.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ CODE PREVIEW ═══ -->
+  <section style="padding: var(--space-12) var(--space-6); background: var(--color-surface-sunken);">
+    <div class="ren-center-wide">
+      <div class="ren-grid-2" style="gap: var(--space-10); align-items: center;">
+        <div class="ren-stack-lg">
+          <span class="ren-tag">Developer experience</span>
+          <h2 style="font-size: var(--text-3xl); font-weight: var(--weight-bold); margin: 0;">
+            HTML you'd write anyway, but accessible
+          </h2>
+          <p style="color: var(--color-text-secondary); font-size: var(--text-lg); line-height: var(--leading-relaxed); margin: 0;">
+            A button is just <code>&lt;button class="ren-btn"&gt;</code>. A dialog is a <code>&lt;dialog&gt;</code>.
+            No custom elements to memorize, no render trees to debug. Native first — always.
+          </p>
+          <div class="ren-cluster">
+            <a href="../docs/components.html" class="ren-btn ren-btn-primary">Read the docs</a>
+            <a href="#install" class="ren-btn ren-btn-ghost">Install →</a>
+          </div>
+        </div>
+
+        <pre class="ln-code"><span class="c-comment">&lt;!-- Just HTML. That's it. --&gt;</span>
+<span class="c-tag">&lt;button</span> <span class="c-attr">class</span>=<span class="c-str">"ren-btn ren-btn-primary"</span><span class="c-tag">&gt;</span>
+  Sign in
+<span class="c-tag">&lt;/button&gt;</span>
+
+<span class="c-tag">&lt;dialog</span> <span class="c-attr">class</span>=<span class="c-str">"ren-dialog"</span><span class="c-tag">&gt;</span>
+  <span class="c-tag">&lt;h2&gt;</span>Are you sure?<span class="c-tag">&lt;/h2&gt;</span>
+  <span class="c-tag">&lt;form</span> <span class="c-attr">method</span>=<span class="c-str">"dialog"</span><span class="c-tag">&gt;</span>
+    <span class="c-tag">&lt;button</span> <span class="c-attr">class</span>=<span class="c-str">"ren-btn"</span><span class="c-tag">&gt;</span>Cancel<span class="c-tag">&lt;/button&gt;</span>
+  <span class="c-tag">&lt;/form&gt;</span>
+<span class="c-tag">&lt;/dialog&gt;</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ TESTIMONIAL ═══ -->
+  <section style="padding: var(--space-16) var(--space-6);">
+    <div class="ren-center" style="--center-width: 48rem;">
+      <div class="ren-stack-xl" style="align-items: center; text-align: center;">
+        <span class="ren-tag">What teams say</span>
+        <blockquote class="ln-quote" style="margin: 0;">
+          &ldquo;We replaced a tangled Tailwind+shadcn setup with RenDS in a weekend. Our bundle dropped 180 KB,
+          our Lighthouse a11y went to 100, and we stopped arguing about <code>!important</code>.&rdquo;
+        </blockquote>
+        <div class="ren-row">
+          <div class="ren-avatar" style="background: var(--color-accent); color: var(--color-on-accent); display: inline-flex; align-items: center; justify-content: center; font-weight: var(--weight-bold);">A</div>
+          <div style="text-align: left;">
+            <div style="font-weight: var(--weight-semibold);">Ana López</div>
+            <div style="font-size: var(--text-sm); color: var(--color-text-muted);">Staff Engineer · Particle</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ CTA ═══ -->
+  <section id="install" style="padding: var(--space-8) var(--space-6);">
+    <div class="ren-center-wide">
+      <div class="ln-cta">
+        <div class="ren-stack-lg" style="align-items: center;">
+          <h2 style="font-size: var(--text-4xl); font-weight: var(--weight-bold); margin: 0; max-width: 20ch;">
+            Start shipping accessible UI today
+          </h2>
+          <p style="font-size: var(--text-lg); line-height: var(--leading-relaxed); max-width: 52ch; margin: 0;">
+            MIT licensed. Zero lock-in. Works with any stack — or none. Customize your theme in Create,
+            copy the CSS, done.
+          </p>
+          <div class="ren-cluster" style="justify-content: center;">
+            <a href="../create/" class="ren-btn ren-btn-lg" style="--ren-btn-bg: white; --ren-btn-text: var(--color-accent);">Open Create →</a>
+            <a href="../docs/components.html" class="ren-btn ren-btn-lg ren-btn-ghost" style="--ren-btn-text: white; --ren-btn-border: rgba(255,255,255,0.4);">Read the docs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ FOOTER ═══ -->
+  <footer class="ln-footer" style="padding: var(--space-10) var(--space-6);">
+    <div class="ren-center-wide">
+      <div class="ren-stack-lg">
+        <div class="ren-grid-4" style="gap: var(--space-8);">
+          <div class="ren-stack">
+            <strong style="color: var(--color-text);">RenDS</strong>
+            <p style="margin: 0;">Vanilla, accessible, atomic.</p>
+          </div>
+          <div class="ren-stack-sm">
+            <strong style="color: var(--color-text); font-size: var(--text-sm);">Product</strong>
+            <a href="../docs/components.html">Components</a>
+            <a href="../create/">Create</a>
+            <a href="./dashboard.html">Blocks</a>
+          </div>
+          <div class="ren-stack-sm">
+            <strong style="color: var(--color-text); font-size: var(--text-sm);">Docs</strong>
+            <a href="../docs/primitive-zero.html">Primitive Zero</a>
+            <a href="../docs/components.html">Components</a>
+            <a href="../docs/content-guidelines.css">Content guidelines</a>
+          </div>
+          <div class="ren-stack-sm">
+            <strong style="color: var(--color-text); font-size: var(--text-sm);">Community</strong>
+            <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+            <a href="#">Discord</a>
+            <a href="./blog.html">Blog</a>
+          </div>
+        </div>
+        <hr class="ren-separator" role="separator" aria-hidden="true">
+        <div class="ren-row-spread">
+          <span>© 2026 RenDS · MIT License</span>
+          <div class="ren-cluster">
+            <a href="#">Privacy</a>
+            <a href="#">Terms</a>
+            <a href="#">Status</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

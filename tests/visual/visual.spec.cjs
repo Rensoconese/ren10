@@ -16,7 +16,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render full test page correctly', async ({ page }) => {
     // Take a full-page screenshot
-    await expect(page).toMatchSnapshot('full-page.png', {
+    await expect(page).toHaveScreenshot('full-page.png', {
       maxDiffPixels: 200,
       threshold: 0.2,
     });
@@ -28,7 +28,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render buttons section correctly', async ({ page }) => {
     const section = page.locator('h2:has-text("Primitives") ~ .test-subsection:first-child');
-    await expect(section).toMatchSnapshot('primitives-buttons.png', {
+    await expect(section).toHaveScreenshot('primitives-buttons.png', {
       maxDiffPixels: 100,
       threshold: 0.15,
     });
@@ -36,7 +36,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render badges section correctly', async ({ page }) => {
     const section = page.locator('text=Badges').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-badges.png', {
+    await expect(section).toHaveScreenshot('primitives-badges.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -44,7 +44,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render banners section correctly', async ({ page }) => {
     const section = page.locator('text=Banners').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-banners.png', {
+    await expect(section).toHaveScreenshot('primitives-banners.png', {
       maxDiffPixels: 100,
       threshold: 0.15,
     });
@@ -52,7 +52,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render breadcrumbs section correctly', async ({ page }) => {
     const section = page.locator('text=Breadcrumbs').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-breadcrumbs.png', {
+    await expect(section).toHaveScreenshot('primitives-breadcrumbs.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -60,7 +60,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render cards section correctly', async ({ page }) => {
     const section = page.locator('text=Cards').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-cards.png', {
+    await expect(section).toHaveScreenshot('primitives-cards.png', {
       maxDiffPixels: 150,
       threshold: 0.2,
     });
@@ -68,7 +68,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render checkboxes section correctly', async ({ page }) => {
     const section = page.locator('text=Checkboxes').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-checkboxes.png', {
+    await expect(section).toHaveScreenshot('primitives-checkboxes.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -76,7 +76,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render fields section correctly', async ({ page }) => {
     const section = page.locator('text=Fields').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-fields.png', {
+    await expect(section).toHaveScreenshot('primitives-fields.png', {
       maxDiffPixels: 100,
       threshold: 0.15,
     });
@@ -84,7 +84,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render icons section correctly', async ({ page }) => {
     const section = page.locator('text=Icons').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-icons.png', {
+    await expect(section).toHaveScreenshot('primitives-icons.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -92,7 +92,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render links section correctly', async ({ page }) => {
     const section = page.locator('text=Links').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-links.png', {
+    await expect(section).toHaveScreenshot('primitives-links.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -100,7 +100,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render pagination section correctly', async ({ page }) => {
     const section = page.locator('text=Pagination').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-pagination.png', {
+    await expect(section).toHaveScreenshot('primitives-pagination.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -108,7 +108,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render progress section correctly', async ({ page }) => {
     const section = page.locator('text=Progress').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-progress.png', {
+    await expect(section).toHaveScreenshot('primitives-progress.png', {
       maxDiffPixels: 100,
       threshold: 0.15,
     });
@@ -116,7 +116,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render radio buttons section correctly', async ({ page }) => {
     const section = page.locator('text=Radio Buttons').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-radio.png', {
+    await expect(section).toHaveScreenshot('primitives-radio.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -124,7 +124,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render tags section correctly', async ({ page }) => {
     const section = page.locator('text=Tags').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-tags.png', {
+    await expect(section).toHaveScreenshot('primitives-tags.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -132,7 +132,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render switches section correctly', async ({ page }) => {
     const section = page.locator('text=Switches').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-switches.png', {
+    await expect(section).toHaveScreenshot('primitives-switches.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -140,7 +140,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render separators section correctly', async ({ page }) => {
     const section = page.locator('text=Separators').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-separators.png', {
+    await expect(section).toHaveScreenshot('primitives-separators.png', {
       maxDiffPixels: 30,
       threshold: 0.08,
     });
@@ -148,7 +148,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render avatars section correctly', async ({ page }) => {
     const section = page.locator('text=Avatars').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-avatars.png', {
+    await expect(section).toHaveScreenshot('primitives-avatars.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -157,7 +157,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
   test('should render spinners section correctly', async ({ page }) => {
     const section = page.locator('text=Spinners').locator('..').locator('..').first();
     // Spinners animate, so we use a more lenient threshold
-    await expect(section).toMatchSnapshot('primitives-spinners.png', {
+    await expect(section).toHaveScreenshot('primitives-spinners.png', {
       maxDiffPixels: 200,
       threshold: 0.25,
     });
@@ -166,7 +166,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
   test('should render skeleton loaders section correctly', async ({ page }) => {
     const section = page.locator('text=Skeleton Loaders').locator('..').locator('..').first();
     // Skeletons animate, so use more lenient threshold
-    await expect(section).toMatchSnapshot('primitives-skeleton.png', {
+    await expect(section).toHaveScreenshot('primitives-skeleton.png', {
       maxDiffPixels: 150,
       threshold: 0.2,
     });
@@ -174,7 +174,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render keyboard keys section correctly', async ({ page }) => {
     const section = page.locator('text=Keyboard Keys').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('primitives-kbd.png', {
+    await expect(section).toHaveScreenshot('primitives-kbd.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -186,7 +186,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render dialog section correctly', async ({ page }) => {
     const section = page.locator('text=Dialog').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-dialog.png', {
+    await expect(section).toHaveScreenshot('composites-dialog.png', {
       maxDiffPixels: 100,
       threshold: 0.15,
     });
@@ -194,7 +194,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render tabs section correctly', async ({ page }) => {
     const section = page.locator('text=Tabs').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-tabs.png', {
+    await expect(section).toHaveScreenshot('composites-tabs.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -202,7 +202,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render accordion section correctly', async ({ page }) => {
     const section = page.locator('text=Accordion').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-accordion.png', {
+    await expect(section).toHaveScreenshot('composites-accordion.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -210,7 +210,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render toggle group section correctly', async ({ page }) => {
     const section = page.locator('text=Toggle Group').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-toggle-group.png', {
+    await expect(section).toHaveScreenshot('composites-toggle-group.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -218,7 +218,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render tooltip section correctly', async ({ page }) => {
     const section = page.locator('text=Tooltip').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-tooltip.png', {
+    await expect(section).toHaveScreenshot('composites-tooltip.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -226,7 +226,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render select section correctly', async ({ page }) => {
     const section = page.locator('text=Select').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-select.png', {
+    await expect(section).toHaveScreenshot('composites-select.png', {
       maxDiffPixels: 50,
       threshold: 0.1,
     });
@@ -234,7 +234,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render slider section correctly', async ({ page }) => {
     const section = page.locator('text=Slider').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('composites-slider.png', {
+    await expect(section).toHaveScreenshot('composites-slider.png', {
       maxDiffPixels: 75,
       threshold: 0.12,
     });
@@ -246,7 +246,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render dark theme section correctly', async ({ page }) => {
     const section = page.locator('text=Dark Mode').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('theme-dark-mode.png', {
+    await expect(section).toHaveScreenshot('theme-dark-mode.png', {
       maxDiffPixels: 150,
       threshold: 0.2,
     });
@@ -254,7 +254,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should render RTL section correctly', async ({ page }) => {
     const section = page.locator('text=RTL').locator('..').locator('..').first();
-    await expect(section).toMatchSnapshot('theme-rtl.png', {
+    await expect(section).toHaveScreenshot('theme-rtl.png', {
       maxDiffPixels: 150,
       threshold: 0.2,
     });
@@ -266,7 +266,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('dark-mode: should render full page in dark scheme', async ({ page }) => {
     // This test runs with colorScheme: 'dark' from playwright.config.js
-    await expect(page).toMatchSnapshot('full-page-dark.png', {
+    await expect(page).toHaveScreenshot('full-page-dark.png', {
       maxDiffPixels: 300,
       threshold: 0.25,
     });
@@ -291,7 +291,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
     expect(hasReducedMotion).toBe(true);
 
     // Take screenshot with reduced motion
-    await expect(page).toMatchSnapshot('reduced-motion.png', {
+    await expect(page).toHaveScreenshot('reduced-motion.png', {
       maxDiffPixels: 200,
       threshold: 0.2,
     });
@@ -329,7 +329,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
     expect(isVisible).toBe(true);
 
     // Take screenshot of RTL section
-    await expect(rtlSection).toMatchSnapshot('rtl-layout.png', {
+    await expect(rtlSection).toHaveScreenshot('rtl-layout.png', {
       maxDiffPixels: 150,
       threshold: 0.2,
     });
@@ -403,7 +403,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
     expect(isFocused).toBe(true);
 
     // Take screenshot with focus state
-    await expect(page).toMatchSnapshot('focus-state.png', {
+    await expect(page).toHaveScreenshot('focus-state.png', {
       maxDiffPixels: 200,
       threshold: 0.2,
     });

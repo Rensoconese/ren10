@@ -15,57 +15,85 @@
   color-scheme: light dark;
 
   /* ─── Accent / Tint ─── */
-  --color-accent:        light-dark(var(--blue-500), var(--blue-400));
-  --color-accent-hover:  light-dark(var(--blue-600), var(--blue-300));
-  --color-accent-active: light-dark(var(--blue-700), var(--blue-200));
+  /* Accent is used as a SOLID background with --color-on-accent text. Values tuned
+     so that WHITE on accent (light) and BLACK on accent (dark) both pass WCAG AA.
+     Light: blue-600 (5.88:1 vs white). Dark: blue-400 (8.2:1 vs black). */
+  --color-accent:        light-dark(var(--blue-600), var(--blue-400));
+  --color-accent-hover:  light-dark(var(--blue-700), var(--blue-300));
+  --color-accent-active: light-dark(var(--blue-800), var(--blue-200));
   --color-accent-subtle: light-dark(var(--blue-50), var(--blue-900));
-  --color-on-accent:     var(--white);
+  --color-on-accent:     light-dark(var(--white), var(--black));
 
   /* ─── Semantic Status ─── */
-  --color-success:        var(--green-400);
+  /* Status tokens follow the same rule as --color-accent: solid bg with adaptive
+     on-X text that passes AA. Each pair tuned per color, Apple-like brightness
+     preserved in dark mode. */
+  --color-success:        light-dark(var(--green-700), var(--green-400));
   --color-success-subtle: light-dark(var(--green-50), var(--green-900));
-  --color-on-success:     var(--white);
+  --color-on-success:     light-dark(var(--white), var(--black));
 
-  --color-warning:        var(--orange-400);
+  --color-warning:        light-dark(var(--orange-700), var(--orange-400));
   --color-warning-subtle: light-dark(var(--orange-50), var(--orange-900));
-  --color-on-warning:     var(--white);
+  --color-on-warning:     light-dark(var(--white), var(--black));
 
-  --color-danger:         light-dark(var(--red-400), #FF453A);
+  --color-danger:         light-dark(var(--red-500), var(--red-400));
   --color-danger-subtle:  light-dark(var(--red-50), var(--red-900));
-  --color-on-danger:      var(--white);
+  --color-on-danger:      light-dark(var(--white), var(--black));
 
-  --color-info:           light-dark(var(--teal-400), #64D2FF);
+  --color-info:           light-dark(var(--teal-700), var(--teal-400));
   --color-info-subtle:    light-dark(var(--teal-50), var(--teal-900));
-  --color-on-info:        var(--white);
+  --color-on-info:        light-dark(var(--white), var(--black));
+
+  /* AI — used by Carbon-for-AI message patterns (ren-ai). */
+  --color-ai:             light-dark(var(--purple-500), var(--purple-300));
+  --color-ai-hover:       light-dark(var(--purple-600), var(--purple-200));
+  --color-ai-subtle:      light-dark(var(--purple-50), var(--purple-900));
+  --color-on-ai:          light-dark(var(--white), var(--black));
 
   /* ─── Text ─── */
   --color-text:           light-dark(var(--black), var(--white));
-  --color-text-secondary: light-dark(var(--gray-700), #EBEBF5);
-  --color-text-muted:     light-dark(var(--gray-600), var(--gray-500));
+  --color-text-secondary: light-dark(var(--gray-700), var(--gray-300));
+  --color-text-muted:     light-dark(var(--gray-700), var(--gray-500)); /* gray-700 light 7.24:1; gray-500 dark 4.78:1 */
+  /* NOTE: --color-text-faint is INCIDENTAL CONTENT ONLY (WCAG-exempt): disabled labels, placeholder
+     hints, decorative punctuation (breadcrumb separators, ellipsis), non-interactive calendar
+     outside-month dates. It does NOT meet AA and must NEVER be used for eyebrows, captions, table
+     headers, step numbering, or any other text the user is expected to read. Use --color-text-muted
+     for those cases (7.24:1 light / 4.78:1 dark = AA in both). */
   --color-text-faint:     light-dark(var(--gray-400), var(--gray-800));
   --color-text-inverted:  light-dark(var(--white), var(--black));
-  --color-text-link:      var(--color-accent);
-  --color-text-link-hover:var(--color-accent-hover);
+  --color-text-link:      var(--color-accent-strong); /* strong variant so links pass AA on light surface */
+  --color-text-link-hover:var(--color-accent-active);
 
   /* ─── Surfaces / Backgrounds ─── */
   --color-surface:        light-dark(var(--white), var(--black));
   --color-surface-raised: light-dark(var(--white), var(--gray-1000));
-  --color-surface-sunken: light-dark(var(--gray-100), #0A0A0A);
+  --color-surface-sunken: light-dark(var(--gray-100), var(--black));
   --color-surface-overlay:light-dark(var(--white), var(--gray-1000));
 
   /* ─── Borders ─── */
-  --color-border:        light-dark(var(--gray-200), var(--gray-900));
-  --color-border-strong: light-dark(var(--gray-300), var(--gray-800));
-  --color-border-muted:  light-dark(var(--gray-100), var(--gray-950));
-  --color-border-accent: var(--color-accent);
+  /* --color-border: decorative separator between regions (fails 3:1, por diseño).
+     --color-border-interactive: bordes de controles (inputs, buttons, checkboxes)
+        que DEBEN pasar WCAG 1.4.11 3:1 contra su surface. gray-500 da 3.07:1 light
+        / 7.42:1 dark — ambos AA. */
+  --color-border:             light-dark(var(--gray-200), var(--gray-900));
+  --color-border-strong:      light-dark(var(--gray-300), var(--gray-800));
+  --color-border-muted:       light-dark(var(--gray-100), var(--gray-950));
+  --color-border-interactive: light-dark(var(--gray-500), var(--gray-500));
+  --color-border-accent:      var(--color-accent);
 
   /* ─── Fills (interactive backgrounds) ─── */
   --color-fill:        light-dark(var(--gray-100), var(--gray-950));
   --color-fill-hover:  light-dark(var(--gray-200), var(--gray-900));
   --color-fill-active: light-dark(var(--gray-300), var(--gray-800));
 
+  /* ─── Strong variants (AA-compliant for text on light surfaces) ─── */
+  --color-accent-strong:     var(--color-accent-hover);                   /* blue-600 light, 5.88:1 vs white */
+  --color-success-strong:    light-dark(var(--green-700), var(--green-300)); /* 5.92:1 light, 6.22:1 dark */
+  --color-danger-strong:     light-dark(var(--red-500),   var(--red-300));   /* 6.93:1 light, 4.63:1 dark */
+  --color-info-strong:       light-dark(var(--teal-700),  var(--teal-300)); /* 5.27:1 light */
+  --color-warning-strong:    light-dark(var(--orange-700), var(--orange-300)); /* 6.29:1 light */
+
   /* ─── Aliases (compatibility) ─── */
-  --color-accent-strong:     var(--color-accent-hover);
   --color-background-hover:  var(--color-fill-hover);
   --color-background-active: var(--color-fill-active);
   --color-border-hover:      var(--color-border-strong);
@@ -90,9 +118,9 @@
   /* ─── Form States ─── */
   --color-input-bg:               light-dark(var(--gray-100), var(--gray-1000));
   --color-input-bg-hover:         light-dark(var(--white), var(--gray-950));
-  --color-input-border:           light-dark(var(--gray-200), var(--gray-900));
+  --color-input-border:           var(--color-border-interactive); /* 3:1 AA en ambos modos */
   --color-input-border-focus:     var(--color-accent);
-  --color-input-placeholder:      light-dark(var(--gray-600), var(--gray-700));
+  --color-input-placeholder:      light-dark(var(--gray-700), var(--gray-500)); /* AA on input bg */
   --color-input-disabled-bg:      light-dark(var(--gray-200), var(--gray-950));
   --color-input-disabled-text:    light-dark(var(--gray-400), var(--gray-800));
   --color-input-error-border:     var(--color-danger);

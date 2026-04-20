@@ -935,7 +935,7 @@
 .ren-page-grid,
 .ren-sidebar-grid {
   & :focus-visible {
-    outline: 2px solid var(--color-focus, #4F46E5);
+    outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
 }

@@ -245,6 +245,11 @@
       <li><a href="#structure">Estructura</a></li>
       <li><a href="#combos">Combinaciones</a></li>
     </ul>
+
+    <h3>Navegación</h3>
+    <ul>
+      <li><a href="./components.html">← Components (Layer 2+)</a></li>
+    </ul>
   </aside>
 
   <!-- ───────────── MAIN CONTENT ───────────── -->
@@ -285,7 +290,7 @@
             <h6>Heading 6</h6>
           </div>
         </div>
-        <pre class="element-code">&lt;h1&gt;Heading 1&lt;/h1&gt;
+        <pre class="element-code" tabindex="0">&lt;h1&gt;Heading 1&lt;/h1&gt;
 &lt;h2&gt;Heading 2&lt;/h2&gt;
 &lt;h3&gt;Heading 3&lt;/h3&gt;</pre>
         <p class="graduate">Usan tokens <code>--display-*</code>, <code>--title-*</code> y <code>--headline-*</code>. Incluyen <code>text-wrap: balance</code> para mejor rasgado. Primer heading pierde margin-top automáticamente.</p>
@@ -303,7 +308,7 @@
             <p>Y este es un párrafo normal, con <code>text-wrap: pretty</code> y márgenes verticales con tokens de espaciado.</p>
           </div>
         </div>
-        <pre class="element-code">&lt;p role="doc-subtitle"&gt;Lead paragraph&lt;/p&gt;
+        <pre class="element-code" tabindex="0">&lt;p role="doc-subtitle"&gt;Lead paragraph&lt;/p&gt;
 &lt;p&gt;Párrafo normal.&lt;/p&gt;</pre>
       </article>
 
@@ -316,7 +321,7 @@
         <div class="element-render">
           <p>Esto es un <a href="#intro">enlace interno</a> dentro de texto.</p>
         </div>
-        <pre class="element-code">&lt;a href="/ruta"&gt;Texto del enlace&lt;/a&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;a href="/ruta"&gt;Texto del enlace&lt;/a&gt;</pre>
         <p class="graduate">Para enlaces con variantes (subtle, destructive, standalone) o iconografía, usar el primitivo <code>ren-link</code>.</p>
       </article>
 
@@ -329,7 +334,7 @@
         <div class="element-render">
           <p>Texto con <strong>énfasis fuerte</strong>, con <em>énfasis suave</em>, y también <b>negrita pura</b> o <i>itálica pura</i>.</p>
         </div>
-        <pre class="element-code">&lt;strong&gt;énfasis fuerte&lt;/strong&gt;
+        <pre class="element-code" tabindex="0">&lt;strong&gt;énfasis fuerte&lt;/strong&gt;
 &lt;em&gt;énfasis suave&lt;/em&gt;</pre>
       </article>
 
@@ -342,7 +347,7 @@
         <div class="element-render">
           <p>Precio: $99 <small>+ IVA. Pagos en 12 cuotas sin interés.</small></p>
         </div>
-        <pre class="element-code">$99 &lt;small&gt;+ IVA&lt;/small&gt;</pre>
+        <pre class="element-code" tabindex="0">$99 &lt;small&gt;+ IVA&lt;/small&gt;</pre>
       </article>
 
       <!-- MARK -->
@@ -354,7 +359,7 @@
         <div class="element-render">
           <p>Buscamos la palabra <mark>encontrada</mark> en este texto.</p>
         </div>
-        <pre class="element-code">la palabra &lt;mark&gt;encontrada&lt;/mark&gt; aquí</pre>
+        <pre class="element-code" tabindex="0">la palabra &lt;mark&gt;encontrada&lt;/mark&gt; aquí</pre>
       </article>
 
       <!-- TIME -->
@@ -370,7 +375,7 @@
             <p><time>2026-03-11</time> · <time>09:05</time></p>
           </div>
         </div>
-        <pre class="element-code">&lt;time datetime="2026-04-16"&gt;16 abr 2026&lt;/time&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;time datetime="2026-04-16"&gt;16 abr 2026&lt;/time&gt;</pre>
       </article>
 
       <!-- CODE -->
@@ -382,7 +387,7 @@
         <div class="element-render">
           <p>Ejecutá <code>npm install</code> para instalar las dependencias.</p>
         </div>
-        <pre class="element-code">ejecutá &lt;code&gt;npm install&lt;/code&gt;</pre>
+        <pre class="element-code" tabindex="0">ejecutá &lt;code&gt;npm install&lt;/code&gt;</pre>
       </article>
 
       <!-- PRE -->
@@ -396,7 +401,7 @@
   return `Hola, ${name}`;
 }</code></pre>
         </div>
-        <pre class="element-code">&lt;pre&gt;&lt;code&gt;function hello(name) {
+        <pre class="element-code" tabindex="0">&lt;pre&gt;&lt;code&gt;function hello(name) {
   return `Hola, ${name}`;
 }&lt;/code&gt;&lt;/pre&gt;</pre>
       </article>
@@ -410,7 +415,7 @@
         <div class="element-render">
           <p>Presioná <kbd>Cmd</kbd> + <kbd>K</kbd> para abrir la búsqueda.</p>
         </div>
-        <pre class="element-code">&lt;kbd&gt;Cmd&lt;/kbd&gt; + &lt;kbd&gt;K&lt;/kbd&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;kbd&gt;Cmd&lt;/kbd&gt; + &lt;kbd&gt;K&lt;/kbd&gt;</pre>
       </article>
 
       <!-- SAMP -->
@@ -422,7 +427,7 @@
         <div class="element-render">
           <p>El resultado fue: <samp>added 1 package in 2s</samp></p>
         </div>
-        <pre class="element-code">Resultado: &lt;samp&gt;added 1 package&lt;/samp&gt;</pre>
+        <pre class="element-code" tabindex="0">Resultado: &lt;samp&gt;added 1 package&lt;/samp&gt;</pre>
       </article>
 
       <!-- VAR -->
@@ -434,7 +439,7 @@
         <div class="element-render">
           <p>La fórmula es <var>E</var> = <var>mc</var>², donde <var>c</var> = 299.792.458 m/s.</p>
         </div>
-        <pre class="element-code">&lt;var&gt;E&lt;/var&gt; = &lt;var&gt;mc&lt;/var&gt;²</pre>
+        <pre class="element-code" tabindex="0">&lt;var&gt;E&lt;/var&gt; = &lt;var&gt;mc&lt;/var&gt;²</pre>
       </article>
 
       <!-- BLOCKQUOTE + CITE -->
@@ -449,7 +454,7 @@
             <cite>Leonardo da Vinci</cite>
           </blockquote>
         </div>
-        <pre class="element-code">&lt;blockquote&gt;
+        <pre class="element-code" tabindex="0">&lt;blockquote&gt;
   &lt;p&gt;La simplicidad es...&lt;/p&gt;
   &lt;cite&gt;Leonardo da Vinci&lt;/cite&gt;
 &lt;/blockquote&gt;</pre>
@@ -465,7 +470,7 @@
         <div class="element-render">
           <p>Como dice Ada: <q>el único error real es no aprender del error</q>.</p>
         </div>
-        <pre class="element-code">&lt;q&gt;el único error real&lt;/q&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;q&gt;el único error real&lt;/q&gt;</pre>
       </article>
 
       <!-- DEL + INS -->
@@ -480,7 +485,7 @@
             <p>Claude <del>debería</del> <ins>debe</ins> escribir <del>código claro</del> <ins>código legible</ins>.</p>
           </div>
         </div>
-        <pre class="element-code">precio pasó de &lt;del&gt;$99&lt;/del&gt; &lt;ins&gt;$79&lt;/ins&gt;</pre>
+        <pre class="element-code" tabindex="0">precio pasó de &lt;del&gt;$99&lt;/del&gt; &lt;ins&gt;$79&lt;/ins&gt;</pre>
         <p class="graduate">Combinación contextual: <code>&lt;del&gt;</code> y <code>&lt;ins&gt;</code> adyacentes forman un diff visual (rojo subtle + verde subtle). Ideal para changelogs, ediciones, AI suggestions.</p>
       </article>
 
@@ -493,7 +498,7 @@
         <div class="element-render">
           <p>La <abbr title="Organización Mundial de la Salud">OMS</abbr> publicó un nuevo reporte.</p>
         </div>
-        <pre class="element-code">&lt;abbr title="..."&gt;OMS&lt;/abbr&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;abbr title="..."&gt;OMS&lt;/abbr&gt;</pre>
       </article>
 
       <!-- SUB + SUP -->
@@ -505,7 +510,7 @@
         <div class="element-render">
           <p>H<sub>2</sub>O, E = mc<sup>2</sup>, 10<sup>-9</sup></p>
         </div>
-        <pre class="element-code">H&lt;sub&gt;2&lt;/sub&gt;O
+        <pre class="element-code" tabindex="0">H&lt;sub&gt;2&lt;/sub&gt;O
 mc&lt;sup&gt;2&lt;/sup&gt;</pre>
       </article>
 
@@ -535,7 +540,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <li>Tercer item</li>
           </ul>
         </div>
-        <pre class="element-code">&lt;ul&gt;
+        <pre class="element-code" tabindex="0">&lt;ul&gt;
   &lt;li&gt;Item&lt;/li&gt;
   &lt;li&gt;Item con sub
     &lt;ul&gt;&lt;li&gt;sub&lt;/li&gt;&lt;/ul&gt;
@@ -556,7 +561,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <li>Deployá a producción</li>
           </ol>
         </div>
-        <pre class="element-code">&lt;ol&gt;
+        <pre class="element-code" tabindex="0">&lt;ol&gt;
   &lt;li&gt;Paso uno&lt;/li&gt;
   &lt;li&gt;Paso dos&lt;/li&gt;
 &lt;/ol&gt;</pre>
@@ -578,7 +583,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <dd>Componente compuesto de varios primitives. Ejemplo: Card usa surface, text y button.</dd>
           </dl>
         </div>
-        <pre class="element-code">&lt;dl&gt;
+        <pre class="element-code" tabindex="0">&lt;dl&gt;
   &lt;dt&gt;Término&lt;/dt&gt;
   &lt;dd&gt;Definición asociada al término.&lt;/dd&gt;
 &lt;/dl&gt;</pre>
@@ -627,7 +632,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </tbody>
           </table>
         </div>
-        <pre class="element-code">&lt;table&gt;
+        <pre class="element-code" tabindex="0">&lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;&lt;th&gt;Col&lt;/th&gt;&lt;/tr&gt;
   &lt;/thead&gt;
@@ -669,7 +674,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </tfoot>
           </table>
         </div>
-        <pre class="element-code">&lt;table&gt;
+        <pre class="element-code" tabindex="0">&lt;table&gt;
   &lt;caption&gt;Título&lt;/caption&gt;
   &lt;thead&gt;...&lt;/thead&gt;
   &lt;tbody&gt;...&lt;/tbody&gt;
@@ -712,7 +717,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </tbody>
           </table>
         </div>
-        <pre class="element-code">&lt;th scope="col"&gt;Columna&lt;/th&gt;
+        <pre class="element-code" tabindex="0">&lt;th scope="col"&gt;Columna&lt;/th&gt;
 &lt;th scope="row"&gt;Fila&lt;/th&gt;</pre>
         <p class="graduate">Tablas comparativas y matrices deben usar <code>scope</code> para que lectores de pantalla asocien cada celda con sus headers.</p>
       </article>
@@ -737,7 +742,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <input id="pz-name" type="text" placeholder="Ada Lovelace">
           </div>
         </div>
-        <pre class="element-code">&lt;label for="name"&gt;Nombre&lt;/label&gt;
+        <pre class="element-code" tabindex="0">&lt;label for="name"&gt;Nombre&lt;/label&gt;
 &lt;input id="name" type="text"&gt;</pre>
         <p class="graduate">Para inputs con prefix/suffix, iconos internos o validación visual custom, graduar a <code>ren-field</code>.</p>
       </article>
@@ -776,7 +781,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </div>
           </div>
         </div>
-        <pre class="element-code">&lt;input type="email"&gt;
+        <pre class="element-code" tabindex="0">&lt;input type="email"&gt;
 &lt;input type="password"&gt;
 &lt;input type="number" min="0" max="100"&gt;
 &lt;input type="date"&gt;
@@ -808,7 +813,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </div>
           </div>
         </div>
-        <pre class="element-code">&lt;input type="checkbox"&gt;
+        <pre class="element-code" tabindex="0">&lt;input type="checkbox"&gt;
 &lt;input type="radio" name="plan"&gt;</pre>
         <p class="graduate">Para grupos con estados visuales elaborados (chip-like, card selection) graduar a <code>ren-toggle-group</code>.</p>
       </article>
@@ -825,7 +830,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <textarea id="pz-msg" rows="3" placeholder="Contame qué pensás…"></textarea>
           </div>
         </div>
-        <pre class="element-code">&lt;textarea rows="3"&gt;&lt;/textarea&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;textarea rows="3"&gt;&lt;/textarea&gt;</pre>
       </article>
 
       <!-- SELECT -->
@@ -845,7 +850,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </select>
           </div>
         </div>
-        <pre class="element-code">&lt;select&gt;
+        <pre class="element-code" tabindex="0">&lt;select&gt;
   &lt;option&gt;Uno&lt;/option&gt;
   &lt;option&gt;Dos&lt;/option&gt;
 &lt;/select&gt;</pre>
@@ -869,7 +874,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </fieldset>
           </form>
         </div>
-        <pre class="element-code">&lt;fieldset&gt;
+        <pre class="element-code" tabindex="0">&lt;fieldset&gt;
   &lt;legend&gt;Título del grupo&lt;/legend&gt;
   &lt;label&gt;...&lt;/label&gt;
   &lt;input&gt;
@@ -889,7 +894,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <button type="button" disabled>Disabled</button>
           </div>
         </div>
-        <pre class="element-code">&lt;button&gt;Primary action&lt;/button&gt;
+        <pre class="element-code" tabindex="0">&lt;button&gt;Primary action&lt;/button&gt;
 &lt;button disabled&gt;Disabled&lt;/button&gt;</pre>
         <p class="graduate">Para secondary, ghost, destructive, icon-only, loading states, graduar a <code>ren-button</code>.</p>
       </article>
@@ -909,7 +914,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <p style="margin-top:var(--space-2)">Suma: <output name="pzResult" for="pzA pzB">100</output></p>
           </form>
         </div>
-        <pre class="element-code">&lt;output name="result"&gt;100&lt;/output&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;output name="result"&gt;100&lt;/output&gt;</pre>
       </article>
 
       <!-- PROGRESS -->
@@ -925,7 +930,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </label>
           </div>
         </div>
-        <pre class="element-code">&lt;progress value="70" max="100"&gt;&lt;/progress&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;progress value="70" max="100"&gt;&lt;/progress&gt;</pre>
       </article>
 
       <!-- METER -->
@@ -947,7 +952,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </label>
           </div>
         </div>
-        <pre class="element-code">&lt;meter value="0.3" min="0" max="1"
+        <pre class="element-code" tabindex="0">&lt;meter value="0.3" min="0" max="1"
   low="0.4" high="0.7" optimum="0.2"&gt;
 &lt;/meter&gt;</pre>
         <p class="graduate">Diferencia clave vs <code>&lt;progress&gt;</code>: meter mide una cantidad estática (uso de disco, rating), progress un proceso en curso (upload, install).</p>
@@ -972,7 +977,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </datalist>
           </div>
         </div>
-        <pre class="element-code">&lt;input list="browsers"&gt;
+        <pre class="element-code" tabindex="0">&lt;input list="browsers"&gt;
 &lt;datalist id="browsers"&gt;
   &lt;option value="Chrome"&gt;
   &lt;option value="Firefox"&gt;
@@ -1005,7 +1010,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </details>
           </div>
         </div>
-        <pre class="element-code">&lt;details&gt;
+        <pre class="element-code" tabindex="0">&lt;details&gt;
   &lt;summary&gt;Título clicable&lt;/summary&gt;
   &lt;p&gt;Contenido expandible.&lt;/p&gt;
 &lt;/details&gt;</pre>
@@ -1030,7 +1035,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             </dialog>
           </div>
         </div>
-        <pre class="element-code">&lt;dialog id="my-dialog"&gt;
+        <pre class="element-code" tabindex="0">&lt;dialog id="my-dialog"&gt;
   &lt;h3&gt;Título&lt;/h3&gt;
   &lt;p&gt;Contenido&lt;/p&gt;
   &lt;form method="dialog"&gt;
@@ -1061,7 +1066,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
         <div class="element-render">
           <img src="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 200'&gt;&lt;rect width='400' height='200' fill='%23007AFF'/&gt;&lt;text x='50%25' y='50%25' fill='white' font-size='24' text-anchor='middle' dominant-baseline='middle' font-family='system-ui'&gt;400 × 200 placeholder&lt;/text&gt;&lt;/svg&gt;" alt="Imagen placeholder 400x200">
         </div>
-        <pre class="element-code">&lt;img src="..." alt="Descripción"&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;img src="..." alt="Descripción"&gt;</pre>
       </article>
 
       <!-- FIGURE + FIGCAPTION -->
@@ -1076,7 +1081,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <figcaption>Figura 1. Crecimiento Q1 2026 por región.</figcaption>
           </figure>
         </div>
-        <pre class="element-code">&lt;figure&gt;
+        <pre class="element-code" tabindex="0">&lt;figure&gt;
   &lt;img src="..." alt="..."&gt;
   &lt;figcaption&gt;Pie de foto&lt;/figcaption&gt;
 &lt;/figure&gt;</pre>
@@ -1094,7 +1099,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             Tu navegador no soporta video.
           </video>
         </div>
-        <pre class="element-code">&lt;video controls poster="cover.jpg"&gt;
+        <pre class="element-code" tabindex="0">&lt;video controls poster="cover.jpg"&gt;
   &lt;source src="video.mp4" type="video/mp4"&gt;
 &lt;/video&gt;</pre>
       </article>
@@ -1111,7 +1116,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             Tu navegador no soporta audio.
           </audio>
         </div>
-        <pre class="element-code">&lt;audio controls&gt;
+        <pre class="element-code" tabindex="0">&lt;audio controls&gt;
   &lt;source src="song.mp3" type="audio/mp3"&gt;
 &lt;/audio&gt;</pre>
       </article>
@@ -1125,7 +1130,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
         <div class="element-render">
           <iframe src="about:blank" title="Demo iframe"></iframe>
         </div>
-        <pre class="element-code">&lt;iframe src="https://…" title="..."&gt;&lt;/iframe&gt;</pre>
+        <pre class="element-code" tabindex="0">&lt;iframe src="https://…" title="..."&gt;&lt;/iframe&gt;</pre>
         <p class="graduate">En producción sería un YouTube embed, Google Maps, etc. El aspect-ratio asegura que no colapse sin width/height inline.</p>
       </article>
 
@@ -1155,7 +1160,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <code>&lt;footer&gt;</code> — Pie de página o sección
           </div>
         </div>
-        <pre class="element-code">&lt;body&gt;
+        <pre class="element-code" tabindex="0">&lt;body&gt;
   &lt;header&gt;…&lt;/header&gt;
   &lt;nav&gt;…&lt;/nav&gt;
   &lt;main&gt;
@@ -1182,7 +1187,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <p>Segundo bloque tras el separador.</p>
           </div>
         </div>
-        <pre class="element-code">&lt;p&gt;…&lt;/p&gt;
+        <pre class="element-code" tabindex="0">&lt;p&gt;…&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;…&lt;/p&gt;</pre>
       </article>
@@ -1200,7 +1205,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             Buenos Aires, Argentina
           </address>
         </div>
-        <pre class="element-code">&lt;address&gt;
+        <pre class="element-code" tabindex="0">&lt;address&gt;
   &lt;a href="mailto:…"&gt;…&lt;/a&gt;
 &lt;/address&gt;</pre>
       </article>
@@ -1227,7 +1232,7 @@ mc&lt;sup&gt;2&lt;/sup&gt;</pre>
             <cite>Steve Jobs, The New York Times, 2003</cite>
           </blockquote>
         </div>
-        <pre class="element-code">&lt;blockquote&gt;
+        <pre class="element-code" tabindex="0">&lt;blockquote&gt;
   &lt;p&gt;…&lt;/p&gt;
   &lt;cite&gt;Steve Jobs&lt;/cite&gt;  /* firma automática */
 &lt;/blockquote&gt;
@@ -1248,7 +1253,7 @@ Mi libro favorito es &lt;cite&gt;El nombre del viento&lt;/cite&gt;.</pre>
             <p>Claude <del>debería</del> <ins>debe</ins> escribir <del>código claro</del> <ins>código legible y claro</ins>.</p>
           </div>
         </div>
-        <pre class="element-code">precio: &lt;del&gt;$99&lt;/del&gt; &lt;ins&gt;$79&lt;/ins&gt;
+        <pre class="element-code" tabindex="0">precio: &lt;del&gt;$99&lt;/del&gt; &lt;ins&gt;$79&lt;/ins&gt;
 
 /* combinator: del + ins
    rojo subtle + verde subtle = diff visual */</pre>
@@ -1269,7 +1274,7 @@ Mi libro favorito es &lt;cite&gt;El nombre del viento&lt;/cite&gt;.</pre>
             </fieldset>
           </form>
         </div>
-        <pre class="element-code">&lt;fieldset&gt;
+        <pre class="element-code" tabindex="0">&lt;fieldset&gt;
   &lt;legend&gt;Título del grupo&lt;/legend&gt;
   … inputs …
 &lt;/fieldset&gt;</pre>
@@ -1293,7 +1298,7 @@ Mi libro favorito es &lt;cite&gt;El nombre del viento&lt;/cite&gt;.</pre>
             </tbody>
           </table>
         </div>
-        <pre class="element-code">&lt;table&gt;
+        <pre class="element-code" tabindex="0">&lt;table&gt;
   &lt;caption&gt;Título&lt;/caption&gt;
   &lt;thead&gt;…&lt;/thead&gt;
   &lt;tbody&gt;…&lt;/tbody&gt;
@@ -1314,7 +1319,7 @@ nothing to commit, working tree clean</samp>
 $ npm install rends
 <samp>added 1 package in 2s</samp></code></pre>
         </div>
-        <pre class="element-code">&lt;pre&gt;&lt;code&gt;$ git status
+        <pre class="element-code" tabindex="0">&lt;pre&gt;&lt;code&gt;$ git status
 &lt;samp&gt;On branch main
 nothing to commit, working tree clean&lt;/samp&gt;
 &lt;/code&gt;&lt;/pre&gt;</pre>

@@ -14,6 +14,24 @@
     :root {
       --test-spacing: 2rem;
       --test-border: 1px solid var(--color-border);
+
+      /* Legacy token aliases — the test page was authored before the
+         RenDS semantic token vocabulary was finalized. Keep these so
+         existing markup keeps working without a big rewrite. */
+      --color-primary: var(--color-accent-strong);
+      --color-background: var(--color-surface);
+      --color-foreground: var(--color-text);
+      --color-muted: var(--color-fill);
+      --color-muted-foreground: var(--color-text-secondary);
+      --color-secondary: var(--color-fill-subtle);
+    }
+
+    /* Ensure the default <button> uses RenDS-themed colors so contrast
+       tests don't fail against the user-agent's blue button default. */
+    button {
+      background-color: var(--color-fill);
+      color: var(--color-text);
+      font: inherit;
     }
 
     html {
@@ -106,13 +124,20 @@
     .theme-light {
       color-scheme: light;
       background-color: white;
-      color: #000;
+      color: var(--black);
     }
 
     .theme-dark {
       color-scheme: dark;
-      background-color: #1a1a1a;
-      color: #fff;
+      background-color: var(--black);
+      color: var(--white);
+    }
+
+    .theme-dark h1, .theme-dark h2, .theme-dark h3,
+    .theme-dark h4, .theme-dark h5, .theme-dark h6,
+    .theme-dark p, .theme-dark label, .theme-dark span,
+    .theme-dark a, .theme-dark li {
+      color: var(--white);
     }
 
     .rtl-section {
@@ -122,8 +147,8 @@
 
     [data-theme="dark"] {
       color-scheme: dark;
-      background-color: #1a1a1a;
-      color: #fff;
+      background-color: var(--black);
+      color: var(--white);
     }
 
     .state-showcase {
@@ -347,7 +372,7 @@
   </style>
 </head>
 <body>
-  <div class="test-container">
+  <main class="test-container">
     <h1 style="margin-top: 0; text-align: center;">RenDS Visual Regression Test Suite</h1>
     <p style="text-align: center; color: var(--color-muted-foreground);">
       Comprehensive component showcase for visual regression testing
@@ -362,35 +387,35 @@
         <h3 class="test-subsection-title">Buttons</h3>
         <div class="state-showcase">
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #ccc;">Default</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-border-interactive);">Default</button>
             <span class="state-item-label">Default</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #ccc;" data-state="hover">Hover</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-border-interactive);" data-state="hover">Hover</button>
             <span class="state-item-label">Hover</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #ccc;" data-state="active">Active</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-border-interactive);" data-state="active">Active</button>
             <span class="state-item-label">Active</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #ccc;" disabled>Disabled</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-border-interactive);" disabled>Disabled</button>
             <span class="state-item-label">Disabled</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #ccc; background-color: #007bff; color: white;">Primary</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-border); background-color: var(--color-accent); color: var(--color-on-accent);">Primary</button>
             <span class="state-item-label">Primary</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #dc3545; color: #dc3545;">Secondary</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-danger-strong); color: var(--color-danger-strong); background: transparent;">Secondary</button>
             <span class="state-item-label">Secondary</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #28a745; color: #28a745;">Success</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-success-strong); color: var(--color-success-strong);">Success</button>
             <span class="state-item-label">Success</span>
           </div>
           <div class="state-item">
-            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #dc3545; background-color: #dc3545; color: white;">Danger</button>
+            <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-danger); background-color: var(--color-danger); color: var(--color-on-danger);">Danger</button>
             <span class="state-item-label">Danger</span>
           </div>
         </div>
@@ -400,28 +425,28 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Badges</h3>
         <div class="badge-group">
-          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #007bff; color: white; border-radius: 12px; font-size: 0.875rem;">Default</span>
-          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #28a745; color: white; border-radius: 12px; font-size: 0.875rem;">Success</span>
-          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #dc3545; color: white; border-radius: 12px; font-size: 0.875rem;">Danger</span>
-          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #ffc107; color: #000; border-radius: 12px; font-size: 0.875rem;">Warning</span>
-          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #17a2b8; color: white; border-radius: 12px; font-size: 0.875rem;">Info</span>
-          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: #6c757d; color: white; border-radius: 12px; font-size: 0.875rem;">Secondary</span>
+          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-accent); color: var(--color-on-accent); border-radius: 12px; font-size: 0.875rem;">Default</span>
+          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-success); color: var(--color-on-success); border-radius: 12px; font-size: 0.875rem;">Success</span>
+          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-danger); color: var(--color-on-danger); border-radius: 12px; font-size: 0.875rem;">Danger</span>
+          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-warning); color: var(--color-on-warning); border-radius: 12px; font-size: 0.875rem;">Warning</span>
+          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-info); color: var(--color-on-info); border-radius: 12px; font-size: 0.875rem;">Info</span>
+          <span style="display: inline-block; padding: 0.25rem 0.75rem; background-color: var(--color-text); color: var(--color-text-inverted); border-radius: 12px; font-size: 0.875rem;">Secondary</span>
         </div>
       </div>
 
       <!-- Banner -->
       <div class="test-subsection">
         <h3 class="test-subsection-title">Banners</h3>
-        <div style="background-color: #d4edda; color: #155724; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #28a745;">
+        <div style="background-color: var(--color-success-subtle); color: var(--color-success-strong); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid var(--color-success-strong);">
           Success Banner Message
         </div>
-        <div style="background-color: #fff3cd; color: #856404; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #ffc107;">
+        <div style="background-color: var(--color-warning-subtle); color: var(--color-warning-strong); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid var(--color-warning-strong);">
           Warning Banner Message
         </div>
-        <div style="background-color: #f8d7da; color: #721c24; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #dc3545;">
+        <div style="background-color: var(--color-danger-subtle); color: var(--color-danger-strong); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid var(--color-danger-strong);">
           Error Banner Message
         </div>
-        <div style="background-color: #d1ecf1; color: #0c5460; padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid #17a2b8;">
+        <div style="background-color: var(--color-info-subtle); color: var(--color-info-strong); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; border-left: 4px solid var(--color-info-strong);">
           Info Banner Message
         </div>
       </div>
@@ -455,7 +480,7 @@
               <p style="margin: 0; font-size: 0.875rem; color: var(--color-muted-foreground);">Card description and content goes here.</p>
             </div>
             <div style="padding: 1rem; border-top: var(--test-border); display: flex; gap: 0.5rem;">
-              <button style="flex: 1; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">Action</button>
+              <button style="flex: 1; padding: 0.5rem; border: 1px solid var(--color-border-interactive); border-radius: 4px;">Action</button>
             </div>
           </div>
           <div style="border: var(--test-border); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); background-color: var(--color-muted);">
@@ -465,9 +490,9 @@
               <p style="margin: 0; font-size: 0.875rem; color: var(--color-muted-foreground);">With centered content</p>
             </div>
           </div>
-          <div style="border: 2px solid var(--color-primary); border-radius: 8px; overflow: hidden; padding: 1rem; background-color: var(--color-primary); color: white;">
-            <h4 style="margin: 0 0 0.5rem 0;">Featured Card</h4>
-            <p style="margin: 0; font-size: 0.875rem;">Highlighted card with primary color</p>
+          <div style="border: 2px solid var(--color-accent); border-radius: 8px; overflow: hidden; padding: 1rem; background-color: var(--color-accent); color: var(--color-on-accent);">
+            <h4 style="margin: 0 0 0.5rem 0; color: inherit;">Featured Card</h4>
+            <p style="margin: 0; font-size: 0.875rem; color: inherit;">Highlighted card with primary color</p>
           </div>
         </div>
       </div>
@@ -506,24 +531,24 @@
         <div class="form-demo">
           <div>
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Normal Field</label>
-            <input type="text" placeholder="Normal input" data-state="default" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc;">
+            <input type="text" aria-label="Normal input" placeholder="Normal input" data-state="default" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--color-border-interactive);">
           </div>
           <div>
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Focused Field</label>
-            <input type="text" placeholder="Focused input" data-state="focused" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 2px solid #007bff; outline: none;">
+            <input type="text" aria-label="Focused input" placeholder="Focused input" data-state="focused" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 2px solid var(--color-accent-strong); outline: none;">
           </div>
           <div>
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Error Field</label>
-            <input type="text" placeholder="Error input" data-state="error" value="Invalid content" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 2px solid #dc3545;">
-            <small style="color: #dc3545; display: block; margin-top: 0.25rem;">Error message</small>
+            <input type="text" aria-label="Error input" placeholder="Error input" data-state="error" value="Invalid content" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 2px solid var(--color-danger-strong);">
+            <small style="color: var(--color-danger-strong); display: block; margin-top: 0.25rem;">Error message</small>
           </div>
           <div>
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Success Field</label>
-            <input type="text" placeholder="Success input" data-state="success" value="Valid content" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 2px solid #28a745;">
+            <input type="text" aria-label="Success input" placeholder="Success input" data-state="success" value="Valid content" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 2px solid var(--color-success-strong);">
           </div>
           <div>
             <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Disabled Field</label>
-            <input type="text" placeholder="Disabled input" data-state="disabled" disabled style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #ccc; background-color: #f5f5f5; color: #999;">
+            <input type="text" aria-label="Disabled input" placeholder="Disabled input" data-state="disabled" disabled style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid var(--color-border-interactive); background-color: var(--color-input-disabled-bg); color: var(--color-text-muted);">
           </div>
         </div>
       </div>
@@ -551,11 +576,11 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Links</h3>
         <div class="link-demo">
-          <a href="#" data-state="default" style="color: #007bff; text-decoration: none;">Default Link</a>
-          <a href="#" data-state="hover" style="color: #0056b3; text-decoration: underline;">Hover Link</a>
-          <a href="#" data-state="visited" style="color: #5a378a; text-decoration: none;">Visited Link</a>
-          <a href="#" data-state="active" style="color: #004085; font-weight: bold;">Active Link</a>
-          <a href="#" data-state="disabled" style="color: #999; text-decoration: line-through; cursor: not-allowed;">Disabled Link</a>
+          <a href="#" data-state="default" style="color: var(--color-accent-strong); text-decoration: none;">Default Link</a>
+          <a href="#" data-state="hover" style="color: var(--color-accent-strong); text-decoration: underline;">Hover Link</a>
+          <a href="#" data-state="visited" style="color: var(--color-text-secondary); text-decoration: none;">Visited Link</a>
+          <a href="#" data-state="active" style="color: var(--color-accent-active); font-weight: bold;">Active Link</a>
+          <a href="#" data-state="disabled" aria-disabled="true" tabindex="-1" style="color: var(--color-text-muted); text-decoration: line-through; cursor: not-allowed;">Disabled Link</a>
         </div>
       </div>
 
@@ -563,13 +588,13 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Pagination</h3>
         <div class="pagination-demo">
-          <button style="padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; background-color: white;" disabled>← Previous</button>
-          <button style="padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; background-color: white;">1</button>
-          <button style="padding: 0.5rem 0.75rem; border: 1px solid #007bff; border-radius: 4px; background-color: #007bff; color: white;">2</button>
-          <button style="padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; background-color: white;">3</button>
+          <button style="padding: 0.5rem 0.75rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; background-color: white;" disabled>← Previous</button>
+          <button style="padding: 0.5rem 0.75rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; background-color: white;">1</button>
+          <button style="padding: 0.5rem 0.75rem; border: 1px solid var(--color-accent); border-radius: 4px; background-color: var(--color-accent); color: var(--color-on-accent);">2</button>
+          <button style="padding: 0.5rem 0.75rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; background-color: white;">3</button>
           <span style="padding: 0.5rem;">...</span>
-          <button style="padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; background-color: white;">10</button>
-          <button style="padding: 0.5rem 0.75rem; border: 1px solid #ccc; border-radius: 4px; background-color: white;">Next →</button>
+          <button style="padding: 0.5rem 0.75rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; background-color: white;">10</button>
+          <button style="padding: 0.5rem 0.75rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; background-color: white;">Next →</button>
         </div>
       </div>
 
@@ -578,26 +603,26 @@
         <h3 class="test-subsection-title">Progress</h3>
         <div class="progress-demo">
           <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">0%</label>
-          <div style="height: 0.5rem; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
-            <div style="width: 0%; height: 100%; background-color: #007bff;"></div>
+          <div style="height: 0.5rem; background-color: var(--color-fill); border-radius: 4px; overflow: hidden;">
+            <div style="width: 0%; height: 100%; background-color: var(--color-accent-strong);"></div>
           </div>
         </div>
         <div class="progress-demo">
           <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">50%</label>
-          <div style="height: 0.5rem; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
-            <div style="width: 50%; height: 100%; background-color: #007bff;"></div>
+          <div style="height: 0.5rem; background-color: var(--color-fill); border-radius: 4px; overflow: hidden;">
+            <div style="width: 50%; height: 100%; background-color: var(--color-accent-strong);"></div>
           </div>
         </div>
         <div class="progress-demo">
           <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">100%</label>
-          <div style="height: 0.5rem; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
-            <div style="width: 100%; height: 100%; background-color: #28a745;"></div>
+          <div style="height: 0.5rem; background-color: var(--color-fill); border-radius: 4px; overflow: hidden;">
+            <div style="width: 100%; height: 100%; background-color: var(--color-success-strong);"></div>
           </div>
         </div>
         <div class="progress-demo">
           <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Indeterminate</label>
-          <div style="height: 0.5rem; background-color: #e9ecef; border-radius: 4px; overflow: hidden; position: relative;">
-            <div style="width: 30%; height: 100%; background-color: #007bff; animation: progress 1.5s ease-in-out infinite;"></div>
+          <div style="height: 0.5rem; background-color: var(--color-fill); border-radius: 4px; overflow: hidden; position: relative;">
+            <div style="width: 30%; height: 100%; background-color: var(--color-accent-strong); animation: progress 1.5s ease-in-out infinite;"></div>
           </div>
         </div>
         <style>
@@ -636,10 +661,10 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Tags</h3>
         <div class="badge-group">
-          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: #e7f3ff; color: #004085; border: 1px solid #b6d4fe; border-radius: 4px; font-size: 0.875rem;">Tag 1 <span style="cursor: pointer;">×</span></span>
-          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: #e2e3e5; color: #383d41; border: 1px solid #bcc5d0; border-radius: 4px; font-size: 0.875rem;">Tag 2 <span style="cursor: pointer;">×</span></span>
-          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; border-radius: 4px; font-size: 0.875rem;">Tag 3 <span style="cursor: pointer;">×</span></span>
-          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: #f8d7da; color: #842029; border: 1px solid #f5c2c7; border-radius: 4px; font-size: 0.875rem;">Tag 4 <span style="cursor: pointer;">×</span></span>
+          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: var(--color-accent-subtle); color: var(--color-accent-strong); border: 1px solid var(--color-accent); border-radius: 4px; font-size: 0.875rem;">Tag 1 <span style="cursor: pointer;">×</span></span>
+          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: var(--color-fill); color: var(--color-text-secondary); border: 1px solid var(--color-border); border-radius: 4px; font-size: 0.875rem;">Tag 2 <span style="cursor: pointer;">×</span></span>
+          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: var(--color-success-subtle); color: var(--color-success-strong); border: 1px solid var(--color-success); border-radius: 4px; font-size: 0.875rem;">Tag 3 <span style="cursor: pointer;">×</span></span>
+          <span style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.75rem; background-color: var(--color-danger-subtle); color: var(--color-danger-strong); border: 1px solid var(--color-danger); border-radius: 4px; font-size: 0.875rem;">Tag 4 <span style="cursor: pointer;">×</span></span>
         </div>
       </div>
 
@@ -649,19 +674,19 @@
         <div class="component-group">
           <div class="component-item">
             <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-              <input type="checkbox" style="appearance: none; width: 40px; height: 24px; background-color: #ccc; border-radius: 12px; cursor: pointer; position: relative; transition: background-color 0.3s;" data-state="off">
+              <input type="checkbox" style="appearance: none; width: 40px; height: 24px; background-color: var(--color-border-interactive); border-radius: 12px; cursor: pointer; position: relative; transition: background-color 0.3s;" data-state="off">
               <span style="font-size: 0.875rem;">Off</span>
             </label>
           </div>
           <div class="component-item">
             <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-              <input type="checkbox" checked style="appearance: none; width: 40px; height: 24px; background-color: #28a745; border-radius: 12px; cursor: pointer; position: relative; transition: background-color 0.3s;" data-state="on">
+              <input type="checkbox" checked style="appearance: none; width: 40px; height: 24px; background-color: var(--color-success-strong); border-radius: 12px; cursor: pointer; position: relative; transition: background-color 0.3s;" data-state="on">
               <span style="font-size: 0.875rem;">On</span>
             </label>
           </div>
           <div class="component-item">
             <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.5;">
-              <input type="checkbox" disabled style="appearance: none; width: 40px; height: 24px; background-color: #e9ecef; border-radius: 12px; cursor: not-allowed; position: relative;" data-state="disabled">
+              <input type="checkbox" disabled style="appearance: none; width: 40px; height: 24px; background-color: var(--color-fill); border-radius: 12px; cursor: not-allowed; position: relative;" data-state="disabled">
               <span style="font-size: 0.875rem;">Disabled</span>
             </label>
           </div>
@@ -692,18 +717,18 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Avatars</h3>
         <div class="avatar-group-demo">
-          <div style="width: 32px; height: 32px; border-radius: 50%; background-color: #007bff; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.875rem;" title="32px">AB</div>
-          <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #28a745; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1rem;" title="40px">CD</div>
-          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: #dc3545; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.25rem;" title="48px">EF</div>
-          <div style="width: 56px; height: 56px; border-radius: 50%; background-color: #ffc107; display: flex; align-items: center; justify-content: center; color: black; font-weight: bold; font-size: 1.5rem;" title="56px">GH</div>
+          <div style="width: 32px; height: 32px; border-radius: 50%; background-color: var(--color-accent); display: flex; align-items: center; justify-content: center; color: var(--color-on-accent); font-weight: bold; font-size: 0.875rem;" title="32px">AB</div>
+          <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-success); display: flex; align-items: center; justify-content: center; color: var(--color-on-success); font-weight: bold; font-size: 1rem;" title="40px">CD</div>
+          <div style="width: 48px; height: 48px; border-radius: 50%; background-color: var(--color-danger); display: flex; align-items: center; justify-content: center; color: var(--color-on-danger); font-weight: bold; font-size: 1.25rem;" title="48px">EF</div>
+          <div style="width: 56px; height: 56px; border-radius: 50%; background-color: var(--color-warning); display: flex; align-items: center; justify-content: center; color: var(--color-on-warning); font-weight: bold; font-size: 1.5rem;" title="56px">GH</div>
         </div>
         <div style="margin-top: 1rem;">
           <h4 style="margin-top: 0; margin-bottom: 0.5rem; font-size: 0.875rem;">Avatar Group</h4>
           <div style="display: flex; margin-left: -0.5rem;">
-            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #007bff; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-left: -0.5rem; border: 2px solid white; position: relative; z-index: 3;">A</div>
-            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #28a745; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-left: -0.5rem; border: 2px solid white; position: relative; z-index: 2;">B</div>
-            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #dc3545; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-left: -0.5rem; border: 2px solid white; position: relative; z-index: 1;">C</div>
-            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: #6c757d; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-left: -0.5rem; border: 2px solid white; position: relative; z-index: 0; font-size: 0.875rem;">+2</div>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-accent); display: flex; align-items: center; justify-content: center; color: var(--color-on-accent); font-weight: bold; margin-left: -0.5rem; border: 2px solid white; position: relative; z-index: 3;">A</div>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-success); display: flex; align-items: center; justify-content: center; color: var(--color-on-success); font-weight: bold; margin-left: -0.5rem; border: 2px solid white; position: relative; z-index: 2;">B</div>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-danger); display: flex; align-items: center; justify-content: center; color: var(--color-on-danger); font-weight: bold; margin-left: -0.5rem; border: 2px solid var(--color-surface); position: relative; z-index: 1;">C</div>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background-color: var(--color-text); display: flex; align-items: center; justify-content: center; color: var(--color-text-inverted); font-weight: bold; margin-left: -0.5rem; border: 2px solid var(--color-surface); position: relative; z-index: 0; font-size: 0.875rem;">+2</div>
           </div>
         </div>
       </div>
@@ -713,15 +738,15 @@
         <h3 class="test-subsection-title">Spinners</h3>
         <div class="component-group">
           <div class="component-item">
-            <div style="width: 24px; height: 24px; border: 3px solid #f3f3f3; border-top: 3px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <div style="width: 24px; height: 24px; border: 3px solid var(--color-fill); border-top: 3px solid var(--color-accent-strong); border-radius: 50%; animation: spin 1s linear infinite;"></div>
             <span class="component-item-label">Small (24px)</span>
           </div>
           <div class="component-item">
-            <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <div style="width: 40px; height: 40px; border: 4px solid var(--color-fill); border-top: 4px solid var(--color-accent-strong); border-radius: 50%; animation: spin 1s linear infinite;"></div>
             <span class="component-item-label">Medium (40px)</span>
           </div>
           <div class="component-item">
-            <div style="width: 56px; height: 56px; border: 5px solid #f3f3f3; border-top: 5px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <div style="width: 56px; height: 56px; border: 5px solid var(--color-fill); border-top: 5px solid var(--color-accent-strong); border-radius: 50%; animation: spin 1s linear infinite;"></div>
             <span class="component-item-label">Large (56px)</span>
           </div>
         </div>
@@ -738,14 +763,14 @@
         <h3 class="test-subsection-title">Skeleton Loaders</h3>
         <div style="display: grid; gap: 1rem;">
           <div>
-            <div style="height: 1rem; background-color: #e9ecef; border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; margin-bottom: 0.5rem;"></div>
-            <div style="height: 1rem; background-color: #e9ecef; border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; width: 80%;"></div>
+            <div style="height: 1rem; background-color: var(--color-fill); border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; margin-bottom: 0.5rem;"></div>
+            <div style="height: 1rem; background-color: var(--color-fill); border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; width: 80%;"></div>
           </div>
           <div style="display: flex; gap: 1rem;">
-            <div style="width: 40px; height: 40px; background-color: #e9ecef; border-radius: 50%; animation: skeleton-pulse 1.5s ease-in-out infinite;"></div>
+            <div style="width: 40px; height: 40px; background-color: var(--color-fill); border-radius: 50%; animation: skeleton-pulse 1.5s ease-in-out infinite;"></div>
             <div style="flex: 1;">
-              <div style="height: 1rem; background-color: #e9ecef; border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; margin-bottom: 0.5rem;"></div>
-              <div style="height: 1rem; background-color: #e9ecef; border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; width: 70%;"></div>
+              <div style="height: 1rem; background-color: var(--color-fill); border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; margin-bottom: 0.5rem;"></div>
+              <div style="height: 1rem; background-color: var(--color-fill); border-radius: 4px; animation: skeleton-pulse 1.5s ease-in-out infinite; width: 70%;"></div>
             </div>
           </div>
         </div>
@@ -761,16 +786,16 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Keyboard Keys</h3>
         <div class="component-group">
-          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 #dee2e6;">Ctrl</kbd>
+          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: var(--color-fill); border: 1px solid var(--color-border); border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 var(--color-border);">Ctrl</kbd>
           <span style="padding: 0 0.25rem;">+</span>
-          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 #dee2e6;">C</kbd>
-          <span style="margin-left: 1rem; padding-left: 1rem; border-left: 1px solid #dee2e6;">Copy</span>
+          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: var(--color-fill); border: 1px solid var(--color-border); border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 var(--color-border);">C</kbd>
+          <span style="margin-left: 1rem; padding-left: 1rem; border-left: 1px solid var(--color-border);">Copy</span>
         </div>
         <div class="component-group" style="margin-top: 0.5rem;">
-          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 #dee2e6;">⌘</kbd>
+          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: var(--color-fill); border: 1px solid var(--color-border); border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 var(--color-border);">⌘</kbd>
           <span style="padding: 0 0.25rem;">+</span>
-          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 #dee2e6;">K</kbd>
-          <span style="margin-left: 1rem; padding-left: 1rem; border-left: 1px solid #dee2e6;">Command Palette</span>
+          <kbd style="display: inline-block; padding: 0.25rem 0.5rem; background-color: var(--color-fill); border: 1px solid var(--color-border); border-radius: 3px; font-family: monospace; font-size: 0.875rem; box-shadow: 0 2px 0 var(--color-border);">K</kbd>
+          <span style="margin-left: 1rem; padding-left: 1rem; border-left: 1px solid var(--color-border);">Command Palette</span>
         </div>
       </div>
     </div>
@@ -787,8 +812,8 @@
             <h3 style="margin-top: 0; margin-bottom: 1rem;">Dialog Title</h3>
             <p style="margin: 0 0 1rem 0; color: var(--color-muted-foreground);">This is a dialog component in the open state.</p>
             <div style="display: flex; gap: 0.5rem; justify-content: center;">
-              <button style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px; background-color: white;">Cancel</button>
-              <button style="padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #007bff; color: white;">Confirm</button>
+              <button style="padding: 0.5rem 1rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; background-color: white;">Cancel</button>
+              <button style="padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: var(--color-accent); color: var(--color-on-accent);">Confirm</button>
             </div>
           </div>
         </div>
@@ -799,7 +824,7 @@
         <h3 class="test-subsection-title">Tabs</h3>
         <div style="border-bottom: 1px solid var(--color-border); margin-bottom: 1rem;">
           <div style="display: flex; gap: 2rem;">
-            <button style="padding: 0.75rem 0; border: none; background: none; border-bottom: 2px solid #007bff; color: #007bff; font-weight: 500; cursor: pointer;" data-state="active">Tab 1</button>
+            <button style="padding: 0.75rem 0; border: none; background: none; border-bottom: 2px solid var(--color-accent-strong); color: var(--color-accent-strong); font-weight: 500; cursor: pointer;" data-state="active">Tab 1</button>
             <button style="padding: 0.75rem 0; border: none; background: none; border-bottom: 2px solid transparent; color: var(--color-muted-foreground); font-weight: 500; cursor: pointer;" data-state="inactive">Tab 2</button>
             <button style="padding: 0.75rem 0; border: none; background: none; border-bottom: 2px solid transparent; color: var(--color-muted-foreground); font-weight: 500; cursor: pointer;" data-state="inactive">Tab 3</button>
           </div>
@@ -835,7 +860,7 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Toggle Group</h3>
         <div style="display: inline-flex; border: 1px solid var(--color-border); border-radius: 4px; overflow: hidden;">
-          <button style="padding: 0.5rem 1rem; border: none; border-right: 1px solid var(--color-border); background-color: #007bff; color: white; cursor: pointer;" data-state="active">Left</button>
+          <button style="padding: 0.5rem 1rem; border: none; border-right: 1px solid var(--color-border); background-color: var(--color-accent); color: var(--color-on-accent); cursor: pointer;" data-state="active">Left</button>
           <button style="padding: 0.5rem 1rem; border: none; border-right: 1px solid var(--color-border); background-color: var(--color-background); color: var(--color-foreground); cursor: pointer;" data-state="inactive">Center</button>
           <button style="padding: 0.5rem 1rem; border: none; background-color: var(--color-background); color: var(--color-foreground); cursor: pointer;" data-state="inactive">Right</button>
         </div>
@@ -846,12 +871,12 @@
         <h3 class="test-subsection-title">Tooltip</h3>
         <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
           <div style="position: relative; display: inline-block;">
-            <button style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px;">Hover me</button>
-            <div style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; background-color: #000; color: white; border-radius: 4px; font-size: 0.875rem; white-space: nowrap; opacity: 0;" data-state="hidden">Tooltip text</div>
+            <button style="padding: 0.5rem 1rem; border: 1px solid var(--color-border-interactive); border-radius: 4px;">Hover me</button>
+            <div style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; background-color: var(--black); color: white; border-radius: 4px; font-size: 0.875rem; white-space: nowrap; opacity: 0;" data-state="hidden">Tooltip text</div>
           </div>
           <div style="position: relative; display: inline-block;">
-            <button style="padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 4px;">Visible tooltip</button>
-            <div style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; background-color: #000; color: white; border-radius: 4px; font-size: 0.875rem; white-space: nowrap; opacity: 1;" data-state="visible">Tooltip text</div>
+            <button style="padding: 0.5rem 1rem; border: 1px solid var(--color-border-interactive); border-radius: 4px;">Visible tooltip</button>
+            <div style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; background-color: var(--black); color: white; border-radius: 4px; font-size: 0.875rem; white-space: nowrap; opacity: 1;" data-state="visible">Tooltip text</div>
           </div>
         </div>
       </div>
@@ -860,7 +885,7 @@
       <div class="test-subsection">
         <h3 class="test-subsection-title">Select</h3>
         <div style="max-width: 300px;">
-          <select style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: inherit;" data-state="closed">
+          <select style="width: 100%; padding: 0.5rem; border: 1px solid var(--color-border-interactive); border-radius: 4px; font-family: inherit; font-size: inherit;" data-state="closed">
             <option>Choose an option</option>
             <option>Option 1</option>
             <option>Option 2</option>
@@ -874,11 +899,11 @@
         <h3 class="test-subsection-title">Slider</h3>
         <div style="max-width: 300px;">
           <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Volume</label>
-          <input type="range" min="0" max="100" value="50" style="width: 100%; cursor: pointer;" data-state="default">
+          <input type="range" aria-label="Default slider" min="0" max="100" value="50" style="width: 100%; cursor: pointer;" data-state="default">
         </div>
         <div style="max-width: 300px; margin-top: 1rem;">
           <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem;">Disabled</label>
-          <input type="range" min="0" max="100" value="30" disabled style="width: 100%; cursor: not-allowed; opacity: 0.5;" data-state="disabled">
+          <input type="range" aria-label="Disabled slider" min="0" max="100" value="30" disabled style="width: 100%; cursor: not-allowed; opacity: 0.5;" data-state="disabled">
         </div>
       </div>
     </div>
@@ -889,16 +914,16 @@
       <div class="theme-section theme-dark" data-theme="dark">
         <h3 style="margin-top: 0;">Dark Theme Components</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-          <button style="padding: 0.5rem 1rem; border-radius: 4px; background-color: white; color: #000; border: 1px solid #ccc;">Button</button>
+          <button style="padding: 0.5rem 1rem; border-radius: 4px; background-color: white; color: var(--black); border: 1px solid var(--color-border-interactive);">Button</button>
           <div style="padding: 1rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px;">Card in Dark</div>
           <div style="display: flex; gap: 0.5rem;">
             <input type="checkbox" checked id="dark-cb">
             <label for="dark-cb">Checkbox</label>
           </div>
-          <input type="text" placeholder="Input in dark" style="padding: 0.5rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background-color: rgba(0,0,0,0.3); color: inherit;">
+          <input type="text" aria-label="Input in dark mode" placeholder="Input in dark" style="padding: 0.5rem; border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; background-color: rgba(0,0,0,0.3); color: inherit;">
         </div>
         <div style="height: 0.5rem; background-color: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 1rem;">
-          <div style="width: 70%; height: 100%; background-color: #0d9488;"></div>
+          <div style="width: 70%; height: 100%; background-color: var(--color-info-strong);"></div>
         </div>
         <p style="font-size: 0.875rem; color: rgba(255,255,255,0.7); margin: 0;">
           Dark mode provides better visibility in low-light environments
@@ -912,13 +937,13 @@
       <div class="theme-section rtl-section" dir="rtl">
         <h3 style="margin-top: 0;">مكونات RTL</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-          <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid #ccc;">زر</button>
+          <button style="padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--color-border-interactive);">زر</button>
           <div style="padding: 1rem; border: 1px solid var(--color-border); border-radius: 4px;">بطاقة</div>
           <div style="display: flex; gap: 0.5rem;">
             <label for="rtl-cb">خانة اختيار</label>
             <input type="checkbox" checked id="rtl-cb">
           </div>
-          <input type="text" placeholder="إدخال" style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
+          <input type="text" aria-label="إدخال" placeholder="إدخال" style="padding: 0.5rem; border: 1px solid var(--color-border); border-radius: 4px;">
         </div>
         <div class="breadcrumb-demo" style="justify-content: flex-end;">
           <span class="breadcrumb-current">الصفحة الحالية</span>
@@ -952,6 +977,6 @@
       <p style="margin: 0;">RenDS Visual Regression Test Suite</p>
       <p style="margin: 0.5rem 0 0 0;">Generated for comprehensive component testing</p>
     </div>
-  </div>
+  </main>
 </body>
 </html>

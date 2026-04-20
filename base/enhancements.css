@@ -55,7 +55,7 @@
     top: 0;
     inset-inline: 0;
     height: 3px;
-    background: var(--color-accent, #3b82f6);
+    background: var(--color-accent);
     transform-origin: left;
     z-index: 9999;
     animation: ren-scale-x linear both;

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Layout Primitives — RenDS Docs</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Shared top nav */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Shell */
+    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-10) var(--space-6); }
+    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
+
+    /* Header */
+    .dx-header { margin-bottom: var(--space-10); max-width: 72ch; }
+    .dx-header h1 { font-size: var(--text-6xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: var(--space-2) 0 var(--space-4); }
+    .dx-header .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0; }
+
+    /* TOC */
+    .dx-toc { padding: var(--space-4); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin: var(--space-8) 0 var(--space-12); }
+    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2); }
+    .dx-toc-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; }
+    .dx-toc-links a { color: var(--color-text); text-decoration: none; font-size: var(--text-sm); padding: 0 var(--space-1); }
+    .dx-toc-links a:hover { color: var(--color-accent); }
+
+    /* Section per primitive */
+    .dx-prim { padding-top: var(--space-10); margin-top: var(--space-10); border-top: 1px solid var(--color-border-muted); scroll-margin-top: 80px; }
+    .dx-prim:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+    .dx-prim-head { display: flex; align-items: baseline; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-3); }
+    .dx-prim h2 { font-size: var(--text-3xl); letter-spacing: -0.02em; font-weight: var(--weight-bold); margin: 0; font-family: var(--font-mono); }
+    .dx-prim-tagline { color: var(--color-text-muted); font-size: var(--text-base); }
+    .dx-prim > p { color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 var(--space-5); max-width: 72ch; }
+    .dx-prim h3 { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-text-muted); margin: var(--space-6) 0 var(--space-2); }
+    code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
+
+    /* Demo */
+    .dx-demo { padding: var(--space-5); border: 1px dashed var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); margin: var(--space-3) 0; }
+    .dx-box { background: var(--color-accent-subtle); border: 1px solid var(--color-accent); color: var(--color-accent-active); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-sm); text-align: center; }
+    .dx-box-alt { background: var(--color-fill); border: 1px solid var(--color-border); color: var(--color-text-secondary); }
+
+    /* Code block */
+    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-3) 0; color: var(--color-text); }
+    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
+
+    /* Callout */
+    .dx-rules { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5) var(--space-6); margin: var(--space-10) 0; }
+    .dx-rules h3 { margin: 0 0 var(--space-3); text-transform: none; letter-spacing: normal; font-size: var(--text-lg); color: var(--color-text); }
+    .dx-rules table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    .dx-rules th, .dx-rules td { padding: var(--space-2) var(--space-3); text-align: left; border-bottom: 1px solid var(--color-border-muted); vertical-align: top; }
+    .dx-rules th { font-weight: var(--weight-semibold); color: var(--color-text-muted); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; }
+    .dx-rules tr:last-child td { border-bottom: none; }
+    .dx-rules code { font-size: 0.85em; }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.6</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell">
+
+    <!-- Header -->
+    <header class="dx-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+          <li aria-current="page">Layout Primitives</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Structure</p>
+      <h1>Layout Primitives</h1>
+      <p class="lede">Eleven composable layouts inspired by <em>Every Layout</em> (Heydon Pickering & Andy Bell). Each solves exactly one spatial problem. Nest them instead of writing custom <code>display: flex</code>.</p>
+    </header>
+
+    <!-- Why callout -->
+    <div class="dx-rules">
+      <h3>Rule of thumb</h3>
+      <table>
+        <thead><tr><th>When you need…</th><th>Use</th><th>Not</th></tr></thead>
+        <tbody>
+          <tr><td>Vertical stack of elements</td><td><code>ren-stack</code></td><td><code>display: flex; flex-direction: column</code></td></tr>
+          <tr><td>Horizontal items that wrap</td><td><code>ren-cluster</code></td><td><code>display: flex; flex-wrap: wrap</code></td></tr>
+          <tr><td>Header with left + right content</td><td><code>ren-row-spread</code></td><td><code>justify-content: space-between</code></td></tr>
+          <tr><td>Centered content container</td><td><code>ren-center</code></td><td><code>max-width: X; margin: 0 auto</code></td></tr>
+          <tr><td>Responsive card grid</td><td><code>ren-grid-3</code></td><td><code>grid-template-columns: repeat(3, 1fr)</code></td></tr>
+          <tr><td>Sidebar + main content</td><td><code>ren-with-sidebar</code></td><td>custom flex with fixed sidebar</td></tr>
+          <tr><td>Full-screen centered (login, hero)</td><td><code>ren-cover</code></td><td><code>min-height: 100vh; flex center</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- TOC -->
+    <nav class="dx-toc" aria-label="Layouts on this page">
+      <p class="dx-toc-title">Primitives</p>
+      <ul class="dx-toc-links">
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#cluster">Cluster</a></li>
+        <li><a href="#row">Row</a></li>
+        <li><a href="#row-spread">Row Spread</a></li>
+        <li><a href="#center">Center</a></li>
+        <li><a href="#with-sidebar">With Sidebar</a></li>
+        <li><a href="#grid">Grid</a></li>
+        <li><a href="#cover">Cover</a></li>
+        <li><a href="#frame">Frame</a></li>
+        <li><a href="#switcher">Switcher</a></li>
+        <li><a href="#reel">Reel</a></li>
+      </ul>
+    </nav>
+
+    <!-- STACK -->
+    <section class="dx-prim" id="stack">
+      <div class="dx-prim-head"><h2>ren-stack</h2><span class="dx-prim-tagline">Vertical flow with consistent spacing</span></div>
+      <p>The most-used layout in RenDS. Any list of elements that should sit on top of each other with a gap between them. Gap defaults to <code>--space-4</code> (16px).</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-stack">
+          <div class="dx-box">First</div>
+          <div class="dx-box">Second</div>
+          <div class="dx-box">Third</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-stack"&gt;
+  &lt;p&gt;First&lt;/p&gt;
+  &lt;p&gt;Second&lt;/p&gt;
+  &lt;p&gt;Third&lt;/p&gt;
+&lt;/div&gt;</code></div>
+
+      <h3>Variants</h3>
+      <p>Gap sizes: <code>ren-stack-xs</code> (4px), <code>-sm</code> (8px), <code>-md</code> (16px, default), <code>-lg</code> (24px), <code>-xl</code> (32px). Or override inline: <code>style="--stack-gap: var(--space-6)"</code>.</p>
+    </section>
+
+    <!-- CLUSTER -->
+    <section class="dx-prim" id="cluster">
+      <div class="dx-prim-head"><h2>ren-cluster</h2><span class="dx-prim-tagline">Horizontal items that wrap</span></div>
+      <p>For tags, buttons, chips, or any set of inline-ish elements that should flow horizontally and wrap when they run out of room.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-cluster">
+          <span class="dx-box">Tag A</span>
+          <span class="dx-box">Longer tag B</span>
+          <span class="dx-box">C</span>
+          <span class="dx-box">Tag D</span>
+          <span class="dx-box">Another one E</span>
+          <span class="dx-box">F</span>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-cluster"&gt;
+  &lt;span class="ren-tag"&gt;Design&lt;/span&gt;
+  &lt;span class="ren-tag"&gt;Accessibility&lt;/span&gt;
+  &lt;span class="ren-tag"&gt;Tokens&lt;/span&gt;
+&lt;/div&gt;</code></div>
+
+      <p>Custom gap: <code>style="--cluster-gap: var(--space-3)"</code>.</p>
+    </section>
+
+    <!-- ROW -->
+    <section class="dx-prim" id="row">
+      <div class="dx-prim-head"><h2>ren-row</h2><span class="dx-prim-tagline">Non-wrapping horizontal row</span></div>
+      <p>Like Cluster but <em>never wraps</em>. Ideal for icon + label pairs, breadcrumbs, or toolbars where you know the children fit.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-row">
+          <div class="dx-box">Icon</div>
+          <div class="dx-box">Label</div>
+          <div class="dx-box">Meta</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-row"&gt;
+  &lt;svg&gt;...&lt;/svg&gt;
+  &lt;span&gt;Label&lt;/span&gt;
+&lt;/div&gt;</code></div>
+    </section>
+
+    <!-- ROW SPREAD -->
+    <section class="dx-prim" id="row-spread">
+      <div class="dx-prim-head"><h2>ren-row-spread</h2><span class="dx-prim-tagline">Left-aligned + right-aligned content</span></div>
+      <p>Any header bar, card footer, or "title on the left, actions on the right" layout. Replaces the <code>justify-content: space-between</code> reflex.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-row-spread">
+          <div class="dx-box">Page title</div>
+          <div class="dx-box">Action button</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-row-spread"&gt;
+  &lt;h1&gt;Dashboard&lt;/h1&gt;
+  &lt;button class="ren-btn ren-btn-primary"&gt;New&lt;/button&gt;
+&lt;/div&gt;</code></div>
+    </section>
+
+    <!-- CENTER -->
+    <section class="dx-prim" id="center">
+      <div class="dx-prim-head"><h2>ren-center</h2><span class="dx-prim-tagline">Max-width container, horizontally centered</span></div>
+      <p>The "content column" pattern. Wraps your main content, caps its width, keeps it centered on any viewport.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-center-narrow" style="background: var(--color-accent-subtle); border: 1px dashed var(--color-accent); padding: var(--space-3); color: var(--color-accent-active); font-family: var(--font-mono); font-size: var(--text-sm); text-align: center;">.ren-center-narrow (max-width ~672px)</div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;main class="ren-center"&gt;
+  &lt;h1&gt;Article title&lt;/h1&gt;
+  &lt;p&gt;Body copy...&lt;/p&gt;
+&lt;/main&gt;</code></div>
+
+      <h3>Variants</h3>
+      <p>
+        <code>ren-center-narrow</code> — <code>width-2xl</code>, good for forms.<br>
+        <code>ren-center-prose</code> — <code>width-prose</code> (~65ch), good for articles.<br>
+        <code>ren-center-wide</code> — <code>width-7xl</code>, good for app shells.
+      </p>
+    </section>
+
+    <!-- WITH SIDEBAR -->
+    <section class="dx-prim" id="with-sidebar">
+      <div class="dx-prim-head"><h2>ren-with-sidebar</h2><span class="dx-prim-tagline">Fixed sidebar + flexible main</span></div>
+      <p>Every app layout. Sidebar at a fixed width on the left, main content fills the rest. Wraps gracefully on narrow viewports.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-with-sidebar" style="--sidebar-width: 160px;">
+          <aside class="dx-box dx-box-alt" style="padding: var(--space-4);">Sidebar<br><small style="color: var(--color-text-muted);">160px</small></aside>
+          <main class="dx-box" style="padding: var(--space-4);">Main content<br><small style="color: var(--color-text-muted);">fills the rest</small></main>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-with-sidebar" style="--sidebar-width: 260px"&gt;
+  &lt;aside&gt;...&lt;/aside&gt;
+  &lt;main&gt;...&lt;/main&gt;
+&lt;/div&gt;</code></div>
+    </section>
+
+    <!-- GRID -->
+    <section class="dx-prim" id="grid">
+      <div class="dx-prim-head"><h2>ren-grid</h2><span class="dx-prim-tagline">Responsive card grid</span></div>
+      <p>Auto-fitting grid for cards, tiles, stat panels. Use <code>ren-grid-2</code>, <code>ren-grid-3</code>, or <code>ren-grid-4</code> for fixed column counts.</p>
+
+      <h3>Preview (ren-grid-3)</h3>
+      <div class="dx-demo">
+        <div class="ren-grid-3">
+          <div class="dx-box">1</div>
+          <div class="dx-box">2</div>
+          <div class="dx-box">3</div>
+          <div class="dx-box">4</div>
+          <div class="dx-box">5</div>
+          <div class="dx-box">6</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-grid-3"&gt;
+  &lt;div class="ren-card"&gt;...&lt;/div&gt;
+  &lt;div class="ren-card"&gt;...&lt;/div&gt;
+  &lt;div class="ren-card"&gt;...&lt;/div&gt;
+&lt;/div&gt;</code></div>
+
+      <p>Plain <code>ren-grid</code> uses <code>auto-fit</code> with a min-width, perfect when you don't know how many items there will be.</p>
+    </section>
+
+    <!-- COVER -->
+    <section class="dx-prim" id="cover">
+      <div class="dx-prim-head"><h2>ren-cover</h2><span class="dx-prim-tagline">Full-viewport centered content</span></div>
+      <p>Login pages, hero sections, empty states. Content vertically centered on at least <code>100vh</code>, with optional header/footer at the top/bottom.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo" style="padding: 0; min-height: 220px;">
+        <div class="ren-cover" style="min-height: 220px; padding: var(--space-3);">
+          <div class="dx-box dx-box-alt" style="padding: var(--space-2) var(--space-3);">Header</div>
+          <div class="dx-box" style="padding: var(--space-5) var(--space-6);">Centered content</div>
+          <div class="dx-box dx-box-alt" style="padding: var(--space-2) var(--space-3);">Footer</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-cover"&gt;
+  &lt;header&gt;...&lt;/header&gt;         &lt;!-- optional top --&gt;
+  &lt;main class="ren-center-narrow"&gt;
+    &lt;form class="ren-card"&gt;...&lt;/form&gt;
+  &lt;/main&gt;
+  &lt;footer&gt;...&lt;/footer&gt;         &lt;!-- optional bottom --&gt;
+&lt;/div&gt;</code></div>
+    </section>
+
+    <!-- FRAME -->
+    <section class="dx-prim" id="frame">
+      <div class="dx-prim-head"><h2>ren-frame</h2><span class="dx-prim-tagline">Aspect-ratio container</span></div>
+      <p>Locks a box to a specific aspect ratio. Ideal for video embeds, thumbnails, or cover images that can't collapse on load.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-grid-3">
+          <div class="ren-frame ren-frame-square" style="background: var(--color-accent-subtle); color: var(--color-accent-active); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-sm);">1 / 1</div>
+          <div class="ren-frame ren-frame-video" style="background: var(--color-accent-subtle); color: var(--color-accent-active); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-sm);">16 / 9</div>
+          <div class="ren-frame ren-frame-photo" style="background: var(--color-accent-subtle); color: var(--color-accent-active); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-sm);">4 / 3</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-frame ren-frame-video"&gt;
+  &lt;img src="thumb.jpg" alt=""&gt;
+&lt;/div&gt;</code></div>
+
+      <p>Variants: <code>ren-frame-square</code> (1:1), <code>ren-frame-video</code> (16:9), <code>ren-frame-photo</code> (4:3). Custom ratio: <code>style="--frame-ratio: 3 / 2"</code>.</p>
+    </section>
+
+    <!-- SWITCHER -->
+    <section class="dx-prim" id="switcher">
+      <div class="dx-prim-head"><h2>ren-switcher</h2><span class="dx-prim-tagline">Row on wide, column on narrow</span></div>
+      <p>Switches from horizontal to vertical at a container breakpoint. The "no more media queries" way to do responsive columns.</p>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-switcher"&gt;
+  &lt;div&gt;Column one&lt;/div&gt;
+  &lt;div&gt;Column two&lt;/div&gt;
+  &lt;div&gt;Column three&lt;/div&gt;
+&lt;/div&gt;</code></div>
+
+      <p>Threshold: <code>style="--switcher-threshold: 40rem"</code>.</p>
+    </section>
+
+    <!-- REEL -->
+    <section class="dx-prim" id="reel">
+      <div class="dx-prim-head"><h2>ren-reel</h2><span class="dx-prim-tagline">Horizontal scroll row</span></div>
+      <p>For galleries, carousels, horizontal card lists. Scroll-snap on by default; hide the scrollbar with <code>ren-reel-hidden-scroll</code> if you want.</p>
+
+      <h3>Preview</h3>
+      <div class="dx-demo">
+        <div class="ren-reel" tabindex="0">
+          <div class="dx-box" style="min-width: 140px;">Card 1</div>
+          <div class="dx-box" style="min-width: 140px;">Card 2</div>
+          <div class="dx-box" style="min-width: 140px;">Card 3</div>
+          <div class="dx-box" style="min-width: 140px;">Card 4</div>
+          <div class="dx-box" style="min-width: 140px;">Card 5</div>
+          <div class="dx-box" style="min-width: 140px;">Card 6</div>
+          <div class="dx-box" style="min-width: 140px;">Card 7</div>
+        </div>
+      </div>
+
+      <h3>Markup</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-reel"&gt;
+  &lt;img src="1.jpg" alt=""&gt;
+  &lt;img src="2.jpg" alt=""&gt;
+  &lt;img src="3.jpg" alt=""&gt;
+&lt;/div&gt;</code></div>
+    </section>
+
+    <!-- FULL PAGE EXAMPLE -->
+    <section class="dx-prim" id="composing">
+      <div class="dx-prim-head"><h2 style="font-family: var(--font-sans);">Composing a full page</h2></div>
+      <p>Most pages are two or three layouts deep. Here's a dashboard skeleton using only layout primitives — zero custom flex, zero custom grid.</p>
+
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-with-sidebar" style="--sidebar-width: 260px"&gt;
+  &lt;aside&gt;&lt;!-- sidebar nav --&gt;&lt;/aside&gt;
+
+  &lt;main class="ren-stack-lg"&gt;
+    &lt;div class="ren-row-spread"&gt;
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+      &lt;button class="ren-btn ren-btn-primary"&gt;New&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class="ren-grid-4"&gt;
+      &lt;!-- stat cards --&gt;
+    &lt;/div&gt;
+
+    &lt;div class="ren-card"&gt;
+      &lt;!-- big chart --&gt;
+    &lt;/div&gt;
+
+    &lt;div class="ren-grid-2"&gt;
+      &lt;!-- table + activity feed --&gt;
+    &lt;/div&gt;
+  &lt;/main&gt;
+&lt;/div&gt;</code></div>
+
+      <p style="margin-top: var(--space-6);">Want to see it built out? Open <a href="../blocks/landing.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">landing.html</a> or <a href="../blocks/blog.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">blog.html</a> — both are built entirely with these primitives.</p>
+    </section>
+
+  </div>
+
+</body>
+</html>

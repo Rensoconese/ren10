@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — RenDS Block</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Top strip — same style as landing */
+    .bl-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--color-surface) 75%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+              backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .bl-nav-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+    }
+    .bl-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
+
+    /* Blog header */
+    .bl-header {
+      padding: var(--space-12) var(--space-6) var(--space-8);
+      text-align: center;
+    }
+
+    /* Featured post — big card, horizontal on desktop */
+    .bl-featured {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 0;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+    }
+    .bl-featured-cover {
+      aspect-ratio: 4 / 3;
+      background:
+        radial-gradient(ellipse at 30% 30%, color-mix(in srgb, var(--color-accent) 55%, transparent), transparent 60%),
+        linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 40%, var(--purple-500)), color-mix(in srgb, var(--color-accent) 80%, var(--blue-500)));
+      position: relative;
+    }
+    .bl-featured-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 8px);
+      opacity: 0.8;
+    }
+    .bl-featured-body { padding: clamp(var(--space-6), 4vw, var(--space-10)); display: flex; flex-direction: column; justify-content: center; }
+    @media (max-width: 780px) {
+      .bl-featured { grid-template-columns: 1fr; }
+      .bl-featured-cover { aspect-ratio: 21 / 9; }
+    }
+
+    /* Post card — image + body */
+    .bl-post-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .bl-post-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-border-strong);
+      box-shadow: 0 12px 32px -12px rgba(0,0,0,0.15);
+    }
+    .bl-post-card:focus-visible {
+      outline: 2px solid transparent;
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 30%, transparent);
+    }
+    .bl-post-cover {
+      aspect-ratio: 16 / 10;
+      position: relative;
+      background: var(--color-surface-sunken);
+    }
+    .bl-post-cover.v-1 { background: linear-gradient(135deg, var(--orange-400), var(--red-400)); }
+    .bl-post-cover.v-2 { background: linear-gradient(135deg, var(--green-500), var(--blue-500)); }
+    .bl-post-cover.v-3 { background: linear-gradient(135deg, var(--purple-400), var(--pink-400)); }
+    .bl-post-cover.v-4 { background: linear-gradient(135deg, var(--blue-500), var(--blue-600)); }
+    .bl-post-cover.v-5 { background: linear-gradient(135deg, var(--teal-500), var(--green-400)); }
+    .bl-post-cover.v-6 { background: linear-gradient(135deg, var(--red-400), var(--orange-400)); }
+    .bl-post-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 10px);
+    }
+
+    .bl-post-body { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
+    .bl-post-title {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      line-height: var(--leading-snug);
+      color: var(--color-text);
+      margin: 0;
+    }
+    .bl-post-excerpt {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      margin: 0;
+    }
+    .bl-post-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: auto;
+    }
+    .bl-post-meta .dot { opacity: 0.5; }
+
+    /* Sidebar */
+    .bl-sidebar-card {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+    }
+
+    /* Newsletter card */
+    .bl-newsletter {
+      background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 90%, transparent), color-mix(in srgb, var(--color-accent) 60%, var(--purple-500)));
+      color: white;
+      border-radius: var(--radius-lg);
+      padding: var(--space-6);
+    }
+    .bl-newsletter h4 { color: white; margin: 0; font-size: var(--text-lg); font-weight: var(--weight-semibold); }
+    .bl-newsletter p  { color: rgba(255,255,255,0.88); font-size: var(--text-sm); margin: 0; line-height: var(--leading-relaxed); }
+    .bl-newsletter input {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: white;
+    }
+    .bl-newsletter input::placeholder { color: rgba(255,255,255,0.6); }
+    .bl-newsletter input:focus {
+      border-color: white;
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════ TOP NAV ═══ -->
+  <header class="bl-nav">
+    <div class="ren-center-wide" style="padding-block: var(--space-3);">
+      <div class="ren-row-spread">
+        <div class="ren-row">
+          <strong style="font-size: var(--text-lg);">RenDS</strong>
+          <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2);">v0.6</span>
+        </div>
+        <nav class="bl-nav-links ren-cluster" aria-label="Main">
+          <a href="../docs/components.html">Components</a>
+          <a href="../create/">Create</a>
+          <a href="./blog.html" aria-current="page" style="color: var(--color-text);">Blog</a>
+          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+        <div class="ren-row">
+          <a href="./auth.html" class="ren-btn ren-btn-ghost ren-btn-sm">Sign in</a>
+          <a href="../create/" class="ren-btn ren-btn-primary ren-btn-sm">Try it</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════ HEADER ═══ -->
+  <section class="bl-header">
+    <div class="ren-center-narrow">
+      <div class="ren-stack" style="align-items: center;">
+        <nav aria-label="Breadcrumb" class="ren-breadcrumb">
+          <ol>
+            <li><a href="./landing.html">Home</a></li>
+            <li aria-current="page">Blog</li>
+          </ol>
+        </nav>
+        <h1 style="font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); font-weight: var(--weight-bold); letter-spacing: -0.02em; margin: 0;">
+          From the RenDS team
+        </h1>
+        <p style="color: var(--color-text-secondary); font-size: var(--text-lg); max-width: 56ch; line-height: var(--leading-relaxed); margin: 0;">
+          Notes on craft, accessibility, and the weird corners of CSS we find interesting.
+          New post most weeks.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ MAIN ═══ -->
+  <main style="padding: var(--space-6) var(--space-6) var(--space-16);">
+    <div class="ren-center-wide">
+      <div class="ren-with-sidebar" style="--sidebar-width: 280px; --content-min: 60%;">
+
+        <!-- ═══ Main column ═══ -->
+        <div class="ren-stack-xl">
+
+          <!-- Featured post -->
+          <a href="#" class="bl-featured" style="text-decoration: none; color: inherit; display: grid;">
+            <div class="bl-featured-cover" role="img" aria-label="Gradient cover art"></div>
+            <div class="bl-featured-body">
+              <div class="ren-stack-lg">
+                <div class="ren-cluster">
+                  <span class="ren-badge ren-badge-primary">Featured</span>
+                  <span class="ren-tag">Architecture</span>
+                </div>
+                <h2 style="font-size: clamp(var(--text-2xl), 3vw, var(--text-4xl)); font-weight: var(--weight-bold); letter-spacing: -0.02em; line-height: var(--leading-tight); margin: 0;">
+                  Why we bet on CSS Cascade Layers (and never wrote <code>!important</code> again)
+                </h2>
+                <p style="color: var(--color-text-secondary); font-size: var(--text-base); line-height: var(--leading-relaxed); margin: 0;">
+                  Specificity wars are a design-system killer. Here's how layers flatten the cascade, make overrides
+                  trivial, and let contributors ship without reviewer fatigue.
+                </p>
+                <div class="ren-row">
+                  <div class="ren-avatar ren-avatar-sm" style="background: var(--color-accent); color: var(--color-on-accent); display: inline-flex; align-items: center; justify-content: center; font-weight: var(--weight-bold); font-size: var(--text-xs);">R</div>
+                  <span style="font-size: var(--text-sm); color: var(--color-text);">Ren Soconese</span>
+                  <span style="color: var(--color-text-muted); font-size: var(--text-sm);">·</span>
+                  <span style="font-size: var(--text-sm); color: var(--color-text-muted);">Apr 14, 2026</span>
+                  <span style="color: var(--color-text-muted); font-size: var(--text-sm);">·</span>
+                  <span style="font-size: var(--text-sm); color: var(--color-text-muted);">8 min read</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Section heading -->
+          <div class="ren-row-spread" style="align-items: baseline;">
+            <h3 style="font-size: var(--text-2xl); font-weight: var(--weight-bold); margin: 0;">Latest posts</h3>
+            <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm);">View all →</a>
+          </div>
+
+          <!-- Post grid -->
+          <div class="ren-grid-2">
+
+            <a href="#" class="bl-post-card">
+              <div class="bl-post-cover v-1" role="img" aria-label="Cover"></div>
+              <div class="bl-post-body">
+                <div class="ren-cluster">
+                  <span class="ren-tag">A11y</span>
+                </div>
+                <h3 class="bl-post-title">A better reduced-motion: dissolves beat silence</h3>
+                <p class="bl-post-excerpt">Killing animations outright creates dead UI. Here's the alternative we ship —
+                  fade, highlight, color-shift — opt-in, semantic, and WCAG-friendly.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span>
+                  <span class="dot">·</span>
+                  <span>Apr 11, 2026</span>
+                  <span class="dot">·</span>
+                  <span>5 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="bl-post-card">
+              <div class="bl-post-cover v-2" role="img" aria-label="Cover"></div>
+              <div class="bl-post-body">
+                <div class="ren-cluster">
+                  <span class="ren-tag">Tokens</span>
+                </div>
+                <h3 class="bl-post-title">Semantic spacing: the layer between scale and component</h3>
+                <p class="bl-post-excerpt">Why <code>--space-card-padding</code> beats <code>--space-6</code> in
+                  every place that matters, and how to migrate without breaking existing components.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span>
+                  <span class="dot">·</span>
+                  <span>Apr 8, 2026</span>
+                  <span class="dot">·</span>
+                  <span>6 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="bl-post-card">
+              <div class="bl-post-cover v-3" role="img" aria-label="Cover"></div>
+              <div class="bl-post-body">
+                <div class="ren-cluster">
+                  <span class="ren-tag">Components</span>
+                </div>
+                <h3 class="bl-post-title">Native <code>&lt;dialog&gt;</code> is 90% of what you need</h3>
+                <p class="bl-post-excerpt">Top-layer. Backdrop. ESC-to-close. Focus trap. Modern browsers ship a dialog
+                  that's almost perfect out of the box — the last 10% is one line of CSS.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span>
+                  <span class="dot">·</span>
+                  <span>Apr 2, 2026</span>
+                  <span class="dot">·</span>
+                  <span>4 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="bl-post-card">
+              <div class="bl-post-cover v-4" role="img" aria-label="Cover"></div>
+              <div class="bl-post-body">
+                <div class="ren-cluster">
+                  <span class="ren-tag">Theming</span>
+                </div>
+                <h3 class="bl-post-title">How <code>light-dark()</code> killed our theme provider</h3>
+                <p class="bl-post-excerpt">One CSS function. Zero JS. Zero FOUC. The browser already knows what the
+                  user wants — stop fighting it with localStorage hacks.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span>
+                  <span class="dot">·</span>
+                  <span>Mar 25, 2026</span>
+                  <span class="dot">·</span>
+                  <span>7 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="bl-post-card">
+              <div class="bl-post-cover v-5" role="img" aria-label="Cover"></div>
+              <div class="bl-post-body">
+                <div class="ren-cluster">
+                  <span class="ren-tag">Layouts</span>
+                </div>
+                <h3 class="bl-post-title">Every Layout, revisited: the 10 primitives we actually use</h3>
+                <p class="bl-post-excerpt">Stack, Cluster, Sidebar, Cover, Frame, Reel. Old idea, sharpened. Here's the
+                  API that replaced 80% of our custom flex/grid.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span>
+                  <span class="dot">·</span>
+                  <span>Mar 18, 2026</span>
+                  <span class="dot">·</span>
+                  <span>9 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="#" class="bl-post-card">
+              <div class="bl-post-cover v-6" role="img" aria-label="Cover"></div>
+              <div class="bl-post-body">
+                <div class="ren-cluster">
+                  <span class="ren-tag">Release</span>
+                </div>
+                <h3 class="bl-post-title">RenDS 0.6: Glass, dual type, and 39 new semantic tokens</h3>
+                <p class="bl-post-excerpt">Backdrop-filter materials, a Carbon-style Productive/Expressive split, and
+                  a whole layer of intent-based spacing. The biggest release since we launched.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span>
+                  <span class="dot">·</span>
+                  <span>Mar 10, 2026</span>
+                  <span class="dot">·</span>
+                  <span>3 min</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Pagination" class="ren-pagination" style="justify-self: center;">
+            <a href="#" aria-disabled="true" tabindex="-1" class="ren-pagination-item">←</a>
+            <a href="#" class="ren-pagination-item" aria-current="page">1</a>
+            <a href="#" class="ren-pagination-item">2</a>
+            <a href="#" class="ren-pagination-item">3</a>
+            <span class="ren-pagination-item" aria-hidden="true">…</span>
+            <a href="#" class="ren-pagination-item">7</a>
+            <a href="#" class="ren-pagination-item">→</a>
+          </nav>
+
+        </div>
+
+        <!-- ═══ Sidebar ═══ -->
+        <aside class="ren-stack-lg" aria-label="Blog sidebar">
+
+          <!-- Search -->
+          <div class="ren-field">
+            <label for="bl-search" class="ren-sr-only">Search posts</label>
+            <input id="bl-search" type="search" placeholder="Search posts…">
+          </div>
+
+          <!-- Tags -->
+          <div class="bl-sidebar-card">
+            <div class="ren-stack">
+              <h4 style="font-size: var(--text-sm); font-weight: var(--weight-semibold); margin: 0; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted);">Browse by tag</h4>
+              <div class="ren-cluster">
+                <a href="#" class="ren-tag">A11y <span style="color: var(--color-text-muted);">12</span></a>
+                <a href="#" class="ren-tag">Tokens <span style="color: var(--color-text-muted);">8</span></a>
+                <a href="#" class="ren-tag">Components <span style="color: var(--color-text-muted);">21</span></a>
+                <a href="#" class="ren-tag">Theming <span style="color: var(--color-text-muted);">6</span></a>
+                <a href="#" class="ren-tag">Layouts <span style="color: var(--color-text-muted);">9</span></a>
+                <a href="#" class="ren-tag">Release <span style="color: var(--color-text-muted);">14</span></a>
+                <a href="#" class="ren-tag">Architecture <span style="color: var(--color-text-muted);">5</span></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="bl-newsletter">
+            <div class="ren-stack">
+              <h4>Level up your UI</h4>
+              <p>One post a week on craft, accessibility, and the underrated platform features that make UI feel nice.
+                No spam, unsubscribe in one click.</p>
+              <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed ✓';" class="ren-stack-sm">
+                <div class="ren-field">
+                  <label for="bl-email" class="ren-sr-only">Email</label>
+                  <input id="bl-email" type="email" placeholder="you@example.com" required>
+                </div>
+                <button type="submit" class="ren-btn" style="--ren-btn-bg: white; --ren-btn-text: var(--color-accent); width: 100%;">Subscribe</button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Popular -->
+          <div class="bl-sidebar-card">
+            <div class="ren-stack">
+              <h4 style="font-size: var(--text-sm); font-weight: var(--weight-semibold); margin: 0; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted);">Most read</h4>
+              <ol class="ren-stack-sm" style="margin: 0; padding: 0; list-style: none; counter-reset: rank;">
+                <li style="counter-increment: rank; display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span aria-hidden="true" style="font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: var(--weight-semibold); min-width: 1.5ch;">01</span>
+                  <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm); line-height: var(--leading-snug);">Why we bet on CSS Cascade Layers</a>
+                </li>
+                <li style="counter-increment: rank; display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span aria-hidden="true" style="font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: var(--weight-semibold); min-width: 1.5ch;">02</span>
+                  <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm); line-height: var(--leading-snug);">Every Layout, revisited</a>
+                </li>
+                <li style="counter-increment: rank; display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span aria-hidden="true" style="font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: var(--weight-semibold); min-width: 1.5ch;">03</span>
+                  <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm); line-height: var(--leading-snug);">How light-dark() killed our theme provider</a>
+                </li>
+                <li style="counter-increment: rank; display: flex; gap: var(--space-3); align-items: flex-start;">
+                  <span aria-hidden="true" style="font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: var(--weight-semibold); min-width: 1.5ch;">04</span>
+                  <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm); line-height: var(--leading-snug);">Semantic spacing: the layer between scale and component</a>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════════ FOOTER ═══ -->
+  <footer style="border-top: 1px solid var(--color-border); background: var(--color-surface-sunken); padding: var(--space-8) var(--space-6); font-size: var(--text-sm); color: var(--color-text-muted);">
+    <div class="ren-center-wide">
+      <div class="ren-row-spread">
+        <span>© 2026 RenDS · MIT License</span>
+        <div class="ren-cluster">
+          <a href="./landing.html" style="color: var(--color-text-secondary); text-decoration: none;">Home</a>
+          <a href="../docs/components.html" style="color: var(--color-text-secondary); text-decoration: none;">Docs</a>
+          <a href="../create/" style="color: var(--color-text-secondary); text-decoration: none;">Create</a>
+          <a href="#" style="color: var(--color-text-secondary); text-decoration: none;">RSS</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

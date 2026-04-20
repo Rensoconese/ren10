@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Docs — RenDS</title>
+  <meta name="description" content="The vanilla, accessible, atomic design system. No framework required.">
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Top nav (shared with landing/blog) */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Hero */
+    .dx-hero { padding: var(--space-16) var(--space-6) var(--space-12); }
+    .dx-hero h1 { font-size: clamp(var(--text-5xl), 6vw, var(--text-7xl)); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 var(--space-5); font-weight: var(--weight-bold); background: linear-gradient(135deg, var(--color-text) 0%, color-mix(in srgb, var(--color-accent) 70%, var(--color-text)) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .dx-hero p.lede { font-size: var(--text-xl); color: var(--color-text-muted); margin: 0 0 var(--space-8); max-width: 52ch; line-height: 1.55; }
+    .dx-install { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-family: var(--font-mono); font-size: var(--text-sm); max-width: 560px; }
+    .dx-install::before { content: "$"; color: var(--color-text-muted); }
+    .dx-install code { flex: 1; background: none; padding: 0; color: var(--color-text); font-family: inherit; }
+
+    /* Section */
+    .dx-section { padding: var(--space-12) var(--space-6); }
+    .dx-section + .dx-section { border-top: 1px solid var(--color-border-muted); }
+    .dx-section-title { font-size: var(--text-3xl); font-weight: var(--weight-bold); margin: 0 0 var(--space-2); letter-spacing: -0.02em; }
+    .dx-section-sub { color: var(--color-text-muted); margin: 0 0 var(--space-8); }
+    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
+
+    /* Doc card (link card) */
+    .dx-card { display: block; padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface); text-decoration: none; color: inherit; transition: border-color var(--duration-fast, 150ms), transform var(--duration-fast, 150ms); position: relative; }
+    .dx-card:hover { border-color: var(--color-border-strong); transform: translateY(-2px); }
+    .dx-card:focus-visible { outline: 2px solid var(--color-focus-ring); outline-offset: 2px; }
+    .dx-card-eyebrow { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); }
+    .dx-card-title { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-1) 0 var(--space-1); }
+    .dx-card-desc { color: var(--color-text-muted); font-size: var(--text-sm); margin: 0; line-height: 1.55; }
+    .dx-card-arrow { position: absolute; top: var(--space-6); right: var(--space-6); color: var(--color-text-faint); transition: color var(--duration-fast, 150ms), transform var(--duration-fast, 150ms); }
+    .dx-card:hover .dx-card-arrow { color: var(--color-text); transform: translateX(2px); }
+
+    /* Pillars */
+    .dx-pillar-num { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--radius-md); background: var(--color-accent-subtle); color: var(--color-accent); font-weight: var(--weight-bold); font-size: var(--text-base); }
+
+    /* Footer */
+    .dx-footer { border-top: 1px solid var(--color-border-muted); padding: var(--space-10) var(--space-6); color: var(--color-text-muted); font-size: var(--text-sm); }
+    .dx-footer a { color: var(--color-text-muted); text-decoration: none; }
+    .dx-footer a:hover { color: var(--color-text); }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.6</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="dx-hero">
+    <div class="ren-center-wide">
+      <div class="ren-stack-lg" style="--stack-gap: var(--space-6);">
+        <div>
+          <p class="dx-kicker">Documentation</p>
+          <h1>Build fast UIs the browser already knows how to render.</h1>
+          <p class="lede">RenDS is a vanilla, accessible, atomic design system. No React, no build step, no framework lock-in. Just HTML, CSS, and a sprinkle of Web Components where native elements aren't enough.</p>
+        </div>
+        <div class="dx-install">
+          <code>node rends/cli/index.js add button dialog select</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Start here -->
+  <section class="dx-section">
+    <div class="ren-center-wide">
+      <div class="ren-stack-lg">
+        <div>
+          <p class="dx-kicker">Start here</p>
+          <h2 class="dx-section-title">The three pages that get you building</h2>
+          <p class="dx-section-sub">In order. Read the first, scan the second, bookmark the third.</p>
+        </div>
+
+        <div class="ren-grid-3">
+          <a class="dx-card" href="getting-started.html">
+            <div class="dx-card-eyebrow">01 · Setup</div>
+            <h3 class="dx-card-title">Getting Started</h3>
+            <p class="dx-card-desc">Drop RenDS into a project, link the CSS, render your first button. Two minutes, no npm.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="tokens.html">
+            <div class="dx-card-eyebrow">02 · Foundations</div>
+            <h3 class="dx-card-title">Tokens</h3>
+            <p class="dx-card-desc">Colors, spacing, type, radius. The 3-tier system: primitives, semantic, component.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="layouts.html">
+            <div class="dx-card-eyebrow">03 · Structure</div>
+            <h3 class="dx-card-title">Layout Primitives</h3>
+            <p class="dx-card-desc">Stack, Cluster, Grid, Cover, With-sidebar. Every page skeleton you'll ever need.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guides -->
+  <section class="dx-section">
+    <div class="ren-center-wide">
+      <div class="ren-stack-lg">
+        <div>
+          <p class="dx-kicker">Guides</p>
+          <h2 class="dx-section-title">Cross-cutting topics</h2>
+          <p class="dx-section-sub">Two subjects that touch every component. Read them once, refer back as needed.</p>
+        </div>
+
+        <div class="ren-grid-2">
+          <a class="dx-card" href="accessibility.html">
+            <div class="dx-card-eyebrow">Guide</div>
+            <h3 class="dx-card-title">Accessibility</h3>
+            <p class="dx-card-desc">WCAG 2.1 AA baseline, keyboard navigation, focus management, color contrast, reduced motion. What's automatic and what's your job.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="theming.html">
+            <div class="dx-card-eyebrow">Guide</div>
+            <h3 class="dx-card-title">Theming</h3>
+            <p class="dx-card-desc">Dark mode, data-theme / density / shape, three override levels, building a theme from scratch, and distributing it as CSS, JSON, or a URL.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- References -->
+  <section class="dx-section">
+    <div class="ren-center-wide">
+      <div class="ren-stack-lg">
+        <div>
+          <p class="dx-kicker">References</p>
+          <h2 class="dx-section-title">Explore the system</h2>
+          <p class="dx-section-sub">52 components, 8 starter themes, 5 example pages. All source you can copy.</p>
+        </div>
+
+        <div class="ren-grid-2">
+          <a class="dx-card" href="components.html">
+            <div class="dx-card-eyebrow">Catalog</div>
+            <h3 class="dx-card-title">Components showcase</h3>
+            <p class="dx-card-desc">Live examples of every primitive, composite, and pattern in one scrollable page. 18 primitives · 26 composites · 8 patterns.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="../blocks/landing.html">
+            <div class="dx-card-eyebrow">Examples</div>
+            <h3 class="dx-card-title">Blocks</h3>
+            <p class="dx-card-desc">Full-page examples composing RenDS into real screens: auth, dashboard, settings, landing, blog.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="../create/index.html">
+            <div class="dx-card-eyebrow">Tool</div>
+            <h3 class="dx-card-title">Theme Builder</h3>
+            <p class="dx-card-desc">Pick base color, fonts, radius, density. Export CSS, JSON, or a ZIP. Share via URL.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="primitive-zero.html">
+            <div class="dx-card-eyebrow">Philosophy</div>
+            <h3 class="dx-card-title">Primitive Zero</h3>
+            <p class="dx-card-desc">The case for classless-first: why a raw &lt;button&gt; should already look right.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="dx-card" href="cli.html">
+            <div class="dx-card-eyebrow">Tooling</div>
+            <h3 class="dx-card-title">CLI</h3>
+            <p class="dx-card-desc">Scaffold a new project, add components, pick a type scale. Five commands, no global install.</p>
+            <span class="dx-card-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Three pillars -->
+  <section class="dx-section">
+    <div class="ren-center-wide">
+      <div class="ren-stack-lg">
+        <div>
+          <p class="dx-kicker">Philosophy</p>
+          <h2 class="dx-section-title">Three pillars, no exceptions</h2>
+          <p class="dx-section-sub">Every decision in RenDS ladders up to one of these.</p>
+        </div>
+
+        <div class="ren-grid-3">
+          <div class="ren-stack" style="--stack-gap: var(--space-3);">
+            <div class="dx-pillar-num">1</div>
+            <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Vanilla first</h3>
+            <p style="color: var(--color-text-muted); margin: 0; line-height: 1.55;">Pure HTML, CSS, JS. No React, no Vue, no build step. Use <code>&lt;dialog&gt;</code>, <code>&lt;details&gt;</code>, Popover API before reaching for JS. Web Components are for encapsulation, not for rendering.</p>
+          </div>
+          <div class="ren-stack" style="--stack-gap: var(--space-3);">
+            <div class="dx-pillar-num">2</div>
+            <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Accessible by default</h3>
+            <p style="color: var(--color-text-muted); margin: 0; line-height: 1.55;">WCAG 2.1 AA minimum, AAA target. Every component ships with keyboard support, focus management, ARIA, and <code>prefers-reduced-motion</code> respect. Not an afterthought.</p>
+          </div>
+          <div class="ren-stack" style="--stack-gap: var(--space-3);">
+            <div class="dx-pillar-num">3</div>
+            <h3 style="font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0;">Atomic architecture</h3>
+            <p style="color: var(--color-text-muted); margin: 0; line-height: 1.55;">Tokens → Primitives → Composites → Patterns. Build upward. Never skip a layer. A Button uses tokens. A Dialog uses buttons. A Form uses dialogs and fields.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="dx-footer">
+    <div class="ren-center-wide">
+      <div class="ren-row-spread">
+        <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+          <span class="dx-brand-mark" style="width: 20px; height: 20px; font-size: 10px;">R</span>
+          <span>RenDS v0.6</span>
+          <span>·</span>
+          <span>MIT License</span>
+        </div>
+        <div class="ren-cluster" style="--cluster-gap: var(--space-5);">
+          <a href="getting-started.html">Getting started</a>
+          <a href="tokens.html">Tokens</a>
+          <a href="layouts.html">Layouts</a>
+          <a href="accessibility.html">Accessibility</a>
+          <a href="theming.html">Theming</a>
+          <a href="components.html">Components</a>
+          <a href="cli.html">CLI</a>
+          <a href="https://github.com">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -29,10 +29,10 @@
   font-weight: var(--weight-semibold);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: light-dark(#7C3AED, #A78BFA);
+  color: light-dark(var(--purple-500), var(--purple-300));
   background: light-dark(
-    color-mix(in srgb, #7C3AED 10%, transparent),
-    color-mix(in srgb, #A78BFA 15%, transparent)
+    color-mix(in srgb, var(--purple-500) 10%, transparent),
+    color-mix(in srgb, var(--purple-300) 15%, transparent)
   );
   border-radius: var(--radius-sm);
   line-height: 1;
@@ -51,14 +51,14 @@
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: light-dark(
-    color-mix(in srgb, #7C3AED 4%, var(--color-surface-raised)),
-    color-mix(in srgb, #A78BFA 6%, var(--color-surface-raised))
+    color-mix(in srgb, var(--purple-500) 4%, var(--color-surface-raised)),
+    color-mix(in srgb, var(--purple-300) 6%, var(--color-surface-raised))
   );
   border: var(--stroke-1) solid light-dark(
-    color-mix(in srgb, #7C3AED 15%, transparent),
-    color-mix(in srgb, #A78BFA 12%, transparent)
+    color-mix(in srgb, var(--purple-500) 15%, transparent),
+    color-mix(in srgb, var(--purple-300) 12%, transparent)
   );
-  border-inline-start: 3px solid light-dark(#7C3AED, #A78BFA);
+  border-inline-start: 3px solid light-dark(var(--purple-500), var(--purple-300));
   line-height: var(--leading-relaxed);
 }
 
@@ -97,7 +97,7 @@
   content: '▊';
   display: inline;
   animation: ren-ai-blink 0.8s step-end infinite;
-  color: light-dark(#7C3AED, #A78BFA);
+  color: light-dark(var(--purple-500), var(--purple-300));
   margin-inline-start: 1px;
 }
 
@@ -134,7 +134,7 @@
   width: 6px;
   height: 6px;
   border-radius: var(--radius-full);
-  background: light-dark(#7C3AED, #A78BFA);
+  background: light-dark(var(--purple-500), var(--purple-300));
   animation: ren-ai-dot-bounce 1.4s ease-in-out infinite;
 }
 
@@ -166,10 +166,10 @@
   padding: var(--space-0-5) var(--space-2);
   font-size: var(--caption-sm-size);
   font-weight: var(--weight-medium);
-  color: light-dark(#7C3AED, #A78BFA);
+  color: light-dark(var(--purple-500), var(--purple-300));
   background: light-dark(
-    color-mix(in srgb, #7C3AED 8%, transparent),
-    color-mix(in srgb, #A78BFA 10%, transparent)
+    color-mix(in srgb, var(--purple-500) 8%, transparent),
+    color-mix(in srgb, var(--purple-300) 10%, transparent)
   );
   border-radius: var(--radius-sm);
   text-decoration: none;
@@ -181,8 +181,8 @@
 
 .ren-ai-citation:hover {
   background: light-dark(
-    color-mix(in srgb, #7C3AED 15%, transparent),
-    color-mix(in srgb, #A78BFA 20%, transparent)
+    color-mix(in srgb, var(--purple-500) 15%, transparent),
+    color-mix(in srgb, var(--purple-300) 20%, transparent)
   );
 }
 
@@ -222,10 +222,10 @@
   justify-content: center;
   font-size: var(--caption-sm-size);
   font-weight: var(--weight-bold);
-  color: light-dark(#7C3AED, #A78BFA);
+  color: light-dark(var(--purple-500), var(--purple-300));
   background: light-dark(
-    color-mix(in srgb, #7C3AED 10%, transparent),
-    color-mix(in srgb, #A78BFA 12%, transparent)
+    color-mix(in srgb, var(--purple-500) 10%, transparent),
+    color-mix(in srgb, var(--purple-300) 12%, transparent)
   );
   border-radius: var(--radius-sm);
 }
@@ -314,7 +314,7 @@
 }
 
 .ren-ai-action[data-active="true"] {
-  color: light-dark(#7C3AED, #A78BFA);
+  color: light-dark(var(--purple-500), var(--purple-300));
 }
 
 /* Feedback buttons (thumbs up/down) */
@@ -350,10 +350,10 @@
 }
 
 .ren-ai-prompt:focus-within {
-  border-color: light-dark(#7C3AED, #A78BFA);
+  border-color: light-dark(var(--purple-500), var(--purple-300));
   box-shadow: 0 0 0 3px light-dark(
-    color-mix(in srgb, #7C3AED 15%, transparent),
-    color-mix(in srgb, #A78BFA 15%, transparent)
+    color-mix(in srgb, var(--purple-500) 15%, transparent),
+    color-mix(in srgb, var(--purple-300) 15%, transparent)
   );
 }
 
@@ -385,7 +385,7 @@
   height: var(--size-md);
   border: none;
   border-radius: var(--radius-full);
-  background: light-dark(#7C3AED, #A78BFA);
+  background: light-dark(var(--purple-500), var(--purple-300));
   color: white;
   cursor: pointer;
   transition: all var(--duration-fast) var(--ease-out);
@@ -393,7 +393,7 @@
 }
 
 .ren-ai-prompt-send:hover {
-  background: light-dark(#6D28D9, #C4B5FD);
+  background: light-dark(var(--purple-600), var(--purple-200));
   transform: scale(1.05);
 }
 
@@ -410,12 +410,12 @@
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: light-dark(
-    color-mix(in srgb, #7C3AED 3%, var(--color-surface-raised)),
-    color-mix(in srgb, #A78BFA 4%, var(--color-surface-raised))
+    color-mix(in srgb, var(--purple-500) 3%, var(--color-surface-raised)),
+    color-mix(in srgb, var(--purple-300) 4%, var(--color-surface-raised))
   );
   border-inline-start: 3px solid light-dark(
-    color-mix(in srgb, #7C3AED 30%, transparent),
-    color-mix(in srgb, #A78BFA 20%, transparent)
+    color-mix(in srgb, var(--purple-500) 30%, transparent),
+    color-mix(in srgb, var(--purple-300) 20%, transparent)
   );
 }
 
@@ -426,8 +426,8 @@
     90deg,
     var(--color-fill) 25%,
     light-dark(
-      color-mix(in srgb, #7C3AED 5%, var(--color-fill)),
-      color-mix(in srgb, #A78BFA 8%, var(--color-fill))
+      color-mix(in srgb, var(--purple-500) 5%, var(--color-fill)),
+      color-mix(in srgb, var(--purple-300) 8%, var(--color-fill))
     ) 50%,
     var(--color-fill) 75%
   );

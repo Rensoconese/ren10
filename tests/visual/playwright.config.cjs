@@ -11,7 +11,8 @@ const { defineConfig, devices } = require('@playwright/test');
  * - Proper timeout settings
  */
 module.exports = defineConfig({
-  testDir: './',
+  testDir: '../',
+  testMatch: ['**/*.spec.cjs'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

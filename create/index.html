@@ -8,6 +8,16 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Geist:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Raleway:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Merriweather:wght@400;700&family=Noto+Serif:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+  <!--
+    NOTA: este theme builder CONTIENE hex literals a propósito.
+    - Las paletas (Zinc, Slate, Neutral, ...) son DATOS de entrada al builder.
+    - La lógica de derivación opera sobre hex como input.
+    - El CSS exportado se compone con hex que el usuario copia a su proyecto.
+    - El chrome de la app (sidebar oscuro) es independiente de los tokens RenDS.
+    Es la única app standalone de RenDS que justificadamente trabaja con hex
+    como dato primitivo (equivalente a los themes/appearance.css).
+  -->
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -205,6 +215,106 @@
       font-weight: 600;
     }
     .sidebar-btn.primary:hover { opacity: 0.9; }
+
+    /* ─── Footer multi-row layout ─── */
+    .footer-row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.375rem;
+    }
+
+    /* ─── Export popover menu ─── */
+    .export-wrap { position: relative; }
+    .export-menu {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 0.375rem);
+      left: 0;
+      right: 0;
+      background: var(--sidebar-bg);
+      border: 1px solid var(--sidebar-border);
+      border-radius: 10px;
+      overflow: hidden;
+      z-index: 20;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+    }
+    .export-menu.open { display: block; }
+    .export-menu button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--sidebar-text);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8125rem;
+      text-align: left;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .export-menu button:hover { background: var(--sidebar-hover); }
+    .export-menu button + button { border-top: 1px solid rgba(255,255,255,0.04); }
+    .export-menu .menu-key {
+      margin-left: auto;
+      color: var(--sidebar-text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.6875rem;
+    }
+
+    /* ─── Templates modal tiles ─── */
+    .tpl-tile {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 0.875rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: #f5f5f7;
+      text-align: left;
+      font-family: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .tpl-tile:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+    .tpl-tile .tpl-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+    .tpl-tile .tpl-desc {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.45;
+      flex: 1;
+    }
+    .tpl-tile .tpl-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tpl-tile .tpl-swatches {
+      display: flex;
+      gap: 4px;
+    }
+    .tpl-tile .tpl-swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15);
+    }
+    .tpl-tile .tpl-tag {
+      margin-left: auto;
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.4);
+    }
 
     /* ═══ PREVIEW ═══ */
     .main {
@@ -623,10 +733,30 @@
         </div>
 
         <div class="sidebar-footer">
-          <button class="sidebar-btn" onclick="toggleCode()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-            Copy CSS
-          </button>
+          <div class="footer-row-2">
+            <button class="sidebar-btn" onclick="openTemplates()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Templates
+            </button>
+            <button class="sidebar-btn" onclick="shareLink()">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share
+            </button>
+          </div>
+          <div class="export-wrap">
+            <button class="sidebar-btn primary" id="btn-export" onclick="toggleExportMenu(event)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Export
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="export-menu" id="export-menu">
+              <button onclick="toggleCode(); closeExportMenu();">Preview CSS</button>
+              <button onclick="copyCss(); closeExportMenu();">Copy CSS<span class="menu-key">⌘C</span></button>
+              <button onclick="downloadCSS()">Download .css</button>
+              <button onclick="downloadJSON()">Download .json</button>
+              <button onclick="downloadZIP()">Download .zip</button>
+            </div>
+          </div>
           <button class="sidebar-btn" onclick="randomize()">Shuffle</button>
         </div>
       </div>
@@ -653,6 +783,22 @@
         </div>
       </div>
       <pre id="css-output" style="flex:1;overflow:auto;padding:1.25rem;color:#e5e5e7;font-family:'JetBrains Mono',monospace;font-size:0.75rem;line-height:1.7;margin:0;"></pre>
+    </div>
+  </div>
+
+  <!-- Templates Modal -->
+  <div id="templates-modal" style="display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:2rem;" onclick="if(event.target===this)closeTemplates()">
+    <div style="max-width:760px; margin:0 auto; background:#1c1c1e; border-radius:16px; border:1px solid rgba(255,255,255,0.1); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 4rem);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <div style="color:#f5f5f7;font-size:0.9375rem;font-weight:600;">Starter templates</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:0.75rem;margin-top:2px;">Pick one as a base — customize from there.</div>
+        </div>
+        <button onclick="closeTemplates()" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div id="templates-grid" style="flex:1;overflow:auto;padding:1.25rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;"></div>
     </div>
   </div>
 
@@ -1723,10 +1869,333 @@ ${(() => {
     }
 
     // ═══════════════════════════════════════════
+    // TEMPLATES
+    // ═══════════════════════════════════════════
+
+    const TEMPLATES = [
+      {
+        name: 'Minimal Zinc',
+        tag: 'Default',
+        desc: 'Neutral, clean, everything quiet.',
+        baseColor: 'Zinc', theme: { name: 'Zinc', isBase: true }, chart: { name: 'Zinc', isBase: true },
+        font: 'Inter', heading: 'Inherit', radius: 'Small', density: 'Default', mode: 'light',
+      },
+      {
+        name: 'Linear Indigo',
+        tag: 'Dark',
+        desc: 'Crisp dark UI with indigo accents.',
+        baseColor: 'Slate', theme: { name: 'Indigo' }, chart: { name: 'Violet' },
+        font: 'Inter', heading: 'Inherit', radius: 'Default', density: 'Compact', mode: 'dark',
+      },
+      {
+        name: 'Vercel Geist',
+        tag: 'Dark',
+        desc: 'High contrast neutrals, mono vibes.',
+        baseColor: 'Neutral', theme: { name: 'Neutral', isBase: true }, chart: { name: 'Neutral', isBase: true },
+        font: 'Geist', heading: 'Inherit', radius: 'Small', density: 'Default', mode: 'dark',
+      },
+      {
+        name: 'Apple Blue',
+        tag: 'Friendly',
+        desc: 'System blue with soft edges.',
+        baseColor: 'Stone', theme: { name: 'Blue' }, chart: { name: 'Blue' },
+        font: 'Inter', heading: 'Inherit', radius: 'Large', density: 'Comfortable', mode: 'light',
+      },
+      {
+        name: 'Editorial Rose',
+        tag: 'Expressive',
+        desc: 'Serif headings, rose accent.',
+        baseColor: 'Stone', theme: { name: 'Rose' }, chart: { name: 'Rose' },
+        font: 'DM Sans', heading: 'Playfair Display', radius: 'Large', density: 'Comfortable', mode: 'light',
+      },
+      {
+        name: 'Forest Emerald',
+        tag: 'Nature',
+        desc: 'Olive base, deep emerald accent.',
+        baseColor: 'Olive', theme: { name: 'Emerald' }, chart: { name: 'Emerald' },
+        font: 'Manrope', heading: 'Inherit', radius: 'Default', density: 'Default', mode: 'light',
+      },
+      {
+        name: 'Playful Violet',
+        tag: 'Expressive',
+        desc: 'Rounded, airy, attention-grabbing.',
+        baseColor: 'Zinc', theme: { name: 'Violet' }, chart: { name: 'Pink' },
+        font: 'Outfit', heading: 'Inherit', radius: 'Full', density: 'Comfortable', mode: 'light',
+      },
+      {
+        name: 'Amber Mono',
+        tag: 'Warm',
+        desc: 'Warm stone with amber highlight.',
+        baseColor: 'Stone', theme: { name: 'Amber' }, chart: { name: 'Orange' },
+        font: 'Plus Jakarta', heading: 'Inherit', radius: 'Small', density: 'Compact', mode: 'light',
+      },
+    ];
+
+    function openTemplates() {
+      const grid = document.getElementById('templates-grid');
+      grid.innerHTML = TEMPLATES.map((t, i) => {
+        const bc = BASE_COLORS.find(b => b.name === t.baseColor);
+        const acc = t.theme.isBase
+          ? (BASE_COLORS.find(b => b.name === t.theme.name) || {}).swatch
+          : (THEMES.find(x => x.name === t.theme.name) || {}).hex;
+        const ch = t.chart.isBase
+          ? (BASE_COLORS.find(b => b.name === t.chart.name) || {}).swatch
+          : (THEMES.find(x => x.name === t.chart.name) || {}).hex;
+        return `<button class="tpl-tile" onclick="applyTemplate(${i})">
+          <div class="tpl-name">${t.name}</div>
+          <div class="tpl-desc">${t.desc}</div>
+          <div class="tpl-meta">
+            <div class="tpl-swatches">
+              <div class="tpl-swatch" style="background:${bc ? bc.swatch : '#888'};" title="Base: ${t.baseColor}"></div>
+              <div class="tpl-swatch" style="background:${acc || '#888'};" title="Accent: ${t.theme.name}"></div>
+              <div class="tpl-swatch" style="background:${ch || '#888'};" title="Chart: ${t.chart.name}"></div>
+            </div>
+            <span class="tpl-tag">${t.tag}</span>
+          </div>
+        </button>`;
+      }).join('');
+      document.getElementById('templates-modal').style.display = 'flex';
+    }
+
+    function closeTemplates() {
+      document.getElementById('templates-modal').style.display = 'none';
+    }
+
+    function applyTemplate(i) {
+      const t = TEMPLATES[i];
+      if (!t) return;
+      state.baseColor = BASE_COLORS.find(b => b.name === t.baseColor) || state.baseColor;
+      if (t.theme.isBase) {
+        const bc = BASE_COLORS.find(b => b.name === t.theme.name);
+        if (bc) state.theme = { name: bc.name, h: 0, s: 0, l: 45, hex: bc.swatch, isBase: true };
+      } else {
+        state.theme = THEMES.find(x => x.name === t.theme.name) || state.theme;
+      }
+      if (t.chart.isBase) {
+        const bc = BASE_COLORS.find(b => b.name === t.chart.name);
+        if (bc) state.chartColor = { name: bc.name, h: 0, s: 0, l: 45, hex: bc.swatch, isBase: true };
+      } else {
+        state.chartColor = THEMES.find(x => x.name === t.chart.name) || state.chartColor;
+      }
+      state.font = FONTS.find(f => f.name === t.font) || state.font;
+      state.fontHeading = HEADING_FONTS.find(f => f.name === t.heading) || state.fontHeading;
+      state.radius = RADII.find(r => r.name === t.radius) || state.radius;
+      state.density = DENSITIES.find(d => d.name === t.density) || state.density;
+      state.mode = t.mode || state.mode;
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeTemplates();
+      showToast('Applied: ' + t.name);
+    }
+
+    // ═══════════════════════════════════════════
+    // STATE SERIALIZATION
+    // ═══════════════════════════════════════════
+
+    function serializeState() {
+      return {
+        rends: 'theme',
+        v: 1,
+        baseColor: state.baseColor.name,
+        theme:    { name: state.theme.name,       isBase: !!state.theme.isBase },
+        chart:    { name: state.chartColor.name,  isBase: !!state.chartColor.isBase },
+        font:     state.font.name,
+        heading:  state.fontHeading.name,
+        radius:   state.radius.name,
+        density:  state.density.name,
+        iconLib:  state.iconLib,
+        mode:     state.mode,
+      };
+    }
+
+    function deserializeState(data) {
+      try {
+        if (!data || data.rends !== 'theme') return false;
+        const bc = BASE_COLORS.find(b => b.name === data.baseColor);
+        if (bc) state.baseColor = bc;
+
+        if (data.theme && data.theme.isBase) {
+          const tb = BASE_COLORS.find(b => b.name === data.theme.name);
+          if (tb) state.theme = { name: tb.name, h: 0, s: 0, l: 45, hex: tb.swatch, isBase: true };
+        } else if (data.theme) {
+          const t = THEMES.find(x => x.name === data.theme.name);
+          if (t) state.theme = t;
+        }
+
+        if (data.chart && data.chart.isBase) {
+          const cb = BASE_COLORS.find(b => b.name === data.chart.name);
+          if (cb) state.chartColor = { name: cb.name, h: 0, s: 0, l: 45, hex: cb.swatch, isBase: true };
+        } else if (data.chart) {
+          const c = THEMES.find(x => x.name === data.chart.name);
+          if (c) state.chartColor = c;
+        }
+
+        const f = FONTS.find(x => x.name === data.font);           if (f) state.font = f;
+        const h = HEADING_FONTS.find(x => x.name === data.heading);if (h) state.fontHeading = h;
+        const r = RADII.find(x => x.name === data.radius);         if (r) state.radius = r;
+        const d = DENSITIES.find(x => x.name === data.density);    if (d) state.density = d;
+        if (data.iconLib) state.iconLib = data.iconLib;
+        if (data.mode) state.mode = data.mode;
+        return true;
+      } catch (e) {
+        console.warn('Failed to deserialize theme', e);
+        return false;
+      }
+    }
+
+    // base64url encoding (URL-safe, no padding)
+    function encodeStateToHash() {
+      const json = JSON.stringify(serializeState());
+      return btoa(unescape(encodeURIComponent(json)))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    function decodeStateFromHash(hash) {
+      try {
+        const b64 = hash.replace(/-/g, '+').replace(/_/g, '/');
+        const pad = b64.length % 4 === 0 ? '' : '='.repeat(4 - (b64.length % 4));
+        return JSON.parse(decodeURIComponent(escape(atob(b64 + pad))));
+      } catch (e) {
+        console.warn('Failed to decode hash', e);
+        return null;
+      }
+    }
+
+    function restoreFromUrl() {
+      const match = location.hash.match(/^#t=(.+)$/);
+      if (!match) return false;
+      const data = decodeStateFromHash(match[1]);
+      return !!(data && deserializeState(data));
+    }
+
+    // ═══════════════════════════════════════════
+    // SHARE + EXPORT
+    // ═══════════════════════════════════════════
+
+    function shareLink() {
+      const url = location.origin + location.pathname + '#t=' + encodeStateToHash();
+      navigator.clipboard.writeText(url).then(
+        () => showToast('Share link copied'),
+        () => showToast('Unable to copy — check clipboard permissions')
+      );
+      try { history.replaceState(null, '', url); } catch (e) {}
+    }
+
+    function toggleExportMenu(e) {
+      const m = document.getElementById('export-menu');
+      m.classList.toggle('open');
+      if (e) e.stopPropagation();
+    }
+
+    function closeExportMenu() {
+      document.getElementById('export-menu').classList.remove('open');
+    }
+
+    document.addEventListener('click', (e) => {
+      const m = document.getElementById('export-menu');
+      if (!m) return;
+      if (!e.target.closest('#btn-export') && !e.target.closest('#export-menu')) {
+        m.classList.remove('open');
+      }
+    });
+
+    function downloadFile(filename, content, mime) {
+      const blob = new Blob([content], { type: mime || 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadCSS() {
+      downloadFile('rends-theme.css', generateCSS(), 'text/css');
+      closeExportMenu();
+      showToast('rends-theme.css downloaded');
+    }
+
+    function downloadJSON() {
+      const data = serializeState();
+      downloadFile('rends-theme.json', JSON.stringify(data, null, 2), 'application/json');
+      closeExportMenu();
+      showToast('rends-theme.json downloaded');
+    }
+
+    function downloadZIP() {
+      closeExportMenu();
+      if (typeof JSZip === 'undefined') {
+        showToast('JSZip still loading — try again in a second');
+        return;
+      }
+      const zip = new JSZip();
+      zip.file('rends-theme.css',  generateCSS());
+      zip.file('rends-theme.json', JSON.stringify(serializeState(), null, 2));
+      zip.file('README.md',        buildReadme());
+      zip.generateAsync({ type: 'blob' }).then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'rends-theme.zip';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('rends-theme.zip downloaded');
+      });
+    }
+
+    function buildReadme() {
+      const s = serializeState();
+      const today = new Date().toISOString().slice(0, 10);
+      return [
+        '# RenDS Custom Theme',
+        '',
+        'Generated by RenDS Create on ' + today + '.',
+        '',
+        '## Settings',
+        '',
+        '- Base color: ' + s.baseColor,
+        '- Accent: ' + s.theme.name + (s.theme.isBase ? ' (derived from base)' : ''),
+        '- Chart accent: ' + s.chart.name + (s.chart.isBase ? ' (derived from base)' : ''),
+        '- Body font: ' + s.font,
+        '- Heading font: ' + s.heading,
+        '- Radius: ' + s.radius,
+        '- Density: ' + s.density,
+        '- Default mode: ' + s.mode,
+        '',
+        '## How to use',
+        '',
+        '1. Drop `rends-theme.css` into your project and import it **after** the RenDS base tokens:',
+        '',
+        '   ```css',
+        "   @import 'rends/index.css';",
+        "   @import './rends-theme.css'; /* overrides */",
+        '   ```',
+        '',
+        '2. Or paste the CSS inline into your app root stylesheet.',
+        '',
+        '## Files',
+        '',
+        '- `rends-theme.css` — custom property overrides',
+        '- `rends-theme.json` — machine-readable config for re-import',
+        '',
+        '## Re-open in Create',
+        '',
+        'Keep the JSON around — you can re-import it later in the Create builder, or share a live link via the Share button.',
+        '',
+      ].join('\n');
+    }
+
+    // ═══════════════════════════════════════════
     // INIT
     // ═══════════════════════════════════════════
 
     function init() {
+      restoreFromUrl(); // rehydrate from #t=... if present
       renderDropdowns();
       updateSidebarValues();
       applyTheme();

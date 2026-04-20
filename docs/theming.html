@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Theming — RenDS Docs</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Shared top nav */
+    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
+    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
+    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
+    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
+    .dx-nav-menu { display: flex; gap: var(--space-5); }
+    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
+    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
+    .dx-nav-menu a:hover { color: var(--color-text); }
+    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+
+    /* Shell */
+    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-10) var(--space-6); }
+    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
+
+    /* Header */
+    .dx-header { margin-bottom: var(--space-10); max-width: 72ch; }
+    .dx-header h1 { font-size: var(--text-6xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: var(--space-2) 0 var(--space-4); }
+    .dx-header .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0; }
+
+    /* Section */
+    .dx-section { padding-top: var(--space-10); margin-top: var(--space-10); border-top: 1px solid var(--color-border-muted); scroll-margin-top: 80px; }
+    .dx-section:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
+    .dx-section h2 { font-size: var(--text-3xl); letter-spacing: -0.02em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
+    /* Scoped to direct children only — `.dx-section p` (descendant) was biting <p> inside
+       cards/callouts that had their own intended color (see PHASE-7-12-COMPLETE.md). */
+    .dx-section > p { color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 var(--space-4); max-width: 72ch; }
+    .dx-section h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-8) 0 var(--space-2); }
+    .dx-section ul, .dx-section ol { max-width: 72ch; padding-left: var(--space-5); line-height: 1.7; color: var(--color-text-secondary); }
+    .dx-section li { margin-bottom: var(--space-2); }
+    code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
+
+    /* Code block */
+    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-3) 0; color: var(--color-text); }
+    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
+
+    /* Callout */
+    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; max-width: 72ch; }
+    .dx-callout p { margin: 0; color: var(--color-text); }
+    .dx-callout strong { color: var(--color-accent-active); }
+
+    /* Theme preview side-by-side */
+    .dx-compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin: var(--space-5) 0; max-width: 72ch; }
+    .dx-mini {
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      color: var(--color-text);
+      /* Every preview re-establishes its own token baseline because it overrides light/dark */
+    }
+    .dx-mini-title { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin: 0 0 var(--space-3); font-weight: var(--weight-semibold); }
+    .dx-mini-card { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-2); }
+    .dx-mini-heading { font-size: var(--text-sm); font-weight: var(--weight-semibold); margin: 0 0 var(--space-1); color: var(--color-text); }
+    .dx-mini-body { font-size: var(--text-xs); color: var(--color-text-muted); margin: 0; }
+    .dx-mini-btn { margin-top: var(--space-2); display: inline-flex; padding: var(--space-1) var(--space-3); border-radius: var(--radius-sm); background: var(--color-accent); color: var(--color-on-accent); font-size: var(--text-xs); font-weight: var(--weight-medium); border: 1px solid var(--color-accent); }
+
+    /* Token override demos */
+    .dx-swatches { display: flex; gap: var(--space-2); margin: var(--space-3) 0; }
+    .dx-chip { width: 32px; height: 32px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); }
+
+    /* Theme card preview */
+    .dx-theme-card {
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-raised);
+      margin: var(--space-4) 0;
+      max-width: 72ch;
+    }
+    .dx-theme-card-label { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); margin: 0 0 var(--space-3); }
+
+    /* Quick nav */
+    .dx-toc { padding: var(--space-4); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin: var(--space-8) 0 var(--space-4); }
+    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2); }
+    .dx-toc-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; }
+    .dx-toc-links a { color: var(--color-text); text-decoration: none; font-size: var(--text-sm); padding: 0 var(--space-1); }
+    .dx-toc-links a:hover { color: var(--color-accent); }
+
+    @media (max-width: 720px) {
+      .dx-compare { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.6</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../blocks/landing.html">Blocks</a>
+        <a href="../create/index.html">Create</a>
+      </nav>
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell">
+
+    <!-- Header -->
+    <header class="dx-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+          <li aria-current="page">Theming</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Guides</p>
+      <h1>Theming</h1>
+      <p class="lede">A theme in RenDS is not a separate stylesheet you load — it's a set of CSS custom properties you set. Change three semantic tokens and your whole app retints. This guide walks through how, when, and how far.</p>
+
+      <!-- TOC -->
+      <nav class="dx-toc" aria-label="On this page">
+        <p class="dx-toc-title">On this page</p>
+        <ul class="dx-toc-links">
+          <li><a href="#dark-mode">Dark mode</a></li>
+          <li><a href="#data-attrs">Data attributes</a></li>
+          <li><a href="#override">Override levels</a></li>
+          <li><a href="#build">Build a theme</a></li>
+          <li><a href="#builder">Theme Builder</a></li>
+          <li><a href="#multi">Multi-theme apps</a></li>
+          <li><a href="#export">Distribute a theme</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <!-- Dark mode -->
+    <section class="dx-section" id="dark-mode">
+      <p class="dx-kicker">Automatic</p>
+      <h2>Dark mode, for free</h2>
+      <p>RenDS uses <code>color-scheme: light dark</code> at the root and the CSS <code>light-dark()</code> function inside semantic tokens. That means:</p>
+      <ul>
+        <li>The page respects the user's OS preference by default. No JS, no class toggles.</li>
+        <li>Form controls, scrollbars, and native dialogs get dark styling too.</li>
+        <li>All semantic tokens resolve to the right value per mode automatically.</li>
+      </ul>
+
+      <p>Under the hood a semantic color looks like this:</p>
+      <div class="dx-pre" tabindex="0"><code>--color-text: light-dark(var(--black), var(--white));
+--color-surface: light-dark(var(--white), var(--black));
+--color-border: light-dark(var(--gray-200), var(--gray-900));</code></div>
+
+      <h3>Force a specific mode</h3>
+      <p>If you need to override the OS preference (for a per-user setting, for example), set <code>data-theme</code> on <code>&lt;html&gt;</code>:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;html data-theme="dark"&gt; ... &lt;/html&gt;
+&lt;html data-theme="light"&gt; ... &lt;/html&gt;</code></div>
+
+      <h3>Toggle at runtime</h3>
+      <div class="dx-pre" tabindex="0"><code>function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme') || 'light';
+  html.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+}</code></div>
+
+      <div class="dx-callout">
+        <p><strong>Don't write separate dark-mode CSS.</strong> If you're tempted to add <code>@media (prefers-color-scheme: dark) { ... }</code>, you're probably hardcoding a color. Use a semantic token instead.</p>
+      </div>
+    </section>
+
+    <!-- Data attributes -->
+    <section class="dx-section" id="data-attrs">
+      <p class="dx-kicker">Attributes</p>
+      <h2>Data attributes</h2>
+      <p>RenDS supports three top-level data attributes on <code>&lt;html&gt;</code> that shift the whole system at once:</p>
+
+      <h3><code>data-theme</code></h3>
+      <p>Values: <code>light</code>, <code>dark</code>. Forces color mode regardless of OS preference.</p>
+
+      <h3><code>data-density</code></h3>
+      <p>Values: <code>comfortable</code> (default), <code>compact</code>, <code>spacious</code>. Scales spacing and touch targets up or down.</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;html data-density="compact"&gt; ... &lt;/html&gt;</code></div>
+
+      <h3><code>data-shape</code></h3>
+      <p>Values: <code>sharp</code>, <code>rounded</code> (default), <code>pill</code>. Scales border-radius across all components.</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;html data-shape="pill"&gt; ... &lt;/html&gt;</code></div>
+
+      <p>These attributes can combine freely:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;html data-theme="dark" data-density="compact" data-shape="sharp"&gt;</code></div>
+    </section>
+
+    <!-- Override levels -->
+    <section class="dx-section" id="override">
+      <p class="dx-kicker">Customization</p>
+      <h2>Three levels of override</h2>
+      <p>Every theming change you'll ever make in RenDS fits one of three levels. Pick the narrowest one that does the job.</p>
+
+      <h3>Level 1 — Override a semantic token (widest reach)</h3>
+      <p>Change the meaning of <em>accent</em> everywhere, instantly:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --color-accent: #8B5CF6;        /* violet */
+  --color-accent-hover: #7C3AED;
+  --color-accent-active: #6D28D9;
+  --color-accent-subtle: #EDE9FE;
+}</code></div>
+      <p>Every button, link, focus ring, selected tab, and progress bar switches together. One block of CSS.</p>
+
+      <h3>Level 2 — Override a component token (component-wide)</h3>
+      <p>Change how all buttons look without touching button CSS:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --ren-btn-radius: var(--radius-full);
+  --ren-btn-padding-x: var(--space-5);
+  --ren-btn-weight: var(--weight-semibold);
+}</code></div>
+      <p>Doesn't touch cards, tags, dialogs — only buttons. Use this when the design system's baseline is close but not quite right.</p>
+
+      <h3>Level 3 — Scope to a section (opt-in)</h3>
+      <p>Scoping an override to a class keeps the rest of the app on defaults:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;section class="brand-rose"&gt;
+  &lt;button class="ren-btn ren-btn-primary"&gt;Rose only&lt;/button&gt;
+&lt;/section&gt;
+
+&lt;style&gt;
+.brand-rose {
+  --color-accent: #F43F5E;
+  --color-accent-hover: #E11D48;
+  --color-accent-subtle: #FFE4E6;
+}
+&lt;/style&gt;</code></div>
+
+      <div class="dx-callout">
+        <p><strong>Why this works without <code>!important</code>:</strong> RenDS uses CSS Cascade Layers. Any CSS you write <em>outside</em> a layer automatically wins over everything inside <code>@layer components</code>. You never fight specificity.</p>
+      </div>
+    </section>
+
+    <!-- Build a theme -->
+    <section class="dx-section" id="build">
+      <p class="dx-kicker">Step by step</p>
+      <h2>Build a theme from scratch</h2>
+      <p>A "theme" in RenDS is typically 10–30 lines of CSS. Here's the canonical build order.</p>
+
+      <h3>Step 1 — Pick your accent</h3>
+      <p>Your brand color. This is the single biggest identity lever. Define all four accent variants so hover, active, and subtle states work:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --color-accent:        #F59E0B;   /* amber-500 */
+  --color-accent-hover:  #D97706;   /* amber-600 */
+  --color-accent-active: #B45309;   /* amber-700 */
+  --color-accent-subtle: #FEF3C7;   /* amber-100 */
+  --color-on-accent:     #FFFFFF;   /* text on solid accent */
+}</code></div>
+
+      <h3>Step 2 — Pick density and shape</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;html data-density="compact" data-shape="rounded"&gt;</code></div>
+
+      <h3>Step 3 — Pick typography</h3>
+      <p>Change the font family tokens if the defaults (<code>system-ui</code>) aren't enough:</p>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-heading: "Fraunces", Georgia, serif;   /* optional */
+}</code></div>
+
+      <h3>Step 4 — Optional: component-level tweaks</h3>
+      <div class="dx-pre" tabindex="0"><code>:root {
+  --ren-btn-weight: var(--weight-semibold);
+  --ren-card-radius: var(--radius-xl);
+  --ren-field-border: var(--color-border-strong);
+}</code></div>
+
+      <h3>That's the whole theme</h3>
+      <p>Save it as <code>themes/my-brand.css</code>, link it after <code>rends/index.css</code>, and you're done:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;link rel="stylesheet" href="rends/index.css"&gt;
+&lt;link rel="stylesheet" href="rends/components/index.css"&gt;
+&lt;link rel="stylesheet" href="themes/my-brand.css"&gt;</code></div>
+
+      <div class="dx-theme-card">
+        <p class="dx-theme-card-label">Example: "amber-editorial"</p>
+        <div class="dx-pre" style="margin: 0;" tabindex="0"><code>/* themes/amber-editorial.css */
+:root {
+  --color-accent:        #F59E0B;
+  --color-accent-hover:  #D97706;
+  --color-accent-active: #B45309;
+  --color-accent-subtle: #FEF3C7;
+  --color-on-accent:     #FFFFFF;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-heading: "Fraunces", Georgia, serif;
+
+  --ren-card-radius: var(--radius-xl);
+  --ren-btn-weight: var(--weight-semibold);
+}
+:root[data-density="compact"] { /* optional density tune */ }</code></div>
+      </div>
+    </section>
+
+    <!-- Theme Builder -->
+    <section class="dx-section" id="builder">
+      <p class="dx-kicker">Tool</p>
+      <h2>Use the Theme Builder</h2>
+      <p>If you'd rather not hand-write tokens, use <a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Create</a> — the built-in visual theme builder. It has pickers for base color, theme tint, chart palette, heading and body fonts, icon library, radius, density, and light/dark mode.</p>
+
+      <ol>
+        <li>Pick your combination from the sidebar.</li>
+        <li>Preview updates live in the canvas.</li>
+        <li>Click <strong>Templates</strong> to start from one of 8 curated starters (Minimal Zinc, Linear Indigo, Vercel Geist, Apple Blue, Editorial Rose, Forest Emerald, Playful Violet, Amber Mono).</li>
+        <li>Export as CSS, JSON, or ZIP — or hit <strong>Share</strong> for a URL that re-creates your exact theme.</li>
+      </ol>
+
+      <p>The Builder is especially useful when you want to explore combinations you wouldn't have thought to try. The Shuffle button rerolls every picker at once.</p>
+    </section>
+
+    <!-- Multi-theme apps -->
+    <section class="dx-section" id="multi">
+      <p class="dx-kicker">Advanced</p>
+      <h2>Multi-theme apps</h2>
+      <p>Because themes are just CSS custom properties, nothing stops you from running multiple themes on one page. The rules:</p>
+      <ul>
+        <li>Tokens cascade. A child element inherits from its ancestor unless overridden.</li>
+        <li>Override at any ancestor. The scope is "from here down".</li>
+      </ul>
+
+      <h3>Per-section</h3>
+      <div class="dx-pre" tabindex="0"><code>&lt;body&gt;
+  &lt;main&gt;
+    &lt;!-- Default theme --&gt;
+  &lt;/main&gt;
+  &lt;aside class="promo-theme"&gt;
+    &lt;!-- Rose accent within this aside --&gt;
+    &lt;button class="ren-btn ren-btn-primary"&gt;Upgrade&lt;/button&gt;
+  &lt;/aside&gt;
+&lt;/body&gt;</code></div>
+
+      <h3>Per-route (SPA)</h3>
+      <p>Set <code>data-theme</code> or a class on the route container when routing:</p>
+      <div class="dx-pre" tabindex="0"><code>document.getElementById('app').dataset.theme = routeConfig.theme;
+// e.g. "dark", "light", "brand-b2b"</code></div>
+
+      <h3>Per-user</h3>
+      <p>Save preference to <code>localStorage</code> on change, apply on load:</p>
+      <div class="dx-pre" tabindex="0"><code>// On app init
+const saved = localStorage.getItem('theme');
+if (saved) document.documentElement.dataset.theme = saved;
+
+// On toggle
+function setTheme(next) {
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('theme', next);
+}</code></div>
+    </section>
+
+    <!-- Export -->
+    <section class="dx-section" id="export">
+      <p class="dx-kicker">Share</p>
+      <h2>Distribute a theme</h2>
+      <p>Themes are plain CSS files, so you have several options for sharing:</p>
+
+      <h3>As a CSS file</h3>
+      <p>Simplest. Commit <code>themes/my-brand.css</code> to your repo, link it after <code>rends/index.css</code>. Done.</p>
+
+      <h3>As JSON</h3>
+      <p>The Theme Builder exports a compact JSON with just the picker choices (not the resolved CSS). This is useful when another tool will consume and reshape it:</p>
+      <div class="dx-pre" tabindex="0"><code>{
+  "rends": "theme",
+  "v": 1,
+  "baseColor": "zinc",
+  "theme": "violet",
+  "chart": "pink",
+  "headingFont": "outfit",
+  "bodyFont": "outfit",
+  "iconLib": "lucide",
+  "radius": "full",
+  "density": "default",
+  "mode": "light"
+}</code></div>
+
+      <h3>As a shareable URL</h3>
+      <p>The Theme Builder can encode the entire state into a URL hash. Zero backend required:</p>
+      <div class="dx-pre" tabindex="0"><code>https://your-site.com/create#t=eyJyZW5kcyI6InRoZW1lIiwidiI6MSwi...</code></div>
+      <p>Opening that URL restores the exact picker state. Great for design reviews, Slack threads, or git commits ("here's the theme I'm proposing: &lt;link&gt;").</p>
+
+      <h3>As a ZIP</h3>
+      <p>The Builder's ZIP export bundles the resolved <code>.css</code>, the <code>.json</code> state, and a <code>README.md</code> with install instructions. Hand that to anyone — including non-technical teammates.</p>
+    </section>
+
+    <!-- Next -->
+    <section class="dx-section" id="next">
+      <p class="dx-kicker">Keep going</p>
+      <h2>Next</h2>
+      <ul>
+        <li><a href="tokens.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Tokens reference</a> — every semantic and component token in one place.</li>
+        <li><a href="accessibility.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Accessibility</a> — don't break contrast when you theme.</li>
+        <li><a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Create</a> — the visual Theme Builder.</li>
+        <li><a href="components.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Components</a> — see every component in one page.</li>
+      </ul>
+    </section>
+
+  </div>
+
+</body>
+</html>

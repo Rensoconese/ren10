@@ -465,7 +465,11 @@ textarea:hover {
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):focus,
 select:focus,
 textarea:focus {
-  outline: none;
+  /* Transparent outline is invisible in normal rendering but becomes
+     system-colored in Windows Forced Colors mode, where box-shadow
+     is stripped. Guarantees a visible focus ring in high contrast. */
+  outline: 2px solid transparent;
+  outline-offset: 2px;
   border-color: var(--color-input-border-focus);
   box-shadow: 0 0 0 3px var(--color-input-focus-ring);
   background-color: var(--color-input-bg-hover);

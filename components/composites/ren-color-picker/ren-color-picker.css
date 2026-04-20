@@ -91,7 +91,7 @@
   height: 24px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
-  background-color: #ffffff;
+  background-color: var(--white);
   background-image: repeating-conic-gradient(
     var(--color-border) 0deg 90deg,
     transparent 90deg 180deg
@@ -194,6 +194,8 @@
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);
   cursor: pointer;
+  /* Hue rainbow. Intencionalmente hex literals: son los 6 puntos del espectro
+     HSL puros (red→yellow→green→cyan→blue→magenta→red), no colores de UI. */
   background: linear-gradient(
     to right,
     #ff0000 0%,

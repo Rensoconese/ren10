@@ -33,6 +33,13 @@ yarn-error.log*
 # Testing
 coverage/
 .nyc_output/
+test-results/
+tests/**/test-results/
+tests/**/playwright-report/
+
+# Scratch / debug files (leading underscore convention)
+_*.cjs
+_*.js
 
 # Temporary files
 *.tmp
