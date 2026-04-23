@@ -37,7 +37,7 @@
   width: 0%;
   background-color: var(--color-accent);
   border-radius: var(--radius-full);
-  transition: width var(--duration-normal) var(--ease-out);
+  transition: width var(--duration-state) var(--ease-enter);
 }
 
 /* ─── Sizes ─── */
@@ -76,7 +76,7 @@
 
 .ren-progress-indeterminate .ren-progress-bar {
   width: 30% !important;
-  animation: ren-progress-slide 1.5s var(--ease-out) infinite;
+  animation: ren-progress-slide 1.5s var(--ease-enter) infinite;
 }
 
 @keyframes ren-progress-slide {

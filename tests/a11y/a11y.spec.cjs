@@ -527,10 +527,18 @@ test.describe('RenDS Design System - Accessibility (WCAG AAA)', () => {
   });
 
   test('should provide context for dynamic content', async ({ page }) => {
-    // Check for aria-live regions
-    const liveRegions = await page.locator('[aria-live]').all();
+    // Any element that screen readers will announce on mutation counts as a
+    // live region — either an explicit aria-live, or one of the roles that
+    // imply it (status / alert / log / progressbar). Dynamic content on this
+    // page (progress bars, toasts if any) should live behind at least one of
+    // these so AT users get parity with sighted users.
+    const liveRegions = await page
+      .locator('[aria-live], [role="status"], [role="alert"], [role="log"], [role="progressbar"]')
+      .all();
 
-    console.log(`Found ${liveRegions.length} live regions`);
+    expect(liveRegions.length,
+      'Expected at least one ARIA live region on test-page.html to cover dynamic content'
+    ).toBeGreaterThan(0);
   });
 
   // ========================================

@@ -122,7 +122,7 @@
   top: 0;
   width: 100%;
   opacity: 0;
-  transition: opacity var(--duration-normal) var(--ease-out);
+  transition: opacity var(--duration-enter) var(--ease-enter);
   pointer-events: none;
 }
 
@@ -155,9 +155,7 @@
   cursor: pointer;
   color: white;
   font-size: 20px;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    opacity var(--duration-normal) var(--ease-out);
+  transition: var(--transition-tactile);
 }
 
 /* Arrow positioning */
@@ -244,9 +242,7 @@
     cursor: pointer;
     color: white;
 
-    transition:
-      background-color var(--duration-normal, 200ms) var(--ease-out, ease-out),
-      opacity var(--duration-normal, 200ms) var(--ease-out, ease-out);
+    transition: var(--transition-tactile);
   }
 
   .ren-carousel-viewport::scroll-button(inline-start) {
@@ -289,9 +285,7 @@
   background-color: var(--color-border);
   border: none;
   cursor: pointer;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    transform var(--duration-normal) var(--ease-out);
+  transition: var(--transition-tactile);
   padding: 0;
   margin: 0;
 }

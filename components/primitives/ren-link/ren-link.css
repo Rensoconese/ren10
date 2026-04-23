@@ -24,8 +24,8 @@
   text-decoration-thickness: 1px;
   cursor: pointer;
   transition:
-    color var(--duration-fast) var(--ease-out),
-    text-decoration-color var(--duration-fast) var(--ease-out);
+    color var(--duration-tactile) var(--ease-enter),
+    text-decoration-color var(--duration-tactile) var(--ease-enter);
   /* Inline elements: ensure touch target via padding */
   -webkit-tap-highlight-color: transparent;
 }
@@ -88,8 +88,8 @@
   text-decoration: none;
   border-radius: var(--radius-md);
   transition:
-    background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+    background-color var(--duration-tactile) var(--ease-enter),
+    color var(--duration-tactile) var(--ease-enter);
 }
 
 .ren-link-nav:hover {
@@ -122,7 +122,7 @@
   font-weight: var(--weight-semibold);
   text-decoration: none;
   z-index: 9999;
-  transition: top var(--duration-fast) var(--ease-out);
+  transition: top var(--duration-tactile) var(--ease-enter);
 }
 
 .ren-link-skip:focus {

@@ -72,38 +72,39 @@
   max-width: 100%;
   position: relative;
   overflow: hidden;
-  animation: ren-toast-fade-in var(--duration-normal) var(--ease-out);
+  /* Enter + exit use semantic tokens so global motion tuning cascades here. */
+  animation: ren-toast-fade-in var(--duration-enter) var(--ease-enter);
 }
 
 .ren-toast[data-closing] {
-  animation: ren-toast-fade-out var(--duration-normal) var(--ease-in);
+  animation: ren-toast-fade-out var(--duration-exit) var(--ease-exit);
   opacity: 0;
 }
 
 /* Slide-in animations by position */
 .ren-toast-viewport[data-position="top-right"] .ren-toast,
 .ren-toast-viewport[data-position="bottom-right"] .ren-toast {
-  animation: ren-toast-slide-in-right var(--duration-normal) var(--ease-out);
+  animation: ren-toast-slide-in-right var(--duration-enter) var(--ease-enter);
 }
 
 .ren-toast-viewport[data-position="top-right"] .ren-toast[data-closing],
 .ren-toast-viewport[data-position="bottom-right"] .ren-toast[data-closing] {
-  animation: ren-toast-slide-out-right var(--duration-normal) var(--ease-in);
+  animation: ren-toast-slide-out-right var(--duration-exit) var(--ease-exit);
 }
 
 .ren-toast-viewport[data-position="top-left"] .ren-toast,
 .ren-toast-viewport[data-position="bottom-left"] .ren-toast {
-  animation: ren-toast-slide-in-left var(--duration-normal) var(--ease-out);
+  animation: ren-toast-slide-in-left var(--duration-enter) var(--ease-enter);
 }
 
 .ren-toast-viewport[data-position="top-left"] .ren-toast[data-closing],
 .ren-toast-viewport[data-position="bottom-left"] .ren-toast[data-closing] {
-  animation: ren-toast-slide-out-left var(--duration-normal) var(--ease-in);
+  animation: ren-toast-slide-out-left var(--duration-exit) var(--ease-exit);
 }
 
 .ren-toast-viewport[data-position="top-center"] .ren-toast,
 .ren-toast-viewport[data-position="bottom-center"] .ren-toast {
-  animation: ren-toast-fade-in var(--duration-normal) var(--ease-out);
+  animation: ren-toast-fade-in var(--duration-enter) var(--ease-enter);
 }
 
 /* ═══ TOAST CONTENT STRUCTURE ═══ */
@@ -162,8 +163,8 @@
   padding: var(--space-1);
   font-size: 18px;
   line-height: 1;
-  transition: background-color var(--duration-fast) var(--ease-in-out),
-              color var(--duration-fast) var(--ease-in-out);
+  /* Tactile (hover/focus/press) — uses shared semantic preset */
+  transition: var(--transition-tactile);
 }
 
 .ren-toast-close:hover {
@@ -306,7 +307,12 @@
   }
 }
 
-/* ═══ REDUCED MOTION ═══ */
+/* ═══ REDUCED MOTION ═══
+   Belt-and-suspenders: semantic --duration-* already collapse
+   to 0ms under reduced-motion (see tokens/semantic/motion.css),
+   so the animations above become instant. We keep this block
+   to force a plain fade (no slide) as an Apple-HIG alternative,
+   and to stop the loading spinner. */
 @media (prefers-reduced-motion: reduce) {
   .ren-toast,
   .ren-toast[data-closing],
@@ -316,11 +322,11 @@
   .ren-toast-viewport[data-position="bottom-left"] .ren-toast,
   .ren-toast-viewport[data-position="top-center"] .ren-toast,
   .ren-toast-viewport[data-position="bottom-center"] .ren-toast {
-    animation: ren-toast-fade-in var(--duration-fast) var(--ease-in-out) !important;
+    animation: ren-toast-fade-in var(--duration-micro) linear !important;
   }
 
   .ren-toast[data-closing] {
-    animation: ren-toast-fade-out var(--duration-fast) var(--ease-in-out) !important;
+    animation: ren-toast-fade-out var(--duration-micro) linear !important;
   }
 
   .ren-toast-loading .ren-toast-icon {

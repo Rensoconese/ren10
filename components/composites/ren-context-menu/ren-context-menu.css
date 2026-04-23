@@ -41,15 +41,16 @@
   /* Position set by JS */
   position: fixed;
 
-  /* Animation */
+  /* Animation — semantic tokens keep context-menu in sync with
+     ren-menu / ren-popover. Collapses to 0ms under reduce. */
   opacity: 0;
   transform: scale(0.95);
   transform-origin: top left;
   transition:
-    opacity var(--duration-fast) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out),
-    overlay var(--duration-fast) allow-discrete,
-    display var(--duration-fast) allow-discrete;
+    opacity var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+    display var(--duration-enter) var(--ease-enter) allow-discrete;
 }
 
 .ren-context-menu:popover-open {

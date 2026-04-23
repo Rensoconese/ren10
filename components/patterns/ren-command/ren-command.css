@@ -16,7 +16,7 @@
   flex-direction: column;
   z-index: var(--ren-z-modal, 1000);
   margin: auto;
-  animation: commandIn var(--duration-moderate) var(--ease-out);
+  animation: commandIn var(--duration-enter) var(--ease-enter);
 
   @starting-style {
     opacity: 0;
@@ -46,7 +46,7 @@
   &::backdrop {
     background-color: rgb(0 0 0 / 0.5);
     backdrop-filter: blur(4px);
-    animation: backdropIn var(--duration-moderate) var(--ease-out);
+    animation: backdropIn var(--duration-overlay) var(--ease-enter);
 
     @starting-style {
       background-color: rgb(0 0 0 / 0);
@@ -181,7 +181,7 @@
   padding: var(--ren-space-2, 0.5rem) var(--ren-space-3, 0.75rem);
   border-radius: 0.375rem;
   cursor: pointer;
-  transition: background-color var(--duration-normal) var(--ease-default);
+  transition: background-color var(--duration-state) var(--ease-state-change);
   user-select: none;
   background-color: transparent;
   border: none;

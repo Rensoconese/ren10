@@ -46,7 +46,7 @@
   font-size: var(--body-size);
   font-weight: var(--label-weight);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition: background-color var(--duration-tactile) var(--ease-enter);
   white-space: nowrap;
 }
 
@@ -92,13 +92,13 @@
 /* Visible state for menu open */
 .ren-menubar-menu:not([hidden]) {
   display: flex;
-  animation: menubar-menu-open var(--duration-fast) var(--ease-out);
+  animation: menubar-menu-open var(--duration-exit) var(--ease-enter);
 }
 
 /* Hidden state for menu closed */
 .ren-menubar-menu[hidden] {
   display: none;
-  animation: menubar-menu-close var(--duration-fast) var(--ease-out);
+  animation: menubar-menu-close var(--duration-exit) var(--ease-enter);
 }
 
 @starting-style {
@@ -146,7 +146,7 @@
   font-weight: normal;
   text-align: start;
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out));
+  transition: background-color var(--duration-tactile) var(--ease-enter);
   position: relative;
   gap: var(--space-2);
 }

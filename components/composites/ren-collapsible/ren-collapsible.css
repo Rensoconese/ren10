@@ -45,7 +45,7 @@
   cursor: pointer;
   user-select: none;
   list-style: none; /* Remove default marker */
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 }
 
 /* Remove default marker in WebKit */
@@ -62,7 +62,7 @@
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   flex-shrink: 0;
-  transition: transform var(--duration-normal) var(--ease-out);
+  transition: transform var(--duration-enter) var(--ease-enter);
 }
 
 .ren-collapsible[open] > summary::after {

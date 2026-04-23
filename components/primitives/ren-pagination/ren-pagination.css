@@ -47,8 +47,8 @@
   border-radius: var(--radius-md);
   border: var(--stroke-1) solid transparent;
   transition:
-    background-color var(--duration-fast) var(--ease-out),
-    border-color var(--duration-fast) var(--ease-out);
+    background-color var(--duration-tactile) var(--ease-enter),
+    border-color var(--duration-tactile) var(--ease-enter);
   user-select: none;
 }
 

@@ -126,9 +126,9 @@
 .ren-card-interactive {
   cursor: pointer;
   transition:
-    box-shadow var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out),
-    transform var(--duration-fast) var(--ease-out);
+    box-shadow var(--duration-state) var(--ease-enter),
+    border-color var(--duration-state) var(--ease-enter),
+    transform var(--duration-tactile) var(--ease-enter);
 }
 
 .ren-card-interactive:hover {
@@ -150,8 +150,8 @@
 .ren-card-selectable {
   cursor: pointer;
   transition:
-    border-color var(--duration-normal) var(--ease-out),
-    box-shadow var(--duration-normal) var(--ease-out);
+    border-color var(--duration-state) var(--ease-enter),
+    box-shadow var(--duration-state) var(--ease-enter);
 }
 
 .ren-card-selectable:hover {

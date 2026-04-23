@@ -55,9 +55,7 @@
   text-align: start;
   user-select: none;
   list-style: none;
-  transition:
-    background-color var(--duration-normal) var(--ease-out),
-    color var(--duration-normal) var(--ease-out);
+  transition: var(--transition-tactile);
 
   /* Remove default browser marker */
   &::marker,
@@ -78,7 +76,7 @@
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
-    transition: transform var(--duration-normal) var(--ease-out);
+    transition: transform var(--duration-enter) var(--ease-enter);
   }
 
   /* Hover state */
@@ -151,8 +149,8 @@
       height: 0;
       overflow: hidden;
       transition:
-        height var(--duration-normal) var(--ease-out),
-        opacity var(--duration-normal) var(--ease-out);
+        height var(--duration-enter) var(--ease-enter),
+        opacity var(--duration-enter) var(--ease-enter);
     }
 
     /* Also try Chrome/V8 syntax (may vary by engine) */
@@ -160,8 +158,8 @@
       height: 0;
       overflow: hidden;
       transition:
-        height var(--duration-normal) var(--ease-out),
-        opacity var(--duration-normal) var(--ease-out);
+        height var(--duration-enter) var(--ease-enter),
+        opacity var(--duration-enter) var(--ease-enter);
     }
   }
 
@@ -170,8 +168,8 @@
     opacity: 0;
     max-height: 0;
     transition:
-      opacity var(--duration-normal) var(--ease-out),
-      max-height var(--duration-normal) var(--ease-out);
+      opacity var(--duration-enter) var(--ease-enter),
+      max-height var(--duration-enter) var(--ease-enter);
   }
 
   /* When details is open */

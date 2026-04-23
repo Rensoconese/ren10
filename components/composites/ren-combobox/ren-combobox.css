@@ -20,7 +20,7 @@
     line-height: var(--leading-5);
     color: var(--color-text);
 
-    transition: all var(--duration-moderate) var(--ease-default);
+    transition: var(--transition-tactile);
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -71,7 +71,7 @@
     font-size: 1.25rem;
     color: var(--color-text-muted);
 
-    transition: color var(--duration-normal) var(--ease-default);
+    transition: var(--transition-tactile);
 
     &:hover {
       color: var(--color-text);
@@ -139,7 +139,7 @@
         translate: 0 -8px;
       }
 
-      animation: ren-combobox-open var(--duration-normal) var(--ease-default) forwards;
+      animation: ren-combobox-open var(--duration-enter) var(--ease-enter) forwards;
     }
 
     &[popover]:popover-open {
@@ -169,7 +169,7 @@
     font-size: var(--text-sm);
     color: var(--color-text);
 
-    transition: background-color var(--duration-normal) var(--ease-default);
+    transition: background-color var(--duration-micro) var(--ease-enter);
 
     &[data-highlighted] {
       background: var(--color-fill);
@@ -243,7 +243,7 @@
     color: var(--color-accent);
     font-weight: 500;
 
-    transition: background-color var(--duration-normal) var(--ease-default);
+    transition: var(--transition-tactile);
 
     &:hover {
       background: var(--color-accent-subtle);

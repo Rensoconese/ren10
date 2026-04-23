@@ -38,7 +38,7 @@
   background-color: var(--color-danger-subtle);
   border: 1px solid var(--color-danger);
   border-radius: var(--radius-md);
-  transition: all var(--duration-moderate) var(--ease-out);
+  transition: all var(--duration-enter) var(--ease-enter);
 }
 
 .ren-form-error-summary[hidden],
@@ -90,7 +90,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  transition: all var(--duration-moderate) var(--ease-out);
+  transition: all var(--duration-enter) var(--ease-enter);
 }
 
 .ren-form-success[hidden] {
@@ -191,7 +191,7 @@
   color: var(--color-text-muted);
   font-size: var(--label-size);
   font-weight: var(--label-weight);
-  transition: all var(--duration-normal) var(--ease-out);
+  transition: all var(--duration-state) var(--ease-enter);
   border: 2px solid transparent;
 }
 
@@ -201,7 +201,7 @@
   font-weight: var(--label-weight);
   color: var(--color-text-muted);
   white-space: nowrap;
-  transition: all var(--duration-normal) var(--ease-out);
+  transition: all var(--duration-state) var(--ease-enter);
 }
 
 /* Divider between steps */
@@ -211,7 +211,7 @@
   height: 2px;
   background-color: var(--color-border);
   min-width: 1rem;
-  transition: background-color var(--duration-normal) var(--ease-out);
+  transition: background-color var(--duration-state) var(--ease-enter);
 }
 
 /* Active step */
@@ -304,7 +304,7 @@
 }
 
 .ren-form-error-summary[data-has-errors] {
-  animation: slideInError var(--duration-moderate) var(--ease-out);
+  animation: slideInError var(--duration-enter) var(--ease-enter);
 }
 
 @media (prefers-reduced-motion: reduce) {

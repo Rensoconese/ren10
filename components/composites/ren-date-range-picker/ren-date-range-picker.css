@@ -37,7 +37,7 @@
   font-size: var(--body-size);
   font-family: inherit;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
   min-height: var(--touch-min);
 
   &:hover:not([disabled]) {
@@ -125,7 +125,7 @@
   }
 
   &:popover-open {
-    animation: ren-date-range-popup-in var(--duration-normal) var(--ease-out) both;
+    animation: ren-date-range-popup-in var(--duration-enter) var(--ease-enter) both;
   }
 
   /* ═══ FALLBACK POSITIONING (no anchor support) ═══ */
@@ -194,7 +194,7 @@
   font-weight: var(--label-weight);
   text-align: start;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 
   &:hover {
     background: var(--color-fill);
@@ -272,7 +272,7 @@
   font-size: var(--label-size);
   font-weight: var(--label-weight);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 
   &:focus-visible {
     outline: 2px solid var(--color-accent);
@@ -391,7 +391,7 @@
     overflow-y: auto;
 
     &:popover-open {
-      animation: ren-date-range-mobile-in var(--duration-normal) var(--ease-out) both;
+      animation: ren-date-range-mobile-in var(--duration-enter) var(--ease-enter) both;
     }
   }
 

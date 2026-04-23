@@ -48,7 +48,7 @@
     border: 2px solid white;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-default);
+    transition: var(--transition-tactile);
 
     &:hover {
       transform: scale(1.1);
@@ -67,7 +67,7 @@
     border: 2px solid white;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-default);
+    transition: var(--transition-tactile);
 
     &:hover {
       transform: scale(1.1);
@@ -299,7 +299,7 @@
       border: 2px solid white;
       box-shadow: var(--shadow-sm);
       cursor: pointer;
-      transition: all var(--duration-normal) var(--ease-default);
+      transition: var(--transition-tactile);
       z-index: 6;
 
       &:hover {
@@ -319,7 +319,7 @@
       border: 2px solid white;
       box-shadow: var(--shadow-sm);
       cursor: pointer;
-      transition: all var(--duration-normal) var(--ease-default);
+      transition: var(--transition-tactile);
       z-index: 6;
 
       &:hover {

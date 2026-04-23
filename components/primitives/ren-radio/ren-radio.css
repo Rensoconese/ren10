@@ -64,9 +64,9 @@
   border-radius: var(--radius-full);
   background-color: transparent;
   transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out),
-    transform var(--duration-fast) var(--ease-spring);
+    background-color var(--duration-state) var(--ease-enter),
+    border-color var(--duration-state) var(--ease-enter),
+    transform var(--duration-tactile) var(--ease-playful);
 }
 
 /* Radio dot (hidden by default) */
@@ -78,7 +78,7 @@
   background-color: var(--color-on-accent);
   border-radius: var(--radius-full);
   transform: scale(0);
-  transition: transform var(--duration-normal) var(--ease-spring);
+  transition: transform var(--duration-state) var(--ease-playful);
 }
 
 /* ─── States ─── */

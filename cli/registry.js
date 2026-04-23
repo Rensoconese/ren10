@@ -93,6 +93,145 @@ export const REGISTRY = {
 <ren-icon class="ren-icon-lg">🎨</ren-icon>`,
   },
 
+  avatar: {
+    name: 'Avatar',
+    layer: 'primitives',
+    dir: 'ren-avatar',
+    description: 'User avatar with image, initials fallback, status dot, and sizes',
+    files: ['ren-avatar.css'],
+    deps: [],
+    usage: `<span class="ren-avatar"><img src="/u.jpg" alt="Jane Doe"></span>
+<span class="ren-avatar ren-avatar-lg">JD</span>
+<span class="ren-avatar" data-status="online">JD</span>`,
+  },
+
+  banner: {
+    name: 'Banner',
+    layer: 'primitives',
+    dir: 'ren-banner',
+    description: 'Full-width announcement or status banner with variants',
+    files: ['ren-banner.css'],
+    deps: [],
+    usage: `<div class="ren-banner ren-banner-info" role="status">
+  <p>Heads up: maintenance window tonight at 10pm UTC.</p>
+  <button class="ren-banner-close" aria-label="Dismiss">×</button>
+</div>`,
+  },
+
+  breadcrumb: {
+    name: 'Breadcrumb',
+    layer: 'primitives',
+    dir: 'ren-breadcrumb',
+    description: 'Hierarchical navigation trail with separators',
+    files: ['ren-breadcrumb.css'],
+    deps: [],
+    usage: `<nav class="ren-breadcrumb" aria-label="Breadcrumb">
+  <ol>
+    <li><a href="/">Home</a></li>
+    <li><a href="/docs">Docs</a></li>
+    <li aria-current="page">Breadcrumb</li>
+  </ol>
+</nav>`,
+  },
+
+  card: {
+    name: 'Card',
+    layer: 'primitives',
+    dir: 'ren-card',
+    description: 'Surface container with header, body, footer sections',
+    files: ['ren-card.css'],
+    deps: [],
+    usage: `<article class="ren-card">
+  <header class="ren-card-header"><h3>Title</h3></header>
+  <div class="ren-card-body">Content goes here.</div>
+  <footer class="ren-card-footer"><button class="ren-btn">Action</button></footer>
+</article>`,
+  },
+
+  kbd: {
+    name: 'Kbd',
+    layer: 'primitives',
+    dir: 'ren-kbd',
+    description: 'Keyboard key indicator for shortcuts',
+    files: ['ren-kbd.css'],
+    deps: [],
+    usage: `Press <kbd class="ren-kbd">⌘</kbd>+<kbd class="ren-kbd">K</kbd> to search.`,
+  },
+
+  link: {
+    name: 'Link',
+    layer: 'primitives',
+    dir: 'ren-link',
+    description: 'Styled link with underline, external icon, and variants',
+    files: ['ren-link.css'],
+    deps: [],
+    usage: `<a href="/docs" class="ren-link">Read the docs</a>
+<a href="https://example.com" class="ren-link ren-link-external">External</a>`,
+  },
+
+  pagination: {
+    name: 'Pagination',
+    layer: 'primitives',
+    dir: 'ren-pagination',
+    description: 'Page navigation controls with prev/next and page numbers',
+    files: ['ren-pagination.css'],
+    deps: [],
+    usage: `<nav class="ren-pagination" aria-label="Pagination">
+  <a href="?page=1" aria-label="Previous">‹</a>
+  <a href="?page=1">1</a>
+  <a href="?page=2" aria-current="page">2</a>
+  <a href="?page=3">3</a>
+  <a href="?page=3" aria-label="Next">›</a>
+</nav>`,
+  },
+
+  separator: {
+    name: 'Separator',
+    layer: 'primitives',
+    dir: 'ren-separator',
+    description: 'Visual or semantic divider (horizontal/vertical)',
+    files: ['ren-separator.css'],
+    deps: [],
+    usage: `<hr class="ren-separator">
+<div class="ren-separator ren-separator-vertical" role="separator" aria-orientation="vertical"></div>`,
+  },
+
+  skeleton: {
+    name: 'Skeleton',
+    layer: 'primitives',
+    dir: 'ren-skeleton',
+    description: 'Loading placeholder shape (text, circle, rect) with shimmer',
+    files: ['ren-skeleton.css'],
+    deps: [],
+    usage: `<div class="ren-skeleton ren-skeleton-text"></div>
+<div class="ren-skeleton ren-skeleton-circle"></div>
+<div class="ren-skeleton" style="width:200px;height:120px"></div>`,
+  },
+
+  spinner: {
+    name: 'Spinner',
+    layer: 'primitives',
+    dir: 'ren-spinner',
+    description: 'Indeterminate loading spinner respecting reduced-motion',
+    files: ['ren-spinner.css'],
+    deps: [],
+    usage: `<span class="ren-spinner" role="status" aria-label="Loading"></span>
+<span class="ren-spinner ren-spinner-lg"></span>`,
+  },
+
+  tag: {
+    name: 'Tag',
+    layer: 'primitives',
+    dir: 'ren-tag',
+    description: 'Pill-shaped tag/chip with optional dismiss button',
+    files: ['ren-tag.css'],
+    deps: [],
+    usage: `<span class="ren-tag">design</span>
+<span class="ren-tag ren-tag-removable">a11y
+  <button class="ren-tag-close" aria-label="Remove">×</button>
+</span>`,
+  },
+
   // COMPOSITES
   dialog: {
     name: 'Dialog',
@@ -362,6 +501,107 @@ export const REGISTRY = {
 </ren-carousel>`,
   },
 
+  'alert-dialog': {
+    name: 'Alert Dialog',
+    layer: 'composites',
+    dir: 'ren-alert-dialog',
+    description: 'Modal alert for destructive or blocking confirmations',
+    files: ['ren-alert-dialog.css'],
+    deps: [],
+    usage: `<dialog class="ren-alert-dialog" role="alertdialog" aria-labelledby="ad-title">
+  <h2 id="ad-title">Delete project?</h2>
+  <p>This action cannot be undone.</p>
+  <div class="ren-alert-dialog-actions">
+    <button class="ren-btn">Cancel</button>
+    <button class="ren-btn ren-btn-danger">Delete</button>
+  </div>
+</dialog>`,
+  },
+
+  collapsible: {
+    name: 'Collapsible',
+    layer: 'composites',
+    dir: 'ren-collapsible',
+    description: 'Single expandable region built on native <details>',
+    files: ['ren-collapsible.css'],
+    deps: [],
+    usage: `<details class="ren-collapsible">
+  <summary>Show more</summary>
+  <p>Hidden content revealed when expanded.</p>
+</details>`,
+  },
+
+  'color-picker': {
+    name: 'Color Picker',
+    layer: 'composites',
+    dir: 'ren-color-picker',
+    description: 'Color input with swatches, hex field, and native picker',
+    files: ['ren-color-picker.css', 'ren-color-picker.js'],
+    deps: [],
+    usage: `<ren-color-picker value="#5b6cff">
+  <input type="color">
+  <input type="text" class="ren-color-picker-hex">
+</ren-color-picker>`,
+  },
+
+  'context-menu': {
+    name: 'Context Menu',
+    layer: 'composites',
+    dir: 'ren-context-menu',
+    description: 'Right-click / long-press menu with keyboard support',
+    files: ['ren-context-menu.css', 'ren-context-menu.js'],
+    deps: ['dismissable.js', 'keyboard-nav.js'],
+    usage: `<ren-context-menu>
+  <div class="ren-context-menu-trigger">Right-click me</div>
+  <ul role="menu" class="ren-context-menu">
+    <li role="menuitem">Copy</li>
+    <li role="menuitem">Paste</li>
+  </ul>
+</ren-context-menu>`,
+  },
+
+  'date-range-picker': {
+    name: 'Date Range Picker',
+    layer: 'composites',
+    dir: 'ren-date-range-picker',
+    description: 'Two-calendar picker for start/end date selection',
+    files: ['ren-date-range-picker.css', 'ren-date-range-picker.js'],
+    deps: ['dismissable.js', 'id-generator.js'],
+    usage: `<ren-date-range-picker>
+  <input type="text" placeholder="Start">
+  <input type="text" placeholder="End">
+</ren-date-range-picker>`,
+  },
+
+  dropzone: {
+    name: 'Dropzone',
+    layer: 'composites',
+    dir: 'ren-dropzone',
+    description: 'Drag-and-drop file upload area with keyboard fallback',
+    files: ['ren-dropzone.css', 'ren-dropzone.js'],
+    deps: [],
+    usage: `<ren-dropzone accept="image/*" multiple>
+  <label>
+    <input type="file" multiple>
+    <span>Drop files here or click to browse</span>
+  </label>
+</ren-dropzone>`,
+  },
+
+  toolbar: {
+    name: 'Toolbar',
+    layer: 'composites',
+    dir: 'ren-toolbar',
+    description: 'Horizontal group of controls with roving tabindex',
+    files: ['ren-toolbar.css', 'ren-toolbar.js'],
+    deps: ['keyboard-nav.js'],
+    usage: `<ren-toolbar role="toolbar" aria-label="Formatting">
+  <button>Bold</button>
+  <button>Italic</button>
+  <button>Underline</button>
+</ren-toolbar>`,
+  },
+
   // PATTERNS
   nav: {
     name: 'Navigation',
@@ -456,6 +696,40 @@ export const REGISTRY = {
     <button role="menuitem">Edit</button>
   </div>
 </ren-menubar>`,
+  },
+
+  ai: {
+    name: 'AI',
+    layer: 'patterns',
+    dir: 'ren-ai',
+    description: 'AI chat surface — message bubbles, prompt input, streaming caret',
+    files: ['ren-ai.css'],
+    deps: [],
+    usage: `<section class="ren-ai">
+  <div class="ren-ai-thread">
+    <div class="ren-ai-msg ren-ai-msg-user">Summarize this PR.</div>
+    <div class="ren-ai-msg ren-ai-msg-assistant">Sure — here's a 3-bullet TL;DR…</div>
+  </div>
+  <form class="ren-ai-prompt">
+    <textarea placeholder="Ask anything…"></textarea>
+    <button class="ren-btn">Send</button>
+  </form>
+</section>`,
+  },
+
+  'empty-state': {
+    name: 'Empty State',
+    layer: 'patterns',
+    dir: 'ren-empty-state',
+    description: 'Friendly placeholder for zero-data screens with optional CTA',
+    files: ['ren-empty-state.css'],
+    deps: [],
+    usage: `<div class="ren-empty-state">
+  <ren-icon class="ren-icon-xl">📭</ren-icon>
+  <h3>No messages yet</h3>
+  <p>When someone writes you, it'll show up here.</p>
+  <button class="ren-btn ren-btn-primary">Compose</button>
+</div>`,
   },
 };
 

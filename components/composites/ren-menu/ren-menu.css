@@ -8,7 +8,7 @@
   min-width: 12rem;
   z-index: var(--z-dropdown, 1000);
   position: absolute;
-  animation: ren-menu-open var(--duration-normal) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+  animation: ren-menu-open var(--duration-enter) var(--ease-enter);
   visibility: hidden;
   opacity: 0;
   inset: auto auto auto auto;
@@ -36,8 +36,8 @@
   color: var(--color-text);
   border-radius: var(--radius-sm, 0.25rem);
   min-height: 2rem;
-  transition: background-color var(--duration-fast) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
-              color var(--duration-fast) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+  /* Tactile hover/focus — shared preset from semantic motion tokens */
+  transition: var(--transition-tactile);
   white-space: nowrap;
   text-decoration: none;
 }
@@ -133,7 +133,8 @@
   border: 2px solid var(--color-border);
   border-radius: 2px;
   background: white;
-  transition: all var(--duration-fast) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
+  /* Tactile — shared semantic preset */
+  transition: var(--transition-tactile);
 }
 
 .ren-menu-radio-item::before {
@@ -186,7 +187,7 @@
 
 /* ═══ CLOSING STATE WITH ANIMATION ═══ */
 .ren-menu[data-closing] {
-  animation: ren-menu-close var(--duration-normal) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)) forwards;
+  animation: ren-menu-close var(--duration-exit) var(--ease-exit) forwards;
 }
 
 @keyframes ren-menu-close {
@@ -200,11 +201,15 @@
   }
 }
 
-/* ═══ RESPECTS MOTION PREFERENCES ═══ */
+/* ═══ RESPECTS MOTION PREFERENCES ═══
+   Semantic --duration-* already collapse to 0ms under reduced-motion
+   (see tokens/semantic/motion.css). We keep this block as a
+   belt-and-suspenders fallback and to drop the scale/translate
+   keyframe so the menu simply appears/disappears in place. */
 @media (prefers-reduced-motion: reduce) {
   .ren-menu {
     animation: none;
-    transition: opacity var(--duration-normal);
+    transition: opacity var(--duration-enter);
   }
 
   .ren-menu:not(.ren-open) {
@@ -225,9 +230,9 @@
   .ren-menu[popover] {
     visibility: visible;
     opacity: 0;
-    transition: opacity var(--duration-normal) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
-                overlay var(--duration-normal) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)),
-                display var(--duration-normal) var(--ease-out, cubic-bezier(0, 0, 0.2, 1)) allow-discrete;
+    transition: opacity var(--duration-enter) var(--ease-enter),
+                overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+                display var(--duration-enter) var(--ease-enter) allow-discrete;
     animation: none;
   }
 

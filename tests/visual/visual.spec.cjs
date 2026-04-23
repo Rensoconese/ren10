@@ -27,7 +27,12 @@ test.describe('RenDS Design System - Visual Regression', () => {
   // ========================================
 
   test('should render buttons section correctly', async ({ page }) => {
-    const section = page.locator('h2:has-text("Primitives") ~ .test-subsection:first-child');
+    // "Buttons" h3 is not unique — there is also "Radio Buttons". Scope to
+    // the .test-subsection wrapper whose own h3 is exactly "Buttons".
+    const section = page
+      .locator('.test-subsection')
+      .filter({ has: page.locator('h3.test-subsection-title:text-is("Buttons")') })
+      .first();
     await expect(section).toHaveScreenshot('primitives-buttons.png', {
       maxDiffPixels: 100,
       threshold: 0.15,
@@ -253,7 +258,12 @@ test.describe('RenDS Design System - Visual Regression', () => {
   });
 
   test('should render RTL section correctly', async ({ page }) => {
-    const section = page.locator('text=RTL').locator('..').locator('..').first();
+    // Heading reads "RTL (Right-to-Left)". Pin to the .test-section whose h2
+    // contains "RTL" to avoid matching the inner Arabic heading.
+    const section = page
+      .locator('.test-section')
+      .filter({ has: page.locator('h2.test-section-title:has-text("RTL")') })
+      .first();
     await expect(section).toHaveScreenshot('theme-rtl.png', {
       maxDiffPixels: 150,
       threshold: 0.2,
@@ -321,8 +331,9 @@ test.describe('RenDS Design System - Visual Regression', () => {
   // ========================================
 
   test('should render RTL layout correctly', async ({ page }) => {
-    // Locate the RTL section
-    const rtlSection = page.locator('dir=rtl').first();
+    // The Playwright selector `dir=rtl` is not a valid engine prefix — it
+    // silently matches nothing. Use a real CSS attribute selector instead.
+    const rtlSection = page.locator('[dir="rtl"]').first();
 
     // Verify it exists
     const isVisible = await rtlSection.isVisible();
@@ -337,7 +348,7 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should verify RTL text direction', async ({ page }) => {
     // Verify RTL section has correct dir attribute
-    const rtlSection = page.locator('dir=rtl').first();
+    const rtlSection = page.locator('[dir="rtl"]').first();
     const direction = await rtlSection.getAttribute('dir');
 
     expect(direction).toBe('rtl');
@@ -345,7 +356,9 @@ test.describe('RenDS Design System - Visual Regression', () => {
 
   test('should verify flex order in RTL', async ({ page }) => {
     // In RTL, breadcrumb should be reversed
-    const breadcrumbItems = page.locator('dir=rtl .breadcrumb-demo a, dir=rtl .breadcrumb-current').first();
+    const breadcrumbItems = page
+      .locator('[dir="rtl"] .breadcrumb-demo a, [dir="rtl"] .breadcrumb-current')
+      .first();
 
     const text = await breadcrumbItems.evaluate(() => {
       const parent = document.querySelector('[dir="rtl"] .breadcrumb-demo');
@@ -494,7 +507,9 @@ test.describe('RenDS Design System - Visual Regression', () => {
     ];
 
     for (const section of sections) {
-      const element = page.locator(`text="${section}"`).first();
+      // Substring match — "RTL" heading is actually "RTL (Right-to-Left)",
+      // so exact-text matching with quotes would miss it.
+      const element = page.getByText(section, { exact: false }).first();
       expect(await element.isVisible()).toBe(true);
     }
   });

@@ -23,14 +23,16 @@
   /* Automatic flip when near viewport edges */
   position-try-fallbacks: flip-block;
 
-  /* Smooth transitions */
+  /* Smooth transitions — semantic tokens keep tooltip in sync with the
+     rest of the overlay family (popover, menu, dialog). Collapses to
+     0ms under prefers-reduced-motion via tokens/semantic/motion.css. */
   opacity: 0;
   transform: translateY(4px) scale(0.95);
   transition:
-    opacity var(--duration-normal) var(--ease-out),
-    transform var(--duration-normal) var(--ease-out),
-    overlay var(--duration-normal) var(--ease-out) allow-discrete,
-    display var(--duration-normal) var(--ease-out) allow-discrete;
+    opacity var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+    display var(--duration-enter) var(--ease-enter) allow-discrete;
 }
 
 /* ═══ TOOLTIP OPEN STATE ═══ */
@@ -96,12 +98,16 @@
   }
 }
 
-/* ═══ RESPECTS MOTION PREFERENCES ═══ */
+/* ═══ RESPECTS MOTION PREFERENCES ═══
+   Semantic tokens already collapse to 0ms under reduce, but we keep
+   this belt-and-suspenders block so the transform-half can be skipped
+   entirely (no scale bounce) while overlay/display discrete swaps
+   still happen. */
 @media (prefers-reduced-motion: reduce) {
   .ren-tooltip {
-    transition: opacity var(--duration-normal), transform var(--duration-normal),
-                overlay var(--duration-normal) allow-discrete,
-                display var(--duration-normal) allow-discrete;
+    transition: opacity var(--duration-enter), transform var(--duration-enter),
+                overlay var(--duration-enter) allow-discrete,
+                display var(--duration-enter) allow-discrete;
   }
 
   @starting-style {
@@ -125,12 +131,12 @@
 
   /* Fallback animations */
   .ren-tooltip {
-    animation: ren-tooltip-fallback-open var(--duration-normal) var(--ease-out);
+    animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
   .ren-tooltip:popover-open,
   .ren-tooltip.ren-open {
-    animation: ren-tooltip-fallback-open var(--duration-normal) var(--ease-out);
+    animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
   @keyframes ren-tooltip-fallback-open {

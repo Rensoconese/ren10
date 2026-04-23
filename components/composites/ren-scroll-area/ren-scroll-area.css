@@ -5,7 +5,7 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-fill-active) transparent;
 
-  transition: scrollbar-color var(--duration-normal) var(--ease-default);
+  transition: scrollbar-color var(--duration-enter) var(--ease-enter);
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -22,7 +22,7 @@
     border: 2px solid transparent;
     background-clip: content-box;
 
-    transition: background-color var(--duration-normal) var(--ease-default);
+    transition: var(--transition-tactile);
   }
 
   &::-webkit-scrollbar-thumb:hover {

@@ -1,0 +1,120 @@
+/* ============================================
+   RenDS — Semantic Motion Tokens
+   ============================================
+   Maps primitive durations + easings into
+   INTENT-based motion tokens. Components should
+   reach for these, not the primitives.
+
+   Think of these as "presets" at the token level:
+   every pair is a (duration, ease) decision that
+   has already been made correctly for its intent.
+
+   Categories:
+     · State:    enter / exit / in-place / emphasize
+     · Scale:    micro (feedback) → macro (route change)
+     · Surface:  overlay / sheet / menu / tooltip
+
+   Use the composed --transition-* tokens when you
+   need a ready-to-paste `transition:` value.
+
+   All tokens automatically collapse to 0.01ms under
+   prefers-reduced-motion via tokens/primitives/motion.css.
+   ============================================ */
+
+:root {
+  /* ─── INTENT DURATIONS ─────────────────────────
+     Name by *role*, not by value. If later you need
+     every enter to be 50ms faster, change one token. */
+
+  --duration-micro:       var(--duration-fastest);  /* 50ms   — pixel-level feedback */
+  --duration-tactile:     var(--duration-fast);     /* 100ms  — hover, focus, press */
+  --duration-state:       var(--duration-normal);   /* 150ms  — toggle, checkbox */
+  --duration-enter:       var(--duration-moderate); /* 250ms  — widget appearing */
+  --duration-exit:        var(--duration-fast);     /* 100ms  — widget leaving (always faster than enter) */
+  --duration-emphasize:   var(--duration-slower);   /* 450ms  — hero transitions */
+  --duration-route:       var(--duration-slow);     /* 300ms  — page change */
+  --duration-overlay:     var(--duration-moderate); /* 250ms  — dialog/sheet/popover scrim */
+
+  /* ─── INTENT EASINGS ──────────────────────────── */
+  --ease-enter:           var(--ease-decelerate);
+  --ease-exit:            var(--ease-accelerate);
+  --ease-state-change:    var(--ease-standard);
+  --ease-attention:       var(--ease-emphasized-decelerate);
+  --ease-playful:         var(--ease-spring-soft);
+
+  /* ─── READY-TO-PASTE TRANSITION PRESETS ─────────
+     Use as:
+       transition: var(--transition-tactile);
+     or compose property-specific:
+       transition: opacity var(--duration-enter) var(--ease-enter),
+                   transform var(--duration-enter) var(--ease-enter);
+  */
+
+  /* Tactile: hover/focus/press. Affects colors + borders + shadows. */
+  --transition-tactile:
+    color           var(--duration-tactile) var(--ease-state-change),
+    background-color var(--duration-tactile) var(--ease-state-change),
+    border-color    var(--duration-tactile) var(--ease-state-change),
+    box-shadow      var(--duration-tactile) var(--ease-state-change),
+    opacity         var(--duration-tactile) var(--ease-state-change);
+
+  /* State change: aria-expanded, aria-pressed, data-state. Adds transform. */
+  --transition-state:
+    color           var(--duration-state) var(--ease-state-change),
+    background-color var(--duration-state) var(--ease-state-change),
+    border-color    var(--duration-state) var(--ease-state-change),
+    box-shadow      var(--duration-state) var(--ease-state-change),
+    transform       var(--duration-state) var(--ease-state-change),
+    opacity         var(--duration-state) var(--ease-state-change);
+
+  /* Enter: mounting a widget (dialog, menu, toast, popover).
+     Use together with @starting-style for open animation. */
+  --transition-enter:
+    opacity   var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    filter    var(--duration-enter) var(--ease-enter);
+
+  /* Exit: unmounting. ALWAYS shorter than enter. */
+  --transition-exit:
+    opacity   var(--duration-exit) var(--ease-exit),
+    transform var(--duration-exit) var(--ease-exit),
+    filter    var(--duration-exit) var(--ease-exit);
+
+  /* Overlay: backdrop / scrim / dialog body composited move. */
+  --transition-overlay:
+    opacity         var(--duration-overlay) var(--ease-enter),
+    background-color var(--duration-overlay) var(--ease-enter),
+    backdrop-filter var(--duration-overlay) var(--ease-enter),
+    overlay         var(--duration-overlay) allow-discrete,
+    display         var(--duration-overlay) allow-discrete;
+
+  /* Emphasize: for hero / onboarding / attention flows. */
+  --transition-emphasize:
+    opacity   var(--duration-emphasize) var(--ease-attention),
+    transform var(--duration-emphasize) var(--ease-attention);
+
+  /* ─── CHOREOGRAPHY ─────────────────────────────
+     Stagger delay between sibling entries (applied by
+     base/motion.css `.ren-stagger > *` or via JS helper). */
+  --motion-stagger-step:   40ms;
+  --motion-stagger-max:    10;  /* cap to avoid long total delays */
+}
+
+/* ─── REDUCED MOTION ────────────────────────────
+   Collapse semantic durations under reduced-motion.
+   (Primitive durations are already collapsed in
+   tokens/primitives/motion.css — this keeps the
+   semantic tokens in sync and removes staggering.) */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-micro:     0ms;
+    --duration-tactile:   0ms;
+    --duration-state:     0ms;
+    --duration-enter:     0ms;
+    --duration-exit:      0ms;
+    --duration-emphasize: 0ms;
+    --duration-route:     0ms;
+    --duration-overlay:   0ms;
+    --motion-stagger-step: 0ms;
+  }
+}

@@ -50,10 +50,7 @@
   cursor: text;
   caret-color: var(--color-accent);
   text-align: center;
-  transition:
-    border-color var(--duration-normal) var(--ease-out),
-    background-color var(--duration-normal) var(--ease-out),
-    box-shadow var(--duration-normal) var(--ease-out);
+  transition: var(--transition-tactile);
 
   /* ═══ PLACEHOLDER STYLING ═══ */
   &::placeholder {

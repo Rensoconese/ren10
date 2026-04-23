@@ -21,10 +21,7 @@
   border: var(--stroke-1) solid var(--color-input-border);
   border-radius: var(--radius-md);
   background-color: var(--color-input-bg);
-  transition:
-    border-color var(--duration-normal) var(--ease-out),
-    background-color var(--duration-normal) var(--ease-out),
-    box-shadow var(--duration-normal) var(--ease-out);
+  transition: var(--transition-tactile);
 
   /* ═══ FOCUS STATE ON GROUP ═══ */
   &:has(.ren-number-field-input:focus) {
@@ -63,9 +60,7 @@
   font-size: var(--text-lg);
   font-weight: 600;
   font-family: var(--font-mono);
-  transition:
-    background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 
   /* ═══ REMOVE FOCUS OUTLINE - GROUP HANDLES IT ═══ */
   &:focus {

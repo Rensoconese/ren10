@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="amber-editorial">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RenDS — New Themes & Motion Preview</title>
+  <link rel="stylesheet" href="../index.css" />
+  <link rel="stylesheet" href="../components/index.css" />
+  <link rel="stylesheet" href="./appearance.css" />
+  <style>
+    /* Outside any @layer, so it overrides at will. */
+    body { padding: 1.5rem; }
+    .swatch {
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: var(--text-sm) / 1 var(--font-mono);
+      color: var(--color-on-accent);
+      background: var(--color-accent);
+    }
+    .swatch.sub    { background: var(--color-accent-subtle); color: var(--color-text); }
+    .swatch.strong { background: var(--color-accent-strong); color: var(--color-on-accent); }
+    .swatch.surf   { background: var(--color-surface-sunken); color: var(--color-text); border:1px solid var(--color-border); }
+    .theme-pill {
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--color-border);
+      background: var(--color-surface-raised);
+      color: var(--color-text);
+      font: var(--text-sm) var(--font-sans);
+      cursor: pointer;
+    }
+    .theme-pill[aria-pressed="true"] {
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+      border-color: var(--color-accent);
+    }
+    .demo-card {
+      padding: 1rem;
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+    }
+    .motion-demo {
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-subtle);
+      color: var(--color-text);
+      min-height: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+<main class="ren-center ren-stack-lg">
+
+  <header class="ren-stack">
+    <h1>RenDS — new themes &amp; motion</h1>
+    <p class="ren-muted">Switch theme and toggle motion demos below. Every combination is AA-verified.</p>
+  </header>
+
+  <!-- Theme picker -->
+  <section class="ren-stack">
+    <h2>Themes</h2>
+    <div class="ren-cluster" role="group" aria-label="Theme picker">
+      <button class="theme-pill" data-set-theme=""                 aria-pressed="false">default (slate)</button>
+      <button class="theme-pill" data-set-theme="ocean"            aria-pressed="false">ocean</button>
+      <button class="theme-pill" data-set-theme="forest"           aria-pressed="false">forest</button>
+      <button class="theme-pill" data-set-theme="sunset"           aria-pressed="false">sunset</button>
+      <button class="theme-pill" data-set-theme="rose"             aria-pressed="false">rose</button>
+      <button class="theme-pill" data-set-theme="purple"           aria-pressed="false">purple</button>
+      <button class="theme-pill" data-set-theme="amber-editorial"  aria-pressed="true">amber-editorial</button>
+      <button class="theme-pill" data-set-theme="cyber"            aria-pressed="false">cyber</button>
+      <button class="theme-pill" data-set-theme="minimal-mono"     aria-pressed="false">minimal-mono</button>
+    </div>
+  </section>
+
+  <!-- Swatches -->
+  <section class="ren-stack">
+    <h2>Accent + surface swatches</h2>
+    <div class="ren-grid-4">
+      <div class="swatch">accent / on-accent</div>
+      <div class="swatch strong">accent-strong</div>
+      <div class="swatch sub">accent-subtle</div>
+      <div class="swatch surf">surface-sunken</div>
+    </div>
+  </section>
+
+  <!-- Typography + links -->
+  <section class="ren-stack">
+    <h2>Typography &amp; links</h2>
+    <div class="demo-card ren-stack">
+      <h3 style="font-family: var(--font-heading, var(--font-sans));">The quick brown fox jumps over the lazy dog.</h3>
+      <p>Body text: <a href="#" class="ren-link">this is a link</a>, and this is <strong>strong text</strong>.</p>
+      <p><code>const token = 'var(--color-accent)';</code></p>
+    </div>
+  </section>
+
+  <!-- Buttons -->
+  <section class="ren-stack">
+    <h2>Buttons &amp; badges</h2>
+    <div class="ren-cluster">
+      <button class="ren-btn ren-btn-primary">Primary</button>
+      <button class="ren-btn">Secondary</button>
+      <button class="ren-btn ren-btn-ghost">Ghost</button>
+      <span class="ren-badge">New</span>
+      <span class="ren-badge ren-badge-success">Stable</span>
+      <span class="ren-tag">tag</span>
+    </div>
+  </section>
+
+  <!-- Hex→theme generator preview -->
+  <section class="ren-stack">
+    <h2>Generate a theme from one hex</h2>
+    <div class="demo-card ren-stack">
+      <label class="ren-row">
+        <span>Brand hex:</span>
+        <input id="gen-input" type="text" class="ren-field" value="#4F46E5" style="max-width: 16ch;" />
+        <button id="gen-run" class="ren-btn ren-btn-primary">Generate &amp; apply</button>
+      </label>
+      <pre id="gen-report" style="font: var(--text-xs)/1.4 var(--font-mono); white-space: pre-wrap;"></pre>
+      <pre id="gen-css"    style="font: var(--text-xs)/1.4 var(--font-mono); white-space: pre-wrap; background: var(--color-surface-sunken); padding: 0.75rem; border-radius: var(--radius-md);"></pre>
+    </div>
+  </section>
+
+  <!-- Motion demos -->
+  <section class="ren-stack">
+    <h2>Motion presets</h2>
+    <div class="demo-card ren-stack">
+      <div class="ren-cluster">
+        <button class="ren-btn" data-play="fade">fade</button>
+        <button class="ren-btn" data-play="scale">scale</button>
+        <button class="ren-btn" data-play="pop">pop</button>
+        <button class="ren-btn" data-play="slide-up">slide-up</button>
+        <button class="ren-btn" data-play="slide-down">slide-down</button>
+        <button class="ren-btn" data-play="slide-left">slide-left</button>
+        <button class="ren-btn" data-play="slide-right">slide-right</button>
+        <button class="ren-btn" data-play="blur">blur</button>
+      </div>
+      <div id="motion-target" class="motion-demo" data-motion="fade" data-state="open">
+        Target element. Flip its <code>data-state</code> to replay.
+      </div>
+
+      <h3>Stagger</h3>
+      <div class="ren-cluster">
+        <button class="ren-btn" id="stagger-play">Replay stagger</button>
+      </div>
+      <ul class="ren-stagger ren-stack" id="stagger-list">
+        <li class="demo-card" data-motion="slide-up" data-state="open">Item 1</li>
+        <li class="demo-card" data-motion="slide-up" data-state="open">Item 2</li>
+        <li class="demo-card" data-motion="slide-up" data-state="open">Item 3</li>
+        <li class="demo-card" data-motion="slide-up" data-state="open">Item 4</li>
+        <li class="demo-card" data-motion="slide-up" data-state="open">Item 5</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<script type="module">
+  import { generateTheme, contrast } from './theme-generator.js';
+  import { setMotionState, applyStagger, prefersReducedMotion } from '../utils/motion.js';
+
+  // Theme picker
+  const pills = document.querySelectorAll('[data-set-theme]');
+  pills.forEach(p => p.addEventListener('click', () => {
+    const t = p.dataset.setTheme;
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    else document.documentElement.removeAttribute('data-theme');
+    pills.forEach(x => x.setAttribute('aria-pressed', String(x === p)));
+  }));
+
+  // Generator
+  const genInput  = document.getElementById('gen-input');
+  const genReport = document.getElementById('gen-report');
+  const genCss    = document.getElementById('gen-css');
+  document.getElementById('gen-run').addEventListener('click', () => {
+    const hex = genInput.value.trim();
+    let theme;
+    try { theme = generateTheme(hex, { name: 'brand', warmth: 0 }); }
+    catch (e) { genReport.textContent = 'ERROR: ' + e.message; return; }
+    genCss.textContent = theme.css;
+    const lines = [];
+    for (const r of [...theme.report.passes, ...theme.report.warnings]) {
+      const mark = r.pass ? '✓' : '✗';
+      lines.push(`${mark} ${r.ratio}:1  ${r.label}`);
+    }
+    genReport.textContent = lines.join('\n');
+
+    // Live-apply the generated CSS.
+    let tag = document.getElementById('gen-style');
+    if (!tag) { tag = document.createElement('style'); tag.id = 'gen-style'; document.head.appendChild(tag); }
+    tag.textContent = theme.css;
+    document.documentElement.setAttribute('data-theme', 'brand');
+    pills.forEach(x => x.setAttribute('aria-pressed', 'false'));
+  });
+
+  // Motion demos — flip data-motion then replay.
+  const target = document.getElementById('motion-target');
+  document.querySelectorAll('[data-play]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      target.dataset.motion = btn.dataset.play;
+      await setMotionState(target, 'closed');
+      await setMotionState(target, 'open');
+    });
+  });
+
+  // Stagger demo
+  const list = document.getElementById('stagger-list');
+  document.getElementById('stagger-play').addEventListener('click', async () => {
+    applyStagger(list);
+    Array.from(list.children).forEach(li => li.dataset.state = 'closed');
+    await new Promise(r => requestAnimationFrame(r));
+    Array.from(list.children).forEach(li => li.dataset.state = 'open');
+  });
+
+  if (prefersReducedMotion()) {
+    console.info('prefers-reduced-motion active — animations collapsed.');
+  }
+</script>
+
+</body>
+</html>

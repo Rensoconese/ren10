@@ -59,7 +59,7 @@
   text-decoration: none;
   padding: var(--space-1) 0;
   border-radius: var(--radius-sm);
-  transition: color var(--duration-fast) var(--ease-out);
+  transition: color var(--duration-tactile) var(--ease-enter);
 }
 
 .ren-breadcrumb a:hover {

@@ -26,15 +26,17 @@
   /* Smooth scrolling for body overflow */
   scrollbar-gutter: stable;
 
-  /* ═══ ANIMATION STATES ═══ */
+  /* ═══ ANIMATION STATES ═══
+     Uses semantic motion tokens so global motion tuning
+     cascades to every component. See tokens/semantic/motion.css. */
   opacity: 1;
   transform: scale(1) translateY(0);
 
   transition:
-    opacity var(--duration-moderate) var(--ease-default),
-    transform var(--duration-moderate) var(--ease-default),
-    overlay var(--duration-moderate) allow-discrete,
-    display var(--duration-moderate) allow-discrete;
+    opacity   var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay   var(--duration-enter) allow-discrete,
+    display   var(--duration-enter) allow-discrete;
 
   /* ═══ ENTRY ANIMATION (CSS Transitions instead of keyframes) ═══ */
   @starting-style {
@@ -42,16 +44,14 @@
     transform: scale(0.95) translateY(8px);
   }
 
-  /* ═══ BACKDROP STYLING ═══ */
+  /* ═══ BACKDROP STYLING ═══
+     Uses --transition-overlay so scrim fade/blur duration
+     is tuned in one place (tokens/semantic/motion.css). */
   &::backdrop {
     background-color: rgba(0, 0, 0, 0);
     backdrop-filter: blur(0px);
 
-    transition:
-      background-color var(--duration-slow) var(--ease-default),
-      backdrop-filter var(--duration-slow) var(--ease-default),
-      overlay var(--duration-slow) allow-discrete,
-      display var(--duration-slow) allow-discrete;
+    transition: var(--transition-overlay);
 
     /* ═══ BACKDROP ENTRY ANIMATION ═══ */
     @starting-style {
@@ -161,10 +161,8 @@
   justify-content: center;
   line-height: 1;
 
-  /* Transitions */
-  transition:
-    background-color var(--duration-200) var(--ease-out),
-    color var(--duration-200) var(--ease-out);
+  /* Tactile transitions (hover / focus / press) */
+  transition: var(--transition-tactile);
 
   &:hover {
     background-color: var(--color-background-hover);
@@ -239,10 +237,10 @@
 
       transform: translateY(100%);
       transition:
-        transform var(--duration-slow) var(--ease-default),
-        opacity var(--duration-slow) var(--ease-default),
-        overlay var(--duration-slow) allow-discrete,
-        display var(--duration-slow) allow-discrete;
+        transform var(--duration-enter) var(--ease-enter),
+        opacity   var(--duration-enter) var(--ease-enter),
+        overlay   var(--duration-enter) allow-discrete,
+        display   var(--duration-enter) allow-discrete;
 
       @starting-style {
         transform: translateY(100%);

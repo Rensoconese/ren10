@@ -50,14 +50,15 @@
   box-shadow: var(--shadow-xl);
   text-align: center;
 
-  /* Animation */
+  /* Animation — semantic tokens keep this in sync with ren-dialog
+     and respect prefers-reduced-motion via tokens/semantic/motion.css. */
   opacity: 1;
   transform: scale(1);
   transition:
-    opacity var(--duration-normal) var(--ease-out),
-    transform var(--duration-normal) var(--ease-out),
-    overlay var(--duration-normal) var(--ease-out) allow-discrete,
-    display var(--duration-normal) var(--ease-out) allow-discrete;
+    opacity   var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay   var(--duration-enter) var(--ease-enter) allow-discrete,
+    display   var(--duration-enter) var(--ease-enter) allow-discrete;
 }
 
 /* Entry animation */
@@ -74,13 +75,10 @@
   transform: scale(0.95);
 }
 
-/* Backdrop */
+/* Backdrop — shared overlay transition keeps all scrims in sync. */
 .ren-alert-dialog::backdrop {
   background-color: var(--color-overlay);
-  transition:
-    opacity var(--duration-normal) var(--ease-out),
-    overlay var(--duration-normal) var(--ease-out) allow-discrete,
-    display var(--duration-normal) var(--ease-out) allow-discrete;
+  transition: var(--transition-overlay);
 }
 
 @starting-style {

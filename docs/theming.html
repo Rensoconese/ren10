@@ -140,7 +140,9 @@
           <li><a href="#data-attrs">Data attributes</a></li>
           <li><a href="#override">Override levels</a></li>
           <li><a href="#build">Build a theme</a></li>
+          <li><a href="#ready-made">Ready-made themes</a></li>
           <li><a href="#builder">Theme Builder</a></li>
+          <li><a href="#generator">Generate from hex</a></li>
           <li><a href="#multi">Multi-theme apps</a></li>
           <li><a href="#export">Distribute a theme</a></li>
         </ul>
@@ -305,6 +307,39 @@
       </div>
     </section>
 
+    <!-- Ready-made themes -->
+    <section class="dx-section" id="ready-made">
+      <p class="dx-kicker">Drop-in</p>
+      <h2>Ready-made themes</h2>
+      <p>RenDS ships a small set of reference themes under <code>rends/themes/</code>. Each is a plain CSS file — link it after <code>rends/index.css</code> and you're done. They're also meant to be read: every one is short enough to understand end-to-end, and copying the structure is the fastest way to learn the token vocabulary.</p>
+
+      <div class="dx-theme-card">
+        <p class="dx-theme-card-label">themes/amber-editorial.css</p>
+        <p>Warm editorial palette on a Fraunces display face. Amber accent, generous card radius, comfortable density. Pairs well with long-form reading UIs, marketing pages, and newsletter dashboards.</p>
+      </div>
+
+      <div class="dx-theme-card">
+        <p class="dx-theme-card-label">themes/cyber.css</p>
+        <p>High-contrast neon on near-black surfaces. Cyan/magenta accent pair, mono-first typography, sharp corners. Tuned for ops consoles, terminal-adjacent dashboards, and anything that wants to feel like a deck readout. Light and dark both ship — the light variant is a "daybreak" shift rather than a pure inversion, so contrast holds.</p>
+      </div>
+
+      <div class="dx-theme-card">
+        <p class="dx-theme-card-label">themes/minimal-mono.css</p>
+        <p>A monochrome baseline: one gray ramp, one accent reserved for actions. Zero decoration. Best as a starting point for a product theme (fork and add an accent) or for screenshots and docs where color would distract.</p>
+      </div>
+
+      <p>All three themes:</p>
+      <ul>
+        <li>Stay AA-compliant in both light and dark modes — contrast was audited before merge.</li>
+        <li>Override only semantic tokens. No component CSS is touched, so upgrades stay painless.</li>
+        <li>Are safe to use as references — copy, rename, and edit rather than importing and re-overriding.</li>
+      </ul>
+
+      <div class="dx-pre" tabindex="0"><code>&lt;link rel="stylesheet" href="rends/index.css"&gt;
+&lt;link rel="stylesheet" href="rends/components/index.css"&gt;
+&lt;link rel="stylesheet" href="rends/themes/amber-editorial.css"&gt;</code></div>
+    </section>
+
     <!-- Theme Builder -->
     <section class="dx-section" id="builder">
       <p class="dx-kicker">Tool</p>
@@ -315,10 +350,57 @@
         <li>Pick your combination from the sidebar.</li>
         <li>Preview updates live in the canvas.</li>
         <li>Click <strong>Templates</strong> to start from one of 8 curated starters (Minimal Zinc, Linear Indigo, Vercel Geist, Apple Blue, Editorial Rose, Forest Emerald, Playful Violet, Amber Mono).</li>
+        <li>Click <strong>Generate</strong> to hand it a single hex and let it build an AA-safe palette around it (see next section).</li>
         <li>Export as CSS, JSON, or ZIP — or hit <strong>Share</strong> for a URL that re-creates your exact theme.</li>
       </ol>
 
       <p>The Builder is especially useful when you want to explore combinations you wouldn't have thought to try. The Shuffle button rerolls every picker at once.</p>
+    </section>
+
+    <!-- Generator -->
+    <section class="dx-section" id="generator">
+      <p class="dx-kicker">Tool</p>
+      <h2>Generate a palette from a single hex</h2>
+      <p>You have a brand color. You want a full token set around it that clears WCAG contrast requirements in both light and dark mode. That's what the <strong>Generate</strong> tab in Create does.</p>
+
+      <p>Hand it one hex — say <code>#F59E0B</code> — and it returns:</p>
+      <ul>
+        <li>An 11-step tonal scale (50–950) derived from your hex in OKLCH space, so lightness progresses evenly rather than fighting sRGB's gamma curve.</li>
+        <li>Light-mode and dark-mode <code>--color-accent</code> / <code>-hover</code> / <code>-active</code> / <code>-subtle</code> / <code>-on-accent</code> picked from the scale so each pair clears contrast targets.</li>
+        <li>A contrast audit listing every pair (accent on surface, on-accent on accent, subtle-on-subtle, etc.) with the measured ratio and pass/fail.</li>
+        <li>A ready-to-paste <code>[data-theme]</code> block exporting the full token set.</li>
+      </ul>
+
+      <p>Pick an output and either <strong>Apply</strong> the theme to the Builder (then refine with the other pickers) or <strong>Copy CSS</strong> and paste it into your project. No backend call; it runs entirely in the browser.</p>
+
+      <h3>AA or AAA?</h3>
+      <p>The modal has a <strong>Target</strong> toggle so you can pick which conformance level the generator should optimize for:</p>
+      <ul>
+        <li><strong>AA</strong> — 4.5:1 for normal text, 3:1 for non-text UI (focus rings, icon-only buttons). The safe default for product work.</li>
+        <li><strong>AAA</strong> — 7:1 for text, 4.5:1 for non-text. Use when you're serving readers with low vision, older audiences, or editorial long-form content that will be read for minutes rather than seconds.</li>
+      </ul>
+      <p>Switching the toggle re-runs the analyzer immediately. For most hues AAA just walks the accent one or two steps darker (light mode) or lighter (dark mode). For saturated yellows, oranges, and neon greens, AAA may push you all the way to step 900 on white — which reads more like a "brand-tinted text" than a brand color, and is a signal that AAA on that exact hue isn't practical without shifting the hue itself. When no step in the scale can reach the target, the generator falls back to the terminal step and flags the shortfall in the audit in amber so you see the tradeoff instead of a silent fail.</p>
+
+      <div class="dx-callout">
+        <p><strong>It's a tool, not a mandate.</strong> If the generator's dark-mode accent looks too muted for your brand, override it. Generated palettes are a safe baseline — you're free to deviate once you know the contrast math is under control.</p>
+      </div>
+
+      <h3>Same algorithm, no UI</h3>
+      <p>If you want the palette without opening Create, the generator is also a plain ES module at <code>rends/themes/theme-generator.js</code>:</p>
+      <div class="dx-pre" tabindex="0"><code>import { generateTheme } from './rends/themes/theme-generator.js';
+
+// AA by default.
+const theme = generateTheme('#F59E0B');
+console.log(theme.css);      // CSS block ready to inject
+console.log(theme.light);    // { accent, accentHover, ..., onAccent }
+console.log(theme.dark);
+console.log(theme.report);   // { passes: [...], warnings: [...], level }
+
+// AAA targets 7:1 text / 4.5:1 non-text instead.
+const strict = generateTheme('#F59E0B', { level: 'AAA' });
+console.log(strict.level);   // 'AAA'
+console.log(strict.report.warnings); // shortfalls flagged per-pair</code></div>
+      <p>Useful at build time (emit a theme file from a single config value) or in Storybook (let design pick a hex and see the palette rebuild). The <code>level</code> option accepts the strings <code>'AA'</code> or <code>'AAA'</code>; anything else normalizes to AA.</p>
     </section>
 
     <!-- Multi-theme apps -->

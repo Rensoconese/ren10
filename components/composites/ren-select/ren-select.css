@@ -46,10 +46,9 @@
   text-align: start;
   white-space: nowrap;
 
-  transition:
-    border-color var(--duration-normal) var(--ease-out),
-    background-color var(--duration-normal) var(--ease-out),
-    box-shadow var(--duration-normal) var(--ease-out);
+  /* Semantic preset keeps trigger hover/focus in sync with other
+     tactile inputs (button, checkbox, text field). */
+  transition: var(--transition-tactile);
 }
 
 .ren-select-trigger:hover:not(:disabled):not([aria-expanded="true"]) {
@@ -104,7 +103,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--duration-normal) var(--ease-out);
+  transition: transform var(--duration-micro) var(--ease-enter);
   pointer-events: none;
 }
 
@@ -142,7 +141,7 @@
   visibility: hidden;
   opacity: 0;
   transform: translateY(-4px) scale(0.98);
-  animation: ren-select-close var(--duration-normal) var(--ease-out) forwards;
+  animation: ren-select-close var(--duration-exit) var(--ease-exit) forwards;
 }
 
 /* ═══ SELECT CONTENT OPEN STATE ═══ */
@@ -150,7 +149,7 @@
 .ren-select-content.ren-open {
   visibility: visible;
   opacity: 1;
-  animation: ren-select-open var(--duration-normal) var(--ease-out);
+  animation: ren-select-open var(--duration-enter) var(--ease-enter);
 }
 
 @keyframes ren-select-open {
@@ -184,9 +183,11 @@
   cursor: pointer;
   color: var(--color-text);
   border-radius: var(--radius-sm);
+  /* Micro-duration keeps option hover snappy; tokens/semantic/motion
+     collapses this to 0ms under reduced-motion. */
   transition:
-    background-color var(--duration-100) var(--ease-out),
-    color var(--duration-100) var(--ease-out);
+    background-color var(--duration-micro) var(--ease-enter),
+    color var(--duration-micro) var(--ease-enter);
   white-space: nowrap;
   user-select: none;
   min-height: 2rem;
@@ -306,7 +307,7 @@
   height: 1rem;
   cursor: pointer;
   color: var(--color-text-muted);
-  transition: color var(--duration-100) var(--ease-out);
+  transition: var(--transition-tactile);
 }
 
 .ren-select-chip-remove:hover {
@@ -354,9 +355,9 @@
   .ren-select-content[popover] {
     visibility: visible;
     opacity: 0;
-    transition: opacity var(--duration-normal) var(--ease-out),
-                overlay var(--duration-normal) var(--ease-out),
-                display var(--duration-normal) var(--ease-out) allow-discrete;
+    transition: opacity var(--duration-enter) var(--ease-enter),
+                overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+                display var(--duration-enter) var(--ease-enter) allow-discrete;
     animation: none;
   }
 

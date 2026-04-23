@@ -55,7 +55,7 @@
   border-radius: var(--radius-md);
   color: var(--color-text);
   cursor: pointer;
-  transition: background-color var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
   position: relative;
 
   &:hover {
@@ -131,7 +131,7 @@
   color: var(--color-text);
   font-size: var(--body-size);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
   position: relative;
 
   /* ═══ DEFAULT STATE ═══ */
@@ -240,7 +240,7 @@
 }
 
 .ren-calendar-grid {
-  animation: ren-calendar-fade-in var(--duration-normal) var(--ease-out);
+  animation: ren-calendar-fade-in var(--duration-enter) var(--ease-enter);
 }
 
 /* ═══ REDUCED MOTION SUPPORT ═══ */

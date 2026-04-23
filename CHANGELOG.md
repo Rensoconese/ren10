@@ -11,7 +11,204 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
-- Nothing yet.
+### Added
+
+- **Theme generator: AAA mode.** `generateTheme(hex, { level: 'AAA' })`
+  targets WCAG 2.1 AAA thresholds (7:1 text, 4.5:1 non-text UI) instead of
+  the default AA (4.5:1 / 3:1). Constant `WCAG_THRESHOLDS` exported
+  conceptually via the level-aware audit. The return object now includes
+  `level` and `report.level`; CSS header comment records the target.
+  Invalid values normalize to `'AA'`.
+- **AA/AAA segmented control in `create/` Generate modal.** Radio-group
+  toggle in the modal header; switching it re-runs the analyzer against
+  the new level. Subtitle, report heading, and threshold help-text all
+  update live. Shortfalls (hues that cannot meet AAA even at the terminal
+  scale step) render as amber `⚠` warnings to distinguish them from hard
+  failures.
+- **`theming.html` "AA or AAA?" section.** Explains when to use each
+  level, how the generator behaves with saturated hues, and the new
+  `level` option in the module snippet.
+- **`smoke-create-generator.mjs`** expanded from 9 to 10 checks covering
+  the AA/AAA toggle state, heading swap, and library-level return.
+- **`date-range-picker` demo section in `docs/components.html`.** Trigger
+  with start/end values, popover with 6 presets (Last 7/30 days, This
+  month, Last month, This quarter, This year), dual calendar placeholders,
+  footer with selection summary + Cancel/Apply, and an empty-state
+  variant. Registered in `components.spec.cjs` SECTION_MAP; the
+  previously-empty SKIPPED set stays empty. Scoped axe scan clean.
+- **Live-region markup in `tests/visual/test-page.html`.** Progress bars
+  now carry `role="progressbar"` + `aria-labelledby` + `aria-valuenow/min/max`
+  (indeterminate bar omits `valuenow` per ARIA spec); a new
+  `role="status" aria-live="polite" aria-atomic="true"` region
+  demonstrates the status-announcement pattern consumers should use.
+
+### Changed
+
+- `buildScheme(scale, mode)` → `buildScheme(scale, mode, textRatio)`.
+  Internal; no public API break.
+- `auditTheme()` now accepts `{ level }` and scales both text and non-text
+  minimums from it. Default remains AA (4.5/3) so existing callers keep
+  their current behavior.
+- **A11y test hardening.** The `should provide context for dynamic content`
+  test in `tests/a11y/a11y.spec.cjs` was a hollow `console.log`; it now
+  asserts at least one live region (`[aria-live]`, `role=status`,
+  `role=alert`, `role=log`, or `role=progressbar`) exists on test-page.html.
+- **11 primitives and 7 patterns migrated to semantic motion tokens.**
+  Legacy primitives (`--duration-normal/fast/moderate/slow/slower`,
+  `--ease-out/in/default/spring/snappy`) replaced with semantic equivalents
+  (`--duration-state/tactile/enter/exit/route/emphasize`, `--ease-enter/
+  exit/state-change/playful`). Behavior preserved — legacy aliases continue
+  to resolve to the same values, so external consumers are unaffected.
+  Primitives touched: button, link, field, checkbox, radio, progress,
+  banner, tag, pagination, breadcrumb, card. Patterns touched: nav,
+  sidebar, command, table, form, menubar, ai. Intentionally left alone:
+  spinner, skeleton, icon (raw values for infinite loops).
+
+### Fixed
+
+- **`ren-menubar.css`** had an extra `)` in a `transition:` declaration
+  that caused the browser to silently discard the rule. Menubar items
+  now get their hover transition as intended.
+
+## [0.8.0] — 2026-04-21
+
+Focus: themes, motion, and the hex→tokens generator. Consolidates four phases
+(F7.21 → F7.24): CLI registry gap, per-component test suite, three ready-made
+themes, a unified motion-token system, a palette generator from a single hex,
+and its UI integration in `create/`. All changes are additive or internal
+refactors — no public token renames, no component API breakage.
+
+### Added
+
+- **Three ready-made themes** under `rends/themes/`, each a drop-in CSS file
+  that only overrides semantic tokens:
+  - `amber-editorial.css` — warm editorial palette, Fraunces display,
+    amber accent, generous card radius.
+  - `cyber.css` — high-contrast neon on near-black surfaces, cyan/magenta
+    accent pair, mono-first typography, sharp corners. Light variant is a
+    "daybreak" shift rather than a pure inversion; both modes pass AA.
+  - `minimal-mono.css` — single gray ramp, single accent reserved for
+    actions. Meant as a starting point for product themes.
+  All three audited with `contrast-audit.js` before merge. (F7.24; tasks #2 #3 #4)
+- **Semantic motion tokens** in `rends/tokens/semantic/motion.css`:
+  `--duration-micro` (60ms), `--duration-enter` (250ms), `--duration-exit`
+  (180ms), `--ease-enter`, `--ease-exit`. Plus compound presets
+  `--transition-tactile` (hover/focus/press), `--transition-overlay`
+  (backdrops), `--transition-enter`, `--transition-exit`,
+  `--transition-state`. Legacy aliases (`--duration-fast/normal/slow`,
+  `--ease-out/in/default`) still resolve for backward compatibility.
+  (F7.24; tasks #6 #7)
+- **`rends/themes/theme-generator.js`** — ES module that takes a hex and
+  returns an AA-safe theme. Exports `generateTheme(hex, opts?)` →
+  `{name, scale, light, dark, css, report}`, `scaleFromHex()` (11-step OKLCH
+  tonal scale), `auditTheme()` (pair-by-pair contrast report), plus color
+  utilities (`hexToRgb`, `rgbToHex`, `rgbToHsl`, `hslToRgb`, `relLum`,
+  `contrast`, `wcagLevel`, `onColor`). Runs entirely in-browser; usable at
+  build time, in Storybook, or from Node. (F7.24; task #5)
+- **"Generate" tab in `create/`** — new sidebar button next to Shuffle that
+  opens a modal with hex input + live swatch, 11-step scale preview,
+  light/dark accent pair, contrast audit, and CSS export block. Apply
+  button writes back into the Builder's state. Focus management includes
+  open/close focus restoration, Esc handler, and focus trap. Generator ES
+  module bridged to inline scripts via `window.rendsGen`. (F7.24; task #14)
+- **Ready-made themes + generator sections in `docs/theming.html`** — two
+  new sections describing the three reference themes and the hex→token
+  generator (both the UI flow in `create/` and the module API). TOC
+  updated. (F7.24; task #19)
+- **`rends/scripts/smoke-motion-migration.mjs`** — headless Playwright
+  regression for the motion-token migration. 10 checks over
+  `docs/components.html`, `themes/preview.html`, and `create/index.html`
+  (token resolution, dialog/toast/popover/menu open-close, non-empty
+  computed styles, 6 motion presets firing, `window.rendsGen` attached).
+  Ignore-list handles sandbox-blocked CDNs (fonts, lucide, jszip) without
+  masking real errors. (F7.24; task #15)
+- **`rends/scripts/smoke-create-generator.mjs`** — 9-check smoke for the
+  Generator modal: button renders, focus lands on hex input, bad-hex
+  surfaces an error, good hex (`#F59E0B`) produces 11 scale cells and ≥6
+  audit rows, CSS export contains `[data-theme="brand"]`, Apply mutates
+  `state.theme.hex`, Esc closes the modal, zero console errors. (F7.24; task #15)
+- **20 missing entries in `cli/registry.js`** — `rends add <component>` now
+  covers all 52 components. Added 11 primitives (avatar, banner,
+  breadcrumb, card, kbd, link, pagination, separator, skeleton, spinner,
+  tag), 7 composites (alert-dialog, collapsible, color-picker,
+  context-menu, date-range-picker, dropzone, toolbar), and 2 patterns
+  (ai, empty-state). Each entry includes `name`, `layer`, `dir`,
+  `description`, `files`, `deps`, and a cribable `usage` block. (F7.22;
+  task #83)
+- **`tests/components/components.spec.cjs` + `playwright.config.cjs`** —
+  per-component test suite that imports `REGISTRY` dynamically,
+  maintains a `SECTION_MAP` for non-trivial section IDs (e.g. `select`
+  → `custom-select`), and for each component asserts visibility, demo
+  content, and axe-scoped WCAG 2.1 AA compliance. Desktop Light + Dark
+  matrix, **102 / 102 passing** (2 skipped: `date-range-picker`, which
+  has no section in `docs/components.html` yet). (F7.23; task #84)
+- **`test:components` npm script** targeting the new per-component
+  config. (F7.23)
+
+### Changed
+
+- **16 composites migrated to semantic motion tokens.** Overlay family
+  (`ren-dialog`, `ren-alert-dialog`, `ren-sheet`, `ren-toast`, `ren-popover`,
+  `ren-menu`, `ren-context-menu`, `ren-tooltip`, `ren-hover-card`) now uses
+  `--duration-enter` / `--ease-enter` for open, `--duration-exit` /
+  `--ease-exit` for close, and `var(--transition-overlay)` for backdrops.
+  Dropdowns (`ren-select`, `ren-combobox`) match the overlay family for
+  the content panel and use `var(--transition-tactile)` on triggers, with
+  `--duration-micro` on option hover for snappiness. Stateful composites
+  (`ren-accordion`, `ren-collapsible`, `ren-tabs`) use
+  `var(--transition-tactile)` on hover/focus and `--duration-enter` for
+  chevron rotation. Pickers and widgets (`ren-calendar`, `ren-date-picker`,
+  `ren-date-range-picker`, `ren-color-picker`, `ren-carousel`, `ren-toolbar`,
+  `ren-dropzone`, `ren-toggle-group`, `ren-scroll-area`, `ren-slider`,
+  `ren-otp`, `ren-number-field`) consolidated tactile hover/focus into
+  the preset. Post-migration, grep for legacy
+  `--(duration|ease)-(fast|normal|slow|moderate|default)` against
+  `components/composites/**/*.css` returns **zero** hits. Primitives and
+  patterns layers are deliberately out of scope (their hover/focus still
+  works via the legacy aliases). (F7.24; tasks #10 #11 #12 #13 #18)
+- **`prefers-reduced-motion: reduce` handling** moved to the token layer.
+  Semantic durations now collapse to `0ms` at `:root` under the media
+  query, cascading automatically to any component that uses them. Explicit
+  per-component reduced-motion blocks are kept as belt-and-suspenders for
+  cases that also need to suppress `transform` or `translate`. (F7.24; task #7)
+
+### Fixed
+
+- **`docs/components.html` referenced `../base/semantics.css`** (renamed
+  to `classless.css` in an earlier phase but the `<link>` was never
+  updated). Surfaced by `smoke-motion-migration.mjs`. (F7.24; task #16)
+- **`ren-table.js` class missing `export`** — `docs/components.html`
+  imported `{ RenTable }` but the module declared
+  `class RenTable extends HTMLElement` without the keyword. Fixed to
+  match the pattern of sibling modules (`ren-number-field`, `ren-otp`,
+  `ren-form`). (F7.24; task #17)
+
+### Removed
+
+- **`docs/test-base-select.html`** — 151-line scratch file experimenting
+  with `appearance: base-select`. Unlinked, no history beyond the initial
+  Primitive Zero commit. (F7.21; task #82)
+
+### Accessibility milestones
+
+- `tests/components/components.spec.cjs`: **102 / 102 pass** (51
+  components × Desktop Light + Dark), 2 skipped for `date-range-picker`.
+  Every component's docs section scoped-axe-tested with zero AA
+  violations.
+- All three new themes pass AA on `surface`, `on-accent`, `subtle`, and
+  text pairs in both light and dark modes.
+- Generator output: 100% of audit rows generated for the reference hex
+  `#F59E0B` pass AA. Generator also supports scaling the input hex up/down
+  the scale if the raw color fails against a target surface (reported in
+  the audit as a "shifted" entry).
+
+### Semver notes
+
+Minor bump (0.7.1 → 0.8.0). All changes are additive or internal
+refactors. The motion token vocabulary is new, but legacy duration/ease
+aliases still resolve, so existing components and consumer themes keep
+working. No token renames, no component API removals, no breaking test
+harness changes.
 
 ## [0.7.1] — 2026-04-20
 
@@ -287,7 +484,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.8.0
 [0.7.1]: https://github.com/Rensoconese/ren10/releases/tag/v0.7.1
 [0.7.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.6.0

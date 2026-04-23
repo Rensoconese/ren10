@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="../tokens/semantic/colors.css">
   <link rel="stylesheet" href="../tokens/semantic/typography.css">
   <link rel="stylesheet" href="../base/reset.css">
-  <link rel="stylesheet" href="../base/semantics.css">
+  <link rel="stylesheet" href="../base/classless.css">
   <link rel="stylesheet" href="../base/utilities.css">
   <link rel="stylesheet" href="../base/layouts.css">
 
@@ -436,6 +436,7 @@
         <a href="#color-picker">Color Picker</a>
         <a href="#calendar">Calendar</a>
         <a href="#date-picker">Date Picker</a>
+        <a href="#date-range-picker">Date Range Picker</a>
         <a href="#carousel">Carousel</a>
         <a href="#custom-select">Custom Select</a>
         <a href="#menu">Menu</a>
@@ -2810,6 +2811,71 @@
             </button>
           </div>
         </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           DATE RANGE PICKER
+           ═══════════════════════════════════════════════════════════ -->
+      <section id="date-range-picker" class="demo-section">
+        <h2>Date Range Picker</h2>
+        <p class="demo-description">Trigger button that opens a pair of calendars in a popover for selecting a start/end range. Ships preset shortcuts (Last 7 days, This month, etc.), apply/cancel actions, and a summary of the selected span.</p>
+
+        <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-start;">
+          <div class="ren-date-range-picker" id="demo-date-range-picker">
+            <button class="ren-date-range-trigger"
+                    popovertarget="demo-drp-dropdown"
+                    style="anchor-name: --drp-1;"
+                    aria-haspopup="dialog"
+                    aria-expanded="false">
+              <span class="ren-date-range-value">
+                <span class="ren-date-range-start">Apr 1, 2026</span>
+                <span class="ren-date-range-separator" aria-hidden="true">→</span>
+                <span class="ren-date-range-end">Apr 7, 2026</span>
+              </span>
+            </button>
+            <div class="ren-date-range-dropdown" id="demo-drp-dropdown" popover
+                 role="dialog" aria-label="Select date range"
+                 style="position-anchor: --drp-1;">
+              <div class="ren-date-range-inner">
+                <div class="ren-date-range-presets" role="group" aria-label="Presets">
+                  <button class="ren-date-range-preset" type="button" aria-pressed="true">Last 7 days</button>
+                  <button class="ren-date-range-preset" type="button" aria-pressed="false">Last 30 days</button>
+                  <button class="ren-date-range-preset" type="button" aria-pressed="false">This month</button>
+                  <button class="ren-date-range-preset" type="button" aria-pressed="false">Last month</button>
+                  <button class="ren-date-range-preset" type="button" aria-pressed="false">This quarter</button>
+                  <button class="ren-date-range-preset" type="button" aria-pressed="false">This year</button>
+                </div>
+                <div class="ren-date-range-divider" aria-hidden="true"></div>
+                <div class="ren-date-range-calendars">
+                  <div style="padding: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); text-align: center; min-width: 220px;">
+                    Start-month calendar renders here
+                  </div>
+                  <div style="padding: var(--space-3); font-size: var(--text-sm); color: var(--color-text-muted); text-align: center; min-width: 220px;">
+                    End-month calendar renders here
+                  </div>
+                </div>
+              </div>
+              <div class="ren-date-range-footer">
+                <div class="ren-date-range-summary">
+                  <strong>7 days</strong> selected · Apr 1 → Apr 7
+                </div>
+                <div class="ren-date-range-actions">
+                  <button class="ren-date-range-cancel" type="button">Cancel</button>
+                  <button class="ren-date-range-apply" type="button">Apply</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ren-date-range-picker">
+            <button class="ren-date-range-trigger ren-date-range-empty" disabled
+                    aria-haspopup="dialog" aria-expanded="false">
+              <span class="ren-date-range-value" data-placeholder>Select date range</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="demo-description" style="margin-top: var(--space-4);">Shipped as a Web Component (<code>&lt;ren-date-range-picker&gt;</code>) that hydrates the markup above — see the component README for live usage, presets, locale, and form-wire-up.</p>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════

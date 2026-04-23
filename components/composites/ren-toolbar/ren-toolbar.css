@@ -49,9 +49,7 @@
   font-weight: var(--weight-medium);
   cursor: pointer;
   border-radius: var(--radius-sm);
-  transition:
-    background-color var(--duration-fast) var(--ease-out),
-    color var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 }
 
 .ren-toolbar-item:hover {

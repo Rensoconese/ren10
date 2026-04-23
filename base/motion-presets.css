@@ -1,0 +1,261 @@
+/* ============================================
+   RenDS — Motion Presets
+   ============================================
+   A coherent set of enter/exit animations plus a
+   choreography helper (stagger). Pair with the
+   semantic motion tokens in tokens/semantic/motion.css.
+
+   Two ways to use:
+
+   1) DATA ATTRIBUTES (declarative, recommended)
+      <div data-motion="fade"         data-state="open">   …
+      <div data-motion="scale"        data-state="closed"> …
+      <div data-motion="slide-up"     data-state="open">   …
+
+      Drives enter/exit via `data-state` flipping.
+      Pairs perfectly with the JS helper in
+      utils/motion.js (or any of your own toggles).
+
+   2) UTILITY CLASSES (imperative, for ad-hoc use)
+      <div class="ren-anim-fade-in">          …
+      <div class="ren-anim-scale-out">        …
+      <ul  class="ren-stagger">               …
+
+   Every preset:
+      · Uses semantic duration + ease tokens
+      · Respects prefers-reduced-motion (collapses)
+      · Ships with an accompanying `-out` / exit pair
+      · Works with or without the JS helper
+
+   Add a new preset by:
+      1. Define @keyframes ren-{name}-in / ren-{name}-out
+      2. Add the data-motion="{name}" selector below
+      3. (Optional) Add utility classes
+   ============================================ */
+
+/* ─────────────────────────────────────────────
+   KEYFRAMES — the primitive motions
+   ───────────────────────────────────────────── */
+
+@keyframes ren-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ren-fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes ren-scale-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+@keyframes ren-scale-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.96); }
+}
+
+@keyframes ren-pop-in {
+  from { opacity: 0; transform: scale(0.8);  }
+  60%  { opacity: 1; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+@keyframes ren-pop-out {
+  from { opacity: 1; transform: scale(1);    }
+  to   { opacity: 0; transform: scale(0.85); }
+}
+
+@keyframes ren-slide-up-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+@keyframes ren-slide-up-out {
+  from { opacity: 1; transform: translateY(0);   }
+  to   { opacity: 0; transform: translateY(-4px); }
+}
+
+@keyframes ren-slide-down-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes ren-slide-down-out {
+  from { opacity: 1; transform: translateY(0);    }
+  to   { opacity: 0; transform: translateY(4px);  }
+}
+
+@keyframes ren-slide-left-in {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0);   }
+}
+@keyframes ren-slide-left-out {
+  from { opacity: 1; transform: translateX(0);   }
+  to   { opacity: 0; transform: translateX(-4px); }
+}
+
+@keyframes ren-slide-right-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+@keyframes ren-slide-right-out {
+  from { opacity: 1; transform: translateX(0);    }
+  to   { opacity: 0; transform: translateX(4px);  }
+}
+
+@keyframes ren-blur-in {
+  from { opacity: 0; filter: blur(6px); }
+  to   { opacity: 1; filter: blur(0);   }
+}
+@keyframes ren-blur-out {
+  from { opacity: 1; filter: blur(0);   }
+  to   { opacity: 0; filter: blur(4px); }
+}
+
+/* ─────────────────────────────────────────────
+   DATA-MOTION DRIVEN — declarative state binding
+   Component flips `data-state="open|closed"`,
+   the preset picks the correct keyframe.
+   Works without JS when the user toggles data-state.
+   ───────────────────────────────────────────── */
+
+[data-motion] {
+  /* Default fill-mode keeps the element in its
+     final rest state once the animation completes. */
+  animation-fill-mode: both;
+}
+
+/* Each preset: two selectors (open / closed). */
+
+[data-motion="fade"][data-state="open"] {
+  animation: ren-fade-in var(--duration-enter) var(--ease-enter);
+}
+[data-motion="fade"][data-state="closed"] {
+  animation: ren-fade-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="scale"][data-state="open"] {
+  animation: ren-scale-in var(--duration-enter) var(--ease-enter);
+}
+[data-motion="scale"][data-state="closed"] {
+  animation: ren-scale-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="pop"][data-state="open"] {
+  animation: ren-pop-in var(--duration-enter) var(--ease-playful);
+}
+[data-motion="pop"][data-state="closed"] {
+  animation: ren-pop-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="slide-up"][data-state="open"] {
+  animation: ren-slide-up-in var(--duration-enter) var(--ease-enter);
+}
+[data-motion="slide-up"][data-state="closed"] {
+  animation: ren-slide-up-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="slide-down"][data-state="open"] {
+  animation: ren-slide-down-in var(--duration-enter) var(--ease-enter);
+}
+[data-motion="slide-down"][data-state="closed"] {
+  animation: ren-slide-down-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="slide-left"][data-state="open"] {
+  animation: ren-slide-left-in var(--duration-enter) var(--ease-enter);
+}
+[data-motion="slide-left"][data-state="closed"] {
+  animation: ren-slide-left-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="slide-right"][data-state="open"] {
+  animation: ren-slide-right-in var(--duration-enter) var(--ease-enter);
+}
+[data-motion="slide-right"][data-state="closed"] {
+  animation: ren-slide-right-out var(--duration-exit) var(--ease-exit);
+}
+
+[data-motion="blur"][data-state="open"] {
+  animation: ren-blur-in var(--duration-enter) var(--ease-attention);
+}
+[data-motion="blur"][data-state="closed"] {
+  animation: ren-blur-out var(--duration-exit) var(--ease-exit);
+}
+
+/* ─────────────────────────────────────────────
+   UTILITY CLASSES — imperative one-shots
+   ───────────────────────────────────────────── */
+
+.ren-anim-fade-in         { animation: ren-fade-in         var(--duration-enter) var(--ease-enter)  both; }
+.ren-anim-fade-out        { animation: ren-fade-out        var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-scale-in        { animation: ren-scale-in        var(--duration-enter) var(--ease-enter)  both; }
+.ren-anim-scale-out       { animation: ren-scale-out       var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-pop-in          { animation: ren-pop-in          var(--duration-enter) var(--ease-playful) both; }
+.ren-anim-pop-out         { animation: ren-pop-out         var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-slide-up-in     { animation: ren-slide-up-in     var(--duration-enter) var(--ease-enter)  both; }
+.ren-anim-slide-up-out    { animation: ren-slide-up-out    var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-slide-down-in   { animation: ren-slide-down-in   var(--duration-enter) var(--ease-enter)  both; }
+.ren-anim-slide-down-out  { animation: ren-slide-down-out  var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-slide-left-in   { animation: ren-slide-left-in   var(--duration-enter) var(--ease-enter)  both; }
+.ren-anim-slide-left-out  { animation: ren-slide-left-out  var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-slide-right-in  { animation: ren-slide-right-in  var(--duration-enter) var(--ease-enter)  both; }
+.ren-anim-slide-right-out { animation: ren-slide-right-out var(--duration-exit)  var(--ease-exit)   both; }
+.ren-anim-blur-in         { animation: ren-blur-in         var(--duration-enter) var(--ease-attention) both; }
+.ren-anim-blur-out        { animation: ren-blur-out        var(--duration-exit)  var(--ease-exit)   both; }
+
+/* ─────────────────────────────────────────────
+   CHOREOGRAPHY — stagger children on enter
+   ───────────────────────────────────────────── */
+
+.ren-stagger > * {
+  /* Use CSS counter for index, then multiply by step. */
+  animation-delay: calc(var(--motion-stagger-step) * var(--ren-stagger-i, 0));
+}
+
+/*
+  Runtime-safe stagger: set --ren-stagger-i per child
+  either via inline style or the JS helper
+  (applyStagger) in utils/motion.js. A pure-CSS
+  fallback up to --motion-stagger-max (10 items):
+*/
+.ren-stagger > :nth-child(1)  { --ren-stagger-i: 0; }
+.ren-stagger > :nth-child(2)  { --ren-stagger-i: 1; }
+.ren-stagger > :nth-child(3)  { --ren-stagger-i: 2; }
+.ren-stagger > :nth-child(4)  { --ren-stagger-i: 3; }
+.ren-stagger > :nth-child(5)  { --ren-stagger-i: 4; }
+.ren-stagger > :nth-child(6)  { --ren-stagger-i: 5; }
+.ren-stagger > :nth-child(7)  { --ren-stagger-i: 6; }
+.ren-stagger > :nth-child(8)  { --ren-stagger-i: 7; }
+.ren-stagger > :nth-child(9)  { --ren-stagger-i: 8; }
+.ren-stagger > :nth-child(10) { --ren-stagger-i: 9; }
+
+/* ─────────────────────────────────────────────
+   REDUCED MOTION — collapse to instant dissolves
+   ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-motion][data-state="open"],
+  [data-motion][data-state="closed"],
+  .ren-anim-fade-in, .ren-anim-fade-out,
+  .ren-anim-scale-in, .ren-anim-scale-out,
+  .ren-anim-pop-in, .ren-anim-pop-out,
+  .ren-anim-slide-up-in, .ren-anim-slide-up-out,
+  .ren-anim-slide-down-in, .ren-anim-slide-down-out,
+  .ren-anim-slide-left-in, .ren-anim-slide-left-out,
+  .ren-anim-slide-right-in, .ren-anim-slide-right-out,
+  .ren-anim-blur-in, .ren-anim-blur-out {
+    animation-duration: 0.01ms !important;
+    animation-name: ren-fade-in !important;
+    animation-timing-function: linear !important;
+  }
+  /* Exit becomes instant fade-out */
+  [data-motion][data-state="closed"],
+  .ren-anim-fade-out, .ren-anim-scale-out, .ren-anim-pop-out,
+  .ren-anim-slide-up-out, .ren-anim-slide-down-out,
+  .ren-anim-slide-left-out, .ren-anim-slide-right-out,
+  .ren-anim-blur-out {
+    animation-name: ren-fade-out !important;
+  }
+  .ren-stagger > * {
+    animation-delay: 0ms !important;
+  }
+}

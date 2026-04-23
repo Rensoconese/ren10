@@ -28,9 +28,7 @@
   border-radius: var(--radius-lg);
   background-color: var(--color-surface-sunken);
   cursor: pointer;
-  transition:
-    border-color var(--duration-fast) var(--ease-out),
-    background-color var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 }
 
 .ren-dropzone:hover {

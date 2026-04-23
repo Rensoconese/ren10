@@ -136,6 +136,137 @@
 }
 
 /* ═══════════════════════════════════════════════
+   THEME: AMBER-EDITORIAL — Warm amber/cream, editorial
+   ═══════════════════════════════════════════════
+   Designed for long-form reading: cream surfaces,
+   generous radius, serif headings, amber accent.
+   AA-verified (theme-generator.js, from #F59E0B):
+     light on-accent 6.12:1 · dark on-accent 10.47:1
+     light link      6.55:1 · dark link       6.63:1
+   ═══════════════════════════════════════════════ */
+[data-theme="amber-editorial"] {
+  /* Layer 1: Global */
+  --color-accent:        light-dark(#85590F, #F6A723);
+  --color-accent-hover:  light-dark(#5A3D0C, #F0B95C);
+  --color-accent-active: light-dark(#352408, #EFCD95);
+  --color-accent-strong: light-dark(#5A3D0C, #F0B95C);
+  --color-accent-subtle: light-dark(#FEF6E7, #352408);
+  --color-on-accent:     light-dark(#FFFFFF, #000000);
+  --color-focus-ring:    light-dark(#85590F, #F6A723);
+
+  /* Layer 2: Surfaces — warm cream in light, deep walnut in dark */
+  --color-surface:        light-dark(#FBF8F3, #0E0D0C);
+  --color-surface-raised: light-dark(#FFFFFF, #181716);
+  --color-surface-sunken: light-dark(#F5EFE3, #080807);
+
+  /* Editorial typography (optional override) */
+  --font-heading: "Playfair Display", "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body:    "Lora", "Noto Serif", Georgia, serif;
+
+  /* More generous radius, editorial feel */
+  --radius-md:  0.625rem;
+  --radius-lg:  0.875rem;
+  --radius-xl:  1.125rem;
+
+  /* Subtle component tuning */
+  --ren-card-radius:   var(--radius-xl);
+  --ren-btn-weight:    var(--weight-semibold);
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: CYBER — Neon magenta on near-black, sharp
+   ═══════════════════════════════════════════════
+   Dark-dominant aesthetic: deep graphite surfaces,
+   saturated fuchsia accent, sharp edges, mono feel.
+   AA-verified (from #D946EF):
+     light on-accent 5.51:1 · dark on-accent  8.46:1
+     light link      7.42:1 · dark link       6.21:1
+   ═══════════════════════════════════════════════ */
+[data-theme="cyber"] {
+  --color-accent:        light-dark(#BF18D8, #D42CED);
+  --color-accent-hover:  light-dark(#9C17B0, #D862E9);
+  --color-accent-active: light-dark(#721480, #E099EB);
+  --color-accent-strong: light-dark(#9C17B0, #D862E9);
+  --color-accent-subtle: light-dark(#FAF4FB, #2E0A33);
+  --color-on-accent:     light-dark(#FFFFFF, #000000);
+  --color-focus-ring:    light-dark(#BF18D8, #D42CED);
+
+  /* AI token doubles as the secondary neon: cyan */
+  --color-ai:            light-dark(#0E7490, #22D3EE);
+  --color-ai-hover:      light-dark(#0C5D78, #67E8F9);
+  --color-ai-subtle:     light-dark(#ECFEFF, #083344);
+  --color-on-ai:         light-dark(#FFFFFF, #000000);
+
+  /* Graphite surfaces with a cool tint */
+  --color-surface:        light-dark(#FAFAFB, #0B0B10);
+  --color-surface-raised: light-dark(#FFFFFF, #12121A);
+  --color-surface-sunken: light-dark(#F3F3F6, #050509);
+
+  /* Sharper borders for a technical look */
+  --color-border:          light-dark(#D4D4D8, #262630);
+  --color-border-strong:   light-dark(#A1A1AA, #3F3F4A);
+
+  /* Sharp corners, mono headings */
+  --radius-md:  0.1875rem;
+  --radius-lg:  0.25rem;
+  --radius-xl:  0.375rem;
+  --radius-2xl: 0.5rem;
+
+  --font-heading: "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "JetBrains Mono", "Geist Mono", ui-monospace, monospace;
+
+  --ren-btn-radius:  var(--radius-md);
+  --ren-card-radius: var(--radius-md);
+  --ren-field-radius:var(--radius-md);
+}
+
+/* ═══════════════════════════════════════════════
+   THEME: MINIMAL-MONO — Pure grayscale, Geist-like
+   ═══════════════════════════════════════════════
+   No saturated color. Neutral gray accent, maximum
+   typographic emphasis. Ideal for docs/dashboards.
+   AA-verified (from #737373):
+     light on-accent 6.01:1 · dark on-accent  6.25:1
+     light link      8.59:1 · dark link       8.45:1
+   ═══════════════════════════════════════════════ */
+[data-theme="minimal-mono"] {
+  --color-accent:        light-dark(#171717, #F5F5F5);
+  --color-accent-hover:  light-dark(#000000, #FFFFFF);
+  --color-accent-active: light-dark(#000000, #FFFFFF);
+  --color-accent-strong: light-dark(#171717, #FAFAFA);
+  --color-accent-subtle: light-dark(#F5F5F5, #171717);
+  --color-on-accent:     light-dark(#FFFFFF, #000000);
+  --color-focus-ring:    light-dark(#171717, #F5F5F5);
+
+  /* Desaturate status tokens to stay monochrome-ish */
+  --color-info:          light-dark(#404040, #D4D4D4);
+  --color-info-strong:   light-dark(#262626, #E5E5E5);
+  --color-info-subtle:   light-dark(#F5F5F5, #171717);
+
+  /* Pure grayscale surfaces */
+  --color-surface:        light-dark(#FFFFFF, #0A0A0A);
+  --color-surface-raised: light-dark(#FFFFFF, #141414);
+  --color-surface-sunken: light-dark(#FAFAFA, #050505);
+
+  --color-border:          light-dark(#E5E5E5, #262626);
+  --color-border-strong:   light-dark(#D4D4D4, #404040);
+  --color-border-interactive: light-dark(#737373, #A3A3A3);
+
+  /* Sharp, Swiss feel */
+  --radius-sm:  0.125rem;
+  --radius-md:  0.1875rem;
+  --radius-lg:  0.25rem;
+  --radius-xl:  0.375rem;
+  --radius-2xl: 0.5rem;
+
+  --font-sans:    "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+
+  --ren-btn-weight: var(--weight-medium);
+}
+
+/* ═══════════════════════════════════════════════
    DARK MODE OVERRIDE
    ═══════════════════════════════════════════════
    [data-theme="dark"] forces dark regardless of OS

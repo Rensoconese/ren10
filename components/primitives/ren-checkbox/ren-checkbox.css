@@ -63,9 +63,9 @@
   border-radius: var(--radius-sm);
   background-color: transparent;
   transition:
-    background-color var(--duration-normal) var(--ease-out),
-    border-color var(--duration-normal) var(--ease-out),
-    transform var(--duration-fast) var(--ease-spring);
+    background-color var(--duration-state) var(--ease-enter),
+    border-color var(--duration-state) var(--ease-enter),
+    transform var(--duration-tactile) var(--ease-playful);
 }
 
 /* Checkmark (hidden by default) */
@@ -77,7 +77,7 @@
   border: solid var(--color-on-accent);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg) scale(0);
-  transition: transform var(--duration-normal) var(--ease-spring);
+  transition: transform var(--duration-state) var(--ease-playful);
   margin-top: -2px;
 }
 
@@ -174,7 +174,7 @@
   background-color: var(--color-fill-active);
   border-radius: var(--radius-full);
   transition:
-    background-color var(--duration-normal) var(--ease-out);
+    background-color var(--duration-state) var(--ease-enter);
 }
 
 /* Thumb */
@@ -189,8 +189,8 @@
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
   transition:
-    transform var(--duration-normal) var(--ease-snappy),
-    box-shadow var(--duration-normal) var(--ease-out);
+    transform var(--duration-state) var(--ease-state-change),
+    box-shadow var(--duration-state) var(--ease-enter);
 }
 
 /* ─── States ─── */

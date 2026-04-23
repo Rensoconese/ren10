@@ -21,14 +21,14 @@
   /* Automatic flip when near viewport edges */
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
 
-  /* Smooth transitions */
+  /* Enter/exit transitions driven by semantic motion tokens. */
   opacity: 0;
   transform: translateY(-4px) scale(0.95);
   transition:
-    opacity var(--duration-moderate) var(--ease-out),
-    transform var(--duration-moderate) var(--ease-out),
-    overlay var(--duration-moderate) var(--ease-out) allow-discrete,
-    display var(--duration-moderate) var(--ease-out) allow-discrete;
+    opacity   var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay   var(--duration-enter) var(--ease-enter) allow-discrete,
+    display   var(--duration-enter) var(--ease-enter) allow-discrete;
 }
 
 /* ═══ POPOVER OPEN STATE ═══ */
@@ -118,18 +118,24 @@
   gap: var(--space-2);
 }
 
-/* ═══ RESPECTS MOTION PREFERENCES ═══ */
+/* ═══ RESPECTS MOTION PREFERENCES ═══
+   Semantic --duration-enter already collapses to 0ms under
+   reduced-motion. We keep this block to drop the transform
+   (scale/translate) in the starting-style, so the popover
+   fades in place instead of moving. */
 @media (prefers-reduced-motion: reduce) {
   .ren-popover {
-    transition: opacity var(--duration-normal), transform var(--duration-normal),
-                overlay var(--duration-normal) allow-discrete,
-                display var(--duration-normal) allow-discrete;
+    transition:
+      opacity var(--duration-enter),
+      overlay var(--duration-enter) allow-discrete,
+      display var(--duration-enter) allow-discrete;
+    transform: none;
   }
 
   @starting-style {
     .ren-popover:popover-open {
       opacity: 0;
-      transform: scale(1);
+      transform: none;
     }
   }
 }
@@ -148,12 +154,12 @@
 
   /* Fallback animations */
   .ren-popover {
-    animation: ren-popover-fallback-open var(--duration-moderate) var(--ease-out);
+    animation: ren-popover-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
   .ren-popover:popover-open,
   .ren-popover.ren-open {
-    animation: ren-popover-fallback-open var(--duration-moderate) var(--ease-out);
+    animation: ren-popover-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
   @keyframes ren-popover-fallback-open {

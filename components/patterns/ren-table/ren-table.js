@@ -46,7 +46,7 @@
  * @fires ren-filter - Dispatched when filter changes: { columnIndex, value }
  */
 
-class RenTable extends HTMLElement {
+export class RenTable extends HTMLElement {
   #table = null;
   #thead = null;
   #tbody = null;

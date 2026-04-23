@@ -92,9 +92,11 @@
     height: 100dvh;
   }
 
-  /* Transitions */
-  transition: translate var(--duration-slow) var(--ease-default),
-    opacity var(--duration-slow) var(--ease-default);
+  /* Transitions — semantic tokens keep sheet in sync with ren-dialog and
+     friends; --duration-enter / --ease-enter collapse to 0ms under
+     prefers-reduced-motion via tokens/semantic/motion.css. */
+  transition: translate var(--duration-enter) var(--ease-enter),
+    opacity var(--duration-enter) var(--ease-enter);
   transition-behavior: allow-discrete;
 
   /* Reduce motion */
@@ -125,9 +127,11 @@
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
   }
 
-  /* Closed state animation */
+  /* Backdrop animations — enter uses --duration-enter / --ease-enter,
+     close uses the exit pair so the scrim fades at a slightly brisker
+     clip than the entry, matching the rest of the overlay family. */
   &[open]::backdrop {
-    animation: ren-sheet-backdrop-open var(--duration-slow) var(--ease-default) forwards;
+    animation: ren-sheet-backdrop-open var(--duration-enter) var(--ease-enter) forwards;
   }
 
   &::backdrop {
@@ -136,14 +140,14 @@
     }
 
     opacity: 1;
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--color-overlay);
     backdrop-filter: blur(4px);
 
-    animation: ren-sheet-backdrop-close var(--duration-slow) var(--ease-default) forwards;
+    animation: ren-sheet-backdrop-close var(--duration-exit) var(--ease-exit) forwards;
   }
 
   &:modal::backdrop {
-    background: rgba(0, 0, 0, 0.4);
+    background: var(--color-overlay);
     backdrop-filter: blur(4px);
   }
 }
@@ -188,7 +192,7 @@
   font-size: 1.5rem;
   color: var(--color-text-muted);
 
-  transition: color var(--duration-normal) var(--ease-default);
+  transition: var(--transition-tactile);
 
   &:hover {
     color: var(--color-text);

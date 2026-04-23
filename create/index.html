@@ -757,7 +757,10 @@
               <button onclick="downloadZIP()">Download .zip</button>
             </div>
           </div>
-          <button class="sidebar-btn" onclick="randomize()">Shuffle</button>
+          <div class="footer-row-2">
+            <button class="sidebar-btn" onclick="openGenerator()" title="Generate a full WCAG-safe palette (AA or AAA) from a single hex">Generate</button>
+            <button class="sidebar-btn" onclick="randomize()">Shuffle</button>
+          </div>
         </div>
       </div>
     </aside>
@@ -799,6 +802,113 @@
         </button>
       </div>
       <div id="templates-grid" style="flex:1;overflow:auto;padding:1.25rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;"></div>
+    </div>
+  </div>
+
+  <!-- Generator Modal (hex → AA-safe tokens) -->
+  <div id="generator-modal"
+       style="display:none; position:fixed; inset:0; z-index:500; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); padding:2rem;"
+       role="dialog" aria-modal="true" aria-labelledby="gen-title"
+       onclick="if(event.target===this)closeGenerator()">
+    <div class="gen-dialog"
+         style="max-width:760px; margin:0 auto; background:#1c1c1e; border-radius:16px; border:1px solid rgba(255,255,255,0.1); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 4rem);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <div>
+          <div id="gen-title" style="color:#f5f5f7;font-size:0.9375rem;font-weight:600;">Generate from hex</div>
+          <div style="color:rgba(255,255,255,0.5);font-size:0.75rem;margin-top:2px;">Any brand hex → a full <span id="gen-title-level">AA</span>-verified accent scale.</div>
+        </div>
+        <button onclick="closeGenerator()" aria-label="Close"
+                style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;padding:4px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div style="padding:1.25rem; overflow:auto; flex:1;">
+        <!-- Input row -->
+        <div class="gen-input-row"
+             style="display:flex; gap:0.5rem; align-items:stretch; margin-bottom:0.75rem;">
+          <label for="gen-hex" class="sr-only"
+                 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
+            Brand hex
+          </label>
+          <span aria-hidden="true" id="gen-swatch"
+                style="width:2.5rem;flex:none;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:#4F46E5;"></span>
+          <input id="gen-hex" type="text" value="#4F46E5" spellcheck="false"
+                 placeholder="#RRGGBB"
+                 style="flex:1;min-width:0;background:#0f0f10;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:0 0.75rem;color:#f5f5f7;font-family:'JetBrains Mono',monospace;font-size:0.8125rem;letter-spacing:0.02em;" />
+          <button id="gen-run-btn" onclick="runGenerator()"
+                  style="background:#f5f5f7;border:none;color:#1c1c1e;padding:0 1rem;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:pointer;">
+            Analyze
+          </button>
+          <button id="gen-apply-btn" onclick="applyGeneratedTheme()" disabled
+                  aria-disabled="true"
+                  style="background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.4);padding:0 1rem;border-radius:8px;font-size:0.8125rem;font-weight:600;cursor:not-allowed;">
+            Apply as accent
+          </button>
+        </div>
+
+        <!-- Level toggle (AA / AAA) -->
+        <div role="radiogroup" aria-label="WCAG conformance target"
+             style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.75rem;">
+          <span style="color:rgba(255,255,255,0.55); font-size:0.75rem; font-family:'JetBrains Mono',monospace; letter-spacing:0.04em; text-transform:uppercase;">Target</span>
+          <div id="gen-level-group"
+               style="display:inline-flex; background:#0f0f10; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:2px;">
+            <button type="button" role="radio" aria-checked="true"
+                    id="gen-level-aa" data-level="AA"
+                    onclick="setGeneratorLevel('AA')"
+                    style="background:rgba(245,245,247,0.08); border:none; color:#f5f5f7; padding:0.25rem 0.75rem; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer;"
+                    title="WCAG 2.1 AA — 4.5:1 text, 3:1 non-text. Good default.">AA</button>
+            <button type="button" role="radio" aria-checked="false"
+                    id="gen-level-aaa" data-level="AAA"
+                    onclick="setGeneratorLevel('AAA')"
+                    style="background:transparent; border:none; color:rgba(245,245,247,0.55); padding:0.25rem 0.75rem; border-radius:6px; font-size:0.75rem; font-weight:600; cursor:pointer;"
+                    title="WCAG 2.1 AAA — 7:1 text, 4.5:1 non-text. Stricter; may shift accent to darker/lighter steps.">AAA</button>
+          </div>
+          <span id="gen-level-help" style="color:rgba(255,255,255,0.4); font-size:0.6875rem;">4.5:1 text · 3:1 UI</span>
+        </div>
+
+        <div id="gen-error" role="alert"
+             style="display:none; color:#fca5a5; font-size:0.8125rem; padding:0.5rem 0.75rem; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:8px; margin-bottom:0.75rem;">
+        </div>
+
+        <!-- Results -->
+        <div id="gen-results" style="display:none;">
+          <!-- Scale strip -->
+          <h3 style="color:#f5f5f7;font-size:0.8125rem;font-weight:600;margin:0.5rem 0 0.375rem 0;">Tonal scale</h3>
+          <div id="gen-scale"
+               style="display:grid; grid-template-columns:repeat(11,1fr); gap:2px; border-radius:10px; overflow:hidden; margin-bottom:1rem;"></div>
+
+          <!-- Light / Dark previews side-by-side -->
+          <h3 style="color:#f5f5f7;font-size:0.8125rem;font-weight:600;margin:0.5rem 0 0.375rem 0;">Light & dark schemes</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem;">
+            <div id="gen-scheme-light" class="gen-scheme-card"
+                 style="padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.08);"></div>
+            <div id="gen-scheme-dark" class="gen-scheme-card"
+                 style="padding:0.75rem; border-radius:10px; border:1px solid rgba(255,255,255,0.08);"></div>
+          </div>
+
+          <!-- AA / AAA audit -->
+          <h3 id="gen-report-heading" style="color:#f5f5f7;font-size:0.8125rem;font-weight:600;margin:0.5rem 0 0.375rem 0;">Contrast audit (WCAG AA)</h3>
+          <ul id="gen-report"
+              style="list-style:none;margin:0 0 1rem 0;padding:0.5rem 0;border-top:1px solid rgba(255,255,255,0.08);border-bottom:1px solid rgba(255,255,255,0.08);font-family:'JetBrains Mono',monospace;font-size:0.75rem;line-height:1.6;max-height:10rem;overflow:auto;"></ul>
+
+          <!-- CSS output -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin:0.5rem 0 0.375rem 0;">
+            <h3 style="color:#f5f5f7;font-size:0.8125rem;font-weight:600;margin:0;">Export CSS</h3>
+            <button onclick="copyGeneratedCss()"
+                    style="background:rgba(255,255,255,0.08);border:none;color:#f5f5f7;padding:0.25rem 0.625rem;border-radius:6px;font-size:0.6875rem;font-weight:500;cursor:pointer;">
+              Copy CSS
+            </button>
+          </div>
+          <pre id="gen-css"
+               style="background:#0f0f10;border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:0.75rem;color:#e5e5e7;font-family:'JetBrains Mono',monospace;font-size:0.75rem;line-height:1.6;margin:0;overflow:auto;max-height:14rem;white-space:pre-wrap;word-break:break-word;"></pre>
+        </div>
+
+        <!-- Empty-state hint -->
+        <p id="gen-hint" style="color:rgba(255,255,255,0.45);font-size:0.75rem;margin:0.75rem 0 0 0;">
+          Tip: paste your brand hex, click <strong style="color:#f5f5f7;">Analyze</strong>, review contrast, then <strong style="color:#f5f5f7;">Apply as accent</strong> to push it into the builder.
+        </p>
+      </div>
     </div>
   </div>
 
@@ -1961,6 +2071,227 @@ ${(() => {
       document.getElementById('templates-modal').style.display = 'none';
     }
 
+    // ═══════════════════════════════════════════
+    // GENERATOR (hex → AA-safe tokens)
+    //
+    // JS here is only for a11y / keyboard wiring and
+    // proxying into the ES module at rends/themes/theme-generator.js
+    // (see the <script type="module"> loader near the bottom of the
+    // file, which assigns the generator API onto window.rendsGen).
+    // ═══════════════════════════════════════════
+
+    let genLastResult = null;
+    let genLastFocus  = null;
+    let genLevel      = 'AA';
+
+    /**
+     * Toggle the WCAG target between AA and AAA.
+     * If there's a prior result, re-run the generator so results stay in sync.
+     */
+    function setGeneratorLevel(level) {
+      const next = level === 'AAA' ? 'AAA' : 'AA';
+      if (next === genLevel) return;
+      genLevel = next;
+
+      const aaBtn  = document.getElementById('gen-level-aa');
+      const aaaBtn = document.getElementById('gen-level-aaa');
+      const active = next === 'AAA' ? aaaBtn : aaBtn;
+      const idle   = next === 'AAA' ? aaBtn  : aaaBtn;
+      active.setAttribute('aria-checked', 'true');
+      active.style.background = 'rgba(245,245,247,0.08)';
+      active.style.color = '#f5f5f7';
+      idle.setAttribute('aria-checked', 'false');
+      idle.style.background = 'transparent';
+      idle.style.color = 'rgba(245,245,247,0.55)';
+
+      document.getElementById('gen-level-help').textContent =
+        next === 'AAA' ? '7:1 text · 4.5:1 UI' : '4.5:1 text · 3:1 UI';
+      document.getElementById('gen-title-level').textContent = next;
+      document.getElementById('gen-report-heading').textContent =
+        'Contrast audit (WCAG ' + next + ')';
+
+      if (genLastResult) runGenerator();
+    }
+
+    function openGenerator() {
+      const modal = document.getElementById('generator-modal');
+      genLastFocus = document.activeElement;
+      modal.style.display = 'flex';
+      // Reset UI
+      document.getElementById('gen-error').style.display = 'none';
+      document.getElementById('gen-results').style.display = 'none';
+      const input = document.getElementById('gen-hex');
+      // Seed with current accent if we can
+      if (state.theme && state.theme.hex) {
+        input.value = state.theme.hex;
+        document.getElementById('gen-swatch').style.background = state.theme.hex;
+      }
+      setTimeout(() => input.select(), 0);
+    }
+
+    function closeGenerator() {
+      document.getElementById('generator-modal').style.display = 'none';
+      if (genLastFocus && typeof genLastFocus.focus === 'function') {
+        try { genLastFocus.focus(); } catch (e) { /* noop */ }
+      }
+    }
+
+    function runGenerator() {
+      const errBox = document.getElementById('gen-error');
+      errBox.style.display = 'none';
+      errBox.textContent = '';
+
+      if (!window.rendsGen || !window.rendsGen.generateTheme) {
+        errBox.textContent = 'Generator module still loading — try again in a moment.';
+        errBox.style.display = 'block';
+        return;
+      }
+      const raw = document.getElementById('gen-hex').value.trim();
+      let theme;
+      try {
+        theme = window.rendsGen.generateTheme(raw, { name: 'brand', level: genLevel });
+      } catch (e) {
+        errBox.textContent = 'Could not parse hex: ' + (e && e.message ? e.message : e);
+        errBox.style.display = 'block';
+        return;
+      }
+      genLastResult = theme;
+
+      // Update swatch to the actual parsed hex.
+      document.getElementById('gen-swatch').style.background = theme.scale[500] || raw;
+      renderGeneratorResult(theme);
+
+      const applyBtn = document.getElementById('gen-apply-btn');
+      applyBtn.disabled = false;
+      applyBtn.setAttribute('aria-disabled', 'false');
+      applyBtn.style.background = '#f5f5f7';
+      applyBtn.style.color = '#1c1c1e';
+      applyBtn.style.cursor = 'pointer';
+    }
+
+    function renderGeneratorResult(theme) {
+      // Scale strip
+      const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      const scaleEl = document.getElementById('gen-scale');
+      scaleEl.innerHTML = steps.map(k => {
+        const hex = theme.scale[k];
+        // Pick readable text color per step via relative luminance
+        const rl = window.rendsGen.relLum(hex);
+        const fg = rl > 0.35 ? '#111' : '#fff';
+        return '<div style="background:' + hex + ';color:' + fg +
+               ';padding:0.75rem 0.25rem;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:0.625rem;line-height:1.2;">' +
+               '<div style="font-weight:600;">' + k + '</div>' +
+               '<div style="opacity:0.85;">' + hex + '</div>' +
+               '</div>';
+      }).join('');
+
+      // Scheme preview cards
+      const lightCard = document.getElementById('gen-scheme-light');
+      const darkCard  = document.getElementById('gen-scheme-dark');
+      lightCard.style.background = theme.light['--color-surface'];
+      lightCard.style.color      = '#111';
+      darkCard.style.background  = theme.dark['--color-surface'];
+      darkCard.style.color       = '#fafafa';
+
+      const schemeMarkup = (scheme, label) =>
+        '<div style="font-family:\'JetBrains Mono\',monospace;font-size:0.6875rem;line-height:1.5;">' +
+        '<div style="font-weight:600;margin-bottom:0.375rem;opacity:0.7;text-transform:uppercase;letter-spacing:0.08em;">' + label + '</div>' +
+        '<div style="display:flex;gap:0.375rem;margin-bottom:0.5rem;flex-wrap:wrap;">' +
+          ['--color-accent','--color-accent-hover','--color-accent-strong','--color-accent-subtle']
+            .map(k => '<span title="' + k + '" style="width:1.5rem;height:1.5rem;border-radius:6px;background:' + scheme[k] + ';border:1px solid rgba(0,0,0,0.12);"></span>')
+            .join('') +
+        '</div>' +
+        '<button type="button" tabindex="-1" ' +
+          'style="pointer-events:none;background:' + scheme['--color-accent'] + ';color:' + scheme['--color-on-accent'] + ';border:none;border-radius:6px;padding:0.375rem 0.625rem;font-size:0.75rem;font-weight:600;">Sample button</button>' +
+        '</div>';
+
+      lightCard.innerHTML = schemeMarkup(theme.light, 'Light');
+      darkCard.innerHTML  = schemeMarkup(theme.dark,  'Dark');
+
+      // AA / AAA report — keeps warnings (including AAA shortfalls) at the top
+      // of the list so they read first, then passes.
+      const reportEl = document.getElementById('gen-report');
+      const rows = [];
+      for (const r of theme.report.warnings) rows.push({ ok: false, ...r });
+      for (const r of theme.report.passes)   rows.push({ ok: true,  ...r });
+      reportEl.innerHTML = rows.length === 0
+        ? '<li style="color:rgba(255,255,255,0.55);padding:0.25rem 0.75rem;">No audit rows returned.</li>'
+        : rows.map(r => {
+            const color = r.ok ? '#86efac' : (r.shortfall ? '#fcd34d' : '#fca5a5');
+            const mark  = r.ok ? '✓' : (r.shortfall ? '⚠' : '✗');
+            const ratio = Number.isFinite(r.ratio) ? r.ratio + ':1' : '—';
+            return '<li style="display:grid;grid-template-columns:1rem 4rem 1fr;gap:0.5rem;padding:0.125rem 0.75rem;color:' + color + ';">' +
+                     '<span aria-hidden="true">' + mark + '</span>' +
+                     '<span>' + ratio + '</span>' +
+                     '<span style="color:rgba(255,255,255,0.7);">' + r.label + '</span>' +
+                   '</li>';
+          }).join('');
+
+      // CSS block
+      document.getElementById('gen-css').textContent = theme.css;
+
+      document.getElementById('gen-results').style.display = 'block';
+    }
+
+    function copyGeneratedCss() {
+      if (!genLastResult) return;
+      navigator.clipboard.writeText(genLastResult.css).then(
+        () => showToast('Generated CSS copied'),
+        () => showToast('Unable to copy — check clipboard permissions')
+      );
+    }
+
+    function applyGeneratedTheme() {
+      if (!genLastResult || !window.rendsGen) return;
+      // Pick the hex we'll feed into the builder as the primary accent.
+      // We keep it simple: use the input hex the user supplied (middle
+      // of the scale). applyTheme() handles light/dark variation itself.
+      const hex = genLastResult.scale[500];
+      const rgb = window.rendsGen.hexToRgb(hex);
+      const { h, s, l } = window.rendsGen.rgbToHsl(rgb);
+      // rgbToHsl returns 0..1; applyTheme's code treats state.theme.s/l as 0..100.
+      state.theme = {
+        name: 'Brand',
+        h: Math.round(h),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100),
+        hex,
+        isBase: false,
+      };
+      applyTheme();
+      updateSidebarValues();
+      renderDropdowns();
+      closeGenerator();
+      showToast('Applied generated theme');
+    }
+
+    // Live hex swatch while typing; Enter runs the generator.
+    document.addEventListener('DOMContentLoaded', () => {
+      const input   = document.getElementById('gen-hex');
+      const swatch  = document.getElementById('gen-swatch');
+      if (!input || !swatch) return;
+      input.addEventListener('input', () => {
+        const v = input.value.trim();
+        if (/^#?[0-9a-fA-F]{3,8}$/.test(v)) {
+          swatch.style.background = v.startsWith('#') ? v : ('#' + v);
+        }
+      });
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); runGenerator(); }
+      });
+    });
+
+    // Esc closes either modal; focus trap for the generator modal.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      const gen = document.getElementById('generator-modal');
+      const tpl = document.getElementById('templates-modal');
+      const css = document.getElementById('css-modal');
+      if (gen && gen.style.display === 'flex') { e.preventDefault(); closeGenerator(); return; }
+      if (tpl && tpl.style.display === 'flex') { e.preventDefault(); closeTemplates(); return; }
+      if (css && css.style.display !== 'none' && css.style.display !== '') { e.preventDefault(); closeCssModal && closeCssModal(); }
+    });
+
     function applyTemplate(i) {
       const t = TEMPLATES[i];
       if (!t) return;
@@ -2202,6 +2533,33 @@ ${(() => {
     }
 
     init();
+  </script>
+
+  <!--
+    Hex → AA-safe theme generator. Loaded as an ES module so we can
+    reuse the single source of truth at rends/themes/theme-generator.js
+    (same module powering themes/preview.html and the AA test suite).
+    The functions are re-exposed on window so the inline (non-module)
+    handlers above can call them without duplicating logic here.
+  -->
+  <script type="module">
+    import {
+      generateTheme,
+      hexToRgb,
+      rgbToHex,
+      rgbToHsl,
+      hslToRgb,
+      relLum,
+      contrast,
+      onColor,
+      scaleFromHex,
+      auditTheme,
+    } from '../themes/theme-generator.js';
+
+    window.rendsGen = {
+      generateTheme, hexToRgb, rgbToHex, rgbToHsl, hslToRgb,
+      relLum, contrast, onColor, scaleFromHex, auditTheme,
+    };
   </script>
 </body>
 </html>

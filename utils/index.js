@@ -54,3 +54,14 @@ export {
   wireControls,
   resetIdCounter,
 } from './id-generator.js';
+
+// Motion coordination (enter/exit + stagger + reduced-motion)
+export {
+  prefersReducedMotion,
+  onReducedMotionChange,
+  waitForMotion,
+  setMotionState,
+  motionMount,
+  motionUnmount,
+  applyStagger,
+} from './motion.js';

@@ -18,9 +18,10 @@
   min-width: 15rem;
   z-index: 1000;
 
-  /* ═══ POPOVER API ═══ */
+  /* ═══ POPOVER API ═══
+     Semantic tokens keep hover-card in sync with tooltip + popover. */
   &:popover-open {
-    animation: ren-hover-card-in var(--duration-moderate) var(--ease-default) both;
+    animation: ren-hover-card-in var(--duration-enter) var(--ease-enter) both;
   }
 
   /* ═══ ARROW STYLING ═══ */
@@ -117,7 +118,7 @@
     border-radius: var(--radius-md);
     border: none;
     cursor: pointer;
-    transition: all var(--duration-normal) var(--ease-default);
+    transition: var(--transition-tactile);
 
     &:focus-visible {
       outline: 2px solid var(--color-accent);
@@ -222,7 +223,7 @@
 .ren-hover-card a {
   color: var(--color-accent);
   text-decoration: underline;
-  transition: color var(--duration-normal) var(--ease-default);
+  transition: var(--transition-tactile);
 
   &:hover {
     color: var(--color-accent-strong);

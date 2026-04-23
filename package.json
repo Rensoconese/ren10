@@ -1,6 +1,6 @@
 {
   "name": "rends",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
@@ -49,7 +49,8 @@
     "lint": "npm run lint:css && npm run lint:js",
     "test": "playwright test",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
-    "test:visual": "playwright test --config tests/visual/playwright.config.cjs"
+    "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
+    "test:components": "playwright test --config tests/components/playwright.config.cjs"
   },
   "keywords": [
     "design-system",

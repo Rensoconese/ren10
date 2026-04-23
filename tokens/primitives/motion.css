@@ -18,30 +18,52 @@
   --duration-slowest: 600ms;   /* page transitions, large animations */
 
   /* ─── Easing Curves ─── */
-  --ease-linear:    linear;
+  /*
+     Easings organized by *intent*. Use these names when writing
+     new motion; the legacy aliases below keep existing components
+     working unchanged.
+  */
 
-  /* Standard — most common, balanced feel */
-  --ease-default:   cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-linear:        linear;
 
-  /* Out — decelerating, element arriving. Preferred for UI */
-  --ease-out:       cubic-bezier(0.215, 0.61, 0.355, 1);
+  /* Standard — most common, balanced feel (legacy default) */
+  --ease-default:       cubic-bezier(0.25, 0.1, 0.25, 1);
 
-  /* In — accelerating, element leaving */
-  --ease-in:        cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  /* Decelerate — element arriving / entering / expanding.
+     Preferred for ANY motion that ends at rest in the UI. */
+  --ease-decelerate:    cubic-bezier(0.00, 0.00, 0.20, 1.00);
 
-  /* In-Out — balanced, symmetric */
-  --ease-in-out:    cubic-bezier(0.645, 0.045, 0.355, 1);
+  /* Accelerate — element leaving / exiting / collapsing.
+     Use only when the element goes off-screen or disappears. */
+  --ease-accelerate:    cubic-bezier(0.40, 0.00, 1.00, 1.00);
 
-  /* Spring — slight overshoot, playful feel */
-  --ease-spring:    cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Standard in-out — symmetric, for in-flight position changes
+     (not entering/exiting, just moving between two on-screen states). */
+  --ease-standard:      cubic-bezier(0.20, 0.00, 0.00, 1.00);
 
-  /* Bounce — noticeable overshoot */
-  --ease-bounce:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Emphasized (Material 3) — slower start, fast middle, gentle stop.
+     Use for hero / attention-seeking transitions. */
+  --ease-emphasized:    cubic-bezier(0.20, 0.00, 0.00, 1.00);
+  --ease-emphasized-decelerate: cubic-bezier(0.05, 0.70, 0.10, 1.00);
+  --ease-emphasized-accelerate: cubic-bezier(0.30, 0.00, 0.80, 0.15);
 
-  /* Snappy — fast start, smooth end (Apple style) */
-  --ease-snappy:    cubic-bezier(0.2, 0, 0, 1);
+  /* Spring-soft — gentle overshoot, friendly feel */
+  --ease-spring-soft:   cubic-bezier(0.34, 1.20, 0.64, 1.00);
 
-  /* ─── Aliases (compatibility) ─── */
+  /* Spring-snappy — fast overshoot, playful (Apple sheet feel) */
+  --ease-spring-snappy: cubic-bezier(0.20, 1.50, 0.40, 1.00);
+
+  /* Bounce — noticeable overshoot (use sparingly) */
+  --ease-bounce:        cubic-bezier(0.34, 1.56, 0.64, 1.00);
+
+  /* ─── Legacy aliases (preserved verbatim) ─── */
+  --ease-out:           var(--ease-decelerate);
+  --ease-in:            var(--ease-accelerate);
+  --ease-in-out:        cubic-bezier(0.645, 0.045, 0.355, 1);
+  --ease-spring:        var(--ease-spring-soft);
+  --ease-snappy:        var(--ease-standard);
+
+  /* ─── Duration aliases (compatibility) ─── */
   --duration-100: var(--duration-fast);
   --duration-200: var(--duration-normal);
 }

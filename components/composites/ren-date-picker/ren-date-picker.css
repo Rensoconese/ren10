@@ -29,7 +29,7 @@
   font-size: var(--body-size);
   font-family: inherit;
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
   min-height: var(--touch-min);
 
   &:hover:not([disabled]) {
@@ -110,7 +110,7 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    animation: ren-date-picker-popup-in var(--duration-normal) var(--ease-out) both;
+    animation: ren-date-picker-popup-in var(--duration-enter) var(--ease-enter) both;
   }
 
   /* ═══ FALLBACK POSITIONING (no anchor support) ═══ */
@@ -173,7 +173,7 @@
   font-size: var(--label-size);
   font-weight: var(--label-weight);
   cursor: pointer;
-  transition: all var(--duration-fast) var(--ease-out);
+  transition: var(--transition-tactile);
 
   &:hover {
     background: var(--color-fill-hover);
@@ -243,7 +243,7 @@
     overflow-y: auto;
 
     &:popover-open {
-      animation: ren-date-picker-mobile-in var(--duration-normal) var(--ease-out) both;
+      animation: ren-date-picker-mobile-in var(--duration-enter) var(--ease-enter) both;
     }
   }
 
