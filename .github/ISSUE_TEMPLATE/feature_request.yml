@@ -1,0 +1,79 @@
+name: Feature request
+description: Propose a new component, token, CLI subcommand, theme, or behavior change.
+title: "[feat] "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For larger proposals (a new component, a token rename, a CLI subcommand) please open this issue **before** writing the PR — it lets us align on shape and avoid wasted work.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What can't you do today, or what's awkward about the current API?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like it to work? API sketch, mockup, or pseudo-code.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed and why you rejected them.
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Layer
+      description: Where would the change live?
+      options:
+        - New primitive component
+        - New composite component
+        - New pattern component
+        - Token addition / rename
+        - CLI subcommand or flag
+        - Theme (preset or generator option)
+        - Docs site
+        - Test infrastructure
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Is this a breaking change?
+      options:
+        - No (additive)
+        - Yes (token rename, removed CSS class, etc.)
+        - Unsure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: a11y_check
+    attributes:
+      label: Accessibility considerations
+      options:
+        - label: I've thought about keyboard interaction (Tab order, Esc, arrow keys, Enter / Space).
+        - label: I've thought about screen reader announcements (ARIA roles, labels, live regions).
+        - label: I've thought about reduced-motion and high-contrast users.
+        - label: This change has no a11y impact (e.g. tooling, docs).
+
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Are you willing to implement this?
+      options:
+        - label: Yes, I can open the PR.
+        - label: Yes, with guidance.
+        - label: No, just proposing the idea.

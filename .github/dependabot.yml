@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # npm — the rends package itself
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Argentina/Buenos_Aires"
+    open-pull-requests-limit: 5
+    labels:
+      - "deps"
+    commit-message:
+      prefix: "chore(deps)"
+      include: "scope"
+    groups:
+      playwright:
+        patterns:
+          - "playwright"
+          - "@playwright/*"
+      lint-tooling:
+        patterns:
+          - "stylelint*"
+          - "eslint*"
+          - "@eslint/*"
+      a11y:
+        patterns:
+          - "axe-*"
+
+  # GitHub Actions used by the workflows
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Argentina/Buenos_Aires"
+    open-pull-requests-limit: 5
+    labels:
+      - "deps"
+      - "ci"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"

@@ -1,6 +1,6 @@
 {
   "name": "rends",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
@@ -20,8 +20,13 @@
     "base/",
     "components/",
     "utils/",
-    "cli/"
+    "cli/",
+    "CHANGELOG.md"
   ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "exports": {
     ".": {
       "import": "./index.css"

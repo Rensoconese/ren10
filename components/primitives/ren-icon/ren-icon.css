@@ -101,7 +101,7 @@
 /* ─── Animation ─── */
 
 .ren-icon-spin {
-  animation: ren-icon-spin 1s linear infinite;
+  animation: ren-icon-spin var(--duration-loop) var(--ease-loop) infinite;
 }
 
 @keyframes ren-icon-spin {

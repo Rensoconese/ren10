@@ -13,6 +13,72 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+### Accessibility milestones
+
+## [0.8.2] — 2026-04-27
+
+Focus: post-0.8.1 polish. Centralizes the three remaining "infinite loop"
+animations (spinner, skeleton, icon-spin) on a new family of motion tokens,
+and rounds out the theme generator with a "did you mean…" hue suggester for
+the rare AAA shortfall case. Closes the last technical loose end carried
+over from F7.26 (F7.27). All changes are additive — no public API breaks,
+no token renames, no consumer-visible behavior changes.
+
+### Added
+
+- **`suggestAlternativeHues(hex, level, count)`** in
+  `themes/theme-generator.js`: searches nearby hues (±15°/±30°/…) at
+  constant saturation and lightness for candidates that meet the target
+  WCAG level without an AAA shortfall. Exposed on `window.rendsGen`.
+- **Shortfall suggestions in the `create/` Generate modal.** When the
+  audit report contains a `shortfall` row (hue cannot reach the target
+  at any scale step), a yellow callout below the report offers up to
+  4 nearby hues that do pass, shown as clickable swatches. Clicking a
+  swatch re-runs the generator with that hex.
+- **Loop motion tokens** in `tokens/semantic/motion.css`:
+  `--duration-loop` (1s), `--duration-loop-slow` (1.5s),
+  `--duration-loop-gentle` (2s), `--ease-loop` (linear),
+  `--ease-loop-smooth` (breathy material-style rotation),
+  `--ease-loop-pulse` (ease-in-out). Designed for continuous
+  animations and deliberately do not collapse under
+  `prefers-reduced-motion` — a reduced spinner would freeze
+  visually. Components using them are expected to swap to a
+  reduced-motion variant that also uses loop tokens.
+
+### Changed
+
+- **`ren-spinner`, `ren-skeleton`, `ren-icon`** now consume the
+  new loop tokens instead of raw values. Behavior preserved 1:1
+  (same durations, same curves, same reduced-motion fallback);
+  all three can now be centrally retuned by overriding
+  `--duration-loop*` or `--ease-loop*`. Closes the last loose end
+  from F7.26.
+
+### Semver notes
+
+Patch bump (0.8.1 → 0.8.2). All changes are additive: a new helper
+function, a new UI block that only renders on shortfall, and a new
+token family. The migration of spinner/skeleton/icon to loop tokens
+preserves resolved values 1:1 — no consumer-visible motion difference.
+
+## [0.8.1] — 2026-04-23
+
+Focus: post-0.8.0 polish. Closes the F7.25–F7.26 loose ends (date-range
+picker demo, a11y test hardening, motion-token migration across primitives
+and patterns) and repairs five pre-existing broken visual-regression
+locators inherited from v0.7.1. No public API or token changes — all
+additive or strictly test-internal.
+
+### Added
+
 - **Theme generator: AAA mode.** `generateTheme(hex, { level: 'AAA' })`
   targets WCAG 2.1 AAA thresholds (7:1 text, 4.5:1 non-text UI) instead of
   the default AA (4.5:1 / 3:1). Constant `WCAG_THRESHOLDS` exported
@@ -69,6 +135,28 @@ consolidates them and starts formal version tracking with 0.7.0.
 - **`ren-menubar.css`** had an extra `)` in a `transition:` declaration
   that caused the browser to silently discard the rule. Menubar items
   now get their hover transition as intended.
+- **5 visual-regression tests with broken locators** in
+  `tests/visual/visual.spec.cjs`. Pre-existing since v0.7.1, documented
+  in the F7.26 phase note.
+  - `should render buttons section correctly` — selector
+    `h2:has-text("Primitives") ~ .test-subsection:first-child` never
+    matched (h2 is the first-child of `.test-section`, the subsection
+    div is not). Replaced with `.test-subsection` filtered by a
+    `:text-is("Buttons")` h3, which disambiguates from "Radio Buttons".
+  - `should render RTL section correctly` — used
+    `text="RTL"`-chained navigation that landed on the wrong ancestor;
+    replaced with `.test-section:has(h2:has-text("RTL"))`, pinning to
+    the expected section directly.
+  - `should render RTL layout correctly`, `should verify RTL text
+    direction`, `should verify flex order in RTL` — all used
+    `page.locator('dir=rtl')`, which is not a valid Playwright selector
+    engine prefix and silently matched nothing. Replaced with the CSS
+    attribute selector `[dir="rtl"]`.
+  - `should display all component sections` — used
+    `text="${section}"` exact-match inside a loop that included
+    `"RTL"`, which never matched the full heading
+    `RTL (Right-to-Left)`. Replaced with
+    `page.getByText(section, { exact: false })`.
 
 ## [0.8.0] — 2026-04-21
 
@@ -484,9 +572,11 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.0...HEAD
-[0.8.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.8.0
-[0.7.1]: https://github.com/Rensoconese/ren10/releases/tag/v0.7.1
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/Rensoconese/ren10/compare/v0.8.1...v0.8.2
+[0.8.1]: https://github.com/Rensoconese/ren10/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/Rensoconese/ren10/compare/v0.7.1...v0.8.0
+[0.7.1]: https://github.com/Rensoconese/ren10/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.7.0
 [0.6.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.6.0
 [0.5.0]: https://github.com/Rensoconese/ren10/releases/tag/v0.5.0

@@ -42,6 +42,22 @@
   --ease-attention:       var(--ease-emphasized-decelerate);
   --ease-playful:         var(--ease-spring-soft);
 
+  /* ─── INFINITE LOOP ──────────────────────────────
+     Continuous animations — spinners, skeletons, icon
+     rotations. These do NOT collapse under
+     prefers-reduced-motion (that would freeze the
+     indicator visually); components using them are
+     expected to swap to a reduced-motion variant that
+     itself reaches for loop tokens. */
+
+  --duration-loop:         1s;     /* spinner, icon-spin */
+  --duration-loop-slow:    1.5s;   /* skeleton pulse */
+  --duration-loop-gentle:  2s;     /* reduced-motion opacity pulse */
+
+  --ease-loop:             linear;                        /* constant rotation */
+  --ease-loop-smooth:      cubic-bezier(0.4, 0, 0.2, 1);  /* breathy rotation */
+  --ease-loop-pulse:       ease-in-out;                   /* gentle in/out cycle */
+
   /* ─── READY-TO-PASTE TRANSITION PRESETS ─────────
      Use as:
        transition: var(--transition-tactile);

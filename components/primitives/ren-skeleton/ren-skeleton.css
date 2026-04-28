@@ -25,7 +25,7 @@
     var(--color-fill) 75%
   );
   background-size: 200% 100%;
-  animation: ren-skeleton-pulse 1.5s ease-in-out infinite;
+  animation: ren-skeleton-pulse var(--duration-loop-slow) var(--ease-loop-pulse) infinite;
   border-radius: var(--radius-sm);
   min-height: 1rem;
 }

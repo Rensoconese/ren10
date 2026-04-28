@@ -1,0 +1,108 @@
+name: Bug report
+description: Report a defect — a component renders wrong, an a11y rule fails, a token resolves to the wrong value, the CLI errors out.
+title: "[bug] "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Please fill in the sections below — the more concrete the repro, the faster we can fix it.
+
+  - type: input
+    id: version
+    attributes:
+      label: RenDS version
+      description: From `rends/package.json` or your `node_modules/rends/package.json`.
+      placeholder: "0.8.2"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Which part of the system is affected?
+      options:
+        - Component (primitive)
+        - Component (composite)
+        - Component (pattern)
+        - Tokens (primitives / semantic / component)
+        - Theme generator / themes
+        - CLI (init / add / list / scales)
+        - Docs site
+        - Tests / CI
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Component or token name
+      description: If applicable. e.g. `ren-dialog`, `--color-accent-strong`, `themes/cyber.css`.
+      placeholder: "ren-dialog"
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you think would happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What actually happened? Include console errors and screenshots if relevant.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal, self-contained repro is best — a CodePen, a small HTML file, or numbered steps.
+      placeholder: |
+        1. Add `ren-dialog` via `npx rends add dialog`.
+        2. Open the dialog with `<ren-dialog open>`.
+        3. Press Esc.
+        4. Focus does not return to the trigger.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: Browsers affected
+      multiple: true
+      options:
+        - Chrome / Edge (Chromium)
+        - Firefox
+        - Safari (WebKit)
+        - Mobile Safari (iOS)
+        - Mobile Chrome (Android)
+        - Not browser-specific (CLI / build / tests)
+
+  - type: dropdown
+    id: theme
+    attributes:
+      label: Theme + mode
+      description: Default RenDS, a built-in theme, or custom?
+      options:
+        - Default
+        - slate / ocean / forest / sunset / rose / purple
+        - amber-editorial / cyber / minimal-mono
+        - Custom theme via generator
+        - Custom theme hand-rolled
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: a11y
+    attributes:
+      label: Accessibility implication
+      options:
+        - label: This bug breaks WCAG 2.1 AA (e.g. focus is lost, contrast drops, ARIA wiring is wrong).
+        - label: This bug affects keyboard-only navigation.
+        - label: This bug affects screen reader output.

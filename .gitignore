@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
-package-lock.json
+# Note: package-lock.json IS committed — needed by `npm ci` in CI.
+# Ignore the alternative lockfiles to prevent accidental cross-tool commits.
 yarn.lock
 pnpm-lock.yaml
 

@@ -23,7 +23,7 @@
   border: 2.5px solid var(--color-fill-active);
   border-top-color: var(--color-accent);
   border-radius: var(--radius-full);
-  animation: ren-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: ren-spin var(--duration-loop) var(--ease-loop-smooth) infinite;
 }
 
 /* ─── Sizes ─── */
@@ -45,7 +45,7 @@
 /* Reduced motion: pulse opacity instead of rotating */
 @media (prefers-reduced-motion: reduce) {
   .ren-spinner {
-    animation: ren-spin-gentle 2s ease-in-out infinite;
+    animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
   }
 
   @keyframes ren-spin-gentle {

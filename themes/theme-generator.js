@@ -407,6 +407,50 @@ export function generateTheme(hex, opts = {}) {
 }
 
 /**
+ * Suggest alternative hues near the input that would meet the requested WCAG
+ * level without a shortfall — useful when a brand hue is too saturated to
+ * reach 7:1 at any step of its own scale. Searches by rotating H in small
+ * increments first, then widens out; saturation and lightness stay identical.
+ *
+ * Returns an array of `{ hex, hueShift }` up to `count` entries. Empty array
+ * if no nearby hue passes (rare — there's almost always a ±30° neighbor that
+ * reaches AAA). Candidates are ordered by closeness to the input hue.
+ *
+ * Example:
+ *   suggestAlternativeHues('#ff5500', 'AAA', 3)
+ *   // → [{ hex: '#ff3300', hueShift: -15 }, ...]
+ */
+export function suggestAlternativeHues(inputHex, level = 'AA', count = 3) {
+  const lvl = resolveLevel(level);
+  let inputHsl;
+  try {
+    inputHsl = rgbToHsl(hexToRgb(inputHex));
+  } catch {
+    return [];
+  }
+  // Hue shifts from nearest to farthest. Symmetric around the input.
+  const shifts = [15, -15, 30, -30, 45, -45, 60, -60, 90, -90, 120, -120];
+  const out = [];
+  for (const shift of shifts) {
+    const newH = (((inputHsl.h + shift) % 360) + 360) % 360;
+    const rgb = hslToRgb({ h: newH, s: inputHsl.s, l: inputHsl.l });
+    const hex = rgbToHex(rgb);
+    let theme;
+    try {
+      theme = generateTheme(hex, { level: lvl, name: '__probe' });
+    } catch {
+      continue;
+    }
+    const hasShortfall = theme.report.warnings.some((w) => w.shortfall);
+    if (!hasShortfall) {
+      out.push({ hex, hueShift: shift });
+      if (out.length >= count) break;
+    }
+  }
+  return out;
+}
+
+/**
  * Audit the generated theme — reports pass/fail of every critical pair
  * against the target WCAG level's thresholds.
  *
