@@ -49,18 +49,9 @@
     }
     .bl-featured-cover {
       aspect-ratio: 4 / 3;
-      background:
-        radial-gradient(ellipse at 30% 30%, color-mix(in srgb, var(--color-accent) 55%, transparent), transparent 60%),
-        linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 40%, var(--purple-500)), color-mix(in srgb, var(--color-accent) 80%, var(--blue-500)));
+      background: var(--color-accent-subtle);
+      border-inline-end: 1px solid var(--color-border);
       position: relative;
-    }
-    .bl-featured-cover::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 8px);
-      opacity: 0.8;
     }
     .bl-featured-body { padding: clamp(var(--space-6), 4vw, var(--space-10)); display: flex; flex-direction: column; justify-content: center; }
     @media (max-width: 780px) {
@@ -94,19 +85,16 @@
       aspect-ratio: 16 / 10;
       position: relative;
       background: var(--color-surface-sunken);
+      border-bottom: 1px solid var(--color-border);
     }
-    .bl-post-cover.v-1 { background: linear-gradient(135deg, var(--orange-400), var(--red-400)); }
-    .bl-post-cover.v-2 { background: linear-gradient(135deg, var(--green-500), var(--blue-500)); }
-    .bl-post-cover.v-3 { background: linear-gradient(135deg, var(--purple-400), var(--pink-400)); }
-    .bl-post-cover.v-4 { background: linear-gradient(135deg, var(--blue-500), var(--blue-600)); }
-    .bl-post-cover.v-5 { background: linear-gradient(135deg, var(--teal-500), var(--green-400)); }
-    .bl-post-cover.v-6 { background: linear-gradient(135deg, var(--red-400), var(--orange-400)); }
-    .bl-post-cover::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04) 0 2px, transparent 2px 10px);
-    }
+    /* Variant placeholders — subtle status tints, no gradients. Replace with real
+       images by setting `background-image: url(...)` on each card's cover. */
+    .bl-post-cover.v-1 { background: var(--color-warning-subtle); }
+    .bl-post-cover.v-2 { background: var(--color-success-subtle); }
+    .bl-post-cover.v-3 { background: var(--color-ai-subtle); }
+    .bl-post-cover.v-4 { background: var(--color-accent-subtle); }
+    .bl-post-cover.v-5 { background: var(--color-info-subtle); }
+    .bl-post-cover.v-6 { background: var(--color-danger-subtle); }
 
     .bl-post-body { padding: var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
     .bl-post-title {
@@ -140,25 +128,38 @@
       padding: var(--space-5);
     }
 
-    /* Newsletter card */
+    /* Newsletter card — solid accent bg with on-accent foreground (auto-adapts to light/dark) */
     .bl-newsletter {
-      background: linear-gradient(135deg, color-mix(in srgb, var(--color-accent) 90%, transparent), color-mix(in srgb, var(--color-accent) 60%, var(--purple-500)));
-      color: white;
+      background: var(--color-accent);
+      color: var(--color-on-accent);
       border-radius: var(--radius-lg);
       padding: var(--space-6);
     }
-    .bl-newsletter h4 { color: white; margin: 0; font-size: var(--text-lg); font-weight: var(--weight-semibold); }
-    .bl-newsletter p  { color: rgba(255,255,255,0.88); font-size: var(--text-sm); margin: 0; line-height: var(--leading-relaxed); }
+    .bl-newsletter h4 { color: var(--color-on-accent); margin: 0; font-size: var(--text-lg); font-weight: var(--weight-semibold); }
+    .bl-newsletter p  { color: color-mix(in srgb, var(--color-on-accent) 88%, transparent); font-size: var(--text-sm); margin: 0; line-height: var(--leading-relaxed); }
     .bl-newsletter input {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: white;
+      background: color-mix(in srgb, var(--color-on-accent) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-on-accent) 25%, transparent);
+      color: var(--color-on-accent);
     }
-    .bl-newsletter input::placeholder { color: rgba(255,255,255,0.6); }
+    .bl-newsletter input::placeholder { color: color-mix(in srgb, var(--color-on-accent) 60%, transparent); }
     .bl-newsletter input:focus {
-      border-color: white;
-      background: rgba(255,255,255,0.25);
-      box-shadow: 0 0 0 3px rgba(255,255,255,0.25);
+      border-color: var(--color-on-accent);
+      background: color-mix(in srgb, var(--color-on-accent) 25%, transparent);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-on-accent) 25%, transparent);
+    }
+    /* Subscribe button — light on the gradient. Real :hover (inline styles kill it). */
+    .bl-btn-on-accent {
+      background-color: var(--color-on-accent);
+      color: var(--color-accent);
+      border-color: var(--color-on-accent);
+    }
+    .bl-btn-on-accent:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--color-on-accent) 88%, var(--color-accent));
+      border-color: color-mix(in srgb, var(--color-on-accent) 88%, var(--color-accent));
+    }
+    .bl-btn-on-accent:active:not(:disabled) {
+      background-color: color-mix(in srgb, var(--color-on-accent) 75%, var(--color-accent));
     }
   </style>
 </head>
@@ -170,7 +171,7 @@
       <div class="ren-row-spread">
         <div class="ren-row">
           <strong style="font-size: var(--text-lg);">RenDS</strong>
-          <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2);">v0.6</span>
+          <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2);">v0.8.2</span>
         </div>
         <nav class="bl-nav-links ren-cluster" aria-label="Main">
           <a href="../docs/components.html">Components</a>
@@ -188,7 +189,7 @@
 
   <!-- ═══════════════════════════════════════════ HEADER ═══ -->
   <section class="bl-header">
-    <div class="ren-center-narrow">
+    <div class="ren-center-wide">
       <div class="ren-stack" style="align-items: center;">
         <nav aria-label="Breadcrumb" class="ren-breadcrumb">
           <ol>
@@ -213,13 +214,13 @@
       <div class="ren-with-sidebar" style="--sidebar-width: 280px; --content-min: 60%;">
 
         <!-- ═══ Main column ═══ -->
-        <div class="ren-stack-xl">
+        <div class="ren-stack ren-stack-xl">
 
           <!-- Featured post -->
           <a href="#" class="bl-featured" style="text-decoration: none; color: inherit; display: grid;">
             <div class="bl-featured-cover" role="img" aria-label="Gradient cover art"></div>
             <div class="bl-featured-body">
-              <div class="ren-stack-lg">
+              <div class="ren-stack ren-stack-lg">
                 <div class="ren-cluster">
                   <span class="ren-badge ren-badge-primary">Featured</span>
                   <span class="ren-tag">Architecture</span>
@@ -382,7 +383,7 @@
         </div>
 
         <!-- ═══ Sidebar ═══ -->
-        <aside class="ren-stack-lg" aria-label="Blog sidebar">
+        <aside class="ren-stack ren-stack-lg" aria-label="Blog sidebar">
 
           <!-- Search -->
           <div class="ren-field">
@@ -412,12 +413,12 @@
               <h4>Level up your UI</h4>
               <p>One post a week on craft, accessibility, and the underrated platform features that make UI feel nice.
                 No spam, unsubscribe in one click.</p>
-              <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed ✓';" class="ren-stack-sm">
+              <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed ✓';" class="ren-stack ren-stack-sm">
                 <div class="ren-field">
                   <label for="bl-email" class="ren-sr-only">Email</label>
                   <input id="bl-email" type="email" placeholder="you@example.com" required>
                 </div>
-                <button type="submit" class="ren-btn" style="--ren-btn-bg: white; --ren-btn-text: var(--color-accent); width: 100%;">Subscribe</button>
+                <button type="submit" class="ren-btn bl-btn-on-accent" style="width: 100%;">Subscribe</button>
               </form>
             </div>
           </div>
@@ -426,7 +427,7 @@
           <div class="bl-sidebar-card">
             <div class="ren-stack">
               <h4 style="font-size: var(--text-sm); font-weight: var(--weight-semibold); margin: 0; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted);">Most read</h4>
-              <ol class="ren-stack-sm" style="margin: 0; padding: 0; list-style: none; counter-reset: rank;">
+              <ol class="ren-stack ren-stack-sm" style="margin: 0; padding: 0; list-style: none; counter-reset: rank;">
                 <li style="counter-increment: rank; display: flex; gap: var(--space-3); align-items: flex-start;">
                   <span aria-hidden="true" style="font-variant-numeric: tabular-nums; color: var(--color-text-muted); font-weight: var(--weight-semibold); min-width: 1.5ch;">01</span>
                   <a href="#" class="ren-link ren-link-plain" style="font-size: var(--text-sm); line-height: var(--leading-snug);">Why we bet on CSS Cascade Layers</a>
