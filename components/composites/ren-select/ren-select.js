@@ -30,9 +30,9 @@
  * @fires change - Standard change event for form submission
  */
 
-import { createKeyboardNav } from '../../utils/keyboard-nav.js';
-import { createDismissable } from '../../utils/dismissable.js';
-import { autoId } from '../../utils/id-generator.js';
+import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
+import { createDismissable } from '../../../utils/dismissable.js';
+import { autoId } from '../../../utils/id-generator.js';
 
 /**
  * Compute dropdown position relative to trigger element.
@@ -151,8 +151,8 @@ export class RenSelect extends HTMLElement {
    */
   bindElements() {
     // Try to find explicitly marked elements
-    this.#trigger = this.querySelector('[data-select-trigger]');
-    this.#content = this.querySelector('[data-select-content]');
+    this.#trigger = this.querySelector('[data-select-trigger], .ren-select-trigger');
+    this.#content = this.querySelector('[data-select-content], .ren-select-content');
 
     // If not found, look for first button and first div (fallback)
     if (!this.#trigger) {
@@ -160,7 +160,7 @@ export class RenSelect extends HTMLElement {
     }
 
     if (!this.#content) {
-      this.#content = this.querySelector('[data-select-content], [role="listbox"]');
+      this.#content = this.querySelector('[role="listbox"]');
     }
 
     // If still not found, create default structure
@@ -339,7 +339,9 @@ export class RenSelect extends HTMLElement {
    * @private
    */
   updateItems() {
-    this.#items = Array.from(this.#content.querySelectorAll('[role="option"]'));
+    this.#items = Array.from(
+      this.#content.querySelectorAll('[role="option"], [data-select-item], .ren-select-item')
+    );
   }
 
   /* ─────────────────────────────────────────────────────────────

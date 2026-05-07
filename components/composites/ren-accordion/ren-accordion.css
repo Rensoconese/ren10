@@ -77,6 +77,8 @@
     background-position: center;
     background-size: contain;
     transition: transform var(--duration-enter) var(--ease-enter);
+      border: none;
+    transform: rotate(0deg);
   }
 
   /* Hover state */

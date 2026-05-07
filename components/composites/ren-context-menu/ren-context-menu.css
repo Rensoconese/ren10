@@ -53,7 +53,8 @@
     display var(--duration-enter) var(--ease-enter) allow-discrete;
 }
 
-.ren-context-menu:popover-open {
+.ren-context-menu:popover-open,
+.ren-context-menu.ren-open {
   opacity: 1;
   transform: scale(1);
 }

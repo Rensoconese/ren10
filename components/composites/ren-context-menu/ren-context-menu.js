@@ -20,27 +20,65 @@ export function initContextMenu(menuId) {
   const menu = document.getElementById(menuId);
   if (!menu) return;
 
+  if (menu.dataset.renContextMenuInitialized === 'true') return;
+  menu.dataset.renContextMenuInitialized = 'true';
+
+  menu.setAttribute('popover', 'manual');
+
   // Find all triggers for this menu
-  const triggers = document.querySelectorAll(`[data-context="${menuId}"]`);
+  const triggers = [...document.querySelectorAll(`[data-context="${menuId}"]`)];
+  const itemSelector = '.ren-menu-item:not(:disabled):not([aria-disabled="true"])';
+
+  const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
+
+  const close = () => {
+    if (!isOpen()) return;
+
+    if ('hidePopover' in menu && menu.matches(':popover-open')) {
+      try {
+        menu.hidePopover();
+      } catch (e) {
+        // Popover may have already been closed by the browser.
+      }
+    } else {
+      menu.classList.remove('ren-open');
+    }
+
+    menu.setAttribute('data-state', 'closed');
+  };
 
   const show = (x, y) => {
+    if (isOpen()) {
+      close();
+    }
+
     // Position menu at cursor
     menu.style.left = `${x}px`;
     menu.style.top = `${y}px`;
 
-    menu.showPopover();
+    if ('showPopover' in menu) {
+      try {
+        menu.showPopover();
+      } catch (e) {
+        // Popover may already be open during rapid repeated contextmenu events.
+      }
+    } else {
+      menu.classList.add('ren-open');
+    }
+
+    menu.setAttribute('data-state', 'open');
 
     // Adjust if overflows viewport
     const rect = menu.getBoundingClientRect();
     if (rect.right > window.innerWidth) {
-      menu.style.left = `${x - rect.width}px`;
+      menu.style.left = `${Math.max(8, x - rect.width)}px`;
     }
     if (rect.bottom > window.innerHeight) {
-      menu.style.top = `${y - rect.height}px`;
+      menu.style.top = `${Math.max(8, y - rect.height)}px`;
     }
 
     // Focus first item
-    const firstItem = menu.querySelector('.ren-menu-item:not(:disabled)');
+    const firstItem = menu.querySelector(itemSelector);
     firstItem?.focus();
   };
 
@@ -49,11 +87,21 @@ export function initContextMenu(menuId) {
       e.preventDefault();
       show(e.clientX, e.clientY);
     });
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key !== 'ContextMenu' && !(e.key === 'F10' && e.shiftKey)) return;
+
+      e.preventDefault();
+      const rect = trigger.getBoundingClientRect();
+      show(rect.left + 8, rect.bottom + 8);
+    });
   });
 
   // Keyboard navigation inside menu
   menu.addEventListener('keydown', (e) => {
-    const items = [...menu.querySelectorAll('.ren-menu-item:not(:disabled)')];
+    const items = [...menu.querySelectorAll(itemSelector)];
+    if (items.length === 0) return;
+
     const current = items.indexOf(document.activeElement);
 
     if (e.key === 'ArrowDown') {
@@ -63,20 +111,44 @@ export function initContextMenu(menuId) {
       e.preventDefault();
       items[(current - 1 + items.length) % items.length]?.focus();
     } else if (e.key === 'Escape') {
-      menu.hidePopover();
+      close();
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       document.activeElement?.click();
-      menu.hidePopover();
+      close();
     }
   });
 
   // Close on item click
   menu.addEventListener('click', (e) => {
     if (e.target.closest('.ren-menu-item')) {
-      menu.hidePopover();
+      close();
     }
   });
+
+  const isMenuOrTrigger = (target) =>
+    target instanceof Node &&
+    (menu.contains(target) || triggers.some((trigger) => trigger.contains(target)));
+
+  document.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (isOpen() && !isMenuOrTrigger(e.target)) {
+        close();
+      }
+    },
+    true
+  );
+
+  document.addEventListener(
+    'contextmenu',
+    (e) => {
+      if (isOpen() && !isMenuOrTrigger(e.target)) {
+        close();
+      }
+    },
+    true
+  );
 }
 
 /**

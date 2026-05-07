@@ -29,7 +29,7 @@
  * Selecting a radio via arrow keys also checks it.
  */
 
-import { createKeyboardNav } from '../../utils/keyboard-nav.js';
+import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
 
 export class RenRadioGroup extends HTMLElement {
   static get observedAttributes() {

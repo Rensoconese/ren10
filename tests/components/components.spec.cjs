@@ -1,144 +1,124 @@
 // @ts-check
 /**
- * Per-component smoke tests.
+ * Component catalog smoke tests.
  *
  * Drives from the CLI registry (single source of truth for "what components exist")
- * and validates that every registered component has a matching demo section in
- * docs/components.html, renders visibly, and passes axe scoped to that section.
+ * and validates that every registered component has a matching catalog card in
+ * docs/components.html plus an individual documentation page.
  *
  * This catches three classes of regression that page-level specs miss:
- *   1. New component added to registry but forgotten in components.html
- *   2. A component section broken in a way the full-page a11y scan masks
- *      (e.g. a contained violation that axe reports but the violator happens
- *      to be in a minority on the page)
- *   3. Drift between CLI metadata and docs (naming, IDs, presence)
- *
- * If this spec fails for a component, the fix is usually one of:
- *   - Add a `<section id="..." class="demo-section">` to components.html
- *   - Update SECTION_MAP below if the demo lives under a different anchor
- *   - Fix the actual a11y issue in the component CSS/markup
+ *   1. New component added to registry but forgotten in the catalog
+ *   2. Catalog link points to a missing docs page
+ *   3. Drift between CLI metadata and docs aliases
  */
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
 const path = require('path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 
 const COMPONENTS_HTML = 'file://' + path.resolve(__dirname, '../../docs/components.html');
+const DOCS_DIR = path.resolve(__dirname, '../../docs/components');
 
 /**
- * Registry key → section ID in components.html.
+ * Registry key → individual docs page.
  *
- * Most entries are 1:1 after trivial pluralisation (`button` → `buttons`).
- * A few need explicit mapping because the demo section was named by use-case
- * rather than component (`form` → `form-validation`, `select` → `custom-select`).
- *
- * Known gap: date-range-picker has no demo section yet — tracked as a follow-up.
+ * Most docs use the component directory name from cli/registry.js.
+ * These aliases are intentional public docs names that differ from registry dir.
  */
-const SECTION_MAP = {
-  // Primitives
-  button:       'buttons',
-  field:        'form-fields',
-  checkbox:     'checkbox',
-  badge:        'badges',
-  radio:        'radio',
-  progress:     'progress',
-  icon:         'icons',
-  avatar:       'avatars',
-  banner:       'banners',
-  breadcrumb:   'breadcrumbs',
-  card:         'cards',
-  kbd:          'kbd',
-  link:         'links',
-  pagination:   'pagination',
-  separator:    'separators',
-  skeleton:     'skeletons',
-  spinner:      'spinners',
-  tag:          'tags',
-
-  // Composites
-  dialog:              'dialog',
-  popover:             'popover',
-  tooltip:             'tooltip',
-  tabs:                'tabs',
-  accordion:           'accordion',
-  menu:                'menu',
-  select:              'custom-select',
-  toast:               'toast',
-  slider:              'slider',
-  'toggle-group':      'toggle-group',
-  combobox:            'combobox',
-  sheet:               'sheet',
-  'hover-card':        'hover-card',
-  'scroll-area':       'scroll-area',
-  'number-field':      'number-field',
-  otp:                 'input-otp',
-  calendar:            'calendar',
-  'date-picker':       'date-picker',
-  carousel:            'carousel',
-  'alert-dialog':      'alert-dialog',
-  collapsible:         'collapsible',
-  'color-picker':      'color-picker',
-  'context-menu':      'context-menu',
-  dropzone:            'dropzone',
-  toolbar:             'toolbar',
-  'date-range-picker': 'date-range-picker',
-
-  // Patterns
-  nav:            'nav',
-  sidebar:        'sidebar',
-  command:        'command',
-  table:          'data-table',
-  form:           'form-validation',
-  menubar:        'menubar',
-  ai:             'ai-patterns',
-  'empty-state':  'empty-state',
+const DOC_PAGE_ALIASES = {
+  icon: 'ren-icons.html',
+  otp: 'ren-input-otp.html',
+  table: 'ren-data-table.html',
+  form: 'ren-form-validation.html',
+  ai: 'ren-ai-patterns.html',
 };
 
-const SKIPPED = new Set([]);
+let components = [];
 
-test.describe('Every registered component has a working demo section', () => {
-  test.beforeAll(async () => {
-    // Sanity check: every non-skipped key in REGISTRY must appear in SECTION_MAP.
-    // We load the registry lazily here (ES module) to avoid turning the whole
-    // spec into ESM.
-    const { REGISTRY } = await import('../../cli/registry.js');
-    const registryKeys = Object.keys(REGISTRY);
-    const unmapped = registryKeys.filter(
-      (k) => !SECTION_MAP[k] && !SKIPPED.has(k)
-    );
-    if (unmapped.length > 0) {
-      throw new Error(
-        `Registry entries missing from SECTION_MAP (add them or to SKIPPED): ${unmapped.join(', ')}`
-      );
+function cssString(value) {
+  if (typeof CSS !== 'undefined' && CSS.escape) return CSS.escape(value);
+  return value.replace(/["\\]/g, '\\$&');
+}
+
+test.beforeAll(async () => {
+  const { REGISTRY } = await import('../../cli/registry.js');
+  components = Object.entries(REGISTRY).map(([key, meta]) => {
+    const docFile = DOC_PAGE_ALIASES[key] || `${meta.dir}.html`;
+    return {
+      key,
+      name: meta.name,
+      layer: meta.layer,
+      docFile,
+      href: `components/${docFile}`,
+      docPath: path.join(DOCS_DIR, docFile),
+    };
+  });
+});
+
+test.describe('Component catalog contract', () => {
+  test('catalog page passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await page.goto(COMPONENTS_HTML);
+    await injectAxe(page);
+    await checkA11y(page, null, {
+      detailedReport: false,
+      axeOptions: {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+      },
+    });
+  });
+
+  test('every registry component has a catalog card and docs page', async ({ page }) => {
+    await page.goto(COMPONENTS_HTML);
+
+    for (const component of components) {
+      const href = cssString(component.href);
+      const card = page.locator(`article:has(a[href="${href}"])`);
+
+      await expect(card, `${component.key} should have one catalog card linking to ${component.href}`).toHaveCount(1);
+      await expect(card.first(), `${component.key} catalog card should be visible`).toBeVisible();
+      await expect(
+        card.first().locator('.comp-card-purpose, .comp-featured-purpose').first(),
+        `${component.key} catalog card should explain the component purpose`
+      ).toBeVisible();
+
+      expect(
+        fs.existsSync(component.docPath),
+        `${component.key} docs page should exist at ${path.relative(path.resolve(__dirname, '../..'), component.docPath)}`
+      ).toBe(true);
     }
   });
 
-  for (const [key, sectionId] of Object.entries(SECTION_MAP)) {
-    test(`${key} → #${sectionId} renders and passes axe`, async ({ page }) => {
+  for (const layer of ['primitives', 'composites', 'patterns']) {
+    test(`${layer} registry components are represented in the matching catalog layer`, async ({ page }) => {
       await page.goto(COMPONENTS_HTML);
+      const layerComponents = components.filter((component) => component.layer === layer);
 
-      const section = page.locator(`#${sectionId}`);
-      await expect(section).toBeVisible();
-
-      // Assert the section contains demo content beyond its heading + description.
-      // Each demo-section starts with <h2> + <p.demo-description>; anything else
-      // (a div, a ren-* component, an input, an img, etc.) counts as real demo.
-      const demoDescendants = await section
-        .locator('> *:not(h2):not(p.demo-description)')
-        .count();
-      expect(demoDescendants, `${key} section should contain rendered demo content`).toBeGreaterThan(0);
-
-      // Scoped axe scan: WCAG 2.1 AA on the section subtree only.
-      await injectAxe(page);
-      await checkA11y(page, `#${sectionId}`, {
-        detailedReport: false,
-        axeOptions: {
-          runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
-        },
-      });
+      for (const component of layerComponents) {
+        const href = cssString(component.href);
+        const layerSection = page.locator(`#${layer}`);
+        await expect(
+          layerSection.locator(`article:has(a[href="${href}"])`),
+          `${component.key} should be listed under #${layer}`
+        ).toHaveCount(1);
+      }
     });
   }
 
-  for (const key of SKIPPED) {
-    test.skip(`${key} (demo section pending)`, () => {});
-  }
+  test('every registry component docs page loads', async ({ page }) => {
+    test.setTimeout(60000);
+
+    for (const component of components) {
+      expect(
+        fs.existsSync(component.docPath),
+        `${component.key} docs page should exist before browser navigation`
+      ).toBe(true);
+
+      await page.goto(`file://${component.docPath}`, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('body')).toBeVisible();
+      await expect(
+        page.locator('h1').first(),
+        `${component.key} docs page should have a visible h1`
+      ).toBeVisible();
+    }
+  });
 });

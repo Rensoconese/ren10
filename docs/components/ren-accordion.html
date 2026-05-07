@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accordion — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .demo-acc { background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden; }
+    .demo-acc details { border-bottom: 1px solid var(--color-border); }
+    .demo-acc details:last-child { border-bottom: 0; }
+    .demo-acc summary { list-style: none; padding: var(--space-3) var(--space-4); cursor: pointer; font-weight: var(--weight-medium); display: flex; justify-content: space-between; align-items: center; }
+    .demo-acc summary::-webkit-details-marker { display: none; }
+    .demo-acc summary::marker { display: none; content: ''; }
+    .demo-acc summary::after {
+      content: '';
+      width: 16px; height: 16px;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      border: none;             /* override classless.css base chevron drawn with borders */
+      transform: rotate(0deg);  /* override classless.css base rotate(-45deg) */
+      transition: transform 150ms;
+      flex-shrink: 0;
+    }
+    .demo-acc details[open] summary::after { transform: rotate(180deg); }
+    .demo-acc summary:hover { background: var(--color-fill); }
+    .demo-acc-body { padding: 0 var(--space-4) var(--space-4); color: var(--color-text-secondary); font-size: var(--text-sm); line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.2</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-field.html">Form Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html" aria-current="page">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-input-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-data-table.html">Data Table</a></li>
+        <li><a href="ren-form-validation.html">Form Validation</a></li>
+        <li><a href="ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Accordion</li></ol></nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Accordion</h1>
+        <p class="lede">Stack of collapsible panels. Built on the native <code>&lt;details&gt;</code> + <code>&lt;summary&gt;</code> pair so accessibility comes for free. Single-open or multi-open mode, animated expand / collapse.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Accordions hide secondary content behind disclosure triggers. Use them when the page has more sections than fits on a screen and most users only need one or two at a time — FAQs, settings groups, app feature tours. RenDS just styles the native <code>&lt;details&gt;</code>; the platform does the open/close logic, keyboard handling, and the <code>open</code> attribute.</p>
+        <div class="dx-callout">
+          <p><strong>Don't hide critical content in an accordion.</strong> If users need to read it to make a decision, show it. Accordions hide content one level removed from the primary task.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="demo-acc" style="max-width: 520px;">
+              <details open><summary>How does pricing work?</summary><div class="demo-acc-body">We charge per user, per month. The Basic plan is $9; Pro is $29 and removes seat caps. Annual billing saves 20%.</div></details>
+              <details><summary>Can I cancel anytime?</summary><div class="demo-acc-body">Yes — cancel from your billing settings. Your plan stays active until the end of the current period; we don't pro-rate refunds.</div></details>
+              <details><summary>Do you offer a free trial?</summary><div class="demo-acc-body">14 days, no credit card. After the trial you'll be downgraded to the free tier unless you pick a plan.</div></details>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-accordion&gt;
+  &lt;details open&gt;
+    &lt;summary&gt;How does pricing work?&lt;/summary&gt;
+    &lt;p&gt;We charge per user, per month…&lt;/p&gt;
+  &lt;/details&gt;
+  &lt;details&gt;
+    &lt;summary&gt;Can I cancel anytime?&lt;/summary&gt;
+    &lt;p&gt;Yes — cancel from your billing settings…&lt;/p&gt;
+  &lt;/details&gt;
+&lt;/ren-accordion&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-accordion</code></td><td>Stack container. Borders the group; visually links the items.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-accordion-item</code></td><td>Optional class on each <code>&lt;details&gt;</code>. Useful when accordions live without the wrapper.</td></tr>
+          </tbody>
+        </table>
+        <h3>Web Component attributes</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">single</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>If present, opening one item closes the others (mutually exclusive mode).</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <p>Native <code>&lt;details&gt;</code> handles all the accessibility — keyboard, screen reader announcement of expanded state, the <code>aria-expanded</code> wiring. You don't need to add anything.</p>
+        <ul>
+          <li><kbd>Tab</kbd> moves focus to a closed <code>&lt;summary&gt;</code>; <kbd>Enter</kbd> or <kbd>Space</kbd> toggles open / closed.</li>
+          <li>Screen readers announce "expanded" or "collapsed" automatically.</li>
+          <li>The summary is the trigger — keep it short and start with a verb or noun the user is looking for.</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialog — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Page-specific styles — chrome and tables live in shell.css */
+
+    /* Demo block: preview frame + code block, stacked */
+    .dx-demo {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: var(--space-4) 0;
+    }
+    .dx-demo-preview {
+      background: var(--color-surface-raised);
+      padding: var(--space-8) var(--space-5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      justify-content: center;
+      min-height: 96px;
+    }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* Variant rows — labeled groups of demos */
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      padding-top: var(--space-3);
+    }
+    .dx-vrow-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      padding: var(--space-3);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+    @media (max-width: 720px) {
+      .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); }
+      .dx-vrow-label { padding-top: 0; }
+    }
+
+    /* Anatomy: assembled dialog on top, parts breakdown below */
+    .dx-anatomy {
+      margin: var(--space-4) 0;
+      display: grid;
+      gap: var(--space-4);
+    }
+    .dx-anatomy-num {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--color-text);
+      color: var(--color-surface);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .dx-anatomy-stage {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6) var(--space-5);
+    }
+    .dx-anatomy-stage-label {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-semibold);
+      margin: 0 0 var(--space-3);
+    }
+    .dx-anatomy-parts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+    @media (max-width: 720px) { .dx-anatomy-parts { grid-template-columns: 1fr; } }
+    .dx-anatomy-part {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: grid;
+      gap: var(--space-2);
+    }
+    .dx-anatomy-part-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .dx-anatomy-part-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+    }
+    .dx-anatomy-part-desc {
+      font-size: var(--text-sm);
+      line-height: 1.5;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+    .dx-anatomy-part-desc code { font-size: 0.85em; }
+
+    /* Mocked dialog illustration — a static, non-interactive preview of the
+       dialog frame so users can visualize the parts without opening the modal.
+       Intentionally light: no internal dividers, transparent close button,
+       header/body/footer separated only by spacing. */
+    .dx-dialog-mock {
+      width: 100%;
+      max-width: 380px;
+      margin-inline: auto;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl, 0 12px 48px rgba(0,0,0,0.18));
+      padding: var(--space-5) var(--space-5) var(--space-4);
+    }
+    .dx-dialog-mock-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+    .dx-dialog-mock-title {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      margin: 0;
+      line-height: 1.2;
+    }
+    .dx-dialog-mock-close {
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      line-height: 1;
+      font-size: 18px;
+    }
+    .dx-dialog-mock-close:hover { color: var(--color-text); }
+    .dx-dialog-mock-body {
+      margin-block: var(--space-3) var(--space-4);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+    .dx-dialog-mock-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar (shell.css) -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.2</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar + content shell -->
+  <div class="dx-shell dx-shell-grid">
+
+    <!-- Persistent sidebar — same nav as the catalog so context is never lost -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-field.html">Form Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html" aria-current="page">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-input-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-data-table.html">Data Table</a></li>
+        <li><a href="ren-form-validation.html">Form Validation</a></li>
+        <li><a href="ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="dx-content">
+
+      <!-- Page header -->
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Dialog</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Dialog</h1>
+        <p class="lede">A modal overlay built on the native <code>&lt;dialog&gt;</code> element. Focus trap, keyboard handling, click-outside dismiss, and smooth entry / exit animations come for free. Available as a CSS class set <em>or</em> as the <code>&lt;ren-dialog&gt;</code> Web Component with auto-wired triggers.</p>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           1. OVERVIEW
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>A dialog interrupts the user's current flow to confirm an action, gather a small piece of input, or surface a focused decision. RenDS uses the browser's native <code>&lt;dialog&gt;</code> element under the hood, so a lot of the hard parts — modal scroll lock, top-layer rendering, focus trapping, escape-to-close — come from the platform. The component layers smooth animations, mobile sheet behavior, and declarative auto-wiring on top.</p>
+
+        <p>Use a dialog when the user needs to make a deliberate choice before the rest of the UI continues. If the action is destructive or irreversible, use the <strong>alert</strong> variant so the dialog can't be dismissed by clicking the backdrop.</p>
+
+        <div class="dx-callout">
+          <p><strong>Don't reach for a dialog by default.</strong> If the decision can live on the page (an inline form, a popover, an expandable panel), prefer those. A modal blocks everything else and shouldn't be the answer to "where do I put this content?".</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           2. ANATOMY
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Parts</p>
+        <h2>Anatomy</h2>
+        <p>A dialog is composed of five regions. Three are required (container, body, footer with at least one action), two are conventional (header with title and close button, backdrop).</p>
+
+        <div class="dx-anatomy">
+          <!-- Assembled reference -->
+          <div class="dx-anatomy-stage">
+            <p class="dx-anatomy-stage-label">Assembled</p>
+            <div class="dx-dialog-mock" aria-hidden="true">
+              <div class="dx-dialog-mock-header">
+                <h4 class="dx-dialog-mock-title">Confirm changes</h4>
+                <button class="dx-dialog-mock-close" type="button" tabindex="-1">×</button>
+              </div>
+              <div class="dx-dialog-mock-body">Save the edits to your profile? You can revert any time from settings.</div>
+              <div class="dx-dialog-mock-footer">
+                <button class="ren-btn ren-btn-secondary ren-btn-sm" tabindex="-1">Cancel</button>
+                <button class="ren-btn ren-btn-primary ren-btn-sm" tabindex="-1">Save</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parts -->
+          <div class="dx-anatomy-parts">
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">1</span>
+                <span class="dx-anatomy-part-name">Container</span>
+              </div>
+              <p class="dx-anatomy-part-desc">The dialog box itself — <code>&lt;dialog class="ren-dialog"&gt;</code>. Sized by a width variant token (<code>--dialog-max-width</code>). Renders in the browser's top layer.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">2</span>
+                <span class="dx-anatomy-part-name">Backdrop</span>
+              </div>
+              <p class="dx-anatomy-part-desc">The dimmed scrim. Styled via <code>::backdrop</code>. Click to dismiss (unless <code>alert</code> is set). Fades in with the dialog.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">3</span>
+                <span class="dx-anatomy-part-name">Header</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-dialog-header</code> with <code>.ren-dialog-title</code> and an optional close button (<code>data-dialog-close</code>). Bottom-bordered, padded.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">4</span>
+                <span class="dx-anatomy-part-name">Body</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-dialog-body</code>. Scrolls when content exceeds the dialog's max-height. Independent scrollbar so the page beneath stays locked.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">5</span>
+                <span class="dx-anatomy-part-name">Footer</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-dialog-footer</code> with action buttons. Conventionally right-aligned, primary action last. Top-bordered.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           3. DEMO
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Click any trigger to open the dialog. <kbd>Esc</kbd> closes it; clicking outside the dialog closes it (except for alert dialogs). Tab cycles through the focusable elements without escaping.</p>
+
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <button class="ren-btn ren-btn-primary" data-dialog-trigger="demo-confirm">Open dialog</button>
+            <button class="ren-btn ren-btn-danger" data-dialog-trigger="demo-alert">Open alert dialog</button>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button data-dialog-trigger="confirm-id"&gt;Open dialog&lt;/button&gt;
+
+&lt;ren-dialog id="confirm-id"&gt;
+  &lt;dialog class="ren-dialog"&gt;
+    &lt;div class="ren-dialog-header"&gt;
+      &lt;h2 class="ren-dialog-title"&gt;Confirm changes&lt;/h2&gt;
+      &lt;button class="ren-dialog-close" data-dialog-close aria-label="Close"&gt;×&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-body"&gt;
+      Save the edits to your profile?
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-footer"&gt;
+      &lt;button class="ren-btn ren-btn-secondary" data-dialog-close&gt;Cancel&lt;/button&gt;
+      &lt;button class="ren-btn ren-btn-primary"&gt;Save&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/dialog&gt;
+&lt;/ren-dialog&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           4. VARIANTS
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <p>Five sizes plus an alert mode. Default is <code>md</code>. Pick the smallest size that fits the content — bigger isn't friendlier.</p>
+
+        <div class="dx-vgrid">
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Sizes</span>
+            <div class="dx-vrow-items">
+              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-sm">sm</button>
+              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-md">md (default)</button>
+              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-lg">lg</button>
+              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-xl">xl</button>
+              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-full">full</button>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Alert</span>
+            <div class="dx-vrow-items">
+              <button class="ren-btn ren-btn-danger" data-dialog-trigger="demo-alert">Delete account</button>
+              <span style="font-size: var(--text-sm); color: var(--color-text-muted);">No backdrop dismiss · forces a button choice</span>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">No Escape</span>
+            <div class="dx-vrow-items">
+              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-no-escape">Open critical flow</button>
+              <span style="font-size: var(--text-sm); color: var(--color-text-muted);"><kbd>Esc</kbd> is suppressed · use the in-dialog buttons</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           5. API
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <p>Apply directly to the <code>&lt;dialog&gt;</code> element. They work even if you don't use the Web Component (you'd just script open / close yourself).</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog</code></td>
+              <td>Base. Required on the <code>&lt;dialog&gt;</code> element. Provides background, border-radius, shadow, animations, and the backdrop styling.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-header</code></td>
+              <td>Top region. Flex row with a bottom border. Holds the title and close button.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-title</code></td>
+              <td>Heading inside the header. Set on the actual heading tag (<code>&lt;h2&gt;</code>, <code>&lt;h3&gt;</code>) so screen readers announce it correctly.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-description</code></td>
+              <td>Optional sub-title under the title. Muted color.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-body</code></td>
+              <td>Main content region. Scrolls independently when its content exceeds <code>max-height: 85dvh</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-footer</code></td>
+              <td>Bottom region for action buttons. Top-bordered, right-aligned by default.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-close</code></td>
+              <td>The icon close button placed in the header. Square, ghost-styled, focus ring matches the system token.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-dialog-sm</code> / <code class="dx-api-name">-md</code> / <code class="dx-api-name">-lg</code> / <code class="dx-api-name">-xl</code> / <code class="dx-api-name">-full</code></td>
+              <td>Size modifiers. Set <code>--dialog-max-width</code>: 24rem · 32rem · 42rem · 56rem · 95dvw.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-alert-dialog</code></td>
+              <td>Alert flavor. Suppresses click-outside dismissal. Used by <code>&lt;ren-alert-dialog&gt;</code> internally.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Web Component attributes</h3>
+        <p>Set on the <code>&lt;ren-dialog&gt;</code> wrapper. All are reactive — flipping them in JS opens, closes, or resizes the dialog without rebuilding the markup.</p>
+        <table class="dx-api dx-api-cols-4">
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">open</code></td>
+              <td><span class="dx-api-type">boolean</span></td>
+              <td><span class="dx-api-default">false</span></td>
+              <td>Opens the dialog when present. Mirrors <code>&lt;dialog open&gt;</code> but routes through the component lifecycle (events, focus trap).</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">size</code></td>
+              <td><span class="dx-api-type">"sm" | "md" | "lg" | "xl" | "full"</span></td>
+              <td><span class="dx-api-default">"md"</span></td>
+              <td>Width variant. Adds the matching <code>.ren-dialog-*</code> class to the inner dialog.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">alert</code></td>
+              <td><span class="dx-api-type">boolean</span></td>
+              <td><span class="dx-api-default">false</span></td>
+              <td>Disables backdrop click dismissal. The user must press a button to close.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">no-escape</code></td>
+              <td><span class="dx-api-type">boolean</span></td>
+              <td><span class="dx-api-default">false</span></td>
+              <td>Suppresses <kbd>Esc</kbd> closing the dialog. Use sparingly — it traps the user.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript methods</h3>
+        <p>Available on every <code>&lt;ren-dialog&gt;</code> instance. All return Promises so you can <code>await</code> open / close transitions before continuing.</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">show()</code> / <code class="dx-api-name">open()</code></td>
+              <td>Opens the dialog. Returns a Promise that resolves once the entry animation finishes. Aliases.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">close(returnValue?)</code></td>
+              <td>Closes the dialog. Optional <code>returnValue</code> is forwarded to the <code>ren-close</code> event detail. Promise resolves after the exit animation.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">isOpen</code></td>
+              <td>Boolean getter. <code>true</code> while the dialog is visible.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">dialog</code></td>
+              <td>Getter that returns the underlying native <code>&lt;dialog&gt;</code> element if you need to call its DOM API directly.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="dx-pre" tabindex="0"><code>const dialog = document.querySelector('ren-dialog');
+
+await dialog.show();              // wait for it to be visible
+const result = await dialog.close('confirmed');  // returnValue surfaces in ren-close
+
+if (dialog.isOpen) { /* still open */ }</code></div>
+
+        <h3>Events</h3>
+        <p>Both events bubble and are composed. Listen on the wrapper or any ancestor.</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">ren-open</code></td>
+              <td>Fired after the entry animation completes. <code>event.detail</code> is empty.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">ren-close</code></td>
+              <td>Fired after the exit animation completes. <code>event.detail.returnValue</code> contains the value passed to <code>close()</code>, if any.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Auto-wiring</h3>
+        <p>You don't need to write JavaScript for the common case. Two declarative attributes wire opening and closing:</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">data-dialog-trigger="ID"</code></td>
+              <td>On any element. Click opens the <code>&lt;ren-dialog&gt;</code> with the matching <code>id</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">data-dialog-close</code></td>
+              <td>On any element inside the dialog. Click closes the parent dialog.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           6. ACCESSIBILITY
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <p>Because the component renders an actual <code>&lt;dialog&gt;</code> element, the platform handles most of the work. RenDS adds the focus management, motion preferences, and labelling conventions on top.</p>
+
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Tab</kbd></span>
+            <span>Moves focus to the next focusable element inside the dialog. Cycles back to the first when it reaches the end.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Shift</kbd> + <kbd>Tab</kbd></span>
+            <span>Moves focus backward, cycling at the start of the dialog.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Esc</kbd></span>
+            <span>Closes the dialog. Suppressed when <code>no-escape</code> is set.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Enter</kbd></span>
+            <span>Activates the focused button or submits the focused form, as the platform default. Not intercepted.</span>
+          </div>
+        </div>
+
+        <h3>Focus management</h3>
+        <ul>
+          <li>On open, focus moves to the first focusable element inside the dialog. To override, mark a specific element with <code>autofocus</code>.</li>
+          <li>While open, focus is trapped inside the dialog — Tab and Shift+Tab cycle without leaving.</li>
+          <li>On close, focus returns to the element that opened the dialog (the trigger button). The user never has to find their place again.</li>
+        </ul>
+
+        <h3>Labelling</h3>
+        <p>Always pair the dialog with an accessible name. The simplest path is to give the title an <code>id</code> and reference it via <code>aria-labelledby</code>:</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-dialog id="confirm" aria-labelledby="confirm-title"&gt;
+  &lt;dialog class="ren-dialog"&gt;
+    &lt;div class="ren-dialog-header"&gt;
+      &lt;h2 class="ren-dialog-title" id="confirm-title"&gt;Delete file&lt;/h2&gt;
+    &lt;/div&gt;
+    ...
+  &lt;/dialog&gt;
+&lt;/ren-dialog&gt;</code></div>
+        <p>If you also have descriptive prose under the title, link it with <code>aria-describedby</code>.</p>
+
+        <h3>Motion</h3>
+        <p>Entry and exit animations use the <code>--duration-enter</code> motion token. Under <code>prefers-reduced-motion: reduce</code> the transitions are disabled — the dialog appears and disappears instantly.</p>
+
+        <div class="dx-callout">
+          <p><strong>Use the alert variant for destructive confirmations.</strong> A backdrop click on a regular dialog dismisses it silently — fine for most cases, dangerous when the user is about to delete something. The alert variant forces an explicit button choice.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           7. EXAMPLES
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Confirmation</h3>
+        <p>The classic: a dialog asks the user to confirm a non-trivial action.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="save-confirm"&gt;Save&lt;/button&gt;
+
+&lt;ren-dialog id="save-confirm" aria-labelledby="save-title"&gt;
+  &lt;dialog class="ren-dialog"&gt;
+    &lt;div class="ren-dialog-header"&gt;
+      &lt;h2 class="ren-dialog-title" id="save-title"&gt;Save changes?&lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-body"&gt;
+      Your edits will be visible to the team immediately.
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-footer"&gt;
+      &lt;button class="ren-btn ren-btn-secondary" data-dialog-close&gt;Cancel&lt;/button&gt;
+      &lt;button class="ren-btn ren-btn-primary"&gt;Save&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/dialog&gt;
+&lt;/ren-dialog&gt;</code></div>
+
+        <h3>Destructive (alert)</h3>
+        <p>Backdrop click is suppressed; the user must press one of the two buttons.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;button class="ren-btn ren-btn-danger" data-dialog-trigger="delete-confirm"&gt;Delete account&lt;/button&gt;
+
+&lt;ren-alert-dialog id="delete-confirm" aria-labelledby="delete-title"&gt;
+  &lt;dialog class="ren-dialog ren-alert-dialog"&gt;
+    &lt;div class="ren-dialog-header"&gt;
+      &lt;h2 class="ren-dialog-title" id="delete-title"&gt;Delete this account?&lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-body"&gt;
+      All projects, files, and history will be permanently removed. This cannot be undone.
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-footer"&gt;
+      &lt;button class="ren-btn ren-btn-secondary" data-dialog-close&gt;Keep account&lt;/button&gt;
+      &lt;button class="ren-btn ren-btn-danger"&gt;Delete account&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/dialog&gt;
+&lt;/ren-alert-dialog&gt;</code></div>
+
+        <h3>Form dialog</h3>
+        <p>Using a dialog to collect a small piece of input. Submit the form to close.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="rename"&gt;Rename project&lt;/button&gt;
+
+&lt;ren-dialog id="rename" aria-labelledby="rename-title"&gt;
+  &lt;dialog class="ren-dialog ren-dialog-sm"&gt;
+    &lt;form method="dialog"&gt;
+      &lt;div class="ren-dialog-header"&gt;
+        &lt;h2 class="ren-dialog-title" id="rename-title"&gt;Rename project&lt;/h2&gt;
+      &lt;/div&gt;
+      &lt;div class="ren-dialog-body"&gt;
+        &lt;label for="project-name" class="ren-field-label"&gt;New name&lt;/label&gt;
+        &lt;input id="project-name" name="project-name" class="ren-input" autofocus required&gt;
+      &lt;/div&gt;
+      &lt;div class="ren-dialog-footer"&gt;
+        &lt;button class="ren-btn ren-btn-secondary" type="button" data-dialog-close&gt;Cancel&lt;/button&gt;
+        &lt;button class="ren-btn ren-btn-primary" type="submit"&gt;Rename&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/form&gt;
+  &lt;/dialog&gt;
+&lt;/ren-dialog&gt;</code></div>
+
+        <h3>Reading the result</h3>
+        <p>When you need to know <em>which</em> button closed the dialog, listen to <code>ren-close</code> and pass a <code>returnValue</code>.</p>
+        <div class="dx-pre" tabindex="0"><code>const dialog = document.querySelector('#save-confirm');
+
+dialog.querySelector('.ren-btn-primary')
+  .addEventListener('click', () =&gt; dialog.close('save'));
+
+dialog.querySelector('.ren-btn-secondary')
+  .addEventListener('click', () =&gt; dialog.close('cancel'));
+
+dialog.addEventListener('ren-close', (e) =&gt; {
+  if (e.detail.returnValue === 'save') {
+    persist();
+  }
+});</code></div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Live demo dialogs — kept at the end of the body so they sit
+       outside the dx-shell-grid (top-layer rendering still works
+       no matter where in the DOM the dialog lives).
+       ═══════════════════════════════════════════════════════════ -->
+
+  <ren-dialog id="demo-confirm" aria-labelledby="demo-confirm-title">
+    <dialog class="ren-dialog">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-confirm-title">Confirm changes</h2>
+        <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
+      </div>
+      <div class="ren-dialog-body">
+        Save the edits to your profile? You can revert any time from settings.
+      </div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
+        <button class="ren-btn ren-btn-primary" data-dialog-close>Save</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <ren-alert-dialog id="demo-alert" aria-labelledby="demo-alert-title">
+    <dialog class="ren-dialog ren-alert-dialog">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-alert-title">Delete this account?</h2>
+      </div>
+      <div class="ren-dialog-body">
+        All projects, files, and history will be permanently removed. This cannot be undone.
+      </div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-secondary" data-dialog-close>Keep account</button>
+        <button class="ren-btn ren-btn-danger" data-dialog-close>Delete account</button>
+      </div>
+    </dialog>
+  </ren-alert-dialog>
+
+  <ren-dialog id="demo-size-sm" size="sm" aria-labelledby="demo-size-sm-title">
+    <dialog class="ren-dialog ren-dialog-sm">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-size-sm-title">Small dialog</h2>
+        <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
+      </div>
+      <div class="ren-dialog-body">24 rem (384 px) max-width. For tight, single-decision dialogs.</div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <ren-dialog id="demo-size-md" size="md" aria-labelledby="demo-size-md-title">
+    <dialog class="ren-dialog ren-dialog-md">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-size-md-title">Medium dialog (default)</h2>
+        <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
+      </div>
+      <div class="ren-dialog-body">32 rem (512 px) max-width. The everyday default — fits a paragraph of context plus a couple of buttons.</div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <ren-dialog id="demo-size-lg" size="lg" aria-labelledby="demo-size-lg-title">
+    <dialog class="ren-dialog ren-dialog-lg">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-size-lg-title">Large dialog</h2>
+        <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
+      </div>
+      <div class="ren-dialog-body">42 rem (672 px) max-width. Use for forms with multiple fields or list-pickers.</div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <ren-dialog id="demo-size-xl" size="xl" aria-labelledby="demo-size-xl-title">
+    <dialog class="ren-dialog ren-dialog-xl">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-size-xl-title">Extra-large dialog</h2>
+        <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
+      </div>
+      <div class="ren-dialog-body">56 rem (896 px) max-width. For media browsers, multi-step wizards, or rich previews.</div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <ren-dialog id="demo-size-full" size="full" aria-labelledby="demo-size-full-title">
+    <dialog class="ren-dialog ren-dialog-full">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-size-full-title">Full-bleed dialog</h2>
+        <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
+      </div>
+      <div class="ren-dialog-body">95 dvw — almost edge-to-edge. Reserve for full-screen takeovers (image lightbox, focus modes).</div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <ren-dialog id="demo-no-escape" no-escape aria-labelledby="demo-no-escape-title">
+    <dialog class="ren-dialog">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title" id="demo-no-escape-title">Critical step</h2>
+      </div>
+      <div class="ren-dialog-body">
+        <kbd>Esc</kbd> won't close this. Use one of the buttons below to leave. (You'd reserve this for moments where dismissing accidentally would lose work — e.g. mid-payment-flow.)
+      </div>
+      <div class="ren-dialog-footer">
+        <button class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
+        <button class="ren-btn ren-btn-primary" data-dialog-close>Continue</button>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <!-- Web Component registration (focus trap, animations, auto-wiring) -->
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+
+  <!-- Demo wiring — vanilla, uses the native <dialog> API so triggers fire
+       even if the Web Component never registers. -->
+  <script>
+    // Open: any [data-dialog-trigger="ID"] opens the matching dialog
+    document.querySelectorAll('[data-dialog-trigger]').forEach(trigger => {
+      const targetId = trigger.getAttribute('data-dialog-trigger');
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const wrapper = document.getElementById(targetId);
+        if (!wrapper) return;
+        const dialog = wrapper.tagName === 'DIALOG' ? wrapper : wrapper.querySelector('dialog');
+        if (dialog && typeof dialog.showModal === 'function' && !dialog.open) {
+          dialog.showModal();
+        }
+      });
+    });
+
+    // Close: any [data-dialog-close] inside a <dialog> closes it
+    document.querySelectorAll('[data-dialog-close]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dialog = btn.closest('dialog');
+        if (dialog && typeof dialog.close === 'function') {
+          dialog.close();
+        }
+      });
+    });
+
+    // Backdrop click closes non-alert dialogs (skip <ren-alert-dialog> wrappers)
+    document.querySelectorAll('dialog').forEach(dialog => {
+      const isAlert = dialog.closest('ren-alert-dialog') || dialog.classList.contains('ren-alert-dialog');
+      if (isAlert) return;
+      dialog.addEventListener('click', (e) => {
+        // Click on the backdrop registers as a click on the <dialog> element itself
+        if (e.target === dialog) dialog.close();
+      });
+    });
+  </script>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

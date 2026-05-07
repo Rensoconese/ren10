@@ -13,9 +13,293 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- **Marketing landing page** at `rends/index.html`. Hero, three pillars,
+  atomic-stack visual, live preview block (rendered components alongside
+  their source), templates strip, and a Theme Builder CTA. Uses the
+  shared shell chrome so it sits inside the doc-site nav system.
+
+- **Full per-component documentation.** Every primitive (19), composite
+  (28) and pattern (7) — 54 components total — now has its own page
+  under `docs/components/`. Each page includes Overview, Demo, API
+  reference (with consistent column boundaries via the centralized
+  `.dx-api` class), Accessibility notes, and a persistent left sidebar
+  listing every component in the system.
+
+- **Article-detail blog template** at `templates/blog-post.html`. A
+  long-form reading layout with hero, 21:9 cover, rich typography
+  (headings, lists, blockquote, callout, inline + block code), author
+  card, and a related-posts strip — wired up from the blog list so
+  every post link lands somewhere real.
+
+- **Centralized site shell** in `site/shell.css`. Top nav (`.dx-nav`),
+  sidebar (`.dx-sidebar`), shell containers (`.dx-shell`,
+  `.dx-shell-grid`), code blocks (`.dx-pre`), callouts (`.dx-callout`),
+  API tables (`.dx-api`, `.dx-api-cols-4`), and keyboard tables
+  (`.dx-keys`). Every doc, template, and component page now imports
+  the same chrome.
+
+- **Unified sidebar across the doc site.** Same six-section structure
+  on every page (Guides → Foundations → Primitives → Composites →
+  Patterns → Reference) so navigation is rock-stable as the user
+  moves between pages. `aria-current="page"` highlights the entry
+  for the current page; everything else stays put. Applied to all
+  61 doc-level pages.
+
+- **Mobile drawer + sidebar live filter** (`site/shell.js`, ~5.6 KB,
+  loaded on 64 pages). On screens ≤900px, a hamburger button slides
+  the sidebar in from the side with a backdrop, ESC to close, click
+  outside to close, focus management included. A search input pinned
+  to the top of every sidebar live-filters the 60+ entries; group
+  headers hide automatically when all their items are filtered out.
+
+- **Cmd+K command palette.** Press `⌘K` (Mac) / `Ctrl+K` (Win/Linux)
+  on any doc page to open a fuzzy-searchable palette over the entire
+  site nav. Multi-word queries are supported (`"date pic"` matches
+  Date Picker), exact > prefix > substring scoring, arrow keys
+  navigate, Enter opens, Esc closes. Built on a native `<dialog>`
+  with `showModal()` for free focus trap + ARIA. A visible "Search"
+  button in the top nav exposes the shortcut; on mobile it shrinks
+  to a magnifier icon.
+
 ### Changed
 
+- **Renamed `rends/blocks/` to `rends/templates/`** and updated 139
+  internal references across 68 files (docs pages, every component
+  detail page, the new root landing, every template page, and the
+  shell.css comments). The old `blocks` directory has been removed.
+
+- **Refreshed the blog list template** (`templates/blog.html`).
+  Tightened excerpt copy, fixed the broken `Create` shorthand link,
+  pointed the featured post and grid cards at the new
+  `blog-post.html`, and aligned the preview banner with the new
+  templates routing.
+
+- **Translated `docs/primitive-zero.html` to English.** 227 string-level
+  replacements covering the TOC, every section title, every element's
+  purpose copy, code-sample comments, and demo content. Document
+  language is now `lang="en" data-theme="light"`.
+
+- **Components catalog** (`docs/components.html`) now reflects the
+  fully documented system: every layer reads "all documented" and
+  every component card links to its dedicated page.
+
+- **Foundation pages now use the unified shell.** `primitive-zero.html`,
+  `tokens.html`, and `layouts.html` were rewritten from their bespoke
+  layouts to the shared `dx-shell-grid` + `dx-sidebar` so they sit
+  inside the same nav as the component pages.
+
+- **"Kbd" → "Keyboard Key"** in every sidebar, the catalog card, the
+  page title, the breadcrumb, and the H1 of the component page. The
+  three-letter HTML tag name was meaningful but not self-explanatory
+  in navigation.
+
+- **Removed the ★ "documented" markers** (3,058 instances across 56
+  files) from sidebars, status pills, and featured cards. Now that
+  every component is documented they no longer carry information.
+
+- **Removed the legacy `components-showcase.html` link** from every
+  sidebar's Reference section. The monolith is preserved on disk for
+  history but the per-component pages are the source of truth and
+  the catalog is the single entry point.
+
+- **Promoted templates landing page** (`templates/index.html`) — copy
+  rewritten from "Blocks: Full-page examples" to "Templates: Full-page
+  templates" to match the rename.
+
+- **Theme Builder polish** (`create/index.html`). Added the standard
+  `dx-nav` top bar with paths relative to `create/`, linked the full
+  RenDS stylesheet stack, removed the redundant in-builder nav since
+  the top bar now exposes Docs / Components / Templates / Theme
+  Builder. The builder logic itself is unchanged.
+
 ### Fixed
+
+- **Tabs panels not rendering and dialog triggers not firing in demo
+  pages.** The `<ren-tabs>` custom element had `display: inline` by
+  default, which collapsed panels in the live demos; live-demo wrappers
+  were swapped to `<div class="ren-tabs">` with inline keyboard JS.
+  The `<ren-dialog>` JS had a wrong relative path
+  (`../../utils/` should have been `../../../utils/`) — fixed across
+  9 source files (`ren-sheet.js`, `ren-combobox.js`, `ren-select.js`,
+  `ren-menu.js`, `ren-dialog.js`, `ren-toast.js`, `ren-tabs.js`,
+  `ren-field.js`, `ren-radio.js`).
+
+- **Double divider lines inside dialogs.** Removed the
+  `border-bottom` on `.ren-dialog-header` and `border-top` on
+  `.ren-dialog-footer`; separation is now handled by spacing alone.
+
+- **API table column collapse on component pages.** 4-column
+  attribute tables were rendering with columns 2 and 3 at zero
+  width because the legacy CSS only sized first/last children.
+  Centralized in `.dx-api` with `table-layout: fixed` plus an
+  explicit `.dx-api-cols-4` modifier (18% / 32% / 14% / 36%).
+
+- **Code samples truncated.** The hard-coded `max-width: 72ch` on
+  demos, tables, and code blocks clipped long lines and made the
+  examples unreadable. Removed; added `white-space: pre-wrap` so
+  long lines wrap instead of disappearing.
+
+- **Skeleton component page was truncated** (`docs/components/ren-skeleton.html`)
+  — the file ended mid-sentence with the literal fragment "on" after
+  the lede. Rebuilt with full content (Overview, Demo, Variants —
+  line/circle/rectangle, API, Accessibility) and a working pulsing
+  preview that respects `prefers-reduced-motion`.
+
+- **Calendar demo cut off mid-month.** The static demo grid only
+  rendered days 1–11 of May 2026 instead of the full month. Now
+  shows the complete grid (1–31) with appropriate outside days, a
+  selected state on day 7, today/hover/disabled visuals, and ARIA
+  roles for the grid.
+
+- **Accordion showed two arrows next to each summary.** The native
+  disclosure marker wasn't being suppressed on Firefox / non-WebKit
+  browsers because the demo CSS only had `::-webkit-details-marker`
+  and `list-style: none`. Added an explicit `summary::marker { display:
+  none; content: '' }` and replaced the `›` glyph (which rotated 90°
+  to look like a corner) with an inline Lucide chevron-down SVG that
+  rotates 180° on `[open]`.
+
+- **Context Menu demo did nothing on right-click.** The page had
+  `data-context="demo-cm"` but no actual `<ren-context-menu id="demo-cm">`
+  attached, so the right-click did nothing. Added a vanilla-JS fallback
+  that listens for `contextmenu` on the demo target, positions a
+  mock menu (Cut / Copy / Paste / Delete) at the cursor, dismisses
+  on click outside or Escape, and supports keyboard focus.
+
+- **Empty State demo used a 📦 emoji.** Replaced with the Lucide
+  `package` SVG so the icon respects `currentColor` and renders
+  consistently across platforms instead of as a full-color emoji.
+
+- **Seven other component pages had stray emojis** in demo content
+  (`ren-banner.html` ✓⚠✕, `ren-form-validation.html` ✕, `ren-menu.html`
+  ✎, `ren-multi-step-form.html` ✓, `ren-select.html` 💡, `ren-tag.html`
+  ✕, `ren-tooltip.html` ⚙). All swapped for inline Lucide SVGs in
+  live demos and `<!-- icon SVG -->` placeholders in code samples.
+
+- **Templates with emoji-as-icon** swapped for Lucide SVGs.
+  `landing.html` (◐ ⌨ ⊞ ↯ ◈ ≋ → clock / keyboard / layout-grid /
+  plus / edit / lines), `dashboard.html` (📊 📦 👥 🧾 ⚙️ 🔔 👤 📈 →
+  chart-bar / package / users / file-text / settings / bell / user /
+  trending-up).
+
+- **Hardcoded colors that broke dark mode.** Five files had
+  `color: white`, `border: 2px solid white`, or
+  `box-shadow: rgba(0,0,0,0.18)` instead of semantic tokens. Replaced
+  in `components-showcase.html`, `components.html`, `ren-avatar.html`,
+  `ren-multi-step-form.html`, and `templates/blog.html` with
+  `var(--color-on-accent)`, `var(--color-on-success)`,
+  `var(--color-surface)`, and `var(--shadow-color-5)` as appropriate.
+
+- **`.ren-card-footer-border` over-spacing when stacked directly after
+  `.ren-card-header`.** Without a body in between, the footer's
+  `padding-top: var(--space-3)` plus the description's line-height extra
+  produced ~17px of visual space between the description text and the
+  divider line, which read as too loose. Added a contextual rule
+  (`.ren-card-header + .ren-card-footer-border { padding-top: var(--space-2); }`)
+  that tightens the top padding to 8px when the bordered footer is the
+  direct sibling of the header — so the line sits ~9-10px below the
+  description text instead of ~17px.
+
+- **Browser-default margin leakage across primitive text classes.**
+  Several semantic classes (`.ren-card-title`, `.ren-card-description`,
+  `.ren-banner-title`, `.ren-banner-message`, `.ren-field-description`,
+  `.ren-field-error`, `.ren-progress-label`, `.ren-progress-value`) are
+  typically applied to `<h2>`–`<h4>`, `<p>`, or `<span>`, which carry
+  browser-default block margins (~1em top and bottom on h-tags and p).
+  When these classes lived inside flex containers with explicit `gap`,
+  the browser margins stacked on top of the gap, producing ~40px of
+  visual space where 4px was intended. Each class now explicitly resets
+  margin (`margin: 0` for unrelated stacks; `margin: 0 0 var(--space-1)`
+  for the ones that intentionally set bottom spacing). Closes the
+  `.ren-card-header` "huge gap between title and description" issue
+  surfaced when reviewing the Card docs page; same root cause swept
+  across banner, field, and progress.
+
+### Removed
+
+- `rends/blocks/` directory (renamed to `templates/`).
+- "Browse all in one page" reference link from every sidebar
+  (legacy showcase preserved on disk but no longer linked from the
+  unified nav).
+- Stale Playwright artifacts: 310 PNG visual baselines (~48 MB),
+  the 45 MB `playwright-report/` HTML output, and old
+  `test-results/` JSON. The test source code (4 specs, 3 configs,
+  test page, docs) is intact. Next visual run should regenerate
+  baselines: `npm run test:visual -- --update-snapshots`.
+
+### Changed
+
+- **Renamed `rends/blocks/` to `rends/templates/`** and updated 139
+  internal references across 68 files (docs pages, every component
+  detail page, the new root landing, every template page, and the
+  shell.css comments). The old `blocks` directory has been removed.
+
+- **Refreshed the blog list template** (`templates/blog.html`).
+  Tightened excerpt copy, fixed the broken `Create` shorthand link,
+  pointed the featured post and grid cards at the new
+  `blog-post.html`, and aligned the preview banner with the new
+  templates routing.
+
+- **Translated `docs/primitive-zero.html` to English.** 227 string-level
+  replacements covering the TOC, every section title, every element's
+  purpose copy, code-sample comments, and demo content. Document
+  language is now `lang="en" data-theme="light"`.
+
+- **Components catalog** (`docs/components.html`) now reflects the
+  fully documented system: every layer reads "all documented" and
+  every component card links to its dedicated page.
+
+### Fixed
+
+- **Tabs panels not rendering and dialog triggers not firing in demo
+  pages.** The `<ren-tabs>` custom element had `display: inline` by
+  default, which collapsed panels in the live demos; live-demo wrappers
+  were swapped to `<div class="ren-tabs">` with inline keyboard JS.
+  The `<ren-dialog>` JS had a wrong relative path
+  (`../../utils/` should have been `../../../utils/`) — fixed across
+  9 source files (`ren-sheet.js`, `ren-combobox.js`, `ren-select.js`,
+  `ren-menu.js`, `ren-dialog.js`, `ren-toast.js`, `ren-tabs.js`,
+  `ren-field.js`, `ren-radio.js`).
+
+- **Double divider lines inside dialogs.** Removed the
+  `border-bottom` on `.ren-dialog-header` and `border-top` on
+  `.ren-dialog-footer`; separation is now handled by spacing alone.
+
+- **API table column collapse on component pages.** 4-column
+  attribute tables were rendering with columns 2 and 3 at zero
+  width because the legacy CSS only sized first/last children.
+  Centralized in `.dx-api` with `table-layout: fixed` plus an
+  explicit `.dx-api-cols-4` modifier (18% / 32% / 14% / 36%).
+
+- **Code samples truncated.** The hard-coded `max-width: 72ch` on
+  demos, tables, and code blocks clipped long lines and made the
+  examples unreadable. Removed; added `white-space: pre-wrap` so
+  long lines wrap instead of disappearing.
+
+- **`.ren-card-footer-border` over-spacing when stacked directly after
+  `.ren-card-header`.** Without a body in between, the footer's
+  `padding-top: var(--space-3)` plus the description's line-height extra
+  produced ~17px of visual space between the description text and the
+  divider line, which read as too loose. Added a contextual rule
+  (`.ren-card-header + .ren-card-footer-border { padding-top: var(--space-2); }`)
+  that tightens the top padding to 8px when the bordered footer is the
+  direct sibling of the header — so the line sits ~9-10px below the
+  description text instead of ~17px.
+
+- **Browser-default margin leakage across primitive text classes.**
+  Several semantic classes (`.ren-card-title`, `.ren-card-description`,
+  `.ren-banner-title`, `.ren-banner-message`, `.ren-field-description`,
+  `.ren-field-error`, `.ren-progress-label`, `.ren-progress-value`) are
+  typically applied to `<h2>`–`<h4>`, `<p>`, or `<span>`, which carry
+  browser-default block margins (~1em top and bottom on h-tags and p).
+  When these classes lived inside flex containers with explicit `gap`,
+  the browser margins stacked on top of the gap, producing ~40px of
+  visual space where 4px was intended. Each class now explicitly resets
+  margin (`margin: 0` for unrelated stacks; `margin: 0 0 var(--space-1)`
+  for the ones that intentionally set bottom spacing). Closes the
+  `.ren-card-header` "huge gap between title and description" issue
+  surfaced when reviewing the Card docs page; same root cause swept
+  across banner, field, and progress.
 
 ### Removed
 

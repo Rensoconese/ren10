@@ -1,0 +1,1004 @@
+/* ════════════════════════════════════════════════════════════════
+   RenDS — Shared docs site shell
+   ════════════════════════════════════════════════════════════════
+   Imported by every page in /rends/docs/, /rends/templates/,
+   /rends/templates/, etc. so the entire site shares one chrome.
+
+   Pages should NOT redeclare any of these classes inline.
+   Page-specific styles live in their own <style> block AFTER this
+   file is imported, and use only RenDS tokens.
+
+   Class API (the public surface every page can use):
+     .dx-nav, .dx-nav-inner, .dx-brand, .dx-brand-mark,
+     .dx-nav-menu, .dx-nav-actions
+     .dx-shell                 single-column page container
+     .dx-shell-grid            sidebar + content page container
+     .dx-sidebar               sticky left TOC (primitive-zero style)
+     .dx-content               main content column
+     .dx-header, .dx-kicker
+     .dx-section
+     .dx-pre, .dx-callout
+     .dx-toc-pills             horizontal pill TOC (legacy support)
+     .dx-footer
+   ════════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────
+   Body baseline
+   ───────────────────────────────────────────── */
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+}
+
+
+/* ─────────────────────────────────────────────
+   Preview banner (used on /templates/ template pages
+   to give users a way back to the docs site)
+   ───────────────────────────────────────────── */
+.dx-preview-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-6);
+  background: var(--color-text);
+  color: var(--color-surface);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.02em;
+  position: sticky;
+  top: 0;
+  z-index: 60;
+}
+
+.dx-preview-banner a,
+.dx-preview-banner a:visited {
+  color: var(--color-surface);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.dx-preview-banner a:hover {
+  text-decoration: none;
+}
+
+.dx-preview-banner-label {
+  opacity: 0.7;
+}
+
+
+/* ─────────────────────────────────────────────
+   Top bar (sticky, blurred)
+   ───────────────────────────────────────────── */
+.dx-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--color-border-muted);
+}
+
+.dx-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-6);
+  max-width: var(--width-7xl, 1280px);
+  margin: 0 auto;
+}
+
+.dx-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-md);
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.dx-brand-mark {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-sm);
+  background: var(--color-text);
+  color: var(--color-surface);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.dx-nav-menu {
+  display: flex;
+  gap: var(--space-5);
+}
+
+.dx-nav-menu a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  padding: var(--space-1) 0;
+}
+
+.dx-nav-menu a:hover {
+  color: var(--color-text);
+}
+
+.dx-nav-menu a[aria-current="page"] {
+  color: var(--color-text);
+}
+
+.dx-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 720px) {
+  .dx-nav-menu { display: none; }
+}
+
+
+/* ─────────────────────────────────────────────
+   Page shell (containers)
+   ─────────────────────────────────────────────
+   .dx-shell        single column, content centered
+   .dx-shell-grid   left sidebar + content column
+                    Use both classes together when a page needs
+                    the sidebar pattern: <div class="dx-shell dx-shell-grid">
+   ───────────────────────────────────────────── */
+.dx-shell {
+  max-width: var(--width-7xl, 1280px);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+}
+
+.dx-shell-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .dx-shell-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   Sidebar (primitive-zero pattern, canonical)
+   ───────────────────────────────────────────── */
+.dx-sidebar {
+  position: sticky;
+  /* sit just under the sticky top bar */
+  top: calc(var(--space-12) + var(--space-2));
+  align-self: start;
+  height: fit-content;
+  max-height: calc(100vh - var(--space-16));
+  overflow-y: auto;
+  border-inline-end: 1px solid var(--color-border);
+  padding-inline-end: var(--space-4);
+  padding-block: var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.dx-sidebar h3,
+.dx-sidebar .dx-sidebar-title {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-block: var(--space-4) var(--space-2);
+}
+
+.dx-sidebar h3:first-child,
+.dx-sidebar .dx-sidebar-title:first-child {
+  margin-block-start: 0;
+}
+
+.dx-sidebar ul,
+.dx-sidebar ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dx-sidebar li { margin: 0; }
+
+.dx-sidebar a {
+  display: block;
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+}
+
+.dx-sidebar a:hover {
+  background: var(--color-fill);
+  color: var(--color-text);
+}
+
+.dx-sidebar a[aria-current="page"],
+.dx-sidebar a.active {
+  color: var(--color-text);
+  background: var(--color-fill);
+  font-weight: var(--weight-medium);
+}
+
+@media (max-width: 900px) {
+  .dx-sidebar {
+    position: static;
+    border-inline-end: none;
+    border-block-end: 1px solid var(--color-border);
+    padding-inline-end: 0;
+    padding-block-end: var(--space-4);
+    margin-block-end: var(--space-4);
+    max-height: none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   Content column
+   ───────────────────────────────────────────── */
+.dx-content {
+  min-width: 0;
+}
+
+
+/* ─────────────────────────────────────────────
+   Page header (hero)
+   ───────────────────────────────────────────── */
+.dx-header {
+  margin-bottom: var(--space-10);
+  max-width: 72ch;
+}
+
+.dx-header h1 {
+  font-size: var(--text-6xl);
+  letter-spacing: -0.03em;
+  font-weight: var(--weight-bold);
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.dx-header .lede {
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 60ch;
+}
+
+.dx-kicker {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin: 0 0 var(--space-2);
+}
+
+
+/* ─────────────────────────────────────────────
+   Section (between-section dividers)
+   ───────────────────────────────────────────── */
+.dx-section {
+  padding-top: var(--space-10);
+  margin-top: var(--space-10);
+  border-top: 1px solid var(--color-border-muted);
+  scroll-margin-top: 80px;
+}
+
+.dx-section:first-of-type {
+  border-top: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.dx-section h2 {
+  font-size: var(--text-3xl);
+  letter-spacing: -0.02em;
+  font-weight: var(--weight-bold);
+  margin: 0 0 var(--space-3);
+}
+
+.dx-section > p {
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin: 0 0 var(--space-4);
+  max-width: 72ch;
+}
+
+.dx-section h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-8) 0 var(--space-2);
+}
+
+.dx-section h4 {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  margin: var(--space-6) 0 var(--space-2);
+  color: var(--color-text-secondary);
+}
+
+.dx-section ul,
+.dx-section ol {
+  max-width: 72ch;
+  padding-left: var(--space-5);
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+}
+
+.dx-section li { margin-bottom: var(--space-2); }
+
+
+/* ─────────────────────────────────────────────
+   Inline code
+   ───────────────────────────────────────────── */
+:where(.dx-content, .dx-section) code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface-sunken);
+  padding: 0.1em 0.4em;
+  border-radius: var(--radius-xs);
+  border: 1px solid var(--color-border-muted);
+}
+
+
+/* ─────────────────────────────────────────────
+   Code block — fills the content column; long
+   lines wrap so nothing is hidden behind a
+   hidden-by-default macOS scrollbar.
+   ───────────────────────────────────────────── */
+.dx-pre {
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  margin: var(--space-3) 0;
+  color: var(--color-text);
+}
+
+.dx-pre code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.dx-pre code {
+  background: none;
+  padding: 0;
+  border: none;
+  font-size: inherit;
+}
+
+
+/* ─────────────────────────────────────────────
+   Callout
+   ───────────────────────────────────────────── */
+.dx-callout {
+  border-left: 3px solid var(--color-accent);
+  background: var(--color-accent-subtle);
+  padding: var(--space-4) var(--space-5);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: var(--space-6) 0;
+  max-width: 72ch;
+}
+
+.dx-callout p { margin: 0 0 var(--space-2); color: var(--color-text); }
+.dx-callout p:last-child { margin: 0; }
+.dx-callout strong { color: var(--color-accent-active); }
+
+
+/* ─────────────────────────────────────────────
+   Reference tables (.dx-api) and key tables (.dx-keys)
+   ─────────────────────────────────────────────
+   All reference tables on a page share the SAME
+   column boundary so the eye can scan downward
+   without re-anchoring on every section.
+
+   Default shape — .dx-api — is 2 columns at 35/65.
+   For 4-column attribute tables (Attribute / Type
+   / Default / Notes) add .dx-api-cols-4.
+
+   The visual rhythm is enforced via table-layout: fixed.
+   ───────────────────────────────────────────── */
+.dx-api {
+  width: 100%;
+  margin: var(--space-4) 0;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: var(--text-sm);
+}
+
+.dx-api caption {
+  text-align: left;
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.dx-api thead th {
+  text-align: left;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dx-api tbody td {
+  padding: var(--space-3) var(--space-3) var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-muted);
+  vertical-align: top;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.dx-api tbody tr:last-child td { border-bottom: none; }
+
+.dx-api thead th:first-child,
+.dx-api tbody td:first-child { padding-left: 0; }
+
+.dx-api thead th:last-child,
+.dx-api tbody td:last-child { padding-right: 0; }
+
+.dx-api code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Cell helpers for the 4-column shape */
+.dx-api .dx-api-name { color: var(--color-text); font-weight: var(--weight-medium); }
+.dx-api .dx-api-type { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); }
+.dx-api .dx-api-default { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
+
+/* Default 2-column shape — class column on the left always 35% */
+.dx-api thead th:first-child { width: 35%; }
+
+/* 4-column shape — Attribute / Type / Default / Notes */
+.dx-api.dx-api-cols-4 thead th:nth-child(1) { width: 18%; }
+.dx-api.dx-api-cols-4 thead th:nth-child(2) { width: 32%; }
+.dx-api.dx-api-cols-4 thead th:nth-child(3) { width: 14%; }
+.dx-api.dx-api-cols-4 thead th:nth-child(4) { width: 36%; }
+
+/* Keyboard table — same 35/65 grid as the 2-column .dx-api so the eye
+   reads them as one continuous column boundary. */
+.dx-keys {
+  display: grid;
+  gap: 0;
+  margin: var(--space-4) 0;
+  font-size: var(--text-sm);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dx-keyrow {
+  display: grid;
+  grid-template-columns: 35% 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-muted);
+  align-items: center;
+}
+
+.dx-keyrow:last-child { border-bottom: none; }
+
+.dx-keyrow .keys {
+  display: inline-flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.dx-keyrow span {
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+
+/* ─────────────────────────────────────────────
+   Pill TOC (horizontal jump menu used in some pages)
+   ───────────────────────────────────────────── */
+.dx-toc-pills {
+  padding: var(--space-4);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin: var(--space-6) 0 var(--space-8);
+  max-width: 72ch;
+}
+
+.dx-toc-pills-title {
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+  margin: 0 0 var(--space-2);
+}
+
+.dx-toc-pills-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dx-toc-pills-links a {
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: var(--text-sm);
+  padding: 0 var(--space-1);
+}
+
+.dx-toc-pills-links a:hover { color: var(--color-accent); }
+
+
+/* ─────────────────────────────────────────────
+   Footer
+   ───────────────────────────────────────────── */
+.dx-footer {
+  border-top: 1px solid var(--color-border-muted);
+  padding: var(--space-10) var(--space-6);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  margin-top: var(--space-16);
+}
+
+.dx-footer-inner {
+  max-width: var(--width-7xl, 1280px);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.dx-footer a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.dx-footer a:hover { color: var(--color-text); }
+
+.dx-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+@media (max-width: 720px) {
+  .dx-footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   Mobile drawer & filter (added by shell.js)
+   ────────────────────────────────────────────── */
+
+/* Hamburger button — visible only on mobile (≤900px) */
+.dx-sidebar-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-1);
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+.dx-sidebar-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 900px) {
+  .dx-sidebar-toggle {
+    display: flex;
+  }
+}
+
+/* Backdrop overlay for drawer (mobile only) */
+.dx-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.dx-sidebar-backdrop[data-open] {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .dx-sidebar-backdrop {
+    display: block;
+  }
+}
+
+/* Mobile drawer: transform off-screen by default, slide in on open */
+@media (max-width: 900px) {
+  .dx-sidebar {
+    position: fixed;
+    top: calc(var(--space-12) + var(--space-2));
+    left: 0;
+    width: 280px;
+    height: calc(100vh - (var(--space-12) + var(--space-2)));
+    max-height: none;
+    background: var(--color-surface);
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    border-inline-end: 1px solid var(--color-border);
+    border-block-end: none;
+    padding-inline-end: var(--space-4);
+    padding-block: var(--space-2);
+    overflow-y: auto;
+  }
+
+  .dx-sidebar[data-open] {
+    transform: translateX(0);
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    .dx-sidebar,
+    .dx-sidebar-toggle span,
+    .dx-sidebar-backdrop {
+      transition: none;
+    }
+  }
+}
+
+/* Filter input container & styles */
+.dx-sidebar-filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dx-sidebar-filter-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.dx-sidebar-filter {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  transition: border-color 0.2s ease;
+}
+
+.dx-sidebar-filter:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  background: var(--color-surface-raised);
+}
+
+.dx-sidebar-filter::placeholder {
+  color: var(--color-text-muted);
+}
+
+
+/* ─────────────────────────────────────────────
+   Command Palette (Cmd+K / Ctrl+K)
+   ───────────────────────────────────────────── */
+
+/* Search button in nav */
+.dx-search-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dx-search-btn:hover {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.dx-search-btn:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.dx-search-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.dx-search-btn-label {
+  display: none;
+}
+
+.dx-search-btn kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  padding: 2px var(--space-1);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: var(--weight-normal);
+}
+
+@media (max-width: 640px) {
+  .dx-search-btn-label {
+    display: none;
+  }
+  .dx-search-btn kbd {
+    display: none;
+  }
+  .dx-search-btn {
+    padding: var(--space-2);
+    border: none;
+    background: transparent;
+  }
+}
+
+@media (min-width: 641px) {
+  .dx-search-btn-label {
+    display: inline;
+  }
+}
+
+/* Command palette dialog */
+.dx-palette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  z-index: 999;
+  max-width: 560px;
+  max-height: 500px;
+  margin: auto;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dx-palette::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.dx-palette-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.dx-palette-content {
+  display: flex;
+  flex-direction: column;
+  max-height: 500px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.dx-palette-input {
+  padding: var(--space-3);
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  flex-shrink: 0;
+}
+
+.dx-palette-input:focus {
+  outline: none;
+}
+
+.dx-palette-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.dx-palette-results {
+  list-style: none;
+  margin: 0;
+  padding: var(--space-1);
+  overflow-y: auto;
+  flex: 1;
+  max-height: 400px;
+}
+
+.dx-palette-category {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  padding: var(--space-2) var(--space-3) var(--space-1);
+  margin: var(--space-2) 0 var(--space-1);
+  border-top: 1px solid var(--color-border);
+  pointer-events: none;
+}
+
+.dx-palette-category:first-child {
+  border-top: none;
+  margin-top: 0;
+}
+
+.dx-palette-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background-color 0.15s ease;
+}
+
+.dx-palette-item[aria-selected="true"] {
+  background: color-mix(in srgb, var(--color-accent) 15%, var(--color-surface));
+}
+
+.dx-palette-item:hover {
+  background: color-mix(in srgb, var(--color-accent) 10%, var(--color-surface));
+}
+
+.dx-palette-label {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+}
+
+.dx-palette-label mark {
+  background: transparent;
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+
+.dx-palette-category-badge {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-left: var(--space-2);
+  flex-shrink: 0;
+}
+
+.dx-palette-empty {
+  padding: var(--space-4) var(--space-3);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.dx-palette-footer {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+@media (max-width: 640px) {
+  .dx-palette {
+    max-width: calc(100vw - var(--space-4));
+    max-height: 70vh;
+    top: 50%;
+  }
+
+  .dx-palette-results {
+    max-height: 60vh;
+  }
+
+  .dx-palette-footer {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────
+   Doc-site <details>/<summary> chevron — clean Lucide SVG
+   ─────────────────────────────────────────────────────────
+   The base classless.css draws a chevron with two rotated
+   borders. That works in isolation but clashes whenever a
+   doc page uses <details> in prose or in a demo, because
+   the borders appear ALONGSIDE any custom chevron the page
+   adds. Within the doc-site shell we replace the base
+   chevron with a real Lucide chevron-down SVG so it always
+   renders the same.
+
+   Scope: only applies inside .dx-content (the doc-site
+   article column) so it doesn't reach back into component
+   demos that intentionally set their own.
+   ───────────────────────────────────────────────────────── */
+
+.dx-content details > summary::after {
+  content: "";
+  width: 16px;
+  height: 16px;
+  border: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform: rotate(0deg);
+  transition: transform 150ms;
+  flex-shrink: 0;
+}
+
+.dx-content details[open] > summary::after {
+  transform: rotate(180deg);
+}

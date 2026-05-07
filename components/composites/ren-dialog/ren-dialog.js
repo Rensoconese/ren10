@@ -1,4 +1,4 @@
-import { createFocusTrap } from '../../utils/focus-trap.js';
+import { createFocusTrap } from '../../../utils/focus-trap.js';
 
 /**
  * RenDialog - Modal/Dialog Web Component

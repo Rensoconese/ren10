@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skeleton — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { padding: var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
+
+    /* Demo skeleton primitives */
+    .demo-sk { background: var(--color-fill); border-radius: var(--radius-sm); animation: skeleton-pulse 1.5s ease-in-out infinite; }
+    .demo-sk-line { height: 12px; }
+    .demo-sk-line-sm { height: 10px; }
+    .demo-sk-circle { border-radius: 50%; width: 40px; height: 40px; flex-shrink: 0; }
+    .demo-sk-rect { aspect-ratio: 16 / 9; }
+    @keyframes skeleton-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @media (prefers-reduced-motion: reduce) { .demo-sk { animation: none; } }
+
+    .demo-card-mock { display: flex; gap: var(--space-3); align-items: flex-start; padding: var(--space-4); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface); max-width: 420px; }
+    .demo-card-mock .lines { flex: 1; display: flex; flex-direction: column; gap: var(--space-2); }
+  </style>
+</head>
+<body>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.2</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html" aria-current="page">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-field.html">Form Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-input-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-data-table.html">Data Table</a></li>
+        <li><a href="ren-form-validation.html">Form Validation</a></li>
+        <li><a href="ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Skeleton</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Primitive</p>
+        <h1>Skeleton</h1>
+        <p class="lede">Placeholder shapes that mimic the layout of content while it loads. They pulse subtly so the page feels alive instead of broken.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Use a skeleton when content is on its way and showing real shapes — line widths, avatar circles, image rectangles — helps the user predict what's coming. For shorter waits inside a button or a small panel, prefer <a href="ren-spinner.html" class="ren-link">Spinner</a>.</p>
+        <div class="dx-callout">
+          <p><strong>Match the real layout, not the loading state.</strong> A skeleton that doesn't look like the final UI introduces a second, jarring layout shift when the data arrives. Mirror the spacing, the line count, and the avatar size of the real component.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="demo-card-mock">
+              <div class="ren-skeleton demo-sk demo-sk-circle" aria-hidden="true"></div>
+              <div class="lines">
+                <div class="ren-skeleton demo-sk demo-sk-line" style="width: 70%;" aria-hidden="true"></div>
+                <div class="ren-skeleton demo-sk demo-sk-line-sm" style="width: 90%;" aria-hidden="true"></div>
+                <div class="ren-skeleton demo-sk demo-sk-line-sm" style="width: 60%;" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="card-mock"&gt;
+  &lt;div class="ren-skeleton ren-skeleton-circle"&gt;&lt;/div&gt;
+  &lt;div&gt;
+    &lt;div class="ren-skeleton ren-skeleton-line" style="width: 70%"&gt;&lt;/div&gt;
+    &lt;div class="ren-skeleton ren-skeleton-line-sm" style="width: 90%"&gt;&lt;/div&gt;
+    &lt;div class="ren-skeleton ren-skeleton-line-sm" style="width: 60%"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <div class="dx-vgrid">
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Line</span>
+            <div class="dx-vrow-items">
+              <div class="ren-skeleton demo-sk demo-sk-line" style="width: 100%; margin-bottom: var(--space-2);" aria-hidden="true"></div>
+              <div class="ren-skeleton demo-sk demo-sk-line" style="width: 80%; margin-bottom: var(--space-2);" aria-hidden="true"></div>
+              <div class="ren-skeleton demo-sk demo-sk-line" style="width: 60%;" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Circle</span>
+            <div class="dx-vrow-items" style="display: flex; gap: var(--space-3); align-items: center;">
+              <div class="ren-skeleton demo-sk demo-sk-circle" style="width: 24px; height: 24px;" aria-hidden="true"></div>
+              <div class="ren-skeleton demo-sk demo-sk-circle" style="width: 40px; height: 40px;" aria-hidden="true"></div>
+              <div class="ren-skeleton demo-sk demo-sk-circle" style="width: 64px; height: 64px;" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Rectangle</span>
+            <div class="dx-vrow-items">
+              <div class="ren-skeleton demo-sk demo-sk-rect" style="max-width: 280px;" aria-hidden="true"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-skeleton</code></td><td>Base placeholder. Pulsing background, fully rounded corners on small heights.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-skeleton-line</code></td><td>Text line. 12 px tall. Combine with <code>style="width: 70%"</code> to vary line lengths and avoid the "stack of identical bars" look.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-skeleton-line-sm</code></td><td>Smaller line, 10 px tall. For body copy under headings.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-skeleton-circle</code></td><td>Avatar / icon placeholder. Use inline width/height to match the real avatar size.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-skeleton-rect</code></td><td>Image / hero placeholder. Pair with <code>aspect-ratio</code> to lock it to the final image proportions.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>Mark each skeleton element <code>aria-hidden="true"</code>. Loading shapes should not be announced piece by piece.</li>
+          <li>The container that swaps in the real content should have <code>aria-busy="true"</code> while loading and <code>aria-live="polite"</code> if the change is significant.</li>
+          <li>Pulse animation respects <code>prefers-reduced-motion</code> — the animation stops automatically when the user opts out.</li>
+          <li>Don't show a skeleton forever. If a request is slow, swap to a clearer empty state or error message after a few seconds.</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

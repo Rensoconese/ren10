@@ -129,6 +129,7 @@ Any CSS you write outside a layer automatically overrides RenDS styles. No `!imp
 
 ```
 rends/
+├── index.html          ← Marketing landing page
 ├── index.css           ← Import this for the foundation (reset + tokens + base)
 ├── tokens/             ← Primitives, semantic, component tokens + motion
 ├── base/               ← Reset, classless styles, layouts, utilities, motion presets
@@ -136,15 +137,17 @@ rends/
 │   ├── index.css       ← Bundle import of every component's CSS
 │   ├── primitives/     ← Button, Badge, Card, Field, Link, Progress, Tag…
 │   ├── composites/     ← Dialog, Select, Tabs, Tooltip, Calendar, Date Picker…
-│   └── patterns/       ← Nav, Sidebar, Table, Form, Menubar, Command, AI…
+│   └── patterns/       ← Nav, Sidebar, Data Table, Form Validation, Empty State…
 ├── utils/              ← JS utilities (focus trap, keyboard nav, portals, live-region)
 ├── themes/             ← Theme presets + hex→token generator
-├── blocks/             ← Full page examples (dashboard, auth, settings, landing, blog)
+├── templates/          ← Full page examples (landing, auth, dashboard, settings, blog, blog-post)
+├── create/             ← Theme Builder (interactive token generator)
 ├── cli/                ← `npx rends` CLI (init, add, list, scales)
-└── docs/               ← Demo pages, component catalog, token reference
+├── site/               ← Doc-site chrome (top nav, sidebar, footer)
+└── docs/               ← Component catalog, per-component pages, foundations
 ```
 
-52 components in total: 18 primitives, 26 composites, 8 patterns.
+54 components in total: 19 primitives, 28 composites, 7 patterns. Every component has a dedicated documentation page under `docs/components/`.
 
 ---
 

@@ -704,10 +704,33 @@ theme cascades cleanly from atoms to pages.
    consume the semantic layer. If a name describes *what* it is instead of
    *what value* it holds, it belongs in the semantic layer.
 
-3. **Light DOM, always.** Styling a web component with the host's own CSS
-   should be boring. Shadow DOM is powerful but hostile to the everyday
-   designer who wants to tweak padding in DevTools. Every RenDS custom
-   element keeps its markup in light DOM and scopes through class names.
+3. **Light DOM, always. No Shadow DOM, no exceptions.** Styling a web
+   component with the host's own CSS should be boring. Shadow DOM is
+   powerful but hostile to the everyday designer who wants to tweak padding
+   in DevTools, and it breaks the cascade-layer architecture that makes
+   overrides effortless. Every RenDS custom element keeps its markup in
+   light DOM and scopes through class names.
+
+   The pattern is **progressive enhancement** in two layers:
+
+   1. **CSS-only is usable on its own.** A button renders correctly as
+      `<button class="ren-btn">Save</button>` without any JavaScript. A
+      combobox renders as `<div class="ren-combobox"><input
+      class="ren-combobox-input"><ul class="ren-combobox-list">…</ul></div>`
+      without any JavaScript — it just won't filter or trap focus until JS
+      loads.
+   2. **Custom elements layer on top.** `<ren-button>` enhances the
+      underlying `<button>` with loading/variant state. `<ren-combobox>`
+      enhances its children by wiring ARIA, keyboard nav, and a hidden
+      form input. The element never replaces the markup; it improves it.
+
+   Composites that need encapsulated behavior (toast viewport, sheet,
+   combobox listbox) follow the same rule: they render their internals into
+   the light DOM of the host, declare ARIA via attributes, and expose state
+   through `data-*` attributes (`data-state`, `data-side`, `data-toast-id`)
+   so DevTools and external CSS can see and override everything. If you
+   reach for `attachShadow()`, stop — there is a way to do it in light DOM,
+   and the rest of the system depends on you finding it.
 
 4. **Accessibility is the default, not an add-on.** WCAG 2.1 AA is the
    baseline: every text/background pair in the default theme meets 4.5:1
