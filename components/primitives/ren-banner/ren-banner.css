@@ -69,12 +69,13 @@
   display: block;
   font-weight: var(--weight-semibold);
   font-size: var(--label-size, var(--text-sm));
-  margin-bottom: var(--space-1);
+  margin: 0 0 var(--space-1);
 }
 
 .ren-banner-message {
   font-size: var(--caption-size, var(--text-sm));
   color: var(--color-text-secondary);
+  margin: 0;
 }
 
 /* Title-only (no message) */

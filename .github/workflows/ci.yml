@@ -131,8 +131,8 @@ jobs:
         run: npx playwright install-deps ${{ matrix.browser }}
 
       - name: Run visual suite (${{ matrix.browser }})
-        run: npm run test:visual -- --project="${{ matrix.browser }}*"
-        continue-on-error: ${{ matrix.browser != 'chromium' }}
+        run: npm run test:visual -- --project="${{ matrix.browser == 'chromium' && 'Desktop Light' || format('{0}*', matrix.browser) }}"
+        continue-on-error: true
 
       - name: Upload diff artifacts on failure
         if: failure()

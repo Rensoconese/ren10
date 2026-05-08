@@ -8,59 +8,24 @@
   <link rel="stylesheet" href="../components/index.css">
   <link rel="stylesheet" href="../themes/appearance.css">
   <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../site/shell.css">
   <style>
-    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
-
-    /* Shared top nav */
-    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
-    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
-    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
-    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
-    .dx-nav-menu { display: flex; gap: var(--space-5); }
-    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
-    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
-    .dx-nav-menu a:hover { color: var(--color-text); }
-    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
-
-    /* Shell */
-    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-10) var(--space-6); }
-    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
-
-    /* Header */
-    .dx-header { margin-bottom: var(--space-10); max-width: 72ch; }
-    .dx-header h1 { font-size: var(--text-6xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: var(--space-2) 0 var(--space-4); }
-    .dx-header .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0; }
-
-    /* Section */
-    .dx-section { padding-top: var(--space-10); margin-top: var(--space-10); border-top: 1px solid var(--color-border-muted); scroll-margin-top: 80px; }
-    .dx-section:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
-    .dx-section h2 { font-size: var(--text-3xl); letter-spacing: -0.02em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
-    /* Scoped to direct children only — `.dx-section p` (descendant) was biting <p> inside
-       cards/callouts that had their own intended color (see PHASE-7-12-COMPLETE.md). */
-    .dx-section > p { color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 var(--space-4); max-width: 72ch; }
-    .dx-section h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-8) 0 var(--space-2); }
-    .dx-section ul, .dx-section ol { max-width: 72ch; padding-left: var(--space-5); line-height: 1.7; color: var(--color-text-secondary); }
-    .dx-section li { margin-bottom: var(--space-2); }
-    code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
-
-    /* Code block */
-    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-3) 0; color: var(--color-text); }
-    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
-
-    /* Callout */
-    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; max-width: 72ch; }
-    .dx-callout p { margin: 0; color: var(--color-text); }
-    .dx-callout strong { color: var(--color-accent-active); }
+    /* Page-specific styles — chrome lives in shell.css */
 
     /* Theme preview side-by-side */
-    .dx-compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin: var(--space-5) 0; max-width: 72ch; }
+    .dx-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin: var(--space-5) 0;
+      max-width: 72ch;
+    }
     .dx-mini {
       padding: var(--space-5);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
       background: var(--color-surface);
       color: var(--color-text);
-      /* Every preview re-establishes its own token baseline because it overrides light/dark */
     }
     .dx-mini-title { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin: 0 0 var(--space-3); font-weight: var(--weight-semibold); }
     .dx-mini-card { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); margin-bottom: var(--space-2); }
@@ -83,13 +48,6 @@
     }
     .dx-theme-card-label { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); margin: 0 0 var(--space-3); }
 
-    /* Quick nav */
-    .dx-toc { padding: var(--space-4); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin: var(--space-8) 0 var(--space-4); }
-    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2); }
-    .dx-toc-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; }
-    .dx-toc-links a { color: var(--color-text); text-decoration: none; font-size: var(--text-sm); padding: 0 var(--space-1); }
-    .dx-toc-links a:hover { color: var(--color-accent); }
-
     @media (max-width: 720px) {
       .dx-compare { grid-template-columns: 1fr; }
     }
@@ -108,46 +66,121 @@
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="index.html" aria-current="page">Docs</a>
         <a href="components.html">Components</a>
-        <a href="../blocks/index.html">Blocks</a>
-        <a href="../create/index.html">Create</a>
+        <a href="../templates/index.html">Templates</a>
+        <a href="../create/index.html">Theme Builder</a>
       </nav>
-      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+      <div class="dx-nav-actions">
         <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
         <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
       </div>
     </div>
   </header>
 
-  <div class="dx-shell">
+  <div class="dx-shell dx-shell-grid">
 
-    <!-- Header -->
-    <header class="dx-header">
-      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
-        <ol>
-          <li><a href="index.html" class="ren-link-plain">Docs</a></li>
-          <li aria-current="page">Theming</li>
-        </ol>
-      </nav>
-      <p class="dx-kicker">Guides</p>
-      <h1>Theming</h1>
-      <p class="lede">A theme in RenDS is not a separate stylesheet you load — it's a set of CSS custom properties you set. Change three semantic tokens and your whole app retints. This guide walks through how, when, and how far.</p>
+    <!-- Sticky on-this-page TOC -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="theming.html" aria-current="page">Theming</a></li>
+        <li><a href="accessibility.html">Accessibility</a></li>
+        <li><a href="cli.html">CLI</a></li>
+      </ul>
 
-      <!-- TOC -->
-      <nav class="dx-toc" aria-label="On this page">
-        <p class="dx-toc-title">On this page</p>
-        <ul class="dx-toc-links">
-          <li><a href="#dark-mode">Dark mode</a></li>
-          <li><a href="#data-attrs">Data attributes</a></li>
-          <li><a href="#override">Override levels</a></li>
-          <li><a href="#build">Build a theme</a></li>
-          <li><a href="#ready-made">Ready-made themes</a></li>
-          <li><a href="#builder">Theme Builder</a></li>
-          <li><a href="#generator">Generate from hex</a></li>
-          <li><a href="#multi">Multi-theme apps</a></li>
-          <li><a href="#export">Distribute a theme</a></li>
-        </ul>
-      </nav>
-    </header>
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="tokens.html">Tokens</a></li>
+        <li><a href="layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="components/ren-button.html">Button</a></li>
+        <li><a href="components/ren-card.html">Card</a></li>
+        <li><a href="components/ren-badge.html">Badge</a></li>
+        <li><a href="components/ren-tag.html">Tag</a></li>
+        <li><a href="components/ren-link.html">Link</a></li>
+        <li><a href="components/ren-banner.html">Banner</a></li>
+        <li><a href="components/ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="components/ren-pagination.html">Pagination</a></li>
+        <li><a href="components/ren-separator.html">Separator</a></li>
+        <li><a href="components/ren-avatar.html">Avatar</a></li>
+        <li><a href="components/ren-spinner.html">Spinner</a></li>
+        <li><a href="components/ren-skeleton.html">Skeleton</a></li>
+        <li><a href="components/ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="components/ren-icons.html">Icons</a></li>
+        <li><a href="components/ren-field.html">Form Field</a></li>
+        <li><a href="components/ren-checkbox.html">Checkbox</a></li>
+        <li><a href="components/ren-switch.html">Switch</a></li>
+        <li><a href="components/ren-radio.html">Radio</a></li>
+        <li><a href="components/ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="components/ren-tabs.html">Tabs</a></li>
+        <li><a href="components/ren-accordion.html">Accordion</a></li>
+        <li><a href="components/ren-dialog.html">Dialog</a></li>
+        <li><a href="components/ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="components/ren-toast.html">Toast</a></li>
+        <li><a href="components/ren-tooltip.html">Tooltip</a></li>
+        <li><a href="components/ren-popover.html">Popover</a></li>
+        <li><a href="components/ren-hover-card.html">Hover Card</a></li>
+        <li><a href="components/ren-sheet.html">Sheet</a></li>
+        <li><a href="components/ren-collapsible.html">Collapsible</a></li>
+        <li><a href="components/ren-toolbar.html">Toolbar</a></li>
+        <li><a href="components/ren-dropzone.html">Dropzone</a></li>
+        <li><a href="components/ren-combobox.html">Combobox</a></li>
+        <li><a href="components/ren-slider.html">Slider</a></li>
+        <li><a href="components/ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="components/ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="components/ren-select.html">Select</a></li>
+        <li><a href="components/ren-menu.html">Menu</a></li>
+        <li><a href="components/ren-menubar.html">Menubar</a></li>
+        <li><a href="components/ren-context-menu.html">Context Menu</a></li>
+        <li><a href="components/ren-command.html">Command Palette</a></li>
+        <li><a href="components/ren-number-field.html">Number Field</a></li>
+        <li><a href="components/ren-input-otp.html">Input OTP</a></li>
+        <li><a href="components/ren-color-picker.html">Color Picker</a></li>
+        <li><a href="components/ren-calendar.html">Calendar</a></li>
+        <li><a href="components/ren-date-picker.html">Date Picker</a></li>
+        <li><a href="components/ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="components/ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="components/ren-nav.html">Nav</a></li>
+        <li><a href="components/ren-sidebar.html">Sidebar</a></li>
+        <li><a href="components/ren-empty-state.html">Empty State</a></li>
+        <li><a href="components/ren-data-table.html">Data Table</a></li>
+        <li><a href="components/ren-form-validation.html">Form Validation</a></li>
+        <li><a href="components/ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="components/ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+
+      <!-- Header -->
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="index.html" class="ren-link-plain">Docs</a></li>
+            <li aria-current="page">Theming</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Guides</p>
+        <h1>Theming</h1>
+        <p class="lede">A theme in RenDS is not a separate stylesheet you load — it's a set of CSS custom properties you set. Change three semantic tokens and your whole app retints. This guide walks through how, when, and how far.</p>
+      </header>
 
     <!-- Dark mode -->
     <section class="dx-section" id="dark-mode">
@@ -483,12 +516,15 @@ function setTheme(next) {
       <ul>
         <li><a href="tokens.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Tokens reference</a> — every semantic and component token in one place.</li>
         <li><a href="accessibility.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Accessibility</a> — don't break contrast when you theme.</li>
-        <li><a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Create</a> — the visual Theme Builder.</li>
-        <li><a href="components.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Components</a> — see every component in one page.</li>
+        <li><a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Theme Builder</a> — the visual builder.</li>
+        <li><a href="components.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Components</a> — see every component.</li>
       </ul>
     </section>
 
+    </main>
+
   </div>
 
+  <script src="../site/shell.js" defer></script>
 </body>
 </html>

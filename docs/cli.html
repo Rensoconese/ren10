@@ -8,48 +8,30 @@
   <link rel="stylesheet" href="../components/index.css">
   <link rel="stylesheet" href="../themes/appearance.css">
   <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../site/shell.css">
   <style>
-    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+    /* Page-specific styles — chrome lives in shell.css */
 
-    /* Shared top nav */
-    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
-    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
-    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
-    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
-    .dx-nav-menu { display: flex; gap: var(--space-5); }
-    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
-    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
-    .dx-nav-menu a:hover { color: var(--color-text); }
-    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
+    /* Numbered on-this-page TOC */
+    .cli-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-3); }
+    .cli-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); counter-reset: step; }
+    .cli-toc li { counter-increment: step; }
+    .cli-toc a { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-2) 0; color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); border-left: 2px solid transparent; padding-left: var(--space-3); margin-left: calc(var(--space-3) * -1); }
+    .cli-toc a::before { content: counter(step, decimal-leading-zero); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
+    .cli-toc a:hover, .cli-toc a.active { color: var(--color-text); border-left-color: var(--color-accent); }
 
-    /* Docs layout */
-    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-8) var(--space-6); }
+    /* Content section overrides (numbered headings via data-step) */
+    .cli-page { max-width: 68ch; }
+    .cli-page h1 { font-size: var(--text-5xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
+    .cli-page .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0 0 var(--space-10); }
+    .cli-page section { margin-bottom: var(--space-12); scroll-margin-top: 80px; }
+    .cli-page h2 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); letter-spacing: -0.01em; margin: 0 0 var(--space-3); display: flex; align-items: baseline; gap: var(--space-3); }
+    .cli-page h2::before { content: attr(data-step); font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); font-weight: var(--weight-regular); }
+    .cli-page h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-6) 0 var(--space-2); }
+    .cli-page p { line-height: 1.7; margin: 0 0 var(--space-4); color: var(--color-text-secondary); }
+    .cli-page ul { padding-left: var(--space-5); color: var(--color-text-secondary); line-height: 1.7; }
+    .cli-page ul li { margin-bottom: var(--space-1); }
 
-    /* Sidebar TOC */
-    .dx-toc { position: sticky; top: 72px; align-self: start; }
-    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-3); }
-    .dx-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); counter-reset: step; }
-    .dx-toc li { counter-increment: step; }
-    .dx-toc a { display: flex; align-items: baseline; gap: var(--space-3); padding: var(--space-2) 0; color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); border-left: 2px solid transparent; padding-left: var(--space-3); margin-left: calc(var(--space-3) * -1); }
-    .dx-toc a::before { content: counter(step, decimal-leading-zero); font-family: var(--font-mono); font-size: 11px; color: var(--color-text-muted); }
-    .dx-toc a:hover, .dx-toc a.active { color: var(--color-text); border-left-color: var(--color-accent); }
-
-    /* Content */
-    .dx-content { max-width: 68ch; }
-    .dx-content h1 { font-size: var(--text-5xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
-    .dx-content .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0 0 var(--space-10); }
-    .dx-content section { margin-bottom: var(--space-12); scroll-margin-top: 80px; }
-    .dx-content h2 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); letter-spacing: -0.01em; margin: 0 0 var(--space-3); display: flex; align-items: baseline; gap: var(--space-3); }
-    .dx-content h2::before { content: attr(data-step); font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); font-weight: var(--weight-regular); }
-    .dx-content h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-6) 0 var(--space-2); }
-    .dx-content p { line-height: 1.7; margin: 0 0 var(--space-4); color: var(--color-text-secondary); }
-    .dx-content ul { padding-left: var(--space-5); color: var(--color-text-secondary); line-height: 1.7; }
-    .dx-content ul li { margin-bottom: var(--space-1); }
-    .dx-content code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
-
-    /* Code block */
-    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-4) 0; color: var(--color-text); }
-    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
     .dx-pre-caption { font-size: var(--text-xs); color: var(--color-text-muted); font-family: var(--font-mono); margin-bottom: calc(var(--space-2) * -1); padding-top: var(--space-6); }
 
     /* Terminal block (mimics CLI output) */
@@ -64,11 +46,6 @@
 
     /* File tree */
     .dx-tree { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.8; color: var(--color-text-secondary); margin: var(--space-4) 0; white-space: pre; }
-
-    /* Callout */
-    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; }
-    .dx-callout p { margin: 0; color: var(--color-text); }
-    .dx-callout strong { color: var(--color-accent-active); }
 
     /* Reference table */
     .dx-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
@@ -93,7 +70,6 @@
     .dx-next-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0; }
 
     @media (max-width: 900px) {
-      .dx-toc { display: none; }
       .dx-cmd-grid, .dx-next-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -109,12 +85,12 @@
         <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.2</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
-        <a href="index.html">Docs</a>
+        <a href="index.html" aria-current="page">Docs</a>
         <a href="components.html">Components</a>
-        <a href="../blocks/index.html">Blocks</a>
-        <a href="../create/index.html">Create</a>
+        <a href="../templates/index.html">Templates</a>
+        <a href="../create/index.html">Theme Builder</a>
       </nav>
-      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+      <div class="dx-nav-actions">
         <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
         <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
       </div>
@@ -122,27 +98,99 @@
   </header>
 
   <!-- Shell -->
-  <div class="dx-shell">
-    <div class="ren-with-sidebar" style="--sidebar-width: 200px; --sidebar-gap: var(--space-10);">
+  <div class="dx-shell dx-shell-grid">
 
-      <!-- TOC -->
-      <aside class="dx-toc" aria-label="On this page">
-        <p class="dx-toc-title">On this page</p>
-        <ol>
-          <li><a href="#overview" class="active">Overview</a></li>
-          <li><a href="#install">Install &amp; run</a></li>
-          <li><a href="#init">init</a></li>
-          <li><a href="#add">add</a></li>
-          <li><a href="#list">list</a></li>
-          <li><a href="#scales">scales</a></li>
-          <li><a href="#workflows">Workflows</a></li>
-          <li><a href="#troubleshooting">Troubleshooting</a></li>
-          <li><a href="#next">Next steps</a></li>
-        </ol>
-      </aside>
+    <!-- Sticky on-this-page TOC -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="theming.html">Theming</a></li>
+        <li><a href="accessibility.html">Accessibility</a></li>
+        <li><a href="cli.html" aria-current="page">CLI</a></li>
+      </ul>
 
-      <!-- Content -->
-      <main class="dx-content">
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="tokens.html">Tokens</a></li>
+        <li><a href="layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="components/ren-button.html">Button</a></li>
+        <li><a href="components/ren-card.html">Card</a></li>
+        <li><a href="components/ren-badge.html">Badge</a></li>
+        <li><a href="components/ren-tag.html">Tag</a></li>
+        <li><a href="components/ren-link.html">Link</a></li>
+        <li><a href="components/ren-banner.html">Banner</a></li>
+        <li><a href="components/ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="components/ren-pagination.html">Pagination</a></li>
+        <li><a href="components/ren-separator.html">Separator</a></li>
+        <li><a href="components/ren-avatar.html">Avatar</a></li>
+        <li><a href="components/ren-spinner.html">Spinner</a></li>
+        <li><a href="components/ren-skeleton.html">Skeleton</a></li>
+        <li><a href="components/ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="components/ren-icons.html">Icons</a></li>
+        <li><a href="components/ren-field.html">Form Field</a></li>
+        <li><a href="components/ren-checkbox.html">Checkbox</a></li>
+        <li><a href="components/ren-switch.html">Switch</a></li>
+        <li><a href="components/ren-radio.html">Radio</a></li>
+        <li><a href="components/ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="components/ren-tabs.html">Tabs</a></li>
+        <li><a href="components/ren-accordion.html">Accordion</a></li>
+        <li><a href="components/ren-dialog.html">Dialog</a></li>
+        <li><a href="components/ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="components/ren-toast.html">Toast</a></li>
+        <li><a href="components/ren-tooltip.html">Tooltip</a></li>
+        <li><a href="components/ren-popover.html">Popover</a></li>
+        <li><a href="components/ren-hover-card.html">Hover Card</a></li>
+        <li><a href="components/ren-sheet.html">Sheet</a></li>
+        <li><a href="components/ren-collapsible.html">Collapsible</a></li>
+        <li><a href="components/ren-toolbar.html">Toolbar</a></li>
+        <li><a href="components/ren-dropzone.html">Dropzone</a></li>
+        <li><a href="components/ren-combobox.html">Combobox</a></li>
+        <li><a href="components/ren-slider.html">Slider</a></li>
+        <li><a href="components/ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="components/ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="components/ren-select.html">Select</a></li>
+        <li><a href="components/ren-menu.html">Menu</a></li>
+        <li><a href="components/ren-menubar.html">Menubar</a></li>
+        <li><a href="components/ren-context-menu.html">Context Menu</a></li>
+        <li><a href="components/ren-command.html">Command Palette</a></li>
+        <li><a href="components/ren-number-field.html">Number Field</a></li>
+        <li><a href="components/ren-input-otp.html">Input OTP</a></li>
+        <li><a href="components/ren-color-picker.html">Color Picker</a></li>
+        <li><a href="components/ren-calendar.html">Calendar</a></li>
+        <li><a href="components/ren-date-picker.html">Date Picker</a></li>
+        <li><a href="components/ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="components/ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="components/ren-nav.html">Nav</a></li>
+        <li><a href="components/ren-sidebar.html">Sidebar</a></li>
+        <li><a href="components/ren-empty-state.html">Empty State</a></li>
+        <li><a href="components/ren-data-table.html">Data Table</a></li>
+        <li><a href="components/ren-form-validation.html">Form Validation</a></li>
+        <li><a href="components/ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="components/ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="dx-content cli-page">
         <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
           <ol>
             <li><a href="index.html" class="ren-link-plain">Docs</a></li>
@@ -461,9 +509,10 @@ node rends/cli/index.js add --all</code></div>
             </a>
           </div>
         </section>
-      </main>
-    </div>
+    </main>
+
   </div>
 
+  <script src="../site/shell.js" defer></script>
 </body>
 </html>

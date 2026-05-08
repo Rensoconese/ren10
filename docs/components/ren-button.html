@@ -8,62 +8,16 @@
   <link rel="stylesheet" href="../../components/index.css">
   <link rel="stylesheet" href="../../themes/appearance.css">
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
-
-    /* ─── Top nav (shared with rest of docs) ─── */
-    .dx-nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--color-surface) 80%, transparent); backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--color-border-muted); }
-    .dx-nav-inner { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-6); max-width: var(--width-7xl, 1280px); margin: 0 auto; }
-    .dx-brand { display: flex; align-items: center; gap: var(--space-2); font-weight: var(--weight-bold); font-size: var(--text-md); text-decoration: none; color: var(--color-text); }
-    .dx-brand-mark { width: 24px; height: 24px; border-radius: var(--radius-sm); background: var(--color-text); display: grid; place-items: center; color: var(--color-surface); font-size: 11px; font-weight: 800; }
-    .dx-nav-menu { display: flex; gap: var(--space-5); }
-    .dx-nav-menu a { color: var(--color-text-muted); text-decoration: none; font-size: var(--text-sm); font-weight: var(--weight-medium); }
-    .dx-nav-menu a[aria-current="page"] { color: var(--color-text); }
-    .dx-nav-menu a:hover { color: var(--color-text); }
-    @media (max-width: 720px) { .dx-nav-menu { display: none; } }
-
-    /* ─── Shell ─── */
-    .dx-shell { max-width: var(--width-7xl, 1280px); margin: 0 auto; padding: var(--space-10) var(--space-6); }
-    .dx-kicker { font-size: var(--text-sm); font-weight: var(--weight-semibold); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-accent); margin: 0 0 var(--space-2); }
-
-    /* ─── Header ─── */
-    .dx-header { margin-bottom: var(--space-10); max-width: 72ch; }
-    .dx-header h1 { font-size: var(--text-6xl); letter-spacing: -0.03em; font-weight: var(--weight-bold); margin: var(--space-2) 0 var(--space-4); }
-    .dx-header .lede { color: var(--color-text-muted); font-size: var(--text-lg); line-height: 1.55; margin: 0; }
-
-    /* ─── Section ─── */
-    .dx-section { padding-top: var(--space-10); margin-top: var(--space-10); border-top: 1px solid var(--color-border-muted); scroll-margin-top: 80px; }
-    .dx-section:first-of-type { border-top: none; margin-top: 0; padding-top: 0; }
-    .dx-section h2 { font-size: var(--text-3xl); letter-spacing: -0.02em; font-weight: var(--weight-bold); margin: 0 0 var(--space-3); }
-    .dx-section > p { color: var(--color-text-secondary); line-height: 1.7; margin: 0 0 var(--space-4); max-width: 72ch; }
-    .dx-section h3 { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: var(--space-8) 0 var(--space-2); }
-    .dx-section ul, .dx-section ol { max-width: 72ch; padding-left: var(--space-5); line-height: 1.7; color: var(--color-text-secondary); }
-    .dx-section li { margin-bottom: var(--space-2); }
-    code { font-family: var(--font-mono); font-size: 0.9em; background: var(--color-surface-sunken); padding: 0.1em 0.4em; border-radius: var(--radius-xs); border: 1px solid var(--color-border-muted); }
-
-    /* ─── Code block ─── */
-    .dx-pre { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); overflow-x: auto; font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.6; margin: var(--space-3) 0; color: var(--color-text); }
-    .dx-pre code { background: none; padding: 0; border: none; font-size: inherit; }
-
-    /* ─── Callout ─── */
-    .dx-callout { border-left: 3px solid var(--color-accent); background: var(--color-accent-subtle); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-6) 0; max-width: 72ch; }
-    .dx-callout p { margin: 0 0 var(--space-2); color: var(--color-text); }
-    .dx-callout p:last-child { margin: 0; }
-    .dx-callout strong { color: var(--color-accent-active); }
-
-    /* ─── TOC ─── */
-    .dx-toc { padding: var(--space-4); background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); margin: var(--space-8) 0 var(--space-4); }
-    .dx-toc-title { font-size: var(--text-xs); letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2); }
-    .dx-toc-links { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: 0; padding: 0; list-style: none; }
-    .dx-toc-links a { color: var(--color-text); text-decoration: none; font-size: var(--text-sm); padding: 0 var(--space-1); }
-    .dx-toc-links a:hover { color: var(--color-accent); }
+    /* Page-specific styles — chrome lives in shell.css */
 
     /* ═══════════════════════════════════════════════════════════
        Component-page specific patterns (new)
        ═══════════════════════════════════════════════════════════ */
 
     /* Demo block: preview frame + code block, stacked */
-    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; max-width: 72ch; }
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview {
       background: var(--color-surface-raised);
       padding: var(--space-8) var(--space-5);
@@ -77,7 +31,7 @@
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
 
     /* Variant grid: structured rows for Variants section */
-    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; max-width: 72ch; }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
     .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
     .dx-vrow-label {
       font-size: var(--text-xs);
@@ -105,7 +59,6 @@
     /* Anatomy: assembled button on top, 2x2 grid of part specimens below */
     .dx-anatomy {
       margin: var(--space-4) 0;
-      max-width: 72ch;
       display: grid;
       gap: var(--space-4);
     }
@@ -199,47 +152,8 @@
       font-size: 0.85em;
     }
 
-    /* API table */
-    .dx-api { width: 100%; max-width: 72ch; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
-    .dx-api caption { text-align: left; font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text); margin-bottom: var(--space-2); padding-bottom: var(--space-2); }
-    .dx-api thead th {
-      text-align: left;
-      font-weight: var(--weight-semibold);
-      color: var(--color-text);
-      padding: var(--space-2) var(--space-3);
-      border-bottom: 1px solid var(--color-border);
-      font-size: var(--text-xs);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .dx-api tbody td {
-      padding: var(--space-3);
-      border-bottom: 1px solid var(--color-border-muted);
-      vertical-align: top;
-      color: var(--color-text-secondary);
-      line-height: 1.6;
-    }
-    .dx-api tbody tr:last-child td { border-bottom: none; }
-    .dx-api code { white-space: nowrap; }
-    .dx-api .dx-api-name { color: var(--color-text); font-weight: var(--weight-medium); }
-    .dx-api .dx-api-type { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-accent); white-space: nowrap; }
-    .dx-api .dx-api-default { font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted); }
-
-    /* Keyboard table */
-    .dx-keys { display: grid; gap: var(--space-2); max-width: 72ch; margin: var(--space-3) 0; }
-    .dx-keyrow {
-      display: grid;
-      grid-template-columns: 180px 1fr;
-      gap: var(--space-4);
-      padding: var(--space-3);
-      background: var(--color-surface-raised);
-      border: 1px solid var(--color-border-muted);
-      border-radius: var(--radius-sm);
-      align-items: center;
-    }
-    .dx-keyrow .keys { display: inline-flex; gap: var(--space-1); flex-wrap: wrap; }
-    .dx-keyrow span { color: var(--color-text-secondary); line-height: 1.5; }
-    @media (max-width: 720px) { .dx-keyrow { grid-template-columns: 1fr; gap: var(--space-1); } }
+    /* .dx-api and .dx-keys live in shell.css so every reference table
+       on every component page shares the same column boundary. */
   </style>
 </head>
 <body>
@@ -255,44 +169,123 @@
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="../index.html">Docs</a>
         <a href="../components.html" aria-current="page">Components</a>
-        <a href="../../blocks/index.html">Blocks</a>
-        <a href="../../create/index.html">Create</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
       </nav>
-      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+      <div class="dx-nav-actions">
         <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
         <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
       </div>
     </div>
   </header>
 
-  <div class="dx-shell">
+  <div class="dx-shell dx-shell-grid">
 
-    <!-- Page header -->
-    <header class="dx-header">
-      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
-        <ol>
-          <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
-          <li><a href="../components.html" class="ren-link-plain">Components</a></li>
-          <li aria-current="page">Button</li>
-        </ol>
-      </nav>
-      <p class="dx-kicker">Primitive</p>
-      <h1>Button</h1>
-      <p class="lede">A multi-variant action trigger with built-in loading and disabled states. Works as a CSS-only class set <em>or</em> as the <code>&lt;ren-button&gt;</code> custom element. Meets a 44 px touch target and AA contrast in every variant out of the box.</p>
+    <!-- Persistent sidebar — same nav as the catalog so context is never lost -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
 
-      <nav class="dx-toc" aria-label="On this page">
-        <p class="dx-toc-title">On this page</p>
-        <ul class="dx-toc-links">
-          <li><a href="#overview">Overview</a></li>
-          <li><a href="#anatomy">Anatomy</a></li>
-          <li><a href="#demo">Demo</a></li>
-          <li><a href="#variants">Variants</a></li>
-          <li><a href="#api">API</a></li>
-          <li><a href="#a11y">Accessibility</a></li>
-          <li><a href="#examples">Examples</a></li>
-        </ul>
-      </nav>
-    </header>
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html" aria-current="page">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-field.html">Form Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-input-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-data-table.html">Data Table</a></li>
+        <li><a href="ren-form-validation.html">Form Validation</a></li>
+        <li><a href="ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="dx-content">
+
+      <!-- Page header -->
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Button</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Primitive</p>
+        <h1>Button</h1>
+        <p class="lede">A multi-variant action trigger with built-in loading and disabled states. Works as a CSS-only class set <em>or</em> as the <code>&lt;ren-button&gt;</code> custom element. Meets a 44 px touch target and AA contrast in every variant out of the box.</p>
+      </header>
 
     <!-- ═══════════════════════════════════════════════════════════
          1. OVERVIEW
@@ -568,7 +561,7 @@
 
       <h3>Web Component attributes</h3>
       <p>Set on the <code>&lt;ren-button&gt;</code> element. All are reactive — flipping them in JS re-renders the underlying button.</p>
-      <table class="dx-api">
+      <table class="dx-api dx-api-cols-4">
         <thead>
           <tr>
             <th>Attribute</th>
@@ -786,6 +779,8 @@ btn.addEventListener('click', async () =&gt; {
       </div>
     </section>
 
+    </main>
+
   </div>
 
   <!-- Web Component registration so the live demos render -->
@@ -803,5 +798,6 @@ btn.addEventListener('click', async () =&gt; {
     }
   </script>
 
+  <script src="../../site/shell.js" defer></script>
 </body>
 </html>

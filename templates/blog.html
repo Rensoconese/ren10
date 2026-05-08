@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — RenDS Template</title>
+  <meta name="description" content="A magazine-style blog list. Featured post, category-tagged cards, sidebar with search, tags, newsletter, most-read.">
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../site/shell.css">
+  <style>
+    body {
+      margin: 0;
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+    }
+
+    /* ─────────── Top nav ─────────── */
+    .bl-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--color-surface) 80%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+              backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .bl-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-3) var(--space-6);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-6);
+    }
+    .bl-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-weight: var(--weight-bold);
+      text-decoration: none;
+      color: var(--color-text);
+    }
+    .bl-brand-mark {
+      width: 28px; height: 28px;
+      background: var(--color-text);
+      color: var(--color-surface);
+      border-radius: var(--radius-md);
+      display: grid; place-items: center;
+      font-size: var(--text-sm);
+    }
+    .bl-nav-links { display: flex; gap: var(--space-1); }
+    .bl-nav-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      transition: background 120ms, color 120ms;
+    }
+    .bl-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
+    .bl-nav-links a.active { color: var(--color-text); font-weight: var(--weight-semibold); }
+    .bl-nav-actions { display: flex; gap: var(--space-2); }
+    @media (max-width: 768px) { .bl-nav-links { display: none; } }
+
+    /* ─────────── Container ─────────── */
+    .bl-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-inline: clamp(var(--space-5), 5vw, var(--space-8));
+    }
+
+    /* ─────────── Header ─────────── */
+    .bl-header {
+      padding-block: clamp(var(--space-10), 8vw, var(--space-14));
+      text-align: center;
+    }
+    .bl-header-eyebrow {
+      display: inline-block;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--color-accent);
+      margin-bottom: var(--space-3);
+    }
+    .bl-header h1 {
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin: 0 auto var(--space-4);
+      max-width: 22ch;
+      text-wrap: balance;
+    }
+    .bl-header p {
+      color: var(--color-text-secondary);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+      max-width: 56ch;
+      margin: 0 auto;
+      text-wrap: pretty;
+    }
+
+    /* ─────────── Layout ─────────── */
+    .bl-main { padding-bottom: var(--space-16); }
+    .bl-grid {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: clamp(var(--space-6), 4vw, var(--space-10));
+      align-items: start;
+    }
+    @media (max-width: 960px) { .bl-grid { grid-template-columns: 1fr; } }
+
+    .bl-articles { display: flex; flex-direction: column; gap: var(--space-10); }
+
+    /* ─────────── Featured post ─────────── */
+    .bl-featured {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 0;
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .bl-featured:hover {
+      border-color: var(--color-border-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px -16px color-mix(in srgb, var(--color-text) 12%, transparent);
+    }
+    .bl-featured-cover {
+      aspect-ratio: 4 / 3;
+      background:
+        radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--color-accent) 25%, transparent) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, color-mix(in srgb, var(--color-accent) 18%, transparent) 0%, transparent 50%),
+        var(--color-accent-subtle);
+      border-inline-end: 1px solid var(--color-border);
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+    .bl-featured-cover svg { width: 50%; height: auto; max-width: 200px; opacity: 0.85; color: var(--color-accent); }
+    .bl-featured-body {
+      padding: clamp(var(--space-6), 4vw, var(--space-8));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-3);
+    }
+    .bl-featured-tags { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+    .bl-featured h2 {
+      font-size: clamp(var(--text-xl), 2.4vw, var(--text-3xl));
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0;
+      text-wrap: balance;
+    }
+    .bl-featured p {
+      color: var(--color-text-secondary);
+      font-size: var(--text-base);
+      line-height: 1.55;
+      margin: 0;
+      text-wrap: pretty;
+    }
+    @media (max-width: 720px) {
+      .bl-featured { grid-template-columns: 1fr; }
+      .bl-featured-cover { aspect-ratio: 21 / 9; border-inline-end: 0; border-bottom: 1px solid var(--color-border); }
+    }
+
+    /* ─────────── Section heading ─────────── */
+    .bl-section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-bottom: var(--space-2);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .bl-section-head h3 {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.01em;
+      margin: 0;
+    }
+    .bl-section-head .ren-link { font-size: var(--text-sm); }
+
+    /* ─────────── Post card grid ─────────── */
+    .bl-post-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-5);
+    }
+    .bl-post {
+      display: flex;
+      flex-direction: column;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+    }
+    .bl-post:hover {
+      transform: translateY(-2px);
+      border-color: var(--color-border-strong);
+      box-shadow: 0 12px 28px -12px color-mix(in srgb, var(--color-text) 10%, transparent);
+    }
+    .bl-post-cover {
+      aspect-ratio: 16 / 10;
+      display: grid;
+      place-items: center;
+      border-bottom: 1px solid var(--color-border);
+      position: relative;
+    }
+    .bl-post-cover svg { width: 50%; max-width: 96px; height: auto; opacity: 0.7; }
+    /* Color variants per category */
+    .bl-post-cover.v-a11y    { background: var(--color-warning-subtle); color: var(--color-warning); }
+    .bl-post-cover.v-tokens  { background: var(--color-success-subtle); color: var(--color-success); }
+    .bl-post-cover.v-comp    { background: var(--color-ai-subtle, var(--color-accent-subtle)); color: var(--color-accent); }
+    .bl-post-cover.v-theme   { background: var(--color-accent-subtle); color: var(--color-accent); }
+    .bl-post-cover.v-layout  { background: var(--color-info-subtle); color: var(--color-info); }
+    .bl-post-cover.v-release { background: var(--color-danger-subtle); color: var(--color-danger); }
+
+    .bl-post-body {
+      padding: var(--space-5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      flex: 1;
+    }
+    .bl-post-tag {
+      align-self: flex-start;
+    }
+    .bl-post h3 {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      line-height: 1.4;
+      margin: 0;
+      text-wrap: balance;
+    }
+    .bl-post-excerpt {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      line-height: 1.55;
+      margin: 0;
+      text-wrap: pretty;
+    }
+    .bl-post-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      margin-top: auto;
+    }
+    .bl-post-meta .dot { opacity: 0.5; }
+
+    /* ─────────── Pagination ─────────── */
+    .bl-paginate { display: flex; justify-content: center; }
+
+    /* ─────────── Sidebar ─────────── */
+    .bl-aside {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      position: sticky;
+      top: calc(var(--space-12) + 60px);
+    }
+    @media (max-width: 960px) { .bl-aside { position: static; } }
+
+    .bl-aside-card {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+    }
+    .bl-aside-card h4 {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-secondary);
+      margin: 0 0 var(--space-3);
+    }
+    .bl-tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+    .bl-tag-cloud .ren-tag {
+      transition: background 120ms, color 120ms;
+    }
+    .bl-tag-cloud .ren-tag:hover {
+      background: var(--color-fill);
+      color: var(--color-text);
+    }
+    .bl-tag-cloud .count { color: var(--color-text-muted); margin-left: 4px; font-variant-numeric: tabular-nums; }
+
+    /* Newsletter card */
+    .bl-newsletter {
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+    }
+    .bl-newsletter h4 {
+      color: var(--color-on-accent);
+      margin: 0 0 var(--space-2);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .bl-newsletter p {
+      color: color-mix(in srgb, var(--color-on-accent) 88%, transparent);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+      margin: 0 0 var(--space-3);
+    }
+    .bl-newsletter input {
+      width: 100%;
+      background: color-mix(in srgb, var(--color-on-accent) 15%, transparent);
+      border: 1px solid color-mix(in srgb, var(--color-on-accent) 25%, transparent);
+      color: var(--color-on-accent);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      margin-bottom: var(--space-2);
+    }
+    .bl-newsletter input::placeholder { color: color-mix(in srgb, var(--color-on-accent) 60%, transparent); }
+    .bl-newsletter input:focus {
+      outline: none;
+      border-color: var(--color-on-accent);
+      background: color-mix(in srgb, var(--color-on-accent) 22%, transparent);
+    }
+    .bl-newsletter button {
+      width: 100%;
+      background: var(--color-on-accent);
+      color: var(--color-accent);
+      border: 0;
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      cursor: pointer;
+      transition: background 120ms;
+    }
+    .bl-newsletter button:hover { background: color-mix(in srgb, var(--color-on-accent) 88%, var(--color-accent)); }
+
+    /* Most-read */
+    .bl-rank { display: flex; flex-direction: column; gap: var(--space-3); list-style: none; padding: 0; margin: 0; counter-reset: rank; }
+    .bl-rank li {
+      counter-increment: rank;
+      display: flex;
+      gap: var(--space-3);
+      align-items: flex-start;
+    }
+    .bl-rank li::before {
+      content: "0" counter(rank);
+      font-variant-numeric: tabular-nums;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-sm);
+      flex-shrink: 0;
+      min-width: 2.2ch;
+    }
+    .bl-rank a {
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      line-height: 1.4;
+      font-weight: var(--weight-medium);
+    }
+    .bl-rank a:hover { color: var(--color-accent); }
+
+    /* ─────────── Footer ─────────── */
+    .bl-footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface-sunken);
+      padding-block: var(--space-8);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .bl-footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .bl-footer a { color: var(--color-text-secondary); text-decoration: none; }
+    .bl-footer a:hover { color: var(--color-text); }
+    .bl-footer-links { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <!-- Preview banner -->
+  <div class="dx-preview-banner" role="region" aria-label="Template preview">
+    <span><span class="dx-preview-banner-label">Template preview ·</span> Blog</span>
+    <a href="index.html">← Back to Templates</a>
+  </div>
+
+  <!-- ═══ TOP NAV ═══ -->
+  <header class="bl-nav">
+    <div class="bl-nav-inner">
+      <a href="./landing.html" class="bl-brand">
+        <span class="bl-brand-mark" aria-hidden="true">R</span>
+        <span>RenDS</span>
+      </a>
+      <nav class="bl-nav-links" aria-label="Main">
+        <a href="../docs/components.html">Components</a>
+        <a href="../create/index.html">Theme Builder</a>
+        <a href="./blog.html" class="active" aria-current="page">Blog</a>
+        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+      <div class="bl-nav-actions">
+        <a href="./auth.html" class="ren-btn ren-btn-ghost ren-btn-sm">Sign in</a>
+        <a href="../create/index.html" class="ren-btn ren-btn-primary ren-btn-sm">Try it</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ HEADER ═══ -->
+  <section class="bl-header">
+    <div class="bl-container">
+      <span class="bl-header-eyebrow">The RenDS journal</span>
+      <h1>Notes from the team</h1>
+      <p>Short essays on craft, accessibility, and the corners of the platform we find interesting. New posts most weeks.</p>
+    </div>
+  </section>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="bl-main">
+    <div class="bl-container">
+      <div class="bl-grid">
+
+        <!-- ═══ ARTICLES ═══ -->
+        <div class="bl-articles">
+
+          <!-- Featured -->
+          <a href="./blog-post.html" class="bl-featured" aria-labelledby="feat-title">
+            <div class="bl-featured-cover" role="img" aria-label="Cover artwork — abstract layered shapes">
+              <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="20" y="40" width="160" height="20" rx="4" opacity="0.4"/>
+                <rect x="20" y="70" width="160" height="20" rx="4" opacity="0.55"/>
+                <rect x="20" y="100" width="160" height="20" rx="4" opacity="0.7"/>
+                <rect x="20" y="130" width="160" height="20" rx="4" opacity="0.85"/>
+                <rect x="20" y="160" width="160" height="6" rx="3"/>
+              </svg>
+            </div>
+            <div class="bl-featured-body">
+              <div class="bl-featured-tags">
+                <span class="ren-badge ren-badge-primary">Featured</span>
+                <span class="ren-tag">Architecture</span>
+              </div>
+              <h2 id="feat-title">Why we bet on CSS Cascade Layers (and never wrote <code>!important</code> again)</h2>
+              <p>Specificity wars are a design-system killer. Layers flatten the cascade, make overrides trivial, and let contributors ship without reviewer fatigue.</p>
+              <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; margin-top: var(--space-3);">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-accent); color: var(--color-on-accent); display: grid; place-items: center; font-weight: var(--weight-bold); font-size: var(--text-xs); flex-shrink: 0;" aria-hidden="true">R</div>
+                <span style="font-size: var(--text-sm); font-weight: var(--weight-medium);">Ren Soconese</span>
+                <span style="color: var(--color-text-muted); font-size: var(--text-sm);">·</span>
+                <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">Apr 14, 2026</span>
+                <span style="color: var(--color-text-muted); font-size: var(--text-sm);">·</span>
+                <span style="font-size: var(--text-sm); color: var(--color-text-secondary);">8 min read</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Latest section -->
+          <header class="bl-section-head">
+            <h3>Latest posts</h3>
+            <a href="#" class="ren-link">View all →</a>
+          </header>
+
+          <div class="bl-post-grid">
+
+            <a href="./blog-post.html" class="bl-post">
+              <div class="bl-post-cover v-a11y" role="img" aria-label="Accessibility icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2"/><path d="m12 6 0 12"/><path d="M5 9l7-3 7 3"/><path d="m9 18 3-4 3 4"/></svg>
+              </div>
+              <div class="bl-post-body">
+                <span class="ren-tag bl-post-tag">A11y</span>
+                <h3>A better reduced-motion: dissolves beat silence</h3>
+                <p class="bl-post-excerpt">Killing animation outright creates dead UI. The alternative we ship — fade, highlight, color-shift — is opt-in, semantic, WCAG-friendly.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span><span class="dot">·</span>
+                  <span>Apr 11, 2026</span><span class="dot">·</span>
+                  <span>5 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="./blog-post.html" class="bl-post">
+              <div class="bl-post-cover v-tokens" role="img" aria-label="Tokens icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/></svg>
+              </div>
+              <div class="bl-post-body">
+                <span class="ren-tag bl-post-tag">Tokens</span>
+                <h3>Semantic spacing: the layer between scale and component</h3>
+                <p class="bl-post-excerpt">Why <code>--space-card-padding</code> beats <code>--space-6</code> in every place that matters, and how to migrate without breaking what already ships.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span><span class="dot">·</span>
+                  <span>Apr 8, 2026</span><span class="dot">·</span>
+                  <span>6 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="./blog-post.html" class="bl-post">
+              <div class="bl-post-cover v-comp" role="img" aria-label="Components icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M9 21h6"/><path d="M12 17v4"/></svg>
+              </div>
+              <div class="bl-post-body">
+                <span class="ren-tag bl-post-tag">Components</span>
+                <h3>Native <code>&lt;dialog&gt;</code> is 90% of what you need</h3>
+                <p class="bl-post-excerpt">Top-layer. Backdrop. ESC-to-close. Focus trap. Modern browsers ship a dialog that's almost perfect — the last 10% is one line of CSS.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span><span class="dot">·</span>
+                  <span>Apr 2, 2026</span><span class="dot">·</span>
+                  <span>4 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="./blog-post.html" class="bl-post">
+              <div class="bl-post-cover v-theme" role="img" aria-label="Theming icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18Z" fill="currentColor"/></svg>
+              </div>
+              <div class="bl-post-body">
+                <span class="ren-tag bl-post-tag">Theming</span>
+                <h3>How <code>light-dark()</code> killed our theme provider</h3>
+                <p class="bl-post-excerpt">One CSS function. Zero JS. Zero FOUC. The browser already knows what the user wants — stop fighting it with localStorage hacks.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span><span class="dot">·</span>
+                  <span>Mar 25, 2026</span><span class="dot">·</span>
+                  <span>7 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="./blog-post.html" class="bl-post">
+              <div class="bl-post-cover v-layout" role="img" aria-label="Layouts icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+              </div>
+              <div class="bl-post-body">
+                <span class="ren-tag bl-post-tag">Layouts</span>
+                <h3>Every Layout, revisited: the ten primitives we actually use</h3>
+                <p class="bl-post-excerpt">Stack, Cluster, Sidebar, Cover, Frame, Reel. An old idea, sharpened. Here's the API that replaced 80% of our custom flex and grid.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span><span class="dot">·</span>
+                  <span>Mar 18, 2026</span><span class="dot">·</span>
+                  <span>9 min</span>
+                </div>
+              </div>
+            </a>
+
+            <a href="./blog-post.html" class="bl-post">
+              <div class="bl-post-cover v-release" role="img" aria-label="Release icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 4 8v8l8 6 8-6V8z"/><path d="M12 2v20"/><path d="M4 8l8 6 8-6"/></svg>
+              </div>
+              <div class="bl-post-body">
+                <span class="ren-tag bl-post-tag">Release</span>
+                <h3>RenDS 0.8: 24 new components, sharper tokens, real templates</h3>
+                <p class="bl-post-excerpt">Tanda 3 closes the catalog: every primitive, composite, and pattern is now documented. Plus a refreshed templates section and a tighter token layer.</p>
+                <div class="bl-post-meta">
+                  <span>Ren</span><span class="dot">·</span>
+                  <span>Mar 10, 2026</span><span class="dot">·</span>
+                  <span>3 min</span>
+                </div>
+              </div>
+            </a>
+
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="Pagination" class="bl-paginate">
+            <div class="ren-pagination">
+              <a href="#" aria-disabled="true" tabindex="-1" class="ren-pagination-item">←</a>
+              <a href="#" class="ren-pagination-item" aria-current="page">1</a>
+              <a href="#" class="ren-pagination-item">2</a>
+              <a href="#" class="ren-pagination-item">3</a>
+              <span class="ren-pagination-item" aria-hidden="true">…</span>
+              <a href="#" class="ren-pagination-item">7</a>
+              <a href="#" class="ren-pagination-item">→</a>
+            </div>
+          </nav>
+
+        </div>
+
+        <!-- ═══ SIDEBAR ═══ -->
+        <aside class="bl-aside" aria-label="Blog sidebar">
+
+          <!-- Search -->
+          <div class="ren-field">
+            <label for="bl-search" class="ren-sr-only">Search posts</label>
+            <input id="bl-search" type="search" placeholder="Search posts…">
+          </div>
+
+          <!-- Tags -->
+          <div class="bl-aside-card">
+            <h4>Browse by tag</h4>
+            <div class="bl-tag-cloud">
+              <a href="#" class="ren-tag">A11y <span class="count">12</span></a>
+              <a href="#" class="ren-tag">Tokens <span class="count">8</span></a>
+              <a href="#" class="ren-tag">Components <span class="count">21</span></a>
+              <a href="#" class="ren-tag">Theming <span class="count">6</span></a>
+              <a href="#" class="ren-tag">Layouts <span class="count">9</span></a>
+              <a href="#" class="ren-tag">Release <span class="count">14</span></a>
+              <a href="#" class="ren-tag">Architecture <span class="count">5</span></a>
+            </div>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="bl-newsletter">
+            <h4>Level up your UI</h4>
+            <p>One short post a week — craft, accessibility, and platform features that make UI feel nice. No spam, easy to unsubscribe.</p>
+            <form onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed!';">
+              <label for="bl-email" class="ren-sr-only">Email</label>
+              <input id="bl-email" type="email" placeholder="you@example.com" required>
+              <button type="submit">Subscribe</button>
+            </form>
+          </div>
+
+          <!-- Most read -->
+          <div class="bl-aside-card">
+            <h4>Most read</h4>
+            <ol class="bl-rank">
+              <li><a href="./blog-post.html">Why we bet on CSS Cascade Layers</a></li>
+              <li><a href="./blog-post.html">Every Layout, revisited</a></li>
+              <li><a href="./blog-post.html">How <code>light-dark()</code> killed our theme provider</a></li>
+              <li><a href="./blog-post.html">Semantic spacing: the layer between scale and component</a></li>
+            </ol>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="bl-footer">
+    <div class="bl-container">
+      <div class="bl-footer-row">
+        <span>© 2026 RenDS · MIT License</span>
+        <div class="bl-footer-links">
+          <a href="./landing.html">Home</a>
+          <a href="../docs/components.html">Docs</a>
+          <a href="../create/index.html">Theme Builder</a>
+          <a href="#">RSS</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

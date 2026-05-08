@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module" src="../../../components/composites/ren-dialog/ren-dialog.js"></script>
+</head>
+<body>
+  <button id="open-dialog" type="button" data-dialog-trigger="confirm-delete">Open dialog</button>
+
+  <ren-dialog id="confirm-delete">
+    <dialog>
+      <h1 class="ren-dialog-title">Delete project?</h1>
+      <button id="cancel-dialog" type="button" data-dialog-close>Cancel</button>
+      <button id="delete-dialog" type="button" data-dialog-close="delete">Delete</button>
+    </dialog>
+  </ren-dialog>
+
+  <script>
+    window.lastDialogReturnValue = null;
+    document.querySelector('#confirm-delete').addEventListener('ren-close', (event) => {
+      window.lastDialogReturnValue = event.detail.returnValue;
+    });
+  </script>
+</body>
+</html>

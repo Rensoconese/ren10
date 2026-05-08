@@ -127,6 +127,13 @@ export class RenForm extends HTMLElement {
     this._fields = Array.from(this._form.querySelectorAll('.ren-field'));
     this._errorSummary = this._form.querySelector('.ren-form-error-summary');
     this._successMessage = this._form.querySelector('.ren-form-success');
+
+    // The error summary must be focusable so .focus() actually moves caret /
+    // SR position when validation fails. A plain <div role="alert"> is not
+    // focusable by default; set tabindex="-1" if the author did not.
+    if (this._errorSummary && !this._errorSummary.hasAttribute('tabindex')) {
+      this._errorSummary.setAttribute('tabindex', '-1');
+    }
   }
 
   _initMultiStep() {

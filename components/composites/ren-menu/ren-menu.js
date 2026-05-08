@@ -37,8 +37,8 @@
  *   ren-menu-close:   Dispatched when menu closes
  */
 
-import { createKeyboardNav } from '../../utils/keyboard-nav.js';
-import { createDismissable } from '../../utils/dismissable.js';
+import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
+import { createDismissable } from '../../../utils/dismissable.js';
 
 export class RenMenu extends HTMLElement {
   #trigger = null;
@@ -46,6 +46,7 @@ export class RenMenu extends HTMLElement {
   #keyboardNav = null;
   #dismissable = null;
   #animationFrame = null;
+  #boundItemClick = null;
 
   constructor() {
     super();
@@ -59,6 +60,7 @@ export class RenMenu extends HTMLElement {
     this.setupMenu();
     this.findTrigger();
     this.attachTriggerListeners();
+    this.attachItemListeners();
   }
 
   /**
@@ -100,7 +102,19 @@ export class RenMenu extends HTMLElement {
     }
 
     // Ensure all items have correct roles if not already set
-    this.querySelectorAll('[role="menuitem"]').forEach((item) => {
+    this.querySelectorAll(
+      '.ren-menu-item, .ren-menu-checkbox-item, .ren-menu-radio-item, [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]'
+    ).forEach((item) => {
+      if (!item.hasAttribute('role')) {
+        if (item.classList.contains('ren-menu-checkbox-item')) {
+          item.setAttribute('role', 'menuitemcheckbox');
+        } else if (item.classList.contains('ren-menu-radio-item')) {
+          item.setAttribute('role', 'menuitemradio');
+        } else {
+          item.setAttribute('role', 'menuitem');
+        }
+      }
+
       if (!item.hasAttribute('tabindex')) {
         item.setAttribute('tabindex', '-1');
       }
@@ -143,6 +157,16 @@ export class RenMenu extends HTMLElement {
     this.#trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e));
   }
 
+  /**
+   * Attach delegated item listeners
+   * @private
+   */
+  attachItemListeners() {
+    this.#boundItemClick = this.#boundItemClick || ((e) => this.handleItemClick(e));
+    this.removeEventListener('click', this.#boundItemClick);
+    this.addEventListener('click', this.#boundItemClick);
+  }
+
   /* ═══ TRIGGER HANDLING ═══ */
 
   /**
@@ -167,6 +191,22 @@ export class RenMenu extends HTMLElement {
       e.preventDefault();
       this.open();
     }
+  }
+
+  /**
+   * Handle item click selection
+   * @private
+   */
+  handleItemClick(e) {
+    const item = e.target.closest('[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]');
+
+    if (!item || !this.contains(item) || item.getAttribute('aria-disabled') === 'true') {
+      return;
+    }
+
+    e.preventDefault();
+    e.stopPropagation();
+    this.handleItemSelect(item);
   }
 
   /* ═══ POSITIONING ═══ */
@@ -236,7 +276,7 @@ export class RenMenu extends HTMLElement {
     }
 
     this.#keyboardNav = createKeyboardNav(this, {
-      selector: '[role="menuitem"]:not([aria-disabled="true"])',
+      selector: '[role="menuitem"]:not([aria-disabled="true"]), [role="menuitemcheckbox"]:not([aria-disabled="true"]), [role="menuitemradio"]:not([aria-disabled="true"])',
       orientation: 'vertical',
       loop: true,
       typeahead: true,
@@ -302,8 +342,10 @@ export class RenMenu extends HTMLElement {
    * @private
    */
   handleItemSelect(item) {
+    const role = item.getAttribute('role');
+
     // Handle checkbox items
-    if (item.classList.contains('ren-menu-checkbox-item')) {
+    if (item.classList.contains('ren-menu-checkbox-item') || role === 'menuitemcheckbox') {
       const isChecked = item.getAttribute('aria-checked') === 'true';
       item.setAttribute('aria-checked', !isChecked ? 'true' : 'false');
       this.dispatchSelectEvent(item);
@@ -311,10 +353,10 @@ export class RenMenu extends HTMLElement {
     }
 
     // Handle radio items (exclusive selection within group)
-    if (item.classList.contains('ren-menu-radio-item')) {
+    if (item.classList.contains('ren-menu-radio-item') || role === 'menuitemradio') {
       const group = item.closest('.ren-menu-radio-group') || this;
       group
-        .querySelectorAll('.ren-menu-radio-item')
+        .querySelectorAll('.ren-menu-radio-item, [role="menuitemradio"]')
         .forEach((radioItem) => radioItem.setAttribute('aria-checked', 'false'));
       item.setAttribute('aria-checked', 'true');
       this.dispatchSelectEvent(item);
@@ -371,7 +413,7 @@ export class RenMenu extends HTMLElement {
       this.positionMenu();
 
       // Focus first item
-      const firstItem = this.querySelector('[role="menuitem"]');
+      const firstItem = this.querySelector('[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]');
       if (firstItem) {
         firstItem.focus();
       }
@@ -445,6 +487,10 @@ export class RenMenu extends HTMLElement {
 
     if (this.#animationFrame) {
       cancelAnimationFrame(this.#animationFrame);
+    }
+
+    if (this.#boundItemClick) {
+      this.removeEventListener('click', this.#boundItemClick);
     }
 
     if (this.#trigger) {

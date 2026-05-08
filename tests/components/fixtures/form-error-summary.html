@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module" src="../../../components/patterns/ren-form/ren-form.js"></script>
+</head>
+<body>
+  <ren-form data-validate="onSubmit">
+    <form class="ren-form" novalidate>
+      <div id="summary" class="ren-form-error-summary" role="alert" hidden>
+        <strong>Please fix the following errors:</strong>
+        <ul></ul>
+      </div>
+
+      <div class="ren-field" data-rules="required">
+        <label for="name">Name</label>
+        <input id="name" name="name" required>
+        <span class="ren-field-error" hidden></span>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </ren-form>
+</body>
+</html>

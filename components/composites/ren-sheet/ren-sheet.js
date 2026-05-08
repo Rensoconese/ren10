@@ -1,216 +1,254 @@
-import { createDismissable } from '../../utils/dismissable.js';
-import { autoId } from '../../utils/id-generator.js';
+/**
+ * RenDS — <ren-sheet> Web Component
+ * ==================================
+ * Edge-anchored modal panel. Light DOM only — wraps the consumer's children
+ * in a native <dialog class="ren-sheet"> so we get focus trap, ::backdrop,
+ * Esc handling, and inert-on-body for free.
+ *
+ * Markup:
+ *   <ren-sheet side="right" id="filters">
+ *     <header class="ren-sheet-header">
+ *       <h2 class="ren-sheet-title">Filters</h2>
+ *       <button class="ren-sheet-close" data-sheet-close aria-label="Close">×</button>
+ *     </header>
+ *     <div class="ren-sheet-body"> … </div>
+ *     <footer class="ren-sheet-footer"> … </footer>
+ *   </ren-sheet>
+ *
+ *   <button data-sheet-trigger="filters">Open</button>
+ *
+ * Attributes:
+ *   side         — "right" | "left" | "top" | "bottom" (default "right")
+ *   size         — "sm" | "md" | "lg" | "xl" | "full" (default "md")
+ *   open         — reflects show()/close()
+ *   dismissible  — if "false", only the close button dismisses
+ *
+ * Methods:
+ *   .show()
+ *   .close()
+ *   .open  (getter)
+ *
+ * Events (bubble):
+ *   ren-open
+ *   ren-close
+ *
+ * Light-DOM hooks:
+ *   [data-sheet-trigger="<id>"]  anywhere on the page  → opens the sheet
+ *   [data-sheet-close]           inside the sheet      → closes the sheet
+ */
+
+import { autoId } from '../../../utils/id-generator.js';
 
 export class RenSheet extends HTMLElement {
-  #dialog;
-  #titleId;
-  #descriptionId;
-  #dismissable;
-  #startX = 0;
-  #startY = 0;
-  #isDragging = false;
-  #inertElements = new WeakMap();
-
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
+  static get observedAttributes() {
+    return ['side', 'size', 'data-side', 'data-size', 'open', 'dismissible'];
   }
 
+  #dialog;
+  #titleId;
+  #upgraded = false;
+  #returnFocus = null;
+
+  // Touch swipe
+  #startX = 0;
+  #startY = 0;
+  #dragging = false;
+
   connectedCallback() {
-    this.#titleId = autoId('sheet-title');
-    this.#descriptionId = autoId('sheet-description');
+    if (this.#upgraded) return;
+    this.#upgraded = true;
+    autoId(this, 'sheet');
+    this.#enhance();
+    this.#wire();
 
-    this.#render();
-    this.#setupDialog();
-    this.#setupEventListeners();
-    this.#setupDismissable();
-
+    // If consumer set open as initial attribute, show
     if (this.hasAttribute('open')) {
-      this.show();
+      // Defer to ensure dialog is connected
+      queueMicrotask(() => this.show());
     }
   }
 
-  #render() {
-    const side = this.getAttribute('data-side') || 'right';
-    const size = this.getAttribute('data-size') || 'md';
-
-    this.shadowRoot.innerHTML = `
-      <link rel="stylesheet" href="./ren-sheet.css">
-
-      <dialog class="ren-sheet -${size}" data-side="${side}">
-        <div class="ren-sheet-handle"></div>
-
-        <div class="ren-sheet-header">
-          <div>
-            <h2 class="ren-sheet-title" id="${this.#titleId}">
-              <slot name="title">Sheet</slot>
-            </h2>
-            <p class="ren-sheet-description" id="${this.#descriptionId}">
-              <slot name="description"></slot>
-            </p>
-          </div>
-          <button class="ren-sheet-close" aria-label="Close sheet">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-
-        <div class="ren-sheet-body">
-          <slot></slot>
-        </div>
-
-        <div class="ren-sheet-footer">
-          <slot name="footer"></slot>
-        </div>
-      </dialog>
-    `;
+  attributeChangedCallback(name, oldVal, newVal) {
+    if (!this.#upgraded || !this.#dialog) return;
+    if (name === 'side' || name === 'data-side') {
+      this.#dialog.setAttribute('data-side', this.#getSide());
+    } else if (name === 'size' || name === 'data-size') {
+      this.#syncSize();
+    } else if (name === 'open') {
+      const should = this.hasAttribute('open');
+      if (should && !this.#dialog.open) this.show();
+      if (!should && this.#dialog.open) this.close();
+    }
   }
 
-  #setupDialog() {
-    this.#dialog = this.shadowRoot.querySelector('dialog');
+  /* ─── Enhancement ─── */
+
+  #enhance() {
+    // Move existing children into a <dialog>
+    const fragment = document.createDocumentFragment();
+    while (this.firstChild) fragment.appendChild(this.firstChild);
+
+    this.#dialog = document.createElement('dialog');
+    this.#dialog.className = 'ren-sheet';
     this.#dialog.setAttribute('role', 'dialog');
-    this.#dialog.setAttribute('aria-labelledby', this.#titleId);
-    this.#dialog.setAttribute('aria-describedby', this.#descriptionId);
+    this.#dialog.setAttribute('data-side', this.#getSide());
+    this.#syncSize();
+
+    this.#dialog.appendChild(fragment);
+
+    // Wire aria-labelledby to a heading inside the sheet, if any
+    const heading =
+      this.#dialog.querySelector('.ren-sheet-title') ||
+      this.#dialog.querySelector('h1, h2, h3');
+    if (heading) {
+      this.#titleId = autoId(heading, 'sheet-title');
+      this.#dialog.setAttribute('aria-labelledby', this.#titleId);
+    }
+
+    this.appendChild(this.#dialog);
   }
 
-  #setupEventListeners() {
-    const closeBtn = this.shadowRoot.querySelector('.ren-sheet-close');
-    closeBtn.addEventListener('click', () => this.close());
+  #getSide() {
+    return (
+      this.getAttribute('side') ||
+      this.getAttribute('data-side') ||
+      'right'
+    );
+  }
 
-    // Backdrop click
-    this.shadowRoot.addEventListener('click', (e) => {
-      if (e.target === this.#dialog) {
-        this.close();
-      }
+  #getSize() {
+    return (
+      this.getAttribute('size') ||
+      this.getAttribute('data-size') ||
+      'md'
+    );
+  }
+
+  #syncSize() {
+    if (!this.#dialog) return;
+    // Drop any prior -sm/-md/-lg/-xl/-full classes
+    this.#dialog.classList.remove('-sm', '-md', '-lg', '-xl', '-full');
+    this.#dialog.classList.add(`-${this.#getSize()}`);
+  }
+
+  /* ─── Wiring ─── */
+
+  #wire() {
+    // Backdrop click: native <dialog> dispatches click on the dialog itself
+    // when the user clicks on the backdrop. e.target === dialog → it was the
+    // backdrop, not content inside.
+    this.#dialog.addEventListener('click', (e) => {
+      if (!this.#isDismissible()) return;
+      if (e.target === this.#dialog) this.close();
     });
 
-    // Wire up data-sheet-trigger and data-sheet-close in light DOM
-    this.addEventListener('click', (e) => {
-      const trigger = e.target.closest('[data-sheet-trigger]');
-      const closeEl = e.target.closest('[data-sheet-close]');
-
-      if (trigger) {
-        this.show();
-      }
-      if (closeEl) {
-        this.close();
-      }
+    // Esc — handled natively, but we intercept to honor dismissible=false
+    this.#dialog.addEventListener('cancel', (e) => {
+      if (!this.#isDismissible()) e.preventDefault();
     });
 
-    // Touch swipe to dismiss
+    // [data-sheet-close] anywhere inside
+    this.#dialog.addEventListener('click', (e) => {
+      const closer = e.target.closest('[data-sheet-close]');
+      if (closer && this.#dialog.contains(closer)) this.close();
+    });
+
+    // Swipe to dismiss
     this.#dialog.addEventListener('touchstart', (e) => {
+      if (!this.#isDismissible()) return;
       this.#startX = e.touches[0].clientX;
       this.#startY = e.touches[0].clientY;
-      this.#isDragging = true;
-    });
+      this.#dragging = true;
+    }, { passive: true });
 
     this.#dialog.addEventListener('touchmove', (e) => {
-      if (!this.#isDragging) return;
-
-      const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
-      const deltaX = currentX - this.#startX;
-      const deltaY = currentY - this.#startY;
-
-      const side = this.getAttribute('data-side') || 'right';
+      if (!this.#dragging) return;
+      const dx = e.touches[0].clientX - this.#startX;
+      const dy = e.touches[0].clientY - this.#startY;
+      const side = this.#getSide();
       const threshold = 50;
-
       if (
-        (side === 'right' && deltaX > threshold) ||
-        (side === 'left' && deltaX < -threshold) ||
-        (side === 'bottom' && deltaY > threshold) ||
-        (side === 'top' && deltaY < -threshold)
+        (side === 'right' && dx > threshold) ||
+        (side === 'left' && dx < -threshold) ||
+        (side === 'bottom' && dy > threshold) ||
+        (side === 'top' && dy < -threshold)
       ) {
+        this.#dragging = false;
         this.close();
-        this.#isDragging = false;
       }
-    });
+    }, { passive: true });
 
     this.#dialog.addEventListener('touchend', () => {
-      this.#isDragging = false;
+      this.#dragging = false;
     });
   }
 
-  #setupDismissable() {
-    this.#dismissable = createDismissable({
-      trigger: this,
-      content: this.#dialog,
-      onDismiss: () => this.close(),
-    });
+  #isDismissible() {
+    return this.getAttribute('dismissible') !== 'false';
   }
 
-  // Public API
+  /* ─── Public API ─── */
+
   show() {
-    if (this.#dialog.open) return;
-
+    if (!this.#dialog || this.#dialog.open) return;
+    this.#returnFocus = document.activeElement;
     this.#dialog.showModal();
-    this.#setInert(true);
     this.setAttribute('open', '');
 
-    this.dispatchEvent(
-      new CustomEvent('ren-open', {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    // Focus the first usable element inside, or the close button
+    const focusable =
+      this.#dialog.querySelector('[autofocus]') ||
+      this.#dialog.querySelector(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+    if (focusable) {
+      focusable.focus({ preventScroll: true });
+    }
+
+    this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
   }
 
   close() {
-    if (!this.#dialog.open) return;
-
-    // Trigger close animation
-    this.#setInert(false);
+    if (!this.#dialog || !this.#dialog.open) return;
     this.#dialog.close();
     this.removeAttribute('open');
 
-    this.dispatchEvent(
-      new CustomEvent('ren-close', {
-        bubbles: true,
-        composed: true,
-      })
-    );
+    // Restore focus to the element that opened the sheet
+    if (this.#returnFocus && document.contains(this.#returnFocus)) {
+      this.#returnFocus.focus({ preventScroll: true });
+    }
+    this.#returnFocus = null;
+
+    this.dispatchEvent(new CustomEvent('ren-close', { bubbles: true }));
   }
 
   get open() {
-    return this.#dialog.open;
-  }
-
-  /**
-   * Toggle inert attribute on sibling elements
-   * When active, makes background elements non-interactive
-   * @private
-   * @param {boolean} active
-   */
-  #setInert(active) {
-    const children = document.body.children;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-
-      // Skip the sheet itself and meta elements
-      if (
-        child === this ||
-        child.tagName === 'SCRIPT' ||
-        child.tagName === 'STYLE' ||
-        child.tagName === 'LINK'
-      ) {
-        continue;
-      }
-
-      if (active) {
-        // Save original inert state and set inert
-        if (!this.#inertElements.has(child)) {
-          this.#inertElements.set(child, child.inert);
-        }
-        child.inert = true;
-      } else {
-        // Restore original inert state
-        const originalInert = this.#inertElements.get(child);
-        if (originalInert !== undefined) {
-          child.inert = originalInert;
-          this.#inertElements.delete(child);
-        }
-      }
-    }
+    return !!(this.#dialog && this.#dialog.open);
   }
 }
 
-customElements.define('ren-sheet', RenSheet);
+if (!customElements.get('ren-sheet')) {
+  customElements.define('ren-sheet', RenSheet);
+}
+
+/* ─── Global trigger delegation ─── */
+/**
+ * <button data-sheet-trigger="some-id"> opens <ren-sheet id="some-id">.
+ *
+ * One global listener handles every trigger on the page so consumers don't
+ * need any wiring of their own. Idempotent across module re-imports.
+ */
+if (typeof window !== 'undefined' && !window.__renSheetTriggerWired) {
+  window.__renSheetTriggerWired = true;
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-sheet-trigger]');
+    if (!trigger) return;
+    const targetId = trigger.getAttribute('data-sheet-trigger');
+    if (!targetId) return;
+    const sheet = document.getElementById(targetId);
+    if (sheet && typeof sheet.show === 'function') {
+      e.preventDefault();
+      sheet.show();
+    }
+  });
+}

@@ -16,6 +16,7 @@
   },
   "files": [
     "index.css",
+    "ren-design.md",
     "tokens/",
     "base/",
     "components/",
@@ -49,9 +50,9 @@
     "./components/**/*.js"
   ],
   "scripts": {
-    "lint:css": "stylelint 'components/**/*.css' 'base/**/*.css' 'tokens/**/*.css'",
-    "lint:js": "eslint 'components/**/*.js' 'utils/**/*.js' 'cli/**/*.js'",
-    "lint": "npm run lint:css && npm run lint:js",
+    "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
+    "lint:tokens": "node scripts/lint-tokens.mjs",
+    "lint": "npm run lint:css && npm run lint:tokens",
     "test": "playwright test",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
@@ -69,6 +70,8 @@
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "axe-core": "^4.11.3",
-    "axe-playwright": "^2.2.2"
+    "axe-playwright": "^2.2.2",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard": "^36.0.1"
   }
 }

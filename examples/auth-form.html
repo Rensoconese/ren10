@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RenDS · Auth form example</title>
+
+  <!-- Foundation: tokens, reset, classless, utilities, layouts -->
+  <link rel="stylesheet" href="../index.css">
+
+  <!-- Component CSS (use components/index.css if importing many) -->
+  <link rel="stylesheet" href="../components/primitives/ren-card/ren-card.css">
+  <link rel="stylesheet" href="../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../components/primitives/ren-link/ren-link.css">
+  <link rel="stylesheet" href="../components/primitives/ren-separator/ren-separator.css">
+  <link rel="stylesheet" href="../components/patterns/ren-form/ren-form.css">
+
+  <!-- Component JS -->
+  <script type="module" src="../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../components/patterns/ren-form/ren-form.js"></script>
+</head>
+<body>
+  <!--
+    Layout skeleton: ren-cover centers a full-viewport stack with optional
+    top / bottom regions. The middle child is the centered surface.
+  -->
+  <div class="ren-cover">
+    <header></header>
+
+    <main class="ren-center-narrow">
+      <article class="ren-card ren-stack-lg">
+        <header class="ren-stack-sm">
+          <h1 class="ren-card-title">Sign in to Acme</h1>
+          <p class="ren-card-description">Welcome back. Enter your credentials to continue.</p>
+        </header>
+
+        <ren-form data-validate="onTouched">
+          <form class="ren-form ren-stack" novalidate>
+            <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden>
+              <strong>Please fix the following errors:</strong>
+              <ul></ul>
+            </div>
+
+            <ren-field data-rules="required|email">
+              <label>Email</label>
+              <input class="ren-input" type="email" name="email" autocomplete="email" required>
+              <span data-error></span>
+            </ren-field>
+
+            <ren-field data-rules="required|min:8">
+              <label>Password</label>
+              <input class="ren-input" type="password" name="password" autocomplete="current-password" required minlength="8">
+              <span data-description>At least 8 characters.</span>
+              <span data-error></span>
+            </ren-field>
+
+            <div class="ren-row-spread">
+              <label class="ren-row" style="gap: var(--space-2)">
+                <input type="checkbox" name="remember">
+                <span>Remember me</span>
+              </label>
+              <a class="ren-link" href="/forgot">Forgot password?</a>
+            </div>
+
+            <div class="ren-form-actions">
+              <button class="ren-btn ren-btn-full" type="submit">Sign in</button>
+            </div>
+          </form>
+        </ren-form>
+
+        <hr class="ren-separator" aria-hidden="true">
+
+        <a class="ren-btn ren-btn-secondary ren-btn-full" href="/auth/google">
+          Continue with Google
+        </a>
+
+        <p class="ren-stack-xs" style="text-align: center; color: var(--color-text-muted)">
+          Don't have an account?
+          <a class="ren-link" href="/signup">Create one</a>
+        </p>
+      </article>
+    </main>
+
+    <footer></footer>
+  </div>
+
+  <script type="module">
+    document.querySelector('ren-form').addEventListener('ren-submit', (event) => {
+      event.preventDefault();
+      // POST event.detail.values to your auth endpoint here.
+      console.log('submit', event.detail.values);
+    });
+  </script>
+</body>
+</html>

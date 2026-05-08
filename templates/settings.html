@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — RenDS Template</title>
+  <meta name="description" content="App settings template — sidebar tab nav, profile + notifications + danger zone, sticky save bar.">
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../site/shell.css">
+  <style>
+    body {
+      margin: 0;
+      background: var(--color-surface-sunken);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+    }
+
+    /* ─────────── Container ─────────── */
+    .st-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(var(--space-6), 4vw, var(--space-10)) clamp(var(--space-4), 3vw, var(--space-6));
+    }
+    .st-page-head {
+      margin-bottom: var(--space-8);
+    }
+    .st-page-head h1 {
+      font-size: clamp(var(--text-2xl), 2.5vw, var(--text-3xl));
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.01em;
+      margin: 0 0 var(--space-2);
+    }
+    .st-page-head p {
+      color: var(--color-text-secondary);
+      font-size: var(--text-base);
+      margin: 0;
+    }
+
+    /* ─────────── 2-column layout ─────────── */
+    .st-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: clamp(var(--space-6), 4vw, var(--space-10));
+      align-items: start;
+    }
+    @media (max-width: 880px) {
+      .st-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ─────────── Tab nav (left) ─────────── */
+    .st-nav {
+      position: sticky;
+      top: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .st-nav a {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      transition: background 120ms, color 120ms;
+    }
+    .st-nav a svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.85; }
+    .st-nav a:hover {
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .st-nav a:hover svg { opacity: 1; }
+    .st-nav a.active,
+    .st-nav a[aria-current="page"] {
+      background: var(--color-surface);
+      color: var(--color-text);
+      font-weight: var(--weight-semibold);
+      box-shadow: inset 0 0 0 1px var(--color-border);
+    }
+    .st-nav a.active svg { color: var(--color-accent); opacity: 1; }
+    @media (max-width: 880px) {
+      .st-nav {
+        position: static;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: var(--space-1);
+        margin-bottom: var(--space-4);
+        scroll-snap-type: x mandatory;
+      }
+      .st-nav a { flex-shrink: 0; scroll-snap-align: start; }
+    }
+
+    /* ─────────── Content panels ─────────── */
+    .st-content { display: flex; flex-direction: column; gap: var(--space-6); }
+
+    .st-panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .st-panel-head {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .st-panel-head h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      letter-spacing: -0.01em;
+      margin: 0 0 var(--space-1);
+    }
+    .st-panel-head p {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin: 0;
+      line-height: 1.55;
+    }
+    .st-panel-body { padding: var(--space-6); }
+    .st-panel-body.flush { padding: 0; }
+    .st-panel-foot {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface-sunken);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-3);
+    }
+
+    /* ─────────── Avatar block ─────────── */
+    .st-avatar-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+      padding-bottom: var(--space-6);
+      margin-bottom: var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .st-avatar {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+      display: grid; place-items: center;
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .st-avatar-meta { flex: 1; }
+    .st-avatar-meta p {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin: var(--space-2) 0 0;
+      line-height: 1.55;
+    }
+    .st-avatar-actions {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    /* ─────────── Field grid ─────────── */
+    .st-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+    }
+    @media (max-width: 560px) { .st-grid-2 { grid-template-columns: 1fr; } }
+
+    .st-fields { display: flex; flex-direction: column; gap: var(--space-5); }
+
+    /* ─────────── Toggle rows (notifications) ─────────── */
+    .st-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-5);
+      padding: var(--space-4) var(--space-6);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .st-toggle-row:last-child { border-bottom: 0; }
+    .st-toggle-row .st-toggle-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .st-toggle-row .st-toggle-label {
+      font-weight: var(--weight-medium);
+      color: var(--color-text);
+      font-size: var(--text-sm);
+    }
+    .st-toggle-row .st-toggle-desc {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    /* ─────────── Danger zone ─────────── */
+    .st-danger {
+      border: 1px solid color-mix(in srgb, var(--color-danger) 50%, transparent);
+      background: var(--color-surface);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .st-danger-head {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+      background: color-mix(in srgb, var(--color-danger) 8%, var(--color-surface));
+    }
+    .st-danger-head h2 {
+      margin: 0 0 var(--space-1);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      color: var(--color-danger);
+    }
+    .st-danger-head p {
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      margin: 0;
+      line-height: 1.55;
+    }
+    .st-danger-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-5);
+      padding: var(--space-5) var(--space-6);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preview banner -->
+  <div class="dx-preview-banner" role="region" aria-label="Template preview">
+    <span><span class="dx-preview-banner-label">Template preview ·</span> Settings</span>
+    <a href="index.html">← Back to Templates</a>
+  </div>
+
+  <main class="st-shell">
+
+    <header class="st-page-head">
+      <h1>Settings</h1>
+      <p>Manage your account, preferences, and team configuration.</p>
+    </header>
+
+    <div class="st-layout">
+
+      <!-- ═══ TAB NAV ═══ -->
+      <nav class="st-nav" aria-label="Settings sections">
+        <a href="#profile" class="active" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </a>
+        <a href="#account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>Account</span>
+        </a>
+        <a href="#notifications">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span>Notifications</span>
+        </a>
+        <a href="#appearance">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20z"/><path d="M2 12h20"/></svg>
+          <span>Appearance</span>
+        </a>
+        <a href="#billing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          <span>Billing</span>
+        </a>
+        <a href="#team">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Team</span>
+        </a>
+      </nav>
+
+      <!-- ═══ CONTENT ═══ -->
+      <div class="st-content">
+
+        <!-- Profile -->
+        <section class="st-panel" id="profile" aria-labelledby="profile-title">
+          <header class="st-panel-head">
+            <h2 id="profile-title">Profile</h2>
+            <p>Your public profile information. This is what teammates and customers see.</p>
+          </header>
+
+          <form class="st-panel-body" onsubmit="event.preventDefault();">
+            <div class="st-avatar-row">
+              <div class="st-avatar" aria-hidden="true">R</div>
+              <div class="st-avatar-meta">
+                <div class="st-avatar-actions">
+                  <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm">Upload new</button>
+                  <button type="button" class="ren-btn ren-btn-ghost ren-btn-sm">Remove</button>
+                </div>
+                <p>JPG, PNG, or GIF. Max 2 MB. Square images render best.</p>
+              </div>
+            </div>
+
+            <div class="st-fields">
+              <div class="st-grid-2">
+                <div class="ren-field">
+                  <label for="st-first" class="ren-field-label">First name</label>
+                  <input id="st-first" type="text" value="Ren" autocomplete="given-name">
+                </div>
+                <div class="ren-field">
+                  <label for="st-last" class="ren-field-label">Last name</label>
+                  <input id="st-last" type="text" value="Soconese" autocomplete="family-name">
+                </div>
+              </div>
+
+              <div class="ren-field">
+                <label for="st-email" class="ren-field-label">Email address</label>
+                <input id="st-email" type="email" value="ren@example.com" autocomplete="email">
+                <p class="ren-field-description">Used for notifications and password resets.</p>
+              </div>
+
+              <div class="ren-field">
+                <label for="st-handle" class="ren-field-label">Username</label>
+                <input id="st-handle" type="text" value="rensoconese">
+                <p class="ren-field-description">Your public profile URL: rends.dev/<strong>rensoconese</strong></p>
+              </div>
+
+              <div class="ren-field">
+                <label for="st-bio" class="ren-field-label">Bio</label>
+                <textarea id="st-bio" rows="3" placeholder="A short introduction…" style="resize: vertical;"></textarea>
+                <p class="ren-field-description">160 characters max. Plain text.</p>
+              </div>
+            </div>
+          </form>
+
+          <footer class="st-panel-foot">
+            <button type="button" class="ren-btn ren-btn-ghost">Cancel</button>
+            <button type="submit" class="ren-btn ren-btn-primary">Save changes</button>
+          </footer>
+        </section>
+
+        <!-- Notifications -->
+        <section class="st-panel" id="notifications" aria-labelledby="notif-title">
+          <header class="st-panel-head">
+            <h2 id="notif-title">Notifications</h2>
+            <p>Choose what you want to be notified about. Critical security alerts are always on.</p>
+          </header>
+
+          <div class="st-panel-body flush">
+            <div class="st-toggle-row">
+              <div class="st-toggle-text">
+                <div class="st-toggle-label">Email notifications</div>
+                <div class="st-toggle-desc">Account activity, comments, and direct mentions sent to your inbox.</div>
+              </div>
+              <label class="ren-switch">
+                <input type="checkbox" checked aria-label="Email notifications">
+                <span class="ren-switch-track" aria-hidden="true"></span>
+              </label>
+            </div>
+            <div class="st-toggle-row">
+              <div class="st-toggle-text">
+                <div class="st-toggle-label">Push notifications</div>
+                <div class="st-toggle-desc">Real-time pings on your linked devices.</div>
+              </div>
+              <label class="ren-switch">
+                <input type="checkbox" aria-label="Push notifications">
+                <span class="ren-switch-track" aria-hidden="true"></span>
+              </label>
+            </div>
+            <div class="st-toggle-row">
+              <div class="st-toggle-text">
+                <div class="st-toggle-label">Weekly digest</div>
+                <div class="st-toggle-desc">A summary email every Monday morning. No spam, easy to unsubscribe.</div>
+              </div>
+              <label class="ren-switch">
+                <input type="checkbox" checked aria-label="Weekly digest">
+                <span class="ren-switch-track" aria-hidden="true"></span>
+              </label>
+            </div>
+            <div class="st-toggle-row">
+              <div class="st-toggle-text">
+                <div class="st-toggle-label">Marketing emails</div>
+                <div class="st-toggle-desc">Product news, tips, and tutorials. We keep these to one a month.</div>
+              </div>
+              <label class="ren-switch">
+                <input type="checkbox" aria-label="Marketing emails">
+                <span class="ren-switch-track" aria-hidden="true"></span>
+              </label>
+            </div>
+            <div class="st-toggle-row">
+              <div class="st-toggle-text">
+                <div class="st-toggle-label">
+                  Security alerts
+                  <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2); font-size: 10px;">Required</span>
+                </div>
+                <div class="st-toggle-desc">Suspicious sign-ins, password changes, and 2FA events. Cannot be disabled.</div>
+              </div>
+              <label class="ren-switch">
+                <input type="checkbox" checked disabled aria-label="Security alerts">
+                <span class="ren-switch-track" aria-hidden="true"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Danger zone -->
+        <section class="st-danger" id="danger" aria-labelledby="danger-title">
+          <header class="st-danger-head">
+            <h2 id="danger-title">Danger zone</h2>
+            <p>Irreversible actions on your account. Read carefully before clicking.</p>
+          </header>
+          <div class="st-danger-row">
+            <div class="st-toggle-text">
+              <div class="st-toggle-label">Export your data</div>
+              <div class="st-toggle-desc">Download a JSON archive of your projects, comments, and settings. Available for 24 hours.</div>
+            </div>
+            <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm">Request export</button>
+          </div>
+          <div class="st-danger-row" style="border-top: 1px solid color-mix(in srgb, var(--color-danger) 20%, transparent);">
+            <div class="st-toggle-text">
+              <div class="st-toggle-label">Delete account</div>
+              <div class="st-toggle-desc">Permanently remove your account, projects, and all associated data. <strong style="color: var(--color-danger);">This cannot be undone.</strong></div>
+            </div>
+            <button type="button" class="ren-btn ren-btn-danger ren-btn-sm">Delete account</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>

@@ -5,7 +5,12 @@
   border: none;
 
   background: var(--color-surface);
+  color: var(--color-text);
   border-radius: 0;
+
+  /* Header/body/footer stack: body grows, footer pins to the bottom */
+  display: flex;
+  flex-direction: column;
 
   z-index: 50;
   max-width: 100%;

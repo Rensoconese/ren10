@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RenDS — Vanilla, accessible, atomic design system</title>
+  <meta name="description" content="A design system that ships HTML, CSS, and a sprinkle of Web Components. No React. No build step. WCAG 2.1 AA out of the box.">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="components/index.css">
+  <link rel="stylesheet" href="themes/appearance.css">
+  <link rel="stylesheet" href="tokens/component/tokens.css">
+  <link rel="stylesheet" href="site/shell.css">
+  <style>
+    /* ─────────────────────────────────────────────
+       Page-specific styles. All chrome (top nav,
+       footer, shell containers) lives in shell.css.
+       ───────────────────────────────────────────── */
+
+    /* Hero */
+    .lp-hero { padding-block: var(--space-16) var(--space-12); position: relative; overflow: hidden; }
+    .lp-hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-1) var(--space-3);
+      border-radius: 999px;
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.04em;
+      margin-bottom: var(--space-5);
+    }
+    .lp-hero-eyebrow .dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--color-accent);
+    }
+    .lp-hero h1 {
+      font-size: clamp(var(--text-5xl), 7vw, 84px);
+      line-height: 1.02;
+      letter-spacing: -0.035em;
+      margin: 0 0 var(--space-5);
+      font-weight: var(--weight-bold);
+      max-width: 14ch;
+      background: linear-gradient(135deg, var(--color-text) 0%, color-mix(in srgb, var(--color-accent) 70%, var(--color-text)) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .lp-hero p.lede {
+      font-size: clamp(var(--text-lg), 2vw, var(--text-xl));
+      color: var(--color-text-muted);
+      margin: 0 0 var(--space-7);
+      max-width: 56ch;
+      line-height: 1.55;
+    }
+    .lp-hero-cta { display: flex; gap: var(--space-3); flex-wrap: wrap; align-items: center; }
+    .lp-hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-5);
+      margin-top: var(--space-8);
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+    }
+    .lp-hero-meta strong { color: var(--color-text); font-weight: var(--weight-semibold); }
+
+    /* Section primitives */
+    .lp-section { padding-block: var(--space-12); border-top: 1px solid var(--color-border); }
+    .lp-section-header { margin-bottom: var(--space-8); max-width: 64ch; }
+    .lp-section-title {
+      font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      margin: var(--space-2) 0 var(--space-3);
+      line-height: 1.1;
+    }
+    .lp-section-sub {
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      margin: 0;
+      max-width: 60ch;
+      line-height: 1.55;
+    }
+
+    /* Pillar cards (3-up) */
+    .lp-pillars { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-5); }
+    .lp-pillar {
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+    }
+    .lp-pillar-num {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      background: var(--color-accent-subtle);
+      color: var(--color-accent);
+      font-weight: var(--weight-bold);
+      margin-bottom: var(--space-4);
+    }
+    .lp-pillar h3 {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      margin: 0 0 var(--space-2);
+      letter-spacing: -0.01em;
+    }
+    .lp-pillar p {
+      color: var(--color-text-muted);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    /* Atomic stack visual */
+    .lp-atoms {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: var(--space-4);
+    }
+    .lp-atom {
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .lp-atom-eyebrow {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .lp-atom h4 {
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      margin: 0;
+    }
+    .lp-atom p {
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.55;
+      margin: 0;
+    }
+    .lp-atom-count {
+      margin-top: var(--space-2);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-accent);
+    }
+
+    /* Live preview block */
+    .lp-preview {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface);
+      overflow: hidden;
+    }
+    @media (max-width: 880px) { .lp-preview { grid-template-columns: 1fr; } }
+    .lp-preview-render {
+      padding: var(--space-8) var(--space-6);
+      background: var(--color-surface-raised);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+      align-items: flex-start;
+      justify-content: center;
+      border-inline-end: 1px solid var(--color-border);
+    }
+    @media (max-width: 880px) { .lp-preview-render { border-inline-end: 0; border-bottom: 1px solid var(--color-border); } }
+    .lp-preview-render-row {
+      display: flex;
+      gap: var(--space-3);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .lp-preview-code {
+      padding: var(--space-6) var(--space-5);
+      background: var(--color-surface-sunken);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      color: var(--color-text);
+      overflow-x: auto;
+      margin: 0;
+    }
+    .lp-preview-code .tag { color: color-mix(in srgb, var(--color-accent) 90%, var(--color-text-muted)); }
+    .lp-preview-code .attr { color: color-mix(in srgb, var(--color-info) 80%, var(--color-text-muted)); }
+    .lp-preview-code .str { color: color-mix(in srgb, var(--color-success) 80%, var(--color-text-muted)); }
+    .lp-preview-code .com { color: var(--color-text-muted); font-style: italic; }
+
+    /* Templates strip */
+    .lp-tpl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-4);
+    }
+    .lp-tpl-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 150ms, transform 150ms;
+    }
+    .lp-tpl-card:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+    .lp-tpl-mock {
+      aspect-ratio: 16/10;
+      border-radius: var(--radius-sm);
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-border);
+      position: relative;
+      overflow: hidden;
+    }
+    .lp-tpl-mock::before, .lp-tpl-mock::after { content: ""; position: absolute; background: var(--color-surface); border: 1px solid var(--color-border); }
+    .lp-tpl-mock::before { top: 8px; left: 8px; right: 8px; height: 14px; border-radius: 4px; }
+    .lp-tpl-mock::after { left: 8px; right: 40%; bottom: 8px; top: 32px; border-radius: 4px; }
+    .lp-tpl-mock-2::before { background: var(--color-success-subtle); }
+    .lp-tpl-mock-3::before { background: var(--color-warning-subtle); }
+    .lp-tpl-mock-4::before { background: var(--color-info-subtle); }
+    .lp-tpl-mock-5::before { background: var(--color-danger-subtle); }
+    .lp-tpl-eyebrow {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .lp-tpl-card h3 {
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      margin: 0;
+    }
+
+    /* CTA block */
+    .lp-cta {
+      padding: var(--space-12) var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      background: var(--color-surface-raised);
+      text-align: center;
+      margin-top: var(--space-8);
+    }
+    .lp-cta h2 {
+      font-size: clamp(var(--text-3xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--space-3);
+    }
+    .lp-cta p {
+      max-width: 50ch;
+      margin: 0 auto var(--space-6);
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+    .lp-cta-actions { display: flex; gap: var(--space-3); justify-content: center; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar (shell.css) -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand" aria-current="page">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.2</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="docs/index.html">Docs</a>
+        <a href="docs/components.html">Components</a>
+        <a href="templates/index.html">Templates</a>
+        <a href="create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell">
+
+    <!-- ═══ Hero ═══ -->
+    <section class="lp-hero">
+      <div class="lp-hero-eyebrow">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Vanilla · Accessible · Atomic</span>
+      </div>
+      <h1>The design system the browser already knows.</h1>
+      <p class="lede">
+        RenDS is a vanilla, accessible, atomic design system. No React, no build step,
+        no framework lock-in — just HTML, CSS custom properties, and a sprinkle of
+        Web Components where native elements aren't enough.
+      </p>
+      <div class="lp-hero-cta">
+        <a href="docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-lg">Get started</a>
+        <a href="docs/components.html" class="ren-btn ren-btn-ghost ren-btn-lg">Browse components</a>
+      </div>
+      <div class="lp-hero-meta">
+        <span><strong>54</strong> components</span>
+        <span><strong>200+</strong> design tokens</span>
+        <span><strong>WCAG 2.1 AA</strong> baseline</span>
+        <span><strong>0</strong> framework dependencies</span>
+      </div>
+    </section>
+
+    <!-- ═══ Three pillars ═══ -->
+    <section class="lp-section">
+      <header class="lp-section-header">
+        <p class="dx-kicker">Why RenDS</p>
+        <h2 class="lp-section-title">Three pillars, no exceptions.</h2>
+        <p class="lp-section-sub">
+          Every decision in the system ladders up to one of these three. If a feature can't
+          live inside them, it doesn't ship.
+        </p>
+      </header>
+
+      <div class="lp-pillars">
+        <div class="lp-pillar">
+          <div class="lp-pillar-num" aria-hidden="true">1</div>
+          <h3>Vanilla first</h3>
+          <p>
+            Pure HTML, CSS, and JS. Use <code>&lt;dialog&gt;</code>, <code>&lt;details&gt;</code>,
+            and the Popover API before reaching for JavaScript. Web Components are for
+            encapsulation, not for rendering.
+          </p>
+        </div>
+        <div class="lp-pillar">
+          <div class="lp-pillar-num" aria-hidden="true">2</div>
+          <h3>Accessible by default</h3>
+          <p>
+            WCAG 2.1 AA minimum, AAA where it doesn't fight users. Every component ships
+            with keyboard support, focus management, ARIA, and respects
+            <code>prefers-reduced-motion</code>. Not an afterthought.
+          </p>
+        </div>
+        <div class="lp-pillar">
+          <div class="lp-pillar-num" aria-hidden="true">3</div>
+          <h3>Atomic architecture</h3>
+          <p>
+            Tokens → Primitives → Composites → Patterns. Build upward, never skip a layer.
+            A Button uses tokens. A Dialog uses buttons. A Form uses dialogs and fields.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ Atomic layers ═══ -->
+    <section class="lp-section">
+      <header class="lp-section-header">
+        <p class="dx-kicker">What's inside</p>
+        <h2 class="lp-section-title">Four layers. No exceptions.</h2>
+        <p class="lp-section-sub">
+          The system isn't a bag of components — it's a strict atomic stack. Each layer
+          builds on the one below it.
+        </p>
+      </header>
+
+      <div class="lp-atoms">
+        <article class="lp-atom">
+          <span class="lp-atom-eyebrow">Layer 0</span>
+          <h4>Tokens</h4>
+          <p>Color, spacing, type, radius, motion, shadow. Three tiers: primitive, semantic, component.</p>
+          <span class="lp-atom-count">200+ values</span>
+        </article>
+        <article class="lp-atom">
+          <span class="lp-atom-eyebrow">Layer 1</span>
+          <h4>Primitives</h4>
+          <p>Single-purpose CSS-only components. Button, Card, Field, Badge, Tag, Banner, and 13 more.</p>
+          <span class="lp-atom-count">19 components</span>
+        </article>
+        <article class="lp-atom">
+          <span class="lp-atom-eyebrow">Layer 2</span>
+          <h4>Composites</h4>
+          <p>JS-enhanced behavior on top of primitives. Dialog, Tabs, Popover, Combobox, Calendar, and more.</p>
+          <span class="lp-atom-count">28 components</span>
+        </article>
+        <article class="lp-atom">
+          <span class="lp-atom-eyebrow">Layer 3</span>
+          <h4>Patterns</h4>
+          <p>Multi-component recipes. Nav, Sidebar, Data Table, Form Validation, Empty State.</p>
+          <span class="lp-atom-count">7 patterns</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- ═══ Live preview ═══ -->
+    <section class="lp-section">
+      <header class="lp-section-header">
+        <p class="dx-kicker">Try it</p>
+        <h2 class="lp-section-title">Drop in markup. Get a real component.</h2>
+        <p class="lp-section-sub">
+          No imports. No registration. Add the stylesheet and the class — the browser does
+          the rest. Web Components light up automatically when present.
+        </p>
+      </header>
+
+      <div class="lp-preview">
+        <div class="lp-preview-render">
+          <div class="lp-preview-render-row">
+            <button class="ren-btn ren-btn-primary">Save changes</button>
+            <button class="ren-btn ren-btn-secondary">Cancel</button>
+            <button class="ren-btn ren-btn-ghost">Learn more</button>
+          </div>
+          <div class="lp-preview-render-row">
+            <span class="ren-badge ren-badge-success">Live</span>
+            <span class="ren-badge ren-badge-warning">Beta</span>
+            <span class="ren-tag">design-system</span>
+            <span class="ren-tag">accessibility</span>
+          </div>
+          <div class="lp-preview-render-row" style="width: 100%; max-width: 320px;">
+            <label class="ren-field" style="flex: 1;">
+              <span class="ren-field-label">Project name</span>
+              <input type="text" class="ren-input" value="my-app" readonly>
+            </label>
+          </div>
+        </div>
+        <pre class="lp-preview-code"><code><span class="com">&lt;!-- Just HTML. No React. --&gt;</span>
+<span class="tag">&lt;button</span> <span class="attr">class=</span><span class="str">"ren-btn ren-btn-primary"</span><span class="tag">&gt;</span>
+  Save changes
+<span class="tag">&lt;/button&gt;</span>
+
+<span class="tag">&lt;span</span> <span class="attr">class=</span><span class="str">"ren-badge ren-badge-success"</span><span class="tag">&gt;</span>
+  Live
+<span class="tag">&lt;/span&gt;</span>
+
+<span class="tag">&lt;label</span> <span class="attr">class=</span><span class="str">"ren-field"</span><span class="tag">&gt;</span>
+  <span class="tag">&lt;span</span> <span class="attr">class=</span><span class="str">"ren-field-label"</span><span class="tag">&gt;</span>Project name<span class="tag">&lt;/span&gt;</span>
+  <span class="tag">&lt;input</span> <span class="attr">class=</span><span class="str">"ren-input"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;/label&gt;</span></code></pre>
+      </div>
+    </section>
+
+    <!-- ═══ Templates ═══ -->
+    <section class="lp-section">
+      <header class="lp-section-header">
+        <p class="dx-kicker">Templates</p>
+        <h2 class="lp-section-title">Real screens, ready to copy.</h2>
+        <p class="lp-section-sub">
+          Five full-page templates assembled from RenDS components. View source, copy
+          markup, swap copy, ship.
+        </p>
+      </header>
+
+      <div class="lp-tpl-grid">
+        <a class="lp-tpl-card" href="templates/landing.html">
+          <div class="lp-tpl-mock" aria-hidden="true"></div>
+          <span class="lp-tpl-eyebrow">Marketing</span>
+          <h3>Landing page</h3>
+        </a>
+        <a class="lp-tpl-card" href="templates/auth.html">
+          <div class="lp-tpl-mock lp-tpl-mock-2" aria-hidden="true"></div>
+          <span class="lp-tpl-eyebrow">Auth</span>
+          <h3>Sign in / sign up</h3>
+        </a>
+        <a class="lp-tpl-card" href="templates/dashboard.html">
+          <div class="lp-tpl-mock lp-tpl-mock-3" aria-hidden="true"></div>
+          <span class="lp-tpl-eyebrow">App</span>
+          <h3>Dashboard</h3>
+        </a>
+        <a class="lp-tpl-card" href="templates/settings.html">
+          <div class="lp-tpl-mock lp-tpl-mock-4" aria-hidden="true"></div>
+          <span class="lp-tpl-eyebrow">App</span>
+          <h3>Settings</h3>
+        </a>
+        <a class="lp-tpl-card" href="templates/blog.html">
+          <div class="lp-tpl-mock lp-tpl-mock-5" aria-hidden="true"></div>
+          <span class="lp-tpl-eyebrow">Content</span>
+          <h3>Blog</h3>
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ Theme Builder teaser ═══ -->
+    <section class="lp-section">
+      <div class="lp-cta">
+        <p class="dx-kicker" style="justify-content: center; display: flex;">Theme Builder</p>
+        <h2>Make it yours in three sliders.</h2>
+        <p>
+          Pick a base color, a font, a radius, a density. Export as CSS, JSON, or a ZIP.
+          Share by URL. No account, no upload — the configuration lives entirely in the link.
+        </p>
+        <div class="lp-cta-actions">
+          <a href="create/index.html" class="ren-btn ren-btn-primary ren-btn-lg">Open the builder</a>
+          <a href="docs/theming.html" class="ren-btn ren-btn-ghost ren-btn-lg">Read about theming</a>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="dx-footer">
+    <div class="dx-footer-inner">
+      <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
+        <span class="dx-brand-mark" style="width: 20px; height: 20px; font-size: 10px;">R</span>
+        <span>RenDS v0.8.2</span>
+        <span>·</span>
+        <span>MIT License</span>
+      </div>
+      <div class="dx-footer-links">
+        <a href="docs/index.html">Docs</a>
+        <a href="docs/getting-started.html">Get started</a>
+        <a href="docs/components.html">Components</a>
+        <a href="templates/index.html">Templates</a>
+        <a href="create/index.html">Theme Builder</a>
+        <a href="docs/cli.html">CLI</a>
+        <a href="https://github.com">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

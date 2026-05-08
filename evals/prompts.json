@@ -1,0 +1,230 @@
+{
+  "name": "rends-agent-evals",
+  "version": "0.8.2",
+  "description": "Deterministic prompt set for RenDS-aware agents. Each entry pairs a user-facing task with the rules an agent must satisfy. The 'expectedComponents' / 'forbiddenPatterns' arrays are the machine-checkable parts: a grader scans the produced HTML/CSS for matches.",
+  "evals": [
+    {
+      "id": "auth-form",
+      "prompt": "Build a login screen using RenDS. It needs an email input, password input, a 'Forgot password?' link, a submit button, and a 'Continue with Google' secondary button. Center it on the screen. Use the validation pattern.",
+      "expectedComponents": [
+        "ren-cover",
+        "ren-card",
+        "ren-form",
+        "ren-field",
+        "ren-input",
+        "ren-btn",
+        "ren-link",
+        "ren-stack",
+        "ren-separator"
+      ],
+      "expectedAttributes": [
+        "type=\"email\"",
+        "autocomplete=\"email\"",
+        "type=\"password\"",
+        "data-validate",
+        "novalidate",
+        "type=\"submit\"",
+        "ren-form-error-summary",
+        "tabindex=\"-1\""
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "var\\(--red-",
+        "#[0-9a-fA-F]{6}",
+        "display: flex",
+        "display: grid",
+        "min-height: 100vh",
+        "tailwind",
+        "shadcn",
+        "import React",
+        "<div[^>]*onclick"
+      ],
+      "referenceFile": "examples/auth-form.html"
+    },
+    {
+      "id": "dashboard-shell",
+      "prompt": "I'm building a dashboard with RenDS. I need a left sidebar (using the sidebar pattern) and a main area with a page header (title + action button), three stat cards in a grid (label, big number, trend badge), and a table of users (name, email, role, status badge).",
+      "expectedComponents": [
+        "ren-sidebar-layout",
+        "ren-sidebar",
+        "ren-sidebar-nav",
+        "ren-sidebar-item",
+        "ren-sidebar-main",
+        "ren-row-spread",
+        "ren-grid-3",
+        "ren-card",
+        "ren-badge",
+        "ren-table",
+        "ren-stack-lg"
+      ],
+      "expectedAttributes": [
+        "aria-current=\"page\"",
+        "aria-label",
+        "scope=\"col\""
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "var\\(--red-",
+        "#[0-9a-fA-F]{6}",
+        "tailwind",
+        "shadcn",
+        "<div[^>]*role=\"dialog\""
+      ],
+      "referenceFile": "examples/dashboard-shell.html"
+    },
+    {
+      "id": "settings-form",
+      "prompt": "Settings page with three sections: profile (first name, last name, email, bio), notifications (3 checkboxes for product, security, marketing), and a 'Danger zone' card with a delete-account button. Use the form pattern with onTouched validation.",
+      "expectedComponents": [
+        "ren-center",
+        "ren-card",
+        "ren-form",
+        "ren-field",
+        "ren-input",
+        "ren-checkbox",
+        "ren-stack-lg",
+        "ren-form-row",
+        "ren-form-actions",
+        "ren-btn-danger"
+      ],
+      "expectedAttributes": [
+        "data-validate=\"onTouched\"",
+        "data-status=\"danger\"",
+        "autocomplete=\"email\""
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "var\\(--red-",
+        "#[0-9a-fA-F]{6}",
+        "<div[^>]*class=\"ren-btn"
+      ],
+      "referenceFile": "examples/settings-form.html"
+    },
+    {
+      "id": "data-table",
+      "prompt": "List management screen for users. Top: search input + role filter + status filter. Middle: sortable table with a select-all checkbox column, name, email, role, status badge, last seen, and a per-row actions button. Bottom: pagination controls.",
+      "expectedComponents": [
+        "ren-center-wide",
+        "ren-card",
+        "ren-table",
+        "ren-field",
+        "ren-input",
+        "ren-checkbox",
+        "ren-tag",
+        "ren-badge",
+        "ren-pagination",
+        "ren-row-spread",
+        "ren-cluster"
+      ],
+      "expectedAttributes": [
+        "type=\"search\"",
+        "scope=\"col\"",
+        "aria-label"
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "var\\(--red-",
+        "#[0-9a-fA-F]{6}",
+        "display: grid"
+      ],
+      "referenceFile": "examples/data-table.html"
+    },
+    {
+      "id": "dialog-workflow",
+      "prompt": "On a project page, I need two actions in a quick-actions card: 'Invite collaborator' opens a dialog with a form (email, role select, send/cancel). 'Delete project' opens an alert dialog (no backdrop dismissal) with cancel and a destructive confirm.",
+      "expectedComponents": [
+        "ren-dialog",
+        "ren-dialog-md",
+        "ren-dialog-sm",
+        "ren-alert-dialog",
+        "ren-dialog-header",
+        "ren-dialog-title",
+        "ren-dialog-body",
+        "ren-dialog-footer",
+        "ren-card",
+        "ren-form",
+        "ren-field",
+        "ren-input",
+        "ren-btn-danger"
+      ],
+      "expectedAttributes": [
+        "data-dialog-trigger",
+        "data-dialog-close",
+        "data-dialog-close=\"delete\"",
+        "data-dialog-close=\"invite\"",
+        "alert"
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "var\\(--red-",
+        "#[0-9a-fA-F]{6}",
+        "<div[^>]*role=\"dialog\"",
+        "rgba\\(0,\\s*0,\\s*0,\\s*0\\.[0-9]+\\)\\s*;[^/]*backdrop"
+      ],
+      "referenceFile": "examples/dialog-workflow.html"
+    },
+    {
+      "id": "app-sidebar",
+      "prompt": "App shell with a persistent sidebar: header (logo), main nav (Inbox, Today, Upcoming), Projects section (3 sample projects), and footer (Help, Settings). The sidebar should be collapsible and persist its state.",
+      "expectedComponents": [
+        "ren-sidebar-layout",
+        "ren-sidebar",
+        "ren-sidebar-header",
+        "ren-sidebar-nav",
+        "ren-sidebar-item",
+        "ren-sidebar-section",
+        "ren-sidebar-section-label",
+        "ren-sidebar-footer",
+        "ren-sidebar-toggle",
+        "ren-sidebar-main",
+        "ren-card-interactive"
+      ],
+      "expectedAttributes": [
+        "aria-current=\"page\"",
+        "aria-label=\"Toggle sidebar\""
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "var\\(--red-",
+        "#[0-9a-fA-F]{6}",
+        "display: none[^/]*sidebar"
+      ],
+      "referenceFile": "examples/app-sidebar.html"
+    },
+    {
+      "id": "ai-panel",
+      "prompt": "A document compose page with a main editor area on the left and an AI assistant rail on the right. The rail shows a thread of user/assistant messages, a 'thinking' state, and a textarea + send button at the bottom. Use the ren-ai pattern.",
+      "expectedComponents": [
+        "ren-with-sidebar",
+        "ren-ai-thread",
+        "ren-ai-message",
+        "ren-ai-message-user",
+        "ren-ai-message-assistant",
+        "ren-ai-message-thinking",
+        "ren-spinner",
+        "ren-btn",
+        "ren-input",
+        "ren-card",
+        "ren-tag"
+      ],
+      "expectedAttributes": [
+        "aria-live=\"polite\""
+      ],
+      "forbiddenPatterns": [
+        "var\\(--purple-",
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "#[0-9a-fA-F]{6}",
+        "tailwind",
+        "shadcn"
+      ],
+      "referenceFile": "examples/ai-panel.html"
+    }
+  ]
+}

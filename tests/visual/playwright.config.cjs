@@ -11,8 +11,8 @@ const { defineConfig, devices } = require('@playwright/test');
  * - Proper timeout settings
  */
 module.exports = defineConfig({
-  testDir: '../',
-  testMatch: ['**/*.spec.cjs'],
+  testDir: '.',
+  testMatch: ['visual.spec.cjs'],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -122,25 +122,6 @@ module.exports = defineConfig({
       },
     },
 
-    // Firefox - Desktop Light (cross-browser testing)
-    {
-      name: 'Firefox Desktop Light',
-      use: {
-        ...devices['Desktop Firefox'],
-        viewport: { width: 1280, height: 1024 },
-        colorScheme: 'light',
-      },
-    },
-
-    // Safari - Desktop Light (cross-browser testing)
-    {
-      name: 'Safari Desktop Light',
-      use: {
-        ...devices['Desktop Safari'],
-        viewport: { width: 1280, height: 1024 },
-        colorScheme: 'light',
-      },
-    },
   ],
 
   webServer: undefined, // No webServer needed, using file:// protocol

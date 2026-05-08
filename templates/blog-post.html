@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why we bet on CSS Cascade Layers — RenDS Blog</title>
+  <meta name="description" content="Specificity wars are a design-system killer. How CSS Cascade Layers flattened our cascade and let contributors ship without reviewer fatigue.">
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../site/shell.css">
+  <style>
+    body { margin: 0; background: var(--color-surface); color: var(--color-text); font-family: var(--font-sans); }
+
+    /* Same product nav as blog list */
+    .bl-nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--color-surface) 75%, transparent);
+      -webkit-backdrop-filter: saturate(180%) blur(14px);
+              backdrop-filter: saturate(180%) blur(14px);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .bl-nav-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+    }
+    .bl-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
+
+    /* Article hero */
+    .bp-hero {
+      padding: var(--space-12) var(--space-6) var(--space-8);
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .bp-hero h1 {
+      font-size: clamp(var(--text-3xl), 5vw, 56px);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin: var(--space-3) 0 var(--space-4);
+      font-weight: var(--weight-bold);
+      text-wrap: balance;
+    }
+    .bp-hero .lede {
+      font-size: var(--text-xl);
+      color: var(--color-text-secondary);
+      margin: 0 0 var(--space-6);
+      line-height: 1.65;
+      text-wrap: pretty;
+    }
+    .bp-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      flex-wrap: wrap;
+      font-weight: var(--weight-medium);
+    }
+    .bp-meta strong { color: var(--color-text); font-weight: var(--weight-semibold); }
+    .bp-cover {
+      max-width: 1040px;
+      margin: 0 auto var(--space-12);
+      aspect-ratio: 21 / 9;
+      background:
+        radial-gradient(circle at 25% 25%, color-mix(in srgb, var(--color-accent) 25%, transparent) 0%, transparent 55%),
+        radial-gradient(circle at 75% 75%, color-mix(in srgb, var(--color-accent) 18%, transparent) 0%, transparent 55%),
+        var(--color-accent-subtle);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .bp-cover svg {
+      width: 30%;
+      max-width: 240px;
+      height: auto;
+      color: var(--color-accent);
+      opacity: 0.75;
+    }
+
+    /* Article body — read-friendly column with rich typography */
+    .bp-body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 var(--space-6);
+      font-size: var(--text-lg);
+      line-height: 1.8;
+      color: var(--color-text);
+    }
+    .bp-body p { margin: 0 0 var(--space-5); text-wrap: pretty; }
+    .bp-body h2 {
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: var(--space-10) 0 var(--space-5);
+      text-wrap: balance;
+    }
+    .bp-body h3 {
+      font-size: var(--text-xl);
+      font-weight: var(--weight-semibold);
+      margin: var(--space-8) 0 var(--space-3);
+      text-wrap: balance;
+    }
+    .bp-body ul, .bp-body ol { margin: 0 0 var(--space-5) var(--space-5); padding: 0; }
+    .bp-body li { margin: var(--space-2) 0; line-height: var(--leading-relaxed); }
+    .bp-body a { color: var(--color-accent); text-underline-offset: 3px; }
+    .bp-body code {
+      font-family: var(--font-mono);
+      font-size: 0.92em;
+      background: var(--color-surface-sunken);
+      padding: 1px 6px;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--color-border-muted);
+    }
+    .bp-body pre {
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-5);
+      overflow-x: auto;
+      font-size: var(--text-sm);
+      line-height: 1.7;
+      margin: 0 0 var(--space-6);
+    }
+    .bp-body pre code { background: none; padding: 0; border: 0; font-size: inherit; }
+    .bp-body blockquote {
+      border-inline-start: 3px solid var(--color-accent);
+      padding: var(--space-1) var(--space-5);
+      margin: var(--space-6) 0;
+      color: var(--color-text-secondary);
+      font-style: italic;
+    }
+    .bp-callout {
+      background: var(--color-accent-subtle);
+      border: 1px solid var(--color-accent-subtle);
+      border-radius: var(--radius-md);
+      padding: var(--space-5) var(--space-6);
+      margin: var(--space-6) 0;
+      font-size: var(--text-base);
+      line-height: var(--leading-relaxed);
+    }
+    .bp-callout p { margin-bottom: 0; }
+    .bp-callout strong { color: var(--color-accent); font-weight: var(--weight-semibold); }
+
+    /* Author footer */
+    .bp-author {
+      max-width: 720px;
+      margin: var(--space-12) auto var(--space-10);
+      padding: var(--space-6);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-surface-raised);
+      display: flex;
+      gap: var(--space-5);
+      align-items: center;
+    }
+    .bp-author-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+      display: grid;
+      place-items: center;
+      font-weight: var(--weight-bold);
+      font-size: var(--text-2xl);
+      flex-shrink: 0;
+    }
+    .bp-author h4 { margin: 0 0 var(--space-1); font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text); }
+    .bp-author p { margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; }
+
+    /* Related */
+    .bp-related {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: var(--space-12) var(--space-6) var(--space-16);
+    }
+    .bp-related h3 {
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      letter-spacing: -0.01em;
+      margin: 0 0 var(--space-6);
+      text-wrap: balance;
+    }
+    .bp-related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-5);
+    }
+    .bp-related-card {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface-raised);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 150ms, transform 150ms, box-shadow 150ms;
+      height: 100%;
+    }
+    .bp-related-card:hover { border-color: var(--color-accent-subtle); transform: translateY(-2px); box-shadow: 0 4px 12px -4px rgba(0,0,0,0.08); }
+    .bp-related-card .ren-tag { align-self: flex-start; }
+    .bp-related-card h4 { margin: 0; font-size: var(--text-base); font-weight: var(--weight-semibold); line-height: 1.4; text-wrap: balance; }
+  </style>
+</head>
+<body>
+
+  <!-- Preview banner -->
+  <div class="dx-preview-banner" role="region" aria-label="Template preview">
+    <span><span class="dx-preview-banner-label">Template preview ·</span> Blog · Article</span>
+    <a href="index.html">← Back to Templates</a>
+  </div>
+
+  <!-- ═══ TOP NAV ═══ -->
+  <header class="bl-nav">
+    <div class="ren-center-wide" style="padding-block: var(--space-3);">
+      <div class="ren-row-spread">
+        <div class="ren-row">
+          <strong style="font-size: var(--text-lg);">RenDS</strong>
+          <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2);">v0.8.2</span>
+        </div>
+        <nav class="bl-nav-links ren-cluster" aria-label="Main">
+          <a href="../docs/components.html">Components</a>
+          <a href="../create/index.html">Theme Builder</a>
+          <a href="./blog.html">Blog</a>
+          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+        </nav>
+        <div class="ren-row">
+          <a href="./auth.html" class="ren-btn ren-btn-ghost ren-btn-sm">Sign in</a>
+          <a href="../create/index.html" class="ren-btn ren-btn-primary ren-btn-sm">Try it</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ ARTICLE HEADER ═══ -->
+  <article>
+    <header class="bp-hero">
+      <nav aria-label="Breadcrumb" class="ren-breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="./landing.html">Home</a></li>
+          <li><a href="./blog.html">Blog</a></li>
+          <li aria-current="page">Cascade Layers</li>
+        </ol>
+      </nav>
+
+      <div class="ren-cluster">
+        <span class="ren-tag">Architecture</span>
+        <span class="ren-tag">CSS</span>
+      </div>
+
+      <h1>Why we bet on CSS Cascade Layers (and never wrote <code>!important</code> again)</h1>
+
+      <p class="lede">
+        Specificity wars are a design-system killer. Layers flatten the cascade,
+        make overrides trivial, and let contributors ship without reviewer fatigue.
+      </p>
+
+      <div class="bp-meta">
+        <div class="ren-avatar ren-avatar-sm" style="background: var(--color-accent); color: var(--color-on-accent); display: inline-flex; align-items: center; justify-content: center; font-weight: var(--weight-bold); font-size: var(--text-xs);">R</div>
+        <strong>Ren Soconese</strong>
+        <span aria-hidden="true">·</span>
+        <time datetime="2026-04-14">Apr 14, 2026</time>
+        <span aria-hidden="true">·</span>
+        <span>8 min read</span>
+      </div>
+    </header>
+
+    <div class="bp-cover" role="img" aria-label="Cover artwork — stacked CSS layers">
+      <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="20" y="40"  width="160" height="20" rx="4" opacity="0.35"/>
+        <rect x="20" y="68"  width="160" height="20" rx="4" opacity="0.5"/>
+        <rect x="20" y="96"  width="160" height="20" rx="4" opacity="0.65"/>
+        <rect x="20" y="124" width="160" height="20" rx="4" opacity="0.8"/>
+        <rect x="20" y="152" width="160" height="6"  rx="3"/>
+      </svg>
+    </div>
+
+    <!-- ═══ ARTICLE BODY ═══ -->
+    <div class="bp-body">
+      <p>
+        For the first eighteen months of RenDS, every fourth pull request had the same
+        review comment: <em>"please remove the <code>!important</code>."</em> The team
+        wasn't being lazy — they were being pragmatic. A token override needed to win.
+        A theme override needed to win harder. Specificity didn't care about intent.
+      </p>
+
+      <p>
+        Then we adopted <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@layer">CSS Cascade Layers</a>.
+        Within a sprint, the comment disappeared from every PR. We removed every
+        <code>!important</code> in the codebase. We onboarded two contributors who'd
+        never touched a design system and they shipped components in their first week.
+      </p>
+
+      <h2>What was actually broken</h2>
+
+      <p>
+        The cascade was doing exactly what the spec says it does. The problem was that
+        the spec wasn't enough on its own. Three things kept colliding:
+      </p>
+
+      <ul>
+        <li><strong>Reset styles</strong> — broad selectors that shouldn't lose to component CSS, but kept doing exactly that.</li>
+        <li><strong>Component CSS</strong> — moderate specificity, written by everyone, hard to predict.</li>
+        <li><strong>Theme overrides</strong> — needed to win against components, but couldn't always.</li>
+      </ul>
+
+      <p>
+        The fix was either to declare a strict ordering convention (and police it forever)
+        or to escalate specificity (and never come back down). We chose neither. We chose
+        layers.
+      </p>
+
+      <h2>Layers in three sentences</h2>
+
+      <p>
+        A layer is a named bucket of styles. Layers cascade in declaration order, and a
+        rule in a later layer always wins over the same rule in an earlier layer —
+        regardless of selector specificity. That's the whole feature.
+      </p>
+
+      <pre><code>@layer reset, base, tokens, components, themes, overrides;
+
+@layer reset {
+  *, *::before, *::after { box-sizing: border-box; }
+}
+
+@layer components {
+  .ren-btn { background: var(--color-accent); }
+}
+
+@layer themes {
+  /* Wins over .ren-btn even with lower specificity */
+  [data-theme="forest"] .ren-btn { background: var(--color-emerald); }
+}</code></pre>
+
+      <p>
+        The order line at the top is the entire policy. Everything else flows from it.
+      </p>
+
+      <div class="bp-callout">
+        <p><strong>The clarifying property of layers:</strong> rule ordering becomes a
+          decision you make once, in one place, instead of a war that's fought in every
+          PR.</p>
+      </div>
+
+      <h2>How RenDS uses them</h2>
+
+      <p>
+        We declare the layer order once in <code>index.css</code>. Every other file
+        opens into a named layer — never the implicit one. The order is:
+      </p>
+
+      <ol>
+        <li><code>reset</code> — minimal box-sizing, default font, link color reset.</li>
+        <li><code>base</code> — the classless layer (raw <code>&lt;button&gt;</code>, <code>&lt;input&gt;</code>, <code>&lt;table&gt;</code>) so unstyled HTML already looks right.</li>
+        <li><code>tokens</code> — primitive, semantic, and component custom properties.</li>
+        <li><code>components</code> — every <code>.ren-*</code> class.</li>
+        <li><code>themes</code> — appearance overrides via <code>[data-theme]</code>.</li>
+        <li><code>overrides</code> — the user's last resort. Always wins.</li>
+      </ol>
+
+      <p>
+        Anything outside a layer would win over everything inside one (that's how the
+        cascade works) so the only place you'll see un-layered CSS is in test fixtures.
+      </p>
+
+      <h2>What we got back</h2>
+
+      <h3>1. Code review without specificity arguments.</h3>
+      <p>
+        Reviewers stopped counting selectors. The question stopped being <em>"will this
+        win?"</em> and started being <em>"does this belong in this layer?"</em>
+      </p>
+
+      <h3>2. Themes that actually theme.</h3>
+      <p>
+        Before layers, a theme override needed at least the specificity of the original
+        rule plus a context selector. Now <code>[data-theme] .ren-btn</code> beats
+        <code>.ren-btn-primary.ren-btn-lg:hover</code> simply because it's in a later
+        layer.
+      </p>
+
+      <h3>3. Newcomers ship faster.</h3>
+      <p>
+        New contributors don't need a mental model of the codebase's specificity
+        topography. They learn the six layer names. Then they write CSS.
+      </p>
+
+      <blockquote>
+        Layers turned the cascade from a battlefield into a spreadsheet. We open the
+        spreadsheet, find the row, write our CSS.
+      </blockquote>
+
+      <h2>The honest caveats</h2>
+
+      <p>
+        Layers have great browser support today (Chromium, Firefox, and Safari all
+        shipped them in 2022) but if you need to support older browsers you'll need a
+        fallback strategy. We chose the easy path: RenDS targets evergreen browsers
+        and documents the fact.
+      </p>
+
+      <p>
+        And layers don't replace good architecture. You can still write tangled CSS
+        inside a layer — the layer just bounds the chaos. We pair them with a strict
+        BEM-ish naming convention (<code>.ren-card</code>, <code>.ren-card-header</code>)
+        so even within a layer, intent is obvious.
+      </p>
+
+      <h2>What's next</h2>
+
+      <p>
+        Cascade Layers solved the easiest hard problem in our CSS: <em>order</em>. The
+        next one is <em>scope</em>. The <code>@scope</code> at-rule is shipping in
+        browsers as I write this, and we're already prototyping a layer-aware
+        component scope. If it works, the next post in this series will be about how
+        we deleted half our specificity hacks all over again.
+      </p>
+    </div>
+
+    <!-- Author -->
+    <footer class="bp-author">
+      <div class="bp-author-avatar" aria-hidden="true">R</div>
+      <div>
+        <h4>Ren Soconese</h4>
+        <p>
+          Designer/engineer, currently building RenDS in the open. Mostly writes about
+          CSS, accessibility, and the parts of the platform other people skip.
+        </p>
+      </div>
+    </footer>
+  </article>
+
+  <!-- ═══ RELATED ═══ -->
+  <aside class="bp-related" aria-label="Related posts">
+    <h3>Keep reading</h3>
+    <div class="bp-related-grid">
+      <a class="bp-related-card" href="./blog-post.html">
+        <span class="ren-tag">Theming</span>
+        <h4>How <code>light-dark()</code> killed our theme provider</h4>
+        <span style="color: var(--color-text-secondary); font-size: var(--text-sm); font-weight: var(--weight-medium);">7 min read</span>
+      </a>
+      <a class="bp-related-card" href="./blog-post.html">
+        <span class="ren-tag">Tokens</span>
+        <h4>Semantic spacing: the layer between scale and component</h4>
+        <span style="color: var(--color-text-secondary); font-size: var(--text-sm); font-weight: var(--weight-medium);">6 min read</span>
+      </a>
+      <a class="bp-related-card" href="./blog-post.html">
+        <span class="ren-tag">A11y</span>
+        <h4>A better reduced-motion: dissolves beat silence</h4>
+        <span style="color: var(--color-text-secondary); font-size: var(--text-sm); font-weight: var(--weight-medium);">5 min read</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer style="border-top: 1px solid var(--color-border); background: var(--color-surface-sunken); padding: var(--space-8) var(--space-6); font-size: var(--text-sm); color: var(--color-text-secondary);">
+    <div class="ren-center-wide">
+      <div class="ren-row-spread">
+        <span>© 2026 RenDS · MIT License</span>
+        <div class="ren-cluster">
+          <a href="./landing.html" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">Home</a>
+          <a href="./blog.html" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">Blog</a>
+          <a href="../docs/components.html" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">Docs</a>
+          <a href="#" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">RSS</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

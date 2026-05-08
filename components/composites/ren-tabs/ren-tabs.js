@@ -33,8 +33,8 @@
  *   - detail: { tab, panel, index, id }
  */
 
-import { createKeyboardNav } from '../../utils/keyboard-nav.js';
-import { autoId } from '../../utils/id-generator.js';
+import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
+import { autoId } from '../../../utils/id-generator.js';
 
 export class RenTabs extends HTMLElement {
   static get observedAttributes() {

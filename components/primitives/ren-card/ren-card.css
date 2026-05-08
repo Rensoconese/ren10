@@ -44,17 +44,23 @@
   padding: var(--space-4) var(--space-4) 0;
 }
 
+/* Title and description are typically applied to <h2>/<h3>/<h4> and <p>
+   respectively, which carry browser-default margins that fight the header's
+   `gap`. Reset them here so .ren-card-header's flex gap is the actual visual
+   gap, regardless of the underlying tag. */
 .ren-card-title {
   font-size: var(--title-sm-size, var(--text-lg));
   font-weight: var(--weight-semibold);
   color: var(--color-text);
   line-height: var(--leading-snug);
+  margin: 0;
 }
 
 .ren-card-description {
   font-size: var(--caption-size, var(--text-sm));
   color: var(--color-text-muted);
   line-height: var(--leading-normal);
+  margin: 0;
 }
 
 .ren-card-body {
@@ -80,6 +86,14 @@
   gap: var(--space-2);
   padding: var(--space-3) var(--space-4);
   border-top: var(--stroke-1) solid var(--color-border-muted);
+}
+
+/* When the bordered footer follows the header directly (no body in between),
+   tighten the top padding so the divider line sits visually close to the
+   description, not floating ~17px below it (which is what you get from the
+   default --space-3 padding plus line-height extra of the description text). */
+.ren-card-header + .ren-card-footer-border {
+  padding-top: var(--space-2);
 }
 
 /* When card has no sections, just padding */

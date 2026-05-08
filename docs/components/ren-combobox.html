@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combobox — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: visible; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { padding: var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
+    .dx-anatomy { margin: var(--space-4) 0; display: grid; gap: var(--space-4); }
+    .dx-anatomy-num { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--color-text); color: var(--color-surface); font-size: var(--text-xs); font-weight: var(--weight-bold); flex-shrink: 0; }
+    .dx-anatomy-stage { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-6) var(--space-5); }
+    .dx-anatomy-stage-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-3); }
+    .dx-anatomy-parts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    @media (max-width: 720px) { .dx-anatomy-parts { grid-template-columns: 1fr; } }
+    .dx-anatomy-part { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); display: grid; gap: var(--space-2); }
+    .dx-anatomy-part-header { display: flex; align-items: center; gap: var(--space-2); }
+    .dx-anatomy-part-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text); }
+    .dx-anatomy-part-desc { font-size: var(--text-sm); line-height: 1.5; color: var(--color-text-secondary); margin: 0; }
+    .dx-anatomy-part-desc code { font-size: 0.85em; }
+
+    /* Constrain demo width */
+    .dx-demo-preview ren-combobox { max-width: 280px; }
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.2</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-field.html">Form Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html" aria-current="page">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-input-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-data-table.html">Data Table</a></li>
+        <li><a href="ren-form-validation.html">Form Validation</a></li>
+        <li><a href="ren-multi-step-form.html">Multi-Step Form</a></li>
+        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Combobox</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Combobox</h1>
+        <p class="lede">A typeahead-searchable picker. Combines a text input with a filtered listbox so users can either type to filter or arrow-key through options. Use it when you have more than ~15 options and need search, but don't need full free-text input (use <code>&lt;input type="text"&gt;</code> with a datalist for that).</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Combobox is a Select with a search box on top. The user can either click the trigger to see all options, or start typing to narrow them down. Each keystroke filters the visible items, arrow keys jump between them, Enter picks one. The chosen value is submitted via a hidden input named after the <code>name</code> attribute.</p>
+        <div class="dx-callout">
+          <p><strong>Combobox vs Select vs native select.</strong> Use <strong>native</strong> for short lists where the platform dropdown is fine. Use <a href="ren-select.html" class="ren-link">Select</a> for richer item rendering but no search. Use <strong>Combobox</strong> when there are too many items to scroll comfortably and the user knows roughly what they want.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Parts</p>
+        <h2>Anatomy</h2>
+        <div class="dx-anatomy">
+          <div class="dx-anatomy-stage">
+            <p class="dx-anatomy-stage-label">Assembled</p>
+            <div style="display: flex; justify-content: center;">
+              <div class="demo-combo" data-anatomy>
+                <input class="demo-combo-input" type="text" placeholder="Type to search…" value="Argentina" readonly>
+              </div>
+            </div>
+          </div>
+          <div class="dx-anatomy-parts">
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">1</span><span class="dx-anatomy-part-name">Container</span></div>
+              <p class="dx-anatomy-part-desc"><code>&lt;ren-combobox&gt;</code> wrapper. Manages selection, filtering, and the hidden form value.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">2</span><span class="dx-anatomy-part-name">Input</span></div>
+              <p class="dx-anatomy-part-desc"><code>&lt;input role="combobox"&gt;</code>. Holds the search query when open, the chosen label when closed.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">3</span><span class="dx-anatomy-part-name">Listbox</span></div>
+              <p class="dx-anatomy-part-desc"><code>role="listbox"</code> popover with the visible (filtered) items. Hides items that don't match the query.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">4</span><span class="dx-anatomy-part-name">Item</span></div>
+              <p class="dx-anatomy-part-desc"><code>.ren-combobox-item</code> with <code>role="option"</code> and a <code>data-value</code>. Filtering matches against the visible text.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <ren-combobox name="country" placeholder="Search a country…">
+              <div class="ren-combobox-item" data-value="ar">Argentina</div>
+              <div class="ren-combobox-item" data-value="br">Brazil</div>
+              <div class="ren-combobox-item" data-value="cl">Chile</div>
+              <div class="ren-combobox-item" data-value="co">Colombia</div>
+              <div class="ren-combobox-item" data-value="ec">Ecuador</div>
+              <div class="ren-combobox-item" data-value="mx">Mexico</div>
+              <div class="ren-combobox-item" data-value="pe">Peru</div>
+              <div class="ren-combobox-item" data-value="us">United States</div>
+              <div class="ren-combobox-item" data-value="uy">Uruguay</div>
+            </ren-combobox>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-combobox name="country" placeholder="Search a country…"&gt;
+  &lt;div class="ren-combobox-item" data-value="ar"&gt;Argentina&lt;/div&gt;
+  &lt;div class="ren-combobox-item" data-value="br"&gt;Brazil&lt;/div&gt;
+  &lt;div class="ren-combobox-item" data-value="cl"&gt;Chile&lt;/div&gt;
+  …
+&lt;/ren-combobox&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <div class="dx-vgrid">
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">With descriptions</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Items can hold structured content — a primary line and a muted secondary line. Useful for "User name + email" or "Repo name + organization" patterns.</p></div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Grouped</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Wrap related items in <code>.ren-combobox-group</code> with an optional <code>.ren-combobox-group-label</code>. Filtering keeps the group label visible while any of its items match.</p></div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Async loading</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Listen for <code>ren-search</code> and replace the items as the user types. Show <code>.ren-combobox-loading</code> while a request is in flight.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-combobox</code></td><td>Wrapper. Sets up positioning context for the floating list.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-combobox-input</code></td><td>The text input. <code>role="combobox"</code>, <code>aria-autocomplete="list"</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-combobox-list</code></td><td>The listbox popover. Shows below the input on open.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-combobox-item</code></td><td>One option. Use with <code>role="option"</code> and <code>data-value</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-combobox-group</code> / <code class="dx-api-name">-group-label</code></td><td>Optional grouping for items.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-combobox-empty</code></td><td>"No results" message shown when the filter matches nothing.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-combobox-loading</code></td><td>Loading row for async data.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Web Component attributes</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">name</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>Form field name. Submitted via a hidden input.</td></tr>
+            <tr><td><code class="dx-api-name">value</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>Initial selected <code>data-value</code>.</td></tr>
+            <tr><td><code class="dx-api-name">placeholder</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">"Search..."</span></td><td>Empty-state text in the input.</td></tr>
+            <tr><td><code class="dx-api-name">disabled</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>Locks the input.</td></tr>
+            <tr><td><code class="dx-api-name">async</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>If present, suppresses local filtering — the parent app provides items via <code>ren-search</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="dx-api">
+          <thead><tr><th>Event</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">ren-change</code></td><td>Selection changed. <code>{ value, item }</code>.</td></tr>
+            <tr><td><code class="dx-api-name">ren-search</code></td><td>User typed. <code>{ query }</code>. Use this for async loading.</td></tr>
+            <tr><td><code class="dx-api-name">ren-open</code> / <code class="dx-api-name">ren-close</code></td><td>Listbox opened / closed.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow"><span class="keys"><kbd>↓</kbd></span><span>Opens the list, highlights the first match.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>↑</kbd> / <kbd>↓</kbd></span><span>Navigate the visible items.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Enter</kbd></span><span>Select the highlighted item.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Esc</kbd></span><span>Closes the list. Press again to clear the input.</span></div>
+          <div class="dx-keyrow"><span class="keys">Type</span><span>Filters the items. Filtering is case-insensitive substring match by default.</span></div>
+        </div>
+        <h3>Labelling</h3>
+        <p>Wrap inside <a href="ren-field.html" class="ren-link">Form Field</a>, or set <code>aria-label</code> on the input. Don't use the placeholder as a label.</p>
+        <div class="dx-callout">
+          <p><strong>Always handle the empty state.</strong> When filtering yields zero items, show <code>.ren-combobox-empty</code>. Silence is worse than "No results — try a different word".</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+        <h3>Async loading</h3>
+        <div class="dx-pre" tabindex="0"><code>const combo = document.querySelector('ren-combobox[async]');
+
+combo.addEventListener('ren-search', async (e) =&gt; {
+  combo.setLoading(true);
+  const results = await fetch(`/api/users?q=${encodeURIComponent(e.detail.query)}`).then(r =&gt; r.json());
+  combo.setItems(results.map(u =&gt; ({ value: u.id, label: u.name, description: u.email })));
+  combo.setLoading(false);
+});</code></pre>
+
+        <h3>Pre-selecting</h3>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-combobox name="country" value="ar"&gt;
+  &lt;div class="ren-combobox-item" data-value="ar"&gt;Argentina&lt;/div&gt;
+  &lt;div class="ren-combobox-item" data-value="br"&gt;Brazil&lt;/div&gt;
+&lt;/ren-combobox&gt;</code></pre>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="../../components/composites/ren-combobox/ren-combobox.js"></script>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

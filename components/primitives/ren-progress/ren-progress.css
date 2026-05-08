@@ -112,7 +112,7 @@
   font-size: var(--label-size);
   font-weight: var(--weight-medium);
   color: var(--color-text);
-  margin-bottom: var(--space-1);
+  margin: 0 0 var(--space-1);
 }
 
 .ren-progress-value {
@@ -120,7 +120,7 @@
   font-size: var(--label-size);
   font-weight: var(--weight-regular);
   color: var(--color-text-secondary);
-  margin-top: var(--space-1);
+  margin: var(--space-1) 0 0;
   text-align: end;
 }
 
