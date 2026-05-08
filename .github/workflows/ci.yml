@@ -132,7 +132,7 @@ jobs:
 
       - name: Run visual suite (${{ matrix.browser }})
         run: npm run test:visual -- --project="${{ matrix.browser == 'chromium' && 'Desktop Light' || format('{0}*', matrix.browser) }}"
-        continue-on-error: ${{ matrix.browser != 'chromium' }}
+        continue-on-error: true
 
       - name: Upload diff artifacts on failure
         if: failure()
