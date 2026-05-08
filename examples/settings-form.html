@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RenDS · Settings form example</title>
+
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+
+  <script type="module" src="../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../components/patterns/ren-form/ren-form.js"></script>
+</head>
+<body>
+  <!--
+    Settings: ren-center caps content width, ren-stack-lg spaces sections,
+    each section is a ren-card with a ren-form inside.
+  -->
+  <main class="ren-center ren-stack-lg" style="padding: var(--space-6) var(--space-4)">
+    <header class="ren-stack-xs">
+      <h1>Settings</h1>
+      <p style="color: var(--color-text-muted)">Manage your profile, preferences, and security.</p>
+    </header>
+
+    <!-- Profile section -->
+    <section class="ren-card">
+      <header class="ren-card-header">
+        <h2 class="ren-card-title">Profile</h2>
+        <p class="ren-card-description">This information will be displayed publicly.</p>
+      </header>
+
+      <ren-form data-validate="onTouched">
+        <form class="ren-form ren-stack" novalidate>
+          <div class="ren-form-row">
+            <ren-field data-rules="required">
+              <label>First name</label>
+              <input class="ren-input" type="text" name="first" autocomplete="given-name" required>
+            </ren-field>
+
+            <ren-field data-rules="required">
+              <label>Last name</label>
+              <input class="ren-input" type="text" name="last" autocomplete="family-name" required>
+            </ren-field>
+          </div>
+
+          <ren-field data-rules="required|email">
+            <label>Email</label>
+            <input class="ren-input" type="email" name="email" autocomplete="email" required>
+            <span data-description>We'll send a confirmation link to this address.</span>
+            <span data-error></span>
+          </ren-field>
+
+          <ren-field>
+            <label>Bio</label>
+            <textarea class="ren-input" name="bio" rows="4" maxlength="240"></textarea>
+            <span data-description>Up to 240 characters.</span>
+          </ren-field>
+
+          <div class="ren-form-actions">
+            <button class="ren-btn ren-btn-secondary" type="button">Reset</button>
+            <button class="ren-btn" type="submit">Save profile</button>
+          </div>
+        </form>
+      </ren-form>
+    </section>
+
+    <!-- Notifications -->
+    <section class="ren-card">
+      <header class="ren-card-header">
+        <h2 class="ren-card-title">Notifications</h2>
+        <p class="ren-card-description">Choose how we contact you.</p>
+      </header>
+
+      <form class="ren-card-body ren-stack" novalidate>
+        <fieldset class="ren-stack-sm" style="border: 0; padding: 0; margin: 0">
+          <legend class="ren-field-label">Email</legend>
+          <label class="ren-checkbox">
+            <input type="checkbox" name="email_product" checked>
+            <span class="ren-checkbox-control"></span>
+            <span>Product updates</span>
+          </label>
+          <label class="ren-checkbox">
+            <input type="checkbox" name="email_security" checked>
+            <span class="ren-checkbox-control"></span>
+            <span>Security alerts</span>
+          </label>
+          <label class="ren-checkbox">
+            <input type="checkbox" name="email_marketing">
+            <span class="ren-checkbox-control"></span>
+            <span>Marketing emails</span>
+          </label>
+        </fieldset>
+
+        <div class="ren-form-actions">
+          <button class="ren-btn" type="submit">Save notifications</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Danger zone -->
+    <section class="ren-card ren-card-outline" data-status="danger">
+      <header class="ren-card-header">
+        <h2 class="ren-card-title">Danger zone</h2>
+        <p class="ren-card-description">Permanent actions. Double-check before continuing.</p>
+      </header>
+      <div class="ren-card-body ren-row-spread">
+        <p>Delete your account and all associated data.</p>
+        <button class="ren-btn ren-btn-danger" type="button" data-dialog-trigger="confirm-delete">
+          Delete account
+        </button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

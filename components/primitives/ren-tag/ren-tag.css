@@ -116,19 +116,19 @@
 .ren-tag-success {
   background-color: var(--color-success-subtle);
   border-color: color-mix(in oklch, var(--color-success), transparent 70%);
-  color: var(--green-700);
+  color: var(--color-success-strong);
 }
 
 .ren-tag-warning {
   background-color: var(--color-warning-subtle);
   border-color: color-mix(in oklch, var(--color-warning), transparent 70%);
-  color: var(--orange-700);
+  color: var(--color-warning-strong);
 }
 
 .ren-tag-danger {
   background-color: var(--color-danger-subtle);
   border-color: color-mix(in oklch, var(--color-danger), transparent 70%);
-  color: var(--red-600);
+  color: var(--color-danger-strong);
 }
 
 /* ─── Size variants ─── */

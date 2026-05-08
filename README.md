@@ -131,6 +131,7 @@ Any CSS you write outside a layer automatically overrides RenDS styles. No `!imp
 rends/
 ├── index.html          ← Marketing landing page
 ├── index.css           ← Import this for the foundation (reset + tokens + base)
+├── ren-design.md       ← Agent-facing RenDS contract and routing map
 ├── tokens/             ← Primitives, semantic, component tokens + motion
 ├── base/               ← Reset, classless styles, layouts, utilities, motion presets
 ├── components/
@@ -147,7 +148,7 @@ rends/
 └── docs/               ← Component catalog, per-component pages, foundations
 ```
 
-54 components in total: 19 primitives, 28 composites, 7 patterns. Every component has a dedicated documentation page under `docs/components/`.
+52 components in total: 18 primitives, 26 composites, 8 patterns. Every component has a dedicated documentation page under `docs/components/`.
 
 ---
 

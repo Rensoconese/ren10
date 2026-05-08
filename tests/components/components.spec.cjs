@@ -13,11 +13,15 @@
  */
 const { test, expect } = require('@playwright/test');
 const fs = require('fs');
+const http = require('http');
 const path = require('path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 
 const COMPONENTS_HTML = 'file://' + path.resolve(__dirname, '../../docs/components.html');
 const DOCS_DIR = path.resolve(__dirname, '../../docs/components');
+const PKG_ROOT = path.resolve(__dirname, '../..');
+const DIALOG_RETURNVALUE_FIXTURE = '/tests/components/fixtures/dialog-returnvalue.html';
+const FORM_ERROR_SUMMARY_FIXTURE = '/tests/components/fixtures/form-error-summary.html';
 
 /**
  * Registry key → individual docs page.
@@ -38,6 +42,42 @@ let components = [];
 function cssString(value) {
   if (typeof CSS !== 'undefined' && CSS.escape) return CSS.escape(value);
   return value.replace(/["\\]/g, '\\$&');
+}
+
+async function startStaticServer() {
+  const contentTypes = {
+    '.css': 'text/css; charset=utf-8',
+    '.html': 'text/html; charset=utf-8',
+    '.js': 'application/javascript; charset=utf-8',
+  };
+
+  const server = http.createServer((req, res) => {
+    const pathname = decodeURIComponent(new URL(req.url || '/', 'http://127.0.0.1').pathname);
+    const filePath = path.normalize(path.join(PKG_ROOT, pathname));
+
+    if (!filePath.startsWith(PKG_ROOT + path.sep)) {
+      res.writeHead(403);
+      res.end('Forbidden');
+      return;
+    }
+
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        res.writeHead(404);
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, { 'content-type': contentTypes[path.extname(filePath)] || 'application/octet-stream' });
+      res.end(data);
+    });
+  });
+
+  await new Promise((resolveListen) => server.listen(0, '127.0.0.1', resolveListen));
+  const { port } = server.address();
+  return {
+    origin: `http://127.0.0.1:${port}`,
+    close: () => new Promise((resolveClose) => server.close(resolveClose)),
+  };
 }
 
 test.beforeAll(async () => {
@@ -120,5 +160,41 @@ test.describe('Component catalog contract', () => {
         `${component.key} docs page should have a visible h1`
       ).toBeVisible();
     }
+  });
+});
+
+test.describe('Agent contract regressions', () => {
+  let staticServer;
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('ren-dialog propagates data-dialog-close value as ren-close returnValue', async ({ page }) => {
+    await page.goto(`${staticServer.origin}${DIALOG_RETURNVALUE_FIXTURE}`);
+    await page.evaluate(() => customElements.whenDefined('ren-dialog'));
+
+    await page.locator('#open-dialog').click();
+    await expect(page.locator('dialog')).toHaveJSProperty('open', true);
+
+    await page.locator('#delete-dialog').click();
+    await expect.poll(() => page.evaluate(() => window.lastDialogReturnValue)).toBe('delete');
+    await expect(page.locator('dialog')).toHaveJSProperty('open', false);
+  });
+
+  test('ren-form makes error summary focusable before invalid submit', async ({ page }) => {
+    await page.goto(`${staticServer.origin}${FORM_ERROR_SUMMARY_FIXTURE}`);
+    await page.evaluate(() => customElements.whenDefined('ren-form'));
+
+    const summary = page.locator('#summary');
+    await expect(summary).toHaveAttribute('tabindex', '-1');
+
+    await page.locator('button[type="submit"]').click();
+    await expect(summary).toBeVisible();
+    await expect(summary).toHaveAttribute('data-has-errors', '');
   });
 });

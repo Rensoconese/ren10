@@ -18,8 +18,8 @@ consolidates them and starts formal version tracking with 0.7.0.
   their source), templates strip, and a Theme Builder CTA. Uses the
   shared shell chrome so it sits inside the doc-site nav system.
 
-- **Full per-component documentation.** Every primitive (19), composite
-  (28) and pattern (7) — 54 components total — now has its own page
+- **Full per-component documentation.** Every primitive (18), composite
+  (26) and pattern (8) — 52 components total — now has its own page
   under `docs/components/`. Each page includes Overview, Demo, API
   reference (with consistent column boundaries via the centralized
   `.dx-api` class), Accessibility notes, and a persistent left sidebar

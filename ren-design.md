@@ -1,14 +1,14 @@
 ---
 # ────────────────────────────────────────────────────────────
-# RenDS — design.md
+# RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.8.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.8.2 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
-# This file is the single source of truth an LLM or agent needs
-# to build UI that looks and behaves like RenDS. The front-matter
-# below lists canonical tokens and their values. The prose after
-# explains *why* those values exist and how to use them together.
+# This is the RenDS-specific design contract for agents. It is not
+# generic external design-system file. Use it as the root router: load
+# this first, then load only the component, pattern, token, layout, or
+# foundation contract required for the current task.
 #
 # If a token is omitted here, it still lives in `tokens/**/*.css`
 # — this document privileges the tokens that compose day-to-day
@@ -17,7 +17,7 @@
 
 system:
   name: RenDS
-  version: 0.8.0
+  version: 0.8.2
   package: rends
   license: MIT
   repo: https://github.com/Rensoconese/ren10
@@ -664,6 +664,64 @@ counts:
 A vanilla, accessible, atomic design system. No framework required, no Shadow
 DOM, no runtime — just CSS custom properties, custom elements, and web
 standards that have been in Chrome, Firefox, and Safari stable for years.
+
+## Agent Routing Contract
+
+`ren-design.md` is the root contract for AI agents working with RenDS. Read
+this file first, then load only the smallest colocated contract needed for the
+task:
+
+| Task | Load next |
+|---|---|
+| Native HTML or classless styling | `base/primitive-zero.md` |
+| Tokens, themes, colors, spacing, type, motion | `tokens/tokens.md` |
+| Page skeleton, responsive layout, utility classes | `base/layouts.md` |
+| Picking a component | `components/components.md` |
+| Editing or using a primitive/composite | `components/{tier}/{ren-name}/component.md` |
+| Editing or using a pattern | `components/patterns/{ren-name}/pattern.md` |
+
+Canonical order for UI generation:
+
+1. Load `ren-design.md`.
+2. Load `tokens/tokens.md` when choosing any visual value.
+3. Load `base/layouts.md` before writing custom layout CSS.
+4. Load `base/primitive-zero.md` when using native HTML elements without a
+   `ren-` class.
+5. Load the exact `component.md` or `pattern.md` for every RenDS part used.
+
+Agents must not invent RenDS APIs from this root file alone. Component and
+pattern contracts near the implementation are the public API for markup,
+variants, states, tokens, accessibility, JavaScript imports, and test
+expectations.
+
+### AI Compliance Layer
+
+RenDS ships an enforcement layer aimed specifically at AI agents:
+
+- **Lowercase contract filenames only.** `ren-design.md`, `tokens.md`,
+  `layouts.md`, `primitive-zero.md`, `components.md`, `component.md`,
+  `pattern.md`. The uppercase variants (DESIGN, COMPONENT, TOKENS,
+  LAYOUTS, PRIMITIVE-ZERO, COMPONENTS) are forbidden and validated by the
+  routing checks listed in the repo-root `AGENTS.md`.
+- **`aiHints` blocks** in every high-value contract. Each
+  `component.md` / `pattern.md` for buttons, cards, fields, dialogs,
+  forms, and sidebars carries a YAML `aiHints` block with
+  `selectionCriteria`, `canonicalImports`, `requiredMarkup`,
+  `forbiddenPatterns`, `tokenPolicy`, and `accessibility`. Agents
+  should read the `aiHints` block first when deciding between two
+  components.
+- **Stylelint + token-policy lint.** `npm run lint` runs Stylelint
+  (`stylelint.config.mjs`) plus `scripts/lint-tokens.mjs`. Both block
+  primitive palette tokens (`--blue-*`, `--gray-*`, …) and hardcoded
+  hex / non-grayscale rgba in component CSS. Each documented exemption is
+  recorded in both files.
+- **Golden examples** under `rends/examples/*.html`. Concrete,
+  copy-correct flows (auth, dashboard shell, settings, data table, dialog
+  workflow, app sidebar, AI panel). Read these before generating a similar
+  flow.
+- **Evals** under `rends/evals/`. `prompts.json` is a deterministic
+  prompt set; `checklist.md` is the rule list an agent must self-check
+  before reporting completion.
 
 The front-matter above is the wire format: tokens, names, values. Everything
 below this line is the prose that explains *why* those values exist, when to
@@ -2177,4 +2235,3 @@ CSS; don't tuck interaction-critical structure inside Shadow DOM.
 **Don't** require JS for presentation. Every RenDS component works
 visually with JS disabled — behaviors layer on top, they don't gate the
 paint.
-

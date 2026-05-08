@@ -283,7 +283,10 @@ export class RenDialog extends HTMLElement {
         'click',
         (e) => {
           e.preventDefault();
-          this.close();
+          // [data-dialog-close="value"] propagates `value` as ren-close.detail.returnValue.
+          // Bare [data-dialog-close] (no value) closes with "".
+          const returnValue = button.getAttribute('data-dialog-close') ?? '';
+          this.close(returnValue);
         },
         { signal: this.#abortController.signal }
       );
