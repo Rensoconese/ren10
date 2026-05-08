@@ -98,13 +98,9 @@ jobs:
           retention-days: 14
 
   visual:
-    name: Visual regression (${{ matrix.browser }})
+    name: Visual regression (chromium)
     runs-on: ubuntu-latest
     needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
     steps:
       - uses: actions/checkout@v4
 
@@ -120,25 +116,24 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ runner.os }}-chromium-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Playwright (${{ matrix.browser }})
+      - name: Install Playwright (Chromium)
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+        run: npx playwright install --with-deps chromium
 
       - name: Install Playwright deps (cache hit)
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps ${{ matrix.browser }}
+        run: npx playwright install-deps chromium
 
-      - name: Run visual suite (${{ matrix.browser }})
-        run: npm run test:visual -- --project="${{ matrix.browser == 'chromium' && 'Desktop Light' || format('{0}*', matrix.browser) }}"
-        continue-on-error: true
+      - name: Run visual suite (Chromium Desktop Light)
+        run: npm run test:visual -- --project="Desktop Light"
 
       - name: Upload diff artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-visual-${{ matrix.browser }}
+          name: playwright-visual-chromium
           path: |
             playwright-report
             test-results
