@@ -15,42 +15,72 @@ How to ship a release of `rends` end-to-end. Currently sized for the **0.8.3 lau
    - Name: `NPM_TOKEN`
    - Value: the token starting with `npm_…`
 
-2. **GitHub Pages → "GitHub Actions" mode.**
-   `https://github.com/Rensoconese/ren10/settings/pages` → Source: **GitHub Actions**.
+2. **GitHub Pages** — currently no `pages.yml` workflow. If you want a public docs site, decide hosting first (re-add `pages.yml`, or Vercel / Netlify / Cloudflare Pages). The repo `pages.yml` was removed deliberately in commit `15d027f`.
 
 ---
 
-## 1 · Push the existing unpushed commits + the new 0.8.3 commit
+## 1 · Push the audit branch and open the PR
 
 ```bash
 cd ~/RenDS/rends    # this folder IS the repo
 
-# Confirm state.
+# Confirm state. The audit work lives on chore/audit-and-cut-0.8.3.
 git fetch origin
 git status
-git log --oneline origin/main..HEAD    # local commits not yet pushed
+git log --oneline origin/main..chore/audit-and-cut-0.8.3
+# Should show 8 commits ending in 0f8a9ec (ci matrix) and 0e2b303 (release 0.8.3).
 
-# Push main and all tags in one shot.
-git push origin main --follow-tags
+# Push the branch — triggers ci.yml against the PR.
+git push -u origin chore/audit-and-cut-0.8.3
+
+# Open the PR.
+gh pr create --base main --head chore/audit-and-cut-0.8.3 \
+  --title "chore: audit 2026-05-11 + cut 0.8.3 + cross-browser CI" \
+  --body-file PR_BODY.md   # See `PR_BODY.md` if generated, or paste manually
 ```
 
-What happens after this push:
-- `ci.yml` runs against `main` → lint + a11y + components + visual matrix.
-- `pages.yml` runs against `main` → deploys the docs site to `https://rensoconese.github.io/ren10/`.
-- `release.yml` runs against the `v0.8.3` tag → re-runs lint + a11y + components, verifies the tag matches `package.json` version, then `npm publish`es with provenance, then creates a GitHub Release with notes pulled from `CHANGELOG.md`.
-
-Watch all runs at: <https://github.com/Rensoconese/ren10/actions>
+While CI runs, expect:
+- **Chromium jobs**: must pass (gating)
+- **Firefox / WebKit jobs**: advisory (`continue-on-error: true`). Engine-specific diffs surface as warnings, not failures.
 
 ---
 
-## 2 · Verify (~5–10 minutes after the push)
+## 2 · Merge to main, then cut tags
+
+After the PR is reviewed and merged:
+
+```bash
+git checkout main && git pull
+
+# Tag v0.8.3 at the merge commit. release.yml fires on tag push.
+git tag -a v0.8.3 -m "Release v0.8.3"
+git push origin v0.8.3
+```
+
+Optional — retroactive tags for the CHANGELOG compare-links:
+
+```bash
+# v0.8.2 is the only previous release with a clearly-identified commit.
+git tag -a v0.8.2 1301c32 -m "Release v0.8.2 (retroactive)"
+git push origin v0.8.2
+
+# v0.7.0 and v0.8.0 don't have separate release commits (the repo's
+# Initial commit at 76bb445 bundled the pre-0.7.1 history). Skipping
+# their tags; their CHANGELOG compare-links already point at the
+# placeholder /releases/tag/v0.x.y URL.
+```
+
+Existing tags on origin: `v0.7.1` (1502ea7), `v0.8.1` (annotated, → bfd2f81).
+
+---
+
+## 3 · Verify (~5–10 minutes after the tag push)
 
 ```bash
 npm view rends version    # should print 0.8.3
 ```
 
 - **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.3>
-- **Pages:** <https://rensoconese.github.io/ren10/>
 
 Smoke test the npm package in a fresh dir:
 
@@ -64,20 +94,20 @@ ls rends/    # tokens/  base/  components/  index.css ...
 
 ---
 
-## 3 · Things that can go wrong
+## 4 · Things that can go wrong
 
 | Symptom                                                                       | Fix                                                                                                                                    |
 | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `release.yml` `verify` job fails: tag != `package.json` version               | Tag and `package.json` `version` must match exactly. Re-tag, or bump `package.json` and re-tag.                                        |
 | `npm publish` fails with `403 Forbidden`                                      | `NPM_TOKEN` is wrong or expired. Regenerate at npmjs.com (type "Automation").                                                          |
 | `npm publish` fails with `403 You do not have permission to publish "rends"`  | The package name `rends` is taken on the public registry. Rename to `@rensoconese/rends` in `package.json` and update README examples. |
-| `pages.yml` deploys but the site is 404                                       | Settings → Pages → Source must be **GitHub Actions** (not "Deploy from a branch"). Re-run the workflow once the setting is right.      |
-| `ci.yml` visual job fails on Firefox/WebKit but Chromium passes               | Linux baselines may differ from your local macOS ones. The matrix has `continue-on-error: true` for non-Chromium so this won't block.  |
+| `ci.yml` Firefox/WebKit a11y or components fail but Chromium passes           | Engine-specific bug surfaced by the matrix. Advisory; doesn't block merge. Investigate via the uploaded `playwright-report-*-firefox` (or `-webkit`) artifact. |
+| `ci.yml` visual job fails on Firefox/WebKit but Chromium passes               | Visual baselines are chromium/linux only by design. Firefox/WebKit visual runs always diff against those baselines — they're advisory. |
 | `npm ci` fails: lockfile out of sync                                          | Locally run `rm -rf node_modules package-lock.json && npm install`, recommit.                                                          |
 
 ---
 
-## 4 · Cutting future releases
+## 5 · Cutting future releases
 
 Once 0.8.3 is out, the per-release flow is:
 
