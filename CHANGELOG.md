@@ -14,14 +14,17 @@ consolidates them and starts formal version tracking with 0.7.0.
 ### Added
 
 - **Cross-browser CI matrix (Firefox + WebKit, advisory).** `ci.yml`
-  now runs the `a11y`, `components`, and `visual` jobs against
-  `[chromium, firefox, webkit]` in parallel. Chromium continues to
-  gate (failures block); Firefox and WebKit use
-  `continue-on-error: ${{ matrix.browser != 'chromium' }}` so engine-
-  specific regressions surface without blocking merges. Cache key
-  includes the browser to avoid collisions. Closes the gap F7.7
-  documented and SHIPPING.md had already described as the expected
-  shape.
+  now runs the `a11y` and `components` jobs against `[chromium, firefox,
+  webkit]` in parallel. Chromium continues to gate (failures block);
+  Firefox and WebKit use `continue-on-error: ${{ matrix.browser !=
+  'chromium' }}` so engine-specific regressions surface without blocking
+  merges. Cache key includes the browser to avoid collisions. The
+  visual job stays Chromium-only — committed baselines are
+  chromium/linux and we don't auto-generate Firefox/WebKit baselines
+  per run. The playwright configs detect `PLAYWRIGHT_BROWSER` and skip
+  the Mobile/Tablet projects for Firefox (Firefox doesn't support
+  `isMobile: true`; Chromium and WebKit do). Closes the gap F7.7
+  documented.
 
 ### Changed
 

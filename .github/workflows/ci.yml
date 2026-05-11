@@ -12,15 +12,16 @@ concurrency:
   cancel-in-progress: true
 
 # Browser matrix policy:
-#   - Chromium is the primary engine. Failures BLOCK the run.
-#   - Firefox and WebKit are advisory (continue-on-error). They surface
-#     engine-specific regressions without gating merges.
-#   - axe-core (a11y) is engine-agnostic in theory, but cross-browser DOM
-#     measurement still catches subtle differences (e.g. scroll-region
-#     focus, custom-element shadow root timing), so we keep the matrix.
-#   - Visual baselines are committed for chromium/linux only. Firefox /
-#     WebKit visual runs are expected to diff; they exist to surface
-#     rendering regressions, not to gate merges.
+#   - lint runs once (no browser).
+#   - a11y and components run on [chromium, firefox, webkit]:
+#       * Chromium is the primary engine. Failures BLOCK the run.
+#       * Firefox and WebKit are advisory (continue-on-error).
+#       * The playwright configs detect PLAYWRIGHT_BROWSER and skip
+#         Mobile/Tablet projects for Firefox (Firefox doesn't support
+#         isMobile: true; Chromium and WebKit do).
+#   - visual runs Chromium-only. Baselines are committed for chromium/linux;
+#     running visual against Firefox or WebKit without those baselines
+#     would fail every screenshot test, so we don't try.
 
 jobs:
   lint:
@@ -131,14 +132,9 @@ jobs:
           retention-days: 14
 
   visual:
-    name: Visual regression (${{ matrix.browser }})
+    name: Visual regression (chromium)
     runs-on: ubuntu-latest
     needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium, firefox, webkit]
-    continue-on-error: ${{ matrix.browser != 'chromium' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -154,26 +150,24 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-${{ runner.os }}-chromium-${{ hashFiles('package-lock.json') }}
 
-      - name: Install Playwright (${{ matrix.browser }})
+      - name: Install Playwright (chromium)
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps ${{ matrix.browser }}
+        run: npx playwright install --with-deps chromium
 
       - name: Install Playwright deps (cache hit)
         if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps ${{ matrix.browser }}
+        run: npx playwright install-deps chromium
 
-      - name: Run visual suite (${{ matrix.browser }} Desktop Light)
+      - name: Run visual suite (chromium Desktop Light)
         run: npm run test:visual -- --project="Desktop Light"
-        env:
-          PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
 
       - name: Upload diff artifacts on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-visual-${{ matrix.browser }}
+          name: playwright-visual-chromium
           path: |
             playwright-report
             test-results
