@@ -1,18 +1,15 @@
 # RenDS — Roadmap
 
 **Repo:** [github.com/Rensoconese/ren10](https://github.com/Rensoconese/ren10)
-**Versión actual en disco:** `0.8.1` (release packaging real: pendiente)
-**Última fase trabajada:** F7.27 (23-abr-2026) — loop motion tokens centralizados (`--duration-loop*` / `--ease-loop*`), `suggestAlternativeHues` en theme generator, spinner/skeleton/icon migrados a tokens semánticos
-**Fecha del roadmap:** 27-abr-2026 (refresh)
+**Versión actual en disco:** `0.8.2` (cortada en CHANGELOG; `[Unreleased]` poblado con post-0.8.2 listo para próximo cut)
+**Última fase cerrada:** F8 (52 páginas de doc por componente + landing + shell unificado + command palette) — todo en `[Unreleased]`
+**Fecha del roadmap:** 2026-05-11 (refresh tras auditoría)
 **Vista ejecutiva (1 pág):** [`STATUS.md`](./STATUS.md)
+**Auditoría exhaustiva:** [`AUDIT-2026-05-11.md`](./AUDIT-2026-05-11.md)
 
 ---
 
-## Estado real (verificado contra el árbol del repo, no contra los PHASE docs)
-
-Algunos PHASE docs declararon como "pendiente" trabajo que ya se cerró en releases posteriores. Antes de planificar, este es el estado verificado.
-
-> **Nota (27-abr-2026):** los 6 ítems comúnmente identificados como "lo que falta para que ren10 sea producto" (tags+commits, npm publish, CI/CD, gobernanza del repo, deploy de docs, cierre de `Unreleased`) están todos cubiertos por los **Hitos 1–5** de este documento. F7.8 y F7.9 están cerrados desde v0.7.1 — la "deuda chica" residual son los items de Hito 1, no F7.8/F7.9.
+## Estado real (verificado contra el árbol del repo)
 
 | Área | Estado | Evidencia |
 |---|---|---|
@@ -20,128 +17,153 @@ Algunos PHASE docs declararon como "pendiente" trabajo que ya se cerró en relea
 | WCAG 2.1 AA — `tests/a11y` | ✅ Done | 224/224 pass en 8 proyectos Chromium |
 | WCAG 2.1 AAA opt-in (theme generator) | ✅ Done | v0.8.1 |
 | Token system 3-layer (primitives / semantic / component) | ✅ Done | `rends/tokens/**` |
-| Motion tokens semánticos | ✅ Done | v0.8.0 + Unreleased |
-| Hex literal audit (cero hardcode fuera de excepciones documentadas) | ✅ Done | F7.7 |
-| CLI (`init`, `add`, `list`, `scales`, `help`) | ✅ Done | `rends/cli/**` |
-| Theme generator hex→tokens + AAA + sugerencias de hue | ✅ Done | v0.8.0 + v0.8.1 + Unreleased |
-| **F7.8** — `docs/cli.html` | ✅ Done en v0.7.1 | 394 líneas, 8 secciones, callouts, examples |
-| **F7.9** — Visual regression baselines | ✅ Done en v0.7.1 | 248 PNGs en `visual.spec.cjs-snapshots/` (8 projects × light/dark) |
+| Motion tokens semánticos + loop tokens | ✅ Done | v0.8.0 + v0.8.2 |
+| Hex literal audit | ✅ Done | F7.7 |
+| CLI (`init`, `add`, `list`, `scales`, `help`) | 🟡 Funciona pero `cli/registry.js` solo cubre 42 de 52 componentes | falta: alert-dialog, color-picker, context-menu, date-picker, date-range-picker, empty-state, hover-card, number-field, scroll-area, toggle-group |
+| Theme generator hex→tokens + AAA + sugerencias de hue | ✅ Done | v0.8.0 + v0.8.1 + v0.8.2 |
+| F7.8 — `docs/cli.html` | ✅ Done en v0.7.1 | 394 líneas |
+| F7.9 — Visual regression baselines | ✅ Done | 312 PNGs en `tests/visual/visual.spec.cjs-snapshots/` (restaurados en `78a9db1`) |
 | Per-component test suite | ✅ Done | `tests/components/components.spec.cjs`, 102/102 pass |
-| LICENSE (MIT) | ⚠️ Existe en `rends/LICENSE`, falta en repo root | — |
-| README | ⚠️ Existe en `rends/README.md`, falta en repo root | — |
-| CONTRIBUTING.md | ❌ No existe | — |
-| CODE_OF_CONDUCT.md | ❌ No existe | — |
-| `.github/` (CI, issue templates, PR template) | ❌ No existe | — |
-| Cross-browser (Firefox/WebKit) en tests | ❌ Solo Chromium | F7.7 deja explícito que falta CI con browsers reales |
-| **F8** — páginas por componente (52 páginas independientes) | ❌ Pendiente | Hoy todo vive en `docs/components.html` |
-| Primer commit + tags `v0.7.0`/`v0.8.0`/`v0.8.1` | ❌ Pendiente | F7.6 declaró que "el repo no tiene commits aún" |
-| Publicación a `npm` | ❌ Pendiente | README promete `npx rends init` pero el paquete no está publicado |
-| Sitio de docs deployado (GitHub Pages / Vercel / Netlify) | ❌ Pendiente | Solo HTML estático local |
-| `[Unreleased]` en CHANGELOG cerrado como `0.8.2` | ❌ Pendiente | Listo para cortarse |
-| Badge "v0.7" en `docs/cli.html` desactualizado | ⚠️ Bug menor | Línea 109 |
+| F8 — 52 páginas por componente | ✅ Done | `docs/components/*.html`, en `[Unreleased]` |
+| Marketing landing | ✅ Done | `rends/index.html`, en `[Unreleased]` |
+| Command palette (Cmd+K) | ✅ Done | `site/shell.js`, en `[Unreleased]` |
+| LICENSE | ✅ | `rends/LICENSE` (MIT) |
+| README | ✅ | `rends/README.md` |
+| CONTRIBUTING.md | ✅ | `rends/CONTRIBUTING.md` |
+| CODE_OF_CONDUCT.md | ✅ | `rends/CODE_OF_CONDUCT.md` |
+| `.github/dependabot.yml` | ✅ | activo |
+| `.github/PULL_REQUEST_TEMPLATE.md` | ✅ | activo |
+| `.github/ISSUE_TEMPLATE/` | ✅ | activo |
+| `.github/workflows/ci.yml` | ✅ | lint + a11y + components + visual, **solo Chromium** |
+| `.github/workflows/release.yml` | ✅ | tag → tests → npm publish + GitHub Release |
+| `.github/workflows/pages.yml` | ❌ Eliminado | commit `15d027f`. Si se quiere docs públicas, decidir hosting nuevo |
+| Cross-browser (Firefox/WebKit) en CI | ❌ Deferred | docs antes prometían "matriz"; realidad es Chromium-only |
+| Primer commit + push | ✅ | 18 commits en `main` + branches dependabot |
+| Tags retroactivos | 🟡 | existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2` |
+| Publicación a `npm` | ❓ | verificar con `npm view rends version`; README promete `npx rends init` |
+| `[Unreleased]` en CHANGELOG | 🟡 Listo para cortar | acumula trabajo post-0.8.2 (landing, F8, shell, command palette, fixes) |
+| `docs/components/` HTML naming | 🟡 | 5 archivos con nombre distinto al de la carpeta del componente (ver Hito 6) |
+| `docs/components/ren-{switch,multi-step-form}.html` huérfanos | 🟡 | ver Hito 6 |
 
 ---
 
-## Roadmap por hito
+## Roadmap por hito (refresh post-auditoría)
 
-### Hito 1 — Higiene de repo (sin código nuevo, alto ROI)
-*Convierte una carpeta privada en un repo público presentable.*
+### Hito 1 — Higiene de repo
+*Estado: ✅ DONE (excepto las dudas sobre el outer workspace que no es git).*
 
-- [ ] **1.1** `LICENSE` en repo root (mirror de `rends/LICENSE`).
-- [ ] **1.2** `README.md` en repo root explicando el layout (`rends/` es el paquete, `_archive/` es histórico, `rends-skill/` es skill auxiliar) + linkeo al README del paquete.
-- [ ] **1.3** `CONTRIBUTING.md` con flujo de PR, convenciones de commits, dónde correr lint/tests, cómo agregar un componente.
-- [ ] **1.4** `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1).
-- [ ] **1.5** `.github/ISSUE_TEMPLATE/bug_report.yml` + `feature_request.yml` + `config.yml` (deshabilitar blank issues).
-- [ ] **1.6** `.github/PULL_REQUEST_TEMPLATE.md`.
-- [ ] **1.7** `.github/dependabot.yml` para npm + actions.
-- [ ] **1.8** Fix badge `v0.7` → `v0.8` en `rends/docs/cli.html` (línea 109).
+- [x] **1.1** `LICENSE` en `rends/`
+- [x] **1.2** `README.md` en `rends/`
+- [x] **1.3** `CONTRIBUTING.md` en `rends/`
+- [x] **1.4** `CODE_OF_CONDUCT.md` en `rends/`
+- [x] **1.5** `.github/ISSUE_TEMPLATE/`
+- [x] **1.6** `.github/PULL_REQUEST_TEMPLATE.md`
+- [x] **1.7** `.github/dependabot.yml`
+- [ ] **1.8** Fix badge `v0.7` → `v0.8` en `rends/docs/cli.html` (línea 109) — verificar si sigue presente
 
 ### Hito 2 — CI/CD
-*Hasta que esto no exista, "passing tests" depende de que Ren los corra a mano.*
+*Estado: ✅ DONE (Chromium-only por ahora).*
 
-- [ ] **2.1** `.github/workflows/ci.yml` — lint + a11y + components + visual en push/PR a `main`. Browsers: Chromium / Firefox / WebKit (matriz). Cache de `node_modules` + de Playwright browsers.
-- [ ] **2.2** `.github/workflows/release.yml` — al pushear un tag `v*`, corre tests, hace `npm publish` (si pasa), crea GitHub Release con notas pulled del CHANGELOG.
-- [ ] **2.3** `.github/workflows/pages.yml` — deploya `rends/docs/`, `rends/blocks/`, `rends/themes/preview.html` y `rends/create/index.html` a GitHub Pages en cada push a `main`.
-- [ ] **2.4** Badge de CI en el README (pasa/falla, coverage opcional).
-- [ ] **2.5** Resolver lo que F7.7 dejó marcado: Firefox/WebKit no se podían correr en el sandbox; con CI esto queda cubierto.
+- [x] **2.1** `.github/workflows/ci.yml` — lint + a11y + components + visual. Browsers: **Chromium only** (Firefox/WebKit deferred a post-launch)
+- [x] **2.2** `.github/workflows/release.yml` — tag `v*` → tests + verify tag/version match + `npm publish` (provenance) + GitHub Release con notas del CHANGELOG
+- [ ] **2.3** ~~`.github/workflows/pages.yml`~~ — **eliminado** en commit `15d027f`. Si se quiere docs públicas, decidir hosting alternativo (Pages reactivado, Vercel, Netlify, Cloudflare Pages)
+- [x] **2.4** Concurrency + cache para Playwright browsers
+- [ ] **2.5** (opcional, post-launch) agregar Firefox/WebKit a la matriz con `continue-on-error: true` — F7.7 dejó documentado el gap
 
-### Hito 3 — Cut 0.8.2 release
-*Empaquetar lo que ya está merged en `[Unreleased]`.*
+### Hito 3 — Cut 0.8.2
+*Estado: ✅ DONE.*
 
-- [ ] **3.1** Mover bloque `[Unreleased]` del CHANGELOG a `[0.8.2] — 2026-04-26`.
-- [ ] **3.2** Bumpear `rends/package.json` `0.8.1` → `0.8.2`.
-- [ ] **3.3** Agregar compare-link `[0.8.2]: …/v0.8.1...v0.8.2`.
-- [ ] **3.4** Actualizar `Current version: **0.8.1**` → `**0.8.2**` en `rends/README.md`.
-- [ ] **3.5** Dejar `[Unreleased]` vacío con sus 6 secciones (Added/Changed/Fixed/Removed/Security/Accessibility milestones).
+- [x] **3.1** Bloque `[0.8.2]` ya está en CHANGELOG con fecha 2026-04-27
+- [x] **3.2** `package.json` en `0.8.2`
+- [x] **3.3** README en `Current version: 0.8.2`
+- [x] **3.4** ren-design.md header en `v0.8.2`
 
-### Hito 4 — Primer commit + tags + push
-*Requiere acceso a la máquina del usuario (no se puede hacer desde el sandbox).*
+### Hito 4 — Push al remoto y tags
+*Estado: 🟡 PARCIAL.*
 
-- [ ] **4.1** `git init` (si no está iniciado) + `.gitignore` cubriendo `node_modules/`, `playwright-report/`, `test-results/`, `_archive/rends-skill-workspace/`.
-- [ ] **4.2** Primer commit con todo el estado actual.
-- [ ] **4.3** Tags retroactivos: `v0.7.0`, `v0.7.1`, `v0.8.0`, `v0.8.1`, `v0.8.2` apuntando al mismo commit (o a commits separados si se divide el initial dump).
-- [ ] **4.4** `git remote add origin git@github.com:Rensoconese/ren10.git` + `git push -u origin main --tags`.
+- [x] **4.1** `git init` + `.gitignore` + remoto configurado (`origin: github.com/Rensoconese/ren10.git`)
+- [x] **4.2** 18 commits en `main`, branches dependabot abiertas
+- [ ] **4.3** Tags retroactivos: `v0.7.0`, `v0.8.0`, `v0.8.2`. Existen `v0.7.1` y `v0.8.1`
+- [ ] **4.4** Push del branch actual (`codex/fix-visual-ci-baselines`) cuando esté listo
 
-### Hito 5 — Publicación
-*El paso que convierte ren10 en un design system instalable.*
+### Hito 5 — Publicación a npm
+*Estado: ❓ Verificar.*
 
-- [ ] **5.1** Asegurar que `package.json` tenga `"publishConfig": { "access": "public" }` y `"files"` bien acotado (ya está acotado).
-- [ ] **5.2** `npm login` con la cuenta correspondiente.
-- [ ] **5.3** Validar con `npm publish --dry-run` que el tarball contiene **solo** `index.css`, `tokens/`, `base/`, `components/`, `utils/`, `cli/` (no `tests/`, no `docs/`, no `node_modules/`, no `_archive/`).
-- [ ] **5.4** `npm publish` → primera versión `0.8.2` (o `0.8.1` retroactivo si se prefiere alinear con el tag).
-- [ ] **5.5** Verificar que `npx rends init` funciona contra el registry público en una carpeta limpia.
-- [ ] **5.6** Activar GitHub Pages → `rends/docs/index.html` accesible públicamente.
+- [x] **5.1** `package.json` tiene `"publishConfig": { "access": "public", "provenance": true }` y `"files"` acotado
+- [ ] **5.2** Confirmar `npm login` activo en máquina local
+- [ ] **5.3** `npm publish --dry-run` para validar tarball (solo `index.css`, `tokens/`, `base/`, `components/`, `utils/`, `cli/`, `ren-design.md`, `CHANGELOG.md`)
+- [ ] **5.4** Decidir: publicar `0.8.2` ahora o esperar a `0.8.3` (cuando se corte `[Unreleased]`)
+- [ ] **5.5** Verificar que `npx rends init` funciona contra el registry público en una carpeta limpia
+- [ ] **5.6** Si se quiere docs públicas: decidir host (Pages re-añadiendo el workflow, Vercel, Netlify) y deploy
 
-### Hito 6 — F8: páginas por componente (deliverable largo)
-*52 páginas, una por componente. Mejora descubribilidad y SEO.*
+### Hito 6 — Limpieza de docs y coherencia naming
+*Estado: 🟡 PENDIENTE — detectado en auditoría 2026-05-11.*
 
-- [ ] **6.1** Diseñar la plantilla base de página de componente (header, sections: Overview / Anatomy / Variants / Props/Slots / Accessibility / Examples / Recipes / API). Una sola plantilla con datos de cada componente.
-- [ ] **6.2** Decidir si se generan a mano o desde `cli/registry.js` (build script). Recomendado: build script — `cli/registry.js` ya tiene `name/layer/dir/files/usage`, falta `description` largo + `props`.
-- [ ] **6.3** Extender `registry.js` con un campo `docs` por componente (sections markdown + ejemplos).
-- [ ] **6.4** Generar las 18 páginas de primitives.
-- [ ] **6.5** Generar las 26 páginas de composites.
-- [ ] **6.6** Generar las 8 páginas de patterns.
-- [ ] **6.7** Linkear desde `docs/components.html` (que pasa a ser índice) a cada página individual.
-- [ ] **6.8** Update `tests/components/components.spec.cjs` para testear las páginas individuales además de la sección dentro del index.
+- [ ] **6.1** Cortar `[Unreleased]` como `0.8.3` (o `0.9.0` si los renames de docs cuentan como breaking para URLs públicas)
+- [ ] **6.2** Renombrar 5 HTMLs en `docs/components/` al nombre canónico de la carpeta:
+  - `ren-ai-patterns.html` → `ren-ai.html`
+  - `ren-data-table.html` → `ren-table.html`
+  - `ren-form-validation.html` → `ren-form.html`
+  - `ren-icons.html` → `ren-icon.html`
+  - `ren-input-otp.html` → `ren-otp.html`
+- [ ] **6.3** Promover `ren-switch` a primitive independiente (extraer CSS de `ren-checkbox.css`, crear `components/primitives/ren-switch/`, actualizar `ren-design.md`, `cli/registry.js`, README — conteo pasa a 19 primitives / 53 total)
+- [ ] **6.4** Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección "Multi-step" desde `ren-form.html` (`ren-form/pattern.md` ya documenta `data-steps`/`[data-active]`)
+- [ ] **6.5** Actualizar `docs/components/_sidebar.html`, `docs/components.html`, command palette JS y todo enlace interno
+- [ ] **6.6** Completar `cli/registry.js` con los 10 componentes faltantes (alert-dialog, color-picker, context-menu, date-picker, date-range-picker, empty-state, hover-card, number-field, scroll-area, toggle-group) + ren-switch nuevo
+- [ ] **6.7** Decidir destino de `docs/components-showcase.html` (230 KB) — borrar o mantener como "view all"
+- [ ] **6.8** Borrar CSS huérfanos: `docs/constraint-driven-design.css`, `docs/content-guidelines.css`
 
-### Hito 7 — Polish post-launch
-*No bloquea launch pero suma.*
+### Hito 7 — Limpieza del outer workspace
+*Estado: 🟡 PENDIENTE — el outer es Cowork workspace, no es el repo. Consolidamos para evitar confusión.*
 
-- [ ] **7.1** Storybook opcional (decisión: ¿vale el costo de dependencia? El sitio de docs vanilla puede ser suficiente).
-- [ ] **7.2** Coverage badge / Lighthouse CI sobre el sitio deployado.
-- [ ] **7.3** Migrar `_archive/RENDS-AUDIT-ROADMAP.docx` a markdown si todavía hay valor pendiente ahí.
-- [ ] **7.4** Sitio público con changelog renderizado (parsea `CHANGELOG.md` → HTML).
+- [ ] **7.1** Reducir `outer/README.md` a índice mínimo apuntando a `rends/`
+- [ ] **7.2** Borrar `outer/SHIPPING.md` (versión vieja pre-launch; `rends/SHIPPING.md` es la actual)
+- [ ] **7.3** Mover `outer/AGENTS.md.rtk-backup-20260506` a `outer/_archive/`
+- [ ] **7.4** Mover 27 `outer/PHASE-*-COMPLETE.md` + 2 duplicados en `rends/` a `outer/_archive/phases/`
+- [ ] **7.5** Decidir destino de `outer/inject_shell_script.py` (mover a `rends/scripts/` con README, o borrar)
+- [ ] **7.6** Decidir destino de `outer/rends.skill` (ZIP) vs `outer/rends-skill/` (source) — clarificar cuál es fuente de verdad
+
+### Hito 8 — Polish post-launch (nice-to-have)
+
+- [ ] **8.1** Storybook opcional (decisión pendiente: ¿vale el costo? el sitio vanilla puede ser suficiente)
+- [ ] **8.2** Coverage badge / Lighthouse CI sobre el sitio deployado
+- [ ] **8.3** Sitio público con changelog renderizado (parsea `CHANGELOG.md` → HTML)
+- [ ] **8.4** Re-evaluar matriz de browsers (Firefox/WebKit con `continue-on-error: true` o expansión completa)
 
 ---
 
-## Orden recomendado y por qué
+## Orden recomendado
 
 ```
-Hito 1 (higiene)  →  Hito 3 (cut 0.8.2)  →  Hito 2 (CI)  →  Hito 4 (commit+push)  →  Hito 5 (publish)  →  Hito 6 (F8)  →  Hito 7
+Hito 6 (limpieza docs)  →  Hito 7 (limpieza outer)  →  cortar 0.8.3  →
+Hito 4.3 (tags retroactivos)  →  Hito 5 (publish)  →  Hito 8
 ```
 
-- **Higiene primero** porque no requiere browser ni network y desbloquea el repo público.
-- **Cut 0.8.2 antes que CI** porque el CI debe correr contra una versión definida; cortar primero evita re-ejecuciones.
-- **CI antes que publish** porque querés que el primer `npm publish` haya pasado por el pipeline.
-- **Publish antes que F8** porque F8 es un trabajo largo y bloquearlo detrás de no-lanzamiento es contraproducente. F8 mejora un sistema ya disponible.
+- **Hito 6 primero** porque deja el sistema coherente antes de cortar la próxima versión.
+- **Hito 7 paralelo** o secuencial — no bloquea publish del paquete.
+- **Cortar 0.8.3** una vez todo lo de 6 está en `[Unreleased]` y ese bloque consolidado.
+- **Tags retroactivos** para que los compare-links del CHANGELOG funcionen.
+- **Publish** finalmente, después de que el pipeline haya pasado.
 
 ---
 
-## Qué se puede hacer **desde aquí mismo** (este chat)
-Todo lo de Hitos **1, 2, 3, 7.3** — son archivos de texto en el repo.
+## Qué se puede hacer **desde este chat**
+Hitos **1.8, 6.1–6.8, 7.1–7.6, 8.3** — son archivos en el repo.
 
 ## Qué requiere **tu máquina**
-Hitos **4 (git/push), 5 (npm publish, Pages activation)**, **6 (F8: si bien parte se puede armar acá, los smoke tests requieren Playwright real)**, y **2.5 (correr CI con browsers reales — pero el YAML se escribe acá)**.
+- **4.3, 4.4** — `git tag` + `git push --tags`
+- **5.2, 5.3, 5.4, 5.5** — `npm login`, `npm publish`, smoke test
+- **5.6** — activación de hosting si se elige Pages u otra plataforma
+- **2.5, 8.4** — agregar/correr Firefox/WebKit en CI con browsers reales
 
 ---
 
 ## Referencias
 
-- Estado de v0.8.1: `rends/CHANGELOG.md` líneas 44–131.
-- F7.27 (último PHASE doc, 23-abr-2026): `PHASE-7-27-COMPLETE.md` — loop motion tokens + `suggestAlternativeHues`.
-- F7.26 (post-0.8.1 polish): `PHASE-7-26-COMPLETE.md`.
-- F7.7 (hex audit final): `PHASE-7-7-COMPLETE.md`.
-- F7.6 (release packaging — declaró "el repo no tiene commits aún"): `PHASE-7-6-COMPLETE.md`.
-- Hex audit policy: `PHASE-7-7-COMPLETE.md` sección "Política post-F7.7".
-- 248 baselines en `rends/tests/visual/visual.spec.cjs-snapshots/`.
-- `[Unreleased]` en CHANGELOG: `rends/CHANGELOG.md` líneas 12–43 (listo para cortar como `[0.8.2]`).
+- Inconsistencias detectadas y plan de fix: `AUDIT-2026-05-11.md`
+- Estado de v0.8.2: `CHANGELOG.md` líneas 234-278
+- F7.27 (último PHASE doc, 23-abr-2026): `PHASE-7-27-COMPLETE.md` en `outer/`
+- F7.7 (hex audit): `outer/PHASE-7-7-COMPLETE.md`
+- Hex audit policy: sección "Política post-F7.7" en F7.7
+- 312 baselines: `rends/tests/visual/visual.spec.cjs-snapshots/`
+- `[Unreleased]` listo para cortar: `CHANGELOG.md:12-232`
