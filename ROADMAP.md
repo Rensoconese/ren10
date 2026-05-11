@@ -1,7 +1,7 @@
 # RenDS — Roadmap
 
 **Repo:** [github.com/Rensoconese/ren10](https://github.com/Rensoconese/ren10)
-**Versión actual en disco:** `0.8.2` (cortada en CHANGELOG; `[Unreleased]` poblado con post-0.8.2 listo para próximo cut)
+**Versión actual en disco:** `0.8.3` (cortada en CHANGELOG el 2026-05-11; `[Unreleased]` vacío)
 **Última fase cerrada:** F8 (52 páginas de doc por componente + landing + shell unificado + command palette) — todo en `[Unreleased]`
 **Fecha del roadmap:** 2026-05-11 (refresh tras auditoría)
 **Vista ejecutiva (1 pág):** [`STATUS.md`](./STATUS.md)
@@ -70,20 +70,22 @@
 - [x] **2.4** Concurrency + cache para Playwright browsers
 - [ ] **2.5** (opcional, post-launch) agregar Firefox/WebKit a la matriz con `continue-on-error: true` — F7.7 dejó documentado el gap
 
-### Hito 3 — Cut 0.8.2
-*Estado: ✅ DONE.*
+### Hito 3 — Cuts de versión
+*Estado: ✅ DONE (0.8.2 cortada en abril, 0.8.3 cortada el 2026-05-11).*
 
-- [x] **3.1** Bloque `[0.8.2]` ya está en CHANGELOG con fecha 2026-04-27
-- [x] **3.2** `package.json` en `0.8.2`
-- [x] **3.3** README en `Current version: 0.8.2`
-- [x] **3.4** ren-design.md header en `v0.8.2`
+- [x] **3.1** Bloque `[0.8.2]` en CHANGELOG con fecha 2026-04-27
+- [x] **3.2** Bloque `[0.8.3]` en CHANGELOG con fecha 2026-05-11
+- [x] **3.3** `package.json` en `0.8.3`
+- [x] **3.4** README en `Current version: 0.8.3`
+- [x] **3.5** ren-design.md header en `v0.8.3`
+- [x] **3.6** v0.8.3 badge en 68 páginas HTML (`docs/`, `index.html`, `templates/landing.html`)
 
 ### Hito 4 — Push al remoto y tags
 *Estado: 🟡 PARCIAL.*
 
 - [x] **4.1** `git init` + `.gitignore` + remoto configurado (`origin: github.com/Rensoconese/ren10.git`)
 - [x] **4.2** 18 commits en `main`, branches dependabot abiertas
-- [ ] **4.3** Tags retroactivos: `v0.7.0`, `v0.8.0`, `v0.8.2`. Existen `v0.7.1` y `v0.8.1`
+- [ ] **4.3** Tags retroactivos: `v0.7.0`, `v0.8.0`, `v0.8.2`, `v0.8.3`. Existen `v0.7.1` y `v0.8.1`
 - [ ] **4.4** Push del branch actual (`codex/fix-visual-ci-baselines`) cuando esté listo
 
 ### Hito 5 — Publicación a npm

@@ -13,6 +13,31 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+### Accessibility milestones
+
+## [0.8.3] — 2026-05-11
+
+Focus: documentation maturity. Lands the marketing page, the 52
+dedicated component pages (the long-running F8 work), the unified
+site shell, the Cmd+K command palette, and the mobile drawer.
+Aligns the `docs/components/` filenames with their colocated
+component directories so an agent that reads `ren-design.md` can
+predict the doc URL. Promotes `ren-switch` to its own primitive
+(18 → 19 primitives; 52 → 53 components total). All package-API
+changes are additive: the same selectors, tokens, and markup that
+worked on 0.8.2 still work — only the `docs/components/*.html`
+file names changed.
+
+### Added
+
 - **Marketing landing page** at `rends/index.html`. Hero, three pillars,
   atomic-stack visual, live preview block (rendered components alongside
   their source), templates strip, and a Theme Builder CTA. Uses the
@@ -802,7 +827,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/Rensoconese/ren10/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Rensoconese/ren10/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/Rensoconese/ren10/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/Rensoconese/ren10/compare/v0.7.1...v0.8.0

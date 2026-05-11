@@ -1,6 +1,6 @@
 # Shipping checklist — RenDS
 
-How to ship a release of `rends` end-to-end. Currently sized for the **0.8.2 launch**, but the per-release pattern is the same after that.
+How to ship a release of `rends` end-to-end. Currently sized for the **0.8.3 launch**, but the per-release pattern is the same after that.
 
 > All commands below run on **your local machine**. They need your git credentials and `npm login`.
 
@@ -20,7 +20,7 @@ How to ship a release of `rends` end-to-end. Currently sized for the **0.8.2 lau
 
 ---
 
-## 1 · Push the existing unpushed commits + the new 0.8.2 commit
+## 1 · Push the existing unpushed commits + the new 0.8.3 commit
 
 ```bash
 cd ~/RenDS/rends    # this folder IS the repo
@@ -37,7 +37,7 @@ git push origin main --follow-tags
 What happens after this push:
 - `ci.yml` runs against `main` → lint + a11y + components + visual matrix.
 - `pages.yml` runs against `main` → deploys the docs site to `https://rensoconese.github.io/ren10/`.
-- `release.yml` runs against the `v0.8.2` tag → re-runs lint + a11y + components, verifies the tag matches `package.json` version, then `npm publish`es with provenance, then creates a GitHub Release with notes pulled from `CHANGELOG.md`.
+- `release.yml` runs against the `v0.8.3` tag → re-runs lint + a11y + components, verifies the tag matches `package.json` version, then `npm publish`es with provenance, then creates a GitHub Release with notes pulled from `CHANGELOG.md`.
 
 Watch all runs at: <https://github.com/Rensoconese/ren10/actions>
 
@@ -46,10 +46,10 @@ Watch all runs at: <https://github.com/Rensoconese/ren10/actions>
 ## 2 · Verify (~5–10 minutes after the push)
 
 ```bash
-npm view rends version    # should print 0.8.2
+npm view rends version    # should print 0.8.3
 ```
 
-- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.2>
+- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.3>
 - **Pages:** <https://rensoconese.github.io/ren10/>
 
 Smoke test the npm package in a fresh dir:
@@ -79,7 +79,7 @@ ls rends/    # tokens/  base/  components/  index.css ...
 
 ## 4 · Cutting future releases
 
-Once 0.8.2 is out, the per-release flow is:
+Once 0.8.3 is out, the per-release flow is:
 
 1. Land changes on `main`. Each PR that ships user-visible behavior updates `## [Unreleased]` in `CHANGELOG.md`.
 2. When ready to cut **X.Y.Z**:

@@ -1,8 +1,8 @@
 # RenDS — Status
 
 **Fecha:** 2026-05-11
-**Versión en disco:** `0.8.2` (cortada en CHANGELOG)
-**`[Unreleased]` actual:** trabajo post-0.8.2 (landing, 52 páginas por componente, command palette, shell unificado, fixes de demos) — listo o casi listo para cortar como `0.8.3` / `0.9.0`
+**Versión en disco:** `0.8.3` (cortada en CHANGELOG hoy)
+**`[Unreleased]` actual:** vacío — listo para acumular post-0.8.3
 **Detalle por hito:** [`ROADMAP.md`](./ROADMAP.md)
 
 Documento de una página con lo que separa el estado actual del repo de "publicado y mantenido". Refresqué este doc tras la auditoría 2026-05-11; el contenido anterior (que decía "repo sin commits, tags v0.7.0/v0.8.0/v0.8.1 no existen") era de antes del primer push.
@@ -18,7 +18,7 @@ Documento de una página con lo que separa el estado actual del repo de "publica
 | Release pipeline (tag → npm publish) | ✅ | `.github/workflows/release.yml` (verifica tag vs package.json, publica con provenance, crea GitHub Release). |
 | Pages workflow | ❌ Eliminado deliberadamente | Commit `15d027f`. Si se quiere docs públicas, decidir alojamiento (Pages, Vercel, Netlify). |
 | Primer commit + push a origin | ✅ | 18 commits en `main`; branches dependabot abiertas |
-| Tags retroactivos | 🟡 Parcial | Existen `v0.7.1`, `v0.8.1`. Falta `v0.7.0`, `v0.8.0`, `v0.8.2` |
+| Tags retroactivos | 🟡 Parcial | Existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2`, `v0.8.3` |
 | 52 componentes (18 + 26 + 8) | ✅ | `components/{primitives,composites,patterns}/**` |
 | 52 páginas de doc por componente (Hito 6 / F8 viejo) | ✅ | `docs/components/*.html` (todas en `[Unreleased]`) |
 | WCAG 2.1 AA (`tests/a11y`) | ✅ | 224/224 pass en Chromium |
@@ -36,9 +36,8 @@ Ordenado por bloqueo / ROI:
 
 | # | Pendiente | Esfuerzo | Bloquea a |
 |---|---|---|---|
-| 1 | Cortar `[Unreleased]` como `0.8.3` (o `0.9.0` si los rename de docs cuentan como breaking) | Trivial | Tags + publish |
-| 2 | Tags retroactivos `v0.7.0`, `v0.8.0`, `v0.8.2` para que los compare-links del CHANGELOG funcionen | Bajo | — |
-| 3 | Decidir si publicar 0.8.2 a npm (verificar con `npm view rends version`) o saltar a 0.8.3 | Trivial | Adopción externa |
+| 2 | Tags retroactivos `v0.7.0`, `v0.8.0`, `v0.8.2`, `v0.8.3` para que los compare-links del CHANGELOG funcionen | Bajo | — |
+| 3 | Publicar 0.8.3 a npm (`npm publish`; verificar con `npm view rends version`) | Trivial | Adopción externa |
 | 5 | Decidir alojamiento del sitio de docs (Pages reactivado / Vercel / Netlify) | Medio | Visibilidad pública |
 | 7 | Renombrar 5 HTMLs en `docs/components/` al nombre canónico (`ren-icons → ren-icon`, etc.) | Medio | Coherencia |
 | 8 | Promover `ren-switch` a primitive independiente | Medio | Conteo 52 → 53 |
