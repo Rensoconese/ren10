@@ -26,9 +26,30 @@ consolidates them and starts formal version tracking with 0.7.0.
   `isMobile: true`; Chromium and WebKit do). Closes the gap F7.7
   documented.
 
+- **CI / npm / license badges in README.** Top of `rends/README.md`
+  now has CI status, npm version, monthly downloads, license, and
+  WCAG 2.1 AA badges. Picked up live from the published package.
+
 ### Changed
 
+- **README Theming section rewritten** to document both the preset
+  themes (link `themes/appearance.css`) and the hex→tokens generator
+  (`import { generateTheme } from 'rends/themes/theme-generator.js'`).
+  The old wording suggested the presets worked from `index.css` alone,
+  which was untrue.
+
 ### Fixed
+
+- **`themes/appearance.css` and `themes/theme-generator.js` now
+  publish to npm.** The previous `package.json` `files` array did NOT
+  include `themes/`, so any consumer that installed `rends` and added
+  `<html data-theme="ocean">` got no theme styles — the file simply
+  wasn't in the tarball. Both files are now explicitly listed under
+  `files`, and `exports` exposes `./themes/appearance.css` and
+  `./themes/theme-generator.js` as importable subpaths. The internal
+  builder UI (`themes/preview.html`) and the unit test
+  (`themes/theme-generator.test.js`) stay out of the tarball.
+  Tarball: 199 → 201 files, 302 → 312 kB.
 
 ### Removed
 
