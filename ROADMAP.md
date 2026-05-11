@@ -37,7 +37,7 @@
 | `.github/workflows/ci.yml` | ✅ | lint + a11y + components + visual, **solo Chromium** |
 | `.github/workflows/release.yml` | ✅ | tag → tests → npm publish + GitHub Release |
 | `.github/workflows/pages.yml` | ❌ Eliminado | commit `15d027f`. Si se quiere docs públicas, decidir hosting nuevo |
-| Cross-browser (Firefox/WebKit) en CI | ❌ Deferred | docs antes prometían "matriz"; realidad es Chromium-only |
+| Cross-browser (Firefox/WebKit) en CI | ✅ Activo en `[Unreleased]` post-0.8.3 | matriz `[chromium, firefox, webkit]` con `continue-on-error` en los no-Chromium |
 | Primer commit + push | ✅ | 18 commits en `main` + branches dependabot |
 | Tags retroactivos | 🟡 | existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2` |
 | Publicación a `npm` | ❓ | verificar con `npm view rends version`; README promete `npx rends init` |
@@ -62,13 +62,13 @@
 - [ ] **1.8** Fix badge `v0.7` → `v0.8` en `rends/docs/cli.html` (línea 109) — verificar si sigue presente
 
 ### Hito 2 — CI/CD
-*Estado: ✅ DONE (Chromium-only por ahora).*
+*Estado: ✅ DONE (cross-browser matrix activo desde [Unreleased] post-0.8.3).*
 
-- [x] **2.1** `.github/workflows/ci.yml` — lint + a11y + components + visual. Browsers: **Chromium only** (Firefox/WebKit deferred a post-launch)
+- [x] **2.1** `.github/workflows/ci.yml` — lint + a11y + components + visual con **matriz Chromium / Firefox / WebKit**. Chromium bloquea, Firefox y WebKit son advisory (`continue-on-error`).
 - [x] **2.2** `.github/workflows/release.yml` — tag `v*` → tests + verify tag/version match + `npm publish` (provenance) + GitHub Release con notas del CHANGELOG
 - [ ] **2.3** ~~`.github/workflows/pages.yml`~~ — **eliminado** en commit `15d027f`. Si se quiere docs públicas, decidir hosting alternativo (Pages reactivado, Vercel, Netlify, Cloudflare Pages)
-- [x] **2.4** Concurrency + cache para Playwright browsers
-- [ ] **2.5** (opcional, post-launch) agregar Firefox/WebKit a la matriz con `continue-on-error: true` — F7.7 dejó documentado el gap
+- [x] **2.4** Concurrency + cache para Playwright browsers (key incluye browser para evitar colisión)
+- [x] **2.5** Firefox/WebKit agregados a la matriz en `[Unreleased]` post-0.8.3 — cierra el gap que F7.7 había marcado.
 
 ### Hito 3 — Cuts de versión
 *Estado: ✅ DONE (0.8.2 cortada en abril, 0.8.3 cortada el 2026-05-11).*

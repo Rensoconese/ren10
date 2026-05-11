@@ -13,6 +13,16 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- **Cross-browser CI matrix (Firefox + WebKit, advisory).** `ci.yml`
+  now runs the `a11y`, `components`, and `visual` jobs against
+  `[chromium, firefox, webkit]` in parallel. Chromium continues to
+  gate (failures block); Firefox and WebKit use
+  `continue-on-error: ${{ matrix.browser != 'chromium' }}` so engine-
+  specific regressions surface without blocking merges. Cache key
+  includes the browser to avoid collisions. Closes the gap F7.7
+  documented and SHIPPING.md had already described as the expected
+  shape.
+
 ### Changed
 
 ### Fixed
