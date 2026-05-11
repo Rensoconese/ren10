@@ -72,7 +72,9 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps ${{ matrix.browser }}
 
-      - run: npm run test:a11y -- --browser=${{ matrix.browser }}
+      - run: npm run test:a11y
+        env:
+          PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
 
       - name: Upload Playwright report on failure
         if: failure()
@@ -116,7 +118,9 @@ jobs:
         if: steps.playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps ${{ matrix.browser }}
 
-      - run: npm run test:components -- --browser=${{ matrix.browser }}
+      - run: npm run test:components
+        env:
+          PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
 
       - name: Upload Playwright report on failure
         if: failure()
@@ -161,7 +165,9 @@ jobs:
         run: npx playwright install-deps ${{ matrix.browser }}
 
       - name: Run visual suite (${{ matrix.browser }} Desktop Light)
-        run: npm run test:visual -- --project="Desktop Light" --browser=${{ matrix.browser }}
+        run: npm run test:visual -- --project="Desktop Light"
+        env:
+          PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
 
       - name: Upload diff artifacts on failure
         if: failure()

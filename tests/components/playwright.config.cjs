@@ -8,7 +8,17 @@ const { defineConfig, devices } = require('@playwright/test');
  * structural: every component registered in cli/registry.js must have a
  * matching section in docs/components.html that renders and passes axe.
  * Full viewport matrix coverage belongs to docs.spec.cjs / a11y.spec.cjs.
+ *
+ * Browser is overridable via PLAYWRIGHT_BROWSER env var (chromium|firefox|webkit).
+ * Default: chromium. CI uses this to fan out the matrix.
  */
+const browserName = process.env.PLAYWRIGHT_BROWSER || 'chromium';
+const desktopDevice = {
+  chromium: devices['Desktop Chrome'],
+  firefox: devices['Desktop Firefox'],
+  webkit: devices['Desktop Safari'],
+}[browserName];
+
 module.exports = defineConfig({
   testDir: '.',
   testMatch: ['**/*.spec.cjs'],
@@ -24,11 +34,11 @@ module.exports = defineConfig({
   projects: [
     {
       name: 'Desktop Light',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 1024 }, colorScheme: 'light' },
+      use: { ...desktopDevice, viewport: { width: 1280, height: 1024 }, colorScheme: 'light' },
     },
     {
       name: 'Desktop Dark',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 1024 }, colorScheme: 'dark' },
+      use: { ...desktopDevice, viewport: { width: 1280, height: 1024 }, colorScheme: 'dark' },
     },
   ],
 });

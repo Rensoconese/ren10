@@ -9,7 +9,19 @@ const { defineConfig, devices } = require('@playwright/test');
  * - Light and dark color schemes
  * - Screenshot matching with configurable threshold
  * - Proper timeout settings
+ *
+ * Browser is overridable via PLAYWRIGHT_BROWSER env var
+ * (chromium|firefox|webkit). Default: chromium. CI uses this to fan out
+ * the matrix; baselines are committed for chromium/linux only — Firefox
+ * and WebKit visual runs are advisory.
  */
+const browserName = process.env.PLAYWRIGHT_BROWSER || 'chromium';
+const desktopDevice = {
+  chromium: devices['Desktop Chrome'],
+  firefox: devices['Desktop Firefox'],
+  webkit: devices['Desktop Safari'],
+}[browserName];
+
 module.exports = defineConfig({
   testDir: '.',
   testMatch: ['visual.spec.cjs'],
@@ -51,6 +63,7 @@ module.exports = defineConfig({
       name: 'Mobile Light',
       use: {
         ...devices['Pixel 5'],
+        browserName,
         colorScheme: 'light',
       },
     },
@@ -60,6 +73,7 @@ module.exports = defineConfig({
       name: 'Mobile Dark',
       use: {
         ...devices['Pixel 5'],
+        browserName,
         colorScheme: 'dark',
       },
     },
@@ -69,6 +83,7 @@ module.exports = defineConfig({
       name: 'Tablet Light',
       use: {
         ...devices['iPad Pro'],
+        browserName,
         colorScheme: 'light',
       },
     },
@@ -78,6 +93,7 @@ module.exports = defineConfig({
       name: 'Tablet Dark',
       use: {
         ...devices['iPad Pro'],
+        browserName,
         colorScheme: 'dark',
       },
     },
@@ -86,7 +102,7 @@ module.exports = defineConfig({
     {
       name: 'Desktop Light',
       use: {
-        ...devices['Desktop Chrome'],
+        ...desktopDevice,
         viewport: { width: 1280, height: 1024 },
         colorScheme: 'light',
       },
@@ -96,7 +112,7 @@ module.exports = defineConfig({
     {
       name: 'Desktop Dark',
       use: {
-        ...devices['Desktop Chrome'],
+        ...desktopDevice,
         viewport: { width: 1280, height: 1024 },
         colorScheme: 'dark',
       },
@@ -106,7 +122,7 @@ module.exports = defineConfig({
     {
       name: 'Ultra-wide Light',
       use: {
-        ...devices['Desktop Chrome'],
+        ...desktopDevice,
         viewport: { width: 1920, height: 1080 },
         colorScheme: 'light',
       },
@@ -116,7 +132,7 @@ module.exports = defineConfig({
     {
       name: 'Ultra-wide Dark',
       use: {
-        ...devices['Desktop Chrome'],
+        ...desktopDevice,
         viewport: { width: 1920, height: 1080 },
         colorScheme: 'dark',
       },
