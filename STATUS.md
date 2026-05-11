@@ -26,7 +26,7 @@ Documento de una página con lo que separa el estado actual del repo de "publica
 | Token system 3-layer | ✅ | `tokens/{primitives,semantic,component}/**` |
 | Motion tokens semánticos + loop tokens | ✅ | v0.8.0 + v0.8.2 (F7.27) |
 | Hex literal audit | ✅ | F7.7 |
-| CLI (`init`, `add`, `list`, `scales`, `help`) | 🟡 | Funciona, pero `cli/registry.js` lista solo 42 de 52 componentes (falta cubrir alert-dialog, color-picker, context-menu, date-picker, date-range-picker, empty-state, hover-card, number-field, scroll-area, toggle-group) |
+| CLI (`init`, `add`, `list`, `scales`, `help`) | ✅ | `cli/registry.js` cubre los 53 componentes (verificado programáticamente con `Object.keys(REGISTRY).length`) |
 | Theme generator hex→tokens + AAA + sugerencias de hue | ✅ | v0.8.0 + v0.8.1 + v0.8.2 |
 | Visual regression baselines | ✅ | 312 PNGs en `tests/visual/visual.spec.cjs-snapshots/` (restaurados en commit `78a9db1`) |
 
@@ -39,7 +39,6 @@ Ordenado por bloqueo / ROI:
 | 1 | Cortar `[Unreleased]` como `0.8.3` (o `0.9.0` si los rename de docs cuentan como breaking) | Trivial | Tags + publish |
 | 2 | Tags retroactivos `v0.7.0`, `v0.8.0`, `v0.8.2` para que los compare-links del CHANGELOG funcionen | Bajo | — |
 | 3 | Decidir si publicar 0.8.2 a npm (verificar con `npm view rends version`) o saltar a 0.8.3 | Trivial | Adopción externa |
-| 4 | Completar `cli/registry.js` (10 entradas faltantes) | Bajo | `npx rends add <esos>` |
 | 5 | Decidir alojamiento del sitio de docs (Pages reactivado / Vercel / Netlify) | Medio | Visibilidad pública |
 | 6 | Limpiar referencias residuales a `blocks/` en STATUS/ROADMAP (este doc ya está limpio) | Bajo | — |
 | 7 | Renombrar 5 HTMLs en `docs/components/` al nombre canónico (`ren-icons → ren-icon`, etc.) | Medio | Coherencia |

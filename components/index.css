@@ -45,6 +45,7 @@
 @import './composites/ren-otp/ren-otp.css';
 @import './composites/ren-calendar/ren-calendar.css';
 @import './composites/ren-date-picker/ren-date-picker.css';
+@import './composites/ren-date-range-picker/ren-date-range-picker.css';
 @import './composites/ren-carousel/ren-carousel.css';
 @import './composites/ren-color-picker/ren-color-picker.css';
 

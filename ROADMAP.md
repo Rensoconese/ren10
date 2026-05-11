@@ -19,7 +19,7 @@
 | Token system 3-layer (primitives / semantic / component) | ✅ Done | `rends/tokens/**` |
 | Motion tokens semánticos + loop tokens | ✅ Done | v0.8.0 + v0.8.2 |
 | Hex literal audit | ✅ Done | F7.7 |
-| CLI (`init`, `add`, `list`, `scales`, `help`) | 🟡 Funciona pero `cli/registry.js` solo cubre 42 de 52 componentes | falta: alert-dialog, color-picker, context-menu, date-picker, date-range-picker, empty-state, hover-card, number-field, scroll-area, toggle-group |
+| CLI (`init`, `add`, `list`, `scales`, `help`) | ✅ Done | `cli/registry.js` cubre los 53 componentes (verificado en F3) |
 | Theme generator hex→tokens + AAA + sugerencias de hue | ✅ Done | v0.8.0 + v0.8.1 + v0.8.2 |
 | F7.8 — `docs/cli.html` | ✅ Done en v0.7.1 | 394 líneas |
 | F7.9 — Visual regression baselines | ✅ Done | 312 PNGs en `tests/visual/visual.spec.cjs-snapshots/` (restaurados en `78a9db1`) |
@@ -109,7 +109,7 @@
 - [x] **6.3** Promover `ren-switch` a primitive independiente — DONE en `[Unreleased]`. Carpeta creada (`components/primitives/ren-switch/{ren-switch.css, component.md}`), CSS extraído de `ren-checkbox.css`, `ren-design.md` actualizado (19 primitives / 53 total), `cli/registry.js` actualizado, README actualizado, `components/index.css` importa el nuevo archivo.
 - [ ] **6.4** Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección "Multi-step" desde `ren-form.html` (`ren-form/pattern.md` ya documenta `data-steps`/`[data-active]`)
 - [ ] **6.5** Actualizar `docs/components/_sidebar.html`, `docs/components.html`, command palette JS y todo enlace interno
-- [ ] **6.6** Completar `cli/registry.js` con los 10 componentes faltantes (alert-dialog, color-picker, context-menu, date-picker, date-range-picker, empty-state, hover-card, number-field, scroll-area, toggle-group) + ren-switch nuevo
+- [x] **6.6** `cli/registry.js` completo — 53 entradas verificadas (los "10 faltantes" originalmente detectados eran un falso positivo del grep que no contaba keys con guión entre comillas tipo `'alert-dialog'`, `'date-range-picker'`, etc.). ren-switch agregado en F2; `components/index.css` arreglado para importar el `ren-date-range-picker.css` que sí faltaba.
 - [ ] **6.7** Decidir destino de `docs/components-showcase.html` (230 KB) — borrar o mantener como "view all"
 - [ ] **6.8** Borrar CSS huérfanos: `docs/constraint-driven-design.css`, `docs/content-guidelines.css`
 
