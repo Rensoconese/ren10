@@ -114,14 +114,14 @@
 - [ ] **6.8** Borrar CSS huérfanos: `docs/constraint-driven-design.css`, `docs/content-guidelines.css`
 
 ### Hito 7 — Limpieza del outer workspace
-*Estado: 🟡 PENDIENTE — el outer es Cowork workspace, no es el repo. Consolidamos para evitar confusión.*
+*Estado: ✅ DONE — el outer es Cowork workspace, no es el repo. Consolidamos para evitar confusión.*
 
-- [ ] **7.1** Reducir `outer/README.md` a índice mínimo apuntando a `rends/`
-- [ ] **7.2** Borrar `outer/SHIPPING.md` (versión vieja pre-launch; `rends/SHIPPING.md` es la actual)
-- [ ] **7.3** Mover `outer/AGENTS.md.rtk-backup-20260506` a `outer/_archive/`
-- [ ] **7.4** Mover 27 `outer/PHASE-*-COMPLETE.md` + 2 duplicados en `rends/` a `outer/_archive/phases/`
-- [ ] **7.5** Decidir destino de `outer/inject_shell_script.py` (mover a `rends/scripts/` con README, o borrar)
-- [ ] **7.6** Decidir destino de `outer/rends.skill` (ZIP) vs `outer/rends-skill/` (source) — clarificar cuál es fuente de verdad
+- [x] **7.1** Reducir `outer/README.md` a índice mínimo apuntando a `rends/`
+- [x] **7.2** Borrar `outer/SHIPPING.md` (versión vieja pre-launch; `rends/SHIPPING.md` es la actual)
+- [x] **7.3** `outer/AGENTS.md.rtk-backup-20260506` — ya estaba limpiado antes de la auditoría
+- [x] **7.4** 24 `outer/PHASE-*-COMPLETE.md` + 2 duplicados en `rends/` movidos a `outer/_archive/phases/` (no eran 27 como decía la auditoría inicial; los gaps 7-13/7-14/7-18/7-19/7-20 nunca existieron)
+- [x] **7.5** `outer/inject_shell_script.py` archivado en `outer/_archive/scripts/` (one-shot — los HTMLs ya tienen el `<script src="../site/shell.js">` inyectado; verificación post-archivado: `grep -c shell.js` en docs/index, docs/getting-started, docs/components/ren-button todos devuelven 1)
+- [x] **7.6** `outer/rends.skill` ZIP archivado en `outer/_archive/rends.skill` (snapshot del 9-Apr-2026; el source `outer/rends-skill/SKILL.md` es más reciente — 7-May-2026 — y es la fuente de verdad)
 
 ### Hito 8 — Polish post-launch (nice-to-have)
 
