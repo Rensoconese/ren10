@@ -38,6 +38,12 @@ test-results/
 tests/**/test-results/
 tests/**/playwright-report/
 
+# Visual baselines: commit only the CI-primary OS (linux). Local runs on
+# macOS/Windows generate -darwin.png / -windows.png that would otherwise
+# bloat the repo and never get used by CI.
+tests/**/visual.spec.cjs-snapshots/*-darwin.png
+tests/**/visual.spec.cjs-snapshots/*-windows.png
+
 # Scratch / debug files (leading underscore convention)
 _*.cjs
 _*.js

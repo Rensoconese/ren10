@@ -85,7 +85,7 @@
 }
 
 .ren-switch:hover > input:checked + .ren-switch-track {
-  background-color: var(--green-500);
+  background-color: var(--color-success-strong);
 }
 
 /* Focus */
