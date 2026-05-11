@@ -112,8 +112,8 @@
 - [ ] **6.4** Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección "Multi-step" desde `ren-form.html` (`ren-form/pattern.md` ya documenta `data-steps`/`[data-active]`)
 - [ ] **6.5** Actualizar `docs/components/_sidebar.html`, `docs/components.html`, command palette JS y todo enlace interno
 - [x] **6.6** `cli/registry.js` completo — 53 entradas verificadas (los "10 faltantes" originalmente detectados eran un falso positivo del grep que no contaba keys con guión entre comillas tipo `'alert-dialog'`, `'date-range-picker'`, etc.). ren-switch agregado en F2; `components/index.css` arreglado para importar el `ren-date-range-picker.css` que sí faltaba.
-- [ ] **6.7** Decidir destino de `docs/components-showcase.html` (230 KB) — borrar o mantener como "view all"
-- [ ] **6.8** Borrar CSS huérfanos: `docs/constraint-driven-design.css`, `docs/content-guidelines.css`
+- [x] **6.7** `docs/components-showcase.html` mantenido — falso positivo en auditoría: el CHANGELOG dice "removed link from every sidebar" (per-page sidebars), pero los 5 enlaces remanentes están en `docs/components.html` (catálogo), que es intencional como vista "view all" y "quick example".
+- [x] **6.8** CSS huérfanos borrados: `docs/constraint-driven-design.css` (14 reglas `.constraint-*`) y `docs/content-guidelines.css` (9 reglas `.content-*`). Verificado: cero consumidores en HTML/JS. Dead code residual.
 
 ### Hito 7 — Limpieza del outer workspace
 *Estado: ✅ DONE — el outer es Cowork workspace, no es el repo. Consolidamos para evitar confusión.*

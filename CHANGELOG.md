@@ -19,6 +19,13 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Removed
 
+- **`docs/constraint-driven-design.css` and `docs/content-guidelines.css`**
+  — two orphan utility-class stylesheets (`.constraint-*` and
+  `.content-*`) that were never imported by any HTML or JS. Dead code
+  residual from early iterations; verified zero consumers via grep.
+  Neither file was in `package.json` `files`, so removal doesn't affect
+  the npm tarball.
+
 ### Security
 
 ### Accessibility milestones
