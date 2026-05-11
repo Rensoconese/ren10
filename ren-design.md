@@ -612,6 +612,7 @@ components:
     - { name: ren-separator,  tag: hr,                type: CSS-only }
     - { name: ren-skeleton,   tag: none,              type: CSS-only (animated) }
     - { name: ren-spinner,    tag: none,              type: CSS-only (animated) }
+    - { name: ren-switch,     tag: native input,      type: CSS-only }
     - { name: ren-tag,        tag: none,              type: CSS-only }
 
   composites:
@@ -653,10 +654,10 @@ components:
     - { name: ren-table,       tag: ren-table,    a11y: aria-sort + aria-selected + keyboard }
 
 counts:
-  primitives: 18
+  primitives: 19
   composites: 26
   patterns:    8
-  total:      52
+  total:      53
 ---
 
 # RenDS
@@ -1401,12 +1402,12 @@ property.
 
 ## Components
 
-RenDS ships 52 components across three tiers. Every component is
+RenDS ships 53 components across three tiers. Every component is
 accessible by default (keyboard, screen reader, reduced motion, 44px
 touch), and every component consumes the token layer — swap a theme and
 every component follows.
 
-### Primitives (18)
+### Primitives (19)
 
 Primitives are the smallest cohesive unit: a button, a badge, a field. They
 compose freely and never require another primitive to be present. Most are
@@ -1499,8 +1500,21 @@ control is visually restyled while the input keeps all native semantics
   so screen readers still see it; the visible `.ren-checkbox-control` is
   pure decoration.
 
-A switch variant (`.ren-switch`) reuses the checkbox mechanics with a
-pill-shaped track and animated thumb.
+For instant on/off toggles (apply immediately, no submit), use the
+sibling primitive `ren-switch` instead.
+
+#### ren-switch
+
+Toggle switch built on native `<input type="checkbox" role="switch">` with
+a pill-shaped track and animated thumb. Same hidden-input technique as
+`ren-checkbox`; the `role="switch"` announces toggle semantics to assistive
+technology.
+
+- **Use when:** the value takes effect immediately (settings, preferences).
+  Use `ren-checkbox` when the value only applies on form submit.
+- **States:** `:checked`, `:disabled`, `:focus-visible`, `:hover`, `:active`.
+- **A11y:** `role="switch"` on the input; the label wrapper carries the full
+  44px touch target via `min-height: var(--touch-min)`.
 
 #### ren-field
 

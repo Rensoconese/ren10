@@ -35,13 +35,28 @@ export const REGISTRY = {
     name: 'Checkbox',
     layer: 'primitives',
     dir: 'ren-checkbox',
-    description: 'Checkbox and toggle switch with accessibility',
-    files: ['ren-checkbox.css', 'ren-checkbox.js'],
+    description: 'Native checkbox with checked, indeterminate, focus, and disabled states',
+    files: ['ren-checkbox.css'],
     deps: [],
-    usage: `<ren-checkbox>
-  <input type="checkbox" id="agree">
-  <label for="agree">I agree</label>
-</ren-checkbox>`,
+    usage: `<label class="ren-checkbox">
+  <input type="checkbox">
+  <span class="ren-checkbox-control"></span>
+  <span>I agree</span>
+</label>`,
+  },
+
+  switch: {
+    name: 'Switch',
+    layer: 'primitives',
+    dir: 'ren-switch',
+    description: 'Toggle switch built on native checkbox with role="switch"',
+    files: ['ren-switch.css'],
+    deps: [],
+    usage: `<label class="ren-switch">
+  <input type="checkbox" role="switch">
+  <span class="ren-switch-track"></span>
+  <span>Dark mode</span>
+</label>`,
   },
 
   badge: {

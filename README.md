@@ -148,7 +148,7 @@ rends/
 └── docs/               ← Component catalog, per-component pages, foundations
 ```
 
-52 components in total: 18 primitives, 26 composites, 8 patterns. Every component has a dedicated documentation page under `docs/components/`.
+53 components in total: 19 primitives, 26 composites, 8 patterns. Every component has a dedicated documentation page under `docs/components/`.
 
 ---
 

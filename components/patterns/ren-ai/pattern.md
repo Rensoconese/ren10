@@ -93,7 +93,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 ## Related Files
 
 - `components/patterns/ren-ai/ren-ai.css`
-- `docs/components/ren-ai-patterns.html`
+- `docs/components/ren-ai.html`
 - `ren-design.md`
 - `tokens/tokens.md`
 - `base/layouts.md`

@@ -63,6 +63,28 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Changed
 
+- **Promoted `ren-switch` to its own primitive.** The switch toggle was
+  living inside `ren-checkbox.css` (and its `component.md` was overloaded
+  with both `--ren-checkbox-*` and `--ren-switch-*` tokens), but the two
+  have different semantics (immediate-effect toggle vs. submit-time
+  checkbox) and warranted their own contract. New layout:
+  `components/primitives/ren-switch/{ren-switch.css, component.md}`.
+  `ren-checkbox.css` is now checkbox-only; `ren-checkbox/component.md`
+  no longer lists `.ren-switch` / `.ren-switch-track` selectors or the
+  `--ren-switch-*` tokens. Public API for `.ren-switch` is unchanged —
+  the same selectors, tokens, and markup still work. Conteo: 18 → 19
+  primitives; 52 → 53 components total. `cli/registry.js` and
+  `components/index.css` updated.
+
+- **Renamed 5 `docs/components/*.html` files** to match their colocated
+  component directory names: `ren-ai-patterns.html → ren-ai.html`,
+  `ren-data-table.html → ren-table.html`, `ren-form-validation.html →
+  ren-form.html`, `ren-icons.html → ren-icon.html`, `ren-input-otp.html
+  → ren-otp.html`. Updated 71 files of internal references (sidebar
+  embedded in every component page, `docs/components.html` catalog,
+  `site/shell.js` command palette registry, cross-links from foundation
+  pages and templates). External links to the old filenames will 404.
+
 - **Renamed `rends/blocks/` to `rends/templates/`** and updated 139
   internal references across 68 files (docs pages, every component
   detail page, the new root landing, every template page, and the

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Input OTP — RenDS Components</title>
+  <title>Icons — RenDS Components</title>
   <link rel="stylesheet" href="../../index.css">
   <link rel="stylesheet" href="../../components/index.css">
   <link rel="stylesheet" href="../../themes/appearance.css">
@@ -13,6 +13,11 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { padding: var(--space-3); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
   </style>
 </head>
 <body>
@@ -50,7 +55,7 @@
         <li><a href="ren-spinner.html">Spinner</a></li>
         <li><a href="ren-skeleton.html">Skeleton</a></li>
         <li><a href="ren-kbd.html">Keyboard Key</a></li>
-        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-icon.html" aria-current="page">Icons</a></li>
         <li><a href="ren-field.html">Form Field</a></li>
         <li><a href="ren-checkbox.html">Checkbox</a></li>
         <li><a href="ren-switch.html">Switch</a></li>
@@ -82,7 +87,7 @@
         <li><a href="ren-context-menu.html">Context Menu</a></li>
         <li><a href="ren-command.html">Command Palette</a></li>
         <li><a href="ren-number-field.html">Number Field</a></li>
-        <li><a href="ren-input-otp.html" aria-current="page">Input OTP</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
         <li><a href="ren-color-picker.html">Color Picker</a></li>
         <li><a href="ren-calendar.html">Calendar</a></li>
         <li><a href="ren-date-picker.html">Date Picker</a></li>
@@ -95,10 +100,10 @@
         <li><a href="ren-nav.html">Nav</a></li>
         <li><a href="ren-sidebar.html">Sidebar</a></li>
         <li><a href="ren-empty-state.html">Empty State</a></li>
-        <li><a href="ren-data-table.html">Data Table</a></li>
-        <li><a href="ren-form-validation.html">Form Validation</a></li>
-        <li><a href="ren-multi-step-form.html">Multi-Step Form</a></li>
-        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-form.html#multi-step">Multi-Step Form</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
       </ul>
 
       <h3>Reference</h3>
@@ -109,15 +114,19 @@
 
     <main class="dx-content">
       <header class="dx-header">
-        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Input OTP</li></ol></nav>
-        <p class="dx-kicker">Composite</p>
-        <h1>Input OTP</h1>
-        <p class="lede">One-time-code input. Auto-advances on each digit, accepts paste, supports a custom mask (4 / 6 / 8 cells).</p>
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Icons</li></ol></nav>
+        <p class="dx-kicker">Primitive</p>
+        <h1>Icons</h1>
+        <p class="lede">Conventions for SVG icons in RenDS. 16 / 20 / 24 px sizing, currentColor stroke, semantic alt or <code>aria-hidden</code> based on whether the icon carries meaning on its own.</p>
       </header>
-      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>For 2FA / verification codes. Each digit gets its own visible cell so users can see exactly how many digits are expected. Paste the whole code at once and it distributes across cells.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="gap: var(--space-2);"><input type="text" inputmode="numeric" maxlength="1" style="width: 40px; height: 48px; text-align: center; font-size: var(--text-xl); border: 1px solid var(--color-border); border-radius: var(--radius-sm);"><input type="text" inputmode="numeric" maxlength="1" style="width: 40px; height: 48px; text-align: center; font-size: var(--text-xl); border: 1px solid var(--color-border); border-radius: var(--radius-sm);"><input type="text" inputmode="numeric" maxlength="1" style="width: 40px; height: 48px; text-align: center; font-size: var(--text-xl); border: 1px solid var(--color-border); border-radius: var(--radius-sm);"><span style="color: var(--color-text-muted);">—</span><input type="text" inputmode="numeric" maxlength="1" style="width: 40px; height: 48px; text-align: center; font-size: var(--text-xl); border: 1px solid var(--color-border); border-radius: var(--radius-sm);"><input type="text" inputmode="numeric" maxlength="1" style="width: 40px; height: 48px; text-align: center; font-size: var(--text-xl); border: 1px solid var(--color-border); border-radius: var(--radius-sm);"><input type="text" inputmode="numeric" maxlength="1" style="width: 40px; height: 48px; text-align: center; font-size: var(--text-xl); border: 1px solid var(--color-border); border-radius: var(--radius-sm);"></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-otp length="6" pattern="3-3"&gt;&lt;/ren-otp&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api dx-api-cols-4"><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead><tbody><tr><td><code class="dx-api-name">length</code></td><td><span class="dx-api-type">number</span></td><td><span class="dx-api-default">6</span></td><td>How many digits the code has.</td></tr><tr><td><code class="dx-api-name">pattern</code></td><td><span class="dx-api-type">string (e.g. "3-3")</span></td><td><span class="dx-api-default">—</span></td><td>Visual grouping with a separator. <code>"3-3"</code> = three cells, dash, three cells.</td></tr><tr><td><code class="dx-api-name">inputmode</code></td><td><span class="dx-api-type">"numeric" | "text"</span></td><td><span class="dx-api-default">"numeric"</span></td><td>Mobile keyboard hint.</td></tr></tbody></table></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Each cell is a real input — Tab moves between, paste splits, autocomplete <code>autocomplete="one-time-code"</code> is set so iOS / Android suggest codes from SMS.</li><li>Wrap in a <code>&lt;label&gt;</code> for the whole group.</li></ul></section>
+      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>RenDS doesn't ship an icon set. Bring your own (Lucide, Heroicons, Iconoir, custom) and follow the conventions below so they look consistent and stay accessible.</p></section>
+      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="2"
+     aria-hidden="true"&gt;
+  &lt;path d="..."/&gt;
+&lt;/svg&gt;</code></pre></div></section>
+      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><h3>Sizing convention</h3><table class="dx-api"><thead><tr><th>Use case</th><th>Size</th></tr></thead><tbody><tr><td>Inline with text (next to a label)</td><td>16 px</td></tr><tr><td>Standard (buttons, menus, tabs)</td><td>20 px</td></tr><tr><td>Large (empty states, headers)</td><td>24 px</td></tr></tbody></table><h3>Color</h3><p>Set <code>stroke="currentColor"</code> (or <code>fill="currentColor"</code> for filled icons) so the icon inherits the surrounding text color. Don't hardcode colors on icons.</p></section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li><strong>Decorative icon next to text</strong>: add <code>aria-hidden="true"</code>. The text already labels the action.</li><li><strong>Icon-only button</strong>: the button needs <code>aria-label="Action name"</code>. The icon stays <code>aria-hidden</code>.</li><li><strong>Icon as the entire link/button identity</strong> (rare): the SVG can have <code>role="img" aria-label="…"</code>.</li></ul></section>
     </main>
   </div>
   <script src="../../site/shell.js" defer></script>

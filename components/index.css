@@ -9,6 +9,7 @@
 @import './primitives/ren-button/ren-button.css';
 @import './primitives/ren-field/ren-field.css';
 @import './primitives/ren-checkbox/ren-checkbox.css';
+@import './primitives/ren-switch/ren-switch.css';
 @import './primitives/ren-badge/ren-badge.css';
 @import './primitives/ren-radio/ren-radio.css';
 @import './primitives/ren-progress/ren-progress.css';

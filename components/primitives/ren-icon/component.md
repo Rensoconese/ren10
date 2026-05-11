@@ -79,7 +79,7 @@ Theme through these public custom properties before reaching for selectors.
 ## Related Files
 
 - `components/primitives/ren-icon/ren-icon.css`
-- `docs/components/ren-icons.html`
+- `docs/components/ren-icon.html`
 - `ren-design.md`
 - `tokens/tokens.md`
 - `base/layouts.md`

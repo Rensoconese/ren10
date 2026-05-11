@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Multi-Step Form — RenDS Components</title>
+  <title>AI Patterns — RenDS Components</title>
   <link rel="stylesheet" href="../../index.css">
   <link rel="stylesheet" href="../../components/index.css">
   <link rel="stylesheet" href="../../themes/appearance.css">
@@ -50,7 +50,7 @@
         <li><a href="ren-spinner.html">Spinner</a></li>
         <li><a href="ren-skeleton.html">Skeleton</a></li>
         <li><a href="ren-kbd.html">Keyboard Key</a></li>
-        <li><a href="ren-icons.html">Icons</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
         <li><a href="ren-field.html">Form Field</a></li>
         <li><a href="ren-checkbox.html">Checkbox</a></li>
         <li><a href="ren-switch.html">Switch</a></li>
@@ -82,7 +82,7 @@
         <li><a href="ren-context-menu.html">Context Menu</a></li>
         <li><a href="ren-command.html">Command Palette</a></li>
         <li><a href="ren-number-field.html">Number Field</a></li>
-        <li><a href="ren-input-otp.html">Input OTP</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
         <li><a href="ren-color-picker.html">Color Picker</a></li>
         <li><a href="ren-calendar.html">Calendar</a></li>
         <li><a href="ren-date-picker.html">Date Picker</a></li>
@@ -95,10 +95,10 @@
         <li><a href="ren-nav.html">Nav</a></li>
         <li><a href="ren-sidebar.html">Sidebar</a></li>
         <li><a href="ren-empty-state.html">Empty State</a></li>
-        <li><a href="ren-data-table.html">Data Table</a></li>
-        <li><a href="ren-form-validation.html">Form Validation</a></li>
-        <li><a href="ren-multi-step-form.html" aria-current="page">Multi-Step Form</a></li>
-        <li><a href="ren-ai-patterns.html">AI Patterns</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-form.html#multi-step">Multi-Step Form</a></li>
+        <li><a href="ren-ai.html" aria-current="page">AI Patterns</a></li>
       </ul>
 
       <h3>Reference</h3>
@@ -109,24 +109,25 @@
 
     <main class="dx-content">
       <header class="dx-header">
-        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Multi-Step Form</li></ol></nav>
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">AI Patterns</li></ol></nav>
         <p class="dx-kicker">Pattern</p>
-        <h1>Multi-Step Form</h1>
-        <p class="lede">Wizard with numbered stepper, per-step validation, back / forward / save-progress controls. For onboarding, checkout, complex setup flows.</p>
+        <h1>AI Patterns</h1>
+        <p class="lede">Conversation thread, message bubble, streaming-text indicator, suggestion chip. The starter kit for building chat-based AI features.</p>
       </header>
-      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Use a multi-step form when a single page would feel overwhelming or when steps depend on previous answers. Show a clear stepper so the user always knows where they are. Save progress between steps so a back-navigation doesn't lose data.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch;"><ol class="ren-stepper" style="display: flex; gap: var(--space-3); list-style: none; padding: 0; margin: 0 0 var(--space-4); justify-content: space-between;"><li style="display: flex; align-items: center; gap: var(--space-2);"><span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-success); color: var(--color-on-success); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-bold);"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span style="font-size: var(--text-sm); color: var(--color-text-muted);">Account</span></li><li style="display: flex; align-items: center; gap: var(--space-2);"><span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-accent); color: var(--color-on-accent); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-bold);">2</span><span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">Profile</span></li><li style="display: flex; align-items: center; gap: var(--space-2);"><span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-fill); color: var(--color-text-muted); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-bold);">3</span><span style="font-size: var(--text-sm); color: var(--color-text-muted);">Plan</span></li></ol><p style="font-size: var(--text-sm); color: var(--color-text-muted); margin: 0;">Step 2 of 3 — current step content goes here.</p></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-multi-step current="2"&gt;
-  &lt;ol class="ren-stepper" aria-label="Setup progress"&gt;
-    &lt;li aria-current="step"&gt;Account&lt;/li&gt;
-    &lt;li&gt;Profile&lt;/li&gt;
-    &lt;li&gt;Plan&lt;/li&gt;
-  &lt;/ol&gt;
-  &lt;form data-step="1"&gt;…&lt;/form&gt;
-  &lt;form data-step="2" hidden&gt;…&lt;/form&gt;
-  &lt;form data-step="3" hidden&gt;…&lt;/form&gt;
-&lt;/ren-multi-step&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-stepper</code></td><td>The progress indicator. Numbered ol with completed / current / pending states.</td></tr><tr><td><code class="dx-api-name">.ren-stepper-step</code></td><td>One step. Use <code>aria-current="step"</code> for the active one.</td></tr><tr><td><code class="dx-api-name">.ren-stepper-step[data-completed]</code></td><td>Past step (checkmark fill).</td></tr></tbody></table><h3>Pattern</h3><ul><li>Validate the current step before <kbd>Next</kbd> advances.</li><li>Allow free <kbd>Back</kbd> navigation — don't lose prior data.</li><li>Save progress to <code>localStorage</code> or the server so the user can leave and resume.</li><li>Last step is "Review" — show all entered data before final submit.</li></ul></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>The stepper is a real <code>&lt;ol&gt;</code> with <code>aria-label</code>; current step uses <code>aria-current="step"</code>.</li><li>Each step is its own <code>&lt;form&gt;</code> with its own focus management — autofocus the first input on step change.</li><li>Announce progress changes via a polite live region: "Step 2 of 3."</li></ul></section>
+      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>AI chat surfaces share a small vocabulary: a thread of alternating bubbles, a streaming response indicator, action buttons under the latest assistant message, and suggested prompts when the user might be stuck. RenDS provides the visual primitives; you bring the inference layer.</p></section>
+      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch; max-width: 480px; margin-inline: auto;"><div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-2);"><div style="background: var(--color-accent); color: var(--color-on-accent); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md) var(--radius-md) var(--radius-xs) var(--radius-md); max-width: 80%; font-size: var(--text-sm);">What's the difference between a Tooltip and a Popover?</div></div><div style="display: flex; justify-content: flex-start; margin-bottom: var(--space-2);"><div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md) var(--radius-md) var(--radius-md) var(--radius-xs); max-width: 80%; font-size: var(--text-sm); color: var(--color-text);">Tooltip is a passive hint shown on hover or focus — typically just text. Popover is interactive: it can hold forms, multiple actions, anything keyboard-navigable. Tooltip never traps focus; Popover does.</div></div><div style="display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-3);"><button class="ren-tag ren-tag-clickable">Show me a tooltip example</button><button class="ren-tag ren-tag-clickable">When should I use a Dialog?</button></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-ai-thread" role="log" aria-live="polite"&gt;
+  &lt;div class="ren-ai-msg ren-ai-msg-user"&gt;…&lt;/div&gt;
+  &lt;div class="ren-ai-msg ren-ai-msg-assistant"&gt;
+    Streaming response…
+    &lt;span class="ren-ai-cursor"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="ren-ai-suggestions"&gt;
+  &lt;button class="ren-tag ren-tag-clickable"&gt;…&lt;/button&gt;
+&lt;/div&gt;</code></pre></div></section>
+      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-ai-thread</code></td><td>Scroll container for messages. <code>role="log"</code>, <code>aria-live="polite"</code>.</td></tr><tr><td><code class="dx-api-name">.ren-ai-msg</code></td><td>One message. Combine with <code>-user</code> or <code>-assistant</code> for direction-aware bubble shape.</td></tr><tr><td><code class="dx-api-name">.ren-ai-cursor</code></td><td>Blinking cursor that appears at the end of streaming responses.</td></tr><tr><td><code class="dx-api-name">.ren-ai-suggestions</code></td><td>Row of suggestion chips below the latest assistant message.</td></tr><tr><td><code class="dx-api-name">.ren-ai-actions</code></td><td>Trailing slot under a message: copy, regenerate, thumbs up/down.</td></tr></tbody></table></section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>The thread is a live region — screen readers announce new messages as they arrive.</li><li>Don't auto-scroll while the user is reading — pause auto-scroll when the user manually scrolls up, resume when they reach the bottom.</li><li>Streaming responses: announce the final text once when complete, not character by character.</li><li>Always provide a "Copy" action on assistant responses — it's the most-used affordance.</li></ul></section>
     </main>
   </div>
   <script src="../../site/shell.js" defer></script>

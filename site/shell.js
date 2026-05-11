@@ -41,7 +41,7 @@
     { category: 'Primitives', label: 'Spinner', href: 'docs/components/ren-spinner.html' },
     { category: 'Primitives', label: 'Skeleton', href: 'docs/components/ren-skeleton.html' },
     { category: 'Primitives', label: 'Keyboard Key', href: 'docs/components/ren-kbd.html' },
-    { category: 'Primitives', label: 'Icons', href: 'docs/components/ren-icons.html' },
+    { category: 'Primitives', label: 'Icons', href: 'docs/components/ren-icon.html' },
     { category: 'Primitives', label: 'Form Field', href: 'docs/components/ren-field.html' },
     { category: 'Primitives', label: 'Checkbox', href: 'docs/components/ren-checkbox.html' },
     { category: 'Primitives', label: 'Switch', href: 'docs/components/ren-switch.html' },
@@ -70,7 +70,7 @@
     { category: 'Composites', label: 'Context Menu', href: 'docs/components/ren-context-menu.html' },
     { category: 'Composites', label: 'Command Palette', href: 'docs/components/ren-command.html' },
     { category: 'Composites', label: 'Number Field', href: 'docs/components/ren-number-field.html' },
-    { category: 'Composites', label: 'Input OTP', href: 'docs/components/ren-input-otp.html' },
+    { category: 'Composites', label: 'Input OTP', href: 'docs/components/ren-otp.html' },
     { category: 'Composites', label: 'Color Picker', href: 'docs/components/ren-color-picker.html' },
     { category: 'Composites', label: 'Calendar', href: 'docs/components/ren-calendar.html' },
     { category: 'Composites', label: 'Date Picker', href: 'docs/components/ren-date-picker.html' },
@@ -80,10 +80,10 @@
     { category: 'Patterns', label: 'Nav', href: 'docs/components/ren-nav.html' },
     { category: 'Patterns', label: 'Sidebar', href: 'docs/components/ren-sidebar.html' },
     { category: 'Patterns', label: 'Empty State', href: 'docs/components/ren-empty-state.html' },
-    { category: 'Patterns', label: 'Data Table', href: 'docs/components/ren-data-table.html' },
-    { category: 'Patterns', label: 'Form Validation', href: 'docs/components/ren-form-validation.html' },
-    { category: 'Patterns', label: 'Multi-Step Form', href: 'docs/components/ren-multi-step-form.html' },
-    { category: 'Patterns', label: 'AI Patterns', href: 'docs/components/ren-ai-patterns.html' },
+    { category: 'Patterns', label: 'Data Table', href: 'docs/components/ren-table.html' },
+    { category: 'Patterns', label: 'Form Validation', href: 'docs/components/ren-form.html' },
+    { category: 'Patterns', label: 'Multi-Step Form', href: 'docs/components/ren-form.html#multi-step' },
+    { category: 'Patterns', label: 'AI Patterns', href: 'docs/components/ren-ai.html' },
   ];
 
   // Wait for DOM to be ready

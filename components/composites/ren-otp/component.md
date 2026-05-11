@@ -75,7 +75,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 
 - `components/composites/ren-otp/ren-otp.css`
 - `components/composites/ren-otp/ren-otp.js`
-- `docs/components/ren-input-otp.html`
+- `docs/components/ren-otp.html`
 - `ren-design.md`
 - `tokens/tokens.md`
 - `base/layouts.md`

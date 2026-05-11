@@ -13,7 +13,7 @@
 
 | Área | Estado | Evidencia |
 |---|---|---|
-| 52 componentes (18 primitives + 26 composites + 8 patterns) | ✅ Done | `rends/components/**` |
+| 53 componentes (19 primitives + 26 composites + 8 patterns) | ✅ Done | `rends/components/**` (ren-switch promovido en `[Unreleased]`) |
 | WCAG 2.1 AA — `tests/a11y` | ✅ Done | 224/224 pass en 8 proyectos Chromium |
 | WCAG 2.1 AAA opt-in (theme generator) | ✅ Done | v0.8.1 |
 | Token system 3-layer (primitives / semantic / component) | ✅ Done | `rends/tokens/**` |
@@ -100,13 +100,13 @@
 *Estado: 🟡 PENDIENTE — detectado en auditoría 2026-05-11.*
 
 - [ ] **6.1** Cortar `[Unreleased]` como `0.8.3` (o `0.9.0` si los renames de docs cuentan como breaking para URLs públicas)
-- [ ] **6.2** Renombrar 5 HTMLs en `docs/components/` al nombre canónico de la carpeta:
+- [x] **6.2** Renombrar 5 HTMLs en `docs/components/` al nombre canónico de la carpeta:
   - `ren-ai-patterns.html` → `ren-ai.html`
   - `ren-data-table.html` → `ren-table.html`
   - `ren-form-validation.html` → `ren-form.html`
   - `ren-icons.html` → `ren-icon.html`
   - `ren-input-otp.html` → `ren-otp.html`
-- [ ] **6.3** Promover `ren-switch` a primitive independiente (extraer CSS de `ren-checkbox.css`, crear `components/primitives/ren-switch/`, actualizar `ren-design.md`, `cli/registry.js`, README — conteo pasa a 19 primitives / 53 total)
+- [x] **6.3** Promover `ren-switch` a primitive independiente — DONE en `[Unreleased]`. Carpeta creada (`components/primitives/ren-switch/{ren-switch.css, component.md}`), CSS extraído de `ren-checkbox.css`, `ren-design.md` actualizado (19 primitives / 53 total), `cli/registry.js` actualizado, README actualizado, `components/index.css` importa el nuevo archivo.
 - [ ] **6.4** Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección "Multi-step" desde `ren-form.html` (`ren-form/pattern.md` ya documenta `data-steps`/`[data-active]`)
 - [ ] **6.5** Actualizar `docs/components/_sidebar.html`, `docs/components.html`, command palette JS y todo enlace interno
 - [ ] **6.6** Completar `cli/registry.js` con los 10 componentes faltantes (alert-dialog, color-picker, context-menu, date-picker, date-range-picker, empty-state, hover-card, number-field, scroll-area, toggle-group) + ren-switch nuevo

@@ -66,6 +66,24 @@ Custom-styled checkbox built on native `<input type="checkbox">`. Supports check
 
 ---
 
+## Switch
+
+Toggle switch built on native `<input type="checkbox" role="switch">`. Use for instant on/off settings; for submit-time form controls, use Checkbox instead.
+
+**Usage:**
+```html
+<label class="ren-switch">
+  <input type="checkbox" role="switch">
+  <span class="ren-switch-track"></span>
+  <span>Dark mode</span>
+</label>
+```
+
+**States:** `:checked`, `:disabled`, `:focus-visible`, `:hover`, `:active`
+**A11y:** `role="switch"` announces toggle semantics; 44px label wrapper hit area; thumb position is the primary visual signal (not color alone)
+
+---
+
 ## Badge
 
 Small atomic label for status, category, or notification. CSS-only.
