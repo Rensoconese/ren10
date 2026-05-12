@@ -38,29 +38,32 @@ jobs:
 
       # Whitelist the files that make up the public site. Everything else
       # in the repo (tests/, scripts/, cli/, evals/, package.json,
-      # node_modules, README) stays out of the artifact even though it's
-      # already public on GitHub — keeps the artifact small and the
-      # deployed surface to "the site, not the repo".
-      - name: Assemble site root from rends/
+      # node_modules, README) stays out of the artifact — keeps the
+      # artifact small and the deployed surface to "the site, not the repo".
+      #
+      # Note: the package working tree IS the repo root (no `rends/`
+      # prefix on the runner). Locally Renso runs from ~/RenDS/rends/
+      # but that "rends/" is the repo checkout itself.
+      - name: Assemble site root
         run: |
           set -e
           mkdir -p _site
-          cp    rends/index.html       _site/
-          cp    rends/index.css        _site/
-          cp    rends/ren-design.md    _site/
-          cp -r rends/tokens           _site/
-          cp -r rends/base             _site/
-          cp -r rends/components       _site/
-          cp -r rends/utils            _site/
-          cp -r rends/themes           _site/
-          cp -r rends/site             _site/
-          cp -r rends/docs             _site/
-          cp -r rends/templates        _site/
-          cp -r rends/create           _site/
-          cp -r rends/examples         _site/
+          cp    index.html       _site/
+          cp    index.css        _site/
+          cp    ren-design.md    _site/
+          cp -r tokens           _site/
+          cp -r base             _site/
+          cp -r components       _site/
+          cp -r utils            _site/
+          cp -r themes           _site/
+          cp -r site             _site/
+          cp -r docs             _site/
+          cp -r templates        _site/
+          cp -r create           _site/
+          cp -r examples         _site/
           # 404 page so wrong URLs land somewhere readable.
-          if [ -f rends/docs/index.html ]; then
-            cp rends/docs/index.html _site/404.html || true
+          if [ -f docs/index.html ]; then
+            cp docs/index.html _site/404.html || true
           fi
 
       - name: Upload artifact
