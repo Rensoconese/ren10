@@ -36,7 +36,7 @@
 | `.github/ISSUE_TEMPLATE/` | ✅ | activo |
 | `.github/workflows/ci.yml` | ✅ | lint + a11y + components + visual, **solo Chromium** |
 | `.github/workflows/release.yml` | ✅ | tag → tests → npm publish + GitHub Release |
-| `.github/workflows/pages.yml` | ❌ Eliminado | commit `15d027f`. Si se quiere docs públicas, decidir hosting nuevo |
+| `.github/workflows/pages.yml` | ✅ Reactivado | deploya `rends/` a `https://rensoconese.github.io/ren10/` en cada push a `main`. Requiere Settings → Pages → Source: GitHub Actions (one-time toggle). |
 | Cross-browser (Firefox/WebKit) en CI | ✅ Activo en `[Unreleased]` post-0.8.3 | matriz `[chromium, firefox, webkit]` con `continue-on-error` en los no-Chromium |
 | Primer commit + push | ✅ | 18 commits en `main` + branches dependabot |
 | Tags retroactivos | 🟡 | existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2` |
@@ -66,7 +66,7 @@
 
 - [x] **2.1** `.github/workflows/ci.yml` — lint + a11y + components + visual con **matriz Chromium / Firefox / WebKit**. Chromium bloquea, Firefox y WebKit son advisory (`continue-on-error`).
 - [x] **2.2** `.github/workflows/release.yml` — tag `v*` → tests + verify tag/version match + `npm publish` (provenance) + GitHub Release con notas del CHANGELOG
-- [ ] **2.3** ~~`.github/workflows/pages.yml`~~ — **eliminado** en commit `15d027f`. Si se quiere docs públicas, decidir hosting alternativo (Pages reactivado, Vercel, Netlify, Cloudflare Pages)
+- [x] **2.3** `.github/workflows/pages.yml` reactivado en `[Unreleased]` post-0.8.4. Deploya `rends/` a `https://rensoconese.github.io/ren10/`. One-time setup: en Settings → Pages → Source poner "GitHub Actions".
 - [x] **2.4** Concurrency + cache para Playwright browsers (key incluye browser para evitar colisión)
 - [x] **2.5** Firefox/WebKit agregados a la matriz en `[Unreleased]` post-0.8.3 — cierra el gap que F7.7 había marcado.
 
