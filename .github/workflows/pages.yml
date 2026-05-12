@@ -28,11 +28,13 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
-        with:
-          # Auto-enable Pages + flip Source to "GitHub Actions" if the
-          # repo hasn't been set up yet. One-time effect on the very first
-          # run; no-op afterwards.
-          enablement: true
+        # Note: the very first deploy requires the maintainer to flip
+        # Settings → Pages → Source to "GitHub Actions" by hand.
+        # configure-pages has an `enablement: true` option for this, but
+        # the default GITHUB_TOKEN doesn't carry admin rights on the
+        # Pages REST API ("Resource not accessible by integration"),
+        # so the auto-bootstrap path fails. Leaving the toggle as a
+        # one-time human step.
 
       # Whitelist the files that make up the public site. Everything else
       # in the repo (tests/, scripts/, cli/, evals/, package.json,
