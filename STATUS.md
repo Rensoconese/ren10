@@ -1,7 +1,7 @@
 # RenDS — Status
 
 **Fecha:** 2026-05-11
-**Versión en disco:** `0.8.3` (cortada en CHANGELOG hoy)
+**Versión en disco:** `0.8.4` (cortada en CHANGELOG hoy)
 **`[Unreleased]` actual:** vacío — listo para acumular post-0.8.3
 **Detalle por hito:** [`ROADMAP.md`](./ROADMAP.md)
 
@@ -37,7 +37,7 @@ Ordenado por bloqueo / ROI:
 | # | Pendiente | Esfuerzo | Bloquea a |
 |---|---|---|---|
 | 2 | Tags retroactivos `v0.7.0`, `v0.8.0`, `v0.8.2`, `v0.8.3` para que los compare-links del CHANGELOG funcionen | Bajo | — |
-| 3 | Publicar 0.8.3 a npm (`npm publish`; verificar con `npm view rends version`) | Trivial | Adopción externa |
+| 3 | Publicar 0.8.4 a npm (`npm publish`; verificar con `npm view ren10 version`) | Trivial | Adopción externa |
 | 5 | Decidir alojamiento del sitio de docs (Pages reactivado / Vercel / Netlify) | Medio | Visibilidad pública |
 | 7 | Renombrar 5 HTMLs en `docs/components/` al nombre canónico (`ren-icons → ren-icon`, etc.) | Medio | Coherencia |
 | 8 | Promover `ren-switch` a primitive independiente | Medio | Conteo 52 → 53 |

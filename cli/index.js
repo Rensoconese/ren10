@@ -155,7 +155,7 @@ async function cmdInit() {
 
   // Create components/index.css.
   // The `/* @rends-imports */` marker is an explicit anchor used by
-  // `npx rends add` to know where to splice new @import lines. Keep
+  // `npx ren10 add` to know where to splice new @import lines. Keep
   // it on its own line so the splice stays clean.
   const componentsIndexPath = path.join(componentsDir, 'index.css');
   const componentIndexContent = `/* ============================================
@@ -182,9 +182,9 @@ async function cmdInit() {
   success('Created rends/index.css');
 
   console.log(`\n${c.bold}Done!${c.reset} Add components with:\n`);
-  console.log(`  ${c.cyan}npx rends add button${c.reset}`);
-  console.log(`  ${c.cyan}npx rends add dialog${c.reset}`);
-  console.log(`  ${c.cyan}npx rends add --all${c.reset}\n`);
+  console.log(`  ${c.cyan}npx ren10 add button${c.reset}`);
+  console.log(`  ${c.cyan}npx ren10 add dialog${c.reset}`);
+  console.log(`  ${c.cyan}npx ren10 add --all${c.reset}\n`);
 
   if (scaleKey) {
     console.log(`${c.dim}Type scale: ${RATIOS[scaleKey].name} (${RATIOS[scaleKey].value})${c.reset}`);
@@ -201,7 +201,7 @@ async function cmdInit() {
 async function cmdScales() {
   const ratios = listRatios();
   console.log(`\n${c.bold}Available Type Scale Ratios${c.reset}\n`);
-  console.log(`${c.dim}Use with: npx rends init --scale <ratio>${c.reset}\n`);
+  console.log(`${c.dim}Use with: npx ren10 init --scale <ratio>${c.reset}\n`);
 
   ratios.forEach(r => {
     const marker = r.key === 'major-third' ? ` ${c.yellow}← default${c.reset}` : '';
@@ -211,9 +211,9 @@ async function cmdScales() {
 
   console.log(`\n${c.dim}★ = recommended for web${c.reset}\n`);
   console.log(`${c.bold}Examples:${c.reset}`);
-  console.log(`  ${c.cyan}npx rends init --scale minor-third${c.reset}`);
-  console.log(`  ${c.cyan}npx rends init --scale perfect-fourth --base 18${c.reset}`);
-  console.log(`  ${c.cyan}npx rends init --scale major-third --fluid${c.reset}\n`);
+  console.log(`  ${c.cyan}npx ren10 init --scale minor-third${c.reset}`);
+  console.log(`  ${c.cyan}npx ren10 init --scale perfect-fourth --base 18${c.reset}`);
+  console.log(`  ${c.cyan}npx ren10 init --scale major-third --fluid${c.reset}\n`);
 }
 
 /**
@@ -239,7 +239,7 @@ function addOneComponent(rendsDir, componentArg, opts = {}) {
   if (!meta) {
     if (!silent) {
       info(
-        `Skipped "${componentName}" — unknown. Run "npx rends list" to see available components.`
+        `Skipped "${componentName}" — unknown. Run "npx ren10 list" to see available components.`
       );
     }
     return null;
@@ -330,14 +330,14 @@ async function cmdAdd() {
 
   if (!fs.existsSync(rendsDir)) {
     error(
-      'rends/ directory not found. Run "npx rends init" first'
+      'rends/ directory not found. Run "npx ren10 init" first'
     );
   }
 
   // Everything after `add` that isn't a flag. Supports
-  //   npx rends add button
-  //   npx rends add button dialog tooltip
-  //   npx rends add --all
+  //   npx ren10 add button
+  //   npx ren10 add button dialog tooltip
+  //   npx ren10 add --all
   const positional = args.slice(1).filter((a) => !a.startsWith('--'));
 
   if (args.includes('--all')) {
@@ -379,7 +379,7 @@ async function cmdAddAll() {
   const rendsDir = path.join(cwd, 'rends');
 
   if (!fs.existsSync(rendsDir)) {
-    error('rends/ directory not found. Run "npx rends init" first');
+    error('rends/ directory not found. Run "npx ren10 init" first');
   }
 
   const allComponents = getAllComponents();
@@ -501,7 +501,7 @@ function showHelp() {
 ${c.bold}RenDS CLI${c.reset} — Vanilla Design System
 
 ${c.bold}Usage:${c.reset}
-  npx rends <command> [options]
+  npx ren10 <command> [options]
 
 ${c.bold}Commands:${c.reset}
   init              Initialize a new RenDS project
@@ -518,14 +518,14 @@ ${c.bold}Init Options:${c.reset}
   --fluid           Generate fluid clamp() values for responsive typography
 
 ${c.bold}Examples:${c.reset}
-  npx rends init
-  npx rends init --scale perfect-fourth
-  npx rends init --scale minor-third --base 18 --fluid
-  npx rends add button
-  npx rends add dialog
-  npx rends add --all
-  npx rends list
-  npx rends scales
+  npx ren10 init
+  npx ren10 init --scale perfect-fourth
+  npx ren10 init --scale minor-third --base 18 --fluid
+  npx ren10 add button
+  npx ren10 add dialog
+  npx ren10 add --all
+  npx ren10 list
+  npx ren10 scales
 
 ${c.bold}Docs:${c.reset}
   https://github.com/rends

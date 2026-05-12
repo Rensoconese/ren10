@@ -1,6 +1,6 @@
 # Shipping checklist — RenDS
 
-How to ship a release of `rends` end-to-end. Currently sized for the **0.8.3 launch**, but the per-release pattern is the same after that.
+How to ship a release of `rends` end-to-end. Currently sized for the **0.8.4 launch**, but the per-release pattern is the same after that.
 
 > All commands below run on **your local machine**. They need your git credentials and `npm login`.
 
@@ -53,7 +53,7 @@ After the PR is reviewed and merged:
 git checkout main && git pull
 
 # Tag v0.8.3 at the merge commit. release.yml fires on tag push.
-git tag -a v0.8.3 -m "Release v0.8.3"
+git tag -a v0.8.4 -m "Release v0.8.4"
 git push origin v0.8.3
 ```
 
@@ -77,18 +77,18 @@ Existing tags on origin: `v0.7.1` (1502ea7), `v0.8.1` (annotated, → bfd2f81).
 ## 3 · Verify (~5–10 minutes after the tag push)
 
 ```bash
-npm view rends version    # should print 0.8.3
+npm view ren10 version    # should print 0.8.4
 ```
 
-- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.3>
+- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.4>
 
 Smoke test the npm package in a fresh dir:
 
 ```bash
 mkdir /tmp/rends-smoke && cd /tmp/rends-smoke
 npm init -y
-npx rends init
-npx rends add button dialog tooltip
+npx ren10 init
+npx ren10 add button dialog tooltip
 ls rends/    # tokens/  base/  components/  index.css ...
 ```
 
@@ -100,7 +100,7 @@ ls rends/    # tokens/  base/  components/  index.css ...
 | ----------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
 | `release.yml` `verify` job fails: tag != `package.json` version               | Tag and `package.json` `version` must match exactly. Re-tag, or bump `package.json` and re-tag.                                        |
 | `npm publish` fails with `403 Forbidden`                                      | `NPM_TOKEN` is wrong or expired. Regenerate at npmjs.com (type "Automation").                                                          |
-| `npm publish` fails with `403 You do not have permission to publish "rends"`  | The package name `rends` is taken on the public registry. Rename to `@rensoconese/rends` in `package.json` and update README examples. |
+| `npm publish` fails with `403 You do not have permission to publish "rends"`  | The package name was rejected by npm's anti-typosquatting policy as 'too similar to existing packages'. Renamed to `ren10` in 0.8.4 (already applied; this row is left as a marker if the next rename round-trip ever repeats). |
 | `ci.yml` Firefox/WebKit a11y or components fail but Chromium passes           | Engine-specific bug surfaced by the matrix. Advisory; doesn't block merge. Investigate via the uploaded `playwright-report-*-firefox` (or `-webkit`) artifact. |
 | `ci.yml` visual job fails on Firefox/WebKit but Chromium passes               | Visual baselines are chromium/linux only by design. Firefox/WebKit visual runs always diff against those baselines — they're advisory. |
 | `npm ci` fails: lockfile out of sync                                          | Locally run `rm -rf node_modules package-lock.json && npm install`, recommit.                                                          |

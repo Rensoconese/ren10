@@ -13,6 +13,30 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+### Accessibility milestones
+
+## [0.8.4] — 2026-05-12
+
+Focus: **first published release.** Renames the npm package from
+`rends` to `ren10` to satisfy the npm typosquatting policy
+("Package name too similar to existing packages read, redis, send,
+runjs"). The CLI binary is renamed to match — `npx ren10 init`
+replaces `npx rends init` — but the local directory the CLI
+scaffolds in your project is still `rends/`, because that's the
+design-system name (same separation as `tailwindcss` package vs
+the local `tailwind.config.js`). 0.8.3 was tagged but never reached
+npm because of this rename gap; everything in 0.8.3 ships in 0.8.4.
+
+### Added
+
 - **Cross-browser CI matrix (Firefox + WebKit, advisory).** `ci.yml`
   now runs the `a11y` and `components` jobs against `[chromium, firefox,
   webkit]` in parallel. Chromium continues to gate (failures block);
@@ -34,7 +58,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 - **README Theming section rewritten** to document both the preset
   themes (link `themes/appearance.css`) and the hex→tokens generator
-  (`import { generateTheme } from 'rends/themes/theme-generator.js'`).
+  (`import { generateTheme } from 'ren10/themes/theme-generator.js'`).
   The old wording suggested the presets worked from `index.css` alone,
   which was untrue.
 
@@ -61,17 +85,17 @@ consolidates them and starts formal version tracking with 0.7.0.
   (`themes/theme-generator.test.js`) stay out of the tarball.
   Tarball: 199 → 201 files, 302 → 312 kB.
 
-- **`npx rends init` copies `themes/`** (`appearance.css` +
+- **`npx ren10 init` copies `themes/`** (`appearance.css` +
   `theme-generator.js`) into the consumer's `rends/` directory. Before,
   init created `tokens/`, `base/`, `components/`, and `index.css` but
   silently skipped `themes/`, so users who followed the README's
-  `<html data-theme="ocean">` example after `npx rends init` still got
+  `<html data-theme="ocean">` example after `npx ren10 init` still got
   nothing. The files are now physically present where the README
   points.
 
-- **`npx rends add <a> <b> <c>` processes all positional arguments.**
+- **`npx ren10 add <a> <b> <c>` processes all positional arguments.**
   Before, the command parsed only `args[1]` and silently dropped every
-  argument after the first — `npx rends add button dialog tooltip`
+  argument after the first — `npx ren10 add button dialog tooltip`
   copied only `button` with no warning. Refactored into an
   `addOneComponent` helper called once per positional arg. Unknown or
   already-present components log an `ℹ` info line and the loop
@@ -87,15 +111,15 @@ consolidates them and starts formal version tracking with 0.7.0.
   splice logic prefers that marker, then the last existing `@import`,
   then the first `*/` of any preceding comment block, then end-of-file
   as a last resort. Verified end-to-end with a clean `npm pack` +
-  `npx rends init` + `npx rends add button dialog tooltip` + smoke of
+  `npx ren10 init` + `npx ren10 add button dialog tooltip` + smoke of
   the resulting `components/index.css`.
 
-- **`npx rends version` now works.** The help text listed `version, -v`
+- **`npx ren10 version` now works.** The help text listed `version, -v`
   as a valid command but the dispatch switch only had cases for `-v`
-  and `--version` — typing `npx rends version` returned an "Unknown
+  and `--version` — typing `npx ren10 version` returned an "Unknown
   command" error. Added `case 'version':` to the switch.
 
-- **`npx rends add --all` uses the same splice logic as `add <name>`.**
+- **`npx ren10 add --all` uses the same splice logic as `add <name>`.**
   Before, `add --all` concatenated `@import` lines to the end of the
   file with a leading `\n`, which left a stray blank line between any
   pre-existing imports (from a prior `add <name>`) and the new batch,
@@ -922,7 +946,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.3...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.4...HEAD
+[0.8.4]: https://github.com/Rensoconese/ren10/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/Rensoconese/ren10/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Rensoconese/ren10/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/Rensoconese/ren10/compare/v0.8.0...v0.8.1

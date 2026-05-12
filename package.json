@@ -1,6 +1,6 @@
 {
-  "name": "rends",
-  "version": "0.8.3",
+  "name": "ren10",
+  "version": "0.8.4",
   "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
@@ -12,7 +12,7 @@
   "type": "module",
   "main": "index.css",
   "bin": {
-    "rends": "./cli/index.js"
+    "ren10": "./cli/index.js"
   },
   "files": [
     "index.css",

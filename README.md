@@ -1,8 +1,8 @@
 # RenDS
 
 [![CI](https://github.com/Rensoconese/ren10/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Rensoconese/ren10/actions/workflows/ci.yml)
-[![npm version](https://img.shields.io/npm/v/rends.svg)](https://www.npmjs.com/package/rends)
-[![npm downloads](https://img.shields.io/npm/dm/rends.svg)](https://www.npmjs.com/package/rends)
+[![npm version](https://img.shields.io/npm/v/ren10.svg)](https://www.npmjs.com/package/ren10)
+[![npm downloads](https://img.shields.io/npm/dm/ren10.svg)](https://www.npmjs.com/package/ren10)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![WCAG 2.1 AA](https://img.shields.io/badge/WCAG_2.1-AA-success.svg)](./docs/accessibility.html)
 
@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.8.3**
+Current version: **0.8.4**
 
 ---
 
@@ -18,11 +18,13 @@ Current version: **0.8.3**
 
 The fastest way to start is the CLI, which scaffolds a `rends/` folder into your project (shadcn/ui style — you own the files):
 
+> **Package name:** the npm package is `ren10` (the repo on GitHub is also `ren10`). The CLI it installs is also named `ren10`, but everything it creates inside your project lives under `rends/` because that's the design-system convention — same separation as `tailwindcss` (the package) vs `tailwind.config.js` (the local file).
+
 ```bash
-npx rends init
-npx rends add button dialog tooltip
+npx ren10 init
+npx ren10 add button dialog tooltip
 # or grab everything
-npx rends add --all
+npx ren10 add --all
 ```
 
 Then link the foundation and whatever components you added:
@@ -133,7 +135,7 @@ Dark mode is automatic via `color-scheme: light dark`. Force it with `data-theme
 **Custom palette from a single hex** (AA-safe theme generator):
 
 ```js
-import { generateTheme } from 'rends/themes/theme-generator.js';
+import { generateTheme } from 'ren10/themes/theme-generator.js';
 
 const { css, report } = generateTheme('#5b6cff', { level: 'AA' });
 document.head.insertAdjacentHTML('beforeend', `<style>${css}</style>`);
@@ -169,7 +171,7 @@ rends/
 ├── themes/             ← Theme presets + hex→token generator
 ├── templates/          ← Full page examples (landing, auth, dashboard, settings, blog, blog-post)
 ├── create/             ← Theme Builder (interactive token generator)
-├── cli/                ← `npx rends` CLI (init, add, list, scales)
+├── cli/                ← `npx ren10` CLI (init, add, list, scales)
 ├── site/               ← Doc-site chrome (top nav, sidebar, footer)
 └── docs/               ← Component catalog, per-component pages, foundations
 ```
@@ -181,14 +183,14 @@ rends/
 ## CLI Reference
 
 ```
-npx rends init                           Initialize a new RenDS project
-npx rends init --scale perfect-fourth    Use a modular type scale
-npx rends init --scale minor-third --fluid  Fluid clamp() responsive typography
-npx rends add <component>...             Add one or more components
-npx rends add --all                      Add every component
-npx rends list                           List all available components
-npx rends scales                         List available type scale ratios
-npx rends help                           Show help
+npx ren10 init                           Initialize a new RenDS project
+npx ren10 init --scale perfect-fourth    Use a modular type scale
+npx ren10 init --scale minor-third --fluid  Fluid clamp() responsive typography
+npx ren10 add <component>...             Add one or more components
+npx ren10 add --all                      Add every component
+npx ren10 list                           List all available components
+npx ren10 scales                         List available type scale ratios
+npx ren10 help                           Show help
 ```
 
 ---

@@ -5,11 +5,11 @@
  * Each module is standalone — import only what you need.
  *
  * Usage (tree-shakeable):
- *   import { createFocusTrap } from 'rends/utils/focus-trap.js';
- *   import { announce } from 'rends/utils/live-region.js';
+ *   import { createFocusTrap } from 'ren10/utils/focus-trap.js';
+ *   import { announce } from 'ren10/utils/live-region.js';
  *
  * Or import everything:
- *   import * as RenUtils from 'rends/utils/index.js';
+ *   import * as RenUtils from 'ren10/utils/index.js';
  */
 
 // Focus management

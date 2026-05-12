@@ -1,7 +1,7 @@
 # RenDS — Roadmap
 
 **Repo:** [github.com/Rensoconese/ren10](https://github.com/Rensoconese/ren10)
-**Versión actual en disco:** `0.8.3` (cortada en CHANGELOG el 2026-05-11; `[Unreleased]` vacío)
+**Versión actual en disco:** `0.8.4` (cortada en CHANGELOG el 2026-05-11; `[Unreleased]` vacío)
 **Última fase cerrada:** F8 (52 páginas de doc por componente + landing + shell unificado + command palette) — todo en `[Unreleased]`
 **Fecha del roadmap:** 2026-05-11 (refresh tras auditoría)
 **Vista ejecutiva (1 pág):** [`STATUS.md`](./STATUS.md)
@@ -40,7 +40,7 @@
 | Cross-browser (Firefox/WebKit) en CI | ✅ Activo en `[Unreleased]` post-0.8.3 | matriz `[chromium, firefox, webkit]` con `continue-on-error` en los no-Chromium |
 | Primer commit + push | ✅ | 18 commits en `main` + branches dependabot |
 | Tags retroactivos | 🟡 | existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2` |
-| Publicación a `npm` | ❓ | verificar con `npm view rends version`; README promete `npx rends init` |
+| Publicación a `npm` | ❓ | verificar con `npm view ren10 version`; README promete `npx ren10 init` |
 | `[Unreleased]` en CHANGELOG | 🟡 Listo para cortar | acumula trabajo post-0.8.2 (landing, F8, shell, command palette, fixes) |
 | `docs/components/` HTML naming | 🟡 | 5 archivos con nombre distinto al de la carpeta del componente (ver Hito 6) |
 | `docs/components/ren-{switch,multi-step-form}.html` huérfanos | 🟡 | ver Hito 6 |
@@ -95,7 +95,7 @@
 - [ ] **5.2** Confirmar `npm login` activo en máquina local
 - [ ] **5.3** `npm publish --dry-run` para validar tarball (solo `index.css`, `tokens/`, `base/`, `components/`, `utils/`, `cli/`, `ren-design.md`, `CHANGELOG.md`)
 - [ ] **5.4** Decidir: publicar `0.8.2` ahora o esperar a `0.8.3` (cuando se corte `[Unreleased]`)
-- [ ] **5.5** Verificar que `npx rends init` funciona contra el registry público en una carpeta limpia
+- [ ] **5.5** Verificar que `npx ren10 init` funciona contra el registry público en una carpeta limpia
 - [ ] **5.6** Si se quiere docs públicas: decidir host (Pages re-añadiendo el workflow, Vercel, Netlify) y deploy
 
 ### Hito 6 — Limpieza de docs y coherencia naming
