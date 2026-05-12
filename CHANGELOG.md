@@ -51,6 +51,35 @@ consolidates them and starts formal version tracking with 0.7.0.
   (`themes/theme-generator.test.js`) stay out of the tarball.
   Tarball: 199 → 201 files, 302 → 312 kB.
 
+- **`npx rends init` copies `themes/`** (`appearance.css` +
+  `theme-generator.js`) into the consumer's `rends/` directory. Before,
+  init created `tokens/`, `base/`, `components/`, and `index.css` but
+  silently skipped `themes/`, so users who followed the README's
+  `<html data-theme="ocean">` example after `npx rends init` still got
+  nothing. The files are now physically present where the README
+  points.
+
+- **`npx rends add <a> <b> <c>` processes all positional arguments.**
+  Before, the command parsed only `args[1]` and silently dropped every
+  argument after the first — `npx rends add button dialog tooltip`
+  copied only `button` with no warning. Refactored into an
+  `addOneComponent` helper called once per positional arg. Unknown or
+  already-present components log an `ℹ` info line and the loop
+  continues instead of fatally exiting. The final usage block now
+  prints one snippet per component that was actually added.
+
+- **`components/index.css` no longer gets `@import` lines spliced
+  inside its header comment.** The previous regex for "where to splice"
+  treated indented lines (`   RenDS — Components Layer`) as "not a
+  comment" and inserted the import on line 1, breaking the close
+  comment and leaving subsequent imports invisible to the CSS parser.
+  The init template now emits a `/* @rends-imports */` marker, and the
+  splice logic prefers that marker, then the last existing `@import`,
+  then the first `*/` of any preceding comment block, then end-of-file
+  as a last resort. Verified end-to-end with a clean `npm pack` +
+  `npx rends init` + `npx rends add button dialog tooltip` + smoke of
+  the resulting `components/index.css`.
+
 ### Removed
 
 - **`docs/constraint-driven-design.css` and `docs/content-guidelines.css`**
