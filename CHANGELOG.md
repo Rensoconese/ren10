@@ -23,6 +23,37 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Accessibility milestones
 
+## [0.8.6] — 2026-05-12
+
+Focus: **docs-site UX audit fixes.** External review surfaced 16
+issues in the docs site (components.html catalog + showcase). Most
+are HTML/CSS edits that don't affect the npm package, but one bug
+fix in `components/composites/ren-sheet/ren-sheet.css` does ship to
+consumers: the sheet was rendering visible-on-load when used as
+`<dialog class="ren-sheet">` because the CSS overrode the browser's
+`display: none` default for unopened `<dialog>` elements.
+
+### Fixed
+
+- **`ren-sheet` was visible without the `open` attribute.** The
+  selector `.ren-sheet { display: flex; position: fixed; }` overrode
+  the browser default `display: none` for `<dialog>` without `open`,
+  so any page that declared a `<dialog class="ren-sheet">` for
+  later use rendered it on top of the content from frame zero
+  (caught in the docs showcase, where Navigation and Filter Results
+  sheets greeted the user before they could see anything). Added an
+  explicit `.ren-sheet:not([open]) { display: none; }` rule that
+  restores the expected behavior. `ren-dialog` and `ren-popover`
+  weren't affected — they don't set `display` on their root
+  selector.
+
+### Changed
+
+- Docs site: 15 catalog/navigation/copy fixes that don't touch the
+  npm package (sidebar tidying, layout consistency between cards,
+  terminology, the "Multi-Step Form" sidebar entry that pointed at
+  the same URL as Form Validation). Full list in PR #13.
+
 ## [0.8.5] — 2026-05-12
 
 Focus: **modernize CSS color and clip syntax to satisfy the new
@@ -979,7 +1010,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.5...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.6...HEAD
+[0.8.6]: https://github.com/Rensoconese/ren10/compare/v0.8.5...v0.8.6
 [0.8.5]: https://github.com/Rensoconese/ren10/compare/v0.8.4...v0.8.5
 [0.8.4]: https://github.com/Rensoconese/ren10/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/Rensoconese/ren10/compare/v0.8.2...v0.8.3
