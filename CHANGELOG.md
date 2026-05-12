@@ -38,6 +38,16 @@ consolidates them and starts formal version tracking with 0.7.0.
   The old wording suggested the presets worked from `index.css` alone,
   which was untrue.
 
+- **GitHub Actions bumped to Node 24-ready releases.** `ci.yml` and
+  `release.yml` now use `actions/checkout@v6`, `actions/setup-node@v6`,
+  `actions/cache@v5`, `actions/upload-artifact@v7`, and
+  `softprops/action-gh-release@v3`. The previous v4/v2 pins ran on
+  Node 20, which GitHub will start forcing to Node 24 on June 2nd,
+  2026 and remove on September 16th, 2026. Closes the 8 "Node.js 20
+  actions are deprecated" warnings that appeared on every CI run.
+  Supersedes the dependabot PRs #1, #4, #5, #6, #7 — those can be
+  closed.
+
 ### Fixed
 
 - **`themes/appearance.css` and `themes/theme-generator.js` now
