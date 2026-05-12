@@ -3,7 +3,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg, 0.5rem);
-  box-shadow: var(--shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.1));
+  box-shadow: var(--shadow-lg, 0 10px 25px rgb(0, 0, 0, 0.1));
   padding-block: var(--space-1, 0.25rem);
   min-width: 12rem;
   z-index: var(--z-dropdown, 1000);

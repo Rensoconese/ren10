@@ -342,20 +342,20 @@
 
    Example HTML:
    ```html
-   <!-- Default: cards that reflow from 1→2→3+ columns naturally -->
+   \3c !-- Default: cards that reflow from 1→2→3+ columns naturally -->
    <div class="ren-auto-grid">
      <article class="ren-card">Item 1</article>
      <article class="ren-card">Item 2</article>
      <article class="ren-card">Item 3</article>
    </div>
 
-   <!-- Small items: badges, tags, etc. -->
+   \3c !-- Small items: badges, tags, etc. -->
    <div class="ren-auto-grid-sm">
      <span class="ren-badge">React</span>
      <span class="ren-badge">CSS</span>
    </div>
 
-   <!-- Large items: featured cards -->
+   \3c !-- Large items: featured cards -->
    <div class="ren-auto-grid-lg">
      <section class="ren-featured">Featured 1</section>
      <section class="ren-featured">Featured 2</section>
@@ -465,7 +465,7 @@
      <main>Main content</main>
    </div>
 
-   <!-- Collapsed sidebar version -->
+   \3c !-- Collapsed sidebar version -->
    <div class="ren-sidebar-grid" data-collapsed>
      <aside class="ren-sidebar">Sidebar</aside>
      <main>Main content (full width)</main>
@@ -543,7 +543,7 @@
 
    Example HTML:
    ```html
-   <!-- Default: 3 columns, switches at 40rem -->
+   \3c !-- Default: 3 columns, switches at 40rem -->
    <div class="ren-albatross">
      <article>Item 1</article>
      <article>Item 2</article>
@@ -552,7 +552,7 @@
      <article>Item 5</article>
    </div>
 
-   <!-- Custom breakpoint -->
+   \3c !-- Custom breakpoint -->
    <div class="ren-albatross" style="--albatross-bp: 50rem; --albatross-cols: 2;">
      <div>Two columns that switch at 50rem</div>
    </div>
@@ -681,10 +681,10 @@
    ```html
    <div class="ren-card-grid">
      <article class="ren-card">
-       <img /> <!-- spans row 1 -->
-       <h2 />  <!-- spans row 2 -->
-       <p />   <!-- spans row 3 (1fr) -->
-       <footer /> <!-- spans row 4 -->
+       <img /> \3c !-- spans row 1 -->
+       <h2 />  \3c !-- spans row 2 -->
+       <p />   \3c !-- spans row 3 (1fr) -->
+       <footer /> \3c !-- spans row 4 -->
      </article>
    </div>
    ```
@@ -794,25 +794,25 @@
 
    Example HTML:
    ```html
-   <!-- Automatically 1 column (1 item) -->
+   \3c !-- Automatically 1 column (1 item) -->
    <section class="ren-quantity-grid">
      <article>Single article</article>
    </section>
 
-   <!-- Automatically 2 columns (2 items) -->
+   \3c !-- Automatically 2 columns (2 items) -->
    <section class="ren-quantity-grid">
      <article>Left</article>
      <article>Right</article>
    </section>
 
-   <!-- Automatically 3 columns (3 items) -->
+   \3c !-- Automatically 3 columns (3 items) -->
    <section class="ren-quantity-grid">
      <article>First</article>
      <article>Second</article>
      <article>Third</article>
    </section>
 
-   <!-- Automatically reflowing (4+ items) -->
+   \3c !-- Automatically reflowing (4+ items) -->
    <section class="ren-quantity-grid">
      <article>1</article>
      <article>2</article>
@@ -879,11 +879,11 @@
 
    Example:
    ```html
-   <!-- Long list of cards—only visible ones render -->
+   \3c !-- Long list of cards—only visible ones render -->
    <div class="ren-auto-grid">
      <article class="ren-lazy-section">Item 1</article>
      <article class="ren-lazy-section">Item 2</article>
-     <!-- ... 100 more items ... -->
+     \3c !-- ... 100 more items ... -->
      <article class="ren-lazy-section">Item 102</article>
    </div>
    ```
@@ -914,7 +914,7 @@
    Example:
    ```html
    <div class="ren-grid-reading-flow">
-     <!-- Content in visual order, keyboard will follow -->
+     \3c !-- Content in visual order, keyboard will follow -->
    </div>
    ```
 
@@ -1006,14 +1006,14 @@
 
    Example HTML:
    ```html
-   <!-- Standard 6-column × 4.5rem modular grid -->
+   \3c !-- Standard 6-column × 4.5rem modular grid -->
    <div class="ren-modular-grid">
      <section>Section 1</section>
      <section>Section 2</section>
-     <!-- ... -->
+     \3c !-- ... -->
    </div>
 
-   <!-- 4-column, custom row height -->
+   \3c !-- 4-column, custom row height -->
    <div class="ren-modular-grid" style="--mod-cols: 4; --mod-row: 6rem;">
      <div>Item 1</div>
    </div>

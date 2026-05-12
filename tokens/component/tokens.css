@@ -137,7 +137,7 @@
   --ren-dialog-border-color: var(--color-border);
   --ren-dialog-shadow:       var(--shadow-xl);
   --ren-dialog-gap:          var(--space-4);
-  --ren-dialog-backdrop:     rgba(0, 0, 0, 0.5);
+  --ren-dialog-backdrop:     rgb(0, 0, 0, 0.5);
 
   /* Motion */
   --ren-dialog-duration:     var(--duration-normal);
@@ -154,7 +154,7 @@
   --ren-sheet-radius:     0;
   --ren-sheet-shadow:     var(--shadow-xl);
   --ren-sheet-padding:    var(--space-6);
-  --ren-sheet-backdrop:   rgba(0, 0, 0, 0.5);
+  --ren-sheet-backdrop:   rgb(0, 0, 0, 0.5);
 
   /* Motion */
   --ren-sheet-duration:   var(--duration-normal);

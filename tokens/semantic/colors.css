@@ -103,7 +103,7 @@
   --color-text-primary:      var(--color-text);
 
   /* ─── Overlay / Backdrop ─── */
-  --color-overlay: light-dark(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+  --color-overlay: light-dark(rgb(0, 0, 0, 0.4), rgb(0, 0, 0, 0.6));
 
   /* ─── Separator ─── */
   --color-separator: light-dark(var(--gray-200), var(--gray-900));
@@ -124,7 +124,7 @@
   --color-input-disabled-bg:      light-dark(var(--gray-200), var(--gray-950));
   --color-input-disabled-text:    light-dark(var(--gray-400), var(--gray-800));
   --color-input-error-border:     var(--color-danger);
-  --color-input-focus-ring:       light-dark(rgba(0, 122, 255, 0.15), rgba(10, 132, 255, 0.25));
+  --color-input-focus-ring:       light-dark(rgb(0, 122, 255, 0.15), rgb(10, 132, 255, 0.25));
 
   /* ─── Disabled ─── */
   --color-disabled-bg:   light-dark(var(--gray-200), var(--gray-950));
@@ -135,12 +135,12 @@
      define theme-aware shadow colors, then compose box-shadows from them.
      This gives us automatic light/dark shadow switching. */
 
-  --shadow-color-1: light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3));
-  --shadow-color-2: light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.3));
-  --shadow-color-3: light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.4));
-  --shadow-color-4: light-dark(rgba(0, 0, 0, 0.1),  rgba(0, 0, 0, 0.4));
-  --shadow-color-5: light-dark(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.5));
-  --shadow-color-6: light-dark(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.4));
+  --shadow-color-1: light-dark(rgb(0, 0, 0, 0.05), rgb(0, 0, 0, 0.3));
+  --shadow-color-2: light-dark(rgb(0, 0, 0, 0.06), rgb(0, 0, 0, 0.3));
+  --shadow-color-3: light-dark(rgb(0, 0, 0, 0.07), rgb(0, 0, 0, 0.4));
+  --shadow-color-4: light-dark(rgb(0, 0, 0, 0.1),  rgb(0, 0, 0, 0.4));
+  --shadow-color-5: light-dark(rgb(0, 0, 0, 0.15), rgb(0, 0, 0, 0.5));
+  --shadow-color-6: light-dark(rgb(0, 0, 0, 0.08), rgb(0, 0, 0, 0.4));
 
   --shadow-xs:
     0 1px 2px var(--shadow-color-1);

@@ -8,7 +8,7 @@
   max-width: 15rem;
   pointer-events: none;
   z-index: var(--z-tooltip, 2000);
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   white-space: normal;
   line-height: 1.4;
   margin: 0;
