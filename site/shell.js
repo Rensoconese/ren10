@@ -42,7 +42,7 @@
     { category: 'Primitives', label: 'Skeleton', href: 'docs/components/ren-skeleton.html' },
     { category: 'Primitives', label: 'Keyboard Key', href: 'docs/components/ren-kbd.html' },
     { category: 'Primitives', label: 'Icons', href: 'docs/components/ren-icon.html' },
-    { category: 'Primitives', label: 'Form Field', href: 'docs/components/ren-field.html' },
+    { category: 'Primitives', label: 'Field', href: 'docs/components/ren-field.html' },
     { category: 'Primitives', label: 'Checkbox', href: 'docs/components/ren-checkbox.html' },
     { category: 'Primitives', label: 'Switch', href: 'docs/components/ren-switch.html' },
     { category: 'Primitives', label: 'Radio', href: 'docs/components/ren-radio.html' },
@@ -82,7 +82,6 @@
     { category: 'Patterns', label: 'Empty State', href: 'docs/components/ren-empty-state.html' },
     { category: 'Patterns', label: 'Data Table', href: 'docs/components/ren-table.html' },
     { category: 'Patterns', label: 'Form Validation', href: 'docs/components/ren-form.html' },
-    { category: 'Patterns', label: 'Multi-Step Form', href: 'docs/components/ren-form.html#multi-step' },
     { category: 'Patterns', label: 'AI Patterns', href: 'docs/components/ren-ai.html' },
   ];
 
