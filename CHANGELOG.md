@@ -80,6 +80,21 @@ consolidates them and starts formal version tracking with 0.7.0.
   `npx rends init` + `npx rends add button dialog tooltip` + smoke of
   the resulting `components/index.css`.
 
+- **`npx rends version` now works.** The help text listed `version, -v`
+  as a valid command but the dispatch switch only had cases for `-v`
+  and `--version` — typing `npx rends version` returned an "Unknown
+  command" error. Added `case 'version':` to the switch.
+
+- **`npx rends add --all` uses the same splice logic as `add <name>`.**
+  Before, `add --all` concatenated `@import` lines to the end of the
+  file with a leading `\n`, which left a stray blank line between any
+  pre-existing imports (from a prior `add <name>`) and the new batch,
+  and didn't honor the `/* @rends-imports */` marker. Refactored to
+  call `addOneComponent` in a loop with a new `silent: true` option,
+  so `--all` reuses the same anchor-aware splice and the only output
+  is the `✓ Added N components` summary. The utility-copy step now
+  skips files that already exist (was unconditional rewrite before).
+
 ### Removed
 
 - **`docs/constraint-driven-design.css` and `docs/content-guidelines.css`**

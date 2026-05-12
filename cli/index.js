@@ -224,21 +224,32 @@ async function cmdScales() {
  * Add one component to rends/components/<name>/.
  * Returns the resolved meta so the caller can render usage examples,
  * or null if the component was skipped (unknown / already exists).
+ *
+ * @param {string} rendsDir   Absolute path to the consumer's rends/ folder.
+ * @param {string} componentArg  Component name (will be lowercased).
+ * @param {object} [opts]
+ * @param {boolean} [opts.silent]  Suppress per-file ✓ / ℹ logs.
+ *                                  Used by `add --all` to keep output tidy.
  */
-function addOneComponent(rendsDir, componentArg) {
+function addOneComponent(rendsDir, componentArg, opts = {}) {
+  const { silent = false } = opts;
   const componentName = componentArg.toLowerCase();
   const meta = getComponent(componentName);
 
   if (!meta) {
-    info(
-      `Skipped "${componentName}" — unknown. Run "npx rends list" to see available components.`
-    );
+    if (!silent) {
+      info(
+        `Skipped "${componentName}" — unknown. Run "npx rends list" to see available components.`
+      );
+    }
     return null;
   }
 
   const componentDir = path.join(rendsDir, 'components', componentName);
   if (fs.existsSync(componentDir)) {
-    info(`Skipped "${componentName}" — already exists in rends/components/${componentName}`);
+    if (!silent) {
+      info(`Skipped "${componentName}" — already exists in rends/components/${componentName}`);
+    }
     return null;
   }
 
@@ -254,7 +265,7 @@ function addOneComponent(rendsDir, componentArg) {
     const destFile = path.join(componentDir, file);
     if (fs.existsSync(srcFile)) {
       copyFile(srcFile, destFile);
-      success(`Copied ${componentName}/${file}`);
+      if (!silent) success(`Copied ${componentName}/${file}`);
     }
   });
 
@@ -269,7 +280,7 @@ function addOneComponent(rendsDir, componentArg) {
       const destDep = path.join(utilsDir, dep);
       if (fs.existsSync(srcDep) && !fs.existsSync(destDep)) {
         copyFile(srcDep, destDep);
-        success(`Copied utils/${dep} (dependency)`);
+        if (!silent) success(`Copied utils/${dep} (dependency)`);
       }
     });
   }
@@ -375,41 +386,23 @@ async function cmdAddAll() {
   let added = 0;
   let skipped = 0;
 
-  allComponents.forEach((name) => {
-    const meta = REGISTRY[name];
-    const componentDir = path.join(rendsDir, 'components', name);
-
-    if (fs.existsSync(componentDir)) {
+  // Reuse the same per-component logic as `add <name>` so the splice
+  // into components/index.css uses the `/* @rends-imports */` anchor
+  // (or the appropriate fallback), instead of blindly concatenating
+  // at end-of-file. Silent mode keeps the output to one summary line.
+  for (const name of allComponents) {
+    const meta = addOneComponent(rendsDir, name, { silent: true });
+    if (meta) {
+      added++;
+    } else {
       skipped++;
-      return;
     }
+  }
 
-    fs.mkdirSync(componentDir, { recursive: true });
-
-    // Copy component files
-    const srcComponentDir = path.join(
-      RENDS_ROOT,
-      'components',
-      meta.layer,
-      meta.dir
-    );
-
-    if (!fs.existsSync(srcComponentDir)) {
-      return;
-    }
-
-    meta.files.forEach((file) => {
-      const srcFile = path.join(srcComponentDir, file);
-      const destFile = path.join(componentDir, file);
-      if (fs.existsSync(srcFile)) {
-        copyFile(srcFile, destFile);
-      }
-    });
-
-    added++;
-  });
-
-  // Copy all utilities
+  // Copy every utility file, not just the deps declared by the
+  // components added in this pass. `add --all` is the "give me
+  // everything" command, so the consumer expects the full utils/
+  // folder to be present.
   const utilsDir = path.join(rendsDir, 'utils');
   fs.mkdirSync(utilsDir, { recursive: true });
   const srcUtilsDir = path.join(RENDS_ROOT, 'utils');
@@ -418,25 +411,11 @@ async function cmdAddAll() {
     utilFiles.forEach((file) => {
       const srcFile = path.join(srcUtilsDir, file);
       const destFile = path.join(utilsDir, file);
-      if (fs.statSync(srcFile).isFile()) {
+      if (fs.statSync(srcFile).isFile() && !fs.existsSync(destFile)) {
         copyFile(srcFile, destFile);
       }
     });
   }
-
-  // Update components/index.css with all imports
-  const componentsIndexPath = path.join(rendsDir, 'components', 'index.css');
-  let indexContent = fs.readFileSync(componentsIndexPath, 'utf8');
-
-  allComponents.forEach((name) => {
-    const meta = REGISTRY[name];
-    const importLine = `@import './${name}/${meta.files[0]}';`;
-    if (!indexContent.includes(importLine)) {
-      indexContent += `\n${importLine}`;
-    }
-  });
-
-  fs.writeFileSync(componentsIndexPath, indexContent);
 
   console.log();
   success(`Added ${added} components`);
@@ -499,6 +478,7 @@ async function main() {
         break;
       case '--version':
       case '-v':
+      case 'version':
         showVersion();
         break;
       default:
