@@ -16,7 +16,7 @@
   --shadow-none: none;
 
   /* ─── Inset Shadow ─── */
-  --shadow-inset-color: light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.3));
+  --shadow-inset-color: light-dark(rgb(0, 0, 0, 0.06), rgb(0, 0, 0, 0.3));
   --shadow-inset: inset 0 2px 4px var(--shadow-inset-color);
 
   /* ─── Ring Shadow (for focus, borders) ─── */

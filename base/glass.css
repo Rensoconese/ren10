@@ -41,13 +41,13 @@
 
   /* Surface tint — a small amount of background color
      so glass has shape even over very busy content. */
-  --glass-tint-light:   rgba(255, 255, 255, 0.55);
-  --glass-tint-dark:    rgba(20, 20, 22, 0.55);
+  --glass-tint-light:   rgb(255, 255, 255, 0.55);
+  --glass-tint-dark:    rgb(20, 20, 22, 0.55);
   --glass-tint:         light-dark(var(--glass-tint-light), var(--glass-tint-dark));
 
   /* Border — hairline that defines the edge */
-  --glass-border-light: rgba(255, 255, 255, 0.25);
-  --glass-border-dark:  rgba(255, 255, 255, 0.08);
+  --glass-border-light: rgb(255, 255, 255, 0.25);
+  --glass-border-dark:  rgb(255, 255, 255, 0.08);
   --glass-border:       light-dark(var(--glass-border-light), var(--glass-border-dark));
 }
 
@@ -65,15 +65,15 @@
 .ren-glass-thin {
   -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thin));
           backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thin));
-  --glass-tint-light: rgba(255, 255, 255, 0.35);
-  --glass-tint-dark:  rgba(20, 20, 22, 0.35);
+  --glass-tint-light: rgb(255, 255, 255, 0.35);
+  --glass-tint-dark:  rgb(20, 20, 22, 0.35);
 }
 
 .ren-glass-thick {
   -webkit-backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thick));
           backdrop-filter: saturate(var(--glass-saturation)) blur(var(--glass-blur-thick));
-  --glass-tint-light: rgba(255, 255, 255, 0.75);
-  --glass-tint-dark:  rgba(20, 20, 22, 0.75);
+  --glass-tint-light: rgb(255, 255, 255, 0.75);
+  --glass-tint-dark:  rgb(20, 20, 22, 0.75);
 }
 
 /* ─── Fallback: browsers without backdrop-filter ─── */

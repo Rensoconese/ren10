@@ -23,6 +23,39 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Accessibility milestones
 
+## [0.8.5] — 2026-05-12
+
+Focus: **modernize CSS color and clip syntax to satisfy the new
+stylelint-config-standard rules.** Bumps `stylelint` from 16.26.1 to
+17.11.0 and `stylelint-config-standard` from 36.0.1 to 40.0.0. The
+new config enables `color-function-alias-notation: "without-alpha"`
+(prefer `rgb(R G B / A)` over `rgba(R, G, B, A)`) and
+`property-no-deprecated` (flag legacy `clip:` in favor of
+`clip-path:`). Both syntaxes resolve identically in modern browsers
+(Baseline since 2023), so the change is purely shape — pixel output
+matches the previous release byte-for-byte. Components verified
+16/16 + visual regression 47/47.
+
+### Changed
+
+- **`rgba()` → `rgb(R G B / A)` across 61 occurrences** in
+  `base/`, `tokens/`, `components/`. Auto-fixed via
+  `stylelint --fix`. Browser support is Baseline since 2023.
+
+- **`clip: rect(0, 0, 0, 0)` → `clip-path: inset(50%)`** and
+  **`clip: auto` → `clip-path: none`** in the 5 visually-hidden /
+  screen-reader-only patterns: `base/utilities.css`
+  (`.ren-sr-only`, `.ren-sr-only-focusable`),
+  `components/primitives/ren-checkbox/ren-checkbox.css`,
+  `components/primitives/ren-radio/ren-radio.css`,
+  `components/primitives/ren-switch/ren-switch.css`. The legacy
+  `clip` property was deprecated; `clip-path` is the modern
+  equivalent and produces the same zero-area rendering.
+
+- **devDependencies bumped:** `stylelint` 16.26.1 → 17.11.0,
+  `stylelint-config-standard` 36.0.1 → 40.0.0. Supersedes the open
+  dependabot PR #10.
+
 ## [0.8.4] — 2026-05-12
 
 Focus: **first published release.** Renames the npm package from
@@ -946,7 +979,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.4...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.5...HEAD
+[0.8.5]: https://github.com/Rensoconese/ren10/compare/v0.8.4...v0.8.5
 [0.8.4]: https://github.com/Rensoconese/ren10/compare/v0.8.3...v0.8.4
 [0.8.3]: https://github.com/Rensoconese/ren10/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Rensoconese/ren10/compare/v0.8.1...v0.8.2

@@ -18,9 +18,9 @@
    even when animation is disabled.
 
    Usage:
-     <div class="ren-motion-dissolve">      <!-- fade on enter -->
-     <div class="ren-motion-highlight">     <!-- brief bg flash -->
-     <div class="ren-motion-pulse">         <!-- gentle opacity pulse -->
+     <div class="ren-motion-dissolve">      \3c !-- fade on enter -->
+     <div class="ren-motion-highlight">     \3c !-- brief bg flash -->
+     <div class="ren-motion-pulse">         \3c !-- gentle opacity pulse -->
 
    These classes do nothing when reduced-motion is OFF.
    The main (motion-full) animation lives on the

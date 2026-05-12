@@ -426,7 +426,7 @@ ren-table[data-loading] {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.4),
+    rgb(255, 255, 255, 0.4),
     transparent
   );
   background-size: 200% 100%;
@@ -531,7 +531,7 @@ ren-table[data-loading] {
 
   .ren-table-loading-overlay {
     animation: none;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255, 255, 255, 0.2);
   }
 }
 

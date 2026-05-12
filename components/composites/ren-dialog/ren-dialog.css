@@ -48,14 +48,14 @@
      Uses --transition-overlay so scrim fade/blur duration
      is tuned in one place (tokens/semantic/motion.css). */
   &::backdrop {
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgb(0, 0, 0, 0);
     backdrop-filter: blur(0px);
 
     transition: var(--transition-overlay);
 
     /* ═══ BACKDROP ENTRY ANIMATION ═══ */
     @starting-style {
-      background-color: rgba(0, 0, 0, 0);
+      background-color: rgb(0, 0, 0, 0);
       backdrop-filter: blur(0px);
     }
   }

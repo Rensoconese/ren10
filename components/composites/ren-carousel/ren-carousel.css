@@ -149,7 +149,7 @@
   align-items: center;
   justify-content: center;
 
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgb(0, 0, 0, 0.4);
   border: none;
   border-radius: var(--radius-full);
   cursor: pointer;
@@ -185,7 +185,7 @@
 /* Hover state — increase opacity */
 .ren-carousel-prev:hover:not(:disabled),
 .ren-carousel-next:hover:not(:disabled) {
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgb(0, 0, 0, 0.7);
 }
 
 /* Active/focus state */
@@ -236,7 +236,7 @@
     align-items: center;
     justify-content: center;
 
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgb(0, 0, 0, 0.4);
     border: none;
     border-radius: var(--radius-full, 9999px);
     cursor: pointer;
@@ -257,7 +257,7 @@
 
   .ren-carousel-viewport::scroll-button(inline-start):hover,
   .ren-carousel-viewport::scroll-button(inline-end):hover {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgb(0, 0, 0, 0.7);
   }
 
   /* Hide JS-generated arrows when native scroll buttons are available */
