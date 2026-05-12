@@ -2,13 +2,12 @@
  * RenDS Shell — Shared interactive UI for doc pages
  * Responsibilities:
  *   1. Hamburger drawer toggle (mobile ≤900px)
- *   2. Component/guide filter input in sidebar
- *   3. Cmd+K command palette with fuzzy search
- *   4. Keyboard controls (ESC to close/clear)
- *   5. Auto-close drawer when link is clicked
+ *   2. Cmd+K command palette with fuzzy search
+ *   3. Keyboard controls (ESC to close palette / drawer)
+ *   4. Auto-close drawer when link is clicked
  *
  * This script is self-attaching: it queries for `.dx-nav`, `.dx-sidebar`,
- * and auto-creates the hamburger + filter input + command palette. Idempotent.
+ * and auto-creates the hamburger + command palette. Idempotent.
  */
 
 (function() {
@@ -112,10 +111,6 @@
     const backdrop = createBackdrop();
     document.body.insertBefore(backdrop, document.body.firstChild);
 
-    // Create filter input at top of sidebar
-    const filterInput = createFilterInput();
-    sidebar.insertBefore(filterInput, sidebar.firstChild);
-
     // Create search button in nav actions
     const searchBtn = createSearchButton(paletteDialog);
     const navActions = navInner.querySelector('.dx-nav-actions');
@@ -130,9 +125,6 @@
         backdrop.setAttribute('data-open', '');
         hamburger.setAttribute('aria-expanded', 'true');
         focusedBeforeOpen = document.activeElement;
-        // Auto-focus the filter input on mobile
-        const filterField = sidebar.querySelector('[data-shell-filter]');
-        if (filterField) filterField.focus();
       } else {
         closeSidebar();
       }
@@ -148,7 +140,7 @@
     });
 
     // Cmd+K (Mac) or Ctrl+K (Windows/Linux) opens command palette
-    // ESC closes drawer and clears filter / closes palette
+    // ESC closes drawer / closes palette
     document.addEventListener('keydown', (e) => {
       const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform);
       const paletteOpen = paletteDialog.hasAttribute('data-open');
@@ -172,16 +164,8 @@
       if (e.key === 'Escape') {
         if (paletteOpen) {
           closePalette();
-        } else {
-          const filterField = sidebar.querySelector('[data-shell-filter]');
-          if (filterField && filterField.value) {
-            // Clear the filter
-            filterField.value = '';
-            filterField.dispatchEvent(new Event('input', { bubbles: true }));
-          } else if (sidebar.hasAttribute('data-open')) {
-            // Close the drawer
-            closeSidebar();
-          }
+        } else if (sidebar.hasAttribute('data-open')) {
+          closeSidebar();
         }
       }
     });
@@ -211,63 +195,6 @@
     backdrop.className = 'dx-sidebar-backdrop';
     backdrop.setAttribute('aria-hidden', 'true');
     return backdrop;
-  }
-
-  function createFilterInput() {
-    const container = document.createElement('div');
-    container.className = 'dx-sidebar-filter-container';
-
-    const label = document.createElement('label');
-    label.htmlFor = 'dx-sidebar-filter';
-    label.className = 'dx-sidebar-filter-label';
-    label.textContent = 'Filter components';
-
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = 'dx-sidebar-filter';
-    input.className = 'dx-sidebar-filter';
-    input.placeholder = 'Search...';
-    input.setAttribute('data-shell-filter', '');
-    input.setAttribute('aria-label', 'Filter sidebar items');
-
-    container.appendChild(label);
-    container.appendChild(input);
-
-    // Wire up live filter
-    input.addEventListener('input', (e) => {
-      filterSidebar(input.value.toLowerCase());
-    });
-
-    return container;
-  }
-
-  function filterSidebar(query) {
-    const sidebar = document.querySelector('.dx-sidebar');
-    if (!sidebar) return;
-
-    // Find all h3 section headers
-    const sections = sidebar.querySelectorAll('h3, .dx-sidebar-title');
-
-    sections.forEach(section => {
-      // Find the next ul/ol after this section header
-      let list = section.nextElementSibling;
-      if (!list || !list.matches('ul, ol')) return;
-
-      // Get all li items in this list
-      const items = list.querySelectorAll('li');
-      let hasVisibleItems = false;
-
-      items.forEach(li => {
-        const link = li.querySelector('a');
-        const text = link ? link.textContent.toLowerCase() : '';
-        const matches = query === '' || text.includes(query);
-        li.style.display = matches ? '' : 'none';
-        if (matches) hasVisibleItems = true;
-      });
-
-      // Show/hide the section header based on whether it has visible items
-      section.style.display = hasVisibleItems ? '' : 'none';
-    });
   }
 
   function createSearchButton(paletteDialog) {
