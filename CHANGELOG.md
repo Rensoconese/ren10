@@ -13,6 +13,126 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- **Cross-browser CI matrix (Firefox + WebKit, advisory).** `ci.yml`
+  now runs the `a11y` and `components` jobs against `[chromium, firefox,
+  webkit]` in parallel. Chromium continues to gate (failures block);
+  Firefox and WebKit use `continue-on-error: ${{ matrix.browser !=
+  'chromium' }}` so engine-specific regressions surface without blocking
+  merges. Cache key includes the browser to avoid collisions. The
+  visual job stays Chromium-only — committed baselines are
+  chromium/linux and we don't auto-generate Firefox/WebKit baselines
+  per run. The playwright configs detect `PLAYWRIGHT_BROWSER` and skip
+  the Mobile/Tablet projects for Firefox (Firefox doesn't support
+  `isMobile: true`; Chromium and WebKit do). Closes the gap F7.7
+  documented.
+
+- **CI / npm / license badges in README.** Top of `rends/README.md`
+  now has CI status, npm version, monthly downloads, license, and
+  WCAG 2.1 AA badges. Picked up live from the published package.
+
+### Changed
+
+- **README Theming section rewritten** to document both the preset
+  themes (link `themes/appearance.css`) and the hex→tokens generator
+  (`import { generateTheme } from 'rends/themes/theme-generator.js'`).
+  The old wording suggested the presets worked from `index.css` alone,
+  which was untrue.
+
+- **GitHub Actions bumped to Node 24-ready releases.** `ci.yml` and
+  `release.yml` now use `actions/checkout@v6`, `actions/setup-node@v6`,
+  `actions/cache@v5`, `actions/upload-artifact@v7`, and
+  `softprops/action-gh-release@v3`. The previous v4/v2 pins ran on
+  Node 20, which GitHub will start forcing to Node 24 on June 2nd,
+  2026 and remove on September 16th, 2026. Closes the 8 "Node.js 20
+  actions are deprecated" warnings that appeared on every CI run.
+  Supersedes the dependabot PRs #1, #4, #5, #6, #7 — those can be
+  closed.
+
+### Fixed
+
+- **`themes/appearance.css` and `themes/theme-generator.js` now
+  publish to npm.** The previous `package.json` `files` array did NOT
+  include `themes/`, so any consumer that installed `rends` and added
+  `<html data-theme="ocean">` got no theme styles — the file simply
+  wasn't in the tarball. Both files are now explicitly listed under
+  `files`, and `exports` exposes `./themes/appearance.css` and
+  `./themes/theme-generator.js` as importable subpaths. The internal
+  builder UI (`themes/preview.html`) and the unit test
+  (`themes/theme-generator.test.js`) stay out of the tarball.
+  Tarball: 199 → 201 files, 302 → 312 kB.
+
+- **`npx rends init` copies `themes/`** (`appearance.css` +
+  `theme-generator.js`) into the consumer's `rends/` directory. Before,
+  init created `tokens/`, `base/`, `components/`, and `index.css` but
+  silently skipped `themes/`, so users who followed the README's
+  `<html data-theme="ocean">` example after `npx rends init` still got
+  nothing. The files are now physically present where the README
+  points.
+
+- **`npx rends add <a> <b> <c>` processes all positional arguments.**
+  Before, the command parsed only `args[1]` and silently dropped every
+  argument after the first — `npx rends add button dialog tooltip`
+  copied only `button` with no warning. Refactored into an
+  `addOneComponent` helper called once per positional arg. Unknown or
+  already-present components log an `ℹ` info line and the loop
+  continues instead of fatally exiting. The final usage block now
+  prints one snippet per component that was actually added.
+
+- **`components/index.css` no longer gets `@import` lines spliced
+  inside its header comment.** The previous regex for "where to splice"
+  treated indented lines (`   RenDS — Components Layer`) as "not a
+  comment" and inserted the import on line 1, breaking the close
+  comment and leaving subsequent imports invisible to the CSS parser.
+  The init template now emits a `/* @rends-imports */` marker, and the
+  splice logic prefers that marker, then the last existing `@import`,
+  then the first `*/` of any preceding comment block, then end-of-file
+  as a last resort. Verified end-to-end with a clean `npm pack` +
+  `npx rends init` + `npx rends add button dialog tooltip` + smoke of
+  the resulting `components/index.css`.
+
+- **`npx rends version` now works.** The help text listed `version, -v`
+  as a valid command but the dispatch switch only had cases for `-v`
+  and `--version` — typing `npx rends version` returned an "Unknown
+  command" error. Added `case 'version':` to the switch.
+
+- **`npx rends add --all` uses the same splice logic as `add <name>`.**
+  Before, `add --all` concatenated `@import` lines to the end of the
+  file with a leading `\n`, which left a stray blank line between any
+  pre-existing imports (from a prior `add <name>`) and the new batch,
+  and didn't honor the `/* @rends-imports */` marker. Refactored to
+  call `addOneComponent` in a loop with a new `silent: true` option,
+  so `--all` reuses the same anchor-aware splice and the only output
+  is the `✓ Added N components` summary. The utility-copy step now
+  skips files that already exist (was unconditional rewrite before).
+
+### Removed
+
+- **`docs/constraint-driven-design.css` and `docs/content-guidelines.css`**
+  — two orphan utility-class stylesheets (`.constraint-*` and
+  `.content-*`) that were never imported by any HTML or JS. Dead code
+  residual from early iterations; verified zero consumers via grep.
+  Neither file was in `package.json` `files`, so removal doesn't affect
+  the npm tarball.
+
+### Security
+
+### Accessibility milestones
+
+## [0.8.3] — 2026-05-11
+
+Focus: documentation maturity. Lands the marketing page, the 52
+dedicated component pages (the long-running F8 work), the unified
+site shell, the Cmd+K command palette, and the mobile drawer.
+Aligns the `docs/components/` filenames with their colocated
+component directories so an agent that reads `ren-design.md` can
+predict the doc URL. Promotes `ren-switch` to its own primitive
+(18 → 19 primitives; 52 → 53 components total). All package-API
+changes are additive: the same selectors, tokens, and markup that
+worked on 0.8.2 still work — only the `docs/components/*.html`
+file names changed.
+
+### Added
+
 - **Marketing landing page** at `rends/index.html`. Hero, three pillars,
   atomic-stack visual, live preview block (rendered components alongside
   their source), templates strip, and a Theme Builder CTA. Uses the
@@ -62,6 +182,28 @@ consolidates them and starts formal version tracking with 0.7.0.
   to a magnifier icon.
 
 ### Changed
+
+- **Promoted `ren-switch` to its own primitive.** The switch toggle was
+  living inside `ren-checkbox.css` (and its `component.md` was overloaded
+  with both `--ren-checkbox-*` and `--ren-switch-*` tokens), but the two
+  have different semantics (immediate-effect toggle vs. submit-time
+  checkbox) and warranted their own contract. New layout:
+  `components/primitives/ren-switch/{ren-switch.css, component.md}`.
+  `ren-checkbox.css` is now checkbox-only; `ren-checkbox/component.md`
+  no longer lists `.ren-switch` / `.ren-switch-track` selectors or the
+  `--ren-switch-*` tokens. Public API for `.ren-switch` is unchanged —
+  the same selectors, tokens, and markup still work. Conteo: 18 → 19
+  primitives; 52 → 53 components total. `cli/registry.js` and
+  `components/index.css` updated.
+
+- **Renamed 5 `docs/components/*.html` files** to match their colocated
+  component directory names: `ren-ai-patterns.html → ren-ai.html`,
+  `ren-data-table.html → ren-table.html`, `ren-form-validation.html →
+  ren-form.html`, `ren-icons.html → ren-icon.html`, `ren-input-otp.html
+  → ren-otp.html`. Updated 71 files of internal references (sidebar
+  embedded in every component page, `docs/components.html` catalog,
+  `site/shell.js` command palette registry, cross-links from foundation
+  pages and templates). External links to the old filenames will 404.
 
 - **Renamed `rends/blocks/` to `rends/templates/`** and updated 139
   internal references across 68 files (docs pages, every component
@@ -226,82 +368,6 @@ consolidates them and starts formal version tracking with 0.7.0.
   `test-results/` JSON. The test source code (4 specs, 3 configs,
   test page, docs) is intact. Next visual run should regenerate
   baselines: `npm run test:visual -- --update-snapshots`.
-
-### Changed
-
-- **Renamed `rends/blocks/` to `rends/templates/`** and updated 139
-  internal references across 68 files (docs pages, every component
-  detail page, the new root landing, every template page, and the
-  shell.css comments). The old `blocks` directory has been removed.
-
-- **Refreshed the blog list template** (`templates/blog.html`).
-  Tightened excerpt copy, fixed the broken `Create` shorthand link,
-  pointed the featured post and grid cards at the new
-  `blog-post.html`, and aligned the preview banner with the new
-  templates routing.
-
-- **Translated `docs/primitive-zero.html` to English.** 227 string-level
-  replacements covering the TOC, every section title, every element's
-  purpose copy, code-sample comments, and demo content. Document
-  language is now `lang="en" data-theme="light"`.
-
-- **Components catalog** (`docs/components.html`) now reflects the
-  fully documented system: every layer reads "all documented" and
-  every component card links to its dedicated page.
-
-### Fixed
-
-- **Tabs panels not rendering and dialog triggers not firing in demo
-  pages.** The `<ren-tabs>` custom element had `display: inline` by
-  default, which collapsed panels in the live demos; live-demo wrappers
-  were swapped to `<div class="ren-tabs">` with inline keyboard JS.
-  The `<ren-dialog>` JS had a wrong relative path
-  (`../../utils/` should have been `../../../utils/`) — fixed across
-  9 source files (`ren-sheet.js`, `ren-combobox.js`, `ren-select.js`,
-  `ren-menu.js`, `ren-dialog.js`, `ren-toast.js`, `ren-tabs.js`,
-  `ren-field.js`, `ren-radio.js`).
-
-- **Double divider lines inside dialogs.** Removed the
-  `border-bottom` on `.ren-dialog-header` and `border-top` on
-  `.ren-dialog-footer`; separation is now handled by spacing alone.
-
-- **API table column collapse on component pages.** 4-column
-  attribute tables were rendering with columns 2 and 3 at zero
-  width because the legacy CSS only sized first/last children.
-  Centralized in `.dx-api` with `table-layout: fixed` plus an
-  explicit `.dx-api-cols-4` modifier (18% / 32% / 14% / 36%).
-
-- **Code samples truncated.** The hard-coded `max-width: 72ch` on
-  demos, tables, and code blocks clipped long lines and made the
-  examples unreadable. Removed; added `white-space: pre-wrap` so
-  long lines wrap instead of disappearing.
-
-- **`.ren-card-footer-border` over-spacing when stacked directly after
-  `.ren-card-header`.** Without a body in between, the footer's
-  `padding-top: var(--space-3)` plus the description's line-height extra
-  produced ~17px of visual space between the description text and the
-  divider line, which read as too loose. Added a contextual rule
-  (`.ren-card-header + .ren-card-footer-border { padding-top: var(--space-2); }`)
-  that tightens the top padding to 8px when the bordered footer is the
-  direct sibling of the header — so the line sits ~9-10px below the
-  description text instead of ~17px.
-
-- **Browser-default margin leakage across primitive text classes.**
-  Several semantic classes (`.ren-card-title`, `.ren-card-description`,
-  `.ren-banner-title`, `.ren-banner-message`, `.ren-field-description`,
-  `.ren-field-error`, `.ren-progress-label`, `.ren-progress-value`) are
-  typically applied to `<h2>`–`<h4>`, `<p>`, or `<span>`, which carry
-  browser-default block margins (~1em top and bottom on h-tags and p).
-  When these classes lived inside flex containers with explicit `gap`,
-  the browser margins stacked on top of the gap, producing ~40px of
-  visual space where 4px was intended. Each class now explicitly resets
-  margin (`margin: 0` for unrelated stacks; `margin: 0 0 var(--space-1)`
-  for the ones that intentionally set bottom spacing). Closes the
-  `.ren-card-header` "huge gap between title and description" issue
-  surfaced when reviewing the Card docs page; same root cause swept
-  across banner, field, and progress.
-
-### Removed
 
 ### Security
 
@@ -856,7 +922,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.2...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.3...HEAD
+[0.8.3]: https://github.com/Rensoconese/ren10/compare/v0.8.2...v0.8.3
 [0.8.2]: https://github.com/Rensoconese/ren10/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/Rensoconese/ren10/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/Rensoconese/ren10/compare/v0.7.1...v0.8.0

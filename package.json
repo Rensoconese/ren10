@@ -1,6 +1,6 @@
 {
   "name": "rends",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
@@ -22,6 +22,8 @@
     "components/",
     "utils/",
     "cli/",
+    "themes/appearance.css",
+    "themes/theme-generator.js",
     "CHANGELOG.md"
   ],
   "publishConfig": {
@@ -40,6 +42,10 @@
     },
     "./base/*": {
       "import": "./base/*.css"
+    },
+    "./themes/appearance.css": "./themes/appearance.css",
+    "./themes/theme-generator.js": {
+      "import": "./themes/theme-generator.js"
     },
     "./utils": {
       "import": "./utils/index.js"

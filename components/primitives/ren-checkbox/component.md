@@ -43,8 +43,8 @@ Use the docs page and source files listed below for full examples before adding 
 
 - `.ren-checkbox`
 - `.ren-checkbox-control`
-- `.ren-switch`
-- `.ren-switch-track`
+
+For toggle switches with on/off semantics, see the sibling primitive `ren-switch`.
 
 ## States And Attributes
 
@@ -65,14 +65,6 @@ Use the docs page and source files listed below for full examples before adding 
 - `--ren-checkbox-gap`
 - `--ren-checkbox-radius`
 - `--ren-checkbox-size`
-- `--ren-switch-bg`
-- `--ren-switch-checked-bg`
-- `--ren-switch-duration`
-- `--ren-switch-easing`
-- `--ren-switch-height`
-- `--ren-switch-thumb-color`
-- `--ren-switch-thumb-size`
-- `--ren-switch-width`
 
 Theme through these public custom properties before reaching for selectors.
 

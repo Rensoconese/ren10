@@ -9,7 +9,61 @@ const { defineConfig, devices } = require('@playwright/test');
  * - Light and dark color schemes
  * - Screenshot matching with configurable threshold
  * - Proper timeout settings
+ *
+ * Browser is overridable via PLAYWRIGHT_BROWSER env var
+ * (chromium|firefox|webkit). Default: chromium.
+ *
+ * CI only runs visual with Chromium — there are no committed baselines
+ * for Firefox or WebKit, and we don't auto-generate them on each PR.
+ * Firefox also skips Mobile/Tablet projects because Pixel 5 / iPad Pro
+ * descriptors require `isMobile: true`, which Firefox doesn't support.
  */
+const browserName = process.env.PLAYWRIGHT_BROWSER || 'chromium';
+const desktopDevice = {
+  chromium: devices['Desktop Chrome'],
+  firefox: devices['Desktop Firefox'],
+  webkit: devices['Desktop Safari'],
+}[browserName];
+const supportsMobileEmulation = browserName !== 'firefox';
+
+const mobileTabletProjects = [
+  {
+    name: 'Mobile Light',
+    use: { ...devices['Pixel 5'], browserName, colorScheme: 'light' },
+  },
+  {
+    name: 'Mobile Dark',
+    use: { ...devices['Pixel 5'], browserName, colorScheme: 'dark' },
+  },
+  {
+    name: 'Tablet Light',
+    use: { ...devices['iPad Pro'], browserName, colorScheme: 'light' },
+  },
+  {
+    name: 'Tablet Dark',
+    use: { ...devices['iPad Pro'], browserName, colorScheme: 'dark' },
+  },
+];
+
+const desktopProjects = [
+  {
+    name: 'Desktop Light',
+    use: { ...desktopDevice, viewport: { width: 1280, height: 1024 }, colorScheme: 'light' },
+  },
+  {
+    name: 'Desktop Dark',
+    use: { ...desktopDevice, viewport: { width: 1280, height: 1024 }, colorScheme: 'dark' },
+  },
+  {
+    name: 'Ultra-wide Light',
+    use: { ...desktopDevice, viewport: { width: 1920, height: 1080 }, colorScheme: 'light' },
+  },
+  {
+    name: 'Ultra-wide Dark',
+    use: { ...desktopDevice, viewport: { width: 1920, height: 1080 }, colorScheme: 'dark' },
+  },
+];
+
 module.exports = defineConfig({
   testDir: '.',
   testMatch: ['visual.spec.cjs'],
@@ -25,104 +79,15 @@ module.exports = defineConfig({
   ],
 
   use: {
-    // Base URL for test page
     baseURL: 'file://',
-
-    // Screenshot settings
-    screenshot: {
-      mode: 'only-on-failure',
-      dir: 'screenshots/failures',
-    },
-
-    // Video settings
-    video: {
-      mode: 'retain-on-failure',
-      dir: 'videos',
-    },
-
-    // Trace settings
+    screenshot: { mode: 'only-on-failure', dir: 'screenshots/failures' },
+    video: { mode: 'retain-on-failure', dir: 'videos' },
     trace: 'on-first-retry',
   },
 
-  // Configure projects for different viewports and color schemes
-  projects: [
-    // Mobile - Light
-    {
-      name: 'Mobile Light',
-      use: {
-        ...devices['Pixel 5'],
-        colorScheme: 'light',
-      },
-    },
-
-    // Mobile - Dark
-    {
-      name: 'Mobile Dark',
-      use: {
-        ...devices['Pixel 5'],
-        colorScheme: 'dark',
-      },
-    },
-
-    // Tablet - Light
-    {
-      name: 'Tablet Light',
-      use: {
-        ...devices['iPad Pro'],
-        colorScheme: 'light',
-      },
-    },
-
-    // Tablet - Dark
-    {
-      name: 'Tablet Dark',
-      use: {
-        ...devices['iPad Pro'],
-        colorScheme: 'dark',
-      },
-    },
-
-    // Desktop - Light
-    {
-      name: 'Desktop Light',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1280, height: 1024 },
-        colorScheme: 'light',
-      },
-    },
-
-    // Desktop - Dark
-    {
-      name: 'Desktop Dark',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1280, height: 1024 },
-        colorScheme: 'dark',
-      },
-    },
-
-    // Ultra-wide Desktop - Light
-    {
-      name: 'Ultra-wide Light',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-        colorScheme: 'light',
-      },
-    },
-
-    // Ultra-wide Desktop - Dark
-    {
-      name: 'Ultra-wide Dark',
-      use: {
-        ...devices['Desktop Chrome'],
-        viewport: { width: 1920, height: 1080 },
-        colorScheme: 'dark',
-      },
-    },
-
-  ],
+  projects: supportsMobileEmulation
+    ? [...mobileTabletProjects, ...desktopProjects]
+    : desktopProjects,
 
   webServer: undefined, // No webServer needed, using file:// protocol
 });

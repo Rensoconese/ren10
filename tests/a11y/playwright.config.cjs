@@ -4,10 +4,36 @@ const { defineConfig, devices } = require('@playwright/test');
 /**
  * Accessibility testing configuration for RenDS Design System.
  *
- * 4 viewports × 2 color schemes = 8 Chromium projects. We don't cross-browser a11y
- * because axe-core evaluates the rendered DOM identically across engines (the
- * exception is scroll-region focus, but that's captured by the default projects).
+ * 4 viewports × 2 color schemes = 8 projects per browser (in chromium and
+ * webkit). Firefox skips the Mobile/Tablet projects because Playwright's
+ * Pixel 5 / iPad Pro descriptors set `isMobile: true`, which Firefox does
+ * not support (Safari/WebKit and Chromium do).
+ *
+ * Browser is overridable via PLAYWRIGHT_BROWSER env var (chromium|firefox|webkit).
+ * Default: chromium. CI uses this to fan out the matrix.
  */
+const browserName = process.env.PLAYWRIGHT_BROWSER || 'chromium';
+const desktopDevice = {
+  chromium: devices['Desktop Chrome'],
+  firefox: devices['Desktop Firefox'],
+  webkit: devices['Desktop Safari'],
+}[browserName];
+const supportsMobileEmulation = browserName !== 'firefox';
+
+const mobileTabletProjects = [
+  { name: 'Mobile Light',      use: { ...devices['Pixel 5'],   browserName, colorScheme: 'light' } },
+  { name: 'Mobile Dark',       use: { ...devices['Pixel 5'],   browserName, colorScheme: 'dark'  } },
+  { name: 'Tablet Light',      use: { ...devices['iPad Pro'],  browserName, colorScheme: 'light' } },
+  { name: 'Tablet Dark',       use: { ...devices['iPad Pro'],  browserName, colorScheme: 'dark'  } },
+];
+
+const desktopProjects = [
+  { name: 'Desktop Light',     use: { ...desktopDevice, viewport: { width: 1280, height: 1024 }, colorScheme: 'light' } },
+  { name: 'Desktop Dark',      use: { ...desktopDevice, viewport: { width: 1280, height: 1024 }, colorScheme: 'dark'  } },
+  { name: 'Ultra-wide Light',  use: { ...desktopDevice, viewport: { width: 1920, height: 1080 }, colorScheme: 'light' } },
+  { name: 'Ultra-wide Dark',   use: { ...desktopDevice, viewport: { width: 1920, height: 1080 }, colorScheme: 'dark'  } },
+];
+
 module.exports = defineConfig({
   testDir: '.',
   testMatch: ['**/*.spec.cjs'],
@@ -20,14 +46,7 @@ module.exports = defineConfig({
     baseURL: 'file://',
     trace: 'retain-on-failure',
   },
-  projects: [
-    { name: 'Mobile Light',      use: { ...devices['Pixel 5'],          colorScheme: 'light' } },
-    { name: 'Mobile Dark',       use: { ...devices['Pixel 5'],          colorScheme: 'dark'  } },
-    { name: 'Tablet Light',      use: { ...devices['iPad Pro'],         colorScheme: 'light' } },
-    { name: 'Tablet Dark',       use: { ...devices['iPad Pro'],         colorScheme: 'dark'  } },
-    { name: 'Desktop Light',     use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 1024 }, colorScheme: 'light' } },
-    { name: 'Desktop Dark',      use: { ...devices['Desktop Chrome'], viewport: { width: 1280, height: 1024 }, colorScheme: 'dark'  } },
-    { name: 'Ultra-wide Light',  use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 }, colorScheme: 'light' } },
-    { name: 'Ultra-wide Dark',   use: { ...devices['Desktop Chrome'], viewport: { width: 1920, height: 1080 }, colorScheme: 'dark'  } },
-  ],
+  projects: supportsMobileEmulation
+    ? [...mobileTabletProjects, ...desktopProjects]
+    : desktopProjects,
 });

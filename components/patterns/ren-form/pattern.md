@@ -245,7 +245,7 @@ Form layout uses `ren-stack` / `--space-*`. Field chrome inherits from
 - `components/patterns/ren-form/ren-form.css`
 - `components/patterns/ren-form/ren-form.js`
 - `components/primitives/ren-field/component.md`
-- `docs/components/ren-form-validation.html`
+- `docs/components/ren-form.html`
 - `ren-design.md`
 - `tokens/tokens.md`
 

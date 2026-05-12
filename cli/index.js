@@ -132,12 +132,31 @@ async function cmdInit() {
   copyDir(path.join(RENDS_ROOT, 'base'), baseDir);
   success('Created rends/base/');
 
+  // Copy themes (preset themes + hex→tokens generator).
+  // appearance.css is opt-in (not auto-imported in index.css below) so the
+  // user pays nothing if they don't use [data-theme]. The generator is a
+  // pure ES module the user can import at build time.
+  const themesDir = path.join(rendsDir, 'themes');
+  fs.mkdirSync(themesDir, { recursive: true });
+  copyFile(
+    path.join(RENDS_ROOT, 'themes', 'appearance.css'),
+    path.join(themesDir, 'appearance.css')
+  );
+  copyFile(
+    path.join(RENDS_ROOT, 'themes', 'theme-generator.js'),
+    path.join(themesDir, 'theme-generator.js')
+  );
+  success('Created rends/themes/');
+
   // Create components directory
   const componentsDir = path.join(rendsDir, 'components');
   fs.mkdirSync(componentsDir, { recursive: true });
   success('Created rends/components/');
 
-  // Create components/index.css
+  // Create components/index.css.
+  // The `/* @rends-imports */` marker is an explicit anchor used by
+  // `npx rends add` to know where to splice new @import lines. Keep
+  // it on its own line so the splice stays clean.
   const componentsIndexPath = path.join(componentsDir, 'index.css');
   const componentIndexContent = `/* ============================================
    RenDS — Components Layer
@@ -145,7 +164,7 @@ async function cmdInit() {
    Import component styles here as you add them.
    ============================================ */
 
-/* Example: @import './button/ren-button.css'; */
+/* @rends-imports */
 `;
   fs.writeFileSync(componentsIndexPath, componentIndexContent);
 
@@ -201,45 +220,41 @@ async function cmdScales() {
  * Command: rends add <component>
  * Add a component to the project
  */
-async function cmdAdd() {
-  const cwd = process.cwd();
-  const rendsDir = path.join(cwd, 'rends');
-
-  if (!fs.existsSync(rendsDir)) {
-    error(
-      'rends/ directory not found. Run "npx rends init" first'
-    );
-  }
-
-  const componentArg = args[1];
-  if (!componentArg) {
-    error('Please specify a component name or use --all');
-  }
-
-  if (componentArg === '--all') {
-    return cmdAddAll();
-  }
-
+/**
+ * Add one component to rends/components/<name>/.
+ * Returns the resolved meta so the caller can render usage examples,
+ * or null if the component was skipped (unknown / already exists).
+ *
+ * @param {string} rendsDir   Absolute path to the consumer's rends/ folder.
+ * @param {string} componentArg  Component name (will be lowercased).
+ * @param {object} [opts]
+ * @param {boolean} [opts.silent]  Suppress per-file ✓ / ℹ logs.
+ *                                  Used by `add --all` to keep output tidy.
+ */
+function addOneComponent(rendsDir, componentArg, opts = {}) {
+  const { silent = false } = opts;
   const componentName = componentArg.toLowerCase();
   const meta = getComponent(componentName);
 
   if (!meta) {
-    error(
-      `Unknown component: ${componentName}. Run "npx rends list" to see available components.`
-    );
+    if (!silent) {
+      info(
+        `Skipped "${componentName}" — unknown. Run "npx rends list" to see available components.`
+      );
+    }
+    return null;
   }
 
-  // Create component directory
   const componentDir = path.join(rendsDir, 'components', componentName);
   if (fs.existsSync(componentDir)) {
-    error(
-      `Component "${componentName}" already exists in rends/components/${componentName}`
-    );
+    if (!silent) {
+      info(`Skipped "${componentName}" — already exists in rends/components/${componentName}`);
+    }
+    return null;
   }
 
   fs.mkdirSync(componentDir, { recursive: true });
 
-  // Copy component files
   const srcComponentDir = path.join(RENDS_ROOT, 'components', meta.layer, meta.dir);
   if (!fs.existsSync(srcComponentDir)) {
     error(`Source component not found: ${srcComponentDir}`);
@@ -250,33 +265,39 @@ async function cmdAdd() {
     const destFile = path.join(componentDir, file);
     if (fs.existsSync(srcFile)) {
       copyFile(srcFile, destFile);
-      success(`Copied ${file}`);
+      if (!silent) success(`Copied ${componentName}/${file}`);
     }
   });
 
-  // Copy dependencies
-  const utilsDir = path.join(rendsDir, 'utils');
-  fs.mkdirSync(utilsDir, { recursive: true });
+  // Copy JS deps from utils/ if the component declares any.
+  if (meta.deps && meta.deps.length > 0) {
+    const utilsDir = path.join(rendsDir, 'utils');
+    fs.mkdirSync(utilsDir, { recursive: true });
 
-  const srcUtilsDir = path.join(RENDS_ROOT, 'utils');
-  meta.deps.forEach((dep) => {
-    const srcDep = path.join(srcUtilsDir, dep);
-    const destDep = path.join(utilsDir, dep);
-    if (fs.existsSync(srcDep) && !fs.existsSync(destDep)) {
-      copyFile(srcDep, destDep);
-      success(`Copied ${dep} (dependency)`);
-    } else if (fs.existsSync(destDep)) {
-      info(`${dep} already exists`);
-    }
-  });
+    const srcUtilsDir = path.join(RENDS_ROOT, 'utils');
+    meta.deps.forEach((dep) => {
+      const srcDep = path.join(srcUtilsDir, dep);
+      const destDep = path.join(utilsDir, dep);
+      if (fs.existsSync(srcDep) && !fs.existsSync(destDep)) {
+        copyFile(srcDep, destDep);
+        if (!silent) success(`Copied utils/${dep} (dependency)`);
+      }
+    });
+  }
 
-  // Update components/index.css
+  // Append @import to components/index.css if not already there.
+  // Strategy (in priority order):
+  //   1. After the last existing @import line.
+  //   2. Right after the `/* @rends-imports */` marker (init template).
+  //   3. After the first `*/` (end of any header comment).
+  //   4. Append at the end.
   const componentsIndexPath = path.join(rendsDir, 'components', 'index.css');
   let indexContent = fs.readFileSync(componentsIndexPath, 'utf8');
   const importLine = `@import './${componentName}/${meta.files[0]}';`;
 
   if (!indexContent.includes(importLine)) {
     const lines = indexContent.split('\n');
+
     const lastImportIdx = lines
       .map((l, i) => (l.trim().startsWith('@import') ? i : -1))
       .filter((i) => i >= 0)
@@ -285,21 +306,68 @@ async function cmdAdd() {
     if (lastImportIdx !== undefined) {
       lines.splice(lastImportIdx + 1, 0, importLine);
     } else {
-      // Find position after header comments
-      const commentEndIdx = lines.findIndex((l) => !l.trim().startsWith('*') && !l.trim().startsWith('/*') && l.trim() !== '');
-      if (commentEndIdx >= 0) {
-        lines.splice(commentEndIdx, 0, '', importLine);
+      const markerIdx = lines.findIndex((l) => l.trim() === '/* @rends-imports */');
+      if (markerIdx >= 0) {
+        lines.splice(markerIdx + 1, 0, importLine);
       } else {
-        lines.push('', importLine);
+        const closeCommentIdx = lines.findIndex((l) => l.includes('*/'));
+        if (closeCommentIdx >= 0) {
+          lines.splice(closeCommentIdx + 1, 0, '', importLine);
+        } else {
+          lines.push('', importLine);
+        }
       }
     }
     fs.writeFileSync(componentsIndexPath, lines.join('\n'));
   }
+
+  return meta;
+}
+
+async function cmdAdd() {
+  const cwd = process.cwd();
+  const rendsDir = path.join(cwd, 'rends');
+
+  if (!fs.existsSync(rendsDir)) {
+    error(
+      'rends/ directory not found. Run "npx rends init" first'
+    );
+  }
+
+  // Everything after `add` that isn't a flag. Supports
+  //   npx rends add button
+  //   npx rends add button dialog tooltip
+  //   npx rends add --all
+  const positional = args.slice(1).filter((a) => !a.startsWith('--'));
+
+  if (args.includes('--all')) {
+    return cmdAddAll();
+  }
+
+  if (positional.length === 0) {
+    error('Please specify one or more component names, or use --all');
+  }
+
+  const added = [];
+  for (const componentArg of positional) {
+    const meta = addOneComponent(rendsDir, componentArg);
+    if (meta) added.push(meta);
+  }
+
+  if (added.length === 0) {
+    console.log(`\n${c.dim}No components added.${c.reset}\n`);
+    return;
+  }
+
   success(`Updated components/index.css`);
 
+  // Render usage for each added component.
   console.log(`\n${c.bold}Usage:${c.reset}\n`);
-  console.log(meta.usage.split('\n').map((line) => `  ${line}`).join('\n'));
-  console.log();
+  for (const meta of added) {
+    console.log(`  ${c.dim}— ${meta.name} —${c.reset}`);
+    console.log(meta.usage.split('\n').map((line) => `  ${line}`).join('\n'));
+    console.log();
+  }
 }
 
 /**
@@ -318,41 +386,23 @@ async function cmdAddAll() {
   let added = 0;
   let skipped = 0;
 
-  allComponents.forEach((name) => {
-    const meta = REGISTRY[name];
-    const componentDir = path.join(rendsDir, 'components', name);
-
-    if (fs.existsSync(componentDir)) {
+  // Reuse the same per-component logic as `add <name>` so the splice
+  // into components/index.css uses the `/* @rends-imports */` anchor
+  // (or the appropriate fallback), instead of blindly concatenating
+  // at end-of-file. Silent mode keeps the output to one summary line.
+  for (const name of allComponents) {
+    const meta = addOneComponent(rendsDir, name, { silent: true });
+    if (meta) {
+      added++;
+    } else {
       skipped++;
-      return;
     }
+  }
 
-    fs.mkdirSync(componentDir, { recursive: true });
-
-    // Copy component files
-    const srcComponentDir = path.join(
-      RENDS_ROOT,
-      'components',
-      meta.layer,
-      meta.dir
-    );
-
-    if (!fs.existsSync(srcComponentDir)) {
-      return;
-    }
-
-    meta.files.forEach((file) => {
-      const srcFile = path.join(srcComponentDir, file);
-      const destFile = path.join(componentDir, file);
-      if (fs.existsSync(srcFile)) {
-        copyFile(srcFile, destFile);
-      }
-    });
-
-    added++;
-  });
-
-  // Copy all utilities
+  // Copy every utility file, not just the deps declared by the
+  // components added in this pass. `add --all` is the "give me
+  // everything" command, so the consumer expects the full utils/
+  // folder to be present.
   const utilsDir = path.join(rendsDir, 'utils');
   fs.mkdirSync(utilsDir, { recursive: true });
   const srcUtilsDir = path.join(RENDS_ROOT, 'utils');
@@ -361,25 +411,11 @@ async function cmdAddAll() {
     utilFiles.forEach((file) => {
       const srcFile = path.join(srcUtilsDir, file);
       const destFile = path.join(utilsDir, file);
-      if (fs.statSync(srcFile).isFile()) {
+      if (fs.statSync(srcFile).isFile() && !fs.existsSync(destFile)) {
         copyFile(srcFile, destFile);
       }
     });
   }
-
-  // Update components/index.css with all imports
-  const componentsIndexPath = path.join(rendsDir, 'components', 'index.css');
-  let indexContent = fs.readFileSync(componentsIndexPath, 'utf8');
-
-  allComponents.forEach((name) => {
-    const meta = REGISTRY[name];
-    const importLine = `@import './${name}/${meta.files[0]}';`;
-    if (!indexContent.includes(importLine)) {
-      indexContent += `\n${importLine}`;
-    }
-  });
-
-  fs.writeFileSync(componentsIndexPath, indexContent);
 
   console.log();
   success(`Added ${added} components`);
@@ -442,6 +478,7 @@ async function main() {
         break;
       case '--version':
       case '-v':
+      case 'version':
         showVersion();
         break;
       default:

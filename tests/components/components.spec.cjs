@@ -26,16 +26,14 @@ const FORM_ERROR_SUMMARY_FIXTURE = '/tests/components/fixtures/form-error-summar
 /**
  * Registry key → individual docs page.
  *
- * Most docs use the component directory name from cli/registry.js.
- * These aliases are intentional public docs names that differ from registry dir.
+ * As of 0.8.3, all docs page filenames match the component directory
+ * name from cli/registry.js (the historical aliases — ren-icons,
+ * ren-input-otp, ren-data-table, ren-form-validation, ren-ai-patterns —
+ * were renamed to ren-icon, ren-otp, ren-table, ren-form, ren-ai).
+ * Map kept empty so any future intentional alias can be added without
+ * a test-file restructure.
  */
-const DOC_PAGE_ALIASES = {
-  icon: 'ren-icons.html',
-  otp: 'ren-input-otp.html',
-  table: 'ren-data-table.html',
-  form: 'ren-form-validation.html',
-  ai: 'ren-ai-patterns.html',
-};
+const DOC_PAGE_ALIASES = {};
 
 let components = [];
 

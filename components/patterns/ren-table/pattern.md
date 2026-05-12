@@ -110,7 +110,7 @@ Theme through these public custom properties before reaching for selectors.
 
 - `components/patterns/ren-table/ren-table.css`
 - `components/patterns/ren-table/ren-table.js`
-- `docs/components/ren-data-table.html`
+- `docs/components/ren-table.html`
 - `ren-design.md`
 - `tokens/tokens.md`
 - `base/layouts.md`

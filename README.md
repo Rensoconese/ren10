@@ -1,10 +1,16 @@
 # RenDS
 
+[![CI](https://github.com/Rensoconese/ren10/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Rensoconese/ren10/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/rends.svg)](https://www.npmjs.com/package/rends)
+[![npm downloads](https://img.shields.io/npm/dm/rends.svg)](https://www.npmjs.com/package/rends)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![WCAG 2.1 AA](https://img.shields.io/badge/WCAG_2.1-AA-success.svg)](./docs/accessibility.html)
+
 A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.8.2**
+Current version: **0.8.3**
 
 ---
 
@@ -101,7 +107,18 @@ Composable layout classes — use them instead of hand-rolling flexbox/grid:
 
 ### Theming
 
-Apply themes with data attributes on `<html>`:
+The presets and the hex→tokens generator ship as separate files so you only pay for what you use.
+
+**Preset themes** (opt-in):
+
+```html
+<!-- Foundation -->
+<link rel="stylesheet" href="rends/index.css">
+<!-- Theme presets — only needed if you use [data-theme="..."] -->
+<link rel="stylesheet" href="rends/themes/appearance.css">
+```
+
+Then apply via data attribute on `<html>`:
 
 ```html
 <html data-theme="ocean" data-shape="rounded" data-density="comfortable">
@@ -113,7 +130,16 @@ Apply themes with data attributes on `<html>`:
 
 Dark mode is automatic via `color-scheme: light dark`. Force it with `data-theme="dark"` or `data-theme="light"`.
 
-Need a custom palette? The hex→tokens generator at `themes/preview.html` takes your brand colors, computes AA (and optionally AAA) accessible pairs, and outputs ready-to-paste CSS custom properties.
+**Custom palette from a single hex** (AA-safe theme generator):
+
+```js
+import { generateTheme } from 'rends/themes/theme-generator.js';
+
+const { css, report } = generateTheme('#5b6cff', { level: 'AA' });
+document.head.insertAdjacentHTML('beforeend', `<style>${css}</style>`);
+```
+
+There's also an interactive UI at `themes/preview.html` you can open locally to dial in the palette before committing the generated CSS.
 
 ### CSS Cascade Layers
 
@@ -148,7 +174,7 @@ rends/
 └── docs/               ← Component catalog, per-component pages, foundations
 ```
 
-52 components in total: 18 primitives, 26 composites, 8 patterns. Every component has a dedicated documentation page under `docs/components/`.
+53 components in total: 19 primitives, 26 composites, 8 patterns. Every component has a dedicated documentation page under `docs/components/`.
 
 ---
 
