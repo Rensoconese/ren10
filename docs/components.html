@@ -78,9 +78,9 @@
 
     .comp-card-header {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-2);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-1);
       padding: var(--space-4) var(--space-5) var(--space-2);
     }
     .comp-card-name {
@@ -280,7 +280,7 @@
         <a href="../create/index.html">Theme Builder</a>
       </nav>
       <div class="dx-nav-actions">
-        <a href="https://github.com" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
         <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
       </div>
     </div>
@@ -374,12 +374,6 @@
         <li><a href="components/ren-menubar.html">Menubar</a></li>
         <li><a href="components/ren-ai.html">AI Patterns</a></li>
       </ul>
-
-
-      <h3>Reference</h3>
-      <ul>
-        <li><a href="components-showcase.html">Browse all in one page (legacy) →</a></li>
-      </ul>
     </aside>
 
     <!-- Content -->
@@ -427,22 +421,20 @@
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Primitive Zero</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">classless</code>
             </header>
             <p class="comp-card-purpose">Every semantic HTML tag, styled globally. A raw <code>&lt;button&gt;</code>, <code>&lt;blockquote&gt;</code>, or <code>&lt;details&gt;</code> already looks right — no class required.</p>
             <div class="comp-card-render">
               <p style="margin: 0;"><strong>Bold</strong> · <em>italic</em> · <code>code</code> · <a href="#">link</a></p>
             </div>
             <footer class="comp-card-footer">
-              <a href="primitive-zero.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">classless</span>
-            </footer>
+              <a href="primitive-zero.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Tokens</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">CSS custom properties</code>
             </header>
             <p class="comp-card-purpose">Three-tier system: raw primitives (<code>--blue-500</code>), semantic meaning (<code>--color-accent</code>), component hooks (<code>--ren-btn-bg</code>). Override the layer that matches your intent.</p>
             <div class="comp-card-render">
@@ -453,15 +445,13 @@
               <span style="width: 28px; height: 28px; border-radius: 6px; background: var(--color-text);"></span>
             </div>
             <footer class="comp-card-footer">
-              <a href="tokens.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">CSS custom properties</span>
-            </footer>
+              <a href="tokens.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Layouts</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-stack, ren-grid…</code>
             </header>
             <p class="comp-card-purpose">Eleven composable layouts — Stack, Cluster, Grid, Cover, With-sidebar — that nest into any page skeleton without writing custom flex.</p>
             <div class="comp-card-render">
@@ -472,9 +462,7 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="layouts.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-stack, ren-grid…</span>
-            </footer>
+              <a href="layouts.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
         </div>
@@ -498,31 +486,27 @@
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Button</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-btn</code>
             </header>
             <p class="comp-card-purpose">Multi-variant action trigger with built-in loading and disabled states. Six variants × three sizes, AA contrast, 44 px touch target.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-button.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-btn</span>
-            </footer>
+              <a href="components/ren-button.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Card</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-card</code>
             </header>
             <p class="comp-card-purpose">Flexible content container with optional header, body, footer. Five visual variants, status accents, interactive and selectable patterns.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-card.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-card</span>
-            </footer>
+              <a href="components/ren-card.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Badge</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-badge</code>
             </header>
             <p class="comp-card-purpose">Small contextual labels for status, tags, or counters. Eight variants including dot and outline.</p>
             <div class="comp-card-render">
@@ -531,15 +515,13 @@
               <span class="ren-badge ren-badge-warning">Warning</span>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-badge.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-badge</span>
-            </footer>
+              <a href="components/ren-badge.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Tag</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-tag</code>
             </header>
             <p class="comp-card-purpose">Removable filter chips for selections, categories, and active filters.</p>
             <div class="comp-card-render">
@@ -547,15 +529,13 @@
               <span class="ren-tag ren-tag-removable">filter ✕</span>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-tag.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-tag</span>
-            </footer>
+              <a href="components/ren-tag.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Link</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-link</code>
             </header>
             <p class="comp-card-purpose">Variants beyond plain anchor: subtle, plain, destructive, with icon affordances.</p>
             <div class="comp-card-render">
@@ -563,30 +543,26 @@
               <a href="#" class="ren-link-subtle">Subtle</a>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-link.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-link</span>
-            </footer>
+              <a href="components/ren-link.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Banner</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-banner</code>
             </header>
             <p class="comp-card-purpose">Page-level callout for system-wide messages: maintenance, success, errors. Five status variants.</p>
             <div class="comp-card-render">
               <div class="ren-banner ren-banner-info" style="font-size: var(--text-xs); padding: var(--space-2) var(--space-3);">System update at 2 PM</div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-banner.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-banner</span>
-            </footer>
+              <a href="components/ren-banner.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Breadcrumb</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-breadcrumb</code>
             </header>
             <p class="comp-card-purpose">Trail of links showing the user's location in a hierarchical structure.</p>
             <div class="comp-card-render">
@@ -599,15 +575,13 @@
               </nav>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-breadcrumb.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-breadcrumb</span>
-            </footer>
+              <a href="components/ren-breadcrumb.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Pagination</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-pagination</code>
             </header>
             <p class="comp-card-purpose">Page navigation for lists. Supports numbered, simple, and truncated variants.</p>
             <div class="comp-card-render">
@@ -620,15 +594,13 @@
               </nav>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-pagination.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-pagination</span>
-            </footer>
+              <a href="components/ren-pagination.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Separator</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-separator</code>
             </header>
             <p class="comp-card-purpose">Horizontal or vertical dividers, with optional center label.</p>
             <div class="comp-card-render">
@@ -637,15 +609,13 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-separator.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-separator</span>
-            </footer>
+              <a href="components/ren-separator.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Avatar</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-avatar</code>
             </header>
             <p class="comp-card-purpose">Profile images, initials, and status indicators. Six sizes, square or round.</p>
             <div class="comp-card-render">
@@ -654,15 +624,13 @@
               <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-warning); color: var(--color-on-warning); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-semibold);">CD</div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-avatar.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-avatar</span>
-            </footer>
+              <a href="components/ren-avatar.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Spinner</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-spinner</code>
             </header>
             <p class="comp-card-purpose">Loading indicator. Five sizes (xs to xl) plus a light variant for dark surfaces.</p>
             <div class="comp-card-render">
@@ -671,15 +639,13 @@
               <div class="ren-spinner ren-spinner-lg"></div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-spinner.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-spinner</span>
-            </footer>
+              <a href="components/ren-spinner.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Skeleton</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-skeleton</code>
             </header>
             <p class="comp-card-purpose">Placeholder shapes for loading content. Pulses subtly to signal "data on the way".</p>
             <div class="comp-card-render">
@@ -690,15 +656,13 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-skeleton.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-skeleton</span>
-            </footer>
+              <a href="components/ren-skeleton.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Keyboard Key</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">kbd</code>
             </header>
             <p class="comp-card-purpose">Keyboard shortcut keys. Renders <code>&lt;kbd&gt;</code> with mono type and a subtle bottom border.</p>
             <div class="comp-card-render">
@@ -706,15 +670,13 @@
               <kbd style="padding: 2px 6px; background: var(--color-fill); border: 1px solid var(--color-border); border-bottom-width: 2px; border-radius: 4px; font-size: var(--text-xs); font-family: var(--font-mono);">K</kbd>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-kbd.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">kbd</span>
-            </footer>
+              <a href="components/ren-kbd.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Field</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-field, ren-input</code>
             </header>
             <p class="comp-card-purpose">Label + input + helper + error, with auto-wired ARIA. The smallest accessible unit of a form. Sizes, icons, validation states, and works with input / textarea / select.</p>
             <div class="comp-card-render">
@@ -724,15 +686,13 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-field.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-field, ren-input</span>
-            </footer>
+              <a href="components/ren-field.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Checkbox</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-checkbox</code>
             </header>
             <p class="comp-card-purpose">Boolean input wrapped around a native checkbox. Custom-styled control, native semantics, indeterminate state included.</p>
             <div class="comp-card-render">
@@ -741,15 +701,13 @@
               </label>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-checkbox.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-checkbox</span>
-            </footer>
+              <a href="components/ren-checkbox.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Switch</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-switch</code>
             </header>
             <p class="comp-card-purpose">Two-state toggle for settings that take effect immediately. Same input as Checkbox, different visual metaphor.</p>
             <div class="comp-card-render">
@@ -759,15 +717,13 @@
               </label>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-switch.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-switch</span>
-            </footer>
+              <a href="components/ren-switch.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Radio</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-radio</code>
             </header>
             <p class="comp-card-purpose">Mutually-exclusive choices. Always grouped under a shared name, always wrapped in a fieldset with a legend.</p>
             <div class="comp-card-render">
@@ -777,15 +733,13 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-radio.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-radio</span>
-            </footer>
+              <a href="components/ren-radio.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Progress</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-progress</code>
             </header>
             <p class="comp-card-purpose">Determinate or indeterminate progress bar. Accent or status colors.</p>
             <div class="comp-card-render">
@@ -796,15 +750,13 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-progress.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-progress</span>
-            </footer>
+              <a href="components/ren-progress.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Icons</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">svg</code>
             </header>
             <p class="comp-card-purpose">Convention for SVG icons. 16 / 20 / 24 px sizing, currentColor stroke, semantic alt text.</p>
             <div class="comp-card-render">
@@ -813,9 +765,7 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
             </div>
             <footer class="comp-card-footer">
-              <a href="components/ren-icon.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">svg</span>
-            </footer>
+              <a href="components/ren-icon.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
         </div>
@@ -840,313 +790,261 @@
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Tabs</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-tabs</code>
             </header>
             <p class="comp-card-purpose">Switch between content panels via the ARIA tablist pattern. Three visual variants (underline, pills, enclosed), horizontal or vertical, manual or automatic activation.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-tabs.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-tabs</span>
-            </footer>
+              <a href="components/ren-tabs.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Accordion</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-accordion</code>
             </header>
             <p class="comp-card-purpose">Collapsible panels with single or multi-open mode. Built on <code>&lt;details&gt;</code> for free a11y.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-accordion.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-accordion</span>
-            </footer>
+              <a href="components/ren-accordion.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Dialog</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-dialog</code>
             </header>
             <p class="comp-card-purpose">Modal dialog built on the native <code>&lt;dialog&gt;</code> element. Focus trap, escape-to-close, click-outside dismiss, smooth animations. Five sizes plus an alert variant.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-dialog.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-dialog</span>
-            </footer>
+              <a href="components/ren-dialog.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Alert Dialog</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-alert-dialog</code>
             </header>
             <p class="comp-card-purpose">Confirmation dialog for destructive actions. Forces an explicit choice — no click-outside dismiss.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-alert-dialog.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-alert-dialog</span>
-            </footer>
+              <a href="components/ren-alert-dialog.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Toast</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-toast</code>
             </header>
             <p class="comp-card-purpose">Transient notification with aria-live announcement, auto-dismiss, dismiss button and optional action slot. Four status variants.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-toast.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-toast</span>
-            </footer>
+              <a href="components/ren-toast.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Tooltip</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-tooltip</code>
             </header>
             <p class="comp-card-purpose">Hover/focus hint. Hover delay, focus trigger for keyboard, mobile-friendly tap.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-tooltip.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-tooltip</span>
-            </footer>
+              <a href="components/ren-tooltip.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Popover</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-popover</code>
             </header>
             <p class="comp-card-purpose">Floating panel anchored to a trigger. Native Popover API where supported, polyfilled where not.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-popover.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-popover</span>
-            </footer>
+              <a href="components/ren-popover.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Hover Card</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-hover-card</code>
             </header>
             <p class="comp-card-purpose">Rich-content tooltip — image + text + actions. For previews of links or profiles.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-hover-card.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-hover-card</span>
-            </footer>
+              <a href="components/ren-hover-card.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Sheet</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-sheet</code>
             </header>
             <p class="comp-card-purpose">Edge-anchored panel — bottom on mobile, side on desktop. For supplementary navigation or filters.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-sheet.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-sheet</span>
-            </footer>
+              <a href="components/ren-sheet.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Collapsible</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-collapsible</code>
             </header>
             <p class="comp-card-purpose">Single show/hide region. The simplest form of progressive disclosure.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-collapsible.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-collapsible</span>
-            </footer>
+              <a href="components/ren-collapsible.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Toolbar</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-toolbar</code>
             </header>
             <p class="comp-card-purpose">Grouped action buttons with arrow-key navigation. For editors, canvases, table headers.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-toolbar.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-toolbar</span>
-            </footer>
+              <a href="components/ren-toolbar.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Dropzone</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-dropzone</code>
             </header>
             <p class="comp-card-purpose">File-drop area with drag-over state, click-to-browse fallback, multiple-file support.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-dropzone.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-dropzone</span>
-            </footer>
+              <a href="components/ren-dropzone.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Combobox</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-combobox</code>
             </header>
             <p class="comp-card-purpose">Searchable select. Type to filter, arrow keys to navigate, async loading via the ren-search event.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-combobox.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-combobox</span>
-            </footer>
+              <a href="components/ren-combobox.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Slider</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-slider</code>
             </header>
             <p class="comp-card-purpose">Range input with single or dual handle. Keyboard-accessible, with tick marks and value labels.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-slider.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-slider</span>
-            </footer>
+              <a href="components/ren-slider.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Toggle Group</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-toggle-group</code>
             </header>
             <p class="comp-card-purpose">Segmented control for single or multi-select among 2–5 options. View pickers, alignment buttons.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-toggle-group.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-toggle-group</span>
-            </footer>
+              <a href="components/ren-toggle-group.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Scroll Area</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-scroll-area</code>
             </header>
             <p class="comp-card-purpose">Scrollable region with branded thin scrollbars on platforms that support custom styling.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-scroll-area.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-scroll-area</span>
-            </footer>
+              <a href="components/ren-scroll-area.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Select</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-select</code>
             </header>
             <p class="comp-card-purpose">Custom-styled dropdown for choosing one option. Trigger + popover listbox with full keyboard navigation and typeahead.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-select.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-select</span>
-            </footer>
+              <a href="components/ren-select.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Menu</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-menu</code>
             </header>
             <p class="comp-card-purpose">Dropdown list of actions anchored to a trigger. Keyboard typeahead, separators, group labels, destructive item styling.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-menu.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-menu</span>
-            </footer>
+              <a href="components/ren-menu.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Context Menu</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-context-menu</code>
             </header>
             <p class="comp-card-purpose">Right-click menu. Same engine as Menu but anchored to pointer.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-context-menu.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-context-menu</span>
-            </footer>
+              <a href="components/ren-context-menu.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Number Field</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-number-field</code>
             </header>
             <p class="comp-card-purpose">Numeric stepper with min/max, step, decimals, and clamping behavior.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-number-field.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-number-field</span>
-            </footer>
+              <a href="components/ren-number-field.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Input OTP</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-otp</code>
             </header>
             <p class="comp-card-purpose">One-time-code input. Auto-advances on digit, paste-friendly, supports mask.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-otp.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-otp</span>
-            </footer>
+              <a href="components/ren-otp.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Color Picker</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-color-picker</code>
             </header>
             <p class="comp-card-purpose">Color selection with HSL/RGB/Hex switching, palette, and recent swatches.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-color-picker.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-color-picker</span>
-            </footer>
+              <a href="components/ren-color-picker.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Calendar</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-calendar</code>
             </header>
             <p class="comp-card-purpose">Monthly calendar grid. Keyboard navigation, locale-aware, range select option.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-calendar.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-calendar</span>
-            </footer>
+              <a href="components/ren-calendar.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Date Picker</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-date-picker</code>
             </header>
             <p class="comp-card-purpose">Input + calendar popover. Min/max constraints, disabled dates, format-aware.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-date-picker.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-date-picker</span>
-            </footer>
+              <a href="components/ren-date-picker.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Date Range Picker</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-date-range-picker</code>
             </header>
             <p class="comp-card-purpose">Two-handle date range. Presets (last 7 days, this month). Constrained ranges.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-date-range-picker.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-date-range-picker</span>
-            </footer>
+              <a href="components/ren-date-range-picker.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Carousel</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-carousel</code>
             </header>
             <p class="comp-card-purpose">Scroll-snap gallery with prev/next buttons and dot indicators. Touch- and keyboard-friendly.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-carousel.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-carousel</span>
-            </footer>
+              <a href="components/ren-carousel.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
         </div>
@@ -1170,116 +1068,84 @@
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Nav</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-nav</code>
             </header>
             <p class="comp-card-purpose">Top navigation bar with brand, primary links, search, and account menu.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-nav.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-nav</span>
-            </footer>
+              <a href="components/ren-nav.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Sidebar</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-sidebar</code>
             </header>
             <p class="comp-card-purpose">Left navigation column for app shells. Collapsible sections, active-route indicator.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-sidebar.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-sidebar</span>
-            </footer>
+              <a href="components/ren-sidebar.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Command Palette</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-command</code>
             </header>
             <p class="comp-card-purpose">Searchable command launcher (⌘K). Fuzzy search, keyboard-first, grouping by category.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-command.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-command</span>
-            </footer>
+              <a href="components/ren-command.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Empty State</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-empty-state</code>
             </header>
             <p class="comp-card-purpose">"Nothing here yet" panel with illustration, headline, body copy, and a clear next action.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-empty-state.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-empty-state</span>
-            </footer>
+              <a href="components/ren-empty-state.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Data Table</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-data-table</code>
             </header>
             <p class="comp-card-purpose">Sortable, filterable, paginated table. Sticky header, row selection, dense / comfortable density.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-table.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-data-table</span>
-            </footer>
+              <a href="components/ren-table.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Form Validation</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-form</code>
             </header>
             <p class="comp-card-purpose">Conventions for inline error messages, summary banners, and submit-button state.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-form.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-form</span>
-            </footer>
+              <a href="components/ren-form.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">Menubar</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-menubar</code>
             </header>
             <p class="comp-card-purpose">Horizontal menu bar with sub-menus. For desktop-style apps with File / Edit / View.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-menubar.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-menubar</span>
-            </footer>
+              <a href="components/ren-menubar.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
               <h3 class="comp-card-name">AI Patterns</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
+              <code class="comp-card-class">ren-ai</code>
             </header>
             <p class="comp-card-purpose">Conversation thread, message bubble, streaming indicator, suggestion chip — the AI-app starter kit.</p>
             <footer class="comp-card-footer">
-              <a href="components/ren-ai.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-ai</span>
-            </footer>
+              <a href="components/ren-ai.html" class="comp-card-cta">View full docs →</a>            </footer>
           </article>
 
         </div>
-      </section>
-
-      <!-- ═══════════════════════════════════════════════
-           ALL-IN-ONE FALLBACK
-           ═══════════════════════════════════════════════ -->
-      <section class="layer" id="showcase-link">
-        <p class="layer-eyebrow">Reference</p>
-        <h2 class="layer-title">Browse everything in one page</h2>
-        <p class="layer-intro">
-          The legacy showcase keeps every component on a single scrollable page. Useful
-          for a fast visual scan or when you just want to know "do we have an X". Each
-          card above already deep-links into it.
-        </p>
-        <p>
-          <a href="components-showcase.html" class="ren-btn ren-btn-secondary">Open the showcase →</a>
-        </p>
       </section>
 
     </main>
