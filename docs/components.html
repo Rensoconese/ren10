@@ -291,9 +291,17 @@
 
     <!-- Sticky sidebar — by atomic layer -->
     <aside class="dx-sidebar" aria-label="Component layers">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="theming.html">Theming</a></li>
+        <li><a href="accessibility.html">Accessibility</a></li>
+        <li><a href="cli.html">CLI</a></li>
+      </ul>
+
       <h3>Foundations</h3>
       <ul>
-        <li><a href="#foundations">Overview</a></li>
+        <li><a href="#foundations" aria-current="page">Overview</a></li>
         <li><a href="primitive-zero.html">Primitive Zero</a></li>
         <li><a href="tokens.html">Tokens</a></li>
         <li><a href="layouts.html">Layouts</a></li>
@@ -316,7 +324,7 @@
         <li><a href="components/ren-skeleton.html">Skeleton</a></li>
         <li><a href="components/ren-kbd.html">Keyboard Key</a></li>
         <li><a href="components/ren-icon.html">Icons</a></li>
-        <li><a href="components/ren-field.html">Form Field</a></li>
+        <li><a href="components/ren-field.html">Field</a></li>
         <li><a href="components/ren-checkbox.html">Checkbox</a></li>
         <li><a href="components/ren-switch.html">Switch</a></li>
         <li><a href="components/ren-radio.html">Radio</a></li>
@@ -364,19 +372,13 @@
         <li><a href="components/ren-table.html">Data Table</a></li>
         <li><a href="components/ren-form.html">Form Validation</a></li>
         <li><a href="components/ren-menubar.html">Menubar</a></li>
-        <li><a href="components/ren-form.html#multi-step">Multi-Step Form</a></li>
         <li><a href="components/ren-ai.html">AI Patterns</a></li>
       </ul>
 
-      <h3>System</h3>
-      <ul>
-        <li><a href="components-showcase.html#dynamic-type">Dynamic Type</a></li>
-        <li><a href="components-showcase.html#appearance-api">Appearance API</a></li>
-      </ul>
 
       <h3>Reference</h3>
       <ul>
-        <li><a href="components-showcase.html">Browse all in one page →</a></li>
+        <li><a href="components-showcase.html">Browse all in one page (legacy) →</a></li>
       </ul>
     </aside>
 
@@ -403,7 +405,7 @@
 
       <!-- Story callout — explains the architecture -->
       <aside class="story-callout">
-        <p><strong>How to read this catalog.</strong> RenDS components ladder upward through four atomic layers: <strong>Foundations</strong> (raw HTML elements styled by tokens — no classes needed), <strong>Primitives</strong> (single-purpose, CSS-only components like a button or a tag), <strong>Composites</strong> (multi-part components that may need a sprinkle of JS — dialog, tabs, select), and <strong>Patterns</strong> (full-screen UX patterns like a data table or empty state). Cards marked <strong>Documented</strong> link to a full doc page with API, anatomy, accessibility notes, and live demos. The rest link to a quick visual reference in the showcase.</p>
+        <p><strong>How to read this catalog.</strong> RenDS components ladder upward through four atomic layers: <strong>Foundations</strong> (raw HTML elements styled by tokens — no classes needed), <strong>Primitives</strong> (single-purpose, CSS-only components like a button or a tag), <strong>Composites</strong> (multi-part components that may need a sprinkle of JS — dialog, tabs, select), and <strong>Patterns</strong> (full-screen UX patterns like a data table or empty state). Every card links to a full doc page with API, anatomy, accessibility notes, and live demos.</p>
       </aside>
 
       <!-- ═══════════════════════════════════════════════
@@ -418,7 +420,7 @@
           system that makes everything else themeable. Read these first; the rest is
           composition on top.
         </p>
-        <p class="layer-count">3 references · all documented</p>
+        <p class="layer-count">3 foundations · all documented</p>
 
         <div class="comp-grid">
 
@@ -432,7 +434,7 @@
               <p style="margin: 0;"><strong>Bold</strong> · <em>italic</em> · <code>code</code> · <a href="#">link</a></p>
             </div>
             <footer class="comp-card-footer">
-              <a href="primitive-zero.html" class="comp-card-cta">View full reference →</a>
+              <a href="primitive-zero.html" class="comp-card-cta">View full docs →</a>
               <span class="comp-card-class">classless</span>
             </footer>
           </article>
@@ -451,8 +453,8 @@
               <span style="width: 28px; height: 28px; border-radius: 6px; background: var(--color-text);"></span>
             </div>
             <footer class="comp-card-footer">
-              <a href="tokens.html" class="comp-card-cta">View full reference →</a>
-              <span class="comp-card-class">--*</span>
+              <a href="tokens.html" class="comp-card-cta">View full docs →</a>
+              <span class="comp-card-class">CSS custom properties</span>
             </footer>
           </article>
 
@@ -470,7 +472,7 @@
               </div>
             </div>
             <footer class="comp-card-footer">
-              <a href="layouts.html" class="comp-card-cta">View full reference →</a>
+              <a href="layouts.html" class="comp-card-cta">View full docs →</a>
               <span class="comp-card-class">ren-stack, ren-grid…</span>
             </footer>
           </article>
@@ -491,57 +493,31 @@
         </p>
         <p class="layer-count">19 components · all documented</p>
 
-        <!-- Featured: Button (the canonical example) -->
-        <article class="comp-featured">
-          <div class="comp-featured-body">
-            <p class="comp-featured-eyebrow">Documented · primitive</p>
-            <h3 class="comp-featured-name">Button</h3>
-            <p class="comp-featured-purpose">Multi-variant action trigger with built-in loading and disabled states. Six variants × three sizes, AA contrast, 44 px touch target. Works as a CSS class set <em>or</em> as the <code>&lt;ren-button&gt;</code> custom element.</p>
-            <div class="comp-featured-meta">
-              <code class="comp-card-class">ren-btn · ren-btn-primary · ren-btn-sm…</code>
-            </div>
-            <div style="display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap;">
-              <a href="components/ren-button.html" class="ren-btn ren-btn-primary ren-btn-sm">View full docs →</a>
-              <a href="components-showcase.html#buttons" class="ren-btn ren-btn-ghost ren-btn-sm">Quick example</a>
-            </div>
-          </div>
-          <div class="comp-featured-render">
-            <button class="ren-btn ren-btn-primary">Primary</button>
-            <button class="ren-btn ren-btn-secondary">Secondary</button>
-            <button class="ren-btn ren-btn-ghost">Ghost</button>
-            <button class="ren-btn ren-btn-outline">Outline</button>
-            <button class="ren-btn ren-btn-danger">Danger</button>
-            <button class="ren-btn ren-btn-link">Link</button>
-          </div>
-        </article>
-
-        <!-- Featured: Card (the second canonical example) -->
-        <article class="comp-featured">
-          <div class="comp-featured-body">
-            <p class="comp-featured-eyebrow">Documented · primitive</p>
-            <h3 class="comp-featured-name">Card</h3>
-            <p class="comp-featured-purpose">Flexible content container with optional header, body, footer. Five visual variants, status accents, and built-in interactive / selectable patterns. Pure CSS — no JavaScript required.</p>
-            <div class="comp-featured-meta">
-              <code class="comp-card-class">ren-card · ren-card-header · ren-card-body · ren-card-footer</code>
-            </div>
-            <div style="display: flex; gap: var(--space-2); margin-top: var(--space-3); flex-wrap: wrap;">
-              <a href="components/ren-card.html" class="ren-btn ren-btn-primary ren-btn-sm">View full docs →</a>
-              <a href="components-showcase.html#cards" class="ren-btn ren-btn-ghost ren-btn-sm">Quick example</a>
-            </div>
-          </div>
-          <div class="comp-featured-render">
-            <div class="ren-card" style="max-width: 240px;">
-              <div class="ren-card-header"><strong>Weekly report</strong></div>
-              <div class="ren-card-body" style="font-size: var(--text-sm); color: var(--color-text-muted);">Everything looks great.</div>
-              <div class="ren-card-footer">
-                <button class="ren-btn ren-btn-primary ren-btn-sm">Open</button>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Compact grid for the rest of primitives -->
         <div class="comp-grid">
+
+          <article class="comp-card">
+            <header class="comp-card-header">
+              <h3 class="comp-card-name">Button</h3>
+              <span class="comp-card-status comp-card-status-docs">Documented</span>
+            </header>
+            <p class="comp-card-purpose">Multi-variant action trigger with built-in loading and disabled states. Six variants × three sizes, AA contrast, 44 px touch target.</p>
+            <footer class="comp-card-footer">
+              <a href="components/ren-button.html" class="comp-card-cta">View full docs →</a>
+              <span class="comp-card-class">ren-btn</span>
+            </footer>
+          </article>
+
+          <article class="comp-card">
+            <header class="comp-card-header">
+              <h3 class="comp-card-name">Card</h3>
+              <span class="comp-card-status comp-card-status-docs">Documented</span>
+            </header>
+            <p class="comp-card-purpose">Flexible content container with optional header, body, footer. Five visual variants, status accents, interactive and selectable patterns.</p>
+            <footer class="comp-card-footer">
+              <a href="components/ren-card.html" class="comp-card-cta">View full docs →</a>
+              <span class="comp-card-class">ren-card</span>
+            </footer>
+          </article>
 
           <article class="comp-card">
             <header class="comp-card-header">
@@ -657,12 +633,12 @@
             <p class="comp-card-purpose">Horizontal or vertical dividers, with optional center label.</p>
             <div class="comp-card-render">
               <div style="width: 100%;">
-                <div class="ren-divider" style="font-size: var(--text-xs);">Or continue with</div>
+                <div class="ren-separator" style="font-size: var(--text-xs);">Or continue with</div>
               </div>
             </div>
             <footer class="comp-card-footer">
               <a href="components/ren-separator.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-divider</span>
+              <span class="comp-card-class">ren-separator</span>
             </footer>
           </article>
 
@@ -679,7 +655,7 @@
             </div>
             <footer class="comp-card-footer">
               <a href="components/ren-avatar.html" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">img / div</span>
+              <span class="comp-card-class">ren-avatar</span>
             </footer>
           </article>
 
@@ -708,9 +684,9 @@
             <p class="comp-card-purpose">Placeholder shapes for loading content. Pulses subtly to signal "data on the way".</p>
             <div class="comp-card-render">
               <div style="width: 100%; display: flex; flex-direction: column; gap: var(--space-2);">
-                <div class="mini-stripe" style="width: 80%;"></div>
-                <div class="mini-stripe" style="width: 60%;"></div>
-                <div class="mini-stripe" style="width: 90%;"></div>
+                <div class="ren-skeleton ren-skeleton-text" style="width: 80%;"></div>
+                <div class="ren-skeleton ren-skeleton-text" style="width: 60%;"></div>
+                <div class="ren-skeleton ren-skeleton-text" style="width: 90%;"></div>
               </div>
             </div>
             <footer class="comp-card-footer">
@@ -737,7 +713,7 @@
 
           <article class="comp-card is-documented">
             <header class="comp-card-header">
-              <h3 class="comp-card-name">Form Field</h3>
+              <h3 class="comp-card-name">Field</h3>
               <span class="comp-card-status comp-card-status-docs">Documented</span>
             </header>
             <p class="comp-card-purpose">Label + input + helper + error, with auto-wired ARIA. The smallest accessible unit of a form. Sizes, icons, validation states, and works with input / textarea / select.</p>
@@ -1187,7 +1163,7 @@
           A nav bar, a sidebar, a data table — these are not single components, they're
           arrangements of components that solve a recurring screen-level problem.
         </p>
-        <p class="layer-count">9 patterns · all documented</p>
+        <p class="layer-count">8 patterns · all documented</p>
 
         <div class="comp-grid">
 
@@ -1272,18 +1248,6 @@
             <footer class="comp-card-footer">
               <a href="components/ren-menubar.html" class="comp-card-cta">View full docs →</a>
               <span class="comp-card-class">ren-menubar</span>
-            </footer>
-          </article>
-
-          <article class="comp-card">
-            <header class="comp-card-header">
-              <h3 class="comp-card-name">Multi-Step Form</h3>
-              <span class="comp-card-status comp-card-status-docs">Documented</span>
-            </header>
-            <p class="comp-card-purpose">Wizard with stepper, progress save, and back/forward navigation. For onboarding and checkouts.</p>
-            <footer class="comp-card-footer">
-              <a href="components/ren-form.html#multi-step" class="comp-card-cta">View full docs →</a>
-              <span class="comp-card-class">ren-stepper</span>
             </footer>
           </article>
 

@@ -1,3 +1,11 @@
+/* Hide the dialog when it isn't open. The browser default for
+   `<dialog>` without `open` is `display: none`, but the rule below
+   sets `display: flex` for layout, so without this explicit reset
+   the sheet would render in-flow on every page load. */
+.ren-sheet:not([open]) {
+  display: none;
+}
+
 .ren-sheet {
   position: fixed;
   margin: 0;
