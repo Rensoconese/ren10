@@ -12,6 +12,12 @@ Built with pure HTML, CSS, and Web Components. You own the code — copy what yo
 
 Current version: **0.8.6**
 
+> **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
+> assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
+> Every colocated `component.md` / `pattern.md` carries an `aiHints` YAML
+> block with selection criteria, canonical imports, required markup,
+> forbidden patterns, and accessibility rules.
+
 ---
 
 ## Quick Start

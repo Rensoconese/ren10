@@ -22,6 +22,66 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a transient notification anchored to a viewport corner that auto-dismisses after a duration."
+    - "The notification must NOT steal focus or block the page (use ren-dialog for that)."
+    - "You need a status variant — success / info / warning / danger / loading — with matching icon and border accent."
+    - "You need a polite or assertive live-region announcement for screen-readers (handled via utils/live-region)."
+    - "You need the imperative window.toast API (toast.success, toast.danger, toast.promise(...)) instead of declarative markup."
+    - "You need swipe-to-dismiss, hover-to-pause timers, and an optional inline action button."
+  avoidWhen:
+    - "The message blocks the workflow and demands a decision — use ren-dialog (alert variant)."
+    - "The message is persistent / inline page-level — use ren-banner or ren-alert."
+    - "The message describes a form field state — use the helper-text / error slot on ren-field."
+    - "The disclosure is a contextual popover from a trigger — use ren-popover or ren-tooltip."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-toast/ren-toast.css"
+  js:
+    - "rends/components/composites/ren-toast/ren-toast.js"
+  notes:
+    - "JS is required: it owns the viewport queue, timers, live-region announcements, and swipe handling. window.toast is exposed as the imperative API."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Place one <ren-toast-viewport> (or <div class=\"ren-toast-viewport\" role=\"region\" aria-label=\"Notifications\">) per position; data-position defaults to bottom-right."
+  - "Toasts themselves are appended by the JS as .ren-toast nodes with .ren-toast-icon, .ren-toast-body (.ren-toast-title + .ren-toast-description), optional .ren-toast-actions, and .ren-toast-close."
+  - "Status variants are applied as a sibling class on .ren-toast: .ren-toast-success / .ren-toast-info / .ren-toast-warning / .ren-toast-danger / .ren-toast-error / .ren-toast-loading."
+  - "Action buttons inside .ren-toast-actions reuse .ren-btn (typically .ren-btn-ghost .ren-btn-sm); .ren-toast-action is only an override hook."
+  - "Set duration: 0 (or status: 'loading') for persistent toasts; expose a close button so users can dismiss them."
+
+forbiddenPatterns:
+  - "Calling toast.show() with status: 'danger' AND focusing the toast — toasts must not steal focus."
+  - "Rendering toasts inline in document body without a .ren-toast-viewport host (timers and stacking will not work)."
+  - "Hardcoded position offsets via inline style — use the [data-position] attribute and rely on var(--space-4) inset."
+  - "Custom slide animations via @keyframes overriding ren-toast-slide-in-*; route motion through --duration-enter / --ease-enter."
+  - "Using a toast to ask for confirmation (\"Are you sure?\") — confirmations belong in ren-dialog."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-toast-anim-duration, --ren-toast-bg, --ren-toast-border, --ren-toast-duration, --ren-toast-easing, --ren-toast-gap, --ren-toast-padding, --ren-toast-radius, --ren-toast-shadow, --ren-toast-width, plus the shared --ren-btn-* family for inline action buttons."
+    - "Semantic state tokens: --color-success, --color-info, --color-warning, --color-danger, --color-accent (progress bar), --color-surface, --color-surface-raised, --color-surface-hover, --color-surface-active, --color-text, --color-text-muted, --color-border."
+    - "Shape / motion tokens: --space-*, --radius-sm, --radius-lg, --shadow-lg, --duration-enter, --duration-exit, --duration-micro, --ease-enter, --ease-exit, --transition-tactile, --z-toast."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgb / named color values in overrides for the status border-inline-start or icon color."
+    - "Hardcoded animation timings; route through --duration-enter / --duration-exit and the paired easings."
+
+accessibility:
+  required:
+    - "Viewport is a role=\"region\" with aria-label=\"Notifications\" so screen-readers can locate it as a landmark."
+    - "Success / info messages announce via aria-live=\"polite\"; danger / error messages announce via aria-live=\"assertive\" (handled by announcePolite / announceAssertive)."
+    - "Status must be communicated by icon AND text/title — color alone does not satisfy the contrast contract."
+    - "Hover and keyboard focus pause auto-dismiss timers; restoring focus elsewhere resumes them."
+    - "The .ren-toast-close button has an accessible name (aria-label=\"Close\") and is reachable via keyboard."
+    - "Toasts never trap focus; they receive focus only when the user tabs into the viewport region intentionally."
+```
+
 ## Required Imports
 
 ```html

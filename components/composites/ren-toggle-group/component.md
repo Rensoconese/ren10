@@ -22,6 +22,65 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "User picks from a small set of mutually exclusive options shown as visually grouped buttons (single mode)."
+    - "User toggles multiple independent options that share a control (multiple mode, type=\"multiple\")."
+    - "The choices are short labels or icons (text alignment, view density, list/grid mode) better surfaced than in a select."
+    - "You want a visual variant — default filled pill group or .ren-toggle-group-outline."
+    - "You need size variants (.ren-toggle-group-sm / .ren-toggle-group-lg), full-width fill, or vertical orientation."
+  avoidWhen:
+    - "The choice set is large or sortable — use ren-select."
+    - "The choice is binary on/off for a single concept — use ren-switch or ren-checkbox."
+    - "Items are commands rather than state — use ren-toolbar."
+    - "Items are pages or routes — use ren-tabs or ren-nav."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-toggle-group/ren-toggle-group.css"
+  js:
+    - "rends/components/composites/ren-toggle-group/ren-toggle-group.js"
+  notes:
+    - "JS is required: it wires role=button, roving tabindex, aria-pressed updates, keyboard navigation, and the ren-toggle-group-change event."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "<ren-toggle-group type=\"single|multiple\" value=\"...\"> wraps real <button class=\"ren-toggle-group-item\" data-value=\"...\"> elements (the component will also accept [role=button] nodes)."
+  - "Each item must carry a data-value attribute or a stable textContent — the component uses it to drive selection and the change event."
+  - "Set type=\"single\" for mutually-exclusive selection (the component clears other aria-pressed values) or type=\"multiple\" for independent toggles."
+  - "Variants are applied on the host: .ren-toggle-group-outline, .ren-toggle-group-sm / -lg, .ren-toggle-group-full, .ren-toggle-group-vertical."
+  - "Icons inside items must be <svg> or [role=\"img\"] children sized to 1em (handled by the CSS); accompany icons with text or aria-label."
+
+forbiddenPatterns:
+  - "<a href> as items — toggle-group is for state, not navigation."
+  - "Setting aria-pressed manually on items; let the component drive it via setValue / click handling."
+  - "Using ren-btn inside the group as items — they bring their own chrome; use plain <button class=\"ren-toggle-group-item\"> instead."
+  - "Hardcoding the pressed background (background: #fff) — use --color-surface / --color-accent semantic tokens and the outline variant for accent fills."
+  - "Removing the focus-visible outline without restoring an outline-offset visible ring."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-toggle-active-bg, --ren-toggle-active-color, --ren-toggle-bg, --ren-toggle-color, --ren-toggle-font-size, --ren-toggle-font-weight, --ren-toggle-height, --ren-toggle-padding-x, --ren-toggle-radius."
+    - "Semantic tokens: --color-fill, --color-surface, --color-text, --color-text-muted, --color-accent, --color-border, --color-border-strong."
+    - "Shape / motion tokens: --radius-md, --radius-lg, --space-*, --shadow-sm, --touch-min, --transition-tactile, font-size tokens (--font-size-label, --font-size-body, --font-size-xs)."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgb / named color values in overrides for the pressed background or accent border."
+    - "Hardcoded transition durations on item hover; route through --transition-tactile."
+
+accessibility:
+  required:
+    - "Items are real <button> elements with role=\"button\" and aria-pressed reflecting state; roving tabindex ensures only one item is tabindex=0 at a time."
+    - "Arrow Right/Down moves focus to the next item, Arrow Left/Up to the previous (wrapping); Home / End jump to first / last."
+    - "Touch target meets calc(var(--touch-min) - 4px); .ren-toggle-group-sm should only be used in non-touch contexts."
+    - "Active state communicates via background AND font-weight / box-shadow — never rely on color alone."
+    - "Focus-visible outline is 2px solid var(--color-accent) with outline-offset; preserve it across all variants."
+    - "Disabled items use :disabled with pointer-events: none so they remain in tab order semantics but cannot be activated."
+```
+
 ## Required Imports
 
 ```html

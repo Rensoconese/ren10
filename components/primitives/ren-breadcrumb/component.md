@@ -22,6 +22,62 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a hierarchical trail that shows the user's location within a site / app tree."
+    - "The trail has 2+ ancestor levels and the final crumb represents the current page."
+    - "You want native <nav> + <ol> semantics with the \"Breadcrumb\" landmark announcement."
+    - "You need a customizable separator (default ›) via the --breadcrumb-separator custom property."
+    - "Deep paths must collapse middle entries to an ellipsis via .ren-breadcrumb-truncated."
+  avoidWhen:
+    - "The navigation is the primary site nav — use ren-nav."
+    - "The navigation is a tabbed page section — use ren-tabs."
+    - "The navigation is a multi-step wizard — use ren-steps / ren-progress."
+    - "You only need a single \"Back\" link — use ren-link with an arrow icon."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-breadcrumb/ren-breadcrumb.css"
+  notes:
+    - "CSS-only primitive — no colocated JS exists. Do not import a ren-breadcrumb.js."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Root must be <nav aria-label=\"Breadcrumb\" class=\"ren-breadcrumb\"> — the aria-label is what AT announces."
+  - "Items are wrapped in an ordered list: <ol> with <li> children; do not use <ul> or plain <div>s."
+  - "Each crumb is an <a href=\"...\"> except the current page, which uses aria-current=\"page\" and may stay as <a> (pointer-events disabled by CSS) or render as plain text."
+  - "Separators are CSS-generated via ::before — never insert literal \"/\" or \"›\" characters as text nodes."
+  - "Override the separator per-instance with inline style=\"--breadcrumb-separator: '/'\" — do not edit the CSS."
+
+forbiddenPatterns:
+  - "Using <div class=\"ren-breadcrumb\"> without <nav> — strips the landmark."
+  - "Marking multiple crumbs with aria-current=\"page\" — only the final crumb is current."
+  - "Inserting separator glyphs as text content inside <li> — the ::before pseudo handles it."
+  - "Hardcoded font-size or color overrides via inline style — use the --ren-breadcrumb-* tokens."
+  - "Wrapping crumb links in ren-link / ren-btn — breadcrumb owns its own link chrome."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-breadcrumb-active-color, --ren-breadcrumb-color, --ren-breadcrumb-font-size, --ren-breadcrumb-gap, --ren-breadcrumb-separator."
+    - "Semantic tokens: --color-text, --color-text-muted, --color-text-faint, --color-focus-ring."
+    - "Layout / motion tokens: --space-1, --radius-sm, --duration-tactile, --ease-enter, --ring-width, --caption-size, --text-sm."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors for link / current / separator styling."
+    - "Overriding text-decoration with !important — let :hover and aria-current rules drive it."
+
+accessibility:
+  required:
+    - "Root <nav> must carry aria-label=\"Breadcrumb\" (translated per locale) so AT announces the landmark."
+    - "Current page crumb uses aria-current=\"page\"; CSS disables pointer-events but the semantic state is what matters for AT."
+    - "Crumb links must have visible :focus-visible outline driven by --color-focus-ring and --ring-width."
+    - "Separators are decorative (CSS ::before) so they are not announced — never put separator text in the DOM."
+    - "When using .ren-breadcrumb-truncated, the hidden middle crumbs are display:none — ensure the ellipsis is purely decorative and provide a way to expand if the hidden context matters."
+```
+
 ## Required Imports
 
 ```html

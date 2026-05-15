@@ -22,6 +22,63 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The element navigates to a URL, anchor, or routed page (i.e., it has a real href)."
+    - "You need inline text links inside paragraphs styled with underline + hover."
+    - "You need a navigation link with a 44px touch target (.ren-link-nav) plus active-route styling via aria-current=\"page\" / [data-active]."
+    - "You need an external-link affordance with a trailing ↗ marker (.ren-link-external)."
+    - "You need a skip-to-content link that becomes visible only on focus (.ren-link-skip)."
+    - "You need a muted or unstyled (inherits color) anchor (.ren-link-muted, .ren-link-plain)."
+  avoidWhen:
+    - "The element triggers an imperative action (submit, open dialog, delete) — use ren-button."
+    - "The element is a tab, menuitem, or pagination control — use the corresponding component."
+    - "The element is a stateful toggle — use a switch, checkbox, or button with aria-pressed."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-link/ren-link.css"
+  notes:
+    - "CSS-only primitive; no JavaScript file exists for ren-link."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Always render an actual <a href=\"...\"> element. Never style a <button> or <span> as a link."
+  - "External links should set rel=\"noopener noreferrer\" and target=\"_blank\" alongside .ren-link-external when opening in a new tab."
+  - "Nav links representing the current page set aria-current=\"page\" (or data-active for non-routing states) on the <a>."
+  - "Skip links (.ren-link-skip) must be the first focusable element in <body> and reference a real target id (e.g., href=\"#main\")."
+  - "The trailing ↗ on .ren-link-external is decorative content — never use it as the only signal that a link opens externally; provide aria-label or visually-hidden text for screen readers if needed."
+
+forbiddenPatterns:
+  - "<button class=\"ren-link\"> — use a real <a> with an href."
+  - "<a class=\"ren-link\" onclick=\"...\"> without an href — non-focusable, breaks keyboard activation."
+  - "Removing the focus ring (outline: none) without restoring a visible :focus-visible style."
+  - "Hardcoded color overrides like style=\"color:#0066cc\" — use --ren-link-color / --color-text-link."
+  - "Using .ren-link-nav for inline prose links; it expects flex layout and a 44px hit area."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-link-color, --ren-link-font-weight, --ren-link-hover-color, --ren-link-underline."
+    - "Semantic tokens: --color-text-link, --color-text-link-hover, --color-text, --color-text-muted, --color-accent, --color-accent-subtle, --color-on-accent, --color-focus-ring, --color-fill."
+    - "Layout / motion tokens: --space-*, --radius-sm, --radius-md, --touch-min, --ring-width, --duration-tactile, --ease-enter."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Custom underline colors via text-decoration shorthand that bypass --ren-link-underline."
+
+accessibility:
+  required:
+    - "Real <a href> semantics; never simulate a link with a div + onclick."
+    - "Visible :focus-visible ring driven by --color-focus-ring and --ring-width."
+    - ".ren-link-nav guarantees a 44px touch target via min-height: var(--touch-min)."
+    - "The current navigation item must set aria-current=\"page\" so screen readers announce route position."
+    - "Skip links must be reachable as the first Tab stop and become visually focused via .ren-link-skip:focus."
+    - "External-link ↗ glyph is a visual hint only; do not rely on it for assistive-tech announcement."
+```
+
 ## Required Imports
 
 ```html

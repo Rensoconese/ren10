@@ -22,6 +22,66 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "Click on a trigger should reveal a small contextual surface (filters, mini-form, info card) anchored to that trigger."
+    - "You need anchor-positioned placement (top/right/bottom/left) with automatic viewport flip via position-try-fallbacks."
+    - "Need click-outside + Escape dismissal and a visible arrow caret that re-rotates per [data-side]."
+    - "Need progressive enhancement: anchor positioning in modern browsers, JS computePosition() fallback elsewhere."
+    - "Need header / body / footer slots inside the popover surface, with native role=\"dialog\" + aria-modal=\"false\"."
+  avoidWhen:
+    - "The disclosure blocks the page and demands the user's attention — use ren-dialog (modal)."
+    - "Disclosure is reveal-on-hover-intent for non-essential preview content — use ren-hover-card."
+    - "Disclosure is a short text annotation only — use ren-tooltip."
+    - "Disclosure is a list of commands (menu) — use ren-menu / ren-context-menu."
+    - "Disclosure is a side sheet — use ren-sheet."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-popover/ren-popover.css"
+  js:
+    - "rends/components/composites/ren-popover/ren-popover.js"
+  notes:
+    - "JS attaches click + Escape + outside-click handlers and computes JS positioning only when CSS anchor positioning is unsupported."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Use <ren-popover placement=\"bottom\" offset=\"8\"> as the host so it adds .ren-popover, role=\"dialog\", and popover=\"manual\" automatically."
+  - "The trigger is referenced via trigger-id=\"<id>\", or by a child / previous-sibling with [data-popover-trigger]; the component picks them in that order."
+  - "Inside the popover, group content into .ren-popover-header / .ren-popover-body / .ren-popover-footer; a .ren-popover-arrow div is injected if missing."
+  - "Triggers should be real interactive elements (<button> or <a>) so click + keyboard activation work; the component does not click-style arbitrary nodes."
+  - "When using multiple popovers in the same view, set unique trigger-id values so the click handlers do not cross-wire."
+
+forbiddenPatterns:
+  - "Manually wiring trigger.addEventListener('click', popover.show) — the host already attaches its click + dismissable listeners."
+  - "Calling showPopover() directly while bypassing open() — aria-modal, data-state, and ren-open event won't fire."
+  - "Hardcoding inline left/top values — let CSS position-anchor + position-try-fallbacks handle placement and flips (or the JS computePosition fallback)."
+  - "Removing the .ren-popover-arrow element — the [data-side] rules rotate it per side; without it the visual anchor cue disappears."
+  - "Using ren-popover purely as a click-bound tooltip — accessibility expectations differ; use ren-tooltip for short, non-interactive text."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-popover-bg, --ren-popover-border-color, --ren-popover-duration, --ren-popover-easing, --ren-popover-padding, --ren-popover-radius, --ren-popover-shadow, --ren-popover-width."
+    - "Semantic tokens used inside content: --color-surface, --color-border, --color-text-primary, --color-text-secondary, --shadow-lg, --radius-lg."
+    - "Layout / type / motion tokens: --space-2, --space-3, --space-4, --size-body-sm, --z-popover, --duration-enter, --ease-enter."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer overrides."
+    - "Hardcoded backdrop / surface colors via inline styles or rgba()."
+    - "Custom animation timings; reuse --duration-enter / --ease-enter (or --ren-popover-duration / --ren-popover-easing) so reduced-motion overrides apply."
+
+accessibility:
+  required:
+    - "<ren-popover> sets role=\"dialog\"; toggle aria-modal between true (open) and false (closed) is handled by open()/close() — do not override."
+    - "Trigger must be a focusable, real interactive element; click + Enter/Space activation come from native button semantics."
+    - "Escape closes the popover via the document keydown handler; outside-click closes via the document click handler — do not stopPropagation on container click outside these targets."
+    - "When CSS anchor positioning is unsupported the host applies left/top to the popover element; do not overlay your own positioning style or the flip logic breaks."
+    - "Reduced motion strips the transform animation (opacity-only); keep the @media (prefers-reduced-motion: reduce) block intact."
+    - "Avoid putting form submit buttons that affect the page outside the popover surface — keep the interaction self-contained within the dialog role."
+```
+
 ## Required Imports
 
 ```html

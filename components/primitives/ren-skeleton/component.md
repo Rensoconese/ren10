@@ -22,6 +22,57 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "Content is asynchronously loading and you need a placeholder that preserves layout dimensions."
+    - "You want a shimmer that automatically degrades to a static fill under prefers-reduced-motion."
+    - "You need shape-specific placeholders: text line (.ren-skeleton-text), heading (.ren-skeleton-heading), avatar (.ren-skeleton-circle), or block (.ren-skeleton-rect)."
+    - "The placeholder is short-lived — it will be replaced by real content within a few seconds."
+  avoidWhen:
+    - "The wait is indeterminate or very long — use ren-spinner with descriptive copy."
+    - "Only a single small inline indicator is needed — use ren-spinner-xs or ren-spinner-sm."
+    - "You want a progress bar with a known percentage — use ren-progress instead."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-skeleton/ren-skeleton.css"
+  notes:
+    - "CSS-only primitive. There is no colocated JS — do not import one."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Always combine the base .ren-skeleton with one shape modifier (.ren-skeleton-text, .ren-skeleton-heading, .ren-skeleton-circle, .ren-skeleton-rect) so the size token resolves."
+  - "Wrap a group of skeletons in a container that sets aria-busy=\"true\" and aria-live=\"polite\" so assistive tech is told to wait."
+  - "Replace skeleton nodes with real content as soon as the data resolves — do not leave them mounted indefinitely."
+  - "Match the skeleton's dimensions to the final content (avatar size, line count) to avoid layout shift on swap."
+
+forbiddenPatterns:
+  - "Animating with background-image: linear-gradient(...) hex colors directly; use the .ren-skeleton class and let --color-fill / --color-fill-hover drive the shimmer."
+  - "Hardcoded width: 60% or height: 1.5em overrides for headings; use .ren-skeleton-heading and override --avatar-md / --radius-* via tokens if needed."
+  - "Leaving the skeleton in the DOM after content loads — toggle visibility / remove, never repurpose as decoration."
+  - "Using a skeleton for a determinate progress state (e.g. uploading X of Y) — that is a job for ren-progress."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-skeleton-bg, --ren-skeleton-radius, --ren-skeleton-shine, --ren-skeleton-speed."
+    - "Semantic tokens consumed internally: --color-fill, --color-fill-hover, --radius-sm, --radius-md, --radius-full, --avatar-md, --duration-loop-slow, --ease-loop-pulse."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgba shimmer colors."
+    - "Custom animation durations in seconds; theme via --ren-skeleton-speed or --duration-loop-slow."
+
+accessibility:
+  required:
+    - "The container holding skeleton placeholders must set aria-busy=\"true\" so AT announces the loading state."
+    - "Pair aria-busy with aria-live=\"polite\" when the content swap should be announced once data resolves."
+    - "Skeleton nodes are presentational; do not put role=\"img\" or descriptive alt-text on them."
+    - "The shimmer animation must stop under prefers-reduced-motion (the CSS already handles this — do not override animation in consumer code)."
+    - "Skeleton color must remain perceivable in both light and dark themes via --color-fill (do not pin to a specific gray)."
+```
+
 ## Required Imports
 
 ```html

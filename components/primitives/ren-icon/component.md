@@ -22,6 +22,61 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a consistent sizing wrapper (xs/sm/md/lg/xl/2xl) around an inline SVG."
+    - "You need an icon that inherits the parent text color via currentColor."
+    - "You need a semantic color tint (primary, success, warning, danger, muted) on a glyph."
+    - "You need a spinning loading glyph that respects prefers-reduced-motion."
+    - "You need an icon slot inside ren-button, ren-link, ren-badge, or other primitives."
+  avoidWhen:
+    - "The graphic is decorative and inline — a raw <svg aria-hidden=\"true\"> is enough."
+    - "The element is a clickable control — wrap the icon inside ren-button (ren-btn-icon) instead."
+    - "You need a multi-color illustration or logo — use a plain <svg> with its own viewport."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-icon/ren-icon.css"
+  notes:
+    - "CSS-only primitive; no JavaScript file exists for ren-icon."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Always wrap a real <svg> (or icon-font glyph) inside <span class=\"ren-icon\"> — never style the SVG directly with .ren-icon."
+  - "Decorative icons inside text or buttons must set aria-hidden=\"true\" on the SVG (the wrapper has no role)."
+  - "Standalone meaningful icons must have an accessible name on the parent control (aria-label) or visually-hidden text — the .ren-icon wrapper itself does not carry a name."
+  - "Pick exactly one size variant (.ren-icon-xs through .ren-icon-2xl); the base .ren-icon defaults to md (20px)."
+  - ".ren-icon-spin must be paired with role=\"status\" or aria-busy on a parent for screen reader users."
+
+forbiddenPatterns:
+  - "Setting width/height inline on <svg> instead of using the .ren-icon-* size variants."
+  - "Hardcoding fill=\"#...\" on the inner SVG — drive color via currentColor and the .ren-icon-* color variants."
+  - "Using .ren-icon-danger to convey state without an accompanying text label (state by color alone)."
+  - "Animating the spin with a custom CSS animation instead of .ren-icon-spin (loses reduced-motion guard)."
+  - "Using .ren-icon as a clickable target — wrap with a real <button> or use ren-button instead."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-icon-color, --ren-icon-fill, --ren-icon-size."
+    - "Semantic tokens consumed internally: --color-accent, --color-success, --color-warning, --color-danger, --color-text-secondary."
+    - "Motion tokens: --duration-loop, --ease-loop (for .ren-icon-spin)."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex or named colors on the SVG or wrapper."
+    - "Raw animation durations; rely on --duration-loop / --ease-loop via .ren-icon-spin."
+
+accessibility:
+  required:
+    - "Decorative icons set aria-hidden=\"true\" on the SVG element."
+    - "Meaningful icons get their accessible name from the surrounding control (button aria-label, link text, etc.) — never from the .ren-icon wrapper alone."
+    - "Color variants (.ren-icon-success, .ren-icon-danger) must be paired with text or aria-label so meaning is not color-only."
+    - ".ren-icon-spin animation honors prefers-reduced-motion: reduce automatically."
+    - "Do not turn .ren-icon into an interactive target; it has no focus styles or hit-area guarantees."
+```
+
 ## Required Imports
 
 ```html

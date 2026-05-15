@@ -22,6 +22,64 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The user must pick exactly one option from 2-7 mutually-exclusive choices."
+    - "All choices should be visible at once (no overflow / collapse)."
+    - "You need a custom-styled radio dot built on native <input type=\"radio\"> with preserved semantics."
+    - "You need keyboard arrow navigation + roving tabindex via <ren-radio-group>."
+    - "You need a vertical (.ren-radio-group) or horizontal (.ren-radio-group-horizontal) layout."
+  avoidWhen:
+    - "There are more than ~7 options or the list overflows — use a ren-select / combobox."
+    - "Multiple selections are allowed — use ren-checkbox."
+    - "The choice is binary on/off — use ren-switch or ren-checkbox."
+    - "The selection drives navigation or filters with immediate side effects — consider ren-segmented or tabs."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-radio/ren-radio.css"
+  js:
+    - "rends/components/primitives/ren-radio/ren-radio.js"
+  notes:
+    - "JS is only required when using <ren-radio-group> for arrow-key roving tabindex; a plain <fieldset role=\"radiogroup\"> with .ren-radio labels works CSS-only with native browser radio behavior."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Each option is a <label class=\"ren-radio\"> containing a real <input type=\"radio\" name=\"<group>\">, a <span class=\"ren-radio-control\"></span>, and the visible label text — in that DOM order so the :checked + .ren-radio-control adjacent selector works."
+  - "All radios in one group share the same name attribute so the browser enforces single-selection."
+  - "Wrap the group in <ren-radio-group> (auto-sets role=\"radiogroup\") or in a <fieldset> with <legend> + role=\"radiogroup\" when no JS is desired."
+  - "Use <ren-radio-group orientation=\"horizontal\"> to switch to row layout; the JS swaps the class to .ren-radio-group-horizontal."
+  - "Never set tabindex manually on inputs inside <ren-radio-group> — the roving-tabindex utility manages it."
+
+forbiddenPatterns:
+  - "Replacing <input type=\"radio\"> with a styled <div role=\"radio\"> — loses form submission + native a11y."
+  - "Hiding the input with display: none (breaks focus) — use the built-in visually-hidden clip-path pattern."
+  - "Two radios with different name attributes in the same group (allows multi-selection)."
+  - "Using .ren-radio for an icon-only toggle without a visible text label or aria-label."
+  - "Animating the dot via custom keyframes that bypass --duration-state / --ease-playful."
+
+tokenPolicy:
+  allowed:
+    - "Semantic tokens consumed internally: --color-text, --color-border-strong, --color-accent, --color-accent-hover, --color-on-accent, --color-focus-ring."
+    - "Layout / motion tokens: --space-2, --space-3, --space-4, --radius-full, --body-size, --weight-regular, --touch-min, --ring-width, --ring-offset-width, --duration-state, --duration-tactile, --ease-enter, --ease-playful."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Custom radio sizes that fall below the 20px control + 44px label touch target."
+
+accessibility:
+  required:
+    - "Real <input type=\"radio\"> elements so the browser handles single-selection, form submission, and assistive-tech announcement."
+    - ".ren-radio label has min-height: var(--touch-min) so the whole row is a 44px touch target."
+    - "Visible :focus-visible ring on .ren-radio-control driven by --color-focus-ring (the native input is visually hidden but focus is delegated to its sibling)."
+    - "<ren-radio-group> sets role=\"radiogroup\" and supports arrow-key navigation (Up/Down vertical, Left/Right horizontal) with loop; selection follows focus."
+    - "Disabled options use <input disabled> (handled via :has(input:disabled)) — do not rely on opacity alone."
+    - "Provide a group label via <legend> inside <fieldset> or aria-label / aria-labelledby on <ren-radio-group>."
+```
+
 ## Required Imports
 
 ```html

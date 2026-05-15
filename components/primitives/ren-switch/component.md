@@ -22,6 +22,62 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - More than two states are possible — use `ren-radio` or `ren-toggle-group`.
 - The control must look like a checkbox (square box with checkmark) — use `ren-checkbox`.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The control flips an immediate on/off setting (dark mode, notifications, feature flags)."
+    - "The change should take effect the moment the user toggles it, with no submit step."
+    - "Native checkbox semantics extended with role=\"switch\" are the right a11y model."
+    - "You want the iOS-style 51×31 track plus full label wrapper for a 44px touch target."
+    - "You need the checked color to come from --color-success (positive enablement), not the brand accent."
+  avoidWhen:
+    - "The change must wait for a Save / Submit step — use ren-checkbox so users can review before commit."
+    - "There are 3+ choices or the option is mutually exclusive within a set — use ren-radio or ren-toggle-group."
+    - "The control needs a checkmark glyph to communicate selection — use ren-checkbox."
+    - "The control is a tab / segmented selector across views — use ren-tabs or ren-toggle-group."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-switch/ren-switch.css"
+  notes:
+    - "CSS-only primitive. There is no colocated JS — do not import one."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Wrap the control in a <label class=\"ren-switch\"> so the entire label area is the click / touch target."
+  - "Use a real <input type=\"checkbox\" role=\"switch\"> as the first child; the CSS hides it visually but keeps it focusable and announced."
+  - "Follow the input with <span class=\"ren-switch-track\"></span>; the thumb is the track's ::after pseudo-element — do not add a separate thumb element."
+  - "Include a visible <span>Label</span> sibling for sighted users; if the switch is icon-only, set aria-label on the input."
+  - "Persist on/off changes immediately via the input's change event — never defer to a separate Save action."
+
+forbiddenPatterns:
+  - "<div role=\"switch\" tabindex=\"0\"> custom toggles; always use a real <input type=\"checkbox\" role=\"switch\">."
+  - "Hiding the input with display: none — it removes it from the accessibility tree. Keep the existing clip-path / visually-hidden pattern."
+  - "Hardcoded track / thumb colors via background-color in inline styles; theme via --ren-switch-bg, --ren-switch-checked-bg, --ren-switch-thumb-color."
+  - "Putting the switch inside a <form> where it only applies after submit — that is checkbox territory."
+  - "Removing the focus outline on .ren-switch-track without restoring an equivalent :focus-visible ring."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-switch-bg, --ren-switch-checked-bg, --ren-switch-duration, --ren-switch-easing, --ren-switch-height, --ren-switch-thumb-color, --ren-switch-thumb-size, --ren-switch-width."
+    - "Semantic tokens consumed internally: --color-fill-active, --color-fill-hover, --color-success, --color-success-strong, --color-text, --color-focus-ring, --white, --radius-full, --ring-width, --ring-offset-width, --touch-min, --shadow-sm."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors for the checked / unchecked track."
+    - "Custom transition values; use --ren-switch-duration and --ren-switch-easing."
+
+accessibility:
+  required:
+    - "The native <input type=\"checkbox\" role=\"switch\"> must remain in the DOM and focusable — assistive tech announces it as a switch with on/off states."
+    - "The whole <label class=\"ren-switch\"> wrapper provides a touch target of at least --touch-min (44px)."
+    - "Focus must show the outline ring on .ren-switch-track via :focus-visible (the CSS already wires this up; do not remove it)."
+    - "Do not signal state by color alone — the thumb position (left vs right) is the primary visual cue."
+    - "When the switch is disabled, set disabled on the <input> (the parent .ren-switch:has(input:disabled) handles styling) instead of a custom data attribute."
+    - "If the switch's label is not adjacent text, set aria-label or aria-labelledby on the <input>."
+```
+
 ## Required Imports
 
 ```html

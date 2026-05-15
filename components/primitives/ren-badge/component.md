@@ -22,6 +22,62 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a small inline label for status (success / warning / danger / info), category, count, or tag."
+    - "The label is decorative or status-only; it does not navigate or trigger a side effect."
+    - "You need a presence dot without text (.ren-badge-dot) — color-coded indicator."
+    - "You need a pill-shaped (radius-full) label sized in em so it scales with surrounding text."
+    - "The label must sit inline inside a heading, list item, button, or table cell."
+  avoidWhen:
+    - "The label is a removable chip with an X button — use ren-tag."
+    - "The label is a persistent inline message with title/icon/dismiss — use ren-banner."
+    - "The label triggers a click action — use ren-btn (or .ren-btn-sm) instead."
+    - "You need an avatar / identity surface — use ren-avatar."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-badge/ren-badge.css"
+  notes:
+    - "CSS-only primitive — no colocated JS exists. Do not import a ren-badge.js."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Use <span class=\"ren-badge\"> (inline) — not <div> — so badges flow with surrounding text."
+  - "Combine .ren-badge with a single variant modifier (.ren-badge-primary | -secondary | -success | -warning | -danger | -info | -outline); do not stack two variants."
+  - "Status badges that convey meaning must include text (or visually-hidden text) — color alone is not sufficient."
+  - "Dot indicators use <span class=\"ren-badge-dot ren-badge-dot-success\"> (empty content) and require a sibling text label."
+  - "Numeric count badges should set aria-label (e.g., aria-label=\"3 unread\") when the number is ambiguous without context."
+
+forbiddenPatterns:
+  - "<button class=\"ren-badge\"> — badges are not interactive; use ren-btn for actions."
+  - "Hardcoded background / color overrides via inline style — override --ren-badge-bg / --ren-badge-color instead."
+  - "Using .ren-badge as a removable chip with a close button — that is ren-tag's contract."
+  - "Color-only status (.ren-badge-danger with no text and no aria-label)."
+  - "Setting font-size in px on .ren-badge — the em-based padding will desynchronize from the text scale."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-badge-bg, --ren-badge-color, --ren-badge-font-size, --ren-badge-font-weight, --ren-badge-height, --ren-badge-padding-x, --ren-badge-radius."
+    - "Semantic tokens: --color-fill, --color-fill-hover, --color-accent, --color-on-accent, --color-success-subtle / -strong, --color-warning-subtle / -strong, --color-danger-subtle / -strong, --color-info-subtle / -strong, --color-border."
+    - "Layout tokens: --space-1, --radius-full, --stroke-1, --text-xs, --weight-semibold."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors for badge background, text, or dot color."
+    - "Reaching past the semantic -subtle / -strong pair into raw success / warning / danger primitives."
+
+accessibility:
+  required:
+    - "Badges that communicate status must not rely on color alone — include text or visually-hidden labels."
+    - "Numeric badges need aria-label when the meaning is ambiguous (e.g., \"3 unread messages\")."
+    - "Decorative dot badges (.ren-badge-dot) should be paired with adjacent text content — not used alone."
+    - "Do not place a badge inside a focusable element without ensuring the badge itself is not announced twice; rely on the parent's accessible name."
+    - "Maintain WCAG AA contrast: variants pair -subtle background with -strong text by design; do not invert."
+```
+
 ## Required Imports
 
 ```html

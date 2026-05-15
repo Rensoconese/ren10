@@ -22,6 +22,62 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The user picks, adds, or removes a value (filter chip, selected keyword, attached label)."
+    - "You need a removable token with an embedded dismiss button (.ren-tag-dismiss)."
+    - "You need a toggleable filter pill driven by aria-pressed or data-selected (.ren-tag-clickable)."
+    - "You need a status-tinted token (.ren-tag-primary / .ren-tag-success / .ren-tag-warning / .ren-tag-danger) tied to a semantic color."
+    - "Multiple tokens flow together in a wrap — use .ren-tag-group as the parent."
+  avoidWhen:
+    - "The element is a static, non-interactive status pill — use ren-badge."
+    - "The element triggers an imperative action (submit, open dialog) — use ren-button."
+    - "The element is a hyperlink to another page — use ren-link."
+    - "The element is a form-style multi-select dropdown option — use ren-select / ren-combobox option markup."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-tag/ren-tag.css"
+  notes:
+    - "CSS-only primitive. There is no colocated JS — wire up dismiss/click handlers in your own script."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Render the tag as an inline element: <span class=\"ren-tag\"> for static, <span class=\"ren-tag ren-tag-clickable\" tabindex=\"0\" role=\"button\"> for toggleable filters."
+  - "Removable tags must include <button class=\"ren-tag-dismiss\" type=\"button\" aria-label=\"Remove <name>\">; never use a non-button element for dismissal."
+  - "Toggle / filter tags must mirror selection state via aria-pressed=\"true|false\" (preferred) or data-selected; do not rely on color alone."
+  - "Group multiple tags inside a parent with class=\"ren-tag-group\" so the gap and wrap behavior come from the design system."
+  - "Combine at most one color variant (.ren-tag-primary | .ren-tag-success | .ren-tag-warning | .ren-tag-danger) with at most one size (.ren-tag-sm | .ren-tag-lg)."
+
+forbiddenPatterns:
+  - "<div class=\"ren-tag\" onclick=...> for clickable tags — use a real <button> or .ren-tag-clickable with role=\"button\" and tabindex=\"0\"."
+  - "Custom dismiss icons drawn with background-image; place a text \"×\" or an <svg aria-hidden=\"true\"> inside .ren-tag-dismiss instead."
+  - "Hardcoded background-color: #... overrides; theme via --ren-tag-bg / --ren-tag-border-color / --ren-tag-color."
+  - "Using ren-tag-danger purely for emphasis on a non-danger value — semantic color variants must match meaning (danger = destructive / error)."
+  - "Removing the :focus-visible outline on .ren-tag-clickable or .ren-tag-dismiss without restoring a visible ring."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-tag-bg, --ren-tag-border-color, --ren-tag-color, --ren-tag-font-size, --ren-tag-font-weight, --ren-tag-gap, --ren-tag-height, --ren-tag-padding-x, --ren-tag-radius."
+    - "Semantic tokens consumed internally: --color-text, --color-text-muted, --color-fill, --color-fill-hover, --color-fill-active, --color-border, --color-border-strong, --color-accent, --color-accent-subtle, --color-on-accent, --color-success / --color-success-subtle / --color-success-strong, --color-warning / --color-warning-subtle / --color-warning-strong, --color-danger / --color-danger-subtle / --color-danger-strong, --color-focus-ring, --stroke-1, --radius-full, --ring-width, --ring-offset-width."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgba background and border colors."
+    - "Inline padding / font-size overrides; pick the .ren-tag-sm / .ren-tag-lg variant or override --ren-tag-padding-x / --ren-tag-font-size."
+
+accessibility:
+  required:
+    - "Clickable tags must be focusable: either a real <button>, or use .ren-tag-clickable with tabindex=\"0\" and role=\"button\" plus Space / Enter handling."
+    - "Toggle state must be exposed via aria-pressed; data-selected is for styling parity only, not a substitute for ARIA."
+    - "Dismiss buttons need an aria-label that names the value being removed (e.g. \"Remove React\"), not just \"Remove\"."
+    - "Color variants must not be the sole signal of meaning — pair .ren-tag-danger with text or an icon that conveys the same state."
+    - ":focus-visible outline must remain visible on both .ren-tag-clickable and .ren-tag-dismiss; the CSS wires this to --color-focus-ring."
+    - "Long tag text truncates with ellipsis (.ren-tag > span overflow rule); when this happens, surface the full value via title or an off-screen label."
+```
+
 ## Required Imports
 
 ```html
