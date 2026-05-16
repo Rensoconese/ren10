@@ -37,6 +37,13 @@ export const RATIOS = {
 
 /**
  * Semantic step mapping — maps scale steps to RenDS --text-* tokens.
+ *
+ * 13 steps total: -2 through 10 → --text-xs through --text-8xl.
+ * Every ratio preserves the full 13-step range. Smaller ratios
+ * (e.g. minor-second 1.067) produce closer-spaced sizes but do not
+ * collapse steps; bigger ratios (e.g. octave 2.000) spread them
+ * further apart.
+ *
  * step -2 → --text-xs   (caption2, smallest)
  * step -1 → --text-sm   (caption, footnote)
  * step  0 → --text-base (body)

@@ -203,7 +203,7 @@
         <!-- 1. Overview -->
         <section id="overview">
           <h2 data-step="01">Overview</h2>
-          <p>The RenDS CLI is a single Node script (<code>cli/index.js</code>) shipped inside the design system folder. It exposes five commands:</p>
+          <p>The RenDS CLI is a single Node script (<code>cli/index.js</code>) shipped inside the design system folder. It exposes seven commands:</p>
 
           <div class="dx-cmd-grid">
             <div class="dx-cmd-card">
@@ -213,6 +213,14 @@
             <div class="dx-cmd-card">
               <div class="dx-cmd-card-name">rends add &lt;name&gt;</div>
               <p class="dx-cmd-card-desc">Copy a component (or all components) into your project.</p>
+            </div>
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends remove &lt;name&gt;</div>
+              <p class="dx-cmd-card-desc">Delete a previously-added component. Refuses if locally edited (use <code>--force</code>).</p>
+            </div>
+            <div class="dx-cmd-card">
+              <div class="dx-cmd-card-name">rends upgrade [name]</div>
+              <p class="dx-cmd-card-desc">Refresh installed components from the package source. Diffs each file, prompts.</p>
             </div>
             <div class="dx-cmd-card">
               <div class="dx-cmd-card-name">rends list</div>
@@ -307,6 +315,16 @@ rends --version</code></div>
                 <td>off</td>
                 <td>Wrap each step in <code>clamp()</code> so type scales smoothly between viewport widths.</td>
               </tr>
+              <tr>
+                <td><code>--density &lt;v&gt;</code></td>
+                <td>(none)</td>
+                <td><code>comfortable</code> | <code>compact</code> | <code>spacious</code>. Doesn't modify CSS — prints the <code>data-density</code> attribute to add to your <code>&lt;html&gt;</code> element. The matching presets are already in <code>themes/appearance.css</code>.</td>
+              </tr>
+              <tr>
+                <td><code>--shape &lt;v&gt;</code></td>
+                <td>(none)</td>
+                <td><code>rounded</code> | <code>sharp</code> | <code>pill</code>. Same idea: prints the <code>data-shape</code> attribute to add to <code>&lt;html&gt;</code>.</td>
+              </tr>
             </tbody>
           </table>
 
@@ -318,7 +336,10 @@ node rends/cli/index.js init
 node rends/cli/index.js init --scale minor-third --base 18
 
 # Fluid responsive type
-node rends/cli/index.js init --scale perfect-fourth --fluid</code></div>
+node rends/cli/index.js init --scale perfect-fourth --fluid
+
+# Density + shape (prints the attrs to add to <html>)
+node rends/cli/index.js init --density compact --shape sharp</code></div>
 
           <div class="dx-callout">
             <p><strong>Refuses to overwrite.</strong> If <code>rends/</code> already exists in the current directory, <code>init</code> exits with an error rather than clobber your work. Delete or rename the folder first.</p>
@@ -374,9 +395,72 @@ rends/utils/
           </div>
         </section>
 
-        <!-- 5. list -->
+        <!-- 5. remove -->
+        <section id="remove">
+          <h2 data-step="05"><code>remove</code></h2>
+          <p>Deletes a component you previously installed, scrubbing both the directory under <code>rends/components/&lt;name&gt;/</code> and the matching <code>@import</code> line in <code>components/index.css</code>. Alias: <code>rm</code>.</p>
+
+          <h3>Basic use</h3>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js remove tooltip
+node rends/cli/index.js remove badge tag separator</code></div>
+
+          <h3>Override protection</h3>
+          <p>If <code>remove</code> detects that you've <strong>added extra files</strong> to the component folder, or that any tracked file has been <strong>modified vs the package source</strong>, it refuses to delete and reports what it found. This protects local customisations from accidental loss.</p>
+
+          <p class="dx-pre-caption">terminal output (override detected)</p>
+          <div class="dx-term"><span class="info">ℹ</span> Skipped "dialog" — local overrides detected (modified file(s): ren-dialog.css). Re-run with --force to remove anyway.</div>
+
+          <p>Pass <code>--force</code> (or <code>-f</code>) to remove anyway:</p>
+          <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js remove dialog --force</code></div>
+
+          <div class="dx-callout">
+            <p><strong>What it does NOT do.</strong> <code>remove</code> doesn't touch <code>rends/utils/</code> dependencies that the removed component may have pulled in. Shared utilities stay around in case another component relies on them. If you want a clean sweep, audit <code>utils/</code> manually.</p>
+          </div>
+        </section>
+
+        <!-- 6. upgrade -->
+        <section id="upgrade">
+          <h2 data-step="06"><code>upgrade</code></h2>
+          <p>Compares each installed component against the package source and prompts to overwrite files that differ. No arg = walk every installed component. With a name (or several), upgrade only those. Alias: <code>update</code>.</p>
+
+          <h3>Basic use</h3>
+          <div class="dx-pre" tabindex="0"><code># Upgrade everything that has drifted
+node rends/cli/index.js upgrade
+
+# Upgrade a specific component
+node rends/cli/index.js upgrade dialog
+
+# Preview what would change without writing
+node rends/cli/index.js upgrade --dry-run
+
+# CI mode — overwrite without prompting
+node rends/cli/index.js upgrade --force</code></div>
+
+          <h3>Interactive prompt</h3>
+          <p>For each component that has any differing file, the CLI prints the list and asks:</p>
+          <div class="dx-term"><span class="em">dialog</span> <span class="info">— 2 file(s) differ</span>
+  <span class="warn">~</span> ren-dialog.css
+  <span class="warn">~</span> ren-dialog.js
+Overwrite 2 file(s) in dialog? [y]es / [n]o / [d]iff / [a]bort:</div>
+
+          <ul>
+            <li><strong>y</strong> — overwrite all differing files for this component.</li>
+            <li><strong>n</strong> — leave this component alone and continue with the next.</li>
+            <li><strong>d</strong> — print a minimal diff (red = local, green = upstream), then ask again.</li>
+            <li><strong>a</strong> — abort the whole upgrade run; nothing written from here on.</li>
+          </ul>
+
+          <h3>Identical files are silent</h3>
+          <p>If every tracked file matches the source, the component prints nothing — only the summary tells you it was up to date. This keeps <code>upgrade</code> noiseless when you run it after a small package bump.</p>
+
+          <div class="dx-callout">
+            <p><strong>Bring your overrides back.</strong> <code>upgrade</code> overwrites local edits when you accept. If you want to keep yours and also pick up upstream changes, run <code>upgrade --dry-run</code> first, then merge by hand.</p>
+          </div>
+        </section>
+
+        <!-- 7. list -->
         <section id="list">
-          <h2 data-step="05"><code>list</code></h2>
+          <h2 data-step="07"><code>list</code></h2>
           <p>Prints every component the CLI knows about, grouped by tier and annotated with a one-line description. Use it to discover what's available and to look up canonical names before <code>add</code>.</p>
 
           <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js list</code></div>
@@ -404,9 +488,9 @@ rends/utils/
   <span class="dim">… 5 more</span></div>
         </section>
 
-        <!-- 6. scales -->
+        <!-- 8. scales -->
         <section id="scales">
-          <h2 data-step="06"><code>scales</code></h2>
+          <h2 data-step="08"><code>scales</code></h2>
           <p>Lists the modular type scale ratios you can pass to <code>init --scale</code>. Three are marked <code>★</code> as recommended for web; the default is <code>major-third</code>.</p>
 
           <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js scales</code></div>
@@ -437,9 +521,9 @@ rends/utils/
           <p>Rule of thumb: smaller ratios for information-dense screens, larger for narrative content.</p>
         </section>
 
-        <!-- 7. Workflows -->
+        <!-- 9. Workflows -->
         <section id="workflows">
-          <h2 data-step="07">Workflows</h2>
+          <h2 data-step="09">Workflows</h2>
 
           <h3>Greenfield project — minimal</h3>
           <div class="dx-pre" tabindex="0"><code>node rends/cli/index.js init
@@ -460,9 +544,9 @@ node rends/cli/index.js add --all</code></div>
           <p>The CLI doesn't generate themes. Use the <a href="../create/index.html" class="ren-link-plain" style="text-decoration: underline; text-underline-offset: 2px;">Theme Builder</a> instead, or hand-edit <code>themes/appearance.css</code>. The CLI only owns the <em>structural</em> scaffold (tokens + base + components).</p>
         </section>
 
-        <!-- 8. Troubleshooting -->
+        <!-- 10. Troubleshooting -->
         <section id="troubleshooting">
-          <h2 data-step="08">Troubleshooting</h2>
+          <h2 data-step="10">Troubleshooting</h2>
 
           <h3><code>rends/ directory already exists</code></h3>
           <p>You ran <code>init</code> in a folder that already has a <code>rends/</code> child. Move or delete it, then re-run. There is no <code>--force</code> flag by design — clobbering a token folder is rarely what you want.</p>
@@ -480,9 +564,9 @@ node rends/cli/index.js add --all</code></div>
           <p>Check Node version: the CLI requires Node 18+ for ES module support. <code>node --version</code>. Older Node will silently fail on the <code>import</code> at the top of <code>index.js</code>.</p>
         </section>
 
-        <!-- 9. Next -->
+        <!-- 11. Next -->
         <section id="next">
-          <h2 data-step="09">Next steps</h2>
+          <h2 data-step="11">Next steps</h2>
           <p>You've scaffolded a project and pulled components. Where to go from here:</p>
 
           <div class="dx-next-grid">
