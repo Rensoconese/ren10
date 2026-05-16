@@ -194,11 +194,11 @@
         <p>Trigger a toast from the buttons below. The viewport renders in the bottom-right corner of this page; toasts auto-dismiss after 4 seconds, or click the × to dismiss early.</p>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <button class="ren-btn ren-btn-secondary" data-toast="success">Success</button>
-            <button class="ren-btn ren-btn-secondary" data-toast="info">Info</button>
-            <button class="ren-btn ren-btn-secondary" data-toast="warning">Warning</button>
-            <button class="ren-btn ren-btn-secondary" data-toast="danger">Danger</button>
-            <button class="ren-btn ren-btn-secondary" data-toast="action">With action</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="success">Success</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="info">Info</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="warning">Warning</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="danger">Danger</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="action">With action</button>
           </div>
           <pre class="dx-pre dx-demo-code" tabindex="0"><code>// Imperative API — most common usage
 window.toast.success('Project saved', { description: 'Your changes are live.' });
@@ -256,16 +256,18 @@ window.toast.show({ title: 'Email sent', action: { label: 'Undo', onClick: () =&
         </table>
 
         <h3>JavaScript API</h3>
-        <p>The component exposes a global <code>window.toast</code> with one method per status, plus a generic <code>show()</code>.</p>
-        <table class="dx-api">
-          <thead><tr><th>Method</th><th>Description</th></tr></thead>
+        <p>The component exposes a global <code>window.toast</code> with one method per status, plus a generic <code>show()</code>. Status methods return an <code>id</code> you can later pass to <code>toast.dismiss(id)</code>.</p>
+        <table class="dx-api dx-api-cols-3">
+          <thead><tr><th>Method</th><th>Returns</th><th>Description</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">toast.success(title, options?)</code></td><td>Green check, polite announce.</td></tr>
-            <tr><td><code class="dx-api-name">toast.info(title, options?)</code></td><td>Blue info, polite.</td></tr>
-            <tr><td><code class="dx-api-name">toast.warning(title, options?)</code></td><td>Amber, polite.</td></tr>
-            <tr><td><code class="dx-api-name">toast.danger(title, options?)</code></td><td>Red, <em>assertive</em> announce — screen readers interrupt.</td></tr>
-            <tr><td><code class="dx-api-name">toast.show(options)</code></td><td>Full control. <code>{ title, description, status, duration, action }</code>.</td></tr>
-            <tr><td><code class="dx-api-name">toast.dismiss(id)</code></td><td>Programmatically dismiss a toast by its returned id.</td></tr>
+            <tr><td><code class="dx-api-name">toast.success(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Green check, polite announce.</td></tr>
+            <tr><td><code class="dx-api-name">toast.info(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Blue info, polite.</td></tr>
+            <tr><td><code class="dx-api-name">toast.warning(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Amber, polite.</td></tr>
+            <tr><td><code class="dx-api-name">toast.danger(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Red, <em>assertive</em> announce — screen readers interrupt.</td></tr>
+            <tr><td><code class="dx-api-name">toast.show(options)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Full control. <code>{ title, description, status, duration, action }</code>.</td></tr>
+            <tr><td><code class="dx-api-name">toast.dismiss(id)</code></td><td><span class="dx-api-type">void</span></td><td>Dismiss a specific toast by the id returned from <code>show</code>/status methods.</td></tr>
+            <tr><td><code class="dx-api-name">toast.dismissAll()</code></td><td><span class="dx-api-type">void</span></td><td>Dismiss every visible toast (useful on route change).</td></tr>
+            <tr><td><code class="dx-api-name">toast.promise(promise, opts)</code></td><td><span class="dx-api-type">Promise</span></td><td>Shows a loading toast that swaps to success/error when the promise settles. <code>opts: { loading, success, error }</code> — each can be a string or function of the resolved/rejected value.</td></tr>
           </tbody>
         </table>
 
@@ -331,6 +333,28 @@ window.toast.show({ title: 'Email sent', action: { label: 'Undo', onClick: () =&
   description: 'Reconnecting…',
   duration: 0,            // sticks until dismissed
   action: { label: 'Retry now', onClick: () =&gt; reconnect() },
+});</code></pre>
+
+        <h3>Dismiss a toast programmatically</h3>
+        <p>Status methods return an <code>id</code>. Store it and pass it to <code>toast.dismiss</code> when the underlying state changes.</p>
+        <div class="dx-pre" tabindex="0"><code>// Show a persistent "uploading" toast, dismiss when done.
+const uploadId = toast.info('Uploading…', { duration: 0 });
+
+try {
+  await uploadFile(file);
+  toast.dismiss(uploadId);
+  toast.success('Upload complete');
+} catch (err) {
+  toast.dismiss(uploadId);
+  toast.danger('Upload failed', { description: err.message });
+}</code></pre>
+
+        <h3>Track an async operation with toast.promise</h3>
+        <p>One call covers loading → success / error. The toast updates in place.</p>
+        <div class="dx-pre" tabindex="0"><code>toast.promise(api.saveProfile(data), {
+  loading: 'Saving profile…',
+  success: 'Profile saved',
+  error:   (err) =&gt; `Couldn't save: ${err.message}`,
 });</code></pre>
       </section>
 
