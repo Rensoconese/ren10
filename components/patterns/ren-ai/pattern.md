@@ -100,12 +100,21 @@ Use the docs page and source files listed below for full examples before adding 
 ## Variants And Public Selectors
 
 - `.ren-ai-action`
+- `.ren-ai-action-edit`
+- `.ren-ai-action-regenerate`
 - `.ren-ai-action-thumbs`
 - `.ren-ai-actions`
 - `.ren-ai-citation`
 - `.ren-ai-confidence`
 - `.ren-ai-confidence-bar`
 - `.ren-ai-confidence-fill`
+- `.ren-ai-error`
+- `.ren-ai-error-message`
+- `.ren-ai-file-chip`
+- `.ren-ai-file-chip-icon`
+- `.ren-ai-file-chip-name`
+- `.ren-ai-file-chip-remove`
+- `.ren-ai-file-chip-size`
 - `.ren-ai-message`
 - `.ren-ai-message-content`
 - `.ren-ai-message-footer`
@@ -122,15 +131,29 @@ Use the docs page and source files listed below for full examples before adding 
 - `.ren-ai-source-url`
 - `.ren-ai-sources`
 - `.ren-ai-streaming`
+- `.ren-ai-tool-call`
+- `.ren-ai-tool-call-args`
+- `.ren-ai-tool-call-header`
+- `.ren-ai-tool-call-name`
+- `.ren-ai-tool-call-result`
+- `.ren-ai-tool-call-status`
 - `.ren-ai-typing`
-- `...and 1 more in the source files.`
+- `.ren-ai-typing-dots`
+
+All selectors are CSS-only — the consumer wires retry handlers, file
+upload state, tool execution, and edit-and-resend logic. The pattern
+gives you the visuals (and a sane `<details>` baseline for tool calls
+so collapse works without JS); state belongs to your app.
 
 ## States And Attributes
 
 - `[data-active]`
-- `[data-level]`
+- `[data-level]` — on `.ren-ai-confidence` (high|medium|low)
+- `[data-status]` — on `.ren-ai-tool-call` (pending|running|success|error)
+- `[open]` — native on `.ren-ai-tool-call` when expanded
 - `:active`
 - `:disabled`
+- `:focus-visible`
 - `:hover`
 
 ## Public Token API
