@@ -10,15 +10,64 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
-    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
-    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    /* Page-specific styles — most chrome and table visuals come from
+       components/patterns/ren-table/ren-table.css */
+    .dx-demo {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: var(--space-4) 0;
+    }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-5); }
+    .dx-demo-code   { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* Variant rows */
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow  { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      padding-top: var(--space-3);
+    }
+    .dx-vrow-items {
+      padding: var(--space-3);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+    @media (max-width: 720px) {
+      .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); }
+      .dx-vrow-label { padding-top: 0; }
+    }
+
+    /* Demo tables need their own container width */
+    .dx-table-demo ren-table,
+    .dx-table-demo .ren-table-wrapper { width: 100%; }
   </style>
 </head>
 <body>
-  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
 
   <div class="dx-shell dx-shell-grid">
+
     <aside class="dx-sidebar" aria-label="Site navigation">
       <h3>Guides</h3>
       <ul>
@@ -103,7 +152,7 @@
       <h3>Reference</h3>
       <ul>
         <li><a href="../components.html">Components catalog</a></li>
-</ul>
+      </ul>
     </aside>
 
     <main class="dx-content">
@@ -111,23 +160,411 @@
         <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Data Table</li></ol></nav>
         <p class="dx-kicker">Pattern</p>
         <h1>Data Table <span class="dx-api-badge dx-api-badge-hybrid" title="Renders without JS; JS adds enhancements">Hybrid</span></h1>
-        <p class="lede">Sortable, filterable, paginated table with sticky header, row selection, and density toggle. The workhorse of every CRUD admin.</p>
+        <p class="lede">A comprehensive, accessible <code>&lt;table&gt;</code> with sortable headers, multi-select rows, sticky header and pinned columns, density variants, integrated client-side pagination, search/filter toolbar, empty state, and a loading shimmer. The workhorse of every CRUD admin.</p>
       </header>
-      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Use Data Table for any tabular dataset users will sort, filter or scan: invoices, users, orders, logs. Pair with <a href="ren-pagination.html" class="ren-link">Pagination</a> below for paginated views or with infinite scroll for activity feeds.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="display: block; padding: 0;"><table class="ren-data-table" style="width: 100%; border-collapse: collapse; font-size: var(--text-sm);"><thead><tr><th style="text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); background: var(--color-surface-sunken);">Project</th><th style="text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); background: var(--color-surface-sunken);">Owner</th><th style="text-align: left; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border); background: var(--color-surface-sunken);">Status</th></tr></thead><tbody><tr><td style="padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted);">Atlas</td><td style="padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted);">Ren</td><td style="padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted);"><span class="ren-badge ren-badge-success">Active</span></td></tr><tr><td style="padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted);">Hermes</td><td style="padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted);">Ana</td><td style="padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--color-border-muted);"><span class="ren-badge ren-badge-warning">Pending</span></td></tr><tr><td style="padding: var(--space-2) var(--space-3);">Iris</td><td style="padding: var(--space-2) var(--space-3);">Carlos</td><td style="padding: var(--space-2) var(--space-3);"><span class="ren-badge ren-badge-secondary">Archived</span></td></tr></tbody></table></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;table class="ren-data-table"&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th aria-sort="ascending"&gt;Project&lt;/th&gt;
-      &lt;th&gt;Owner&lt;/th&gt;
-      &lt;th&gt;Status&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;…&lt;/tbody&gt;
-&lt;/table&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-data-table</code></td><td>Apply on the <code>&lt;table&gt;</code>. Adds borders, padding, sticky header, row hover.</td></tr><tr><td><code class="dx-api-name">.ren-data-table-toolbar</code></td><td>Optional row of filters / search / column toggles above the table.</td></tr><tr><td><code class="dx-api-name">.ren-data-table-empty</code></td><td>"No results" state inside the tbody.</td></tr><tr><td><code class="dx-api-name">.ren-data-table-density-compact</code></td><td>Tighter row height for dense data.</td></tr></tbody></table></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Use semantic <code>&lt;table&gt;</code> + <code>&lt;thead&gt;</code> + <code>&lt;tbody&gt;</code>. Don't fake tables with divs.</li><li>Sortable columns: header is a <code>&lt;button&gt;</code> with <code>aria-sort="ascending"</code> / <code>"descending"</code> / <code>"none"</code>.</li><li>Row selection: each row has a <code>&lt;input type="checkbox"&gt;</code> in the first cell with a real <code>&lt;label&gt;</code> linking it to the row identifier.</li></ul></section>
+
+      <!-- 1. OVERVIEW -->
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Data Table is the answer to "I have a list and the user is going to scan, sort, filter, and act on rows." It is built on real semantic <code>&lt;table&gt;</code> — never a grid of divs — so every screen reader, every keyboard, and every assistive technology already knows what to do.</p>
+        <p>Without JavaScript you get a clean styled table. The <code>&lt;ren-table&gt;</code> custom element layers on sorting, selection (including shift-click ranges), pagination, search filtering, column resize, sticky/pinned columns, and density variants. You opt in to each feature by adding the matching attribute or markup — there is no monolithic config.</p>
+
+        <h3>When to use</h3>
+        <ul>
+          <li>Tabular data the user will sort, filter, or scan (invoices, users, orders, logs).</li>
+          <li>Datasets where selecting one-or-many rows triggers actions (delete, export, bulk-edit).</li>
+          <li>Lists big enough to need pagination but small enough to fit in memory client-side.</li>
+        </ul>
+
+        <h3>When not to use</h3>
+        <ul>
+          <li><strong>Cards / tiles instead of rows.</strong> If each item has a thumbnail and 2-3 lines of body, use a <a href="ren-card.html" class="ren-link">Card</a> grid.</li>
+          <li><strong>Tree / hierarchical view.</strong> Reach for a tree component (out of scope for v0.9).</li>
+          <li><strong>2-3 key/value pairs per item.</strong> Use a <code>&lt;dl&gt;</code> description list.</li>
+          <li><strong>A single metric.</strong> Use a stat / KPI card.</li>
+          <li><strong>Server-paged datasets bigger than memory.</strong> The built-in pager is client-side; for server pagination, listen to <code>ren-page-change</code> and fetch yourself instead of relying on <code>data-page-size</code>.</li>
+        </ul>
+
+        <div class="dx-callout">
+          <p><strong>Real <code>&lt;table&gt;</code>, semantically.</strong> The <code>&lt;ren-table&gt;</code> custom element wraps a native <code>&lt;table&gt;</code> in light DOM. Headers stay <code>&lt;th&gt;</code>, rows stay <code>&lt;tr&gt;</code>, cells stay <code>&lt;td&gt;</code>. Sort state, selection, and pagination all map to standard ARIA (<code>aria-sort</code>, <code>aria-selected</code>, <code>aria-live</code>) — you're not opting out of the platform.</p>
+        </div>
+      </section>
+
+      <!-- 2. ANATOMY -->
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Structure</p>
+        <h2>Anatomy</h2>
+        <p>A full-featured Data Table has five regions. All but the <code>&lt;table&gt;</code> itself are optional — drop them and the table still works.</p>
+        <ol>
+          <li><strong>Toolbar</strong> (<code>.ren-table-toolbar</code>) — top bar with search input (<code>[data-table-search]</code>) and bulk actions.</li>
+          <li><strong>Wrapper</strong> (<code>.ren-table-wrapper</code>) — horizontal scroll container. Required for sticky / pinned to anchor against.</li>
+          <li><strong>Header</strong> (<code>.ren-table-header</code> on <code>&lt;thead&gt;</code>) — sticky by default. Sortable columns add <code>.ren-th-sortable</code> + <code>data-column</code>.</li>
+          <li><strong>Body</strong> (<code>.ren-table-body</code> on <code>&lt;tbody&gt;</code>) — rows. Selection column uses <code>.ren-table-select</code>; pinned column uses <code>.ren-th-pinned</code> / <code>.ren-td-pinned</code>.</li>
+          <li><strong>Pagination</strong> (<code>.ren-table-pagination</code>) — info text + prev/next/page-size controls. The JS keeps it in sync with <code>data-page-size</code>.</li>
+        </ol>
+      </section>
+
+      <!-- 3. DEMO -->
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Click the <strong>Project</strong> or <strong>Status</strong> header to sort. Use the checkboxes to select rows. The toolbar search filters by any visible cell.</p>
+        <div class="dx-demo dx-table-demo">
+          <div class="dx-demo-preview">
+            <ren-table data-page-size="5">
+              <div class="ren-table-toolbar">
+                <input class="ren-input ren-input-sm" type="search" placeholder="Search projects…" data-table-search aria-label="Search projects">
+              </div>
+              <div class="ren-table-wrapper">
+                <table class="ren-table">
+                  <thead class="ren-table-header">
+                    <tr>
+                      <th class="ren-th ren-table-select" scope="col"><input type="checkbox" aria-label="Select all"></th>
+                      <th class="ren-th ren-th-sortable" scope="col" data-column="project">Project</th>
+                      <th class="ren-th" scope="col">Owner</th>
+                      <th class="ren-th ren-th-sortable" scope="col" data-column="status">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="ren-table-body">
+                    <tr class="ren-tr" data-row-id="1"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Atlas"></td><td class="ren-td">Atlas</td><td class="ren-td">Ren</td><td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td></tr>
+                    <tr class="ren-tr" data-row-id="2"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Hermes"></td><td class="ren-td">Hermes</td><td class="ren-td">Ana</td><td class="ren-td"><span class="ren-badge ren-badge-warning">Pending</span></td></tr>
+                    <tr class="ren-tr" data-row-id="3"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Iris"></td><td class="ren-td">Iris</td><td class="ren-td">Carlos</td><td class="ren-td"><span class="ren-badge ren-badge-secondary">Archived</span></td></tr>
+                    <tr class="ren-tr" data-row-id="4"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Orion"></td><td class="ren-td">Orion</td><td class="ren-td">Sofía</td><td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td></tr>
+                    <tr class="ren-tr" data-row-id="5"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Lyra"></td><td class="ren-td">Lyra</td><td class="ren-td">Diego</td><td class="ren-td"><span class="ren-badge ren-badge-warning">Pending</span></td></tr>
+                    <tr class="ren-tr" data-row-id="6"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Vega"></td><td class="ren-td">Vega</td><td class="ren-td">Lucía</td><td class="ren-td"><span class="ren-badge ren-badge-success">Active</span></td></tr>
+                    <tr class="ren-tr" data-row-id="7"><td class="ren-td ren-table-select"><input type="checkbox" aria-label="Select row Nova"></td><td class="ren-td">Nova</td><td class="ren-td">Tomás</td><td class="ren-td"><span class="ren-badge ren-badge-secondary">Archived</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="ren-table-pagination">
+                <span class="ren-table-pagination-info"></span>
+                <div class="ren-table-pagination-controls">
+                  <button class="ren-table-pagination-button" type="button" data-page-prev aria-label="Previous page">‹</button>
+                  <button class="ren-table-pagination-button" type="button" data-page-next aria-label="Next page">›</button>
+                </div>
+              </div>
+            </ren-table>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-table data-page-size="5"&gt;
+  &lt;div class="ren-table-toolbar"&gt;
+    &lt;input class="ren-input ren-input-sm" type="search"
+           placeholder="Search…" data-table-search&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-table-wrapper"&gt;
+    &lt;table class="ren-table"&gt;
+      &lt;thead class="ren-table-header"&gt;
+        &lt;tr&gt;
+          &lt;th class="ren-th ren-table-select"&gt;
+            &lt;input type="checkbox" aria-label="Select all"&gt;
+          &lt;/th&gt;
+          &lt;th class="ren-th ren-th-sortable" data-column="project"&gt;Project&lt;/th&gt;
+          &lt;th class="ren-th"&gt;Owner&lt;/th&gt;
+          &lt;th class="ren-th ren-th-sortable" data-column="status"&gt;Status&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody class="ren-table-body"&gt;
+        &lt;tr class="ren-tr" data-row-id="1"&gt;…&lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-table-pagination"&gt;
+    &lt;span class="ren-table-pagination-info"&gt;&lt;/span&gt;
+    &lt;div class="ren-table-pagination-controls"&gt;
+      &lt;button data-page-prev&gt;‹&lt;/button&gt;
+      &lt;button data-page-next&gt;›&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/ren-table&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- 4. VARIANTS -->
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Visual</p>
+        <h2>Variants</h2>
+
+        <div class="dx-vgrid">
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Density</div>
+            <div class="dx-vrow-items">
+              <p>Three densities, runtime-switchable on the host. Tighter rows mean more rows visible at once — useful in admin views.</p>
+              <ul>
+                <li><code>.ren-table-compact</code> — 36 px row height. For high-density scanning.</li>
+                <li><code>.ren-table-comfortable</code> (default) — 48 px row height. Mainstream balance.</li>
+                <li>Spacious (60 px) — set <code>--ren-table-row-height: 60px</code> via inline style or theme override.</li>
+              </ul>
+              <p>Toggle at runtime by adding / removing the class. Sticky header / pinned column offsets adjust automatically.</p>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Sticky header</div>
+            <div class="dx-vrow-items">
+              <p>The header is sticky by default once the wrapper scrolls. No attribute required — works the moment the body overflows.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-table-wrapper" style="max-height: 400px"&gt;
+  &lt;table class="ren-table"&gt;…&lt;/table&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Pinned column</div>
+            <div class="dx-vrow-items">
+              <p>Pin the leftmost (typically selection or row label) column horizontally during scroll. Pinned offsets are managed by the CSS — never hardcode <code>left:</code> values.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;th class="ren-th ren-th-pinned"&gt;Name&lt;/th&gt;
+&lt;td class="ren-td ren-td-pinned"&gt;Atlas&lt;/td&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Empty state</div>
+            <div class="dx-vrow-items">
+              <p>When filtering yields zero rows, the JS swaps the body for an empty state. Provide it explicitly so you control the copy.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-table-empty"&gt;
+  &lt;div class="ren-table-empty-icon" aria-hidden="true"&gt;🔍&lt;/div&gt;
+  &lt;h3 class="ren-table-empty-title"&gt;No matching projects&lt;/h3&gt;
+  &lt;p class="ren-table-empty-description"&gt;Try a different search term or clear filters.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Loading state</div>
+            <div class="dx-vrow-items">
+              <p>Set <code>data-loading</code> on <code>&lt;ren-table&gt;</code> to dim rows, disable interaction, and show a shimmering overlay. Combine with an <code>aria-live="polite"</code> announcement region for screen readers.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;ren-table data-loading&gt;…&lt;/ren-table&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Virtualization</div>
+            <div class="dx-vrow-items">
+              <p><em>Not implemented in v0.9.</em> The built-in body renders all visible rows at once. For datasets &gt; ~5 000 rows, switch to server-side pagination (listen to <code>ren-page-change</code> and fetch the next page) instead of trying to render everything client-side. A windowed virtualizer is on the v1.0 roadmap.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. API -->
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>Custom element attributes</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">data-page-size</code></td><td><span class="dx-api-type">number</span></td><td><span class="dx-api-default">10</span></td><td>Rows per page in the built-in client pager. Set <code>0</code> to disable pagination.</td></tr>
+            <tr><td><code class="dx-api-name">data-loading</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>Shows the shimmer overlay and disables row interaction.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-table</code></td><td>Apply on the <code>&lt;table&gt;</code>. Adds borders, padding, hover, focus rings.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-wrapper</code></td><td>Required scroll container. Anchors sticky header and pinned columns.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-header</code></td><td>On <code>&lt;thead&gt;</code>. Sticky by default once the wrapper scrolls.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-body</code></td><td>On <code>&lt;tbody&gt;</code>. Hosts the row hover and selection styles.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-th</code> / <code class="dx-api-name">.ren-td</code></td><td>Header / body cells. Match the densitiy variant on the host.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-th-sortable</code></td><td>Marks a column sortable. Pair with <code>data-column="<i>key</i>"</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-th-pinned</code> / <code class="dx-api-name">.ren-td-pinned</code></td><td>Sticky column. Offsets handled by the CSS — do not set <code>left:</code> yourself.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-th-resize</code></td><td>Drag handle on header for column resize.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-select</code></td><td>On <code>th</code>/<code>td</code> hosting the selection checkbox column.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-tr</code></td><td>Body row. Required for selection state styling.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-toolbar</code></td><td>Top bar above the table. Holds the search input + bulk actions.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-toolbar-search</code></td><td>Optional wrapper around the search field for grouping with bulk actions.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-pagination</code></td><td>Footer with info text and prev / next / page-size controls.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-pagination-info</code></td><td>"Showing 1-10 of 47" label. JS keeps the text in sync.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-pagination-controls</code></td><td>Buttons cluster: prev, next, page-size <code>&lt;select&gt;</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-pagination-button</code></td><td>Style for prev / next buttons. Real <code>&lt;button&gt;</code>, 44 px touch target.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-empty</code></td><td>Empty / no-results state inside the body.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-empty-icon</code> / <code class="dx-api-name">-title</code> / <code class="dx-api-name">-description</code></td><td>Composable empty-state parts.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-loading-overlay</code></td><td>Shimmer layer rendered while <code>data-loading</code> is set.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-table-compact</code> / <code class="dx-api-name">.ren-table-comfortable</code></td><td>Density variants on the host or table.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Data attributes (consumer-controlled)</h3>
+        <table class="dx-api">
+          <thead><tr><th>Attribute</th><th>Where</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">data-column</code></td><td><code>&lt;th&gt;</code></td><td>Key for sort state. Must be unique per table.</td></tr>
+            <tr><td><code class="dx-api-name">data-row-id</code></td><td><code>&lt;tr&gt;</code></td><td>Stable id for selection state. Use the entity id, not the index.</td></tr>
+            <tr><td><code class="dx-api-name">data-table-search</code></td><td>input</td><td>Marker that wires the input to the table's filter pipeline.</td></tr>
+            <tr><td><code class="dx-api-name">data-page-prev</code> / <code class="dx-api-name">data-page-next</code></td><td>button</td><td>Pager controls. Press wires next / prev page.</td></tr>
+            <tr><td><code class="dx-api-name">data-page-size-select</code></td><td><code>&lt;select&gt;</code></td><td>Page size dropdown. Options become page sizes.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>States (read-only, set by the JS)</h3>
+        <table class="dx-api">
+          <thead><tr><th>State</th><th>Where</th><th>Meaning</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">data-sort</code></td><td><code>&lt;th&gt;</code></td><td><code>asc</code> / <code>desc</code> / <code>none</code>. Mirrored to <code>aria-sort</code>.</td></tr>
+            <tr><td><code class="dx-api-name">aria-sort</code></td><td><code>&lt;th&gt;</code></td><td>Standard ARIA mirror of <code>data-sort</code>.</td></tr>
+            <tr><td><code class="dx-api-name">aria-selected</code></td><td><code>&lt;tr&gt;</code></td><td><code>true</code> when the row's selection checkbox is checked.</td></tr>
+            <tr><td><code class="dx-api-name">data-loading</code></td><td><code>&lt;ren-table&gt;</code></td><td>Set by consumer; the JS responds by showing the overlay.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="dx-api">
+          <thead><tr><th>Event</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">ren-sort-change</code></td><td><code>{ column, direction }</code>. Fires after sort applies. Bubbles.</td></tr>
+            <tr><td><code class="dx-api-name">ren-row-select</code></td><td><code>{ rowId, selected, allSelectedIds: string[] }</code>. Bubbles.</td></tr>
+            <tr><td><code class="dx-api-name">ren-page-change</code></td><td><code>{ page, pageSize }</code>. Useful for server-side pagination — listen and fetch the page yourself.</td></tr>
+            <tr><td><code class="dx-api-name">ren-filter-change</code></td><td><code>{ query, matchedRows }</code>. Fires after the toolbar search filter applies.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 6. PUBLIC TOKEN API -->
+      <section class="dx-section" id="tokens">
+        <p class="dx-kicker">Theming</p>
+        <h2>Public token API</h2>
+        <p>Override these custom properties on <code>&lt;ren-table&gt;</code> or on a class to retheme the table without writing selectors against the internals.</p>
+        <table class="dx-api dx-api-cols-3">
+          <thead><tr><th>Token</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">--ren-table-border-color</code></td><td><code>var(--color-border)</code></td><td>All horizontal / vertical lines.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-cell-padding</code></td><td><code>var(--space-3)</code></td><td>Inline + block padding for every cell.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-row-height</code></td><td><code>auto</code></td><td>Force a fixed row height across the table.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-header-bg</code></td><td><code>var(--color-surface-sunken)</code></td><td>Header row background.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-header-color</code></td><td><code>var(--color-text-muted)</code></td><td>Header text.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-header-size</code></td><td><code>var(--text-xs)</code></td><td>Header font size.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-header-weight</code></td><td><code>var(--weight-semibold)</code></td><td>Header font weight.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-hover-bg</code></td><td><code>var(--color-fill-hover)</code></td><td>Row hover.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-selected-bg</code></td><td><code>var(--color-accent-subtle)</code></td><td>Selected row background.</td></tr>
+            <tr><td><code class="dx-api-name">--ren-table-stripe-bg</code></td><td><code>transparent</code></td><td>Optional zebra striping. Set to <code>var(--color-surface-raised)</code> for stripes.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 7. ACCESSIBILITY -->
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow"><span class="keys"><kbd>Tab</kbd></span><span>Cycles into the toolbar, then into headers, then into the body, then into pagination.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Enter</kbd> / <kbd>Space</kbd></span><span>On a sortable <code>&lt;th&gt;</code>: cycles asc → desc → none. On a checkbox cell: toggles selection.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>↑</kbd> / <kbd>↓</kbd></span><span>Inside the body: moves focus to the same column in the row above / below.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Shift</kbd> + click</span><span>On a row checkbox: selects the range between the last clicked row and the current one.</span></div>
+        </div>
+
+        <h3>Required ARIA</h3>
+        <ul>
+          <li>Sortable <code>&lt;th&gt;</code> sets <code>aria-sort="ascending" | "descending" | "none"</code> mirroring <code>data-sort</code>. The JS owns this — you don't touch <code>aria-sort</code> manually.</li>
+          <li>Selection checkboxes are real <code>&lt;input type="checkbox"&gt;</code> with <code>aria-label</code> ("Select all" / "Select row N"). Rows reflect state via <code>aria-selected="true"</code>.</li>
+          <li>Pagination buttons are real <code>&lt;button&gt;</code> with 44 px touch targets. Disabled uses the <code>disabled</code> attribute, not <code>opacity</code> alone.</li>
+          <li>Loading state pairs <code>data-loading</code> with an <code>aria-live="polite"</code> announcement: "Loading…" → "Loaded 47 rows".</li>
+          <li>Empty state must include a visible <code>.ren-table-empty-title</code> — don't rely on the icon alone.</li>
+          <li>Always provide a <code>&lt;caption class="ren-sr-only"&gt;</code> describing the table for screen readers.</li>
+        </ul>
+
+        <div class="dx-callout">
+          <p><strong>Never fake a table with divs.</strong> <code>&lt;div role="grid"&gt;</code> exists but it costs you the entire native screen-reader heuristic for column / row navigation. Real <code>&lt;table&gt;</code> + <code>&lt;th scope="col"&gt;</code> + <code>&lt;td&gt;</code> is the right answer 99% of the time.</p>
+        </div>
+      </section>
+
+      <!-- 8. EXAMPLES -->
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Sorting (client-side)</h3>
+        <p>Add <code>.ren-th-sortable</code> + <code>data-column</code> on the header. The component owns asc → desc → none cycling and writes <code>data-sort</code> + <code>aria-sort</code>.</p>
+        <pre class="dx-pre" tabindex="0"><code>&lt;th class="ren-th ren-th-sortable" data-column="name"&gt;Name&lt;/th&gt;
+
+// Listen for state changes if you need to mirror to URL or analytics:
+table.addEventListener('ren-sort-change', (e) =&gt; {
+  history.replaceState(null, '', `?sort=${e.detail.column}.${e.detail.direction}`);
+});</code></pre>
+
+        <h3>Server-side sorting</h3>
+        <p>Don't pre-sort the rows. Listen for <code>ren-sort-change</code> and fetch.</p>
+        <pre class="dx-pre" tabindex="0"><code>table.addEventListener('ren-sort-change', async (e) =&gt; {
+  table.dataset.loading = '';
+  const rows = await fetch(`/api/users?sort=${e.detail.column}&dir=${e.detail.direction}`)
+    .then(r =&gt; r.json());
+  renderBody(rows);          // your function — replace tbody innerHTML
+  delete table.dataset.loading;
+});</code></pre>
+
+        <h3>Row selection</h3>
+        <p>Real checkboxes with <code>aria-label</code>. Listen for <code>ren-row-select</code> to enable bulk actions when at least one row is selected.</p>
+        <pre class="dx-pre" tabindex="0"><code>&lt;tr class="ren-tr" data-row-id="1"&gt;
+  &lt;td class="ren-td ren-table-select"&gt;
+    &lt;input type="checkbox" aria-label="Select row Atlas"&gt;
+  &lt;/td&gt;
+  …
+&lt;/tr&gt;
+
+table.addEventListener('ren-row-select', (e) =&gt; {
+  bulkBar.hidden = e.detail.allSelectedIds.length === 0;
+});</code></pre>
+
+        <h3>Pagination</h3>
+        <p>Set <code>data-page-size</code> on the host. The JS owns visible-row slicing and writes the "Showing 1-10 of 47" info.</p>
+        <pre class="dx-pre" tabindex="0"><code>&lt;ren-table data-page-size="25"&gt;
+  …
+  &lt;div class="ren-table-pagination"&gt;
+    &lt;span class="ren-table-pagination-info"&gt;&lt;/span&gt;
+    &lt;div class="ren-table-pagination-controls"&gt;
+      &lt;button data-page-prev&gt;Previous&lt;/button&gt;
+      &lt;button data-page-next&gt;Next&lt;/button&gt;
+      &lt;select data-page-size-select&gt;
+        &lt;option value="10"&gt;10&lt;/option&gt;
+        &lt;option value="25" selected&gt;25&lt;/option&gt;
+        &lt;option value="50"&gt;50&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/ren-table&gt;</code></pre>
+
+        <h3>Density</h3>
+        <p>Add the class on the table (or on a wrapper to apply to many at once).</p>
+        <pre class="dx-pre" tabindex="0"><code>&lt;table class="ren-table ren-table-compact"&gt;…&lt;/table&gt;</code></pre>
+
+        <h3>Sticky header + pinned first column (admin combo)</h3>
+        <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-table-wrapper" style="max-height: 480px"&gt;
+  &lt;table class="ren-table"&gt;
+    &lt;thead class="ren-table-header"&gt;
+      &lt;tr&gt;
+        &lt;th class="ren-th ren-th-pinned"&gt;Name&lt;/th&gt;
+        &lt;th class="ren-th"&gt;Email&lt;/th&gt;
+        &lt;th class="ren-th"&gt;Role&lt;/th&gt;
+        …
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody class="ren-table-body"&gt;
+      &lt;tr class="ren-tr"&gt;
+        &lt;td class="ren-td ren-td-pinned"&gt;Ren&lt;/td&gt;
+        &lt;td class="ren-td"&gt;ren@example.com&lt;/td&gt;
+        …
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+
+        <h3>Empty state on filter miss</h3>
+        <p>Drop the empty state inside the wrapper — the JS swaps it in when the filter pipeline yields zero rows.</p>
+        <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-table-empty" hidden&gt;
+  &lt;div class="ren-table-empty-icon" aria-hidden="true"&gt;🔍&lt;/div&gt;
+  &lt;h3 class="ren-table-empty-title"&gt;No matching projects&lt;/h3&gt;
+  &lt;p class="ren-table-empty-description"&gt;Try a different search or clear filters.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
     </main>
   </div>
+
+  <script type="module" src="../../components/patterns/ren-table/ren-table.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

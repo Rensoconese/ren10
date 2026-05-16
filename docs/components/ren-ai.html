@@ -12,13 +12,52 @@
   <style>
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
-    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-demo-code   { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow  { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      padding-top: var(--space-3);
+    }
+    .dx-vrow-items {
+      padding: var(--space-3);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: grid;
+      gap: var(--space-3);
+    }
+    @media (max-width: 720px) {
+      .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); }
+      .dx-vrow-label { padding-top: 0; }
+    }
   </style>
 </head>
 <body>
-  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
 
   <div class="dx-shell dx-shell-grid">
+
     <aside class="dx-sidebar" aria-label="Site navigation">
       <h3>Guides</h3>
       <ul>
@@ -103,7 +142,7 @@
       <h3>Reference</h3>
       <ul>
         <li><a href="../components.html">Components catalog</a></li>
-</ul>
+      </ul>
     </aside>
 
     <main class="dx-content">
@@ -111,24 +150,419 @@
         <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">AI Patterns</li></ol></nav>
         <p class="dx-kicker">Pattern</p>
         <h1>AI Patterns <span class="dx-api-badge dx-api-badge-css" title="Works without any JavaScript">CSS-only</span></h1>
-        <p class="lede">Conversation thread, message bubble, streaming-text indicator, suggestion chip. The starter kit for building chat-based AI features.</p>
+        <p class="lede"><strong>CSS-only pattern. No Web Component, no colocated JS — bring your own inference layer.</strong> Visual primitives for chat-style AI surfaces: assistant message bubbles, streaming + typing indicators, inline citations, source lists, confidence bars, prompt input, and action affordances (copy, regenerate, thumbs).</p>
       </header>
-      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>AI chat surfaces share a small vocabulary: a thread of alternating bubbles, a streaming response indicator, action buttons under the latest assistant message, and suggested prompts when the user might be stuck. RenDS provides the visual primitives; you bring the inference layer.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch; max-width: 480px; margin-inline: auto;"><div style="display: flex; justify-content: flex-end; margin-bottom: var(--space-2);"><div style="background: var(--color-accent); color: var(--color-on-accent); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md) var(--radius-md) var(--radius-xs) var(--radius-md); max-width: 80%; font-size: var(--text-sm);">What's the difference between a Tooltip and a Popover?</div></div><div style="display: flex; justify-content: flex-start; margin-bottom: var(--space-2);"><div style="background: var(--color-surface); border: 1px solid var(--color-border); padding: var(--space-2) var(--space-3); border-radius: var(--radius-md) var(--radius-md) var(--radius-md) var(--radius-xs); max-width: 80%; font-size: var(--text-sm); color: var(--color-text);">Tooltip is a passive hint shown on hover or focus — typically just text. Popover is interactive: it can hold forms, multiple actions, anything keyboard-navigable. Tooltip never traps focus; Popover does.</div></div><div style="display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-3);"><button class="ren-tag ren-tag-clickable">Show me a tooltip example</button><button class="ren-tag ren-tag-clickable">When should I use a Dialog?</button></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-ai-thread" role="log" aria-live="polite"&gt;
-  &lt;div class="ren-ai-msg ren-ai-msg-user"&gt;…&lt;/div&gt;
-  &lt;div class="ren-ai-msg ren-ai-msg-assistant"&gt;
-    Streaming response…
-    &lt;span class="ren-ai-cursor"&gt;&lt;/span&gt;
-  &lt;/div&gt;
-&lt;/div&gt;
 
-&lt;div class="ren-ai-suggestions"&gt;
-  &lt;button class="ren-tag ren-tag-clickable"&gt;…&lt;/button&gt;
-&lt;/div&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-ai-thread</code></td><td>Scroll container for messages. <code>role="log"</code>, <code>aria-live="polite"</code>.</td></tr><tr><td><code class="dx-api-name">.ren-ai-msg</code></td><td>One message. Combine with <code>-user</code> or <code>-assistant</code> for direction-aware bubble shape.</td></tr><tr><td><code class="dx-api-name">.ren-ai-cursor</code></td><td>Blinking cursor that appears at the end of streaming responses.</td></tr><tr><td><code class="dx-api-name">.ren-ai-suggestions</code></td><td>Row of suggestion chips below the latest assistant message.</td></tr><tr><td><code class="dx-api-name">.ren-ai-actions</code></td><td>Trailing slot under a message: copy, regenerate, thumbs up/down.</td></tr></tbody></table></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>The thread is a live region — screen readers announce new messages as they arrive.</li><li>Don't auto-scroll while the user is reading — pause auto-scroll when the user manually scrolls up, resume when they reach the bottom.</li><li>Streaming responses: announce the final text once when complete, not character by character.</li><li>Always provide a "Copy" action on assistant responses — it's the most-used affordance.</li></ul></section>
+      <!-- 1. OVERVIEW -->
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>AI chat surfaces share a small visual vocabulary: a thread of assistant messages, a streaming response indicator while the model is thinking, inline citations linking to source documents, an action row under the latest message (copy, regenerate, thumbs up/down), and a prompt input at the bottom. RenDS provides every one of those as a stand-alone CSS primitive you can compose freely.</p>
+        <p><strong>Important: this is a CSS-only pattern.</strong> There is no <code>&lt;ren-ai&gt;</code> custom element, no JavaScript file that ships with the package, and no streaming or state machine baked in. You bring:</p>
+        <ul>
+          <li>The inference call (OpenAI, Anthropic, your own backend, etc.).</li>
+          <li>The streaming text update logic (append tokens to <code>.ren-ai-message-content</code>).</li>
+          <li>The action handlers (copy → clipboard API, thumbs → your feedback endpoint, regenerate → re-call the model).</li>
+          <li>The thread state (which message is streaming, message history, scroll-to-bottom).</li>
+        </ul>
+        <p>RenDS does the visual + accessibility plumbing — tokens, layout, focus rings, live regions, reduced-motion fallbacks — so your application code focuses on the model logic, not the chrome.</p>
+
+        <h3>When to use</h3>
+        <ul>
+          <li>Building a chat-style assistant UI (in-app help, support agent, document Q&A).</li>
+          <li>Adding an "Ask AI" panel next to existing content.</li>
+          <li>Rendering AI-generated text with provenance (citations + sources).</li>
+        </ul>
+
+        <h3>When not to use</h3>
+        <ul>
+          <li><strong>Static text labeled "AI-generated".</strong> Use a <a href="ren-badge.html" class="ren-link">Badge</a> or the <code>.ren-ai-slug</code> primitive inline instead.</li>
+          <li><strong>Form-style "AI assist".</strong> If the AI just fills a field, use <a href="ren-field.html" class="ren-link">Field</a> with a custom button — no chat shell needed.</li>
+          <li><strong>Real-time co-edit / multiplayer.</strong> Out of scope — this pattern assumes turn-based request → response.</li>
+        </ul>
+
+        <div class="dx-callout">
+          <p><strong>Visual primitives, not a chat engine.</strong> If you need a higher-level component that manages thread state, streaming, and message history, build it on top using the classes here. The intent is to give you the look without imposing a state shape.</p>
+        </div>
+      </section>
+
+      <!-- 2. ANATOMY -->
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Structure</p>
+        <h2>Anatomy</h2>
+        <p>A complete AI surface has six possible regions. Pick what you need.</p>
+        <ol>
+          <li><strong>AI slug</strong> (<code>.ren-ai-slug</code>) — inline label marking content as AI-generated. Place wherever you'd write "AI" in text.</li>
+          <li><strong>Message</strong> (<code>.ren-ai-message</code>) — assistant bubble. Header (avatar / title), content (the text), footer (actions). User messages style themselves — keep them as plain bubbles or use your own.</li>
+          <li><strong>Indicators</strong> (<code>.ren-ai-typing</code>, <code>.ren-ai-streaming</code>) — shown while the model is generating. The typing dots show "thinking"; streaming pulses the latest token.</li>
+          <li><strong>Citations + sources</strong> (<code>.ren-ai-citation</code>, <code>.ren-ai-sources</code>) — superscript references in the body that link to a list of sources rendered below the message.</li>
+          <li><strong>Confidence</strong> (<code>.ren-ai-confidence</code>) — optional bar showing model confidence (data-level="high|medium|low").</li>
+          <li><strong>Prompt</strong> (<code>.ren-ai-prompt</code>) — the input at the bottom of the thread with a send button.</li>
+        </ol>
+      </section>
+
+      <!-- 3. DEMO -->
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div role="log" aria-live="polite" aria-label="Conversation with assistant" style="display: grid; gap: var(--space-3); max-width: 580px; margin-inline: auto;">
+
+              <!-- user turn -->
+              <div style="justify-self: end; background: var(--color-accent); color: var(--color-on-accent); padding: var(--space-3) var(--space-4); border-radius: var(--radius-lg) var(--radius-lg) var(--radius-sm) var(--radius-lg); max-width: 80%; font-size: var(--text-sm);">
+                What's the difference between a Tooltip and a Popover?
+              </div>
+
+              <!-- assistant turn with full chrome -->
+              <div class="ren-ai-message">
+                <header class="ren-ai-message-header">
+                  <span class="ren-ai-slug">AI</span>
+                  <span style="color: var(--color-text-muted); font-size: var(--text-xs);">Assistant · just now</span>
+                </header>
+                <div class="ren-ai-message-content">
+                  Tooltip is a passive hint shown on hover or focus — typically just text<sup class="ren-ai-citation">1</sup>.
+                  Popover is interactive: it can hold forms, multiple actions, anything keyboard-navigable<sup class="ren-ai-citation">2</sup>.
+                  Tooltip never traps focus; Popover does.
+                </div>
+
+                <div class="ren-ai-confidence" data-level="high">
+                  <span style="font-size: var(--text-xs); color: var(--color-text-muted);">Confidence: High</span>
+                  <div class="ren-ai-confidence-bar"><div class="ren-ai-confidence-fill"></div></div>
+                </div>
+
+                <ol class="ren-ai-sources">
+                  <li class="ren-ai-source">
+                    <span class="ren-ai-source-number">1</span>
+                    <a class="ren-ai-source-title" href="#">Tooltip — RenDS docs</a>
+                    <span class="ren-ai-source-url">rends.dev/docs/components/ren-tooltip.html</span>
+                  </li>
+                  <li class="ren-ai-source">
+                    <span class="ren-ai-source-number">2</span>
+                    <a class="ren-ai-source-title" href="#">Popover — RenDS docs</a>
+                    <span class="ren-ai-source-url">rends.dev/docs/components/ren-popover.html</span>
+                  </li>
+                </ol>
+
+                <footer class="ren-ai-message-footer">
+                  <div class="ren-ai-actions">
+                    <button type="button" class="ren-ai-action" aria-label="Copy response">📋 Copy</button>
+                    <button type="button" class="ren-ai-action" aria-label="Regenerate response">↻ Regenerate</button>
+                    <button type="button" class="ren-ai-action ren-ai-action-thumbs" aria-label="Helpful">👍</button>
+                    <button type="button" class="ren-ai-action ren-ai-action-thumbs" aria-label="Not helpful">👎</button>
+                  </div>
+                </footer>
+              </div>
+
+              <!-- typing indicator -->
+              <div class="ren-ai-typing" aria-live="polite" aria-label="Assistant is typing">
+                <span class="ren-ai-typing-dots"><span></span><span></span><span></span></span>
+                <span style="font-size: var(--text-xs); color: var(--color-text-muted);">Thinking…</span>
+              </div>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div role="log" aria-live="polite" aria-label="Conversation with assistant"&gt;
+
+  &lt;!-- assistant message --&gt;
+  &lt;div class="ren-ai-message"&gt;
+    &lt;header class="ren-ai-message-header"&gt;
+      &lt;span class="ren-ai-slug"&gt;AI&lt;/span&gt;
+      &lt;span&gt;Assistant · just now&lt;/span&gt;
+    &lt;/header&gt;
+
+    &lt;div class="ren-ai-message-content"&gt;
+      Tooltip is passive&lt;sup class="ren-ai-citation"&gt;1&lt;/sup&gt;.
+      Popover is interactive&lt;sup class="ren-ai-citation"&gt;2&lt;/sup&gt;.
+    &lt;/div&gt;
+
+    &lt;div class="ren-ai-confidence" data-level="high"&gt;
+      &lt;span&gt;Confidence: High&lt;/span&gt;
+      &lt;div class="ren-ai-confidence-bar"&gt;
+        &lt;div class="ren-ai-confidence-fill"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;ol class="ren-ai-sources"&gt;
+      &lt;li class="ren-ai-source"&gt;
+        &lt;span class="ren-ai-source-number"&gt;1&lt;/span&gt;
+        &lt;a class="ren-ai-source-title" href="…"&gt;Tooltip — RenDS docs&lt;/a&gt;
+        &lt;span class="ren-ai-source-url"&gt;rends.dev/…&lt;/span&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+
+    &lt;footer class="ren-ai-message-footer"&gt;
+      &lt;div class="ren-ai-actions"&gt;
+        &lt;button class="ren-ai-action"&gt;📋 Copy&lt;/button&gt;
+        &lt;button class="ren-ai-action"&gt;↻ Regenerate&lt;/button&gt;
+        &lt;button class="ren-ai-action ren-ai-action-thumbs"&gt;👍&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/footer&gt;
+  &lt;/div&gt;
+
+  &lt;!-- typing indicator (while model is generating) --&gt;
+  &lt;div class="ren-ai-typing" aria-live="polite"&gt;
+    &lt;span class="ren-ai-typing-dots"&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;
+    &lt;span&gt;Thinking…&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- 4. VARIANTS -->
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Visual</p>
+        <h2>Variants</h2>
+
+        <div class="dx-vgrid">
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">AI slug</div>
+            <div class="dx-vrow-items">
+              <p>Inline marker that flags AI-generated content. Wear it on a button, in copy, or on a card.</p>
+              <p style="margin: 0;">This text was <span class="ren-ai-slug">AI</span> generated.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;span class="ren-ai-slug"&gt;AI&lt;/span&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Streaming</div>
+            <div class="dx-vrow-items">
+              <p>Add <code>.ren-ai-streaming</code> on the message bubble while tokens are being appended to <code>.ren-ai-message-content</code>. It animates the trailing edge as a "still talking" cue.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-ai-message ren-ai-streaming"&gt;
+  &lt;div class="ren-ai-message-content"&gt;The capital of France is Pa&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Typing</div>
+            <div class="dx-vrow-items">
+              <p>Pre-streaming "thinking" state. Three pulsing dots inside <code>.ren-ai-typing-dots</code>.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-ai-typing" aria-live="polite"&gt;
+  &lt;span class="ren-ai-typing-dots"&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;
+  &lt;span&gt;Thinking…&lt;/span&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Skeleton</div>
+            <div class="dx-vrow-items">
+              <p>Placeholder for a message that hasn't started streaming yet (e.g. initial load of a saved thread).</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-ai-message"&gt;
+  &lt;div class="ren-ai-skeleton"&gt;
+    &lt;div class="ren-ai-skeleton-line"&gt;&lt;/div&gt;
+    &lt;div class="ren-ai-skeleton-line"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Confidence</div>
+            <div class="dx-vrow-items">
+              <p>Three levels via <code>data-level</code>. The bar fills proportionally and color-codes (high → success, medium → warning, low → muted).</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-ai-confidence" data-level="high|medium|low"&gt;
+  &lt;span&gt;Confidence: High&lt;/span&gt;
+  &lt;div class="ren-ai-confidence-bar"&gt;
+    &lt;div class="ren-ai-confidence-fill"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Citations</div>
+            <div class="dx-vrow-items">
+              <p>Inline <code>&lt;sup class="ren-ai-citation"&gt;</code> references that link to the sources list under the message.</p>
+              <pre class="dx-pre" tabindex="0"><code>The capital is Paris&lt;sup class="ren-ai-citation"&gt;1&lt;/sup&gt;.
+
+&lt;ol class="ren-ai-sources"&gt;
+  &lt;li class="ren-ai-source"&gt;
+    &lt;span class="ren-ai-source-number"&gt;1&lt;/span&gt;
+    &lt;a class="ren-ai-source-title" href="…"&gt;World Atlas, 2024&lt;/a&gt;
+    &lt;span class="ren-ai-source-url"&gt;example.com/atlas&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;</code></pre>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <div class="dx-vrow-label">Prompt input</div>
+            <div class="dx-vrow-items">
+              <p>Sticky composer at the bottom of the thread. Plain <code>&lt;textarea&gt;</code> + send <code>&lt;button&gt;</code> wrapped in <code>.ren-ai-prompt</code>.</p>
+              <pre class="dx-pre" tabindex="0"><code>&lt;form class="ren-ai-prompt" action="/api/chat" method="post"&gt;
+  &lt;textarea class="ren-ai-prompt-input" name="prompt"
+            placeholder="Ask anything…"
+            rows="1"&gt;&lt;/textarea&gt;
+  &lt;button type="submit" class="ren-ai-prompt-send" aria-label="Send"&gt;→&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 5. API -->
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-ai-slug</code></td><td>Inline "AI" pill. Use anywhere AI-generated content needs an explicit marker.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-message</code></td><td>Assistant message bubble. Wraps header / content / footer.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-message-header</code></td><td>Top row inside the bubble: slug, author name, timestamp.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-message-content</code></td><td>The body text. Append streaming tokens here.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-message-footer</code></td><td>Bottom row: confidence, sources, actions.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-streaming</code></td><td>Add to <code>.ren-ai-message</code> while tokens are streaming. Animates the trailing edge.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-typing</code></td><td>Pre-streaming "thinking" container. Sibling, not nested, of the streaming message.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-typing-dots</code></td><td>Three pulsing dots inside <code>.ren-ai-typing</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-skeleton</code> / <code class="dx-api-name">.ren-ai-skeleton-line</code></td><td>Placeholder for a not-yet-loaded message.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-citation</code></td><td>On <code>&lt;sup&gt;</code> inline in content. Renders as a clickable reference number.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-sources</code></td><td>Ordered list of source entries below the message body.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-source</code></td><td>One source list item. Number + title + url.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-source-number</code> / <code class="dx-api-name">-title</code> / <code class="dx-api-name">-url</code></td><td>Composable parts of a source entry.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-confidence</code></td><td>Confidence indicator. Set <code>data-level="high" | "medium" | "low"</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-confidence-bar</code> / <code class="dx-api-name">-fill</code></td><td>Track + filled portion of the bar.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-actions</code></td><td>Trailing row of action buttons under a message.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-action</code></td><td>One action button (copy, regenerate, etc.). Real <code>&lt;button&gt;</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-action-thumbs</code></td><td>Variant for thumbs up / down feedback buttons.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-prompt</code></td><td>Wrapper for the composer at the bottom of the thread.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-prompt-input</code></td><td>The <code>&lt;textarea&gt;</code> styled to grow with content.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-ai-prompt-send</code></td><td>The send button. Icon-only by convention.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Data attributes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Attribute</th><th>Where</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">data-level</code></td><td><code>.ren-ai-confidence</code></td><td><code>high</code> / <code>medium</code> / <code>low</code>. Tints the bar.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript</h3>
+        <p>None ships with this pattern. The customer code:</p>
+        <ul>
+          <li>Appends tokens to <code>.ren-ai-message-content</code> during streaming.</li>
+          <li>Adds / removes <code>.ren-ai-streaming</code> to flip the trailing-edge animation.</li>
+          <li>Wires <code>.ren-ai-action</code> click handlers (clipboard for copy, callback for regenerate / thumbs).</li>
+          <li>Manages the thread state (which message is active, scroll-to-bottom, save history).</li>
+          <li>Handles the <code>.ren-ai-prompt</code> form submission (call the model, render the response).</li>
+        </ul>
+
+        <div class="dx-callout">
+          <p><strong>Coming in 0.9.0:</strong> selectors for error messages (<code>.ren-ai-error</code>), file upload chips (<code>.ren-ai-file-chip</code>), tool-call display (<code>.ren-ai-tool-call</code>), and edit-and-resend (<code>.ren-ai-action-edit</code>). Still CSS-only — same philosophy.</p>
+        </div>
+      </section>
+
+      <!-- 6. ACCESSIBILITY -->
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+
+        <h3>Live regions</h3>
+        <ul>
+          <li>Wrap the thread in <code>role="log"</code> + <code>aria-live="polite"</code>. New messages are announced as they appear.</li>
+          <li>For long streaming responses, <strong>announce the final text once when complete</strong>, not character by character. Strategy: render the streaming text inside an off-live container, then move it into a live region when streaming finishes.</li>
+          <li>The typing indicator carries its own <code>aria-live="polite"</code> + <code>aria-label="Assistant is typing"</code> so it's announced once.</li>
+        </ul>
+
+        <h3>Focus management</h3>
+        <ul>
+          <li><strong>Don't auto-scroll while the user is reading.</strong> Pause auto-scroll when the user scrolls up from the bottom; resume when they reach the bottom again.</li>
+          <li><strong>Don't move focus on each new message</strong> — focus stays where the user put it.</li>
+          <li><strong>Do</strong> move focus to the prompt input after submitting (the user is likely typing the next message).</li>
+        </ul>
+
+        <h3>Action buttons</h3>
+        <ul>
+          <li>Always include an <strong>accessible name</strong> on icon-only actions (<code>aria-label="Copy response"</code>, <code>aria-label="Regenerate"</code>).</li>
+          <li>Toggle state on thumbs: <code>aria-pressed="true"</code> when the user clicked it.</li>
+          <li>"Copy" is the most-used affordance — make sure it works with no extra modal.</li>
+        </ul>
+
+        <h3>Citations + sources</h3>
+        <ul>
+          <li>The citation <code>&lt;sup&gt;</code> should be a real <code>&lt;a href="#source-N"&gt;</code> so keyboard / screen-reader users can jump to the source list.</li>
+          <li>Source URLs should be readable to screen readers — don't replace the entire URL with an icon.</li>
+        </ul>
+
+        <h3>Reduced motion</h3>
+        <p>All animations (streaming pulse, typing dots, skeleton shimmer) respect <code>prefers-reduced-motion: reduce</code> and fall back to static / opacity-only states. You don't have to wire this — the CSS handles it.</p>
+
+        <div class="dx-callout">
+          <p><strong>Always provide a way out.</strong> An AI thread without a "stop generating" button traps the user when the model goes off the rails. Include a cancel affordance — RenDS doesn't enforce it but it's the most important AI-UX rule.</p>
+        </div>
+      </section>
+
+      <!-- 7. EXAMPLES -->
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Streaming a response</h3>
+        <p>Render an empty <code>.ren-ai-message</code> with <code>.ren-ai-streaming</code> while you append tokens to <code>.ren-ai-message-content</code>.</p>
+        <pre class="dx-pre" tabindex="0"><code>const msg = document.createElement('div');
+msg.className = 'ren-ai-message ren-ai-streaming';
+msg.innerHTML = `
+  &lt;header class="ren-ai-message-header"&gt;
+    &lt;span class="ren-ai-slug"&gt;AI&lt;/span&gt;
+  &lt;/header&gt;
+  &lt;div class="ren-ai-message-content"&gt;&lt;/div&gt;
+`;
+thread.append(msg);
+const target = msg.querySelector('.ren-ai-message-content');
+
+for await (const chunk of streamFromModel(prompt)) {
+  target.append(chunk);
+}
+
+// done streaming
+msg.classList.remove('ren-ai-streaming');</code></pre>
+
+        <h3>Copy action with clipboard API</h3>
+        <pre class="dx-pre" tabindex="0"><code>thread.addEventListener('click', async (e) =&gt; {
+  const btn = e.target.closest('.ren-ai-action');
+  if (!btn || btn.dataset.action !== 'copy') return;
+
+  const msg = btn.closest('.ren-ai-message');
+  const text = msg.querySelector('.ren-ai-message-content').innerText;
+  await navigator.clipboard.writeText(text);
+  toast.success('Copied');
+});</code></pre>
+
+        <h3>Thumbs feedback with aria-pressed</h3>
+        <pre class="dx-pre" tabindex="0"><code>// Markup
+&lt;button type="button"
+        class="ren-ai-action ren-ai-action-thumbs"
+        aria-pressed="false"
+        aria-label="Helpful"&gt;👍&lt;/button&gt;
+
+// JS
+btn.addEventListener('click', () =&gt; {
+  const pressed = btn.getAttribute('aria-pressed') === 'true';
+  btn.setAttribute('aria-pressed', String(!pressed));
+  fetch('/api/feedback', {
+    method: 'POST',
+    body: JSON.stringify({ messageId, helpful: !pressed }),
+  });
+});</code></pre>
+
+        <h3>Suggestion chips</h3>
+        <p>Use <a href="ren-tag.html" class="ren-link">Tag</a> with the <code>clickable</code> variant — there's no AI-specific suggestion class, suggestions are just tags.</p>
+        <pre class="dx-pre" tabindex="0"><code>&lt;div style="display: flex; flex-wrap: wrap; gap: var(--space-1);"&gt;
+  &lt;button class="ren-tag ren-tag-clickable"&gt;Show me an example&lt;/button&gt;
+  &lt;button class="ren-tag ren-tag-clickable"&gt;What about Dialog?&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
     </main>
   </div>
+
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>
