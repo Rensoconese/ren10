@@ -225,6 +225,13 @@
 
         <div class="dx-key-cell"><span class="dx-kbd">Type a letter</span></div>
         <div class="dx-keys-desc">In <code>Select</code> and <code>Menu</code>: jump to next item starting with that letter.</div>
+
+        <div class="dx-key-cell"><span class="dx-kbd">F6</span></div>
+        <div class="dx-keys-desc">Moves focus to the <a href="components/ren-toast.html#a11y" class="ren-link">toast viewport</a> — useful when an action toast is showing and the user wants to act on it before it auto-dismisses. A platform convention from macOS, rarely implemented elsewhere; <code>ren-toast</code> ships it by default.</div>
+      </div>
+
+      <div class="dx-callout">
+        <p><strong>Featured pattern — <kbd>F6</kbd> to reach the toast viewport.</strong> Keyboard-only users frequently miss action toasts ("Undo") because they appear without focus and disappear without warning. <code>ren-toast</code> wires a global <kbd>F6</kbd> handler that moves focus to the viewport so the user can <kbd>Tab</kbd> to the action button. It's a small detail that lifts RenDS above WCAG 2.1 AA — most DSs don't bother. See <a href="components/ren-toast.html#a11y" class="ren-link">ren-toast accessibility</a>.</p>
       </div>
 
       <h3>Test yourself</h3>

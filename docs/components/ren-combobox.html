@@ -150,7 +150,7 @@
           </ol>
         </nav>
         <p class="dx-kicker">Composite</p>
-        <h1>Combobox</h1>
+        <h1>Combobox <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
         <p class="lede">A typeahead-searchable picker. Combines a text input with a filtered listbox so users can either type to filter or arrow-key through options. Use it when you have more than ~15 options and need search, but don't need full free-text input (use <code>&lt;input type="text"&gt;</code> with a datalist for that).</p>
       </header>
 
@@ -275,9 +275,46 @@
         <table class="dx-api">
           <thead><tr><th>Event</th><th>Detail</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">ren-change</code></td><td>Selection changed. <code>{ value, item }</code>.</td></tr>
-            <tr><td><code class="dx-api-name">ren-search</code></td><td>User typed. <code>{ query }</code>. Use this for async loading.</td></tr>
-            <tr><td><code class="dx-api-name">ren-open</code> / <code class="dx-api-name">ren-close</code></td><td>Listbox opened / closed.</td></tr>
+            <tr><td><code class="dx-api-name">ren-change</code></td><td>Selection changed. <code>{ value, item }</code>. Bubbles, composed.</td></tr>
+            <tr><td><code class="dx-api-name">ren-search</code></td><td>User typed. <code>{ query }</code>. Use this for async loading. Bubbles.</td></tr>
+            <tr><td><code class="dx-api-name">ren-open</code> / <code class="dx-api-name">ren-close</code></td><td>Listbox opened / closed. Bubbles, composed.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript methods</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Method</th><th>Returns</th><th>Args</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">.value</code></td>
+              <td><span class="dx-api-type">string</span></td>
+              <td><span class="dx-api-default">—</span></td>
+              <td>Getter / setter for the selected <code>data-value</code>. Setting it updates the input and dispatches <code>ren-change</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.open()</code></td>
+              <td><span class="dx-api-type">void</span></td>
+              <td><span class="dx-api-default">—</span></td>
+              <td>Programmatically opens the listbox.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.close()</code></td>
+              <td><span class="dx-api-type">void</span></td>
+              <td><span class="dx-api-default">—</span></td>
+              <td>Programmatically closes the listbox.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.setLoading(state)</code></td>
+              <td><span class="dx-api-type">void</span></td>
+              <td><span class="dx-api-type">boolean</span></td>
+              <td>Toggles the <code>.ren-combobox-loading</code> row. Pair with <code>ren-search</code> to indicate an async fetch is in flight.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.setItems(items)</code></td>
+              <td><span class="dx-api-type">void</span></td>
+              <td><span class="dx-api-type">Array&lt;{value, label, description?}&gt;</span></td>
+              <td>Replaces the visible options. Use with the <code>async</code> attribute when the parent app owns filtering.</td>
+            </tr>
           </tbody>
         </table>
       </section>

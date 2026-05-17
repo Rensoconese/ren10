@@ -291,6 +291,135 @@
         <p>Rule of thumb: if losing the text loses information, it can't be <code>--color-text-faint</code>. See <a href="accessibility.html#contrast">Accessibility &rarr; Color contrast</a>.</p>
       </div>
 
+      <!-- DO / DON'T visual examples for --color-text-faint -->
+      <h3 id="faint-examples">DO / DON'T: <code>--color-text-faint</code> in the wild</h3>
+      <p>Two columns, real previews. Same token, very different fitness depending on what the user has to read.</p>
+
+      <style>
+        .dx-faint-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: var(--space-4);
+          margin: var(--space-4) 0;
+          max-width: 72ch;
+        }
+        @media (max-width: 720px) { .dx-faint-grid { grid-template-columns: 1fr; } }
+        .dx-faint-card {
+          padding: var(--space-4);
+          border-radius: var(--radius-md);
+          border: 1px solid;
+        }
+        .dx-faint-do   { background: color-mix(in srgb, var(--color-success) 6%, var(--color-surface)); border-color: color-mix(in srgb, var(--color-success) 40%, transparent); }
+        .dx-faint-dont { background: color-mix(in srgb, var(--color-danger)  6%, var(--color-surface)); border-color: color-mix(in srgb, var(--color-danger)  40%, transparent); }
+        .dx-faint-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 var(--space-3); }
+        .dx-faint-do   .dx-faint-label { color: var(--color-success); }
+        .dx-faint-dont .dx-faint-label { color: var(--color-danger); }
+        .dx-faint-preview {
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          padding: var(--space-3) var(--space-4);
+          margin-bottom: var(--space-2);
+          min-height: 56px;
+          display: flex;
+          align-items: center;
+        }
+        .dx-faint-caption { font-size: var(--text-xs); color: var(--color-text-muted); margin: 0 0 var(--space-3); line-height: 1.5; }
+
+        .demo-faint-text { color: var(--color-text-faint); }
+        .demo-muted-text { color: var(--color-text-muted); }
+
+        /* Breadcrumb separator preview (DO) */
+        .demo-bc { display: flex; align-items: center; gap: var(--space-1); font-size: var(--text-sm); }
+        .demo-bc .sep { color: var(--color-text-faint); }
+        .demo-bc a { color: var(--color-text-muted); text-decoration: none; }
+        .demo-bc strong { color: var(--color-text); }
+
+        /* Calendar preview (DO) */
+        .demo-cal { display: grid; grid-template-columns: repeat(7, 28px); gap: 4px; font-family: var(--font-mono); font-size: var(--text-xs); }
+        .demo-cal span { display: grid; place-items: center; height: 28px; color: var(--color-text); }
+        .demo-cal .out { color: var(--color-text-faint); }
+        .demo-cal .today { background: var(--color-accent); color: var(--color-on-accent); border-radius: var(--radius-sm); }
+
+        /* Disabled label preview (DO) */
+        .demo-disabled { display: flex; align-items: center; gap: var(--space-2); opacity: 0.6; }
+        .demo-disabled input[type="checkbox"] { accent-color: var(--color-text-muted); }
+        .demo-disabled label { color: var(--color-text-faint); font-size: var(--text-sm); }
+
+        /* Placeholder preview (DO) */
+        .demo-placeholder { width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-sm); background: var(--color-surface); color: var(--color-text); }
+        .demo-placeholder::placeholder { color: var(--color-text-faint); }
+      </style>
+
+      <div class="dx-faint-grid">
+        <!-- DO -->
+        <div class="dx-faint-card dx-faint-do">
+          <p class="dx-faint-label">Do — incidental</p>
+
+          <div class="dx-faint-preview">
+            <div class="demo-bc"><a>Docs</a><span class="sep">›</span><a>Components</a><span class="sep">›</span><strong>Button</strong></div>
+          </div>
+          <p class="dx-faint-caption">Breadcrumb separators (<code>›</code>) are decorative — the active item is the information.</p>
+
+          <div class="dx-faint-preview" style="display: block; padding-top: var(--space-3);">
+            <div class="demo-cal" aria-hidden="true">
+              <span class="out">28</span><span class="out">29</span><span>1</span><span>2</span><span>3</span><span class="today">4</span><span>5</span>
+            </div>
+          </div>
+          <p class="dx-faint-caption">Calendar days <em>outside</em> the current month — they're context, the user reads inside-month numbers.</p>
+
+          <div class="dx-faint-preview">
+            <div class="demo-disabled">
+              <input type="checkbox" disabled>
+              <label>Email me weekly digests</label>
+            </div>
+          </div>
+          <p class="dx-faint-caption">Disabled label paired with <code>opacity &lt; 1</code>. WCAG 1.4.3 exempts disabled controls.</p>
+
+          <div class="dx-faint-preview">
+            <input class="demo-placeholder" type="text" placeholder="Search projects…" aria-label="Search projects">
+          </div>
+          <p class="dx-faint-caption">Placeholder is a hint about what to type — never the only label.</p>
+        </div>
+
+        <!-- DON'T -->
+        <div class="dx-faint-card dx-faint-dont">
+          <p class="dx-faint-label">Don't — must be read</p>
+
+          <div class="dx-faint-preview" style="flex-direction: column; align-items: flex-start; gap: 6px;">
+            <p class="demo-faint-text" style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">Pricing</p>
+            <h4 style="margin: 0; font-size: var(--text-md);">Pro plan — $24/mo</h4>
+          </div>
+          <p class="dx-faint-caption">Eyebrow / kicker text — readers <em>do</em> rely on it to scan a section. Use <code>--color-text-muted</code>.</p>
+
+          <div class="dx-faint-preview" style="display: block;">
+            <table style="width: 100%; font-size: var(--text-sm); border-collapse: collapse;">
+              <thead><tr>
+                <th style="text-align: left; color: var(--color-text-faint); padding-bottom: 4px;">Name</th>
+                <th style="text-align: left; color: var(--color-text-faint); padding-bottom: 4px;">Email</th>
+              </tr></thead>
+              <tbody><tr><td>Ana</td><td>ana@example.com</td></tr></tbody>
+            </table>
+          </div>
+          <p class="dx-faint-caption">Table headers tell the user what each column is — they fail AA in <code>--color-text-faint</code>. Use <code>--color-text-muted</code>.</p>
+
+          <div class="dx-faint-preview" style="gap: var(--space-3);">
+            <span class="demo-faint-text" style="font-family: var(--font-mono); font-size: var(--text-sm);">1</span>
+            <span style="font-size: var(--text-sm);">Account</span>
+            <span class="demo-faint-text" style="font-family: var(--font-mono); font-size: var(--text-sm);">2</span>
+            <span style="font-size: var(--text-sm);">Profile</span>
+          </div>
+          <p class="dx-faint-caption">Step numbers in a wizard — the user reads them to orient. Use <code>--color-text-muted</code> or the accent for current step.</p>
+
+          <div class="dx-faint-preview">
+            <p class="demo-faint-text" style="margin: 0; font-size: var(--text-sm); line-height: 1.5;">
+              Your password must contain at least 8 characters, one number, and one symbol.
+            </p>
+          </div>
+          <p class="dx-faint-caption">Help text under a field — if it's worth showing, it's worth reading. Use <code>--color-text-muted</code>.</p>
+        </div>
+      </div>
+
       <h3>Surfaces</h3>
       <table class="dx-table">
         <thead><tr><th>Token</th><th>Role</th><th>Preview</th></tr></thead>
@@ -424,9 +553,9 @@
 
       <h3>Live preview</h3>
       <div class="dx-preview">
-        <button class="ren-btn ren-btn-primary">Default</button>
-        <button class="ren-btn ren-btn-primary" style="--ren-btn-bg: hotpink; --ren-btn-border: hotpink;">Hotpink bg</button>
-        <button class="ren-btn ren-btn-primary" style="--ren-btn-radius: var(--radius-full);">Pill radius</button>
+        <button type="button" class="ren-btn ren-btn-primary">Default</button>
+        <button type="button" class="ren-btn ren-btn-primary" style="--ren-btn-bg: hotpink; --ren-btn-border: hotpink;">Hotpink bg</button>
+        <button type="button" class="ren-btn ren-btn-primary" style="--ren-btn-radius: var(--radius-full);">Pill radius</button>
       </div>
       <p>Every preview above is a real <code>&lt;button class="ren-btn ren-btn-primary"&gt;</code> — the only differences are inline token overrides on the element.</p>
     </section>

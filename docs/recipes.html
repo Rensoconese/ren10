@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recipes — RenDS Patterns</title>
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../themes/appearance.css">
+  <link rel="stylesheet" href="../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../site/shell.css">
+  <style>
+    .recipe-card {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      margin: var(--space-4) 0;
+      background: var(--color-surface);
+    }
+    .recipe-uses {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+      align-items: center;
+    }
+    .recipe-uses-label {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-semibold);
+      margin-right: var(--space-2);
+    }
+    .recipe-uses .ren-tag {
+      text-decoration: none;
+    }
+    .recipe-gotchas {
+      background: var(--color-surface-sunken);
+      border-left: 3px solid var(--color-accent);
+      padding: var(--space-3) var(--space-4);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    .recipe-gotchas h4 {
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-semibold);
+      margin: 0 0 var(--space-2);
+    }
+    .recipe-gotchas ul { margin: 0; padding-left: var(--space-5); }
+    .recipe-gotchas li { font-size: var(--text-sm); margin-bottom: var(--space-1); color: var(--color-text-secondary); }
+
+    .dx-pre {
+      max-height: 480px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="index.html" aria-current="page">Docs</a>
+        <a href="components.html">Components</a>
+        <a href="../templates/index.html">Templates</a>
+        <a href="../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="getting-started.html">Getting Started</a></li>
+        <li><a href="theming.html">Theming</a></li>
+        <li><a href="accessibility.html">Accessibility</a></li>
+        <li><a href="cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="tokens.html">Tokens</a></li>
+        <li><a href="layouts.html">Layouts</a></li>
+        <li><a href="foundations/events.html">Events</a></li>
+        <li><a href="foundations/cascade-layers.html">Cascade Layers</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="components.html">Components catalog</a></li>
+        <li><a href="recipes.html" aria-current="page">Recipes</a></li>
+      </ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="index.html" class="ren-link-plain">Docs</a></li><li aria-current="page">Recipes</li></ol></nav>
+        <p class="dx-kicker">Recipes</p>
+        <h1>Patterns recipes</h1>
+        <p class="lede">Each component page documents itself. This page is for <strong>combos</strong>: real flows that wire 3-4 components together. Copy a recipe, swap the data, ship it.</p>
+      </header>
+
+      <!-- Index of recipes -->
+      <section class="dx-section" id="index">
+        <p class="dx-kicker">On this page</p>
+        <h2>Recipes</h2>
+        <ol>
+          <li><a href="#confirm-delete" class="ren-link">Confirm-and-delete flow</a> — Dialog + Form + Toast</li>
+          <li><a href="#searchable-select" class="ren-link">Searchable select</a> — Combobox inside Field</li>
+          <li><a href="#tabbed-settings" class="ren-link">Tabbed settings with URL hash</a> — Tabs + lazy load + history</li>
+          <li><a href="#crud-row" class="ren-link">CRUD admin row</a> — Table + Menu + Dialog + Toast</li>
+          <li><a href="#auth-flow" class="ren-link">Auth flow</a> — Form + Field + Validation + Button</li>
+        </ol>
+      </section>
+
+      <!-- RECIPE 1 -->
+      <section class="dx-section" id="confirm-delete">
+        <p class="dx-kicker">Recipe 1</p>
+        <h2>Confirm-and-delete flow</h2>
+        <p>The single most common destructive flow: user clicks Delete on a row, an alert dialog confirms, and after success a Toast confirms (with an Undo affordance for graceful recovery).</p>
+
+        <div class="recipe-card">
+          <p class="recipe-uses">
+            <span class="recipe-uses-label">Uses</span>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-alert-dialog.html">ren-alert-dialog</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-button.html">ren-button</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-toast.html">ren-toast</a>
+          </p>
+          <pre class="dx-pre" tabindex="0"><code>&lt;!-- 1. Trigger --&gt;
+&lt;button class="ren-btn ren-btn-danger" type="button"
+        data-dialog-trigger="dlg-confirm-delete"&gt;Delete project&lt;/button&gt;
+
+&lt;!-- 2. Confirm dialog (alert variant: no backdrop dismissal) --&gt;
+&lt;ren-alert-dialog id="dlg-confirm-delete"
+                  aria-labelledby="dlg-confirm-delete-title"&gt;
+  &lt;dialog class="ren-dialog ren-alert-dialog"&gt;
+    &lt;div class="ren-dialog-header"&gt;
+      &lt;h2 class="ren-dialog-title" id="dlg-confirm-delete-title"&gt;
+        Delete this project?
+      &lt;/h2&gt;
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-body"&gt;
+      All files, history, and team access will be removed permanently.
+    &lt;/div&gt;
+    &lt;div class="ren-dialog-footer"&gt;
+      &lt;button class="ren-btn ren-btn-secondary" type="button"
+              data-dialog-close&gt;Keep project&lt;/button&gt;
+      &lt;button class="ren-btn ren-btn-danger" type="button"
+              data-action="confirm-delete" autofocus&gt;Delete&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/dialog&gt;
+&lt;/ren-alert-dialog&gt;
+
+&lt;script&gt;
+document.addEventListener('click', async (e) =&gt; {
+  const btn = e.target.closest('[data-action="confirm-delete"]');
+  if (!btn) return;
+
+  btn.dataset.loading = '';
+  try {
+    const backup = await api.deleteProject(projectId);
+    document.getElementById('dlg-confirm-delete').close();
+
+    // 3. Success toast with undo
+    toast.success('Project deleted', {
+      duration: 7000,
+      action: {
+        label: 'Undo',
+        onClick: () =&gt; api.restoreProject(backup),
+      },
+    });
+  } catch (err) {
+    toast.danger('Couldn\'t delete', { description: err.message });
+  } finally {
+    delete btn.dataset.loading;
+  }
+});
+&lt;/script&gt;</code></pre>
+          <div class="recipe-gotchas">
+            <h4>Edge cases &amp; gotchas</h4>
+            <ul>
+              <li><strong>Always autofocus the safe button.</strong> Here it's Delete because the dialog requires explicit choice — but for ambiguous destructive actions, autofocus Cancel.</li>
+              <li><strong>Show the toast <em>after</em> the dialog closes.</strong> If both are visible at once the focus ring jumps confusingly.</li>
+              <li><strong>Undo on a 7s timeout is a hard contract.</strong> If your backend can't actually undelete after a minute, don't promise undo — use a non-actionable toast instead.</li>
+              <li><strong>Optimistic delete?</strong> Remove the row from the UI immediately and call <code>api.restoreOptimistically(backup)</code> on Undo. Adds complexity but feels instant.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECIPE 2 -->
+      <section class="dx-section" id="searchable-select">
+        <p class="dx-kicker">Recipe 2</p>
+        <h2>Searchable select inside a Field</h2>
+        <p>Combobox provides the popover with filterable options, but it doesn't wrap the label / description / error scaffolding. Use Field for that — the same Field you'd use around a plain <code>&lt;input&gt;</code>.</p>
+
+        <div class="recipe-card">
+          <p class="recipe-uses">
+            <span class="recipe-uses-label">Uses</span>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-field.html">ren-field</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-combobox.html">ren-combobox</a>
+          </p>
+          <pre class="dx-pre" tabindex="0"><code>&lt;ren-field name="country" required&gt;
+  &lt;label class="ren-field-label" for="country-cb"&gt;Country&lt;/label&gt;
+  &lt;p class="ren-field-description"&gt;
+    Where the team will be billed.
+  &lt;/p&gt;
+
+  &lt;ren-combobox id="country-cb" name="country" placeholder="Search countries…"&gt;
+    &lt;div class="ren-combobox-item" data-value="ar"&gt;Argentina&lt;/div&gt;
+    &lt;div class="ren-combobox-item" data-value="br"&gt;Brazil&lt;/div&gt;
+    &lt;div class="ren-combobox-item" data-value="cl"&gt;Chile&lt;/div&gt;
+    &lt;div class="ren-combobox-item" data-value="uy"&gt;Uruguay&lt;/div&gt;
+  &lt;/ren-combobox&gt;
+
+  &lt;p class="ren-field-error" data-for="country"&gt;&lt;/p&gt;
+&lt;/ren-field&gt;</code></pre>
+          <div class="recipe-gotchas">
+            <h4>Edge cases &amp; gotchas</h4>
+            <ul>
+              <li><strong>Field's <code>name</code> and Combobox's <code>name</code> must match.</strong> Field wires ARIA <code>aria-describedby</code> + <code>aria-invalid</code> by name — mismatch means the error isn't announced.</li>
+              <li><strong>For async-loaded options</strong>, set <code>async</code> on the combobox and call <code>combo.setItems(arr)</code> from your <code>ren-search</code> listener. The Field error scaffolding works the same way.</li>
+              <li><strong>Don't use Combobox <code>placeholder</code> as a label.</strong> The label inside Field is the accessible name.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECIPE 3 -->
+      <section class="dx-section" id="tabbed-settings">
+        <p class="dx-kicker">Recipe 3</p>
+        <h2>Tabbed settings with URL hash</h2>
+        <p>A settings page where each tab is deep-linkable (<code>#account</code>, <code>#billing</code>, etc.), panels load on demand, and Back / Forward navigates between tabs.</p>
+
+        <div class="recipe-card">
+          <p class="recipe-uses">
+            <span class="recipe-uses-label">Uses</span>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-tabs.html">ren-tabs</a>
+          </p>
+          <pre class="dx-pre" tabindex="0"><code>&lt;ren-tabs data-tabs-hash="true"&gt;
+  &lt;div class="ren-tabs-list" role="tablist"&gt;
+    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="account"&gt;Account&lt;/button&gt;
+    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="billing"&gt;Billing&lt;/button&gt;
+    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="team"&gt;Team&lt;/button&gt;
+    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="api"&gt;API keys&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;section class="ren-tabs-panel" data-tab-id="account"&gt;
+    &lt;!-- always-rendered: profile is cheap --&gt;
+    &lt;h2&gt;Account&lt;/h2&gt;
+    …
+  &lt;/section&gt;
+
+  &lt;section class="ren-tabs-panel" data-tab-id="billing" data-lazy&gt;
+    &lt;!-- lazy: only fetch when visited --&gt;
+  &lt;/section&gt;
+
+  &lt;section class="ren-tabs-panel" data-tab-id="team" data-lazy&gt;&lt;/section&gt;
+  &lt;section class="ren-tabs-panel" data-tab-id="api" data-lazy&gt;&lt;/section&gt;
+&lt;/ren-tabs&gt;
+
+&lt;script&gt;
+const tabs = document.querySelector('ren-tabs');
+
+tabs.addEventListener('ren-tab-change', async (e) =&gt; {
+  const panel = tabs.querySelector(`.ren-tabs-panel[data-tab-id="${e.detail.tabId}"]`);
+  if (panel.dataset.lazy === '' &amp;&amp; !panel.dataset.loaded) {
+    panel.dataset.loaded = '';
+    panel.innerHTML = await fetch(`/settings/${e.detail.tabId}`).then(r =&gt; r.text());
+  }
+});
+&lt;/script&gt;</code></pre>
+          <div class="recipe-gotchas">
+            <h4>Edge cases &amp; gotchas</h4>
+            <ul>
+              <li><strong><code>data-tabs-hash="true"</code></strong> wires <code>location.hash</code> automatically. The hash matches <code>data-tab-id</code>.</li>
+              <li><strong>If your tab IDs collide with anchors on the page</strong> (e.g. a section also has <code>id="account"</code>), prefix them: <code>data-tab-id="t-account"</code>.</li>
+              <li><strong>Lazy panels should keep their <code>data-loaded</code> flag</strong> after the first fetch so revisits don't refetch.</li>
+              <li><strong>Persist UI state too, not just the tab</strong> — if Billing has a form, store its draft in <code>sessionStorage</code> so the user doesn't lose it on tab switch.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECIPE 4 -->
+      <section class="dx-section" id="crud-row">
+        <p class="dx-kicker">Recipe 4</p>
+        <h2>CRUD admin row</h2>
+        <p>The bread-and-butter admin pattern: rows of data, each with a dropdown menu (Edit, Duplicate, Delete), confirm dialog for destructive actions, toast for the result.</p>
+
+        <div class="recipe-card">
+          <p class="recipe-uses">
+            <span class="recipe-uses-label">Uses</span>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-table.html">ren-table</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-menu.html">ren-menu</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-alert-dialog.html">ren-alert-dialog</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-toast.html">ren-toast</a>
+          </p>
+          <pre class="dx-pre" tabindex="0"><code>&lt;ren-table data-page-size="20"&gt;
+  &lt;div class="ren-table-wrapper"&gt;
+    &lt;table class="ren-table"&gt;
+      &lt;thead class="ren-table-header"&gt;
+        &lt;tr&gt;
+          &lt;th class="ren-th ren-th-sortable" data-column="name"&gt;Name&lt;/th&gt;
+          &lt;th class="ren-th"&gt;Email&lt;/th&gt;
+          &lt;th class="ren-th ren-th-sortable" data-column="role"&gt;Role&lt;/th&gt;
+          &lt;th class="ren-th"&gt;&lt;span class="ren-sr-only"&gt;Actions&lt;/span&gt;&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody class="ren-table-body"&gt;
+        &lt;tr class="ren-tr" data-row-id="usr_42"&gt;
+          &lt;td class="ren-td"&gt;Ana&lt;/td&gt;
+          &lt;td class="ren-td"&gt;ana@example.com&lt;/td&gt;
+          &lt;td class="ren-td"&gt;Admin&lt;/td&gt;
+          &lt;td class="ren-td"&gt;
+            &lt;ren-menu&gt;
+              &lt;button class="ren-btn ren-btn-ghost ren-btn-icon" type="button"
+                      aria-label="Actions for Ana"&gt;⋯&lt;/button&gt;
+              &lt;div class="ren-menu-content"&gt;
+                &lt;button class="ren-menu-item" type="button"
+                        data-action="edit" data-id="usr_42"&gt;Edit&lt;/button&gt;
+                &lt;button class="ren-menu-item" type="button"
+                        data-action="duplicate" data-id="usr_42"&gt;Duplicate&lt;/button&gt;
+                &lt;hr class="ren-menu-separator"&gt;
+                &lt;button class="ren-menu-item ren-menu-item-danger" type="button"
+                        data-action="delete" data-id="usr_42"&gt;Delete…&lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/ren-menu&gt;
+          &lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;!-- more rows… --&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+&lt;/ren-table&gt;
+
+&lt;script&gt;
+let pendingDeleteId = null;
+
+document.addEventListener('ren-menu-select', (e) =&gt; {
+  const action = e.detail.item?.dataset?.action;
+  const id     = e.detail.item?.dataset?.id;
+  if (!action) return;
+
+  if (action === 'edit')      openEditDialog(id);
+  if (action === 'duplicate') api.duplicate(id).then(refreshTable);
+  if (action === 'delete') {
+    pendingDeleteId = id;
+    document.getElementById('dlg-confirm-delete-user').showModal();
+  }
+});
+
+document.addEventListener('click', async (e) =&gt; {
+  const btn = e.target.closest('[data-action="confirm-delete-user"]');
+  if (!btn || !pendingDeleteId) return;
+
+  await api.deleteUser(pendingDeleteId);
+  document.getElementById('dlg-confirm-delete-user').close();
+  toast.success('User deleted');
+  refreshTable();
+  pendingDeleteId = null;
+});
+&lt;/script&gt;</code></pre>
+          <div class="recipe-gotchas">
+            <h4>Edge cases &amp; gotchas</h4>
+            <ul>
+              <li><strong>Each Menu button needs <code>aria-label</code></strong> that includes the row identity (<code>"Actions for Ana"</code>), not generic <code>"More"</code>.</li>
+              <li><strong>Use <code>data-row-id</code></strong> on <code>&lt;tr&gt;</code> matching your entity id (<code>usr_42</code>), not the array index. Sort/filter shouldn't change the identity.</li>
+              <li><strong>Disable bulk action when no rows selected</strong> — listen for <code>ren-row-select</code> and toggle the action bar's <code>hidden</code>.</li>
+              <li><strong>Confirm dialog needs autofocus on the safe button</strong> for destructive flows. See Recipe 1.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECIPE 5 -->
+      <section class="dx-section" id="auth-flow">
+        <p class="dx-kicker">Recipe 5</p>
+        <h2>Auth flow (sign in)</h2>
+        <p>Sign-in form with email + password, native HTML5 validation, server-side error mirroring, submit-button loading state, and toast confirmation.</p>
+
+        <div class="recipe-card">
+          <p class="recipe-uses">
+            <span class="recipe-uses-label">Uses</span>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-form.html">ren-form</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-field.html">ren-field</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-button.html">ren-button</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-toast.html">ren-toast</a>
+            <a class="ren-tag ren-tag-clickable" href="components/ren-card.html">ren-card</a>
+          </p>
+          <pre class="dx-pre" tabindex="0"><code>&lt;div class="ren-card ren-stack" style="max-width: 28rem; margin-inline: auto; padding: var(--space-6);"&gt;
+  &lt;h1&gt;Sign in&lt;/h1&gt;
+
+  &lt;ren-form id="sign-in" novalidate&gt;
+    &lt;ren-field name="email" required&gt;
+      &lt;label class="ren-field-label" for="email"&gt;Email&lt;/label&gt;
+      &lt;input id="email" type="email" name="email"
+             class="ren-input" autocomplete="email" required&gt;
+      &lt;p class="ren-field-error" data-for="email"&gt;&lt;/p&gt;
+    &lt;/ren-field&gt;
+
+    &lt;ren-field name="password" required&gt;
+      &lt;label class="ren-field-label" for="password"&gt;Password&lt;/label&gt;
+      &lt;input id="password" type="password" name="password"
+             class="ren-input" autocomplete="current-password"
+             required minlength="8"&gt;
+      &lt;p class="ren-field-error" data-for="password"&gt;&lt;/p&gt;
+    &lt;/ren-field&gt;
+
+    &lt;button class="ren-btn ren-btn-primary ren-btn-full" type="submit"&gt;Sign in&lt;/button&gt;
+  &lt;/ren-form&gt;
+&lt;/div&gt;
+
+&lt;script&gt;
+const form = document.getElementById('sign-in');
+
+form.addEventListener('ren-submit', async (e) =&gt; {
+  const btn = form.querySelector('button[type="submit"]');
+  btn.dataset.loading = '';
+  btn.setAttribute('aria-busy', 'true');
+
+  try {
+    const res = await fetch('/api/sign-in', {
+      method: 'POST',
+      body: JSON.stringify(Object.fromEntries(e.detail.formData)),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!res.ok) {
+      const { errors } = await res.json();
+      // Mirror server errors to each field
+      for (const [field, message] of Object.entries(errors)) {
+        form.querySelector(`ren-field[name="${field}"]`)
+            ?.setError(message);
+      }
+      return;
+    }
+
+    toast.success('Welcome back');
+    location.assign('/app');
+  } catch (err) {
+    toast.danger('Sign-in failed', { description: 'Try again in a moment.' });
+  } finally {
+    delete btn.dataset.loading;
+    btn.removeAttribute('aria-busy');
+  }
+});
+&lt;/script&gt;</code></pre>
+          <div class="recipe-gotchas">
+            <h4>Edge cases &amp; gotchas</h4>
+            <ul>
+              <li><strong><code>novalidate</code></strong> on the form lets Field own the timing — validate on blur, revalidate on input after a first failure.</li>
+              <li><strong><code>autocomplete</code></strong> on every field matters. Browsers and password managers prefill correctly when it's right.</li>
+              <li><strong>Don't disable submit until valid.</strong> Counter-intuitive but: a disabled button gives no feedback. Let the user submit, then show errors on submit.</li>
+              <li><strong>Loading state</strong> uses <code>data-loading</code> + <code>aria-busy="true"</code> — RenDS Button styles both.</li>
+              <li><strong>Server errors</strong> mirror per-field with <code>field.setError(message)</code>. Field announces them via <code>role="alert"</code>.</li>
+              <li><strong>Successful redirect</strong> should happen <em>after</em> the toast — otherwise the toast vanishes with the page.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Closing -->
+      <section class="dx-section" id="contributing">
+        <p class="dx-kicker">Contribute</p>
+        <h2>Missing a recipe?</h2>
+        <p>Recipes are biased toward common flows. If you're solving a pattern that touches 3+ components and the answer feels non-obvious, open an issue with a sketch — we add the recipe to keep the next person 30 minutes ahead.</p>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../site/shell.js" defer></script>
+</body>
+</html>

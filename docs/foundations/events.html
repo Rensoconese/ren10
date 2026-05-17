@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events — RenDS Foundations</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
+    .dx-table th, .dx-table td { text-align: left; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border-muted); vertical-align: top; }
+    .dx-table th { font-weight: var(--weight-semibold); color: var(--color-text-muted); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; }
+    .dx-table td code { font-size: 0.85em; }
+    .dx-table tbody tr:hover { background: var(--color-fill); }
+    .dx-table-flag { display: inline-block; padding: 2px var(--space-2); border-radius: var(--radius-full); font-size: 0.75em; font-weight: var(--weight-medium); font-family: var(--font-mono); }
+    .dx-flag-yes { background: color-mix(in srgb, var(--color-success) 15%, transparent); color: var(--color-success); }
+    .dx-flag-no  { background: var(--color-surface-sunken); color: var(--color-text-muted); }
+    .dx-callout { border-left: 3px solid var(--color-accent); background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface)); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-4) 0; max-width: 72ch; }
+    .dx-callout-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-accent); margin: 0 0 var(--space-2); }
+    .dx-callout p { margin: 0 0 var(--space-2); color: var(--color-text); }
+    .dx-callout p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html" aria-current="page">Docs</a>
+        <a href="../components.html">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+        <li><a href="events.html" aria-current="page">Events</a></li>
+        <li><a href="cascade-layers.html">Cascade Layers</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+        <li><a href="../recipes.html">Recipes</a></li>
+      </ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li aria-current="page">Foundations · Events</li></ol></nav>
+        <p class="dx-kicker">Foundations</p>
+        <h1>Events</h1>
+        <p class="lede">Every interactive RenDS component dispatches its own <code>CustomEvent</code>s. This page is the single source of truth: 34 events, their <code>detail</code> shape, and bubbling behavior. Use it to integrate RenDS with your application state, analytics, or another framework.</p>
+      </header>
+
+      <!-- 1. NAMING CONVENTION -->
+      <section class="dx-section" id="naming">
+        <p class="dx-kicker">Convention</p>
+        <h2>Naming</h2>
+        <p>All RenDS custom events follow the prefix <code>ren-</code>. Most are namespaced by component (<code>ren-tab-change</code>, <code>ren-sort-change</code>, <code>ren-files-added</code>); a handful of <em>generic</em> events are reused across multiple components because they have the same shape and meaning:</p>
+        <ul>
+          <li><code>ren-open</code> / <code>ren-close</code> — fired by every overlay-style component (Dialog, Sheet, Combobox, Hover Card, Popover). Detail is empty by convention.</li>
+          <li><code>ren-change</code> — fired when a control's value changes (Combobox, Select). Detail: <code>{ value, item }</code>.</li>
+        </ul>
+        <p>If you need to disambiguate between e.g. a Dialog opening and a Combobox opening on the same page, scope your listener to the host element rather than to <code>document</code>.</p>
+      </section>
+
+      <!-- 2. POLICY -->
+      <section class="dx-section" id="policy">
+        <p class="dx-kicker">Defaults</p>
+        <h2>Bubbles, composed, cancelable</h2>
+        <ul>
+          <li><strong><code>bubbles: true</code></strong> on virtually every event. RenDS components live in light DOM, so events bubble naturally — listen anywhere up the tree.</li>
+          <li><strong><code>composed: true</code></strong> only on events that <em>conceptually</em> cross host boundaries (Dialog, Combobox, Select, Sheet, Hover Card). RenDS doesn't use Shadow DOM, so <code>composed</code> is mostly future-proofing.</li>
+          <li><strong><code>cancelable: false</code></strong> by default. RenDS components fire events <em>after</em> applying the change — calling <code>e.preventDefault()</code> doesn't roll it back. If you need pre-flight veto behavior (e.g., "block this row from being selected"), gate the user action upstream, not via the event.</li>
+        </ul>
+
+        <div class="dx-callout">
+          <p class="dx-callout-title">Listen on the host, not <code>document</code> — usually</p>
+          <p>For component-specific logic, listen on the component element (<code>combo.addEventListener(…)</code>). For cross-cutting concerns like analytics, listening on <code>document</code> with delegation is fine — every event bubbles by default.</p>
+        </div>
+      </section>
+
+      <!-- 3. MASTER TABLE -->
+      <section class="dx-section" id="catalog">
+        <p class="dx-kicker">Reference</p>
+        <h2>Event catalog</h2>
+        <p>34 events across 27 components. <code>—</code> means the field is not explicitly set (uses the <code>CustomEvent</code> default, which is <code>false</code>).</p>
+
+        <table class="dx-table">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Event</th>
+              <th>bubbles</th>
+              <th>composed</th>
+              <th><code>detail</code></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="../components/ren-accordion.html" class="ren-link">ren-accordion</a></td><td><code>ren-accordion-change</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ index }</code></td></tr>
+            <tr><td><a href="../components/ren-calendar.html" class="ren-link">ren-calendar</a></td><td><code>ren-date-select</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ date }</code></td></tr>
+            <tr><td><a href="../components/ren-carousel.html" class="ren-link">ren-carousel</a></td><td><code>ren-slide-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ index }</code></td></tr>
+            <tr><td><a href="../components/ren-color-picker.html" class="ren-link">ren-color-picker</a></td><td><code>ren-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
+            <tr><td><a href="../components/ren-color-picker.html" class="ren-link">ren-color-picker</a></td><td><code>ren-complete</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
+            <tr><td><a href="../components/ren-combobox.html" class="ren-link">ren-combobox</a></td><td><code>ren-change</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><code>{ value, item }</code></td></tr>
+            <tr><td><a href="../components/ren-combobox.html" class="ren-link">ren-combobox</a></td><td><code>ren-search</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ query }</code></td></tr>
+            <tr><td><a href="../components/ren-combobox.html" class="ren-link">ren-combobox</a></td><td><code>ren-open</code> / <code>ren-close</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-command.html" class="ren-link">ren-command</a></td><td><code>ren-command-select</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ item }</code></td></tr>
+            <tr><td><a href="../components/ren-context-menu.html" class="ren-link">ren-context-menu</a></td><td><code>ren-context-menu-open</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-date-picker.html" class="ren-link">ren-date-picker</a></td><td><code>ren-date-select</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ date }</code></td></tr>
+            <tr><td><a href="../components/ren-date-picker.html" class="ren-link">ren-date-picker</a></td><td><code>ren-date-picker-open</code> / <code>-close</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-date-range-picker.html" class="ren-link">ren-date-range-picker</a></td><td><code>ren-date-range-open</code> / <code>-close</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-dialog.html" class="ren-link">ren-dialog</a></td><td><code>ren-open</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-dialog.html" class="ren-link">ren-dialog</a></td><td><code>ren-close</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><code>{ returnValue }</code></td></tr>
+            <tr><td><a href="../components/ren-dropzone.html" class="ren-link">ren-dropzone</a></td><td><code>ren-files-added</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ files: FileList }</code></td></tr>
+            <tr><td><a href="../components/ren-form.html" class="ren-link">ren-form</a></td><td><code>ren-field-validated</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ fieldName, isValid }</code></td></tr>
+            <tr><td><a href="../components/ren-form.html" class="ren-link">ren-form</a></td><td><code>ren-invalid</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ errors: [] }</code></td></tr>
+            <tr><td><a href="../components/ren-form.html" class="ren-link">ren-form</a></td><td><code>ren-submit</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ formData }</code></td></tr>
+            <tr><td><a href="../components/ren-form.html" class="ren-link">ren-form</a></td><td><code>ren-step-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ step }</code></td></tr>
+            <tr><td><a href="../components/ren-hover-card.html" class="ren-link">ren-hover-card</a></td><td><code>ren-hover-card-open</code> / <code>-close</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-menu.html" class="ren-link">ren-menu</a></td><td><code>ren-menu-open</code> / <code>-close</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-menu.html" class="ren-link">ren-menu</a></td><td><code>ren-menu-select</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ item }</code></td></tr>
+            <tr><td><a href="../components/ren-menubar.html" class="ren-link">ren-menubar</a></td><td><code>ren-menubar-select</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ item }</code></td></tr>
+            <tr><td><a href="../components/ren-number-field.html" class="ren-link">ren-number-field</a></td><td><code>ren-input</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
+            <tr><td><a href="../components/ren-select.html" class="ren-link">ren-select</a></td><td><code>ren-select-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value, item }</code></td></tr>
+            <tr><td><a href="../components/ren-select.html" class="ren-link">ren-select</a></td><td><code>ren-select-open</code> / <code>-close</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-sheet.html" class="ren-link">ren-sheet</a></td><td><code>ren-open</code> / <code>ren-close</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td>—</td></tr>
+            <tr><td><a href="../components/ren-sidebar.html" class="ren-link">ren-sidebar</a></td><td><code>ren-sidebar-toggle</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ isOpen: boolean }</code></td></tr>
+            <tr><td><a href="../components/ren-slider.html" class="ren-link">ren-slider</a></td><td><code>ren-slider-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
+            <tr><td><a href="../components/ren-slider.html" class="ren-link">ren-slider</a></td><td><code>ren-slider-input</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-sort-change</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ column, direction }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-row-select</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ rowId, selected, allSelectedIds }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-page-change</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ page, pageSize }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-filter-change</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ query, matchedRows }</code></td></tr>
+            <tr><td><a href="../components/ren-tabs.html" class="ren-link">ren-tabs</a></td><td><code>ren-tab-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ index, tabId }</code></td></tr>
+            <tr><td><a href="../components/ren-toggle-group.html" class="ren-link">ren-toggle-group</a></td><td><code>ren-toggle-change</code></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 4. PATTERNS -->
+      <section class="dx-section" id="patterns">
+        <p class="dx-kicker">Patterns</p>
+        <h2>How to listen</h2>
+
+        <h3>Targeted listening (preferred)</h3>
+        <p>Listen on the specific component instance. Best for component-specific logic.</p>
+        <pre class="dx-pre" tabindex="0"><code>const combo = document.querySelector('ren-combobox[name="country"]');
+
+combo.addEventListener('ren-change', (e) =&gt; {
+  console.log(e.detail.value, e.detail.item);
+});</code></pre>
+
+        <h3>Global delegation</h3>
+        <p>Listen on <code>document</code> and filter by target. Best for cross-cutting concerns (analytics, undo stack, audit log).</p>
+        <pre class="dx-pre" tabindex="0"><code>document.addEventListener('ren-tab-change', (e) =&gt; {
+  analytics.track('tab_changed', {
+    component: e.target.id,
+    tab: e.detail.tabId,
+  });
+});</code></pre>
+
+        <h3>Filtering by detail</h3>
+        <pre class="dx-pre" tabindex="0"><code>table.addEventListener('ren-row-select', (e) =&gt; {
+  if (e.detail.allSelectedIds.length === 0) {
+    bulkBar.hidden = true;
+  } else {
+    bulkBar.hidden = false;
+    bulkBar.querySelector('.count').textContent = e.detail.allSelectedIds.length;
+  }
+});</code></pre>
+
+        <h3>One-shot listening</h3>
+        <p>Use the standard <code>{ once: true }</code> option — RenDS events are plain <code>CustomEvent</code>s.</p>
+        <pre class="dx-pre" tabindex="0"><code>dialog.addEventListener('ren-close', () =&gt; {
+  cleanup();
+}, { once: true });</code></pre>
+      </section>
+
+      <!-- 5. GOTCHAS -->
+      <section class="dx-section" id="gotchas">
+        <p class="dx-kicker">Watch out</p>
+        <h2>Common gotchas</h2>
+        <ul>
+          <li><strong>Don't <code>preventDefault()</code> to veto state changes.</strong> RenDS events fire after the change applies; cancellation is not wired. To veto, intercept the user action upstream (e.g., disable the trigger button until your check passes).</li>
+          <li><strong>Two components, same event.</strong> If a Combobox and a Select are on the same page, both dispatch <code>ren-change</code> with similar detail. Use <code>e.target.tagName</code> or scope your listener.</li>
+          <li><strong>Cross-component <code>ren-open</code> / <code>ren-close</code>.</strong> Dialog, Sheet, Combobox, Hover Card all fire these. Same trick: scope to host or check <code>e.target.tagName</code>.</li>
+          <li><strong>Form events fire on the <code>&lt;ren-form&gt;</code> host, not on <code>&lt;form&gt;</code>.</strong> Listen on the custom element, not the inner form element.</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

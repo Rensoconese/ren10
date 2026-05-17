@@ -2413,11 +2413,26 @@ ${(() => {
     // ═══════════════════════════════════════════
     // STATE SERIALIZATION
     // ═══════════════════════════════════════════
+    //
+    // Hash format: `#t=<base64url>` where the decoded payload is a JSON object
+    // `{ rends: 'theme', v: <number>, …state }`. Older builds can read newer
+    // hashes (warning when v is newer than HASH_SCHEMA_VERSION); newer builds
+    // can read older hashes (missing `v` is treated as v1 for legacy URLs).
+    //
+    // Bump HASH_SCHEMA_VERSION below whenever serializeState() changes shape.
+    const HASH_SCHEMA_VERSION = 1;
 
     function serializeState() {
+      // Schema:
+      //   rends     — marker; must be 'theme' or decode is rejected
+      //   v         — schema version (current: HASH_SCHEMA_VERSION). Bump
+      //               whenever the field set changes shape so older builds
+      //               can detect newer hashes and warn instead of crashing.
+      //   baseColor, theme, chart, font, heading, radius, density, iconLib,
+      //   mode      — actual state values, referenced by stable .name.
       return {
         rends: 'theme',
-        v: 1,
+        v: HASH_SCHEMA_VERSION,
         baseColor: state.baseColor.name,
         theme:    { name: state.theme.name,       isBase: !!state.theme.isBase },
         chart:    { name: state.chartColor.name,  isBase: !!state.chartColor.isBase },
@@ -2433,6 +2448,23 @@ ${(() => {
     function deserializeState(data) {
       try {
         if (!data || data.rends !== 'theme') return false;
+
+        // Version handling:
+        //   - missing v        → assume legacy v1-compatible (early shares)
+        //   - data.v === 1     → current, decode normally
+        //   - data.v > current → newer than this build; warn and best-effort
+        const incomingVersion = typeof data.v === 'number' ? data.v : 1;
+        if (incomingVersion > HASH_SCHEMA_VERSION) {
+          // Use whatever toast surface is wired; fall back to console.
+          if (typeof showToast === 'function') {
+            showToast('Theme was saved with a newer RenDS (v' + incomingVersion +
+                      '). Some fields may not load — try refreshing the app.');
+          } else {
+            console.warn('Theme hash schema v' + incomingVersion +
+                         ' is newer than this build (v' + HASH_SCHEMA_VERSION + ').');
+          }
+        }
+
         const bc = BASE_COLORS.find(b => b.name === data.baseColor);
         if (bc) state.baseColor = bc;
 

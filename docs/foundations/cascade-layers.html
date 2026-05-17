@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cascade Layers — RenDS Foundations</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-layers { display: grid; gap: var(--space-2); margin: var(--space-5) 0; max-width: 540px; }
+    .dx-layer-row {
+      display: grid;
+      grid-template-columns: 32px 1fr auto;
+      align-items: center;
+      gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+    }
+    .dx-layer-num {
+      width: 24px; height: 24px;
+      border-radius: var(--radius-full);
+      background: var(--color-surface-sunken);
+      color: var(--color-text-muted);
+      display: grid;
+      place-items: center;
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+    }
+    .dx-layer-name {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--color-text);
+      font-weight: var(--weight-medium);
+    }
+    .dx-layer-desc {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      margin-top: 2px;
+    }
+    .dx-layer-priority {
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      font-family: var(--font-mono);
+    }
+    .dx-layer-row-winner {
+      border-color: var(--color-accent);
+      background: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+    }
+    .dx-layer-row-winner .dx-layer-num {
+      background: var(--color-accent);
+      color: var(--color-on-accent);
+    }
+    .dx-table { width: 100%; border-collapse: collapse; margin: var(--space-4) 0; font-size: var(--text-sm); }
+    .dx-table th, .dx-table td { text-align: left; padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border-muted); vertical-align: top; }
+    .dx-table th { font-weight: var(--weight-semibold); color: var(--color-text-muted); font-size: var(--text-xs); letter-spacing: 0.04em; text-transform: uppercase; }
+    .dx-callout {
+      border-left: 3px solid var(--color-warning);
+      background: color-mix(in srgb, var(--color-warning) 8%, var(--color-surface));
+      padding: var(--space-4) var(--space-5);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin: var(--space-4) 0;
+      max-width: 72ch;
+    }
+    .dx-callout-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-warning-active); margin: 0 0 var(--space-2); }
+    .dx-callout p { margin: 0 0 var(--space-2); color: var(--color-text); }
+    .dx-callout p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.8.3</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html" aria-current="page">Docs</a>
+        <a href="../components.html">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="cascade-layers.html" aria-current="page">Cascade Layers</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+        <li><a href="../recipes.html">Recipes</a></li>
+      </ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li aria-current="page">Foundations · Cascade Layers</li></ol></nav>
+        <p class="dx-kicker">Foundations</p>
+        <h1>Cascade Layers</h1>
+        <p class="lede">RenDS uses native CSS Cascade Layers (<code>@layer</code>) so its component styles never fight your code on specificity. Any CSS you write <strong>outside</strong> a layer automatically beats RenDS — no <code>!important</code> needed. This page explains the layer order, what lives in each, and how to integrate with legacy CSS or other design systems.</p>
+      </header>
+
+      <!-- 1. TL;DR -->
+      <section class="dx-section" id="tldr">
+        <p class="dx-kicker">Summary</p>
+        <h2>The short version</h2>
+        <p>RenDS declares this in <code>rends/index.css</code>:</p>
+        <pre class="dx-pre" tabindex="0"><code>@layer reset, tokens, base, components, utilities;</code></pre>
+        <p>Three rules to remember:</p>
+        <ol>
+          <li><strong>Within RenDS</strong>, later layers in that list win over earlier ones. <code>utilities</code> beats <code>components</code> beats <code>base</code> beats <code>tokens</code> beats <code>reset</code>.</li>
+          <li><strong>Unlayered CSS</strong> (your application styles, written without <code>@layer</code>) beats every RenDS layer. You don't need <code>!important</code> to override a button — just write <code>.my-btn { background: red; }</code> and it wins.</li>
+          <li><strong><code>!important</code></strong> reverses the layer order. Useful nowhere, almost ever. Don't reach for it.</li>
+        </ol>
+      </section>
+
+      <!-- 2. CASCADE DIAGRAM -->
+      <section class="dx-section" id="diagram">
+        <p class="dx-kicker">Visual</p>
+        <h2>Layer order (lowest priority → highest)</h2>
+
+        <div class="dx-layers">
+          <div class="dx-layer-row">
+            <span class="dx-layer-num">1</span>
+            <div>
+              <div class="dx-layer-name">@layer reset</div>
+              <div class="dx-layer-desc">Browser normalization. Box-sizing, margin reset, native form element basics.</div>
+            </div>
+            <span class="dx-layer-priority">lowest</span>
+          </div>
+          <div class="dx-layer-row">
+            <span class="dx-layer-num">2</span>
+            <div>
+              <div class="dx-layer-name">@layer tokens</div>
+              <div class="dx-layer-desc">Primitive, semantic, and component tokens (--color-*, --space-*, --ren-*).</div>
+            </div>
+            <span class="dx-layer-priority">low</span>
+          </div>
+          <div class="dx-layer-row">
+            <span class="dx-layer-num">3</span>
+            <div>
+              <div class="dx-layer-name">@layer base</div>
+              <div class="dx-layer-desc">Classless typography, headings, lists, layout primitives.</div>
+            </div>
+            <span class="dx-layer-priority">medium</span>
+          </div>
+          <div class="dx-layer-row">
+            <span class="dx-layer-num">4</span>
+            <div>
+              <div class="dx-layer-name">@layer components</div>
+              <div class="dx-layer-desc">All <code>.ren-*</code> selectors. The bulk of RenDS lives here.</div>
+            </div>
+            <span class="dx-layer-priority">high</span>
+          </div>
+          <div class="dx-layer-row">
+            <span class="dx-layer-num">5</span>
+            <div>
+              <div class="dx-layer-name">@layer utilities</div>
+              <div class="dx-layer-desc">High-specificity utility overrides — sr-only, visibility helpers.</div>
+            </div>
+            <span class="dx-layer-priority">highest in RenDS</span>
+          </div>
+          <div class="dx-layer-row dx-layer-row-winner">
+            <span class="dx-layer-num">★</span>
+            <div>
+              <div class="dx-layer-name">(unlayered) — your CSS</div>
+              <div class="dx-layer-desc">Anything you write without <code>@layer</code>. Wins over every layer above.</div>
+            </div>
+            <span class="dx-layer-priority">WINS ALL</span>
+          </div>
+          <div class="dx-layer-row">
+            <span class="dx-layer-num">!</span>
+            <div>
+              <div class="dx-layer-name">!important</div>
+              <div class="dx-layer-desc">Reverses layer order. Bottom-tier styles win. Avoid.</div>
+            </div>
+            <span class="dx-layer-priority">last resort</span>
+          </div>
+        </div>
+
+        <p>This is plain modern CSS — no preprocessor, no PostCSS plugin. The browser handles it. Supported in every evergreen browser since 2022.</p>
+      </section>
+
+      <!-- 3. WHAT EACH LAYER HOLDS -->
+      <section class="dx-section" id="contents">
+        <p class="dx-kicker">Reference</p>
+        <h2>What lives in each layer</h2>
+        <table class="dx-table">
+          <thead>
+            <tr><th>Layer</th><th>Source files</th><th>Contains</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>reset</code></td>
+              <td><code>base/reset.css</code></td>
+              <td>Box-sizing, margin/padding zeroing, native form element baseline.</td>
+            </tr>
+            <tr>
+              <td><code>tokens</code></td>
+              <td><code>tokens/primitives/*.css</code><br><code>tokens/semantic/*.css</code><br><code>tokens/component/*.css</code></td>
+              <td>All custom properties: <code>--blue-500</code>, <code>--color-text</code>, <code>--space-4</code>, <code>--ren-btn-bg</code>, etc.</td>
+            </tr>
+            <tr>
+              <td><code>base</code></td>
+              <td><code>base/typography.css</code><br><code>base/layouts.css</code><br><code>base/primitive-zero.css</code></td>
+              <td>Classless HTML (<code>h1</code>–<code>h6</code>, <code>p</code>, <code>ul</code>, <code>blockquote</code>, etc.) and layout primitives (<code>.ren-stack</code>, <code>.ren-grid</code>, …).</td>
+            </tr>
+            <tr>
+              <td><code>components</code></td>
+              <td><code>components/**/*.css</code></td>
+              <td>Every <code>.ren-*</code> selector. <code>.ren-btn</code>, <code>.ren-dialog</code>, <code>.ren-field</code>, all 53 components.</td>
+            </tr>
+            <tr>
+              <td><code>utilities</code></td>
+              <td><code>base/utilities.css</code></td>
+              <td>Single-purpose helpers: <code>.ren-sr-only</code>, <code>.ren-hidden</code>, <code>.ren-truncate</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 4. OVERRIDING -->
+      <section class="dx-section" id="override">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Overriding RenDS styles</h2>
+
+        <h3>Recipe 1 — Just write CSS (the answer 90% of the time)</h3>
+        <p>Your application CSS is unlayered by default. It wins over RenDS automatically.</p>
+        <pre class="dx-pre" tabindex="0"><code>/* app.css — loaded after rends/index.css */
+
+.my-checkout-btn {
+  background: var(--color-success);     /* override .ren-btn-primary bg */
+  border-radius: 0;
+}</code></pre>
+        <p>No <code>!important</code>, no specificity bumping, no <code>:where()</code> tricks. Just plain class selectors.</p>
+
+        <h3>Recipe 2 — Override a token, not a selector (best for global theme tweaks)</h3>
+        <p>Most RenDS styles consume tokens. Change the token and every component using it follows.</p>
+        <pre class="dx-pre" tabindex="0"><code>:root {
+  /* Make every button slightly rounder */
+  --ren-btn-radius: 12px;
+
+  /* Switch the accent color across the whole DS */
+  --color-accent: oklch(0.72 0.19 145);
+}</code></pre>
+
+        <h3>Recipe 3 — A layered override (for vendored or shared stylesheets)</h3>
+        <p>If you ship CSS that other apps consume, layer it so consumers can still override <em>you</em> without <code>!important</code>.</p>
+        <pre class="dx-pre" tabindex="0"><code>/* my-design-pack.css */
+
+@layer my-pack;        /* declared AFTER components / utilities,
+                          so it wins over RenDS */
+
+@layer my-pack {
+  .my-card { background: var(--color-surface-raised); }
+}</code></pre>
+        <p>Now consumers of <code>my-design-pack.css</code> can override <code>.my-card</code> from their unlayered CSS and still win.</p>
+      </section>
+
+      <!-- 5. INTEGRATION WITH OTHER STACKS -->
+      <section class="dx-section" id="integration">
+        <p class="dx-kicker">Integration</p>
+        <h2>Mixing RenDS with other CSS</h2>
+
+        <h3>Existing legacy CSS</h3>
+        <p>Already have a big bundle of <code>.btn-blue</code> / <code>.card-old</code> / etc.? Two paths:</p>
+        <ul>
+          <li><strong>Leave it unlayered.</strong> Your legacy CSS wins over RenDS automatically. RenDS only kicks in where you opt in with <code>.ren-*</code> classes. No collision.</li>
+          <li><strong>Layer it explicitly</strong> if you want RenDS to win in some places:
+            <pre class="dx-pre" tabindex="0"><code>@layer legacy;
+@import "./rends/index.css";    /* declares reset → utilities */
+@import "./old-app.css" layer(legacy);
+
+/* Layer order is now: legacy, reset, tokens, base, components, utilities.
+   RenDS wins over legacy because RenDS layers come after. */</code></pre>
+          </li>
+        </ul>
+
+        <h3>Another design system (anything CSS-based)</h3>
+        <p>Same approach: layer the other DS so the order is explicit. Whichever layer you declare later wins.</p>
+        <pre class="dx-pre" tabindex="0"><code>@import "./other-ds.css" layer(other-ds);
+@import "./rends/index.css";   /* unwraps to reset, tokens, base, components, utilities */
+
+/* RenDS components win over other-ds. Want the reverse? Move @layer other-ds
+   to be declared after the RenDS layers. */</code></pre>
+
+        <h3>Inline / scoped styles</h3>
+        <p><code>style="…"</code> attributes are not in any layer; they have specificity higher than any class but still lose to <code>!important</code> in the highest layer. For a one-off tweak inside a single component instance, inline style is fine.</p>
+      </section>
+
+      <!-- 6. ANTI-PATTERNS -->
+      <section class="dx-section" id="anti">
+        <p class="dx-kicker">Avoid</p>
+        <h2>Anti-patterns</h2>
+        <div class="dx-callout">
+          <p class="dx-callout-title">Don't reach for <code>!important</code></p>
+          <p>Cascade Layers exist to make <code>!important</code> obsolete. If you need to override RenDS, write unlayered CSS or override a token. If you find yourself wanting <code>!important</code>, you're fighting a specificity battle that the layer system has already resolved for you.</p>
+        </div>
+        <ul>
+          <li><strong>Don't increase specificity to win.</strong> <code>html body .my-btn</code> looks defensive but breaks the moment a teammate writes <code>html.dark body .my-btn</code>. Unlayered CSS wins by mechanism, not by specificity.</li>
+          <li><strong>Don't unwrap RenDS' layer declarations.</strong> Removing <code>@layer</code> from <code>rends/index.css</code> moves every RenDS rule out of its layer and into the unlayered pool — meaning your CSS no longer wins automatically.</li>
+          <li><strong>Don't redeclare component selectors in your CSS</strong> just to bump specificity. Override the token (<code>--ren-btn-bg</code>) or write a fresh class.</li>
+        </ul>
+      </section>
+
+      <!-- 7. DEBUGGING -->
+      <section class="dx-section" id="debug">
+        <p class="dx-kicker">Devtools</p>
+        <h2>Debugging cascade in DevTools</h2>
+        <p>Chrome, Firefox, and Safari all show the active layer next to each rule in the inspector. Look for the <code>@layer name</code> badge in the Styles panel:</p>
+        <ul>
+          <li>Rules from <code>@layer components</code> are tagged <code>components</code> in the inspector.</li>
+          <li>Unlayered rules are tagged <code>(implicit outer layer)</code>.</li>
+          <li>If your override isn't winning, check the badge — if your CSS is in <code>@layer components</code> by accident (e.g. via an aggressive bundler), it's at the same priority as RenDS instead of above it.</li>
+        </ul>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>
