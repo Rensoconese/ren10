@@ -324,3 +324,11 @@
   --size-xl:  3.75rem;
   --space-unit: 0.625rem;
 }
+
+[data-density="spacious"] {
+  --size-sm:  2.5rem;
+  --size-md:  3rem;
+  --size-lg:  3.5rem;
+  --size-xl:  4rem;
+  --space-unit: 0.875rem;
+}

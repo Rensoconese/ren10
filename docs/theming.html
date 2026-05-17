@@ -224,7 +224,7 @@
       <p>Values: <code>light</code>, <code>dark</code>. Forces color mode regardless of OS preference.</p>
 
       <h3><code>data-density</code></h3>
-      <p>Values: <code>comfortable</code> (default), <code>compact</code>, <code>spacious</code>. Scales spacing and touch targets up or down.</p>
+      <p>Values: <code>comfortable</code> (default), <code>compact</code>, <code>spacious</code>. Scales spacing and touch targets up or down by adjusting <code>--size-sm</code>/<code>-md</code>/<code>-lg</code>/<code>-xl</code> and <code>--space-unit</code>.</p>
       <div class="dx-pre" tabindex="0"><code>&lt;html data-density="compact"&gt; ... &lt;/html&gt;</code></div>
 
       <h3><code>data-shape</code></h3>
@@ -233,6 +233,132 @@
 
       <p>These attributes can combine freely:</p>
       <div class="dx-pre" tabindex="0"><code>&lt;html data-theme="dark" data-density="compact" data-shape="sharp"&gt;</code></div>
+
+      <h3 id="live-toggle">Try them live</h3>
+      <p>Toggle <code>data-density</code> and <code>data-shape</code> on the whole page. The components below — and the rest of this site — update in real time. Refreshing resets to the defaults.</p>
+
+      <style>
+        .dx-toggle-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-block: var(--space-3); }
+        .dx-toggle-label {
+          font-size: var(--text-xs);
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          color: var(--color-text-muted);
+          font-weight: var(--weight-semibold);
+          min-width: 80px;
+        }
+        .dx-toggle-group {
+          display: inline-flex;
+          background: var(--color-surface-sunken);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-md);
+          padding: 2px;
+          gap: 2px;
+        }
+        .dx-toggle-group button {
+          background: transparent;
+          border: 0;
+          padding: var(--space-1) var(--space-3);
+          font-size: var(--text-sm);
+          font-family: inherit;
+          color: var(--color-text-secondary);
+          border-radius: var(--radius-sm);
+          cursor: pointer;
+          font-weight: var(--weight-medium);
+        }
+        .dx-toggle-group button:hover {
+          background: var(--color-fill);
+          color: var(--color-text);
+        }
+        .dx-toggle-group button[aria-pressed="true"] {
+          background: var(--color-surface);
+          color: var(--color-text);
+          box-shadow: 0 1px 2px color-mix(in srgb, var(--color-text) 8%, transparent);
+        }
+        .dx-toggle-group button:focus-visible {
+          outline: 2px solid var(--color-focus-ring);
+          outline-offset: 2px;
+        }
+
+        .dx-toggle-showcase {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: var(--space-3);
+          margin: var(--space-4) 0;
+          padding: var(--space-5);
+          background: var(--color-surface-raised);
+          border: 1px dashed var(--color-border);
+          border-radius: var(--radius-md);
+          align-items: end;
+        }
+        .dx-toggle-showcase .ren-card {
+          background: var(--color-surface);
+          padding: var(--space-3) var(--space-4);
+        }
+      </style>
+
+      <div class="dx-toggle-row">
+        <span class="dx-toggle-label">Density</span>
+        <div class="dx-toggle-group" role="group" aria-label="Density">
+          <button type="button" data-set-density="compact"      aria-pressed="false">Compact</button>
+          <button type="button" data-set-density="comfortable"  aria-pressed="true">Comfortable</button>
+          <button type="button" data-set-density="spacious"     aria-pressed="false">Spacious</button>
+        </div>
+      </div>
+
+      <div class="dx-toggle-row">
+        <span class="dx-toggle-label">Shape</span>
+        <div class="dx-toggle-group" role="group" aria-label="Shape">
+          <button type="button" data-set-shape="sharp"   aria-pressed="false">Sharp</button>
+          <button type="button" data-set-shape="rounded" aria-pressed="true">Rounded</button>
+          <button type="button" data-set-shape="pill"    aria-pressed="false">Pill</button>
+        </div>
+      </div>
+
+      <div class="dx-toggle-showcase" aria-label="Components responding to density and shape">
+        <button type="button" class="ren-btn ren-btn-primary">Primary action</button>
+        <button type="button" class="ren-btn ren-btn-secondary">Secondary</button>
+
+        <div class="ren-field">
+          <label class="ren-field-label" for="dx-toggle-field">Field example</label>
+          <input id="dx-toggle-field" class="ren-input" type="text" value="Hello">
+        </div>
+
+        <div class="ren-card">
+          <h4 style="margin: 0 0 var(--space-1); font-size: var(--text-sm);">Card title</h4>
+          <p style="margin: 0; font-size: var(--text-xs); color: var(--color-text-muted);">Watch the radius and padding change.</p>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          var html = document.documentElement;
+
+          function sync(group, attr) {
+            var current = html.dataset[attr] || '';
+            document.querySelectorAll('[data-set-' + group + ']').forEach(function (btn) {
+              btn.setAttribute('aria-pressed', String(btn.dataset['set' + group.charAt(0).toUpperCase() + group.slice(1)] === current));
+            });
+          }
+
+          document.querySelectorAll('[data-set-density]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              html.dataset.density = btn.dataset.setDensity;
+              sync('density', 'density');
+            });
+          });
+          document.querySelectorAll('[data-set-shape]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              html.dataset.shape = btn.dataset.setShape;
+              sync('shape', 'shape');
+            });
+          });
+
+          // initial sync to actual page state
+          sync('density', 'density');
+          sync('shape', 'shape');
+        })();
+      </script>
     </section>
 
     <!-- Override levels -->
@@ -503,6 +629,29 @@ function setTheme(next) {
       <p>The Theme Builder can encode the entire state into a URL hash. Zero backend required:</p>
       <div class="dx-pre" tabindex="0"><code>https://your-site.com/create#t=eyJyZW5kcyI6InRoZW1lIiwidiI6MSwi...</code></div>
       <p>Opening that URL restores the exact picker state. Great for design reviews, Slack threads, or git commits ("here's the theme I'm proposing: &lt;link&gt;").</p>
+
+      <h4>Hash format and versioning</h4>
+      <p>The string after <code>#t=</code> is a base64url-encoded JSON payload:</p>
+      <div class="dx-pre" tabindex="0"><code>{
+  "rends": "theme",   // marker — decoder rejects if missing
+  "v": 1,             // schema version — bumped when fields change
+  "baseColor": "Neutral",
+  "theme":    { "name": "violet", "isBase": false },
+  "chart":    { "name": "Lime",   "isBase": true  },
+  "font":     "Inter",
+  "heading":  "Inter",
+  "radius":   "Rounded",
+  "density":  "Comfortable",
+  "iconLib":  "lucide",
+  "mode":     "light"
+}</code></div>
+      <p>Compatibility rules:</p>
+      <ul>
+        <li><strong>Newer build, older hash</strong> — works. Missing <code>v</code> is treated as v1. Fields that no longer exist are ignored.</li>
+        <li><strong>Older build, newer hash</strong> — best-effort. If <code>v</code> is greater than the build knows about, the user sees a toast: "Theme was saved with a newer RenDS — some fields may not load." Pickers fall back to defaults for unknown fields.</li>
+        <li><strong>Tampered or invalid hash</strong> — silently ignored; the builder opens with defaults.</li>
+      </ul>
+      <p>If you build tooling on top of the hash format, pin to a known <code>v</code> and treat newer payloads conservatively. Version bumps are documented in <code>CHANGELOG.md</code>.</p>
 
       <h3>As a ZIP</h3>
       <p>The Builder's ZIP export bundles the resolved <code>.css</code>, the <code>.json</code> state, and a <code>README.md</code> with install instructions. Hand that to anyone — including non-technical teammates.</p>
