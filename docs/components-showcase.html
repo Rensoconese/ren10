@@ -567,51 +567,51 @@
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Variants</h3>
           <div class="demo-variants">
-            <button class="ren-btn ren-btn-primary">Primary</button>
-            <button class="ren-btn ren-btn-secondary">Secondary</button>
-            <button class="ren-btn ren-btn-ghost">Ghost</button>
-            <button class="ren-btn ren-btn-outline">Outline</button>
-            <button class="ren-btn ren-btn-danger">Danger</button>
-            <button class="ren-btn ren-btn-link">Link</button>
+            <button type="button" class="ren-btn ren-btn-primary">Primary</button>
+            <button type="button" class="ren-btn ren-btn-secondary">Secondary</button>
+            <button type="button" class="ren-btn ren-btn-ghost">Ghost</button>
+            <button type="button" class="ren-btn ren-btn-outline">Outline</button>
+            <button type="button" class="ren-btn ren-btn-danger">Danger</button>
+            <button type="button" class="ren-btn ren-btn-link">Link</button>
           </div>
         </div>
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Sizes</h3>
           <div style="display: flex; gap: var(--space-3); align-items: center; flex-wrap: wrap;">
-            <button class="ren-btn ren-btn-sm">Small</button>
-            <button class="ren-btn">Medium</button>
-            <button class="ren-btn ren-btn-lg">Large</button>
+            <button type="button" class="ren-btn ren-btn-sm">Small</button>
+            <button type="button" class="ren-btn">Medium</button>
+            <button type="button" class="ren-btn ren-btn-lg">Large</button>
           </div>
         </div>
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Full Width</h3>
-          <button class="ren-btn ren-btn-full">Full Width Button</button>
+          <button type="button" class="ren-btn ren-btn-full">Full Width Button</button>
           <div style="margin-top: var(--space-2);">
-            <button class="ren-btn ren-btn-secondary ren-btn-full">Secondary Full Width</button>
+            <button type="button" class="ren-btn ren-btn-secondary ren-btn-full">Secondary Full Width</button>
           </div>
         </div>
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">States</h3>
           <div class="demo-variants">
-            <button class="ren-btn ren-btn-primary">Normal</button>
-            <button class="ren-btn ren-btn-primary" disabled>Disabled</button>
-            <button class="ren-btn ren-btn-primary" data-loading>Loading</button>
+            <button type="button" class="ren-btn ren-btn-primary">Normal</button>
+            <button type="button" class="ren-btn ren-btn-primary" disabled>Disabled</button>
+            <button type="button" class="ren-btn ren-btn-primary" data-loading>Loading</button>
           </div>
         </div>
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">With Icons</h3>
           <div class="demo-variants">
-            <button class="ren-btn ren-btn-primary">
+            <button type="button" class="ren-btn ren-btn-primary">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 5v14M5 12h14"/>
               </svg>
               Add Item
             </button>
-            <button class="ren-btn ren-btn-secondary" aria-label="View activity">
+            <button type="button" class="ren-btn ren-btn-secondary" aria-label="View activity">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
               </svg>
@@ -622,9 +622,9 @@
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Button Group</h3>
           <div class="ren-btn-group">
-            <button class="ren-btn ren-btn-secondary">Left</button>
-            <button class="ren-btn ren-btn-secondary">Center</button>
-            <button class="ren-btn ren-btn-secondary">Right</button>
+            <button type="button" class="ren-btn ren-btn-secondary">Left</button>
+            <button type="button" class="ren-btn ren-btn-secondary">Center</button>
+            <button type="button" class="ren-btn ren-btn-secondary">Right</button>
           </div>
         </div>
       </section>
@@ -1298,8 +1298,8 @@
         <p class="demo-description">Modal dialog using <code>.ren-dialog</code> with native <code>&lt;dialog&gt;</code> element. Animated entry/exit, backdrop blur, focus trap.</p>
 
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
-          <button class="ren-btn ren-btn-primary" onclick="document.getElementById('dialog-1').showModal()">Open Dialog</button>
-          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('dialog-2').showModal()">Open Alert Dialog</button>
+          <button type="button" class="ren-btn ren-btn-primary" onclick="document.getElementById('dialog-1').showModal()">Open Dialog</button>
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.getElementById('dialog-2').showModal()">Open Alert Dialog</button>
         </div>
 
         <!-- Dialog 1: Standard -->
@@ -1318,8 +1318,8 @@
             </div>
           </div>
           <div class="ren-dialog-footer">
-            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
-            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Save</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="button" class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Save</button>
           </div>
         </dialog>
 
@@ -1331,8 +1331,8 @@
           <h3 id="dialog-2-title" class="ren-alert-dialog-title">Delete item?</h3>
           <p class="ren-alert-dialog-description">This action cannot be undone. The item and all associated data will be permanently removed.</p>
           <div class="ren-alert-dialog-actions">
-            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">Cancel</button>
-            <button class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">Delete</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">Cancel</button>
+            <button type="button" class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">Delete</button>
           </div>
         </dialog>
       </section>
@@ -1345,10 +1345,10 @@
         <p class="demo-description">Temporary feedback messages using <code>.ren-toast</code> with viewport positioning and auto-dismiss.</p>
 
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
-          <button class="ren-btn ren-btn-primary" onclick="showToast('success', 'Changes saved', 'Your profile has been updated successfully.')">Success</button>
-          <button class="ren-btn ren-btn-primary" onclick="showToast('info', 'New update', 'Version 2.0 is now available.')">Info</button>
-          <button class="ren-btn ren-btn-primary" onclick="showToast('warning', 'Storage almost full', 'You have used 90% of your storage quota.')">Warning</button>
-          <button class="ren-btn ren-btn-primary" onclick="showToast('error', 'Upload failed', 'The file could not be uploaded. Please try again.')">Error</button>
+          <button type="button" class="ren-btn ren-btn-primary" onclick="showToast('success', 'Changes saved', 'Your profile has been updated successfully.')">Success</button>
+          <button type="button" class="ren-btn ren-btn-primary" onclick="showToast('info', 'New update', 'Version 2.0 is now available.')">Info</button>
+          <button type="button" class="ren-btn ren-btn-primary" onclick="showToast('warning', 'Storage almost full', 'You have used 90% of your storage quota.')">Warning</button>
+          <button type="button" class="ren-btn ren-btn-primary" onclick="showToast('error', 'Upload failed', 'The file could not be uploaded. Please try again.')">Error</button>
         </div>
 
         <!-- Toast viewport (proper RenDS component) -->
@@ -1844,9 +1844,9 @@
 
           <!-- Navigation -->
           <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
-            <button class="ren-btn ren-btn-secondary" onclick="prevStep()" id="prev-btn" style="display: none;">Previous</button>
-            <button class="ren-btn ren-btn-primary" onclick="nextStep()" id="next-btn">Next</button>
-            <button class="ren-btn ren-btn-success" onclick="submitForm()" id="submit-btn" style="display: none;">Complete</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="prevStep()" id="prev-btn" style="display: none;">Previous</button>
+            <button type="button" class="ren-btn ren-btn-primary" onclick="nextStep()" id="next-btn">Next</button>
+            <button type="button" class="ren-btn ren-btn-success" onclick="submitForm()" id="submit-btn" style="display: none;">Complete</button>
           </div>
         </div>
       </section>
@@ -1868,8 +1868,8 @@
             <p style="margin:0;">The new dashboard is ready for review. All components have been tested and documented.</p>
           </div>
           <div class="ren-card-footer">
-            <button class="ren-btn ren-btn-secondary ren-btn-sm">Dismiss</button>
-            <button class="ren-btn ren-btn-primary ren-btn-sm">View Details</button>
+            <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm">Dismiss</button>
+            <button type="button" class="ren-btn ren-btn-primary ren-btn-sm">View Details</button>
           </div>
         </div>
 
@@ -2213,8 +2213,8 @@
             <h3 class="ren-empty-state-title">No products yet</h3>
             <p class="ren-empty-state-description">Add your first product to start managing your inventory.</p>
             <div class="ren-empty-state-actions">
-              <button class="ren-btn ren-btn-primary">Add Product</button>
-              <button class="ren-btn ren-btn-secondary">Import CSV</button>
+              <button type="button" class="ren-btn ren-btn-primary">Add Product</button>
+              <button type="button" class="ren-btn ren-btn-secondary">Import CSV</button>
             </div>
           </div>
         </div>
@@ -2234,7 +2234,7 @@
             <h3 class="ren-empty-state-title">No notes</h3>
             <p class="ren-empty-state-description">Start writing to capture your thoughts.</p>
             <div class="ren-empty-state-actions">
-              <button class="ren-btn ren-btn-sm">New Note</button>
+              <button type="button" class="ren-btn ren-btn-sm">New Note</button>
             </div>
           </div>
         </div>
@@ -2248,10 +2248,10 @@
         <p class="demo-description">Confirmation dialog using native <code>&lt;dialog&gt;</code>. Blocks interaction — requires explicit confirm/cancel. No outside-click dismiss.</p>
 
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
-          <button class="ren-btn ren-btn-danger" onclick="document.getElementById('demo-alert-danger').showModal()">
+          <button type="button" class="ren-btn ren-btn-danger" onclick="document.getElementById('demo-alert-danger').showModal()">
             Delete Item
           </button>
-          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-alert-warning').showModal()">
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-alert-warning').showModal()">
             Unsaved Changes
           </button>
         </div>
@@ -2264,8 +2264,8 @@
             This action cannot be undone. The item and all its data will be permanently removed.
           </p>
           <div class="ren-alert-dialog-actions">
-            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">Cancel</button>
-            <button class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">Delete</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">Cancel</button>
+            <button type="button" class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">Delete</button>
           </div>
         </dialog>
 
@@ -2277,8 +2277,8 @@
             You have unsaved changes. Do you want to save before leaving?
           </p>
           <div class="ren-alert-dialog-actions">
-            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('discard')">Discard</button>
-            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close('save')">Save Changes</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('discard')">Discard</button>
+            <button type="button" class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close('save')">Save Changes</button>
           </div>
         </dialog>
       </section>
@@ -2315,7 +2315,7 @@
         <p class="demo-description">Popover API-based tooltips with arrow positioning. Triggered on hover/focus via JS.</p>
 
         <div style="display: flex; gap: var(--space-6); flex-wrap: wrap; align-items: center; padding: var(--space-6) 0;">
-          <button class="ren-btn ren-btn-secondary"
+          <button type="button" class="ren-btn ren-btn-secondary"
                   style="anchor-name: --tip-top;"
                   id="tip-trigger-top"
                   aria-describedby="tip-top">
@@ -2327,7 +2327,7 @@
             <span class="ren-tooltip-arrow"></span>
           </div>
 
-          <button class="ren-btn ren-btn-secondary"
+          <button type="button" class="ren-btn ren-btn-secondary"
                   style="anchor-name: --tip-bottom;"
                   id="tip-trigger-bottom"
                   aria-describedby="tip-bottom">
@@ -2339,7 +2339,7 @@
             <span class="ren-tooltip-arrow"></span>
           </div>
 
-          <button class="ren-btn ren-btn-secondary"
+          <button type="button" class="ren-btn ren-btn-secondary"
                   style="anchor-name: --tip-right;"
                   id="tip-trigger-right"
                   aria-describedby="tip-right">
@@ -2361,7 +2361,7 @@
         <p class="demo-description">Rich content popover using the Popover API with anchor positioning. Supports header, body, footer, and arrow.</p>
 
         <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; padding: var(--space-4) 0;">
-          <button class="ren-btn ren-btn-primary"
+          <button type="button" class="ren-btn ren-btn-primary"
                   popovertarget="demo-popover-1"
                   style="anchor-name: --pop-1;">
             Open Popover
@@ -2380,7 +2380,7 @@
               </div>
             </div>
             <div class="ren-popover-footer">
-              <button class="ren-btn ren-btn-sm ren-btn-primary" popovertarget="demo-popover-1" popovertargetaction="hide">Apply</button>
+              <button type="button" class="ren-btn ren-btn-sm ren-btn-primary" popovertarget="demo-popover-1" popovertargetaction="hide">Apply</button>
             </div>
             <span class="ren-popover-arrow"></span>
           </div>
@@ -2395,13 +2395,13 @@
         <p class="demo-description">Slide-in panel using <code>&lt;dialog&gt;</code>. Supports left, right, top, bottom sides with size variants.</p>
 
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
-          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-right').showModal()">
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-right').showModal()">
             Open Right Sheet
           </button>
-          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-left').showModal()">
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-left').showModal()">
             Open Left Sheet
           </button>
-          <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-bottom').showModal()">
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-sheet-bottom').showModal()">
             Open Bottom Sheet
           </button>
         </div>
@@ -2424,8 +2424,8 @@
             </div>
           </div>
           <div class="ren-sheet-footer">
-            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
-            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Save</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Cancel</button>
+            <button type="button" class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Save</button>
           </div>
         </dialog>
 
@@ -2457,8 +2457,8 @@
             </div>
           </div>
           <div class="ren-sheet-footer">
-            <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Reset</button>
-            <button class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Apply Filters</button>
+            <button type="button" class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close()">Reset</button>
+            <button type="button" class="ren-btn ren-btn-primary" onclick="this.closest('dialog').close()">Apply Filters</button>
           </div>
         </dialog>
       </section>
@@ -2994,7 +2994,7 @@
 
         <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
           <div>
-            <button class="ren-btn ren-btn-secondary"
+            <button type="button" class="ren-btn ren-btn-secondary"
                     popovertarget="demo-menu-1"
                     style="anchor-name: --menu-1;">
               Actions ▾
@@ -3103,7 +3103,7 @@
               <a href="#" class="ren-nav-link">Examples</a>
             </div>
             <div class="ren-nav-actions">
-              <button class="ren-btn ren-btn-sm ren-btn-primary">Get Started</button>
+              <button type="button" class="ren-btn ren-btn-sm ren-btn-primary">Get Started</button>
             </div>
           </nav>
         </div>
@@ -3175,7 +3175,7 @@
         <h2>Command Palette</h2>
         <p class="demo-description">Searchable command menu (⌘K pattern) with grouped items, keyboard shortcuts, and descriptions. Uses fixed modal with backdrop blur.</p>
 
-        <button class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-command').style.display='flex'">
+        <button type="button" class="ren-btn ren-btn-secondary" onclick="document.getElementById('demo-command').style.display='flex'">
           Open Command Palette <kbd class="ren-kbd" style="margin-left: var(--space-2);">⌘K</kbd>
         </button>
 
@@ -3240,10 +3240,10 @@
         <p class="demo-description">Apple HIG-inspired adaptive typography with 4 size scales: xSmall, Default, Large, xLarge. Set <code>data-type-scale</code> on any container.</p>
 
         <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-4); flex-wrap: wrap;">
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','xsmall')">xSmall</button>
-          <button class="ren-btn ren-btn-sm ren-btn-primary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','default')">Default</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','large')">Large</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','xlarge')">xLarge</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','xsmall')">xSmall</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-primary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','default')">Default</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','large')">Large</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.getElementById('type-demo').setAttribute('data-type-scale','xlarge')">xLarge</button>
         </div>
 
         <div id="type-demo" data-type-scale="default"
@@ -3268,28 +3268,28 @@
 
         <h3>Color Themes</h3>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='light'" style="background: #2563eb; color: var(--color-on-accent); border: none;">Default</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='ocean'" style="background: #0066CC; color: var(--color-on-accent); border: none;">Ocean</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='forest'" style="background: #15803d; color: var(--color-on-accent); border: none;">Forest</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='sunset'" style="background: #c2410c; color: var(--color-on-accent); border: none;">Sunset</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='rose'" style="background: #E11D48; color: var(--color-on-accent); border: none;">Rose</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='slate'" style="background: #334155; color: var(--color-on-accent); border: none;">Slate</button>
-          <button class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='purple'" style="background: #7C3AED; color: var(--color-on-accent); border: none;">Purple</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='light'" style="background: #2563eb; color: var(--color-on-accent); border: none;">Default</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='ocean'" style="background: #0066CC; color: var(--color-on-accent); border: none;">Ocean</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='forest'" style="background: #15803d; color: var(--color-on-accent); border: none;">Forest</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='sunset'" style="background: #c2410c; color: var(--color-on-accent); border: none;">Sunset</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='rose'" style="background: #E11D48; color: var(--color-on-accent); border: none;">Rose</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='slate'" style="background: #334155; color: var(--color-on-accent); border: none;">Slate</button>
+          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='purple'" style="background: #7C3AED; color: var(--color-on-accent); border: none;">Purple</button>
         </div>
 
         <h3>Shape</h3>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.shape">Default</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='sharp'">Sharp</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='rounded'">Rounded</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='pill'">Pill</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.shape">Default</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='sharp'">Sharp</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='rounded'">Rounded</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.shape='pill'">Pill</button>
         </div>
 
         <h3>Density</h3>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.density">Default</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.density='compact'">Compact</button>
-          <button class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.density='comfortable'">Comfortable</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.density">Default</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.density='compact'">Compact</button>
+          <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="document.documentElement.dataset.density='comfortable'">Comfortable</button>
         </div>
 
         <h3>Preview</h3>
@@ -3302,8 +3302,8 @@
             <div class="ren-card-body">
               <p style="margin:0 0 var(--space-3);">These components respond to the theme, shape, and density settings above.</p>
               <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
-                <button class="ren-btn ren-btn-primary ren-btn-sm">Primary</button>
-                <button class="ren-btn ren-btn-secondary ren-btn-sm">Secondary</button>
+                <button type="button" class="ren-btn ren-btn-primary ren-btn-sm">Primary</button>
+                <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm">Secondary</button>
                 <span class="ren-badge">Badge</span>
               </div>
             </div>
@@ -3317,7 +3317,7 @@
               <span class="ren-tag">Tag A</span>
               <span class="ren-tag ren-tag-success">Tag B</span>
             </div>
-            <button class="ren-btn ren-btn-secondary" style="align-self: flex-start;" onclick="document.documentElement.removeAttribute('data-theme'); delete document.documentElement.dataset.shape; delete document.documentElement.dataset.density;">
+            <button type="button" class="ren-btn ren-btn-secondary" style="align-self: flex-start;" onclick="document.documentElement.removeAttribute('data-theme'); delete document.documentElement.dataset.shape; delete document.documentElement.dataset.density;">
               Reset All
             </button>
           </div>

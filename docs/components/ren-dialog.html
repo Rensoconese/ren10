@@ -301,7 +301,7 @@
           </ol>
         </nav>
         <p class="dx-kicker">Composite</p>
-        <h1>Dialog</h1>
+        <h1>Dialog <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
         <p class="lede">A modal overlay built on the native <code>&lt;dialog&gt;</code> element. Focus trap, keyboard handling, click-outside dismiss, and smooth entry / exit animations come for free. Available as a CSS class set <em>or</em> as the <code>&lt;ren-dialog&gt;</code> Web Component with auto-wired triggers.</p>
       </header>
 
@@ -339,8 +339,8 @@
               </div>
               <div class="dx-dialog-mock-body">Save the edits to your profile? You can revert any time from settings.</div>
               <div class="dx-dialog-mock-footer">
-                <button class="ren-btn ren-btn-secondary ren-btn-sm" tabindex="-1">Cancel</button>
-                <button class="ren-btn ren-btn-primary ren-btn-sm" tabindex="-1">Save</button>
+                <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm" tabindex="-1">Cancel</button>
+                <button type="button" class="ren-btn ren-btn-primary ren-btn-sm" tabindex="-1">Save</button>
               </div>
             </div>
           </div>
@@ -396,12 +396,12 @@
 
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <button class="ren-btn ren-btn-primary" data-dialog-trigger="demo-confirm">Open dialog</button>
-            <button class="ren-btn ren-btn-danger" data-dialog-trigger="demo-alert">Open alert dialog</button>
+            <button type="button" class="ren-btn ren-btn-primary" data-dialog-trigger="demo-confirm">Open dialog</button>
+            <button type="button" class="ren-btn ren-btn-danger" data-dialog-trigger="demo-alert">Open alert dialog</button>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button data-dialog-trigger="confirm-id"&gt;Open dialog&lt;/button&gt;
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button data-dialog-trigger="dlg-confirm"&gt;Open dialog&lt;/button&gt;
 
-&lt;ren-dialog id="confirm-id"&gt;
+&lt;ren-dialog id="dlg-confirm"&gt;
   &lt;dialog class="ren-dialog"&gt;
     &lt;div class="ren-dialog-header"&gt;
       &lt;h2 class="ren-dialog-title"&gt;Confirm changes&lt;/h2&gt;
@@ -431,18 +431,18 @@
           <div class="dx-vrow">
             <span class="dx-vrow-label">Sizes</span>
             <div class="dx-vrow-items">
-              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-sm">sm</button>
-              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-md">md (default)</button>
-              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-lg">lg</button>
-              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-xl">xl</button>
-              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-full">full</button>
+              <button type="button" class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-sm">sm</button>
+              <button type="button" class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-md">md (default)</button>
+              <button type="button" class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-lg">lg</button>
+              <button type="button" class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-xl">xl</button>
+              <button type="button" class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-size-full">full</button>
             </div>
           </div>
 
           <div class="dx-vrow">
             <span class="dx-vrow-label">Alert</span>
             <div class="dx-vrow-items">
-              <button class="ren-btn ren-btn-danger" data-dialog-trigger="demo-alert">Delete account</button>
+              <button type="button" class="ren-btn ren-btn-danger" data-dialog-trigger="demo-alert">Delete account</button>
               <span style="font-size: var(--text-sm); color: var(--color-text-muted);">No backdrop dismiss · forces a button choice</span>
             </div>
           </div>
@@ -450,7 +450,7 @@
           <div class="dx-vrow">
             <span class="dx-vrow-label">No Escape</span>
             <div class="dx-vrow-items">
-              <button class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-no-escape">Open critical flow</button>
+              <button type="button" class="ren-btn ren-btn-secondary" data-dialog-trigger="demo-no-escape">Open critical flow</button>
               <span style="font-size: var(--text-sm); color: var(--color-text-muted);"><kbd>Esc</kbd> is suppressed · use the in-dialog buttons</span>
             </div>
           </div>
@@ -668,10 +668,10 @@ if (dialog.isOpen) { /* still open */ }</code></div>
 
         <h3>Labelling</h3>
         <p>Always pair the dialog with an accessible name. The simplest path is to give the title an <code>id</code> and reference it via <code>aria-labelledby</code>:</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;ren-dialog id="confirm" aria-labelledby="confirm-title"&gt;
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-dialog id="dlg-labelling" aria-labelledby="dlg-labelling-title"&gt;
   &lt;dialog class="ren-dialog"&gt;
     &lt;div class="ren-dialog-header"&gt;
-      &lt;h2 class="ren-dialog-title" id="confirm-title"&gt;Delete file&lt;/h2&gt;
+      &lt;h2 class="ren-dialog-title" id="dlg-labelling-title"&gt;Delete file&lt;/h2&gt;
     &lt;/div&gt;
     ...
   &lt;/dialog&gt;
@@ -695,9 +695,9 @@ if (dialog.isOpen) { /* still open */ }</code></div>
 
         <h3>Confirmation</h3>
         <p>The classic: a dialog asks the user to confirm a non-trivial action.</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="save-confirm"&gt;Save&lt;/button&gt;
+        <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="dlg-save"&gt;Save&lt;/button&gt;
 
-&lt;ren-dialog id="save-confirm" aria-labelledby="save-title"&gt;
+&lt;ren-dialog id="dlg-save" aria-labelledby="save-title"&gt;
   &lt;dialog class="ren-dialog"&gt;
     &lt;div class="ren-dialog-header"&gt;
       &lt;h2 class="ren-dialog-title" id="save-title"&gt;Save changes?&lt;/h2&gt;
@@ -714,9 +714,9 @@ if (dialog.isOpen) { /* still open */ }</code></div>
 
         <h3>Destructive (alert)</h3>
         <p>Backdrop click is suppressed; the user must press one of the two buttons.</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;button class="ren-btn ren-btn-danger" data-dialog-trigger="delete-confirm"&gt;Delete account&lt;/button&gt;
+        <div class="dx-pre" tabindex="0"><code>&lt;button class="ren-btn ren-btn-danger" data-dialog-trigger="dlg-delete"&gt;Delete account&lt;/button&gt;
 
-&lt;ren-alert-dialog id="delete-confirm" aria-labelledby="delete-title"&gt;
+&lt;ren-alert-dialog id="dlg-delete" aria-labelledby="delete-title"&gt;
   &lt;dialog class="ren-dialog ren-alert-dialog"&gt;
     &lt;div class="ren-dialog-header"&gt;
       &lt;h2 class="ren-dialog-title" id="delete-title"&gt;Delete this account?&lt;/h2&gt;
@@ -733,13 +733,13 @@ if (dialog.isOpen) { /* still open */ }</code></div>
 
         <h3>Form dialog</h3>
         <p>Using a dialog to collect a small piece of input. Submit the form to close.</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="rename"&gt;Rename project&lt;/button&gt;
+        <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="dlg-rename"&gt;Rename project&lt;/button&gt;
 
-&lt;ren-dialog id="rename" aria-labelledby="rename-title"&gt;
+&lt;ren-dialog id="dlg-rename" aria-labelledby="dlg-rename-title"&gt;
   &lt;dialog class="ren-dialog ren-dialog-sm"&gt;
     &lt;form method="dialog"&gt;
       &lt;div class="ren-dialog-header"&gt;
-        &lt;h2 class="ren-dialog-title" id="rename-title"&gt;Rename project&lt;/h2&gt;
+        &lt;h2 class="ren-dialog-title" id="dlg-rename-title"&gt;Rename project&lt;/h2&gt;
       &lt;/div&gt;
       &lt;div class="ren-dialog-body"&gt;
         &lt;label for="project-name" class="ren-field-label"&gt;New name&lt;/label&gt;
@@ -755,7 +755,7 @@ if (dialog.isOpen) { /* still open */ }</code></div>
 
         <h3>Reading the result</h3>
         <p>When you need to know <em>which</em> button closed the dialog, listen to <code>ren-close</code> and pass a <code>returnValue</code>.</p>
-        <div class="dx-pre" tabindex="0"><code>const dialog = document.querySelector('#save-confirm');
+        <div class="dx-pre" tabindex="0"><code>const dialog = document.querySelector('#dlg-save');
 
 dialog.querySelector('.ren-btn-primary')
   .addEventListener('click', () =&gt; dialog.close('save'));
@@ -790,8 +790,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
         Save the edits to your profile? You can revert any time from settings.
       </div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
-        <button class="ren-btn ren-btn-primary" data-dialog-close>Save</button>
+        <button type="button" class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>Save</button>
       </div>
     </dialog>
   </ren-dialog>
@@ -805,8 +805,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
         All projects, files, and history will be permanently removed. This cannot be undone.
       </div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-secondary" data-dialog-close>Keep account</button>
-        <button class="ren-btn ren-btn-danger" data-dialog-close>Delete account</button>
+        <button type="button" class="ren-btn ren-btn-secondary" data-dialog-close>Keep account</button>
+        <button type="button" class="ren-btn ren-btn-danger" data-dialog-close>Delete account</button>
       </div>
     </dialog>
   </ren-alert-dialog>
@@ -819,7 +819,7 @@ dialog.addEventListener('ren-close', (e) =&gt; {
       </div>
       <div class="ren-dialog-body">24 rem (384 px) max-width. For tight, single-decision dialogs.</div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
       </div>
     </dialog>
   </ren-dialog>
@@ -832,7 +832,7 @@ dialog.addEventListener('ren-close', (e) =&gt; {
       </div>
       <div class="ren-dialog-body">32 rem (512 px) max-width. The everyday default — fits a paragraph of context plus a couple of buttons.</div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
       </div>
     </dialog>
   </ren-dialog>
@@ -845,7 +845,7 @@ dialog.addEventListener('ren-close', (e) =&gt; {
       </div>
       <div class="ren-dialog-body">42 rem (672 px) max-width. Use for forms with multiple fields or list-pickers.</div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
       </div>
     </dialog>
   </ren-dialog>
@@ -858,7 +858,7 @@ dialog.addEventListener('ren-close', (e) =&gt; {
       </div>
       <div class="ren-dialog-body">56 rem (896 px) max-width. For media browsers, multi-step wizards, or rich previews.</div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
       </div>
     </dialog>
   </ren-dialog>
@@ -871,7 +871,7 @@ dialog.addEventListener('ren-close', (e) =&gt; {
       </div>
       <div class="ren-dialog-body">95 dvw — almost edge-to-edge. Reserve for full-screen takeovers (image lightbox, focus modes).</div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>OK</button>
       </div>
     </dialog>
   </ren-dialog>
@@ -885,8 +885,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
         <kbd>Esc</kbd> won't close this. Use one of the buttons below to leave. (You'd reserve this for moments where dismissing accidentally would lose work — e.g. mid-payment-flow.)
       </div>
       <div class="ren-dialog-footer">
-        <button class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
-        <button class="ren-btn ren-btn-primary" data-dialog-close>Continue</button>
+        <button type="button" class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
+        <button type="button" class="ren-btn ren-btn-primary" data-dialog-close>Continue</button>
       </div>
     </dialog>
   </ren-dialog>
