@@ -17,6 +17,10 @@
   "files": [
     "index.css",
     "ren-design.md",
+    "AGENTS.md",
+    "CLAUDE.md",
+    ".cursorrules",
+    ".windsurfrules",
     "tokens/",
     "base/",
     "components/",

@@ -22,6 +22,64 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "A single, standalone expandable section is needed (no sibling exclusivity)."
+    - "You want a zero-JS disclosure based on native <details>/<summary>."
+    - "Initial state must be declarable in HTML via the [open] attribute."
+    - "A subtle ghost variant (no border, flush) is desired."
+    - "The content area animates height via CSS interpolate-size (no JS measurement)."
+  avoidWhen:
+    - "Multiple grouped disclosures share chrome — use ren-accordion (handles exclusive mode)."
+    - "The disclosure floats above content as a popover — use ren-popover."
+    - "The trigger must control a remote panel — use a button + aria-controls on a custom panel."
+    - "The disclosure is a navigation reveal — use ren-sidebar / ren-menu."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-collapsible/ren-collapsible.css"
+  notes:
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+    - "No colocated JS — open / close uses the native <details> toggle event; consumers can listen for 'toggle' if needed."
+    - "Add interpolate-size support polyfill only if you require height animation on legacy browsers."
+
+requiredMarkup:
+  - "Root element is <details class=\"ren-collapsible\">; do not wrap a <div> with a custom click handler."
+  - "Trigger is the first child <summary>; content lives in a sibling <div class=\"ren-collapsible-content\">."
+  - "Use the [open] attribute to render expanded on first paint (do not set hidden / display via style)."
+  - "Add .ren-collapsible-ghost to the host for the borderless variant; do not invent additional variant classes."
+  - "Keep the chevron decorative — it is rendered via the summary::after pseudo-element."
+
+forbiddenPatterns:
+  - "<div class=\"ren-collapsible\"><div role=\"button\">…</div></div> — must be a real <details>/<summary>."
+  - "Custom triangle / chevron inside the summary text content; rely on summary::after rotation."
+  - "Animating with JavaScript-driven max-height; CSS interpolate-size handles auto-to-zero transitions."
+  - "Removing the focus ring (outline: none) without restoring :focus-visible on summary."
+  - "Calling .open = true on a detached <details> outside the DOM — bind it inside .ren-collapsible first."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-collapse-bg, --ren-collapse-border, --ren-collapse-duration, --ren-collapse-easing, --ren-collapse-padding, --ren-collapse-radius, --ren-collapse-trigger-font, --ren-collapse-trigger-weight."
+    - "Semantic tokens: --color-border, --color-text, --color-text-muted, --color-text-secondary, --color-fill, --color-focus-ring."
+    - "Layout / motion tokens: --space-*, --radius-md, --stroke-1, --touch-min, --ring-width, --duration-enter, --ease-enter, --transition-tactile."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Raw transition values; use --duration-enter / --ease-enter or --ren-collapse-duration / --ren-collapse-easing."
+
+accessibility:
+  required:
+    - "Use the real <details>/<summary> pair so the browser exposes the native disclosure pattern and supports Enter / Space toggle."
+    - "Touch target on the summary stays ≥ var(--touch-min) (44px) — do not shrink below this on touch surfaces."
+    - "Visible :focus-visible ring on summary uses --color-focus-ring and --ring-width; do not remove it."
+    - "Chevron is decorative (::after pseudo) — never expose its rotation to AT via aria-label."
+    - "Communicate open state through the [open] attribute (native semantics) — never rely on color alone."
+    - "Animations respect prefers-reduced-motion (chevron rotation transition is disabled)."
+```
+
 ## Required Imports
 
 ```html

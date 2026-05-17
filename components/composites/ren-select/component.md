@@ -22,6 +22,66 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a styled single- or multi-select with a button trigger and a listbox popup."
+    - "You need full keyboard navigation (Arrow keys, Home/End, typeahead, Enter/Space, Escape)."
+    - "You need ARIA combobox/listbox semantics with aria-expanded, aria-selected, and data-highlighted."
+    - "You need optional grouping (.ren-select-group + .ren-select-label) or separators between options."
+    - "You need multi-select chips (.ren-select-chips, .ren-select-chip) with removal affordances."
+    - "You need hidden form-input integration for submission alongside custom dropdown UI."
+  avoidWhen:
+    - "A bare <select> styled via base/primitive-zero would meet the requirements."
+    - "The control is binary state — use ren-checkbox, ren-switch, or ren-toggle."
+    - "The disclosure is a free-form menu of commands, not value selection — use ren-menu / ren-menubar."
+    - "The disclosure is a navigation list — use ren-nav or ren-sidebar."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-select/ren-select.css"
+  js:
+    - "rends/components/composites/ren-select/ren-select.js"
+  notes:
+    - "JS is required: it owns keyboard nav, dismissable popup, popover positioning, and the hidden form input."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "<ren-select> wraps a real <button data-select-trigger> and a [data-select-content] listbox container."
+  - "Each option is a <div data-select-item data-value=\"...\"> inside .ren-select-content; rely on data-select-item, not arbitrary children."
+  - "The trigger displays .ren-select-value when something is chosen and .ren-select-placeholder when empty — do not collapse them into one node."
+  - "Set name on <ren-select> when the value must submit with a form; the component injects the hidden input automatically."
+  - "Use .ren-select-group + .ren-select-label for grouped options and .ren-select-separator between groups; do not invent dividers."
+
+forbiddenPatterns:
+  - "Substituting a <div role=\"button\"> for the [data-select-trigger] <button> — the trigger must be a real button."
+  - "Animating the dropdown manually with display: none / display: block — use the .ren-open class and the popover open state."
+  - "Removing the focus ring on .ren-select-trigger:focus-visible without restoring an equivalent visible ring."
+  - "Hardcoding option backgrounds via inline style — use --color-accent-subtle / --color-fill via the documented selectors."
+  - "Putting interactive children (links, buttons) inside .ren-select-item; items must remain single-action options."
+
+tokenPolicy:
+  allowed:
+    - "Semantic input tokens: --color-input-bg, --color-input-bg-hover, --color-input-border, --color-input-border-focus, --color-input-focus-ring, --color-input-placeholder, --color-input-disabled-bg, --color-input-disabled-text."
+    - "Surface and content tokens: --color-surface, --color-fill, --color-accent, --color-accent-subtle, --color-text, --color-text-muted, --color-border."
+    - "Shape / motion tokens: --radius-sm, --radius-md, --radius-lg, --space-*, --shadow-lg, --duration-enter, --duration-exit, --duration-micro, --ease-enter, --ease-exit, --transition-tactile."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgb / named color values in overrides."
+    - "Hardcoded transition durations; use --duration-enter / --duration-exit / --duration-micro with their paired easings."
+
+accessibility:
+  required:
+    - "Trigger exposes aria-expanded on open/close and aria-disabled when inert; native <button> Enter/Space activation must be preserved."
+    - "Listbox container carries role=\"listbox\"; each option carries role=\"option\" and aria-selected reflects the selected value."
+    - "Roving highlight on options uses [data-highlighted]; only one option may be highlighted at a time."
+    - "Trigger meets the 44px touch target via min-height: var(--touch-min); .ren-select-sm is only acceptable in non-touch contexts."
+    - "Escape closes the listbox and returns focus to the trigger; outside click dismisses without stealing focus elsewhere."
+    - "Disabled state combines :disabled (or aria-disabled=\"true\") with pointer-events: none on items so click and keypress both no-op."
+```
+
 ## Required Imports
 
 ```html

@@ -22,6 +22,65 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "User needs to pick a contiguous date range (start + end) confirmed by an explicit Apply action."
+    - "UI needs dual side-by-side calendars (left = start month, right = next month) inside a popover."
+    - "Preset shortcuts like Last 7 / Last 30 / This Month / Last Month should be selectable as a sidebar listbox."
+    - "Form submission needs two ISO-string fields named `<name>-start` and `<name>-end` via injected hidden inputs."
+    - "Selection has Apply/Cancel semantics — draft state on outside-click or Cancel must revert to the previously confirmed range."
+  avoidWhen:
+    - "Only a single date is needed — use ren-date-picker (mode=\"single\")."
+    - "User picks two unrelated dates (start-of-trip, end-of-warranty) that are not a contiguous range — use two ren-date-picker instances."
+    - "Range needs commit-on-click without Apply/Cancel — use ren-date-picker with mode=\"range\"."
+    - "No calendar UI is needed; a quick \"last N days\" preset is enough — render ren-select / ren-menu of presets only."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-date-range-picker/ren-date-range-picker.css"
+  js:
+    - "rends/components/composites/ren-date-range-picker/ren-date-range-picker.js"
+  notes:
+    - "Also requires ren-calendar to be registered — the component instantiates two <ren-calendar mode=\"range\"> children inside the dropdown."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Use <ren-date-range-picker> as the host so the upgrade lifecycle builds the trigger, dropdown, dual calendars, presets, and hidden inputs."
+  - "The trigger is a real <button class=\"ren-date-range-trigger\"> with aria-haspopup=\"dialog\" and aria-expanded; do not replace it with a div."
+  - "The dropdown root carries role=\"dialog\", aria-label, and popover=\"manual\"; presets render inside role=\"listbox\" with each preset as role=\"option\" + data-preset=\"<key>\"."
+  - "Footer must contain .ren-date-range-summary (aria-live=\"polite\"), .ren-date-range-cancel, and .ren-date-range-apply — Apply is disabled until both endpoints are set."
+  - "Use `name=\"…\"` on the host so the component injects <input type=\"hidden\" name=\"<name>-start\"> and `…-end` for form submission."
+
+forbiddenPatterns:
+  - "Wiring presets to a single ren-calendar instead of using both calendarLeft/calendarRight — the host depends on having two ren-calendar children to call setRange on."
+  - "Skipping the Apply button and writing directly to the trigger — Cancel/outside-click revert depends on a draft vs confirmed split."
+  - "Hardcoding the dropdown width or breakpoint — the component uses container-type: inline-size with @container ren-date-range to switch to a stacked layout under 500px."
+  - "Adding extra inline color tokens to .ren-date-range-preset[aria-selected=\"true\"] — the highlighted preset already styles via --color-accent-subtle / --color-accent."
+  - "Calling showPopover() directly from outside — use the host's open() / close() / handleApply() / handleCancel() so draft/confirmed state stays consistent."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-calendar-bg, --ren-calendar-border, --ren-calendar-day-size, --ren-calendar-radius, --ren-calendar-range-bg, --ren-calendar-selected-bg, --ren-calendar-selected-color, --ren-calendar-today-bg, --ren-calendar-width."
+    - "Semantic surface / text / accent tokens: --color-surface, --color-surface-raised, --color-border, --color-border-strong, --color-text, --color-text-secondary, --color-text-muted, --color-accent, --color-accent-hover, --color-accent-subtle, --color-on-accent, --color-fill, --color-fill-active, --color-danger, --color-success."
+    - "Layout/motion tokens: --space-*, --radius-md, --radius-lg, --shadow-lg, --duration-enter, --ease-enter, --transition-tactile, --touch-min, --body-size, --label-size, --weight-semibold."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgba colors for any of the trigger, dropdown, presets, or actions — theme via the semantic and --ren-calendar-* tokens."
+    - "Custom transition durations; reuse --duration-enter / --ease-enter so reduced-motion handling continues to apply."
+
+accessibility:
+  required:
+    - "Trigger is a real <button type=\"button\"> with aria-haspopup=\"dialog\" and aria-expanded synced to the dropdown state."
+    - "Dropdown is role=\"dialog\" with aria-label=\"Date range selection\" and focuses the first preset (or first calendar day) on open."
+    - "Preset listbox uses role=\"listbox\" with each .ren-date-range-preset as role=\"option\"; the active preset sets aria-selected=\"true\"."
+    - ".ren-date-range-summary uses aria-live=\"polite\" so changes to the draft range are announced."
+    - "Escape closes via Cancel semantics (reverts draft to confirmed); outside-click does the same — do not silently apply."
+    - "Apply button is disabled (real disabled attribute) until both draftStart and draftEnd are present; do not bypass via aria-disabled alone."
+```
+
 ## Required Imports
 
 ```html

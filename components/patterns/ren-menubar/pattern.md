@@ -22,6 +22,68 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this pattern.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The UI is a desktop-style application menubar with persistent top-level menus (File / Edit / View / Help)."
+    - "You need WAI-ARIA Menubar semantics: role=\"menubar\", role=\"menu\", role=\"menuitem|menuitemcheckbox|menuitemradio\"."
+    - "You need keyboard navigation (Arrow keys, Enter, Space, Escape, Home, End) with roving focus and \"menubar glide\" between triggers."
+    - "You need typeahead character matching for fast item selection."
+    - "You need checkbox / radio menu items (.ren-menubar-checkbox, .ren-menubar-radio) with aria-checked state."
+    - "You need nested submenus with chevron and lateral keyboard navigation."
+  avoidWhen:
+    - "The nav is a horizontal site bar (Home / About / Pricing) — use ren-nav."
+    - "It is a single dropdown / context menu — use ren-menu or ren-popover."
+    - "It is a side rail with sections — use ren-sidebar."
+    - "It is a Ctrl+K searchable launcher — use ren-command."
+
+canonicalImports:
+  css:
+    - "rends/components/patterns/ren-menubar/ren-menubar.css"
+  js:
+    - "rends/components/patterns/ren-menubar/ren-menubar.js"
+  notes:
+    - "JS owns the keyboard model, roving focus, submenu opening, and ren-menubar-select event. CSS-only fallback only renders static chrome."
+    - "Custom element registers as <ren-menubar>; menus are toggled via the [hidden] attribute on .ren-menubar-menu."
+
+requiredMarkup:
+  - "Root is <ren-menubar> wrapping <div class=\"ren-menubar\" role=\"menubar\">."
+  - "Each top-level menu uses <button class=\"ren-menubar-trigger\" aria-haspopup=\"menu\" aria-expanded=\"false\"> + a sibling <div class=\"ren-menubar-menu\" role=\"menu\" hidden>."
+  - "Each item is a <button class=\"ren-menubar-item\" role=\"menuitem\"> (or role=\"menuitemcheckbox|menuitemradio\" for stateful variants)."
+  - "Checkbox / radio items carry aria-checked=\"true|false\"; the ::before pseudo renders the check / dot — do not hand-draw it."
+  - "Separators are <div class=\"ren-menubar-separator\" role=\"separator\">; submenu chevrons are added automatically by .ren-menubar-submenu::after."
+  - "Keyboard shortcuts shown via <span class=\"ren-menubar-shortcut\">⌘N</span>; mirror with a real document-level keydown handler."
+
+forbiddenPatterns:
+  - "Building from <a> tags — items must be <button> so Space activates them."
+  - "Hiding menus with display: none from external code — toggle the [hidden] attribute; the component owns animation states."
+  - "Setting aria-expanded manually from consumer code — the menubar JS manages it on the trigger."
+  - "Wrapping items in <li> without role=\"none\" parent — keep the menu role tree flat or wrap with role=\"none\"."
+  - "Reimplementing keyboard navigation; the component already handles arrows, typeahead, Home/End, and Escape."
+
+tokenPolicy:
+  allowed:
+    - "Semantic surface / text tokens: --color-surface, --color-surface-raised, --color-border, --color-separator, --color-text, --color-text-muted, --color-fill-hover, --color-fill-active, --color-accent, --color-on-accent."
+    - "Spacing / radius / shadow tokens: --space-1, --space-2, --space-3, --radius-sm, --radius-md, --shadow-lg."
+    - "Type tokens: --body-size, --label-size, --label-weight, --caption-size."
+    - "Motion tokens: --duration-tactile, --duration-exit, --ease-enter."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer overrides."
+    - "Hardcoded hex / named colors for hover, active, or accent."
+    - "Replacing the focus outline color with anything other than --color-accent."
+
+accessibility:
+  required:
+    - "Container has role=\"menubar\" and each <button> is a real menuitem with role=\"menuitem|menuitemcheckbox|menuitemradio\"."
+    - "Triggers expose aria-haspopup=\"menu\" and aria-expanded reflects the open/closed state of the associated menu."
+    - "Roving tabindex: only one focusable item at a time; arrow keys move focus. The component manages this — do not set tabindex manually on every item."
+    - "Checkbox / radio items expose aria-checked; the visual check (::before) must not be the only state cue."
+    - "Disabled items use [data-disabled] AND pointer-events: none (CSS handles the latter)."
+    - "Focus-visible outline uses --color-accent — never strip without restoring a visible alternative."
+```
+
 ## Required Imports
 
 ```html

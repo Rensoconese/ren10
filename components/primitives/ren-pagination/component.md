@@ -22,6 +22,64 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "A list, table, or grid is broken into discrete numbered pages with a known total count."
+    - "You need prev / next + numbered items with aria-current=\"page\" on the active page."
+    - "You need a minimal prev / info / next layout (.ren-pagination-simple) when total pages is unknown."
+    - "You need a compact variant for dense tables (.ren-pagination-compact)."
+    - "You need a centered standalone block under content (.ren-pagination-centered)."
+    - "You need an ellipsis spacer between page ranges (.ren-pagination-ellipsis)."
+  avoidWhen:
+    - "The feed is infinite-scroll or load-more — use a button + scroll observer, not pagination."
+    - "The data is paged by cursor with no concept of page numbers — show only prev/next."
+    - "You need step navigation inside a wizard — use a stepper component."
+    - "The navigation is between sibling sections of a page — use tabs or anchor links."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-pagination/ren-pagination.css"
+  notes:
+    - "CSS-only primitive; no JavaScript file exists for ren-pagination."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Wrap the control in a real <nav aria-label=\"Pagination\"> with class=\"ren-pagination\"."
+  - "Each page link is an <a href=\"...\"> with class=\"ren-pagination-item\"; mark the active page with aria-current=\"page\" (it auto-disables pointer-events)."
+  - "Prev / next are <a class=\"ren-pagination-prev\"> / <a class=\"ren-pagination-next\"> with aria-label describing direction when the content is a glyph (e.g., aria-label=\"Previous page\")."
+  - "Use <span class=\"ren-pagination-ellipsis\" aria-hidden=\"true\">…</span> for visual gaps — it must not be focusable."
+  - "Disabled prev/next use aria-disabled=\"true\" (preferred for <a>) or disabled (for <button>)."
+
+forbiddenPatterns:
+  - "<div role=\"navigation\"> or <ul> instead of <nav> for the wrapper."
+  - "Plain <span> or <button> styled as a pagination item — use <a class=\"ren-pagination-item\">."
+  - "Marking the active page with only a CSS class — must include aria-current=\"page\" for screen readers."
+  - "Hiding disabled prev/next via display: none — keep them in DOM with aria-disabled so layout stays stable."
+  - "Hardcoded color overrides on the active item that bypass --color-accent / --color-on-accent."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-pagination-active-bg, --ren-pagination-active-color, --ren-pagination-bg, --ren-pagination-font-size, --ren-pagination-gap, --ren-pagination-hover-bg, --ren-pagination-radius, --ren-pagination-size."
+    - "Semantic tokens consumed internally: --color-text, --color-text-muted, --color-accent, --color-on-accent, --color-fill, --color-fill-hover, --color-disabled-text, --color-focus-ring."
+    - "Layout tokens: --touch-min, --size-sm, --space-1, --space-2, --radius-md, --stroke-1, --ring-width, --ring-offset-width, --duration-tactile, --ease-enter."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Inline width/height styling that breaks min 44px touch target on default variant."
+
+accessibility:
+  required:
+    - "Wrapper is a real <nav> landmark with aria-label=\"Pagination\" (or equivalent)."
+    - "Active page uses aria-current=\"page\"; do not duplicate it on a separate <span>."
+    - "Default and simple variants guarantee min 44px touch targets (--touch-min); compact variant is for non-touch contexts only."
+    - "Visible :focus-visible ring driven by --color-focus-ring + --ring-width / --ring-offset-width."
+    - "Glyph-only prev/next provide an aria-label so the direction is announced."
+    - "Disabled prev/next set aria-disabled=\"true\" AND pointer-events: none (handled by CSS); do not rely on visual dimming alone."
+```
+
 ## Required Imports
 
 ```html

@@ -22,6 +22,63 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "A destructive or irreversible action (delete, sign-out, discard) requires explicit confirmation."
+    - "Accidental dismissal (Escape, backdrop click) must NOT close the dialog."
+    - "The decision is binary and centered around two actions (cancel + confirm)."
+    - "Content is short: an icon, a title, a one-paragraph description, and two buttons."
+    - "You want the native <dialog> showModal() flow with returnValue for the outcome."
+  avoidWhen:
+    - "The dialog hosts a form, multi-step flow, or scrollable content — use ren-dialog."
+    - "The disclosure should dismiss on Escape / backdrop — use ren-dialog (no alert)."
+    - "The notification does not block the page — use ren-toast or ren-banner."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-alert-dialog/ren-alert-dialog.css"
+  notes:
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+    - "No colocated JS — call dialog.showModal() / dialog.close(returnValue) directly on the native <dialog>."
+    - "The component uses the same --ren-dialog-* token namespace as ren-dialog, so token overrides cascade."
+
+requiredMarkup:
+  - "The root element is a real <dialog class=\"ren-alert-dialog\">; never substitute a <div role=\"alertdialog\">."
+  - "Provide a .ren-alert-dialog-title (heading) and a .ren-alert-dialog-description so AT can announce the decision."
+  - "Actions live inside .ren-alert-dialog-actions and use real <button> elements (.ren-btn-secondary + .ren-btn-danger or similar)."
+  - "Each button calls dialog.close('cancel' | 'confirm' | …) so the consumer can read returnValue on the close event."
+  - "Use .ren-alert-dialog-icon-danger or .ren-alert-dialog-icon-warning on the icon slot for severity — do not invent new severity classes."
+
+forbiddenPatterns:
+  - "<div class=\"ren-alert-dialog\"> rendered without the native <dialog> element."
+  - "Calling dialog.show() instead of dialog.showModal() — alert behavior requires modality + ::backdrop."
+  - "Adding Escape-to-close handlers; the alert variant intentionally blocks accidental dismissal."
+  - "Hardcoded rgba backdrops (background: rgba(0,0,0,.5)) — the ::backdrop already reads --color-overlay."
+  - "Replacing .ren-alert-dialog-actions with arbitrary flex containers that bypass the @container narrow-stack layout."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-dialog-backdrop, --ren-dialog-bg, --ren-dialog-border-color, --ren-dialog-duration, --ren-dialog-easing, --ren-dialog-gap, --ren-dialog-padding, --ren-dialog-radius, --ren-dialog-shadow, --ren-dialog-width."
+    - "Semantic tokens: --color-surface, --color-overlay, --color-text, --color-text-muted, --color-danger, --color-danger-subtle, --color-warning, --color-warning-subtle, --color-fill."
+    - "Layout / motion tokens: --space-*, --radius-*, --shadow-xl, --icon-xl, --duration-enter, --ease-enter, --transition-overlay."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Custom backdrop opacity values that bypass --color-overlay or --transition-overlay."
+
+accessibility:
+  required:
+    - "Use a real <dialog> so the browser exposes role=\"dialog\" + aria-modal automatically; add aria-labelledby pointing to .ren-alert-dialog-title."
+    - "Open with showModal(); the backdrop becomes inert so background content is unreachable to keyboard / AT."
+    - "The destructive button must be visually distinct (.ren-btn-danger) AND announced by its text — never rely on color alone."
+    - "Focus must move into the dialog on open and return to the trigger on close (native <dialog> behavior)."
+    - "Touch targets on action buttons stay ≥ 44px (default .ren-btn size)."
+    - "Reduced motion: transitions are disabled under prefers-reduced-motion (already handled by the component)."
+```
+
 ## Required Imports
 
 ```html

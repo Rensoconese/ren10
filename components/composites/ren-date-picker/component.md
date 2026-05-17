@@ -22,6 +22,65 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "User needs to pick a single date (or a single contiguous range) from a calendar popover."
+    - "Trigger should be a button-like control that opens a positioned popover (anchor positioning) with an embedded <ren-calendar>."
+    - "The form needs an ISO-string value submitted via a hidden input under a given name."
+    - "Preset shortcuts (Today, Tomorrow, This Week) should appear alongside the calendar grid."
+    - "Mobile must adapt to a bottom sheet automatically; desktop floats below the trigger."
+  avoidWhen:
+    - "You need two independent start/end inputs with apply/cancel — use ren-date-range-picker."
+    - "You only need a raw native <input type=\"date\"> with no popover styling — fall back to base/primitive-zero."
+    - "You need a non-date generic dropdown — use ren-menu, ren-select, or ren-popover."
+    - "You need a multi-month calendar surface without an input trigger — render <ren-calendar> directly."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-date-picker/ren-date-picker.css"
+  js:
+    - "rends/components/composites/ren-date-picker/ren-date-picker.js"
+  notes:
+    - "Also requires ren-calendar to be registered (the component instantiates <ren-calendar> inside its dropdown)."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Use <ren-date-picker> as the host element so the upgrade lifecycle wires up the trigger, dropdown, and hidden input."
+  - "Trigger must be a real <button class=\"ren-date-picker-trigger\"> with type=\"button\", aria-haspopup=\"dialog\", and aria-expanded; the component sets these if it renders the trigger itself."
+  - "The dropdown surface is a <div class=\"ren-date-picker-dropdown\" popover=\"manual\"> — keep the popover attribute so showPopover()/hidePopover() work."
+  - "Inside the dropdown render a <ren-calendar> child; the host syncs its mode/locale/min/max attributes onto it."
+  - "If you need form submission, set name=\"…\" on <ren-date-picker> so the auto-injected <input type=\"hidden\"> carries the ISO value."
+
+forbiddenPatterns:
+  - "Styling a <div> or <span> as the trigger instead of a real <button> — keyboard activation and aria-expanded depend on the button."
+  - "Replacing the inner <ren-calendar> with raw markup — the host wires ren-date-select events directly to the calendar element."
+  - "Hardcoding popover positioning offsets via inline styles — rely on anchor-name: --ren-date-picker-anchor and position-anchor in the stylesheet."
+  - "Toggling the dropdown by setting display: none — use open()/close()/toggle() on the host so aria-expanded and popover state stay in sync."
+  - "Wrapping a native <input type=\"date\"> in .ren-date-picker — the component expects to own its trigger and popover."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-calendar-bg, --ren-calendar-border, --ren-calendar-day-size, --ren-calendar-radius, --ren-calendar-range-bg, --ren-calendar-selected-bg, --ren-calendar-selected-color, --ren-calendar-today-bg, --ren-calendar-width."
+    - "Semantic surface tokens used by the trigger / dropdown: --color-surface, --color-surface-raised, --color-border, --color-border-strong, --color-text, --color-text-muted, --color-fill, --color-fill-hover, --color-fill-active, --color-accent, --color-danger, --color-success."
+    - "Layout/motion tokens: --space-*, --radius-md, --radius-lg, --shadow-lg, --duration-enter, --ease-enter, --transition-tactile, --touch-min, --body-size, --label-size."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer overrides."
+    - "Hardcoded hex / rgb() colors for trigger or dropdown chrome; theme via --color-* and the --ren-calendar-* token API."
+    - "Custom transition/animation durations; reuse --duration-enter and --ease-enter so reduced-motion overrides apply."
+
+accessibility:
+  required:
+    - "Trigger is a real <button type=\"button\"> with aria-haspopup=\"dialog\" and aria-expanded that flips true/false as the dropdown opens and closes."
+    - "Trigger min-height is var(--touch-min) so the tap target meets 44px; do not reduce it for touch contexts."
+    - ":focus-visible on the trigger and presets must show the --color-accent outline; do not remove it without restoring an equivalent ring."
+    - "Escape closes the dropdown; Enter/Space on the trigger opens it; opening focuses the first non-disabled .ren-calendar-day."
+    - "Error/success states (.ren-date-picker-error, .ren-date-picker-success) must be paired with a text message — do not rely on border color alone."
+    - "Closing returns focus to the trigger; do not break this contract when overriding open()/close()."
+```
+
 ## Required Imports
 
 ```html

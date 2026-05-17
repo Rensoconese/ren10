@@ -22,6 +22,66 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The UI needs a full month grid for date browsing or selection."
+    - "You need single, range, or multiple selection modes (mode=\"single|range|multiple\")."
+    - "Locale-aware month names and first-day-of-week must be supported (locale, first-day attrs)."
+    - "min / max bounds must constrain selectable dates."
+    - "You need ARIA grid + roving tabindex keyboard navigation across days."
+  avoidWhen:
+    - "You only need a date text input — use ren-date-picker (composite that may embed ren-calendar)."
+    - "You need a year/decade picker without a month grid — use a different control."
+    - "The UI is a schedule / agenda view rather than date selection — use a calendar-view pattern."
+    - "Only a static date display is needed — use ren-text with a formatted Date."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-calendar/ren-calendar.css"
+  js:
+    - "rends/components/composites/ren-calendar/ren-calendar.js"
+  notes:
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+    - "JS is required: <ren-calendar> renders the grid imperatively; there is no static markup fallback."
+    - "Configure via attributes (value, mode, locale, first-day, min, max); avoid manual DOM mutations on .ren-calendar-grid."
+
+requiredMarkup:
+  - "Render <ren-calendar> as the host; the component populates its own .ren-calendar-header, .ren-calendar-weekdays, and .ren-calendar-grid."
+  - "Each day cell is a real <button class=\"ren-calendar-day\"> with aria-selected and (when applicable) data-today / data-outside / [disabled]."
+  - "Navigation arrows use .ren-calendar-prev / .ren-calendar-next inside .ren-calendar-nav and rely on the component's chevron pseudo-elements."
+  - "Use .ren-calendar-sm or .ren-calendar-lg on the host for size variants; do not invent custom size classes."
+  - "For ranges, the component sets .ren-calendar-day-range-start, .ren-calendar-day-in-range, .ren-calendar-day-range-end — do not author these by hand."
+
+forbiddenPatterns:
+  - "Replacing day <button>s with <div role=\"button\"> — breaks keyboard + screen reader expectations."
+  - "Hardcoded today highlight (border: 2px solid #...) — rely on [data-today] and --color-accent."
+  - "Toggling a day's selected state by adding a custom class instead of aria-selected=\"true\"."
+  - "Mounting the calendar inside a non-modal popover without focus management — wrap in ren-popover or ren-dialog if floating."
+  - "Hardcoded weekday labels in the markup; the component renders them from locale."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-calendar-bg, --ren-calendar-border, --ren-calendar-day-size, --ren-calendar-radius, --ren-calendar-range-bg, --ren-calendar-selected-bg, --ren-calendar-selected-color, --ren-calendar-today-bg, --ren-calendar-width."
+    - "Semantic tokens: --color-surface-raised, --color-border, --color-text, --color-text-muted, --color-text-faint, --color-fill, --color-fill-active, --color-accent, --color-accent-subtle, --color-on-accent."
+    - "Layout / motion tokens: --space-*, --radius-*, --shadow-md, --touch-min, --duration-enter, --ease-enter, --transition-tactile."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Hardcoded day-cell sizes; tune --ren-calendar-day-size or pick the .ren-calendar-sm / .ren-calendar-lg variant."
+
+accessibility:
+  required:
+    - "Day cells implement the ARIA grid pattern with a single roving tabindex; never expose more than one tab stop in the grid."
+    - "Keyboard: Arrow keys move focus between days, PageUp/PageDown move months, Home/End jump within a week — preserve these in any customization."
+    - "Selected days set aria-selected=\"true\"; do not communicate selection through color alone."
+    - "Today indicator uses [data-today] AND an inset ring (box-shadow); the ring is required so color-blind users perceive today."
+    - "Out-of-month days set [data-outside] and pointer-events: none; do not let them receive focus."
+    - "Min/max bounds disable cells via the native [disabled] attribute so the browser blocks activation."
+```
+
 ## Required Imports
 
 ```html

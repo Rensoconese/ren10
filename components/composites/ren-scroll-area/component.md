@@ -22,6 +22,63 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "A bounded region needs themed native scrollbars (Firefox scrollbar-color + WebKit ::-webkit-scrollbar)."
+    - "You want consistent scrollbar styling across light/dark themes without injecting JS or shadow DOM."
+    - "Need preset max-height utilities (.ren-scroll-area-sm/-md/-lg/-xl/-full) and direction variants (.-x, .-y)."
+    - "Need fade-edge masks (.-fade, .-fade-x) to hint at overflow without resorting to JS observers."
+    - "Need an \"auto\" variant where the scrollbar only appears on hover / focus-within."
+  avoidWhen:
+    - "You need virtualization, restore-scroll-position, or scroll-into-view APIs — those need bespoke JS, not this CSS contract."
+    - "You need a custom-drawn track / thumb (e.g. mini-map, position indicator) — native scrollbar styling cannot do this."
+    - "The container should never scroll (clip overflow) — use overflow: clip / hidden directly."
+    - "The content scrolls horizontally only and needs snap behavior — use a dedicated carousel/scroll-snap pattern."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-scroll-area/ren-scroll-area.css"
+  js: []
+  notes:
+    - "CSS-only component: no JavaScript file is colocated. Do not introduce JS unless the source component grows that responsibility."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Apply class=\"ren-scroll-area\" to a real block element that owns overflow (commonly <div>, <section>, <main>)."
+  - "Constrain height/width explicitly — either via .ren-scroll-area-sm/-md/-lg/-xl/-full, an inline --scroll-max custom property, or a parent flex/grid track."
+  - "Pair direction with intent: .-x for horizontal-only, .-y for vertical-only; omit for auto in both axes."
+  - "When using .-fade or .-fade-x the masking ::before/::after read from --color-surface; ensure the scroll area sits on a surface that matches that token."
+  - "Children that should be focusable for keyboard scrolling need tabindex=\"0\" on the .ren-scroll-area itself when it has no focusable descendants."
+
+forbiddenPatterns:
+  - "Overriding overflow with overflow: hidden — that defeats the entire component (no scrollbar, no fade mask alignment)."
+  - "Wrapping a <ren-scroll-area> custom element instead of the .ren-scroll-area class — no custom element exists for this composite."
+  - "Stacking position: absolute children that escape the scroll context — the fade overlays (::before/::after at z-index: 10) assume in-flow content underneath."
+  - "Hardcoding scrollbar-color or ::-webkit-scrollbar-thumb hex values — theme via --color-fill-active / --color-fill-hover so dark mode adapts."
+  - "Setting --scroll-max on the parent expecting cascade — the rule is .ren-scroll-area[--scroll-max] { max-height: var(--scroll-max) } so the variable must be authored on the same element."
+
+tokenPolicy:
+  allowed:
+    - "Semantic tokens used by the scrollbar and fade masks: --color-fill-active, --color-fill-hover, --color-surface."
+    - "Layout / shape / motion tokens: --radius-full, --duration-enter, --ease-enter, --transition-tactile."
+    - "Authoring custom max-height via the --scroll-max custom property on the .ren-scroll-area element."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer overrides."
+    - "Hardcoded hex / rgb() values for scrollbar thumb or fade-mask gradients."
+    - "Inventing --ren-scroll-area-* tokens — none are part of the Public Token API today."
+
+accessibility:
+  required:
+    - "If the scrollable region contains no focusable child, set tabindex=\"0\" on the .ren-scroll-area so keyboard users can scroll it with Arrow / PageUp / PageDown."
+    - "Provide an accessible name (aria-label / aria-labelledby) when the region is a discrete content landmark; e.g. <section class=\"ren-scroll-area\" aria-label=\"Logs\">."
+    - "Honor prefers-reduced-motion: the component disables scroll-behavior: smooth via the existing @media rule — do not re-enable smooth scrolling under reduced-motion."
+    - "Do not rely on the fade-edge gradients alone to signal more content; pair with a visible affordance (chevron, scroll-hint) when content overflow is decision-critical."
+    - "Scrollbar contrast: --color-fill-active and --color-fill-hover must remain distinguishable from --color-surface in both themes; do not theme so the thumb disappears."
+```
+
 ## Required Imports
 
 ```html

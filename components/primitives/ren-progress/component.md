@@ -22,6 +22,64 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a determinate horizontal bar showing percent completion of a known task (.ren-progress + .ren-progress-bar with inline width)."
+    - "You need an indeterminate loading bar with sliding animation (.ren-progress-indeterminate)."
+    - "You need a semantic-colored progress state (success / warning / danger / info)."
+    - "You need a meter (current value within a min/max range, not progress) — use <meter class=\"ren-meter\">."
+    - "You need optional caption rows above (.ren-progress-label) and below (.ren-progress-value) the bar."
+    - "You need multiple bar heights: sm (4px), md (8px default), lg (12px), xl (16px)."
+  avoidWhen:
+    - "You need a circular spinner — use .ren-icon-spin on a loading glyph."
+    - "You need a busy state on a button — use ren-button with data-loading / aria-busy."
+    - "You need a step indicator with discrete milestones — use a stepper component."
+    - "You need a skeleton placeholder while content loads — use ren-skeleton."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-progress/ren-progress.css"
+  notes:
+    - "CSS-only primitive; no JavaScript file exists for ren-progress."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Determinate progress: <div class=\"ren-progress\" role=\"progressbar\" aria-valuemin=\"0\" aria-valuemax=\"100\" aria-valuenow=\"<pct>\"><div class=\"ren-progress-bar\" style=\"width: <pct>%\"></div></div>."
+  - "Indeterminate progress: add class .ren-progress-indeterminate to the outer and omit aria-valuenow (set aria-valuetext or aria-busy=\"true\" instead)."
+  - "Native semantics alternative: <progress class=\"ren-progress\" max=\"100\" value=\"<pct>\"></progress> when no custom inner bar is needed."
+  - "Meter: <meter class=\"ren-meter\" min=\"0\" max=\"10\" value=\"<n>\"> — for a current value in a range (battery, score), not for progress over time."
+  - "Provide an accessible label via aria-label, aria-labelledby, or a sibling .ren-progress-label."
+
+forbiddenPatterns:
+  - "<div class=\"ren-progress\"> without role=\"progressbar\" + aria-value* (when not using native <progress>)."
+  - "Animating bar width with a custom transition that bypasses --duration-state / --ease-enter."
+  - "Using .ren-progress-danger to convey state by color alone — pair with a text label."
+  - "Hardcoded background colors on .ren-progress-bar that bypass --color-accent / semantic variants."
+  - "Using <meter> for a progress-over-time scenario or <progress> for a current-value-in-range scenario."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-progress-bg, --ren-progress-duration, --ren-progress-easing, --ren-progress-fill, --ren-progress-height, --ren-progress-radius."
+    - "Semantic tokens consumed internally: --color-fill, --color-accent, --color-success, --color-warning, --color-danger, --color-info, --color-text, --color-text-secondary."
+    - "Layout / type tokens: --radius-full, --label-size, --weight-medium, --weight-regular, --space-1, --duration-state, --ease-enter."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Raw animation durations; rely on --ren-progress-duration / --duration-state."
+
+accessibility:
+  required:
+    - "Determinate bars expose role=\"progressbar\" + aria-valuemin / aria-valuemax / aria-valuenow (or use native <progress>)."
+    - "Indeterminate bars omit aria-valuenow and set aria-busy=\"true\" or aria-valuetext=\"Loading\" so AT can announce status."
+    - "Every progress bar has an accessible name (aria-label, aria-labelledby, or a .ren-progress-label paired by id)."
+    - "Color-coded variants (success / warning / danger / info) must be paired with a text label or .ren-progress-value — never color-only."
+    - "Indeterminate animation auto-honors prefers-reduced-motion: reduce (slide is suppressed, bar holds at 50%)."
+    - "Width transition is suppressed under reduced motion so value updates do not animate."
+```
+
 ## Required Imports
 
 ```html

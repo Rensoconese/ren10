@@ -1,0 +1,26 @@
+# Cursor rules for the RenDS / ren10 package.
+#
+# Cursor: load AGENTS.md as the authoritative routing index for this
+# package before doing any UI work. The hard rules, mandatory loading
+# order, and validation commands all live there.
+#
+# Quick summary (read AGENTS.md for the full contract):
+#
+# 1. Treat ren-design.md as the root contract and load it first.
+# 2. Vanilla HTML/CSS/JS only — no React, Vue, Svelte, Tailwind,
+#    shadcn/ui, JSX/TSX, or Shadow DOM.
+# 3. Use RenDS layout primitives (ren-stack, ren-cluster, ren-row,
+#    ren-row-spread, ren-grid, ren-with-sidebar, ren-cover, ren-center*)
+#    before reaching for display: flex / display: grid.
+# 4. Consume semantic (--color-*) or component (--ren-*) tokens only.
+#    Never primitive palette tokens (--blue-*, --gray-*, --red-*, etc.)
+#    and never hardcoded hex / non-grayscale rgba in component CSS.
+# 5. Render real semantic elements: <button>, <dialog>, <form>, <input>,
+#    <a>. Never style a <div> as one of these.
+# 6. WCAG 2.1 AA is the floor: visible :focus-visible, accessible names,
+#    44px touch targets, prefers-reduced-motion respect.
+# 7. Every colocated component.md / pattern.md carries an aiHints YAML
+#    block — read it first when picking between two RenDS parts.
+#
+# Before reporting any task complete, run through evals/checklist.md and
+# `npm run lint`.

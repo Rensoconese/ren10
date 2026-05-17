@@ -22,6 +22,58 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this primitive.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need to display a single keyboard key (⌘, K, Esc, Enter) in documentation or command hints."
+    - "You need to render a keyboard combo (⌘ + K) where each key is a chip with native <kbd> semantics."
+    - "You want monospaced, chip-styled tokens with a sunken background and bottom-shadow border."
+    - "You need an inline label inside menu items, tooltips, or docs showing the shortcut for an action."
+  avoidWhen:
+    - "The element is a status pill or category label — use ren-badge or ren-tag."
+    - "The element is a clickable shortcut trigger — use ren-button and place a <kbd> inside its label."
+    - "You need block-level code samples — use <pre><code> or a code-block component, not <kbd>."
+
+canonicalImports:
+  css:
+    - "rends/components/primitives/ren-kbd/ren-kbd.css"
+  notes:
+    - "CSS-only primitive; no JavaScript file exists for ren-kbd."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "Always use a real <kbd> element with class=\"ren-kbd\"; never style a <span> or <code> as a kbd chip."
+  - "Each key in a combo is its own <kbd class=\"ren-kbd\">; the joiner (+) lives between them as plain text."
+  - "Inside running prose, place the <kbd> inline (it is display: inline-flex with no forced line break)."
+  - "Use white-space: nowrap behavior built in — do not wrap the key glyph across lines via extra markup."
+
+forbiddenPatterns:
+  - "<span class=\"ren-kbd\"> or <code class=\"ren-kbd\"> — must be a real <kbd> for assistive tech."
+  - "Hardcoded background or border colors that bypass --ren-kbd-bg / --ren-kbd-border."
+  - "Adding click handlers on .ren-kbd to fire a shortcut — wrap the kbd inside a ren-button instead."
+  - "Using <kbd class=\"ren-kbd\"> for a multi-character command name (e.g., \"git status\") — use <code> for that."
+  - "Stacking multiple keys inside a single <kbd> (e.g., <kbd>⌘K</kbd>) — split them into one <kbd> per key."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-kbd-bg, --ren-kbd-border, --ren-kbd-color, --ren-kbd-font-family, --ren-kbd-font-size, --ren-kbd-padding, --ren-kbd-radius."
+    - "Semantic tokens consumed internally: --color-text, --color-surface-sunken, --color-border-strong."
+    - "Type tokens: --font-mono, --caption-size, --weight-medium."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / named colors in consumer overrides."
+    - "Custom font-family overrides that bypass --ren-kbd-font-family / --font-mono."
+
+accessibility:
+  required:
+    - "Use the native <kbd> element so screen readers announce \"keyboard input\" semantics."
+    - "Keep contrast on the chip background ≥ WCAG AA against surrounding text (driven by --color-surface-sunken / --color-text)."
+    - "Do not rely on the chip styling alone to convey shortcut meaning; pair with descriptive text (e.g., \"Press <kbd>⌘</kbd> + <kbd>K</kbd> to open search\")."
+    - "Do not make .ren-kbd interactive — it has no focus ring or hit target."
+```
+
 ## Required Imports
 
 ```html

@@ -22,6 +22,64 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this pattern.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "The UI surfaces AI-generated content (chat reply, completion, summary, suggestion)."
+    - "You need an AI message bubble with streaming caret (.ren-ai-streaming) or typing indicator."
+    - "You need to render citations / source references attached to AI output (.ren-ai-citation, .ren-ai-sources)."
+    - "You need a confidence indicator with high/medium/low levels (data-level=\"high|medium|low\")."
+    - "You need a chat-style prompt input (.ren-ai-prompt + .ren-ai-prompt-input + .ren-ai-prompt-send)."
+    - "You need to mark non-AI content as AI-augmented via an inline slug (.ren-ai-slug)."
+  avoidWhen:
+    - "The content is a generic human message — use a plain card / message bubble."
+    - "The control is a generic submit button — use ren-button, not .ren-ai-prompt-send."
+    - "The loading state is for non-AI fetch/page — use ren-skeleton, not .ren-ai-skeleton."
+
+canonicalImports:
+  css:
+    - "rends/components/patterns/ren-ai/ren-ai.css"
+  notes:
+    - "CSS-only pattern. No colocated JS — streaming text and feedback handlers live in consumer code."
+    - "Animations respect prefers-reduced-motion via fallback rules; do not override."
+
+requiredMarkup:
+  - "Wrap AI replies in <div class=\"ren-ai-message\"> with a .ren-ai-message-header (slug + meta) and .ren-ai-message-content."
+  - "Streaming responses add the .ren-ai-streaming class on .ren-ai-message; the blinking caret is the ::after on .ren-ai-message-content."
+  - "Citations are inline <a class=\"ren-ai-citation\"> with vertical-align: super; source lists use <a class=\"ren-ai-source\"> rows inside .ren-ai-sources."
+  - ".ren-ai-confidence MUST carry data-level=\"high|medium|low\"; the fill width and color are driven by that attribute."
+  - "The prompt composer must be .ren-ai-prompt wrapping a <textarea class=\"ren-ai-prompt-input\"> and a <button class=\"ren-ai-prompt-send\"> with an accessible name."
+
+forbiddenPatterns:
+  - "Using .ren-ai-message for non-AI chat content (use a neutral message component instead)."
+  - "Faking confidence levels by inline-styling .ren-ai-confidence-fill width — set data-level."
+  - "Replacing .ren-ai-prompt-send with a bare <button> styled as a circle — use the documented selector."
+  - "Hardcoding the purple accent (e.g. #8B5CF6) instead of letting the pattern resolve --purple-500 / --purple-300 via light-dark()."
+  - "Animating the typing dots or skeleton manually; the pattern ships keyframes + reduced-motion fallbacks."
+
+tokenPolicy:
+  allowed:
+    - "Semantic tokens: --color-text, --color-text-muted, --color-surface-raised, --color-surface-sunken, --color-fill, --color-border-muted, --color-success, --color-warning, --color-danger."
+    - "Layout / type tokens: --space-*, --radius-*, --stroke-1, --body-size, --caption-size, --caption-sm-size, --label-size, --leading-relaxed, --weight-medium, --weight-semibold, --weight-bold."
+    - "Motion tokens: --duration-tactile, --duration-state, --ease-enter."
+    - "Size tokens for the send button and action chrome: --size-sm, --size-md, --text-lg."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code — the pattern owns the purple accent internally."
+    - "Hardcoded hex / named colors (e.g. #8B5CF6, purple, rgb(...))."
+    - "Raw transition durations or easings; use --duration-* / --ease-*."
+
+accessibility:
+  required:
+    - "AI messages must include a visible AI slug or .ren-ai-message-header so screen-reader users know the source is AI-generated, not human."
+    - "Streaming caret and typing dots respect prefers-reduced-motion; never strip those fallbacks."
+    - ".ren-ai-action-thumbs feedback buttons need accessible names (aria-label=\"Helpful\" / \"Not helpful\"); icon-only is not enough."
+    - ".ren-ai-prompt-input is a real <textarea> with an associated <label> (or aria-label); the send button must reflect disabled state via the disabled attribute, not opacity alone."
+    - "Confidence must not rely on color alone — keep the numeric / textual level visible next to .ren-ai-confidence-bar."
+    - ".ren-ai-citation must be a real <a> with href and an accessible target; do not implement as a styled <span>."
+```
+
 ## Required Imports
 
 ```html

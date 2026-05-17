@@ -22,6 +22,66 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 - A simpler primitive can express the UI without this composite.
 - You would need to invent undocumented selectors, states, or JavaScript APIs.
 
+## aiHints
+
+```yaml
+selectionCriteria:
+  useWhen:
+    - "You need a grouped command bar (formatting actions, edit operations, view controls) co-located near content."
+    - "You need the WAI-ARIA Toolbar pattern: Arrow keys move between items, Tab moves focus in / out of the toolbar."
+    - "You need Home / End to jump to first / last item and skip disabled ones."
+    - "Some items are toggleable (aria-pressed / [data-active] for sticky on-states like Bold)."
+    - "You need a visual separator (.ren-toolbar-separator) to group related commands within the bar."
+    - "You need icon-only items via .ren-toolbar-item-icon (aspect-ratio 1) or a ghost variant (.ren-toolbar-ghost)."
+  avoidWhen:
+    - "Items represent value selection rather than commands — use ren-toggle-group."
+    - "Items represent navigation to other pages — use ren-nav or ren-sidebar."
+    - "You need to switch between content panels — use ren-tabs."
+    - "There is only one action — use ren-button directly."
+
+canonicalImports:
+  css:
+    - "rends/components/composites/ren-toolbar/ren-toolbar.css"
+  js:
+    - "rends/components/composites/ren-toolbar/ren-toolbar.js"
+  notes:
+    - "JS is required for the roving tabindex pattern: import initToolbar / initAllToolbars from ren-toolbar.js."
+    - "If the page already imports rends/components/index.css, do not import the CSS again."
+
+requiredMarkup:
+  - "The host is <div class=\"ren-toolbar\" role=\"toolbar\" aria-label=\"<purpose>\">; the role and an aria-label are required so AT can announce it."
+  - "Items are real <button class=\"ren-toolbar-item\"> with tabindex=\"0\" on the first item and tabindex=\"-1\" on the rest (roving tabindex)."
+  - "Separators are <div class=\"ren-toolbar-separator\" role=\"separator\"> between logical groups within the toolbar."
+  - "Sticky toggle items reflect state via aria-pressed=\"true|false\" or [data-active]; do not mix the two on the same item."
+  - "Use .ren-toolbar-vertical on the host to switch arrow keys to Up/Down and turn separators horizontal."
+
+forbiddenPatterns:
+  - "Omitting role=\"toolbar\" or aria-label on the host — initToolbar bails out and the keyboard pattern will not attach."
+  - "Setting tabindex=\"0\" on every item — only the focused item should be tabindex=\"0\"; the JS rewrites the rest to -1."
+  - "Using <a href> as items — toolbar items invoke commands, not navigate; use ren-nav for links."
+  - "Hardcoded gap / padding in inline styles; use --space-1 via the documented selectors."
+  - "Mounting toolbar buttons as .ren-btn — toolbar owns its own item chrome; mixing the two doubles the focus rings and padding."
+
+tokenPolicy:
+  allowed:
+    - "Component tokens: --ren-toolbar-active-bg, --ren-toolbar-bg, --ren-toolbar-border, --ren-toolbar-height, --ren-toolbar-item-hover, --ren-toolbar-item-radius, --ren-toolbar-item-size, --ren-toolbar-padding, --ren-toolbar-radius."
+    - "Semantic tokens: --color-text, --color-accent, --color-border, --color-fill-hover, --color-fill-active, --color-surface, --color-surface-raised, --color-surface-sunken, --color-disabled-text, --color-focus-ring."
+    - "Shape / motion tokens: --radius-sm, --radius-md, --space-1, --space-2, --size-sm, --stroke-1, --ring-width, --shadow-xs, --transition-tactile, --weight-medium, --caption-size, --text-sm."
+  forbidden:
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code."
+    - "Hardcoded hex / rgb / named color values in overrides for the pressed-state background or active accent color."
+    - "Hardcoded transition durations on item hover; route through --transition-tactile."
+
+accessibility:
+  required:
+    - "Host carries role=\"toolbar\" plus an aria-label describing its purpose (e.g. \"Formatting\")."
+    - "Roving tabindex: only one .ren-toolbar-item is tabindex=\"0\" at any time; Tab enters/exits the toolbar instead of cycling items."
+    - "Arrow Left/Right (horizontal) or Up/Down (.ren-toolbar-vertical) moves focus; Home / End jump to first / last; disabled items are skipped."
+    - "Toggle items expose aria-pressed and a visible non-color cue (box-shadow + accent color) in addition to background fill."
+    - "Focus-visible ring is var(--ring-width) solid var(--color-focus-ring) with outline-offset: -1px; preserve it across variants."
+    - "Disabled items use :disabled or aria-disabled=\"true\"; both block keyboard activation and are filtered out of the focus rotation."
+```
+
 ## Required Imports
 
 ```html
