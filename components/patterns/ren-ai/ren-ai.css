@@ -453,3 +453,236 @@
     animation: none;
   }
 }
+
+/* ═══════════════════════════════════════════════
+   AI ERROR — Message failure state
+   ═══════════════════════════════════════════════ */
+.ren-ai-error {
+  position: relative;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-danger) 6%, var(--color-surface-raised));
+  border: var(--stroke-1) solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ren-ai-error-message {
+  color: var(--color-text);
+  font-size: var(--body-size);
+  line-height: 1.5;
+}
+
+.ren-ai-error-message::before {
+  content: '⚠ ';
+  color: var(--color-danger);
+  margin-inline-end: var(--space-1);
+}
+
+/* ═══════════════════════════════════════════════
+   AI ACTION VARIANTS — Regenerate, edit-and-resend
+   These extend the existing .ren-ai-action base.
+   ═══════════════════════════════════════════════ */
+.ren-ai-action-regenerate::before {
+  content: '↻';
+  margin-inline-end: var(--space-1);
+  font-size: 1.1em;
+  display: inline-block;
+  /* Subtle hint that this re-runs inference */
+  transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+}
+
+.ren-ai-action-regenerate:hover::before {
+  transform: rotate(-45deg);
+}
+
+.ren-ai-action-edit::before {
+  content: '✎';
+  margin-inline-end: var(--space-1);
+  font-size: 1.05em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-action-regenerate::before {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   AI FILE CHIP — Uploaded file reference
+   Compact pill showing a file the user attached,
+   with icon, name, size, and remove affordance.
+   ═══════════════════════════════════════════════ */
+.ren-ai-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface-raised);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--caption-size);
+  max-width: 220px;
+}
+
+.ren-ai-file-chip-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  place-items: center;
+}
+
+.ren-ai-file-chip-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+}
+
+.ren-ai-file-chip-size {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--caption-sm-size);
+}
+
+.ren-ai-file-chip-remove {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ren-ai-file-chip-remove:hover,
+.ren-ai-file-chip-remove:focus-visible {
+  background: var(--color-fill);
+  color: var(--color-text);
+}
+
+.ren-ai-file-chip-remove:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   AI TOOL CALL — Model invoking a tool / function
+   Collapsible block built on native <details>
+   so JS is optional. Status via data-status.
+   ═══════════════════════════════════════════════ */
+.ren-ai-tool-call {
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  margin-block: var(--space-2);
+  overflow: hidden;
+}
+
+.ren-ai-tool-call-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-sunken);
+  font-size: var(--caption-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.ren-ai-tool-call-header::-webkit-details-marker { display: none; }
+
+.ren-ai-tool-call-header::before {
+  content: '▸';
+  font-size: 0.75em;
+  color: var(--color-text-muted);
+  transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+}
+
+.ren-ai-tool-call[open] > .ren-ai-tool-call-header::before {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-tool-call-header::before {
+    transition: none;
+  }
+}
+
+.ren-ai-tool-call-name {
+  font-family: var(--font-mono);
+  color: var(--color-text);
+}
+
+.ren-ai-tool-call-status {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--caption-sm-size);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: var(--stroke-1) solid transparent;
+}
+
+.ren-ai-tool-call[data-status="pending"] .ren-ai-tool-call-status {
+  color: var(--color-text-muted);
+  background: var(--color-fill);
+}
+
+.ren-ai-tool-call[data-status="running"] .ren-ai-tool-call-status {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+}
+
+.ren-ai-tool-call[data-status="success"] .ren-ai-tool-call-status {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 15%, transparent);
+}
+
+.ren-ai-tool-call[data-status="error"] .ren-ai-tool-call-status {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 15%, transparent);
+}
+
+.ren-ai-tool-call-args,
+.ren-ai-tool-call-result {
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.ren-ai-tool-call-args {
+  border-bottom: var(--stroke-1) solid var(--color-border-muted);
+}
+
+.ren-ai-tool-call-result {
+  background: var(--color-surface);
+}
+
+.ren-ai-tool-call[data-status="error"] .ren-ai-tool-call-result {
+  background: color-mix(in srgb, var(--color-danger) 4%, var(--color-surface));
+  color: var(--color-text);
+}
