@@ -23,6 +23,118 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Accessibility milestones
 
+## [0.9.0] — 2026-05-16
+
+Focus: **CLI extension, docs depth, foundations pages, and live
+theming controls.** Closes the 17-finding external audit from
+2026-05-16 across four feature branches. No breaking changes —
+`0.9` is a feature-additive minor bump.
+
+### Added
+
+- **CLI: `rends remove <name>` (alias `rm`).** Deletes an installed
+  component folder and scrubs its `@import` from
+  `components/index.css`. Refuses to delete locally-modified files
+  unless `--force` is passed; override detection compares both
+  extra files and modified content against the package source.
+- **CLI: `rends upgrade [name]` (alias `update`).** Diffs each
+  installed component against the package source, prompts
+  per-component (`y` / `n` / `d`iff / `a`bort), and supports
+  `--dry-run` and `--force`. Identical files are silent.
+- **CLI: `--density` and `--shape` flags on `rends init`.** Validated
+  against the same value set as `themes/appearance.css`. Prints the
+  `<html data-density="…" data-shape="…">` attributes for the user
+  to add. Pairs with the new `spacious` density preset.
+- **`[data-density="spacious"]` preset** in `themes/appearance.css`
+  (was advertised in docs but missing from CSS): sizes 2.5 / 3 /
+  3.5 / 4 rem, `--space-unit: 0.875rem`.
+- **`docs/foundations/events.html`.** Central catalog of 34 custom
+  events across 27 components: naming convention, bubbles /
+  composed policy, full table with `detail` shape, listening
+  patterns, common gotchas.
+- **`docs/foundations/cascade-layers.html`.** Explains
+  `@layer reset, tokens, base, components, utilities`, override
+  recipes, integration with legacy / other-DS CSS, devtools tips.
+- **`docs/recipes.html`.** Five cross-component flows with runnable
+  HTML and per-recipe edge cases: confirm-and-delete, searchable
+  select inside Field, tabbed settings with URL hash, CRUD admin
+  row, and auth flow.
+- **DO / DON'T visual section for `--color-text-faint`** in
+  `docs/tokens.html`. Side-by-side previews of correct uses
+  (breadcrumb separator, calendar outside-month, disabled label,
+  placeholder) versus incorrect uses (eyebrow, table header, step
+  number, help text).
+- **API surface badges (CSS-only / Requires JS / Hybrid)** on all
+  53 component docs. Each page header declares the component's
+  JS dependency at a glance. Styles in `site/shell.css`.
+- **Live density/shape toggle on `docs/theming.html`.** Buttons
+  (with `aria-pressed`) mutate `<html data-density>` /
+  `<html data-shape>` in real time on a four-component showcase.
+- **`ren-ai` CSS-only primitives** for error state, regenerate /
+  edit actions, file upload chips, and tool-call display:
+  `.ren-ai-error` + `-message`, `.ren-ai-action-regenerate`,
+  `.ren-ai-action-edit`, `.ren-ai-file-chip` family,
+  `.ren-ai-tool-call` collapsible (native `<details>` baseline,
+  `data-status="pending|running|success|error"`).
+- **Featured F6 → toast viewport** accessibility callout in
+  `docs/accessibility.html`. `ren-toast.js` already wired it; the
+  docs now surface it as a "beyond WCAG AA" example.
+- **`JavaScript methods` table for `ren-combobox`** documenting
+  `.value`, `.open()`, `.close()`, `.setLoading(bool)`,
+  `.setItems(arr)` (previously existed in code but not in docs).
+
+### Changed
+
+- **Theme builder hash format versioning.** `serializeState` was
+  already emitting `v: 1`; `deserializeState` now actually uses it:
+  missing `v` → legacy v1 (older shares keep working); `v` higher
+  than `HASH_SCHEMA_VERSION` → toast warns "Theme saved with a
+  newer RenDS" and falls back to best-effort. Format documented in
+  `docs/theming.html`.
+- **`ren-table` and `ren-ai` docs expanded** from ~133-line stubs
+  to ~570 lines each, matching `ren-button` / `ren-dialog` /
+  `ren-tabs` depth. `ren-table.html` corrected to use the real
+  `.ren-table-*` API (the stub referenced non-existent
+  `.ren-data-table-*` classes). `ren-ai.html` now explicitly
+  states it's CSS-only and documents all 25 real selectors.
+- **Dialog snippet IDs normalised to `dlg-{purpose}`**:
+  `dlg-confirm`, `dlg-save`, `dlg-delete`, `dlg-rename`,
+  `dlg-labelling`. Live demo IDs (`demo-*`) preserved as a
+  separate namespace.
+- **`type-scale.js` clarifies 13 steps total** (`-2..10` mapped to
+  `--text-xs` through `--text-8xl`). All ratios preserve the full
+  range — smaller ratios just pack steps tighter.
+- **Cascade Layers inline mention in `docs/theming.html`** now
+  links to the new full foundations page.
+- **`ren-toast` JS API table expanded** with return types
+  (status methods return `string (id)`) and `dismissAll()` /
+  `promise()` methods. Two new example snippets.
+- **`ren-form` clarifies `.ren-stepper` status**: a callout
+  explicitly states it's an internal CSS pattern of `ren-form`,
+  not a standalone primitive.
+
+### Fixed
+
+- **`type="button"` on 112 buttons across docs and examples.** The
+  audit flagged 50+ `<button class="ren-btn">` without `type=`
+  contradicting `ren-button`'s own warning. A lookahead-based
+  rewrite added the attribute everywhere it was missing, preserving
+  existing `type="submit"` buttons untouched.
+
+### Removed
+
+(nothing)
+
+### Security
+
+(no security-relevant changes)
+
+### Accessibility milestones
+
+- F6 → toast viewport featured in `docs/accessibility.html`.
+  macOS convention rarely implemented elsewhere; lifts RenDS
+  above the WCAG 2.1 AA baseline.
+
 ## [0.8.6] — 2026-05-12
 
 Focus: **docs-site UX audit fixes.** External review surfaced 16
