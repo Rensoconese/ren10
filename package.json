@@ -6,13 +6,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rensoconese/ren10.git"
+    "url": "git+https://github.com/Rensoconese/ren10.git"
   },
   "homepage": "https://github.com/Rensoconese/ren10#readme",
   "type": "module",
   "main": "index.css",
   "bin": {
-    "ren10": "./cli/index.js"
+    "ren10": "cli/index.js"
   },
   "files": [
     "index.css",
