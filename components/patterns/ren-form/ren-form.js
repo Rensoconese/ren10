@@ -80,7 +80,9 @@ const builtInValidators = {
   },
 
   match: (fieldName) => (value, form) => {
-    const targetField = form?.querySelector(`[name="${fieldName}"]`);
+    const targetField = Array.from(form?.elements || []).find(
+      (element) => element.name === fieldName
+    );
     if (!targetField) return 'Target field not found';
     return value === targetField.value ? null : 'Fields do not match';
   },
@@ -347,21 +349,32 @@ export class RenForm extends HTMLElement {
     const ul = this._errorSummary.querySelector('ul');
     if (!ul) return;
 
-    ul.innerHTML = '';
+    ul.replaceChildren();
     errors.forEach((error) => {
       const li = document.createElement('li');
-      li.innerHTML = `<a href="#field-${error.name}">${error.name}: ${error.message}</a>`;
-      li.querySelector('a').addEventListener('click', (e) => {
+      const link = document.createElement('a');
+      const field = this._findFieldInput(error.name);
+
+      link.href = field?.id ? `#${field.id}` : '#';
+      link.textContent = `${error.name}: ${error.message}`;
+      link.addEventListener('click', (e) => {
         e.preventDefault();
-        const field = this._form.querySelector(`[name="${error.name}"]`);
         if (field) field.focus();
       });
+
+      li.appendChild(link);
       ul.appendChild(li);
     });
 
     this._errorSummary.setAttribute('data-has-errors', '');
     this._errorSummary.removeAttribute('hidden');
     this._errorSummary.focus();
+  }
+
+  _findFieldInput(name) {
+    return Array.from(this._form?.elements || []).find(
+      (element) => element.name === name
+    );
   }
 
   _hideErrorSummary() {

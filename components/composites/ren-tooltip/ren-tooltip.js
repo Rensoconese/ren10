@@ -87,6 +87,7 @@ export class RenTooltip extends HTMLElement {
   #showTimeout = null;
   #hideTimeout = null;
   #touchTimer = null;
+  #listenerController = null;
 
   connectedCallback() {
     this.setupTooltip();
@@ -154,17 +155,21 @@ export class RenTooltip extends HTMLElement {
   attachTriggerListeners() {
     if (!this.#trigger) return;
 
+    this.#listenerController?.abort();
+    this.#listenerController = new AbortController();
+    const { signal } = this.#listenerController;
+
     // Mouse events
-    this.#trigger.addEventListener('mouseenter', () => this.scheduleShow());
-    this.#trigger.addEventListener('mouseleave', () => this.scheduleHide());
+    this.#trigger.addEventListener('mouseenter', () => this.scheduleShow(), { signal });
+    this.#trigger.addEventListener('mouseleave', () => this.scheduleHide(), { signal });
 
     // Focus events (use capture for better timing)
-    this.#trigger.addEventListener('focus', () => this.scheduleShow(), true);
-    this.#trigger.addEventListener('blur', () => this.scheduleHide(), true);
+    this.#trigger.addEventListener('focus', () => this.scheduleShow(), { capture: true, signal });
+    this.#trigger.addEventListener('blur', () => this.scheduleHide(), { capture: true, signal });
 
     // Touch events for long-press detection
-    this.#trigger.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-    this.#trigger.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+    this.#trigger.addEventListener('touchstart', (e) => this.handleTouchStart(e), { signal });
+    this.#trigger.addEventListener('touchend', (e) => this.handleTouchEnd(e), { signal });
   }
 
   /**
@@ -316,15 +321,8 @@ export class RenTooltip extends HTMLElement {
    */
   cleanup() {
     this.clearTimeouts();
-
-    if (this.#trigger) {
-      this.#trigger.removeEventListener('mouseenter', () => this.scheduleShow());
-      this.#trigger.removeEventListener('mouseleave', () => this.scheduleHide());
-      this.#trigger.removeEventListener('focus', () => this.scheduleShow());
-      this.#trigger.removeEventListener('blur', () => this.scheduleHide());
-      this.#trigger.removeEventListener('touchstart', (e) => this.handleTouchStart(e));
-      this.#trigger.removeEventListener('touchend', (e) => this.handleTouchEnd(e));
-    }
+    this.#listenerController?.abort();
+    this.#listenerController = null;
   }
 
   /**

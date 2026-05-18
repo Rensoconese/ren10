@@ -65,6 +65,28 @@ function copyFile(src, dest) {
 }
 
 /**
+ * Copy component source into a consumer's flat rends/components/<name>/ folder.
+ * Source components live under components/<layer>/<dir>/, so JS imports that
+ * point at ../../../utils/ need one fewer ../ after copying.
+ */
+function copyComponentFile(src, dest) {
+  const dir = path.dirname(dest);
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+
+  if (!src.endsWith('.js')) {
+    fs.copyFileSync(src, dest);
+    return;
+  }
+
+  const rewritten = fs
+    .readFileSync(src, 'utf8')
+    .replace(/from\s+(['"])\.\.\/\.\.\/\.\.\/utils\//g, 'from $1../../utils/');
+  fs.writeFileSync(dest, rewritten);
+}
+
+/**
  * Copy directory recursively
  */
 function copyDir(src, dest) {
@@ -289,7 +311,7 @@ function addOneComponent(rendsDir, componentArg, opts = {}) {
     const srcFile = path.join(srcComponentDir, file);
     const destFile = path.join(componentDir, file);
     if (fs.existsSync(srcFile)) {
-      copyFile(srcFile, destFile);
+      copyComponentFile(srcFile, destFile);
       if (!silent) success(`Copied ${componentName}/${file}`);
     }
   });

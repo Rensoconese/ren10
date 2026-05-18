@@ -39,13 +39,13 @@
       "import": "./index.css"
     },
     "./components/*": {
-      "import": "./components/*.js"
+      "import": "./components/*"
     },
     "./tokens/*": {
-      "import": "./tokens/*.css"
+      "import": "./tokens/*"
     },
     "./base/*": {
-      "import": "./base/*.css"
+      "import": "./base/*"
     },
     "./themes/appearance.css": "./themes/appearance.css",
     "./themes/theme-generator.js": {
@@ -63,10 +63,15 @@
     "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "lint": "npm run lint:css && npm run lint:tokens",
-    "test": "playwright test",
+    "test": "npm run test:all",
+    "test:all": "npm run test:a11y && npm run test:components && npm run test:visual -- --project=\"Desktop Light\" && npm run test:theme && npm run test:evals && npm run test:exports && npm run smoke:cli-copy",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
-    "test:components": "playwright test --config tests/components/playwright.config.cjs"
+    "test:components": "playwright test --config tests/components/playwright.config.cjs",
+    "test:theme": "node themes/theme-generator.test.js",
+    "test:evals": "node evals/run-eval.mjs --all",
+    "test:exports": "node scripts/verify-package-exports.mjs",
+    "smoke:cli-copy": "node scripts/smoke-cli-copy.mjs"
   },
   "keywords": [
     "design-system",

@@ -81,9 +81,9 @@ item is binary: pass / fail. Failures must be fixed, not noted-and-shipped.
 ## Validation
 
 - [ ] `rg -n "rends/design\.md|DESIGN\.md|COMPONENT\.md|PATTERN\.md|TOKENS\.md|LAYOUTS\.md|PRIMITIVE-ZERO\.md|COMPONENTS\.md" .` returns no stale references.
-- [ ] `find rends/components/primitives -mindepth 2 -maxdepth 2 -type f -name component.md | wc -l` is `18`.
-- [ ] `find rends/components/composites -mindepth 2 -maxdepth 2 -type f -name component.md | wc -l` is `26`.
-- [ ] `find rends/components/patterns   -mindepth 2 -maxdepth 2 -type f -name pattern.md   | wc -l` is `8`.
-- [ ] `cd rends && npm run lint` exits 0.
-- [ ] `cd rends && node evals/run-eval.mjs --all` exits 0 (covers HTML
+- [ ] `find components/primitives -mindepth 2 -maxdepth 2 -type f -name component.md | wc -l` is `19`.
+- [ ] `find components/composites -mindepth 2 -maxdepth 2 -type f -name component.md | wc -l` is `26`.
+- [ ] `find components/patterns   -mindepth 2 -maxdepth 2 -type f -name pattern.md   | wc -l` is `8`.
+- [ ] `npm run lint` exits 0.
+- [ ] `node evals/run-eval.mjs --all` exits 0 (covers HTML
       reference grading + JS regression checks).

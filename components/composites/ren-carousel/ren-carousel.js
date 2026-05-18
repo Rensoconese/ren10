@@ -80,6 +80,8 @@ export class RenCarousel extends HTMLElement {
     this._shouldLoop = false;
     this._slidePerView = 1;
     this._isFade = false;
+    this._reducedMotionQuery = null;
+    this._handleReducedMotionChange = null;
   }
 
   /* ═══ LIFECYCLE ═══ */
@@ -87,6 +89,7 @@ export class RenCarousel extends HTMLElement {
   connectedCallback() {
     this._parseAttributes();
     this._initialize();
+    this._attachReducedMotionListener();
     this._attachEventListeners();
     if (this._autoplayMs > 0) {
       this._startAutoplay();
@@ -98,6 +101,7 @@ export class RenCarousel extends HTMLElement {
     if (this._intersectionObserver) {
       this._intersectionObserver.disconnect();
     }
+    this._detachReducedMotionListener();
     this._detachEventListeners();
   }
 
@@ -434,8 +438,39 @@ export class RenCarousel extends HTMLElement {
 
   /* ═══ AUTOPLAY ═══ */
 
+  _prefersReducedMotion() {
+    return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches === true;
+  }
+
+  _attachReducedMotionListener() {
+    this._reducedMotionQuery = window.matchMedia?.('(prefers-reduced-motion: reduce)') ?? null;
+    if (!this._reducedMotionQuery) return;
+
+    this._handleReducedMotionChange = (event) => {
+      if (event.matches) {
+        this._stopAutoplay();
+      } else if (this._autoplayMs > 0) {
+        this._startAutoplay();
+      }
+    };
+
+    this._reducedMotionQuery.addEventListener?.('change', this._handleReducedMotionChange);
+  }
+
+  _detachReducedMotionListener() {
+    if (this._reducedMotionQuery && this._handleReducedMotionChange) {
+      this._reducedMotionQuery.removeEventListener?.('change', this._handleReducedMotionChange);
+    }
+    this._reducedMotionQuery = null;
+    this._handleReducedMotionChange = null;
+  }
+
   _startAutoplay() {
     if (this._autoplayInterval || this._autoplayMs <= 0) return;
+    if (this._prefersReducedMotion()) {
+      this._stopAutoplay();
+      return;
+    }
 
     this._isAutoplayActive = true;
     this.setAttribute('data-autoplay', '');

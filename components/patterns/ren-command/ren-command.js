@@ -24,6 +24,7 @@ class RenCommand extends HTMLElement {
     this._lastQuery = '';
     this._shortcutKey = 'k';
     this._shortcutMeta = 'ctrl';
+    this._listenerController = null;
   }
 
   connectedCallback() {
@@ -53,22 +54,26 @@ class RenCommand extends HTMLElement {
   }
 
   _attachEventListeners() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     // Input events
     if (this._input) {
-      this._input.addEventListener('input', (e) => this._handleInput(e));
-      this._input.addEventListener('keydown', (e) => this._handleKeydown(e));
+      this._input.addEventListener('input', (e) => this._handleInput(e), { signal });
+      this._input.addEventListener('keydown', (e) => this._handleKeydown(e), { signal });
     }
 
     // Item selection
     this._items.forEach((item, index) => {
-      item.addEventListener('click', () => this._selectItem(index));
-      item.addEventListener('mouseenter', () => this._setHighlighted(index));
-      item.addEventListener('focus', () => this._setHighlighted(index));
+      item.addEventListener('click', () => this._selectItem(index), { signal });
+      item.addEventListener('mouseenter', () => this._setHighlighted(index), { signal });
+      item.addEventListener('focus', () => this._setHighlighted(index), { signal });
     });
 
     // Dialog close
     if (this._dialog && this._dialog.tagName === 'DIALOG') {
-      this._dialog.addEventListener('cancel', () => this._close());
+      this._dialog.addEventListener('cancel', () => this._close(), { signal });
     }
 
     // Close on Escape
@@ -76,20 +81,12 @@ class RenCommand extends HTMLElement {
       if (e.key === KEYBOARD_CODES.Escape && this._isOpen()) {
         this._close();
       }
-    });
+    }, { signal });
   }
 
   _removeEventListeners() {
-    if (this._input) {
-      this._input.removeEventListener('input', (e) => this._handleInput(e));
-      this._input.removeEventListener('keydown', (e) => this._handleKeydown(e));
-    }
-
-    this._items.forEach((item) => {
-      item.removeEventListener('click', () => {});
-      item.removeEventListener('mouseenter', () => {});
-      item.removeEventListener('focus', () => {});
-    });
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   _setupGlobalShortcut() {
@@ -104,7 +101,7 @@ class RenCommand extends HTMLElement {
         e.preventDefault();
         this._open();
       }
-    });
+    }, { signal: this._listenerController?.signal });
   }
 
   _open() {

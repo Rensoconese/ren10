@@ -271,7 +271,7 @@ export const REGISTRY = {
     dir: 'ren-popover',
     description: 'Floating popover with anchor positioning',
     files: ['ren-popover.css', 'ren-popover.js'],
-    deps: ['dismissable.js', 'id-generator.js'],
+    deps: ['dismissable.js', 'focus-trap.js', 'id-generator.js'],
     usage: `<ren-popover>
   <button slot="trigger">Open</button>
   <div class="ren-popover">Content</div>

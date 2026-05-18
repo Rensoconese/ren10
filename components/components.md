@@ -6,10 +6,10 @@ writing markup, CSS, or JavaScript.
 
 ## Counts
 
-- Primitives: 18
+- Primitives: 19
 - Composites: 26
 - Patterns: 8
-- Total: 52
+- Total: 53
 
 ## Routing Rules
 

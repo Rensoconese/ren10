@@ -1,9 +1,9 @@
 # RenDS — Roadmap
 
 **Repo:** [github.com/Rensoconese/ren10](https://github.com/Rensoconese/ren10)
-**Versión actual en disco:** `0.8.4` (cortada en CHANGELOG el 2026-05-11; `[Unreleased]` vacío)
-**Última fase cerrada:** F8 (52 páginas de doc por componente + landing + shell unificado + command palette) — todo en `[Unreleased]`
-**Fecha del roadmap:** 2026-05-11 (refresh tras auditoría)
+**Versión actual en disco:** `0.9.0`
+**Última fase cerrada:** 0.9.0 + hardening post-auditoría (packaging, CLI smoke, JS lifecycle)
+**Fecha del roadmap:** 2026-05-18 (refresh tras auditoría)
 **Vista ejecutiva (1 pág):** [`STATUS.md`](./STATUS.md)
 **Auditoría exhaustiva:** [`AUDIT-2026-05-11.md`](./AUDIT-2026-05-11.md)
 
@@ -41,7 +41,7 @@
 | Primer commit + push | ✅ | 18 commits en `main` + branches dependabot |
 | Tags retroactivos | 🟡 | existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2` |
 | Publicación a `npm` | ❓ | verificar con `npm view ren10 version`; README promete `npx ren10 init` |
-| `[Unreleased]` en CHANGELOG | 🟡 Listo para cortar | acumula trabajo post-0.8.2 (landing, F8, shell, command palette, fixes) |
+| `[Unreleased]` en CHANGELOG | ✅ Activo | acumula hardening post-0.9.0 |
 | `docs/components/` HTML naming | 🟡 | 5 archivos con nombre distinto al de la carpeta del componente (ver Hito 6) |
 | `docs/components/ren-{switch,multi-step-form}.html` huérfanos | 🟡 | ver Hito 6 |
 
@@ -89,12 +89,12 @@
 - [ ] **4.4** Push del branch actual (`codex/fix-visual-ci-baselines`) cuando esté listo
 
 ### Hito 5 — Publicación a npm
-*Estado: ❓ Verificar.*
+*Estado: ❓ Verificar contra npm antes de anunciar publicación.*
 
 - [x] **5.1** `package.json` tiene `"publishConfig": { "access": "public", "provenance": true }` y `"files"` acotado
 - [ ] **5.2** Confirmar `npm login` activo en máquina local
-- [ ] **5.3** `npm publish --dry-run` para validar tarball (solo `index.css`, `tokens/`, `base/`, `components/`, `utils/`, `cli/`, `ren-design.md`, `CHANGELOG.md`)
-- [ ] **5.4** Decidir: publicar `0.8.2` ahora o esperar a `0.8.3` (cuando se corte `[Unreleased]`)
+- [x] **5.3** `npm pack --dry-run` / export smoke para validar tarball y subpaths públicos
+- [ ] **5.4** Publicar la versión actual (`0.9.0`) cuando el maintainer esté listo
 - [ ] **5.5** Verificar que `npx ren10 init` funciona contra el registry público en una carpeta limpia
 - [ ] **5.6** Si se quiere docs públicas: decidir host (Pages re-añadiendo el workflow, Vercel, Netlify) y deploy
 

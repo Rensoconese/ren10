@@ -1,6 +1,7 @@
 # Shipping checklist — RenDS
 
-How to ship a release of `rends` end-to-end. Currently sized for the **0.8.4 launch**, but the per-release pattern is the same after that.
+How to ship a release of `ren10` end-to-end. Currently sized for the
+**0.9.0 line**, but the per-release pattern is the same after that.
 
 > All commands below run on **your local machine**. They need your git credentials and `npm login`.
 
@@ -15,7 +16,8 @@ How to ship a release of `rends` end-to-end. Currently sized for the **0.8.4 lau
    - Name: `NPM_TOKEN`
    - Value: the token starting with `npm_…`
 
-2. **GitHub Pages** — currently no `pages.yml` workflow. If you want a public docs site, decide hosting first (re-add `pages.yml`, or Vercel / Netlify / Cloudflare Pages). The repo `pages.yml` was removed deliberately in commit `15d027f`.
+2. **GitHub Pages** — `pages.yml` is present. One-time setup: GitHub
+   Settings → Pages → Source → GitHub Actions.
 
 ---
 
@@ -52,9 +54,9 @@ After the PR is reviewed and merged:
 ```bash
 git checkout main && git pull
 
-# Tag v0.8.3 at the merge commit. release.yml fires on tag push.
-git tag -a v0.8.4 -m "Release v0.8.4"
-git push origin v0.8.3
+# Tag the package version at the merge commit. release.yml fires on tag push.
+git tag -a v0.9.0 -m "Release v0.9.0"
+git push origin v0.9.0
 ```
 
 Optional — retroactive tags for the CHANGELOG compare-links:
@@ -77,10 +79,10 @@ Existing tags on origin: `v0.7.1` (1502ea7), `v0.8.1` (annotated, → bfd2f81).
 ## 3 · Verify (~5–10 minutes after the tag push)
 
 ```bash
-npm view ren10 version    # should print 0.8.4
+npm view ren10 version    # should print 0.9.0
 ```
 
-- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.4>
+- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.9.0>
 
 Smoke test the npm package in a fresh dir:
 
