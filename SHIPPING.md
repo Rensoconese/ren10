@@ -21,23 +21,22 @@ How to ship a release of `ren10` end-to-end. Currently sized for the
 
 ---
 
-## 1 · Push the audit branch and open the PR
+## 1 · Push the release branch and open the PR
 
 ```bash
 cd ~/RenDS/rends    # this folder IS the repo
 
-# Confirm state. The audit work lives on chore/audit-and-cut-0.8.3.
+# Confirm state. Replace feat/cli-extend with the current release branch.
 git fetch origin
 git status
-git log --oneline origin/main..chore/audit-and-cut-0.8.3
-# Should show 8 commits ending in 0f8a9ec (ci matrix) and 0e2b303 (release 0.8.3).
+git log --oneline origin/main..feat/cli-extend
 
 # Push the branch — triggers ci.yml against the PR.
-git push -u origin chore/audit-and-cut-0.8.3
+git push -u origin feat/cli-extend
 
 # Open the PR.
-gh pr create --base main --head chore/audit-and-cut-0.8.3 \
-  --title "chore: audit 2026-05-11 + cut 0.8.3 + cross-browser CI" \
+gh pr create --base main --head feat/cli-extend \
+  --title "release: harden RenDS 0.9.0" \
   --body-file PR_BODY.md   # See `PR_BODY.md` if generated, or paste manually
 ```
 

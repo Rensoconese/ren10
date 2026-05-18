@@ -594,9 +594,12 @@ export class RenTable extends HTMLElement {
     // Reattach listeners
     const prevBtn = paginationDiv.querySelector('[data-page-prev]');
     const nextBtn = paginationDiv.querySelector('[data-page-next]');
+    const listenerOptions = this.#listenerController
+      ? { signal: this.#listenerController.signal }
+      : undefined;
 
-    if (prevBtn) prevBtn.addEventListener('click', () => this._previousPage());
-    if (nextBtn) nextBtn.addEventListener('click', () => this._nextPage());
+    if (prevBtn) prevBtn.addEventListener('click', () => this._previousPage(), listenerOptions);
+    if (nextBtn) nextBtn.addEventListener('click', () => this._nextPage(), listenerOptions);
   }
 
   /**

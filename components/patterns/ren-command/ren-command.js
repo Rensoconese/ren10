@@ -246,7 +246,7 @@ class RenCommand extends HTMLElement {
     if (newIndex >= visibleItems.length) newIndex = 0;
 
     this._highlightedIndex = newIndex;
-    this._updateUI();
+    this._updateUI({ focus: true });
 
     const item = visibleItems[newIndex];
     item?.scrollIntoView({ block: 'nearest' });
@@ -258,12 +258,14 @@ class RenCommand extends HTMLElement {
     this._updateUI();
   }
 
-  _updateUI() {
+  _updateUI({ focus = false } = {}) {
     const visibleItems = this._getVisibleItems();
     visibleItems.forEach((item, index) => {
       if (index === this._highlightedIndex) {
         item.setAttribute('data-highlighted', '');
-        item.focus();
+        if (focus) {
+          item.focus();
+        }
       } else {
         item.removeAttribute('data-highlighted');
       }

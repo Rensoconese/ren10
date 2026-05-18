@@ -91,10 +91,12 @@ export const REGISTRY = {
     layer: 'primitives',
     dir: 'ren-progress',
     description: 'Progress bar with determinate/indeterminate modes',
-    files: ['ren-progress.css', 'ren-progress.js'],
+    files: ['ren-progress.css'],
     deps: [],
-    usage: `<ren-progress value="65" max="100"></ren-progress>
-<ren-progress indeterminate></ren-progress>`,
+    usage: `<div class="ren-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65">
+  <div class="ren-progress-bar" style="width: 65%"></div>
+</div>
+<div class="ren-progress ren-progress-indeterminate" role="progressbar" aria-label="Loading"></div>`,
   },
 
   icon: {
@@ -442,11 +444,11 @@ export const REGISTRY = {
     layer: 'composites',
     dir: 'ren-scroll-area',
     description: 'Scrollable area with custom scrollbars',
-    files: ['ren-scroll-area.css', 'ren-scroll-area.js'],
+    files: ['ren-scroll-area.css'],
     deps: [],
-    usage: `<ren-scroll-area class="ren-scroll-area">
+    usage: `<div class="ren-scroll-area" tabindex="0" role="region" aria-label="Scrollable content">
   <div>Long content...</div>
-</ren-scroll-area>`,
+</div>`,
   },
 
   'number-field': {

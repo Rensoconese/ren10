@@ -66,6 +66,26 @@ test.describe('Interaction hardening regressions', () => {
     await expect.poll(() => page.evaluate(() => window.__renInjected === true)).toBe(false);
   });
 
+  test('ren-form does not duplicate submit handling after reconnect', async ({ page }) => {
+    await page.goto(`${staticServer.origin}/tests/components/fixtures/form-unsafe-summary.html`);
+    await page.evaluate(() => customElements.whenDefined('ren-form'));
+
+    await page.evaluate(() => {
+      window.__renInvalidCount = 0;
+      const form = document.querySelector('ren-form');
+      const parent = form.parentElement;
+      form.addEventListener('ren-invalid', () => {
+        window.__renInvalidCount += 1;
+      });
+      form.remove();
+      parent.appendChild(form);
+    });
+
+    await page.locator('button[type="submit"]').click();
+
+    await expect.poll(() => page.evaluate(() => window.__renInvalidCount)).toBe(1);
+  });
+
   test('ren-popover syncs trigger state and restores focus', async ({ page }) => {
     await page.goto(`${staticServer.origin}/tests/components/fixtures/popover-focus.html`);
     await page.evaluate(() => customElements.whenDefined('ren-popover'));
@@ -157,6 +177,24 @@ test.describe('Interaction hardening regressions', () => {
 
     await expect.poll(() => page.evaluate(() => {
       return document.querySelector('.ren-color-picker-dropdown')?.matches(':popover-open') || false;
+    })).toBe(true);
+
+    await page.locator('.ren-color-picker-trigger').click();
+
+    await expect.poll(() => page.evaluate(() => {
+      return document.querySelector('.ren-color-picker-dropdown')?.matches(':popover-open') || false;
+    })).toBe(false);
+  });
+
+  test('ren-command keeps focus in the search input after global shortcut opens', async ({ page }) => {
+    await page.goto(`${staticServer.origin}/tests/components/fixtures/lifecycle-cleanup.html`);
+    await expect.poll(() => page.evaluate(() => typeof window.mountAuditComponents)).toBe('function');
+
+    await page.evaluate(() => window.mountAuditComponents());
+    await page.keyboard.press('Control+K');
+
+    await expect.poll(() => page.evaluate(() => {
+      return document.activeElement?.classList.contains('ren-command-input') || false;
     })).toBe(true);
   });
 });

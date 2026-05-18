@@ -106,7 +106,7 @@ function copyDir(src, dest) {
 }
 
 /**
- * Command: rends init
+ * Command: ren10 init
  * Initialize a new RenDS project in current directory
  */
 async function cmdInit() {
@@ -242,7 +242,7 @@ async function cmdInit() {
 }
 
 /**
- * Command: rends scales
+ * Command: ren10 scales
  * List all available type scale ratios
  */
 async function cmdScales() {
@@ -264,7 +264,7 @@ async function cmdScales() {
 }
 
 /**
- * Command: rends add <component>
+ * Command: ren10 add <component>
  * Add a component to the project
  */
 /**
@@ -310,10 +310,12 @@ function addOneComponent(rendsDir, componentArg, opts = {}) {
   meta.files.forEach((file) => {
     const srcFile = path.join(srcComponentDir, file);
     const destFile = path.join(componentDir, file);
-    if (fs.existsSync(srcFile)) {
-      copyComponentFile(srcFile, destFile);
-      if (!silent) success(`Copied ${componentName}/${file}`);
+    if (!fs.existsSync(srcFile)) {
+      error(`Registry file missing for "${componentName}": ${path.relative(RENDS_ROOT, srcFile)}`);
     }
+
+    copyComponentFile(srcFile, destFile);
+    if (!silent) success(`Copied ${componentName}/${file}`);
   });
 
   // Copy JS deps from utils/ if the component declares any.
@@ -418,7 +420,7 @@ async function cmdAdd() {
 }
 
 /**
- * Command: rends add --all
+ * Command: ren10 add --all
  * Add all components at once
  */
 async function cmdAddAll() {
@@ -473,7 +475,7 @@ async function cmdAddAll() {
 }
 
 /**
- * Command: rends list
+ * Command: ren10 list
  * List all available components
  */
 async function cmdList() {
@@ -501,7 +503,7 @@ async function cmdList() {
 }
 
 /**
- * Command: rends remove <component> [...more]
+ * Command: ren10 remove <component> [...more]
  * Remove a previously-added component from rends/components/<name>/ and
  * drop its @import line from rends/components/index.css.
  *
@@ -604,7 +606,7 @@ async function cmdRemove() {
 }
 
 /**
- * Command: rends upgrade [name] [...]
+ * Command: ren10 upgrade [name] [...]
  * Compare each locally-installed component against the package source.
  * For each differing file, prompt the user (overwrite / skip / show diff
  * / abort). Without args, walks every installed component.

@@ -1,7 +1,7 @@
 /**
  * RenDS — Type Scale Generator
  * Generates precise modular typography tokens from a base size and ratio.
- * Used by `rends init --scale <ratio>` and available as standalone utility.
+ * Used by `ren10 init --scale <ratio>` and available as standalone utility.
  *
  * Ratios from musical intervals (same as holistic-rust Type Scale Node):
  *   Minor Second  (1.067)    Major Second  (1.125)

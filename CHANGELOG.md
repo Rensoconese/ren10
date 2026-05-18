@@ -44,16 +44,16 @@ theming controls.** Closes the 17-finding external audit from
 
 ### Added
 
-- **CLI: `rends remove <name>` (alias `rm`).** Deletes an installed
+- **CLI: `ren10 remove <name>` (alias `rm`).** Deletes an installed
   component folder and scrubs its `@import` from
   `components/index.css`. Refuses to delete locally-modified files
   unless `--force` is passed; override detection compares both
   extra files and modified content against the package source.
-- **CLI: `rends upgrade [name]` (alias `update`).** Diffs each
+- **CLI: `ren10 upgrade [name]` (alias `update`).** Diffs each
   installed component against the package source, prompts
   per-component (`y` / `n` / `d`iff / `a`bort), and supports
   `--dry-run` and `--force`. Identical files are silent.
-- **CLI: `--density` and `--shape` flags on `rends init`.** Validated
+- **CLI: `--density` and `--shape` flags on `ren10 init`.** Validated
   against the same value set as `themes/appearance.css`. Prints the
   `<html data-density="…" data-shape="…">` attributes for the user
   to add. Pairs with the new `spacious` density preset.

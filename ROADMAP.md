@@ -24,7 +24,7 @@
 | F7.8 — `docs/cli.html` | ✅ Done en v0.7.1 | 394 líneas |
 | F7.9 — Visual regression baselines | ✅ Done | 312 PNGs en `tests/visual/visual.spec.cjs-snapshots/` (restaurados en `78a9db1`) |
 | Per-component test suite | ✅ Done | `tests/components/components.spec.cjs`, 102/102 pass |
-| F8 — 52 páginas por componente | ✅ Done | `docs/components/*.html`, en `[Unreleased]` |
+| F8 — 53 páginas por componente | ✅ Done | `docs/components/*.html` |
 | Marketing landing | ✅ Done | `rends/index.html`, en `[Unreleased]` |
 | Command palette (Cmd+K) | ✅ Done | `site/shell.js`, en `[Unreleased]` |
 | LICENSE | ✅ | `rends/LICENSE` (MIT) |
@@ -137,15 +137,13 @@
 ## Orden recomendado
 
 ```
-Hito 6 (limpieza docs)  →  Hito 7 (limpieza outer)  →  cortar 0.8.3  →
-Hito 4.3 (tags retroactivos)  →  Hito 5 (publish)  →  Hito 8
+Hito 5 (publish 0.9.0)  →  activar Pages si falta  →  Hito 8 polish
 ```
 
-- **Hito 6 primero** porque deja el sistema coherente antes de cortar la próxima versión.
-- **Hito 7 paralelo** o secuencial — no bloquea publish del paquete.
-- **Cortar 0.8.3** una vez todo lo de 6 está en `[Unreleased]` y ese bloque consolidado.
-- **Tags retroactivos** para que los compare-links del CHANGELOG funcionen.
-- **Publish** finalmente, después de que el pipeline haya pasado.
+- **Publish 0.9.0** queda bloqueado solo por auth npm local / `NPM_TOKEN`.
+- **Pages** requiere el toggle de GitHub Settings si todavía no está activo.
+- **Tags retroactivos** son mantenimiento histórico; no bloquean 0.9.0.
+- **Hito 8** es polish post-release.
 
 ---
 

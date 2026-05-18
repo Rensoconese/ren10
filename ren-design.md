@@ -742,7 +742,7 @@ the host app can style, slot, and select them with ordinary CSS. There is no
 build step required on the consumer side — `import 'rends'` and every token
 listed above is globally available.
 
-The system is organized in the classic atomic taxonomy: **primitives** (18)
+The system is organized in the classic atomic taxonomy: **primitives** (19)
 are the smallest cohesive units (buttons, badges, fields); **composites**
 (26) combine primitives with behavior (dialog, menu, tabs, select);
 **patterns** (8) are page-level organisms (nav, sidebar, table, form,

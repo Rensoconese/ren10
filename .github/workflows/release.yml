@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   verify:
-    name: Verify (lint + a11y + components)
+    name: Verify (lint + package + a11y + components + visual)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -25,6 +25,16 @@ jobs:
       - run: npm ci
 
       - run: npm run lint
+
+      - run: npm run test:theme
+
+      - run: npm run test:evals
+
+      - run: npm run test:exports
+
+      - run: npm run smoke:cli-copy
+
+      - run: npm pack --dry-run
 
       - name: Cache Playwright browsers
         id: playwright-cache
@@ -40,6 +50,8 @@ jobs:
       - run: npm run test:a11y
 
       - run: npm run test:components
+
+      - run: npm run test:visual -- --project="Desktop Light"
 
       - name: Verify tag matches package.json version
         run: |

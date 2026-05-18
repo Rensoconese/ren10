@@ -207,31 +207,31 @@
 
           <div class="dx-cmd-grid">
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends init</div>
+              <div class="dx-cmd-card-name">ren10 init</div>
               <p class="dx-cmd-card-desc">Scaffold tokens + base into a new <code>rends/</code> folder.</p>
             </div>
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends add &lt;name&gt;</div>
+              <div class="dx-cmd-card-name">ren10 add &lt;name&gt;</div>
               <p class="dx-cmd-card-desc">Copy a component (or all components) into your project.</p>
             </div>
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends remove &lt;name&gt;</div>
+              <div class="dx-cmd-card-name">ren10 remove &lt;name&gt;</div>
               <p class="dx-cmd-card-desc">Delete a previously-added component. Refuses if locally edited (use <code>--force</code>).</p>
             </div>
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends upgrade [name]</div>
+              <div class="dx-cmd-card-name">ren10 upgrade [name]</div>
               <p class="dx-cmd-card-desc">Refresh installed components from the package source. Diffs each file, prompts.</p>
             </div>
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends list</div>
+              <div class="dx-cmd-card-name">ren10 list</div>
               <p class="dx-cmd-card-desc">Print every component grouped by tier.</p>
             </div>
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends scales</div>
+              <div class="dx-cmd-card-name">ren10 scales</div>
               <p class="dx-cmd-card-desc">Print every type scale ratio (minor-third, golden, …).</p>
             </div>
             <div class="dx-cmd-card">
-              <div class="dx-cmd-card-name">rends help</div>
+              <div class="dx-cmd-card-name">ren10 help</div>
               <p class="dx-cmd-card-desc">Show usage. <code>--version</code> prints the current release.</p>
             </div>
           </div>
@@ -257,11 +257,11 @@
 }</code></div>
           <p>Then call: <code>npm run rends -- add button</code> (the <code>--</code> forwards args to the script).</p>
 
-          <h3>As a global shortcut</h3>
-          <p>Symlink it into your <code>$PATH</code> if you'd rather type <code>rends</code> directly:</p>
-          <div class="dx-pre" tabindex="0"><code>chmod +x rends/cli/index.js
-ln -s "$(pwd)/rends/cli/index.js" /usr/local/bin/rends
-rends --version</code></div>
+          <h3>From npm</h3>
+          <p>The published package exposes the <code>ren10</code> binary. Run it with <code>npx</code> or install it globally if you prefer a persistent shortcut:</p>
+          <div class="dx-pre" tabindex="0"><code>npx ren10 --version
+npx ren10 init
+npx ren10 add button</code></div>
 
           <div class="dx-callout">
             <p><strong>Node 18+ required.</strong> The CLI uses ES modules (<code>import</code>), <code>fileURLToPath</code>, and modern <code>fs</code> APIs. Any current LTS is fine.</p>
@@ -391,7 +391,7 @@ rends/utils/
           <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/dialog/ren-dialog.js"&gt;&lt;/script&gt;</code></div>
 
           <div class="dx-callout">
-            <p><strong>Unknown component?</strong> The CLI prints the error and points you at <code>rends list</code> for the canonical name list. Names are normalised to lowercase, so <code>add Button</code> works the same as <code>add button</code>.</p>
+            <p><strong>Unknown component?</strong> The CLI prints the error and points you at <code>ren10 list</code> for the canonical name list. Names are normalised to lowercase, so <code>add Button</code> works the same as <code>add button</code>.</p>
           </div>
         </section>
 

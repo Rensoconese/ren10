@@ -104,6 +104,7 @@ export class RenForm extends HTMLElement {
     this._isSubmitting = false;
     this._errorSummary = null;
     this._successMessage = null;
+    this._listenerController = null;
   }
 
   static registerValidator(name, fn) {
@@ -148,8 +149,12 @@ export class RenForm extends HTMLElement {
   }
 
   _attachEventListeners() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     // Form submit
-    this._form.addEventListener('submit', (e) => this._handleSubmit(e));
+    this._form.addEventListener('submit', (e) => this._handleSubmit(e), { signal });
 
     // Field validation
     this._fields.forEach((field) => {
@@ -158,25 +163,25 @@ export class RenForm extends HTMLElement {
 
       switch (this._validationMode) {
         case 'onBlur':
-          input.addEventListener('blur', () => this._validateField(field, input));
+          input.addEventListener('blur', () => this._validateField(field, input), { signal });
           break;
 
         case 'onChange':
           input.addEventListener('input', () => {
             this._debounceValidation(field, input);
-          });
+          }, { signal });
           break;
 
         case 'onTouched':
           input.addEventListener('blur', () => {
             this._touched.add(input.name);
             this._validateField(field, input);
-          });
+          }, { signal });
           input.addEventListener('input', () => {
             if (this._touched.has(input.name)) {
               this._debounceValidation(field, input);
             }
-          });
+          }, { signal });
           break;
 
         case 'onSubmit':
@@ -208,7 +213,8 @@ export class RenForm extends HTMLElement {
   }
 
   _removeEventListeners() {
-    // Event listeners are automatically cleaned up when DOM is removed
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   async _handleSubmit(e) {

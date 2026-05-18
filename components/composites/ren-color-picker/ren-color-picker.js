@@ -749,8 +749,16 @@ export class RenColorPicker extends HTMLElement {
 
   handleTriggerClick(event) {
     event?.preventDefault();
-    if (this.#popover) {
-      this.#popover.showPopover?.();
+    if (!this.#popover) return;
+
+    try {
+      if (this.#popover.matches(':popover-open')) {
+        this.#popover.hidePopover?.();
+      } else {
+        this.#popover.showPopover?.();
+      }
+    } catch (error) {
+      // Native popover can throw if browser state changes mid-click.
     }
   }
 
