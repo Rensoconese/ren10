@@ -7,9 +7,17 @@
 
 import fs from 'fs';
 import path from 'path';
+import { spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
 import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from './registry.js';
 import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
+import {
+  formatKnowledgeRows,
+  loadJsonGraph,
+  queryJsonGraph,
+  querySqliteGraph,
+  sqliteAvailable,
+} from './knowledge-search.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RENDS_ROOT = path.resolve(__dirname, '..');
@@ -503,6 +511,98 @@ async function cmdList() {
 }
 
 /**
+ * Command: ren10 knowledge [path|query|check]
+ * Inspect the packaged RenDS knowledge graph.
+ */
+async function cmdKnowledge() {
+  const subcommand = args[1] || 'path';
+  const knowledgeDir = path.join(RENDS_ROOT, 'knowledge');
+  const sqlitePath = path.join(knowledgeDir, 'ren10-graph.sqlite');
+  const jsonPath = path.join(knowledgeDir, 'ren10-graph.json');
+
+  if (subcommand === 'path' || subcommand === 'paths') {
+    console.log(`\n${c.bold}RenDS Knowledge Graph${c.reset}\n`);
+    console.log(`  SQLite: ${c.cyan}${sqlitePath}${c.reset}`);
+    console.log(`  JSON:   ${c.cyan}${jsonPath}${c.reset}`);
+    console.log(`\n${c.dim}Query with:${c.reset}`);
+    console.log(`  ${c.cyan}npx ren10 knowledge query "ren-toast status"${c.reset}`);
+    console.log(`  ${c.cyan}npx ren10 knowledge query "ren-toast status" --json${c.reset}`);
+    console.log(`\n${c.dim}Validate packaged graph:${c.reset}`);
+    console.log(`  ${c.cyan}npx ren10 knowledge check${c.reset}\n`);
+    return;
+  }
+
+  if (subcommand === 'check') {
+    if (!fs.existsSync(jsonPath)) error(`Knowledge JSON not found: ${jsonPath}`);
+    const graph = loadJsonGraph(jsonPath);
+    const messages = [];
+    if (graph.schemaVersion !== 1) messages.push(`Unexpected schemaVersion: ${graph.schemaVersion}`);
+    if (graph.packageName !== 'ren10') messages.push(`Unexpected packageName: ${graph.packageName}`);
+    if (!Array.isArray(graph.nodes) || !Array.isArray(graph.edges)) {
+      messages.push('JSON graph must contain nodes[] and edges[].');
+    }
+    if (!fs.existsSync(sqlitePath)) {
+      messages.push(`SQLite graph not found: ${sqlitePath}`);
+    } else if (sqliteAvailable()) {
+      const integrity = spawnSync('sqlite3', [sqlitePath, 'PRAGMA integrity_check;'], { encoding: 'utf8' });
+      if (integrity.status !== 0 || integrity.stdout.trim() !== 'ok') {
+        messages.push(`SQLite integrity check failed: ${(integrity.stderr || integrity.stdout).trim()}`);
+      }
+      try {
+        const smoke = querySqliteGraph(sqlitePath, 'ren-toast status', 1);
+        if (smoke.length === 0) messages.push('SQLite FTS smoke query returned no rows.');
+      } catch (err) {
+        messages.push(err.message);
+      }
+    } else {
+      console.log(`${c.dim}sqlite3 CLI not found; SQLite file exists but integrity check was skipped.${c.reset}`);
+    }
+
+    if (messages.length > 0) error(messages.join('\n'));
+    console.log(`RenDS knowledge graph OK: ${graph.nodes?.length ?? 0} nodes, ${graph.edges?.length ?? 0} edges.`);
+    return;
+  }
+
+  if (subcommand !== 'query') {
+    error(`Unknown knowledge command: ${subcommand}. Use "path", "query", or "check".`);
+  }
+
+  const queryArgs = args.slice(2);
+  const forceJson = queryArgs.includes('--json') || process.env.RENDS_KNOWLEDGE_FORCE_JSON === '1';
+  const rawQuery = queryArgs.filter((arg) => arg !== '--json').join(' ').trim();
+  if (!rawQuery) {
+    error('Usage: npx ren10 knowledge query "ren-toast status" [--json]');
+  }
+  if (!fs.existsSync(sqlitePath) && !fs.existsSync(jsonPath)) {
+    error(`Knowledge graph not found: ${knowledgeDir}`);
+  }
+
+  let rows;
+  let source = 'SQLite';
+  if (!forceJson && fs.existsSync(sqlitePath) && sqliteAvailable()) {
+    try {
+      rows = querySqliteGraph(sqlitePath, rawQuery);
+    } catch (err) {
+      if (!fs.existsSync(jsonPath)) error(err.message);
+      source = 'JSON fallback';
+      rows = queryJsonGraph(loadJsonGraph(jsonPath), rawQuery);
+    }
+  } else {
+    if (!fs.existsSync(jsonPath)) error(`JSON graph not found: ${jsonPath}`);
+    source = 'JSON fallback';
+    rows = queryJsonGraph(loadJsonGraph(jsonPath), rawQuery);
+  }
+
+  if (rows.length === 0) {
+    console.log(`No matches for "${rawQuery}".`);
+    return;
+  }
+
+  if (source !== 'SQLite') console.log(`${c.dim}Using ${source}.${c.reset}`);
+  console.log(formatKnowledgeRows(rows, c));
+}
+
+/**
  * Command: ren10 remove <component> [...more]
  * Remove a previously-added component from rends/components/<name>/ and
  * drop its @import line from rends/components/index.css.
@@ -798,6 +898,9 @@ async function main() {
       case 'scales':
         await cmdScales();
         break;
+      case 'knowledge':
+        await cmdKnowledge();
+        break;
       case '--help':
       case '-h':
       case 'help':
@@ -839,6 +942,9 @@ ${c.bold}Commands:${c.reset}
                     (alias: update; no arg = all installed components)
   list              List all available components
   scales            List available type scale ratios
+  knowledge         Show packaged graph paths
+  knowledge query   Query the packaged knowledge graph (SQLite, JSON fallback)
+  knowledge check   Validate packaged knowledge graph files
   help, -h          Show this help message
   version, -v       Show version
 
@@ -869,6 +975,10 @@ ${c.bold}Examples:${c.reset}
   npx ren10 upgrade dialog --dry-run
   npx ren10 list
   npx ren10 scales
+  npx ren10 knowledge
+  npx ren10 knowledge query "ren-toast status"
+  npx ren10 knowledge query "ren-toast status" --json
+  npx ren10 knowledge check
 
 ${c.bold}Docs:${c.reset}
   https://github.com/Rensoconese/ren10

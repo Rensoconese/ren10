@@ -9,6 +9,7 @@ pnpm-lock.yaml
 dist/
 build/
 .cache/
+.ren-knowledge/
 
 # Environment
 .env

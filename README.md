@@ -16,7 +16,9 @@ Current version: **0.9.0**
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
 > Every colocated `component.md` / `pattern.md` carries an `aiHints` YAML
 > block with selection criteria, canonical imports, required markup,
-> forbidden patterns, and accessibility rules.
+> forbidden patterns, and accessibility rules. The npm package also ships a
+> queryable graph in `knowledge/` for agents that need search over contracts,
+> selectors, tokens, docs, and examples.
 
 ---
 
@@ -196,6 +198,10 @@ npx ren10 add <component>...             Add one or more components
 npx ren10 add --all                      Add every component
 npx ren10 list                           List all available components
 npx ren10 scales                         List available type scale ratios
+npx ren10 knowledge                      Show packaged graph paths
+npx ren10 knowledge query "ren-ai"       Search contracts, selectors, tokens, docs
+npx ren10 knowledge query "ren-ai" --json  Force JSON fallback search
+npx ren10 knowledge check                Validate packaged graph files
 npx ren10 help                           Show help
 ```
 

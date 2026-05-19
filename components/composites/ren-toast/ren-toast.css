@@ -185,7 +185,7 @@
 /* ═══ TOAST VARIANTS ═══ */
 /* Success */
 .ren-toast-success {
-  border-inline-start: 3px solid var(--color-success);
+  background: color-mix(in srgb, var(--color-success-subtle) 65%, var(--color-surface-raised));
 }
 
 .ren-toast-success .ren-toast-icon {
@@ -195,7 +195,7 @@
 /* Error / Danger */
 .ren-toast-error,
 .ren-toast-danger {
-  border-inline-start: 3px solid var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger-subtle) 65%, var(--color-surface-raised));
 }
 
 .ren-toast-error .ren-toast-icon,
@@ -205,7 +205,7 @@
 
 /* Warning */
 .ren-toast-warning {
-  border-inline-start: 3px solid var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning-subtle) 65%, var(--color-surface-raised));
 }
 
 .ren-toast-warning .ren-toast-icon {
@@ -214,7 +214,7 @@
 
 /* Info */
 .ren-toast-info {
-  border-inline-start: 3px solid var(--color-info);
+  background: color-mix(in srgb, var(--color-info-subtle) 65%, var(--color-surface-raised));
 }
 
 .ren-toast-info .ren-toast-icon {

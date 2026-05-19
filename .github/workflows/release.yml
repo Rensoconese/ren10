@@ -6,13 +6,14 @@ on:
       - "v*.*.*"
 
 permissions:
-  contents: write
-  id-token: write   # required for npm provenance
+  contents: read
 
 jobs:
   verify:
     name: Verify (lint + package + a11y + components + visual)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v6
 
@@ -31,6 +32,8 @@ jobs:
       - run: npm run test:evals
 
       - run: npm run test:exports
+
+      - run: npm run test:knowledge-package
 
       - run: npm run smoke:cli-copy
 
@@ -66,6 +69,9 @@ jobs:
     name: Publish to npm
     needs: verify
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # required for npm provenance
     steps:
       - uses: actions/checkout@v6
 
@@ -89,6 +95,8 @@ jobs:
     name: Create GitHub Release
     needs: publish
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
 

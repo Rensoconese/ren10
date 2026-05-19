@@ -16,6 +16,10 @@
  *      overlay primitives — replacing them would require a larger shadow
  *      token surface than RenDS currently exposes.
  *
+ *   3. Colored side-border accents on component surfaces. State / AI identity
+ *      should come from subtle surfaces, icons, text, or full component state,
+ *      not from one-sided accent stripes.
+ *
  * Files in `EXEMPT_FILES` are skipped. The list mirrors the overrides in
  * `stylelint.config.mjs` and each entry has a short reason.
  *
@@ -43,9 +47,6 @@ const EXEMPT_FILES = new Set([
   // Hue gradient: literal RGB color wheel.
   'components/composites/ren-color-picker/ren-color-picker.css',
 
-  // AI accent: primitive purple inside color-mix() shimmer.
-  'components/patterns/ren-ai/ren-ai.css',
-
   // Offline status: --gray-400 with no semantic equivalent.
   'components/primitives/ren-avatar/ren-avatar.css',
 
@@ -65,6 +66,8 @@ const EXEMPT_FILES = new Set([
 ]);
 
 const PRIMITIVE_TOKEN = /var\(\s*--(?:blue|gray|grey|red|green|orange|yellow|teal|purple|pink)-\d+\s*[,)]/;
+const COLORED_SIDE_BORDER =
+  /\bborder-(?:inline-start|inline-end|left|right)(?:-color)?\s*:\s*[^;]*var\(\s*--color-(?:accent|success|warning|danger|info|ai)(?:-[\w-]+)?\s*[,)]/;
 
 // Match rgb/rgba/hsl/hsla calls that aren't pure black, white, or transparent.
 // We treat `0,0,0,X`, `0 0 0 / X`, `255,255,255,X`, `255 255 255 / X` as OK.
@@ -145,6 +148,15 @@ async function checkFile(absPath) {
       });
     }
 
+    if (COLORED_SIDE_BORDER.test(line)) {
+      violations.push({
+        path: rel,
+        line: i + 1,
+        kind: 'colored-side-border',
+        snippet: raw.trim(),
+      });
+    }
+
     let m;
     HEX_COLOR.lastIndex = 0;
     while ((m = HEX_COLOR.exec(line))) {
@@ -200,6 +212,8 @@ async function main() {
     const detail =
       v.kind === 'primitive-token'
         ? 'primitive palette token (use a semantic --color-* or component --ren-* token)'
+        : v.kind === 'colored-side-border'
+        ? 'colored side-border accent (use subtle surface, icon, text, or neutral border instead)'
         : v.kind === 'hex-color'
         ? `hardcoded hex color ${v.match} (use a token)`
         : `non-grayscale ${v.match} (use a token; only rgba(0,0,0,X) / rgba(255,255,255,X) are allowed)`;

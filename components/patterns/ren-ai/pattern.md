@@ -56,17 +56,18 @@ forbiddenPatterns:
   - "Using .ren-ai-message for non-AI chat content (use a neutral message component instead)."
   - "Faking confidence levels by inline-styling .ren-ai-confidence-fill width — set data-level."
   - "Replacing .ren-ai-prompt-send with a bare <button> styled as a circle — use the documented selector."
-  - "Hardcoding the purple accent (e.g. #8B5CF6) instead of letting the pattern resolve --purple-500 / --purple-300 via light-dark()."
+  - "Hardcoding the AI accent (e.g. #8B5CF6, --purple-*) instead of using --color-ai / --color-ai-subtle."
+  - "Adding colored side borders to mark AI content; use the AI surface, icon/slug, and semantic tokens instead."
   - "Animating the typing dots or skeleton manually; the pattern ships keyframes + reduced-motion fallbacks."
 
 tokenPolicy:
   allowed:
-    - "Semantic tokens: --color-text, --color-text-muted, --color-surface-raised, --color-surface-sunken, --color-fill, --color-border-muted, --color-success, --color-warning, --color-danger."
+    - "Semantic tokens: --color-ai, --color-ai-hover, --color-ai-subtle, --color-on-ai, --color-text, --color-text-muted, --color-surface-raised, --color-surface-sunken, --color-fill, --color-border-muted, --color-success, --color-warning, --color-danger."
     - "Layout / type tokens: --space-*, --radius-*, --stroke-1, --body-size, --caption-size, --caption-sm-size, --label-size, --leading-relaxed, --weight-medium, --weight-semibold, --weight-bold."
     - "Motion tokens: --duration-tactile, --duration-state, --ease-enter."
     - "Size tokens for the send button and action chrome: --size-sm, --size-md, --text-lg."
   forbidden:
-    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code — the pattern owns the purple accent internally."
+    - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer code or inside the pattern CSS."
     - "Hardcoded hex / named colors (e.g. #8B5CF6, purple, rgb(...))."
     - "Raw transition durations or easings; use --duration-* / --ease-*."
 

@@ -24,6 +24,7 @@
     "tokens/",
     "base/",
     "components/",
+    "knowledge/",
     "utils/",
     "cli/",
     "themes/appearance.css",
@@ -47,6 +48,7 @@
     "./base/*": {
       "import": "./base/*"
     },
+    "./knowledge/*": "./knowledge/*",
     "./themes/appearance.css": "./themes/appearance.css",
     "./themes/theme-generator.js": {
       "import": "./themes/theme-generator.js"
@@ -64,14 +66,18 @@
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "lint": "npm run lint:css && npm run lint:tokens",
     "test": "npm run test:all",
-    "test:all": "npm run test:a11y && npm run test:components && npm run test:visual -- --project=\"Desktop Light\" && npm run test:theme && npm run test:evals && npm run test:exports && npm run smoke:cli-copy",
+    "test:all": "npm run test:a11y && npm run test:components && npm run test:visual -- --project=\"Desktop Light\" && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
     "test:components": "playwright test --config tests/components/playwright.config.cjs",
     "test:theme": "node themes/theme-generator.test.js",
     "test:evals": "node evals/run-eval.mjs --all",
     "test:exports": "node scripts/verify-package-exports.mjs",
-    "smoke:cli-copy": "node scripts/smoke-cli-copy.mjs"
+    "test:knowledge-package": "npm run knowledge:check",
+    "smoke:cli-copy": "node scripts/smoke-cli-copy.mjs",
+    "knowledge:build": "node scripts/build-knowledge-graph.mjs",
+    "knowledge:check": "node scripts/check-knowledge-graph.mjs",
+    "knowledge:query": "node scripts/query-knowledge-graph.mjs"
   },
   "keywords": [
     "design-system",

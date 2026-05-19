@@ -10,6 +10,8 @@ const checks = [
   ['ren10/components/primitives/ren-button/ren-button.css', 'components/primitives/ren-button/ren-button.css'],
   ['ren10/components/composites/ren-dialog/ren-dialog.js', 'components/composites/ren-dialog/ren-dialog.js'],
   ['ren10/base/index.css', 'base/index.css'],
+  ['ren10/knowledge/ren10-graph.sqlite', 'knowledge/ren10-graph.sqlite'],
+  ['ren10/knowledge/ren10-graph.json', 'knowledge/ren10-graph.json'],
   ['ren10/tokens/index.css', 'tokens/index.css'],
   ['ren10/themes/appearance.css', 'themes/appearance.css'],
   ['ren10/themes/theme-generator.js', 'themes/theme-generator.js'],
