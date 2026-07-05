@@ -326,8 +326,17 @@
         }
         .dx-faint-caption { font-size: var(--text-xs); color: var(--color-text-muted); margin: 0 0 var(--space-3); line-height: 1.5; }
 
-        .demo-faint-text { color: var(--color-text-faint); }
+        .demo-faint-text { color: var(--color-text-muted); }
         .demo-muted-text { color: var(--color-text-muted); }
+        .demo-faint-swatch {
+          display: inline-block;
+          width: 1rem;
+          height: 1rem;
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius-sm);
+          background: var(--color-text-faint);
+          flex: 0 0 auto;
+        }
 
         /* Breadcrumb separator preview (DO) */
         .demo-bc { display: flex; align-items: center; gap: var(--space-1); font-size: var(--text-sm); }
@@ -338,13 +347,13 @@
         /* Calendar preview (DO) */
         .demo-cal { display: grid; grid-template-columns: repeat(7, 28px); gap: 4px; font-family: var(--font-mono); font-size: var(--text-xs); }
         .demo-cal span { display: grid; place-items: center; height: 28px; color: var(--color-text); }
-        .demo-cal .out { color: var(--color-text-faint); }
+        .demo-cal .out { color: var(--color-text-muted); }
         .demo-cal .today { background: var(--color-accent); color: var(--color-on-accent); border-radius: var(--radius-sm); }
 
         /* Disabled label preview (DO) */
-        .demo-disabled { display: flex; align-items: center; gap: var(--space-2); opacity: 0.6; }
+        .demo-disabled { display: flex; align-items: center; gap: var(--space-2); }
         .demo-disabled input[type="checkbox"] { accent-color: var(--color-text-muted); }
-        .demo-disabled label { color: var(--color-text-faint); font-size: var(--text-sm); }
+        .demo-disabled span { color: var(--color-text-muted); font-size: var(--text-sm); }
 
         /* Placeholder preview (DO) */
         .demo-placeholder { width: 100%; padding: var(--space-2) var(--space-3); border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-size: var(--text-sm); background: var(--color-surface); color: var(--color-text); }
@@ -366,15 +375,15 @@
               <span class="out">28</span><span class="out">29</span><span>1</span><span>2</span><span>3</span><span class="today">4</span><span>5</span>
             </div>
           </div>
-          <p class="dx-faint-caption">Calendar days <em>outside</em> the current month — they're context, the user reads inside-month numbers.</p>
+          <p class="dx-faint-caption">Calendar days <em>outside</em> the current month are contextual. Keep visible numerals readable; reserve <code>--color-text-faint</code> for non-text decoration.</p>
 
           <div class="dx-faint-preview">
-            <div class="demo-disabled">
+            <label class="demo-disabled">
               <input type="checkbox" disabled>
-              <label>Email me weekly digests</label>
-            </div>
+              <span>Email me weekly digests</span>
+            </label>
           </div>
-          <p class="dx-faint-caption">Disabled label paired with <code>opacity &lt; 1</code>. WCAG 1.4.3 exempts disabled controls.</p>
+          <p class="dx-faint-caption">Disabled controls can use softer affordances, but docs still render visible labels at AA contrast.</p>
 
           <div class="dx-faint-preview">
             <input class="demo-placeholder" type="text" placeholder="Search projects…" aria-label="Search projects">
@@ -390,18 +399,18 @@
             <p class="demo-faint-text" style="font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; margin: 0;">Pricing</p>
             <h4 style="margin: 0; font-size: var(--text-md);">Pro plan — $24/mo</h4>
           </div>
-          <p class="dx-faint-caption">Eyebrow / kicker text — readers <em>do</em> rely on it to scan a section. Use <code>--color-text-muted</code>.</p>
+          <p class="dx-faint-caption">Eyebrow / kicker text — readers <em>do</em> rely on it to scan a section. This preview uses <code>--color-text-muted</code>; do not switch it to faint.</p>
 
           <div class="dx-faint-preview" style="display: block;">
             <table style="width: 100%; font-size: var(--text-sm); border-collapse: collapse;">
               <thead><tr>
-                <th style="text-align: left; color: var(--color-text-faint); padding-bottom: 4px;">Name</th>
-                <th style="text-align: left; color: var(--color-text-faint); padding-bottom: 4px;">Email</th>
+                <th style="text-align: left; color: var(--color-text-muted); padding-bottom: 4px;">Name</th>
+                <th style="text-align: left; color: var(--color-text-muted); padding-bottom: 4px;">Email</th>
               </tr></thead>
               <tbody><tr><td>Ana</td><td>ana@example.com</td></tr></tbody>
             </table>
           </div>
-          <p class="dx-faint-caption">Table headers tell the user what each column is — they fail AA in <code>--color-text-faint</code>. Use <code>--color-text-muted</code>.</p>
+          <p class="dx-faint-caption">Table headers tell the user what each column is. Use <code>--color-text-muted</code>; <code>--color-text-faint</code> fails AA here.</p>
 
           <div class="dx-faint-preview" style="gap: var(--space-3);">
             <span class="demo-faint-text" style="font-family: var(--font-mono); font-size: var(--text-sm);">1</span>
@@ -417,6 +426,12 @@
             </p>
           </div>
           <p class="dx-faint-caption">Help text under a field — if it's worth showing, it's worth reading. Use <code>--color-text-muted</code>.</p>
+
+          <div class="dx-faint-preview" style="gap: var(--space-2);">
+            <span class="demo-faint-swatch" aria-hidden="true"></span>
+            <span style="font-size: var(--text-sm); color: var(--color-text-muted);">Non-text swatch: the faint token itself.</span>
+          </div>
+          <p class="dx-faint-caption">Show the token as a swatch when documenting it; avoid using the token on readable text in the docs.</p>
         </div>
       </div>
 
