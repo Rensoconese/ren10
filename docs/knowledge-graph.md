@@ -26,6 +26,16 @@ npm run knowledge:build
 npm run knowledge:check
 npm run knowledge:query -- "ren-toast status"
 npm run knowledge:query -- "ren-toast status" --json
+npm run agent:manifest
+npm run agent:doctor
+npm run agent:smoke
+npm run agent:check
+npx ren10 manifest --json
+npx ren10 search "dialog workflow" --json
+npx ren10 build "dashboard with sidebar" --json
+npx ren10 component button --dense
+npx ren10 docs layouts --dense
+npx ren10 doctor
 npx ren10 knowledge
 npx ren10 knowledge query "ren-toast status"
 npx ren10 knowledge query "ren-toast status" --json
@@ -39,6 +49,19 @@ Generated and packaged files live in `knowledge/`:
 
 The generated files are included in the npm package, so an installed consumer
 or agent can inspect `node_modules/ren10/knowledge/`.
+
+Agent-facing JSON commands use a stable envelope:
+
+```json
+{
+  "apiVersion": 1,
+  "type": "search",
+  "data": {}
+}
+```
+
+Use `--json` for typed machine output. Use `--dense` when an agent needs a
+compact Markdown summary that still points back to source contracts.
 
 `knowledge:check` is the package/release gate. It regenerates the graph into a
 temporary directory, compares the fresh JSON with the committed package JSON,
@@ -80,6 +103,8 @@ The check currently covers:
 - Required contract, CSS, and docs edges for every component.
 - Selector/token edge consistency.
 - npm pack inclusion for `knowledge/README.md`, JSON, and SQLite.
+- npm pack inclusion for the agent-ready roadmap and eval README.
+- Agent CLI JSON smoke coverage through `npm run agent:smoke`.
 
 ## Intended Next Layer
 

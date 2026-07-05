@@ -189,7 +189,13 @@ const checkPacklist = (messages) => {
 
   const packages = JSON.parse(pack.stdout || '[]');
   const files = new Set((packages[0]?.files ?? []).map((file) => file.path));
-  for (const required of ['knowledge/README.md', 'knowledge/ren10-graph.json', 'knowledge/ren10-graph.sqlite']) {
+  for (const required of [
+    'docs/agent-ready-roadmap.md',
+    'evals/README.md',
+    'knowledge/README.md',
+    'knowledge/ren10-graph.json',
+    'knowledge/ren10-graph.sqlite',
+  ]) {
     if (!files.has(required)) messages.push(`npm pack is missing ${required}.`);
   }
 };
