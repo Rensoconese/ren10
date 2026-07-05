@@ -195,6 +195,8 @@ const checkPacklist = (messages) => {
     'knowledge/README.md',
     'knowledge/ren10-graph.json',
     'knowledge/ren10-graph.sqlite',
+    'skills/rends/SKILL.md',
+    'skills/rends/README.md',
   ]) {
     if (!files.has(required)) messages.push(`npm pack is missing ${required}.`);
   }

@@ -121,11 +121,10 @@ test set for RenDS-aware agents.
 
 ## Skill Wrapper
 
-The companion Anthropic skill (`rends-skill/SKILL.md` in the parent
-workspace, distributable as a tarball) is what external agents load
-when they detect RenDS in a project. It must keep the same loading
-order as this file. Updates to the loading order belong in **both**
-places.
+The companion Anthropic-style skill lives at `skills/rends/SKILL.md` and is
+packaged with `npm run agent:skill:pack`. It is a compact wrapper around this
+file, the CLI manifest, and the colocated contracts; it must not become a
+second source of truth.
 
 <!-- RENDS:START -->
 RenDS v0.9.0 · vanilla HTML/CSS/JS · Light DOM · 53 components

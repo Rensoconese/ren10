@@ -29,6 +29,8 @@ npm run knowledge:query -- "ren-toast status" --json
 npm run agent:manifest
 npm run agent:doctor
 npm run agent:smoke
+npm run agent:skill:check
+npm run agent:skill:pack
 npm run agent:check
 npx ren10 manifest --json
 npx ren10 search "dialog workflow" --json
@@ -103,7 +105,8 @@ The check currently covers:
 - Required contract, CSS, and docs edges for every component.
 - Selector/token edge consistency.
 - npm pack inclusion for `knowledge/README.md`, JSON, and SQLite.
-- npm pack inclusion for the agent-ready roadmap and eval README.
+- npm pack inclusion for the agent-ready roadmap, eval README, and versioned
+  RenDS skill.
 - Agent CLI JSON smoke coverage through `npm run agent:smoke`.
 
 ## Intended Next Layer

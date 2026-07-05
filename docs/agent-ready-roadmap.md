@@ -76,9 +76,13 @@ Planned.
 
 ## Phase 5: Distribution
 
-Planned.
+Status: implemented for the first release path.
 
 - Include the agent docs, graph, roadmap, and eval overview in the npm package.
+- Include `skills/rends/SKILL.md` in the npm package as the versioned source
+  for the distributable skill.
+- Use `npm run agent:skill:check` to prevent stale skill content and
+  `npm run agent:skill:pack` to create `dist/rends-skill-<version>.tgz`.
 - Document the recommended installed-package workflow:
 
   ```bash
@@ -89,14 +93,14 @@ Planned.
   ```
 
 - Keep repository `AGENTS.md`, `CLAUDE.md`, `.cursorrules`,
-  `.windsurfrules`, and `rends-skill/SKILL.md` synchronized with the CLI
+  `.windsurfrules`, and `skills/rends/SKILL.md` synchronized with the CLI
   loading order.
 
 ## Current Definition of Done
 
 - New agent-facing commands return parseable JSON.
 - `doctor` reports no failures.
-- `npm run lint`, `npm run test:evals`, and `npm run knowledge:check` pass.
+- `npm run lint`, `npm run agent:check`, and `npm run knowledge:check` pass.
 - Stale uppercase contract references are absent.
 - Component contract counts remain 19 primitives, 26 composites, and 8
   patterns.
