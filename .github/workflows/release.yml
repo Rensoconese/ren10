@@ -31,9 +31,9 @@ jobs:
 
       - run: npm run test:evals
 
-      - run: npm run test:exports
+      - run: npm run agent:check
 
-      - run: npm run test:knowledge-package
+      - run: npm run test:exports
 
       - run: npm run smoke:cli-copy
 

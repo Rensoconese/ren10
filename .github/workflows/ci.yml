@@ -26,7 +26,7 @@ concurrency:
 #     running visual against Firefox or WebKit without those baselines
 #     would fail every screenshot test, so we don't try.
 #   - package runs once and blocks release-shape regressions: theme/evals,
-#     package exports, CLI copy smoke, and npm pack dry-run.
+#     agent CLI/skill checks, package exports, CLI copy smoke, and npm pack dry-run.
 
 jobs:
   lint:
@@ -62,9 +62,9 @@ jobs:
 
       - run: npm run test:evals
 
-      - run: npm run test:exports
+      - run: npm run agent:check
 
-      - run: npm run test:knowledge-package
+      - run: npm run test:exports
 
       - run: npm run smoke:cli-copy
 

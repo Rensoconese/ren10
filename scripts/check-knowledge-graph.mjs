@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -171,7 +171,7 @@ const checkSqliteAgainstGraph = (graph, dbPath, messages) => {
   if (smoke.length === 0) messages.push('SQLite FTS smoke query returned no rows.');
 };
 
-const checkPacklist = (messages) => {
+const checkPacklist = (graph, messages) => {
   const pack = spawnSync('npm', ['pack', '--dry-run', '--json'], {
     cwd: root,
     env: {
@@ -191,14 +191,29 @@ const checkPacklist = (messages) => {
   const files = new Set((packages[0]?.files ?? []).map((file) => file.path));
   for (const required of [
     'docs/agent-ready-roadmap.md',
+    'docs/knowledge-graph.md',
     'evals/README.md',
+    'examples/auth-form.html',
     'knowledge/README.md',
     'knowledge/ren10-graph.json',
     'knowledge/ren10-graph.sqlite',
+    'site/shell.css',
     'skills/rends/SKILL.md',
     'skills/rends/README.md',
+    'templates/index.html',
   ]) {
     if (!files.has(required)) messages.push(`npm pack is missing ${required}.`);
+  }
+
+  for (const node of graph.nodes ?? []) {
+    if (!node.path || !existsSync(path.join(root, node.path))) continue;
+    const stat = statSync(path.join(root, node.path));
+    const isPacked = stat.isDirectory()
+      ? [...files].some((file) => file.startsWith(`${node.path}/`))
+      : files.has(node.path);
+    if (!isPacked) {
+      messages.push(`Graph node path is not included in npm pack: ${node.path} (${node.type})`);
+    }
   }
 };
 
@@ -238,7 +253,7 @@ const main = () => {
       }
     }
 
-    checkPacklist(messages);
+    if (existsSync(jsonPath)) checkPacklist(readJson(jsonPath), messages);
 
     if (messages.length > 0) fail(messages);
     console.log('RenDS knowledge graph check: OK (fresh JSON, SQLite integrity, graph shape, npm packlist).');

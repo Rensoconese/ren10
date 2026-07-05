@@ -109,7 +109,7 @@
   - `ren-icons.html` → `ren-icon.html`
   - `ren-input-otp.html` → `ren-otp.html`
 - [x] **6.3** Promover `ren-switch` a primitive independiente — DONE en `[Unreleased]`. Carpeta creada (`components/primitives/ren-switch/{ren-switch.css, component.md}`), CSS extraído de `ren-checkbox.css`, `ren-design.md` actualizado (19 primitives / 53 total), `cli/registry.js` actualizado, README actualizado, `components/index.css` importa el nuevo archivo.
-- [ ] **6.4** Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección "Multi-step" desde `ren-form.html` (`ren-form/pattern.md` ya documenta `data-steps`/`[data-active]`)
+- [x] **6.4** `docs/components/ren-multi-step-form.html` ya fue retirado; la sección "Multi-step" vive en `docs/components/ren-form.html` y `ren-form/pattern.md` documenta `data-steps`/`[data-active]`.
 - [ ] **6.5** Actualizar `docs/components/_sidebar.html`, `docs/components.html`, command palette JS y todo enlace interno
 - [x] **6.6** `cli/registry.js` completo — 53 entradas verificadas (los "10 faltantes" originalmente detectados eran un falso positivo del grep que no contaba keys con guión entre comillas tipo `'alert-dialog'`, `'date-range-picker'`, etc.). ren-switch agregado en F2; `components/index.css` arreglado para importar el `ren-date-range-picker.css` que sí faltaba.
 - [x] **6.7** `docs/components-showcase.html` mantenido — falso positivo en auditoría: el CHANGELOG dice "removed link from every sidebar" (per-page sidebars), pero los 5 enlaces remanentes están en `docs/components.html` (catálogo), que es intencional como vista "view all" y "quick example".
@@ -123,7 +123,7 @@
 - [x] **7.3** `outer/AGENTS.md.rtk-backup-20260506` — ya estaba limpiado antes de la auditoría
 - [x] **7.4** 24 `outer/PHASE-*-COMPLETE.md` + 2 duplicados en `rends/` movidos a `outer/_archive/phases/` (no eran 27 como decía la auditoría inicial; los gaps 7-13/7-14/7-18/7-19/7-20 nunca existieron)
 - [x] **7.5** `outer/inject_shell_script.py` archivado en `outer/_archive/scripts/` (one-shot — los HTMLs ya tienen el `<script src="../site/shell.js">` inyectado; verificación post-archivado: `grep -c shell.js` en docs/index, docs/getting-started, docs/components/ren-button todos devuelven 1)
-- [x] **7.6** `outer/rends.skill` ZIP archivado en `outer/_archive/rends.skill` (snapshot del 9-Apr-2026; el source `outer/rends-skill/SKILL.md` es más reciente — 7-May-2026 — y es la fuente de verdad)
+- [x] **7.6** La skill canónica vive versionada en `skills/rends/SKILL.md` y se empaqueta con `npm run agent:skill:pack`; las copias externas del workspace son legacy.
 
 ### Hito 8 — Polish post-launch (nice-to-have)
 

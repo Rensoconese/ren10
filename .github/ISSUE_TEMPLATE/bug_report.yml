@@ -64,7 +64,7 @@ body:
       label: Steps to reproduce
       description: A minimal, self-contained repro is best — a CodePen, a small HTML file, or numbered steps.
       placeholder: |
-        1. Add `ren-dialog` via `npx rends add dialog`.
+        1. Add `ren-dialog` via `npx ren10 add dialog`.
         2. Open the dialog with `<ren-dialog open>`.
         3. Press Esc.
         4. Focus does not return to the trigger.

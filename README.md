@@ -179,7 +179,7 @@ rends/
 ├── themes/             ← Theme presets + hex→token generator
 ├── templates/          ← Full page examples (landing, auth, dashboard, settings, blog, blog-post)
 ├── create/             ← Theme Builder (interactive token generator)
-├── cli/                ← `npx ren10` CLI (init, add, list, scales)
+├── cli/                ← `npx ren10` CLI (init, add, list, search, build, doctor)
 ├── site/               ← Doc-site chrome (top nav, sidebar, footer)
 └── docs/               ← Component catalog, per-component pages, foundations
 ```
@@ -197,10 +197,18 @@ npx ren10 init --scale minor-third --fluid  Fluid clamp() responsive typography
 npx ren10 add <component>...             Add one or more components
 npx ren10 add --all                      Add every component
 npx ren10 list                           List all available components
+npx ren10 manifest --json                Emit the self-describing agent manifest
+npx ren10 component button --dense       Read one component contract summary
+npx ren10 docs layouts --dense           Read dense design/token/layout docs
+npx ren10 search "dialog workflow" --json  Search components, docs, examples, selectors, tokens
+npx ren10 build "dashboard with sidebar" --json  Get a composition kit
+npx ren10 doctor                         Diagnose package and agent-readiness
+npx ren10 agent-docs --agent all         Install/update generated agent guidance
 npx ren10 scales                         List available type scale ratios
 npx ren10 knowledge                      Show packaged graph paths
 npx ren10 knowledge query "ren-ai"       Search contracts, selectors, tokens, docs
-npx ren10 knowledge query "ren-ai" --json  Force JSON fallback search
+npx ren10 knowledge query "ren-ai" --json  Emit typed JSON results
+npx ren10 knowledge query "ren-ai" --source-json  Force JSON graph source
 npx ren10 knowledge check                Validate packaged graph files
 npx ren10 help                           Show help
 ```

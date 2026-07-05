@@ -40,7 +40,7 @@ Ordenado por bloqueo / ROI:
 | 2 | Tags retroactivos `v0.7.0`, `v0.8.0`, `v0.8.2`, `v0.8.3` para que los compare-links del CHANGELOG funcionen | Bajo | — |
 | 3 | Publicar 0.9.0 a npm (`npm publish`; verificar con `npm view ren10 version`) | Trivial | Adopción externa |
 | 5 | Activar GitHub Pages Source: GitHub Actions en Settings | Bajo | Visibilidad pública |
-| 9 | Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección desde `ren-form.html` | Bajo | Coherencia |
+| 10 | Pushear `feat/cli-extend` y abrir PR de 0.9.0 | Bajo | Release 0.9.0 |
 
 Para detalle granular de cada uno, ver [`ROADMAP.md`](./ROADMAP.md).
 Para auditoría exhaustiva con file:line, ver [`AUDIT-2026-05-11.md`](./AUDIT-2026-05-11.md).
@@ -48,7 +48,8 @@ Para auditoría exhaustiva con file:line, ver [`AUDIT-2026-05-11.md`](./AUDIT-20
 ---
 
 ## Cosas que se pueden hacer **desde este chat**
-Items #1, #4, #6, #7, #8, #9 y los textos asociados a #5.
+Textos, docs, checks y empaquetado se pueden mantener desde este chat. Tags,
+merge/release y npm publish requieren credenciales remotas activas.
 
 ## Cosas que requieren **tu máquina**
 Items #2 (`git tag` + `git push --tags`), #3 (`npm login` + `npm publish`), activación de un host para #5.

@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawnSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { API_VERSION, jsonEnvelope, jsonErrorEnvelope } from './json-envelope.js';
 import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from './registry.js';
 import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
 import {
@@ -38,7 +39,6 @@ const SHAPE_VALUES   = ['rounded', 'sharp', 'pill'];
 
 const args = process.argv.slice(2);
 const command = args[0];
-const API_VERSION = 1;
 const RENDS_MARKER_START = '<!-- RENDS:START -->';
 const RENDS_MARKER_END = '<!-- RENDS:END -->';
 
@@ -259,13 +259,11 @@ function readPackageJson() {
 }
 
 function jsonOut(type, data) {
-  console.log(JSON.stringify({ apiVersion: API_VERSION, type, data }, null, 2));
+  console.log(jsonEnvelope(type, data));
 }
 
 function jsonError(message, code = 'ERR_UNKNOWN', suggestions = undefined) {
-  const payload = { apiVersion: API_VERSION, error: message, code };
-  if (suggestions) payload.suggestions = suggestions;
-  console.log(JSON.stringify(payload, null, 2));
+  console.log(jsonErrorEnvelope(message, code, suggestions));
   process.exit(1);
 }
 

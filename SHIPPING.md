@@ -43,6 +43,9 @@ gh pr create --base main --head feat/cli-extend \
 While CI runs, expect:
 - **Chromium jobs**: must pass (gating)
 - **Firefox / WebKit jobs**: advisory (`continue-on-error: true`). Engine-specific diffs surface as warnings, not failures.
+- **Package smoke**: includes `npm run agent:check`, which validates the
+  agent CLI JSON surface, `ren10 doctor`, evals, knowledge graph/package
+  files, and the versioned skill.
 
 ---
 
@@ -120,6 +123,7 @@ Once 0.8.3 is out, the per-release flow is:
    # 3. Add the compare-link at the bottom: [X.Y.Z]: ...compare/v(prev)...vX.Y.Z
    # 4. Bump package.json "version" → "X.Y.Z".
    # 5. Update "Current version: X.Y.Z" in README.md.
+   # 6. Run npm run agent:skill:pack if you need the distributable skill tarball.
    git add -A
    git commit -m "chore(release): X.Y.Z"
    git tag -a vX.Y.Z -m "Release vX.Y.Z"

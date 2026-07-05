@@ -1,6 +1,6 @@
 {
   "name": "rends-agent-evals",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Deterministic prompt set for RenDS-aware agents. Each entry pairs a user-facing task with the rules an agent must satisfy. The 'expectedComponents' / 'forbiddenPatterns' arrays are the machine-checkable parts: a grader scans the produced HTML/CSS for matches.",
   "evals": [
     {
