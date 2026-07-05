@@ -15,8 +15,8 @@
  * are exempt because they DEFINE the primitives and semantic mappings.
  *
  * A small set of component files are also exempt because they intentionally
- * use primitive tokens or literal colors (color-picker hue gradients, AI
- * accent shimmer effects, autofill native styling, etc.). Each exemption is
+ * use primitive tokens or literal colors (color-picker hue gradients, autofill
+ * native styling, etc.). Each exemption is
  * documented inline and mirrored in `scripts/lint-tokens.mjs`.
  */
 
@@ -122,10 +122,6 @@ export default {
         // Hue gradient is a literal RGB color wheel; semantic tokens cannot
         // express the saturated full-spectrum stops.
         'components/composites/ren-color-picker/ren-color-picker.css',
-
-        // AI accent uses primitive purple inside color-mix() shimmer/glow
-        // calculations. light-dark() inside color-mix() does not work.
-        'components/patterns/ren-ai/ren-ai.css',
 
         // Avatar offline indicator uses --gray-400 for a clearly desaturated
         // status dot. No semantic equivalent ("disabled chip on neutral

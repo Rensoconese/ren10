@@ -80,7 +80,9 @@ const builtInValidators = {
   },
 
   match: (fieldName) => (value, form) => {
-    const targetField = form?.querySelector(`[name="${fieldName}"]`);
+    const targetField = Array.from(form?.elements || []).find(
+      (element) => element.name === fieldName
+    );
     if (!targetField) return 'Target field not found';
     return value === targetField.value ? null : 'Fields do not match';
   },
@@ -102,6 +104,7 @@ export class RenForm extends HTMLElement {
     this._isSubmitting = false;
     this._errorSummary = null;
     this._successMessage = null;
+    this._listenerController = null;
   }
 
   static registerValidator(name, fn) {
@@ -146,8 +149,12 @@ export class RenForm extends HTMLElement {
   }
 
   _attachEventListeners() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     // Form submit
-    this._form.addEventListener('submit', (e) => this._handleSubmit(e));
+    this._form.addEventListener('submit', (e) => this._handleSubmit(e), { signal });
 
     // Field validation
     this._fields.forEach((field) => {
@@ -156,25 +163,25 @@ export class RenForm extends HTMLElement {
 
       switch (this._validationMode) {
         case 'onBlur':
-          input.addEventListener('blur', () => this._validateField(field, input));
+          input.addEventListener('blur', () => this._validateField(field, input), { signal });
           break;
 
         case 'onChange':
           input.addEventListener('input', () => {
             this._debounceValidation(field, input);
-          });
+          }, { signal });
           break;
 
         case 'onTouched':
           input.addEventListener('blur', () => {
             this._touched.add(input.name);
             this._validateField(field, input);
-          });
+          }, { signal });
           input.addEventListener('input', () => {
             if (this._touched.has(input.name)) {
               this._debounceValidation(field, input);
             }
-          });
+          }, { signal });
           break;
 
         case 'onSubmit':
@@ -206,7 +213,8 @@ export class RenForm extends HTMLElement {
   }
 
   _removeEventListeners() {
-    // Event listeners are automatically cleaned up when DOM is removed
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   async _handleSubmit(e) {
@@ -347,21 +355,32 @@ export class RenForm extends HTMLElement {
     const ul = this._errorSummary.querySelector('ul');
     if (!ul) return;
 
-    ul.innerHTML = '';
+    ul.replaceChildren();
     errors.forEach((error) => {
       const li = document.createElement('li');
-      li.innerHTML = `<a href="#field-${error.name}">${error.name}: ${error.message}</a>`;
-      li.querySelector('a').addEventListener('click', (e) => {
+      const link = document.createElement('a');
+      const field = this._findFieldInput(error.name);
+
+      link.href = field?.id ? `#${field.id}` : '#';
+      link.textContent = `${error.name}: ${error.message}`;
+      link.addEventListener('click', (e) => {
         e.preventDefault();
-        const field = this._form.querySelector(`[name="${error.name}"]`);
         if (field) field.focus();
       });
+
+      li.appendChild(link);
       ul.appendChild(li);
     });
 
     this._errorSummary.setAttribute('data-has-errors', '');
     this._errorSummary.removeAttribute('hidden');
     this._errorSummary.focus();
+  }
+
+  _findFieldInput(name) {
+    return Array.from(this._form?.elements || []).find(
+      (element) => element.name === name
+    );
   }
 
   _hideErrorSummary() {

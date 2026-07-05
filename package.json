@@ -6,13 +6,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Rensoconese/ren10.git"
+    "url": "git+https://github.com/Rensoconese/ren10.git"
   },
   "homepage": "https://github.com/Rensoconese/ren10#readme",
   "type": "module",
   "main": "index.css",
   "bin": {
-    "ren10": "./cli/index.js"
+    "ren10": "cli/index.js"
   },
   "files": [
     "index.css",
@@ -24,6 +24,14 @@
     "tokens/",
     "base/",
     "components/",
+    "docs/",
+    "examples/",
+    "site/",
+    "templates/",
+    "create/",
+    "evals/README.md",
+    "knowledge/",
+    "skills/",
     "utils/",
     "cli/",
     "themes/appearance.css",
@@ -39,14 +47,15 @@
       "import": "./index.css"
     },
     "./components/*": {
-      "import": "./components/*.js"
+      "import": "./components/*"
     },
     "./tokens/*": {
-      "import": "./tokens/*.css"
+      "import": "./tokens/*"
     },
     "./base/*": {
-      "import": "./base/*.css"
+      "import": "./base/*"
     },
+    "./knowledge/*": "./knowledge/*",
     "./themes/appearance.css": "./themes/appearance.css",
     "./themes/theme-generator.js": {
       "import": "./themes/theme-generator.js"
@@ -63,10 +72,25 @@
     "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "lint": "npm run lint:css && npm run lint:tokens",
-    "test": "playwright test",
+    "test": "npm run test:all",
+    "test:all": "npm run test:a11y && npm run test:components && npm run test:visual -- --project=\"Desktop Light\" && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
-    "test:components": "playwright test --config tests/components/playwright.config.cjs"
+    "test:components": "playwright test --config tests/components/playwright.config.cjs",
+    "test:theme": "node themes/theme-generator.test.js",
+    "test:evals": "node evals/run-eval.mjs --all",
+    "test:exports": "node scripts/verify-package-exports.mjs",
+    "test:knowledge-package": "npm run knowledge:check",
+    "smoke:cli-copy": "node scripts/smoke-cli-copy.mjs",
+    "agent:smoke": "node scripts/smoke-agent-cli.mjs",
+    "agent:skill:check": "node scripts/check-agent-skill.mjs",
+    "agent:skill:pack": "node scripts/pack-agent-skill.mjs",
+    "agent:manifest": "node cli/index.js manifest --json",
+    "agent:doctor": "node cli/index.js doctor",
+    "agent:check": "npm run agent:smoke && npm run agent:skill:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
+    "knowledge:build": "node scripts/build-knowledge-graph.mjs",
+    "knowledge:check": "node scripts/check-knowledge-graph.mjs",
+    "knowledge:query": "node scripts/query-knowledge-graph.mjs"
   },
   "keywords": [
     "design-system",

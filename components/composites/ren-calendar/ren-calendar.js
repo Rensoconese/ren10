@@ -127,6 +127,7 @@ export class RenCalendar extends HTMLElement {
       dayBtn.textContent = date.date.getDate();
       dayBtn.setAttribute('type', 'button');
       dayBtn.setAttribute('role', 'gridcell');
+      dayBtn.setAttribute('data-date', this.dateToString(date.date));
 
       /* ═══ HANDLE OUTSIDE MONTH DATES ═══ */
       if (date.outside) {
@@ -189,15 +190,28 @@ export class RenCalendar extends HTMLElement {
 
   /* ═══ UPDATE TABINDEX FOR ROVING TABINDEX PATTERN ═══ */
   updateTabIndex() {
-    const buttons = this.querySelectorAll('.ren-calendar-day');
-    buttons.forEach((btn, index) => {
-      if (btn.hasAttribute('data-today') && !this.focusedDate) {
-        btn.setAttribute('tabindex', '0');
-      } else if (this.focusedDate && this.isSameDay(this.focusedDate, new Date(btn.textContent))) {
-        btn.setAttribute('tabindex', '0');
-      } else {
-        btn.setAttribute('tabindex', '-1');
-      }
+    const buttons = Array.from(this.querySelectorAll('.ren-calendar-day'));
+    const enabledButtons = buttons.filter((btn) => !btn.disabled);
+    let target = null;
+
+    if (this.focusedDate) {
+      const focusedDateString = this.dateToString(this.focusedDate);
+      target = enabledButtons.find((btn) => btn.dataset.date === focusedDateString);
+    }
+
+    if (!target && this.selectedDate) {
+      const selectedDateString = this.dateToString(this.selectedDate);
+      target = enabledButtons.find((btn) => btn.dataset.date === selectedDateString);
+    }
+
+    if (!target) {
+      target = enabledButtons.find((btn) => btn.hasAttribute('data-today'));
+    }
+
+    target ??= enabledButtons[0] ?? null;
+
+    buttons.forEach((btn) => {
+      btn.setAttribute('tabindex', btn === target ? '0' : '-1');
     });
   }
 
@@ -384,6 +398,8 @@ export class RenCalendar extends HTMLElement {
   focusDateAtIndex(index) {
     const buttons = this.querySelectorAll('.ren-calendar-day');
     if (buttons[index] && !buttons[index].disabled) {
+      this.focusedDate = new Date(buttons[index].dataset.date);
+      this.updateTabIndex();
       buttons[index].focus();
     }
   }

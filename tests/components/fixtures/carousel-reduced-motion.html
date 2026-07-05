@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module" src="../../../components/composites/ren-carousel/ren-carousel.js"></script>
+  <style>
+    .ren-carousel-viewport { display: flex; width: 300px; overflow: hidden; }
+    .ren-carousel-slide { flex: 0 0 300px; min-height: 80px; }
+  </style>
+</head>
+<body>
+  <ren-carousel id="carousel" autoplay="50" loop>
+    <div class="ren-carousel-viewport">
+      <div class="ren-carousel-slide">One</div>
+      <div class="ren-carousel-slide">Two</div>
+      <div class="ren-carousel-slide">Three</div>
+    </div>
+  </ren-carousel>
+</body>
+</html>

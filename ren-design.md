@@ -2,7 +2,7 @@
 # ────────────────────────────────────────────────────────────
 # RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.8.6 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.9.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
@@ -17,7 +17,7 @@
 
 system:
   name: RenDS
-  version: 0.8.6
+  version: 0.9.0
   package: ren10
   license: MIT
   repo: https://github.com/Rensoconese/ren10
@@ -742,7 +742,7 @@ the host app can style, slot, and select them with ordinary CSS. There is no
 build step required on the consumer side — `import 'rends'` and every token
 listed above is globally available.
 
-The system is organized in the classic atomic taxonomy: **primitives** (18)
+The system is organized in the classic atomic taxonomy: **primitives** (19)
 are the smallest cohesive units (buttons, badges, fields); **composites**
 (26) combine primitives with behavior (dialog, menu, tabs, select);
 **patterns** (8) are page-level organisms (nav, sidebar, table, form,

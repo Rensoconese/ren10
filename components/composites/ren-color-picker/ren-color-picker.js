@@ -276,6 +276,7 @@ export class RenColorPicker extends HTMLElement {
   #popover = null;
   #trigger = null;
   #isDragging = false;
+  #listenerController = null;
 
   constructor() {
     super();
@@ -292,6 +293,10 @@ export class RenColorPicker extends HTMLElement {
   }
 
   connectedCallback() {
+    this.#listenerController?.abort();
+    this.#listenerController = new AbortController();
+    const { signal } = this.#listenerController;
+
     // ═══ PARSE ATTRIBUTES ═══
     const value = this.getAttribute('value') || '#3b82f6';
     const hasAlpha = this.hasAttribute('alpha');
@@ -309,13 +314,13 @@ export class RenColorPicker extends HTMLElement {
 
     // ═══ SET UP EVENT LISTENERS ═══
     if (this.#trigger) {
-      this.#trigger.addEventListener('click', this.handleTriggerClick);
+      this.#trigger.addEventListener('click', this.handleTriggerClick, { signal });
       this.#trigger.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           this.handleTriggerClick();
           e.preventDefault();
         }
-      });
+      }, { signal });
     }
 
     // ═══ RENDER DROPDOWN (will be populated on open) ═══
@@ -346,13 +351,12 @@ export class RenColorPicker extends HTMLElement {
           this.#trigger.setAttribute('aria-expanded', 'false');
         }
       }
-    });
+    }, { signal });
   }
 
-  disconnectCallback() {
-    if (this.#trigger) {
-      this.#trigger.removeEventListener('click', this.handleTriggerClick);
-    }
+  disconnectedCallback() {
+    this.#listenerController?.abort();
+    this.#listenerController = null;
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
   }
@@ -743,9 +747,18 @@ export class RenColorPicker extends HTMLElement {
      EVENT HANDLERS
      ═════════════════════════════════════════════════════════════════ */
 
-  handleTriggerClick() {
-    if (this.#popover) {
-      this.#popover.showPopover?.();
+  handleTriggerClick(event) {
+    event?.preventDefault();
+    if (!this.#popover) return;
+
+    try {
+      if (this.#popover.matches(':popover-open')) {
+        this.#popover.hidePopover?.();
+      } else {
+        this.#popover.showPopover?.();
+      }
+    } catch (error) {
+      // Native popover can throw if browser state changes mid-click.
     }
   }
 

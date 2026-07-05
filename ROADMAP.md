@@ -1,9 +1,9 @@
 # RenDS — Roadmap
 
 **Repo:** [github.com/Rensoconese/ren10](https://github.com/Rensoconese/ren10)
-**Versión actual en disco:** `0.8.4` (cortada en CHANGELOG el 2026-05-11; `[Unreleased]` vacío)
-**Última fase cerrada:** F8 (52 páginas de doc por componente + landing + shell unificado + command palette) — todo en `[Unreleased]`
-**Fecha del roadmap:** 2026-05-11 (refresh tras auditoría)
+**Versión actual en disco:** `0.9.0`
+**Última fase cerrada:** 0.9.0 + hardening post-auditoría (packaging, CLI smoke, JS lifecycle)
+**Fecha del roadmap:** 2026-05-18 (refresh tras auditoría)
 **Vista ejecutiva (1 pág):** [`STATUS.md`](./STATUS.md)
 **Auditoría exhaustiva:** [`AUDIT-2026-05-11.md`](./AUDIT-2026-05-11.md)
 
@@ -24,7 +24,7 @@
 | F7.8 — `docs/cli.html` | ✅ Done en v0.7.1 | 394 líneas |
 | F7.9 — Visual regression baselines | ✅ Done | 312 PNGs en `tests/visual/visual.spec.cjs-snapshots/` (restaurados en `78a9db1`) |
 | Per-component test suite | ✅ Done | `tests/components/components.spec.cjs`, 102/102 pass |
-| F8 — 52 páginas por componente | ✅ Done | `docs/components/*.html`, en `[Unreleased]` |
+| F8 — 53 páginas por componente | ✅ Done | `docs/components/*.html` |
 | Marketing landing | ✅ Done | `rends/index.html`, en `[Unreleased]` |
 | Command palette (Cmd+K) | ✅ Done | `site/shell.js`, en `[Unreleased]` |
 | LICENSE | ✅ | `rends/LICENSE` (MIT) |
@@ -41,7 +41,7 @@
 | Primer commit + push | ✅ | 18 commits en `main` + branches dependabot |
 | Tags retroactivos | 🟡 | existen `v0.7.1`, `v0.8.1`. Faltan `v0.7.0`, `v0.8.0`, `v0.8.2` |
 | Publicación a `npm` | ❓ | verificar con `npm view ren10 version`; README promete `npx ren10 init` |
-| `[Unreleased]` en CHANGELOG | 🟡 Listo para cortar | acumula trabajo post-0.8.2 (landing, F8, shell, command palette, fixes) |
+| `[Unreleased]` en CHANGELOG | ✅ Activo | acumula hardening post-0.9.0 |
 | `docs/components/` HTML naming | 🟡 | 5 archivos con nombre distinto al de la carpeta del componente (ver Hito 6) |
 | `docs/components/ren-{switch,multi-step-form}.html` huérfanos | 🟡 | ver Hito 6 |
 
@@ -89,12 +89,12 @@
 - [ ] **4.4** Push del branch actual (`codex/fix-visual-ci-baselines`) cuando esté listo
 
 ### Hito 5 — Publicación a npm
-*Estado: ❓ Verificar.*
+*Estado: ❓ Verificar contra npm antes de anunciar publicación.*
 
 - [x] **5.1** `package.json` tiene `"publishConfig": { "access": "public", "provenance": true }` y `"files"` acotado
 - [ ] **5.2** Confirmar `npm login` activo en máquina local
-- [ ] **5.3** `npm publish --dry-run` para validar tarball (solo `index.css`, `tokens/`, `base/`, `components/`, `utils/`, `cli/`, `ren-design.md`, `CHANGELOG.md`)
-- [ ] **5.4** Decidir: publicar `0.8.2` ahora o esperar a `0.8.3` (cuando se corte `[Unreleased]`)
+- [x] **5.3** `npm pack --dry-run` / export smoke para validar tarball y subpaths públicos
+- [ ] **5.4** Publicar la versión actual (`0.9.0`) cuando el maintainer esté listo
 - [ ] **5.5** Verificar que `npx ren10 init` funciona contra el registry público en una carpeta limpia
 - [ ] **5.6** Si se quiere docs públicas: decidir host (Pages re-añadiendo el workflow, Vercel, Netlify) y deploy
 
@@ -109,7 +109,7 @@
   - `ren-icons.html` → `ren-icon.html`
   - `ren-input-otp.html` → `ren-otp.html`
 - [x] **6.3** Promover `ren-switch` a primitive independiente — DONE en `[Unreleased]`. Carpeta creada (`components/primitives/ren-switch/{ren-switch.css, component.md}`), CSS extraído de `ren-checkbox.css`, `ren-design.md` actualizado (19 primitives / 53 total), `cli/registry.js` actualizado, README actualizado, `components/index.css` importa el nuevo archivo.
-- [ ] **6.4** Borrar `docs/components/ren-multi-step-form.html` y enlazar la sección "Multi-step" desde `ren-form.html` (`ren-form/pattern.md` ya documenta `data-steps`/`[data-active]`)
+- [x] **6.4** `docs/components/ren-multi-step-form.html` ya fue retirado; la sección "Multi-step" vive en `docs/components/ren-form.html` y `ren-form/pattern.md` documenta `data-steps`/`[data-active]`.
 - [ ] **6.5** Actualizar `docs/components/_sidebar.html`, `docs/components.html`, command palette JS y todo enlace interno
 - [x] **6.6** `cli/registry.js` completo — 53 entradas verificadas (los "10 faltantes" originalmente detectados eran un falso positivo del grep que no contaba keys con guión entre comillas tipo `'alert-dialog'`, `'date-range-picker'`, etc.). ren-switch agregado en F2; `components/index.css` arreglado para importar el `ren-date-range-picker.css` que sí faltaba.
 - [x] **6.7** `docs/components-showcase.html` mantenido — falso positivo en auditoría: el CHANGELOG dice "removed link from every sidebar" (per-page sidebars), pero los 5 enlaces remanentes están en `docs/components.html` (catálogo), que es intencional como vista "view all" y "quick example".
@@ -123,7 +123,7 @@
 - [x] **7.3** `outer/AGENTS.md.rtk-backup-20260506` — ya estaba limpiado antes de la auditoría
 - [x] **7.4** 24 `outer/PHASE-*-COMPLETE.md` + 2 duplicados en `rends/` movidos a `outer/_archive/phases/` (no eran 27 como decía la auditoría inicial; los gaps 7-13/7-14/7-18/7-19/7-20 nunca existieron)
 - [x] **7.5** `outer/inject_shell_script.py` archivado en `outer/_archive/scripts/` (one-shot — los HTMLs ya tienen el `<script src="../site/shell.js">` inyectado; verificación post-archivado: `grep -c shell.js` en docs/index, docs/getting-started, docs/components/ren-button todos devuelven 1)
-- [x] **7.6** `outer/rends.skill` ZIP archivado en `outer/_archive/rends.skill` (snapshot del 9-Apr-2026; el source `outer/rends-skill/SKILL.md` es más reciente — 7-May-2026 — y es la fuente de verdad)
+- [x] **7.6** La skill canónica vive versionada en `skills/rends/SKILL.md` y se empaqueta con `npm run agent:skill:pack`; las copias externas del workspace son legacy.
 
 ### Hito 8 — Polish post-launch (nice-to-have)
 
@@ -137,15 +137,13 @@
 ## Orden recomendado
 
 ```
-Hito 6 (limpieza docs)  →  Hito 7 (limpieza outer)  →  cortar 0.8.3  →
-Hito 4.3 (tags retroactivos)  →  Hito 5 (publish)  →  Hito 8
+Hito 5 (publish 0.9.0)  →  activar Pages si falta  →  Hito 8 polish
 ```
 
-- **Hito 6 primero** porque deja el sistema coherente antes de cortar la próxima versión.
-- **Hito 7 paralelo** o secuencial — no bloquea publish del paquete.
-- **Cortar 0.8.3** una vez todo lo de 6 está en `[Unreleased]` y ese bloque consolidado.
-- **Tags retroactivos** para que los compare-links del CHANGELOG funcionen.
-- **Publish** finalmente, después de que el pipeline haya pasado.
+- **Publish 0.9.0** queda bloqueado solo por auth npm local / `NPM_TOKEN`.
+- **Pages** requiere el toggle de GitHub Settings si todavía no está activo.
+- **Tags retroactivos** son mantenimiento histórico; no bloquean 0.9.0.
+- **Hito 8** es polish post-release.
 
 ---
 

@@ -1,3 +1,15 @@
+import { createFocusTrap } from '../../../utils/focus-trap.js';
+
+let nextPopoverId = 0;
+const FOCUSABLE_SELECTOR = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled]):not([type="hidden"])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
 /**
  * Fallback position computation for browsers without CSS anchor positioning.
  * Used only when CSS.supports('anchor-name', '--x') returns false.
@@ -86,7 +98,9 @@ export class RenPopover extends HTMLElement {
   static supportsAnchor = CSS.supports?.('anchor-name', '--x') ?? false;
 
   #trigger = null;
+  #triggerController = null;
   #dismissController = null;
+  #focusTrap = null;
 
   connectedCallback() {
     this.setupPopover();
@@ -104,6 +118,10 @@ export class RenPopover extends HTMLElement {
    */
   setupPopover() {
     this.classList.add('ren-popover');
+
+    if (!this.id) {
+      this.id = `ren-popover-${++nextPopoverId}`;
+    }
 
     // Add arrow if not present
     if (!this.querySelector('.ren-popover-arrow')) {
@@ -151,6 +169,9 @@ export class RenPopover extends HTMLElement {
   attachTriggerListener() {
     if (!this.#trigger) return;
 
+    this.#triggerController?.abort();
+    this.#triggerController = new AbortController();
+
     // Set up anchor relationship if CSS anchors are supported
     if (RenPopover.supportsAnchor) {
       this.#trigger.style.anchorName = '--popover-anchor';
@@ -163,14 +184,22 @@ export class RenPopover extends HTMLElement {
 
     // Wire up popovertarget if not already set
     if (!this.#trigger.hasAttribute('popovertarget')) {
-      this.#trigger.setAttribute('popovertarget', '');
+      this.#trigger.setAttribute('popovertarget', this.id);
     }
+    this.#trigger.setAttribute('aria-haspopup', 'dialog');
+    this.#trigger.setAttribute('aria-controls', this.id);
+    this.#trigger.setAttribute('aria-expanded', this.isOpen() ? 'true' : 'false');
 
     // Click handler
-    this.#trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.toggle();
-    });
+    this.#trigger.addEventListener(
+      'click',
+      (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggle();
+      },
+      { signal: this.#triggerController.signal }
+    );
 
     // Setup dismiss behavior (click outside, Escape key)
     this.#dismissController?.abort();
@@ -245,6 +274,14 @@ export class RenPopover extends HTMLElement {
     }
 
     this.setAttribute('aria-modal', 'true');
+    this.#trigger?.setAttribute('aria-expanded', 'true');
+    this.#focusTrap?.deactivate();
+    this.#focusTrap = createFocusTrap(this, {
+      returnFocus: this.#trigger,
+      autoFocus: true,
+    });
+    this.#focusTrap.activate();
+    requestAnimationFrame(() => this.#focusInitialElement());
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
   }
 
@@ -267,6 +304,10 @@ export class RenPopover extends HTMLElement {
     }
 
     this.setAttribute('aria-modal', 'false');
+    this.#trigger?.setAttribute('aria-expanded', 'false');
+    const focusTrap = this.#focusTrap;
+    this.#focusTrap = null;
+    focusTrap?.deactivate();
     this.dispatchEvent(new CustomEvent('ren-close', { bubbles: true }));
   }
 
@@ -297,9 +338,20 @@ export class RenPopover extends HTMLElement {
    * @private
    */
   cleanup() {
-    if (this.#dismissController) {
-      this.#dismissController.abort();
+    this.#focusTrap?.deactivate();
+    this.#focusTrap = null;
+    this.#triggerController?.abort();
+    this.#triggerController = null;
+    this.#dismissController?.abort();
+    this.#dismissController = null;
+  }
+
+  #focusInitialElement() {
+    const target = this.querySelector(FOCUSABLE_SELECTOR) || this;
+    if (target === this && !this.hasAttribute('tabindex')) {
+      this.setAttribute('tabindex', '-1');
     }
+    target.focus({ preventScroll: true });
   }
 
   /**

@@ -66,6 +66,8 @@ export class RenTable extends HTMLElement {
   #resizeStartX = 0;
   #resizeStartWidth = 0;
   #lastSelectedRowIndex = -1;
+  #listenerController = null;
+  #rowCheckboxController = null;
 
   constructor() {
     super();
@@ -124,16 +126,20 @@ export class RenTable extends HTMLElement {
    * @private
    */
   _attachEventListeners() {
+    this.#listenerController?.abort();
+    this.#listenerController = new AbortController();
+    const { signal } = this.#listenerController;
+
     // Sorting
     this.#headerCells.forEach((cell, index) => {
       if (cell.classList.contains('ren-th-sortable')) {
-        cell.addEventListener('click', () => this._handleSort(cell, index));
+        cell.addEventListener('click', () => this._handleSort(cell, index), { signal });
         cell.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             this._handleSort(cell, index);
           }
-        });
+        }, { signal });
         cell.setAttribute('tabindex', '0');
         cell.setAttribute('role', 'columnheader');
         cell.setAttribute('aria-sort', 'none');
@@ -142,24 +148,24 @@ export class RenTable extends HTMLElement {
 
     // Selection - header checkbox
     if (this.#headerCheckbox) {
-      this.#headerCheckbox.addEventListener('change', () => this._handleSelectAll());
+      this.#headerCheckbox.addEventListener('change', () => this._handleSelectAll(), { signal });
     }
 
     // Selection - row checkboxes
     this._attachRowCheckboxListeners();
 
     // Keyboard navigation
-    this.#table.addEventListener('keydown', (e) => this._handleKeyboard(e));
+    this.#table.addEventListener('keydown', (e) => this._handleKeyboard(e), { signal });
 
     // Column resizing
-    this._setupColumnResize();
+    this._setupColumnResize(signal);
 
     // Search input
     const searchInput = this.querySelector('[data-table-search]');
     if (searchInput) {
       searchInput.addEventListener('input', (e) => {
         this._filterRows(e.target.value);
-      });
+      }, { signal });
     }
 
     // Pagination button clicks
@@ -168,8 +174,8 @@ export class RenTable extends HTMLElement {
       const prevBtn = paginationCtrls.querySelector('[data-page-prev]');
       const nextBtn = paginationCtrls.querySelector('[data-page-next]');
 
-      if (prevBtn) prevBtn.addEventListener('click', () => this._previousPage());
-      if (nextBtn) nextBtn.addEventListener('click', () => this._nextPage());
+      if (prevBtn) prevBtn.addEventListener('click', () => this._previousPage(), { signal });
+      if (nextBtn) nextBtn.addEventListener('click', () => this._nextPage(), { signal });
     }
 
     // Pagination page size selector
@@ -179,7 +185,7 @@ export class RenTable extends HTMLElement {
         this.#pageSize = parseInt(e.target.value, 10);
         this.#currentPage = 1;
         this._renderTable();
-      });
+      }, { signal });
     }
   }
 
@@ -188,8 +194,11 @@ export class RenTable extends HTMLElement {
    * @private
    */
   _removeEventListeners() {
-    // Cleanup event listeners if needed
-    // Browser will automatically clean up listeners when element is removed
+    this.#listenerController?.abort();
+    this.#listenerController = null;
+    this.#rowCheckboxController?.abort();
+    this.#rowCheckboxController = null;
+    this.#resizingColumn = null;
   }
 
   /**
@@ -207,11 +216,15 @@ export class RenTable extends HTMLElement {
    * @private
    */
   _attachRowCheckboxListeners() {
+    this.#rowCheckboxController?.abort();
+    this.#rowCheckboxController = new AbortController();
+    const { signal } = this.#rowCheckboxController;
+
     const checkboxes = Array.from(this.#tbody.querySelectorAll('.ren-table-select input[type="checkbox"]'));
     checkboxes.forEach((checkbox, index) => {
       checkbox.addEventListener('change', (e) => {
         this._handleRowSelect(e, index);
-      });
+      }, { signal });
     });
     this.#rowCheckboxes = checkboxes;
   }
@@ -431,7 +444,7 @@ export class RenTable extends HTMLElement {
    * Setup column resizing
    * @private
    */
-  _setupColumnResize() {
+  _setupColumnResize(signal) {
     this.#headerCells.forEach((cell) => {
       let resizeHandle = cell.querySelector('.ren-th-resize');
 
@@ -443,11 +456,11 @@ export class RenTable extends HTMLElement {
 
       resizeHandle.addEventListener('mousedown', (e) => {
         this._startResize(e, cell);
-      });
+      }, { signal });
     });
 
-    document.addEventListener('mousemove', (e) => this._handleResize(e));
-    document.addEventListener('mouseup', () => this._endResize());
+    document.addEventListener('mousemove', (e) => this._handleResize(e), { signal });
+    document.addEventListener('mouseup', () => this._endResize(), { signal });
   }
 
   /**
@@ -581,9 +594,12 @@ export class RenTable extends HTMLElement {
     // Reattach listeners
     const prevBtn = paginationDiv.querySelector('[data-page-prev]');
     const nextBtn = paginationDiv.querySelector('[data-page-next]');
+    const listenerOptions = this.#listenerController
+      ? { signal: this.#listenerController.signal }
+      : undefined;
 
-    if (prevBtn) prevBtn.addEventListener('click', () => this._previousPage());
-    if (nextBtn) nextBtn.addEventListener('click', () => this._nextPage());
+    if (prevBtn) prevBtn.addEventListener('click', () => this._previousPage(), listenerOptions);
+    if (nextBtn) nextBtn.addEventListener('click', () => this._nextPage(), listenerOptions);
   }
 
   /**
@@ -621,10 +637,15 @@ export class RenTable extends HTMLElement {
     const startIndex = (this.#currentPage - 1) * this.#pageSize;
     const endIndex = startIndex + this.#pageSize;
 
-    this.#rows.forEach((row, index) => {
-      const isVisible = this.#visibleRows.includes(row) &&
-        this.#visibleRows.indexOf(row) >= startIndex &&
-        this.#visibleRows.indexOf(row) < endIndex;
+    const visibleIndexByRow = new Map(
+      this.#visibleRows.map((row, visibleIndex) => [row, visibleIndex])
+    );
+
+    this.#rows.forEach((row) => {
+      const visibleIndex = visibleIndexByRow.get(row);
+      const isVisible = visibleIndex !== undefined &&
+        visibleIndex >= startIndex &&
+        visibleIndex < endIndex;
 
       if (isVisible) {
         row.style.display = '';

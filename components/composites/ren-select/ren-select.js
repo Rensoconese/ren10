@@ -93,9 +93,12 @@ export class RenSelect extends HTMLElement {
   #dismissable = null;
   #hiddenInput = null;
   #animationFrame = null;
+  #listenerController = null;
+  #scrollController = null;
 
   constructor() {
     super();
+    this.positionContent = this.positionContent.bind(this);
   }
 
   /* ─────────────────────────────────────────────────────────────
@@ -275,14 +278,18 @@ export class RenSelect extends HTMLElement {
    * @private
    */
   attachListeners() {
+    this.#listenerController?.abort();
+    this.#listenerController = new AbortController();
+    const { signal } = this.#listenerController;
+
     // Trigger click
-    this.#trigger.addEventListener('click', (e) => this.handleTriggerClick(e));
+    this.#trigger.addEventListener('click', (e) => this.handleTriggerClick(e), { signal });
 
     // Keyboard on trigger
-    this.#trigger.addEventListener('keydown', (e) => this.handleTriggerKeyDown(e));
+    this.#trigger.addEventListener('keydown', (e) => this.handleTriggerKeyDown(e), { signal });
 
     // Item selection
-    this.#content.addEventListener('click', (e) => this.handleItemClick(e));
+    this.#content.addEventListener('click', (e) => this.handleItemClick(e), { signal });
 
     // Setup keyboard navigation in content
     this.setupKeyboardNav();
@@ -493,7 +500,12 @@ export class RenSelect extends HTMLElement {
     this.positionContent();
 
     // Reposition on scroll
-    window.addEventListener('scroll', () => this.positionContent(), true);
+    this.#scrollController?.abort();
+    this.#scrollController = new AbortController();
+    window.addEventListener('scroll', this.positionContent, {
+      capture: true,
+      signal: this.#scrollController.signal,
+    });
 
     // Announce results count for accessibility
     const resultCount = this.#items.length;
@@ -541,7 +553,8 @@ export class RenSelect extends HTMLElement {
     }
 
     // Remove scroll listener
-    window.removeEventListener('scroll', () => this.positionContent(), true);
+    this.#scrollController?.abort();
+    this.#scrollController = null;
 
     // Return focus to trigger
     this.#trigger.focus();
@@ -672,7 +685,10 @@ export class RenSelect extends HTMLElement {
       cancelAnimationFrame(this.#animationFrame);
     }
 
-    window.removeEventListener('scroll', () => this.positionContent(), true);
+    this.#scrollController?.abort();
+    this.#scrollController = null;
+    this.#listenerController?.abort();
+    this.#listenerController = null;
   }
 
   /* ─────────────────────────────────────────────────────────────

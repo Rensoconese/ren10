@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>RenDS Lifecycle Cleanup Fixture</title>
+  </head>
+  <body>
+    <main id="fixture-root"></main>
+    <script type="module">
+      const originalAddEventListener = EventTarget.prototype.addEventListener;
+      const originalRemoveEventListener = EventTarget.prototype.removeEventListener;
+      const listenerIds = new WeakMap();
+      const activeListeners = new Map();
+      let nextListenerId = 1;
+
+      function trackedTargetName(target) {
+        if (target === document) return 'document';
+        if (target === window) return 'window';
+        return null;
+      }
+
+      function listenerId(listener) {
+        if ((typeof listener !== 'function' && typeof listener !== 'object') || listener === null) {
+          return 'unknown';
+        }
+        if (!listenerIds.has(listener)) {
+          listenerIds.set(listener, nextListenerId++);
+        }
+        return listenerIds.get(listener);
+      }
+
+      function listenerKey(target, type, listener, options) {
+        const targetName = trackedTargetName(target);
+        const capture = typeof options === 'boolean' ? options : Boolean(options?.capture);
+        return targetName ? `${targetName}:${type}:${capture}:${listenerId(listener)}` : null;
+      }
+
+      EventTarget.prototype.addEventListener = function(type, listener, options) {
+        const key = listenerKey(this, type, listener, options);
+        if (key) {
+          activeListeners.set(key, {
+            target: trackedTargetName(this),
+            type,
+          });
+
+          const signal = typeof options === 'object' && options ? options.signal : null;
+          if (signal) {
+            originalAddEventListener.call(signal, 'abort', () => {
+              activeListeners.delete(key);
+            }, { once: true });
+          }
+        }
+
+        return originalAddEventListener.call(this, type, listener, options);
+      };
+
+      EventTarget.prototype.removeEventListener = function(type, listener, options) {
+        const key = listenerKey(this, type, listener, options);
+        if (key) {
+          activeListeners.delete(key);
+        }
+
+        return originalRemoveEventListener.call(this, type, listener, options);
+      };
+
+      window.__renListenerAudit = {
+        active() {
+          return Array.from(activeListeners.values());
+        },
+        total() {
+          return activeListeners.size;
+        },
+      };
+
+      await Promise.all([
+        import('/components/patterns/ren-table/ren-table.js'),
+        import('/components/patterns/ren-sidebar/ren-sidebar.js'),
+        import('/components/patterns/ren-command/ren-command.js'),
+        import('/components/composites/ren-select/ren-select.js'),
+        import('/components/composites/ren-color-picker/ren-color-picker.js'),
+      ]);
+
+      await Promise.all([
+        customElements.whenDefined('ren-table'),
+        customElements.whenDefined('ren-sidebar'),
+        customElements.whenDefined('ren-command'),
+        customElements.whenDefined('ren-select'),
+        customElements.whenDefined('ren-color-picker'),
+      ]);
+
+      window.mountAuditComponents = () => {
+        const root = document.querySelector('#fixture-root');
+        root.innerHTML = `
+          <section id="audit-host">
+            <ren-table data-page-size="1">
+              <div class="ren-table-wrapper">
+                <table class="ren-table">
+                  <thead class="ren-table-header">
+                    <tr>
+                      <th class="ren-th ren-th-sortable" data-column="name">Name</th>
+                    </tr>
+                  </thead>
+                  <tbody class="ren-table-body">
+                    <tr class="ren-tr" data-row-id="1">
+                      <td class="ren-td">Ada</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="ren-table-pagination"></div>
+            </ren-table>
+
+            <ren-sidebar class="ren-sidebar" aria-label="Primary">
+              <nav class="ren-sidebar-nav" aria-label="Main">
+                <a class="ren-sidebar-item active" href="#home" aria-current="page">
+                  <span class="ren-sidebar-item-icon" aria-hidden="true">H</span>
+                  <span class="ren-sidebar-item-text">Home</span>
+                </a>
+              </nav>
+              <button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"></button>
+            </ren-sidebar>
+
+            <ren-command data-shortcut="ctrl+k">
+              <dialog class="ren-command">
+                <input class="ren-command-input" type="text" aria-label="Search commands">
+                <div class="ren-command-list">
+                  <button class="ren-command-item" type="button" data-value="open">
+                    <span class="ren-command-item-title">Open</span>
+                  </button>
+                </div>
+              </dialog>
+            </ren-command>
+
+            <ren-select placeholder="Choose one">
+              <button data-select-trigger type="button">Choose one</button>
+              <div data-select-content>
+                <div data-select-item data-value="one">One</div>
+                <div data-select-item data-value="two">Two</div>
+              </div>
+            </ren-select>
+
+            <ren-color-picker value="#007aff"></ren-color-picker>
+          </section>
+        `;
+
+        const select = root.querySelector('ren-select');
+        select.open();
+        select.close();
+      };
+
+      window.removeAuditComponents = () => {
+        document.querySelector('#audit-host')?.remove();
+      };
+    </script>
+  </body>
+</html>

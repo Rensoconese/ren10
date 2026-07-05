@@ -17,6 +17,18 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Fixed
 
+- **Package export smoke coverage.** Added `test:exports` to verify every
+  public subpath resolves without extension-doubling (`.js.js`,
+  `.css.css`) and wired it into `npm test`.
+- **CLI copy smoke coverage.** Added `smoke:cli-copy` to install a component
+  into a temporary consumer project and import the copied JS, catching broken
+  utility-relative imports before publish.
+- **Interactive component robustness.** Hardened `ren-form`, `ren-popover`,
+  `ren-calendar`, `ren-carousel`, `ren-sidebar`, `ren-table`,
+  `ren-command`, `ren-select`, `ren-tooltip`, and `ren-color-picker` around
+  unsafe summary rendering, focus/ARIA state, reduced motion, storage-denied
+  contexts, lifecycle cleanup, and table render cost.
+
 ### Removed
 
 ### Security
@@ -32,16 +44,16 @@ theming controls.** Closes the 17-finding external audit from
 
 ### Added
 
-- **CLI: `rends remove <name>` (alias `rm`).** Deletes an installed
+- **CLI: `ren10 remove <name>` (alias `rm`).** Deletes an installed
   component folder and scrubs its `@import` from
   `components/index.css`. Refuses to delete locally-modified files
   unless `--force` is passed; override detection compares both
   extra files and modified content against the package source.
-- **CLI: `rends upgrade [name]` (alias `update`).** Diffs each
+- **CLI: `ren10 upgrade [name]` (alias `update`).** Diffs each
   installed component against the package source, prompts
   per-component (`y` / `n` / `d`iff / `a`bort), and supports
   `--dry-run` and `--force`. Identical files are silent.
-- **CLI: `--density` and `--shape` flags on `rends init`.** Validated
+- **CLI: `--density` and `--shape` flags on `ren10 init`.** Validated
   against the same value set as `themes/appearance.css`. Prints the
   `<html data-density="…" data-shape="…">` attributes for the user
   to add. Pairs with the new `spacious` density preset.
@@ -1122,7 +1134,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.8.6...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.9.0...HEAD
+[0.9.0]: https://github.com/Rensoconese/ren10/compare/v0.8.6...v0.9.0
 [0.8.6]: https://github.com/Rensoconese/ren10/compare/v0.8.5...v0.8.6
 [0.8.5]: https://github.com/Rensoconese/ren10/compare/v0.8.4...v0.8.5
 [0.8.4]: https://github.com/Rensoconese/ren10/compare/v0.8.3...v0.8.4

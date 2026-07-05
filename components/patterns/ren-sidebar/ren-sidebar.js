@@ -15,6 +15,8 @@ class RenSidebar extends HTMLElement {
     this._isOpen = false;
     this._isMobile = false;
     this._navItems = [];
+    this._listenerController = null;
+    this._storageKey = STORAGE_KEY;
   }
 
   connectedCallback() {
@@ -31,12 +33,17 @@ class RenSidebar extends HTMLElement {
   _initElements() {
     this._toggleBtn = this.querySelector('.ren-sidebar-toggle');
     this._navItems = Array.from(this.querySelectorAll('.ren-sidebar-item'));
+    this._storageKey = this.getAttribute('storage-key') || STORAGE_KEY;
   }
 
   _attachEventListeners() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     // Toggle collapse button
     if (this._toggleBtn) {
-      this._toggleBtn.addEventListener('click', () => this._toggleCollapse());
+      this._toggleBtn.addEventListener('click', () => this._toggleCollapse(), { signal });
     }
 
     // Nav item clicks
@@ -48,7 +55,7 @@ class RenSidebar extends HTMLElement {
         if (this._isMobile && this._isOpen) {
           this._closeMenu();
         }
-      });
+      }, { signal });
     });
 
     // Close on Escape (mobile)
@@ -56,12 +63,12 @@ class RenSidebar extends HTMLElement {
       if (e.key === KEYBOARD_CODES.Escape && this._isMobile && this._isOpen) {
         this._closeMenu();
       }
-    });
+    }, { signal });
 
     // Handle window resize
     window.addEventListener('resize', () => {
       this._updateMobileState();
-    });
+    }, { signal });
 
     // Close menu on outside click (mobile)
     document.addEventListener('click', (e) => {
@@ -73,7 +80,7 @@ class RenSidebar extends HTMLElement {
           }
         }
       }
-    });
+    }, { signal });
 
     // Expose toggle menu for mobile
     this._setupMobileToggle();
@@ -91,13 +98,8 @@ class RenSidebar extends HTMLElement {
   }
 
   _removeEventListeners() {
-    if (this._toggleBtn) {
-      this._toggleBtn.removeEventListener('click', () => this._toggleCollapse());
-    }
-
-    this._navItems.forEach(item => {
-      item.removeEventListener('click', () => {});
-    });
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   _toggleCollapse() {
@@ -111,14 +113,14 @@ class RenSidebar extends HTMLElement {
   _collapse() {
     this._isCollapsed = true;
     this.setAttribute('data-collapsed', '');
-    localStorage.setItem(STORAGE_KEY, 'true');
+    this._writeCollapsedState(true);
     this._dispatchToggleEvent();
   }
 
   _expand() {
     this._isCollapsed = false;
     this.removeAttribute('data-collapsed');
-    localStorage.setItem(STORAGE_KEY, 'false');
+    this._writeCollapsedState(false);
     this._dispatchToggleEvent();
   }
 
@@ -158,9 +160,25 @@ class RenSidebar extends HTMLElement {
   }
 
   _restoreState() {
-    const isCollapsed = localStorage.getItem(STORAGE_KEY) === 'true';
+    const isCollapsed = this._readCollapsedState();
     if (isCollapsed && !this._isMobile) {
       this._collapse();
+    }
+  }
+
+  _readCollapsedState() {
+    try {
+      return localStorage.getItem(this._storageKey) === 'true';
+    } catch (error) {
+      return false;
+    }
+  }
+
+  _writeCollapsedState(isCollapsed) {
+    try {
+      localStorage.setItem(this._storageKey, isCollapsed ? 'true' : 'false');
+    } catch (error) {
+      // Storage can be blocked in private contexts; visual state still updates.
     }
   }
 
@@ -193,7 +211,7 @@ class RenSidebar extends HTMLElement {
   }
 
   setActiveItem(href) {
-    const item = this.querySelector(`[href="${href}"]`);
+    const item = this._navItems.find((navItem) => navItem.getAttribute('href') === href);
     if (item && item.classList.contains('ren-sidebar-item')) {
       this._setActiveItem(item);
     }

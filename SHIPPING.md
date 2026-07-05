@@ -1,6 +1,7 @@
 # Shipping checklist — RenDS
 
-How to ship a release of `rends` end-to-end. Currently sized for the **0.8.4 launch**, but the per-release pattern is the same after that.
+How to ship a release of `ren10` end-to-end. Currently sized for the
+**0.9.0 line**, but the per-release pattern is the same after that.
 
 > All commands below run on **your local machine**. They need your git credentials and `npm login`.
 
@@ -15,33 +16,36 @@ How to ship a release of `rends` end-to-end. Currently sized for the **0.8.4 lau
    - Name: `NPM_TOKEN`
    - Value: the token starting with `npm_…`
 
-2. **GitHub Pages** — currently no `pages.yml` workflow. If you want a public docs site, decide hosting first (re-add `pages.yml`, or Vercel / Netlify / Cloudflare Pages). The repo `pages.yml` was removed deliberately in commit `15d027f`.
+2. **GitHub Pages** — `pages.yml` is present. One-time setup: GitHub
+   Settings → Pages → Source → GitHub Actions.
 
 ---
 
-## 1 · Push the audit branch and open the PR
+## 1 · Push the release branch and open the PR
 
 ```bash
 cd ~/RenDS/rends    # this folder IS the repo
 
-# Confirm state. The audit work lives on chore/audit-and-cut-0.8.3.
+# Confirm state. Replace feat/cli-extend with the current release branch.
 git fetch origin
 git status
-git log --oneline origin/main..chore/audit-and-cut-0.8.3
-# Should show 8 commits ending in 0f8a9ec (ci matrix) and 0e2b303 (release 0.8.3).
+git log --oneline origin/main..feat/cli-extend
 
 # Push the branch — triggers ci.yml against the PR.
-git push -u origin chore/audit-and-cut-0.8.3
+git push -u origin feat/cli-extend
 
 # Open the PR.
-gh pr create --base main --head chore/audit-and-cut-0.8.3 \
-  --title "chore: audit 2026-05-11 + cut 0.8.3 + cross-browser CI" \
+gh pr create --base main --head feat/cli-extend \
+  --title "release: harden RenDS 0.9.0" \
   --body-file PR_BODY.md   # See `PR_BODY.md` if generated, or paste manually
 ```
 
 While CI runs, expect:
 - **Chromium jobs**: must pass (gating)
 - **Firefox / WebKit jobs**: advisory (`continue-on-error: true`). Engine-specific diffs surface as warnings, not failures.
+- **Package smoke**: includes `npm run agent:check`, which validates the
+  agent CLI JSON surface, `ren10 doctor`, evals, knowledge graph/package
+  files, and the versioned skill.
 
 ---
 
@@ -52,9 +56,9 @@ After the PR is reviewed and merged:
 ```bash
 git checkout main && git pull
 
-# Tag v0.8.3 at the merge commit. release.yml fires on tag push.
-git tag -a v0.8.4 -m "Release v0.8.4"
-git push origin v0.8.3
+# Tag the package version at the merge commit. release.yml fires on tag push.
+git tag -a v0.9.0 -m "Release v0.9.0"
+git push origin v0.9.0
 ```
 
 Optional — retroactive tags for the CHANGELOG compare-links:
@@ -77,10 +81,10 @@ Existing tags on origin: `v0.7.1` (1502ea7), `v0.8.1` (annotated, → bfd2f81).
 ## 3 · Verify (~5–10 minutes after the tag push)
 
 ```bash
-npm view ren10 version    # should print 0.8.4
+npm view ren10 version    # should print 0.9.0
 ```
 
-- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.8.4>
+- **GitHub Release:** <https://github.com/Rensoconese/ren10/releases/tag/v0.9.0>
 
 Smoke test the npm package in a fresh dir:
 
@@ -119,6 +123,7 @@ Once 0.8.3 is out, the per-release flow is:
    # 3. Add the compare-link at the bottom: [X.Y.Z]: ...compare/v(prev)...vX.Y.Z
    # 4. Bump package.json "version" → "X.Y.Z".
    # 5. Update "Current version: X.Y.Z" in README.md.
+   # 6. Run npm run agent:skill:pack if you need the distributable skill tarball.
    git add -A
    git commit -m "chore(release): X.Y.Z"
    git tag -a vX.Y.Z -m "Release vX.Y.Z"

@@ -6,6 +6,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 # Cancel in-progress runs on the same PR / branch.
 concurrency:
   group: ci-${{ github.ref }}
@@ -22,6 +25,8 @@ concurrency:
 #   - visual runs Chromium-only. Baselines are committed for chromium/linux;
 #     running visual against Firefox or WebKit without those baselines
 #     would fail every screenshot test, so we don't try.
+#   - package runs once and blocks release-shape regressions: theme/evals,
+#     agent CLI/skill checks, package exports, CLI copy smoke, and npm pack dry-run.
 
 jobs:
   lint:
@@ -38,6 +43,32 @@ jobs:
       - run: npm ci
 
       - run: npm run lint
+
+  package:
+    name: Package smoke (exports + CLI + pack)
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run test:theme
+
+      - run: npm run test:evals
+
+      - run: npm run agent:check
+
+      - run: npm run test:exports
+
+      - run: npm run smoke:cli-copy
+
+      - run: npm pack --dry-run
 
   a11y:
     name: a11y (axe-core, ${{ matrix.browser }})

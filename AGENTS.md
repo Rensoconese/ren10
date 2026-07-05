@@ -121,8 +121,32 @@ test set for RenDS-aware agents.
 
 ## Skill Wrapper
 
-The companion Anthropic skill (`rends-skill/SKILL.md` in the parent
-workspace, distributable as a tarball) is what external agents load
-when they detect RenDS in a project. It must keep the same loading
-order as this file. Updates to the loading order belong in **both**
-places.
+The companion Anthropic-style skill lives at `skills/rends/SKILL.md` and is
+packaged with `npm run agent:skill:pack`. It is a compact wrapper around this
+file, the CLI manifest, and the colocated contracts; it must not become a
+second source of truth.
+
+<!-- RENDS:START -->
+RenDS v0.9.0 · vanilla HTML/CSS/JS · Light DOM · 53 components
+
+WORKFLOW — discover before writing UI:
+1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.
+2. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.
+3. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.
+4. `npx ren10 doctor` — verify package health before shipping.
+
+RULES:
+- Vanilla only: no React/Vue/Svelte/JSX/TSX, no Tailwind, no shadcn/ui.
+- Use RenDS layout primitives before custom flex/grid CSS.
+- Use semantic/component tokens (`--color-*`, `--space-*`, `--ren-*`), never primitive palette tokens or hardcoded colors.
+- Real elements only: button, a, input, form, dialog, table, details.
+- Light DOM only; never attachShadow.
+
+COMPONENTS: primitives=19, composites=26, patterns=8.
+MORE CLI:
+  manifest --json          self-describing CLI surface
+  search "<query>"         search graph across components/docs/examples/tokens
+  docs <topic> --dense     design, tokens, layouts, primitive-zero, components, evals
+  component --list         all components grouped by layer
+  knowledge query "<q>"    packaged graph query; --json emits typed JSON
+<!-- RENDS:END -->
