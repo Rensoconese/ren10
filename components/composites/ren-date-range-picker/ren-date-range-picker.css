@@ -128,8 +128,10 @@
     animation: ren-date-range-popup-in var(--duration-enter) var(--ease-enter) both;
   }
 
-  /* ═══ FALLBACK POSITIONING (no anchor support) ═══ */
-  @supports not (inset-block-start: anchor(bottom)) {
+  /* ═══ FALLBACK POSITIONING (no complete anchor support) ═══ */
+  @supports not ((anchor-name: --ren-anchor) and
+    (position-anchor: --ren-anchor) and
+    (inset-block-start: anchor(bottom))) {
     position: fixed;
     top: auto;
     left: auto;

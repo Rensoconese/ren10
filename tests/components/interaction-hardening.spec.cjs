@@ -102,6 +102,33 @@ test.describe('Interaction hardening regressions', () => {
     await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('trigger');
   });
 
+  test('anchored overlays mirror placement to data-side', async ({ page }) => {
+    await page.goto(`${staticServer.origin}/tests/components/fixtures/anchor-placement.html`);
+    await page.evaluate(() => Promise.all([
+      customElements.whenDefined('ren-popover'),
+      customElements.whenDefined('ren-tooltip'),
+    ]));
+
+    await expect(page.locator('#popover')).toHaveAttribute('data-side', 'right');
+    await expect(page.locator('#tooltip')).toHaveAttribute('data-side', 'bottom');
+
+    await page.evaluate(() => {
+      document.querySelector('#popover')?.setAttribute('placement', 'left');
+      document.querySelector('#tooltip')?.setAttribute('placement', 'top');
+    });
+
+    await expect(page.locator('#popover')).toHaveAttribute('data-side', 'left');
+    await expect(page.locator('#tooltip')).toHaveAttribute('data-side', 'top');
+
+    await page.evaluate(() => {
+      document.querySelector('#popover')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#tooltip')?.setAttribute('placement', 'diagonal');
+    });
+
+    await expect(page.locator('#popover')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#tooltip')).toHaveAttribute('data-side', 'top');
+  });
+
   test('ren-calendar keeps exactly one enabled gridcell tabbable after month navigation', async ({ page }) => {
     await page.goto(`${staticServer.origin}/tests/components/fixtures/calendar-roving.html`);
     await page.evaluate(() => customElements.whenDefined('ren-calendar'));

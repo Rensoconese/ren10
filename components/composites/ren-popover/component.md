@@ -28,7 +28,7 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 selectionCriteria:
   useWhen:
     - "Click on a trigger should reveal a small contextual surface (filters, mini-form, info card) anchored to that trigger."
-    - "You need anchor-positioned placement (top/right/bottom/left) with automatic viewport flip via position-try-fallbacks."
+    - "You need anchor-positioned placement (top/right/bottom/left) via position-area with automatic viewport flip via position-try-fallbacks."
     - "Need click-outside + Escape dismissal and a visible arrow caret that re-rotates per [data-side]."
     - "Need progressive enhancement: anchor positioning in modern browsers, JS computePosition() fallback elsewhere."
     - "Need header / body / footer slots inside the popover surface, with native role=\"dialog\" + aria-modal=\"false\"."
@@ -58,7 +58,7 @@ requiredMarkup:
 forbiddenPatterns:
   - "Manually wiring trigger.addEventListener('click', popover.show) — the host already attaches its click + dismissable listeners."
   - "Calling showPopover() directly while bypassing open() — aria-modal, data-state, and ren-open event won't fire."
-  - "Hardcoding inline left/top values — let CSS position-anchor + position-try-fallbacks handle placement and flips (or the JS computePosition fallback)."
+  - "Hardcoding inline left/top values — let CSS position-anchor + position-area + position-try-fallbacks handle placement and flips (or the JS computePosition fallback)."
   - "Removing the .ren-popover-arrow element — the [data-side] rules rotate it per side; without it the visual anchor cue disappears."
   - "Using ren-popover purely as a click-bound tooltip — accessibility expectations differ; use ren-tooltip for short, non-interactive text."
 

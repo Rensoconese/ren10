@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="module" src="../../../components/composites/ren-popover/ren-popover.js"></script>
+  <script type="module" src="../../../components/composites/ren-tooltip/ren-tooltip.js"></script>
+</head>
+<body>
+  <button id="popover-trigger" type="button" data-popover-trigger>Open filters</button>
+  <ren-popover id="popover" trigger-id="popover-trigger" placement="right">
+    <button type="button">Apply</button>
+  </ren-popover>
+
+  <button id="tooltip-trigger" type="button">
+    Save
+    <ren-tooltip id="tooltip" placement="bottom">Save changes</ren-tooltip>
+  </button>
+</body>
+</html>

@@ -7,10 +7,25 @@ const FOCUSABLE_SELECTOR = [
   'textarea:not([disabled])',
   '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
+const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
+
+function supportsAnchorPositioning() {
+  return (
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('anchor-name', '--ren-anchor') &&
+    CSS.supports('position-anchor', '--ren-anchor') &&
+    CSS.supports('position-area', 'bottom span-all')
+  );
+}
+
+function normalizePlacement(value, fallback = 'bottom') {
+  return PLACEMENTS.has(value) ? value : fallback;
+}
 
 /**
  * Fallback position computation for browsers without CSS anchor positioning.
- * Used only when CSS.supports('anchor-name', '--x') returns false.
+ * Used only when full CSS anchor positioning support is unavailable.
  *
  * @param {HTMLElement} trigger - The trigger element
  * @param {HTMLElement} popover - The popover element
@@ -93,11 +108,18 @@ function computePosition(trigger, popover, placement = 'bottom', offset = 8) {
  * @fires ren-close - Fired when popover closes
  */
 export class RenPopover extends HTMLElement {
-  static supportsAnchor = CSS.supports?.('anchor-name', '--x') ?? false;
+  static observedAttributes = ['placement'];
+  static supportsAnchor = supportsAnchorPositioning();
 
   #trigger = null;
   #triggerController = null;
   #dismissController = null;
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.#syncPlacement();
+    }
+  }
 
   connectedCallback() {
     this.setupPopover();
@@ -135,6 +157,7 @@ export class RenPopover extends HTMLElement {
     // Set accessibility attributes
     this.setAttribute('role', 'dialog');
     this.setAttribute('aria-modal', 'false');
+    this.#syncPlacement();
   }
 
   /**
@@ -236,7 +259,7 @@ export class RenPopover extends HTMLElement {
   positionPopover() {
     if (!this.#trigger || RenPopover.supportsAnchor) return;
 
-    const placement = this.getAttribute('placement') || 'bottom';
+    const placement = normalizePlacement(this.getAttribute('placement'), 'bottom');
     const offset = parseInt(this.getAttribute('offset')) || 8;
 
     const { x, y, finalPlacement } = computePosition(
@@ -249,6 +272,11 @@ export class RenPopover extends HTMLElement {
     this.style.left = `${x}px`;
     this.style.top = `${y}px`;
     this.setAttribute('data-side', finalPlacement);
+  }
+
+  #syncPlacement() {
+    const placement = normalizePlacement(this.getAttribute('placement'), 'bottom');
+    this.setAttribute('data-side', placement);
   }
 
   /**
