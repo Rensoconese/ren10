@@ -74,7 +74,7 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "<ren-popover> sets role=\"dialog\"; toggle aria-modal between true (open) and false (closed) is handled by open()/close() — do not override."
+    - "<ren-popover> sets role=\"dialog\" with aria-modal=\"false\" (non-modal by design). Do not set aria-modal=\"true\" or apply focus trapping."
     - "Trigger must be a focusable, real interactive element; click + Enter/Space activation come from native button semantics."
     - "Escape closes the popover via the document keydown handler; outside-click closes via the document click handler — do not stopPropagation on container click outside these targets."
     - "When CSS anchor positioning is unsupported the host applies left/top to the popover element; do not overlay your own positioning style or the flip logic breaks."

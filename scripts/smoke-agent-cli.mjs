@@ -83,6 +83,11 @@ if (!knowledgePath.sqlitePath || !knowledgePath.jsonPath) {
   throw new Error('knowledge path JSON is missing graph paths');
 }
 
+const bareKnowledgePath = json(['knowledge', '--json'], 'knowledge.path');
+if (bareKnowledgePath.sqlitePath !== knowledgePath.sqlitePath) {
+  throw new Error('bare knowledge --json drifted from knowledge path --json');
+}
+
 const knowledgeQuery = json(['knowledge', 'query', 'ren-toast status', '--json', '--limit', '3'], 'knowledge.query');
 if (knowledgeQuery.results.length === 0 || knowledgeQuery.limit !== 3) {
   throw new Error('knowledge query JSON returned no limited results');
