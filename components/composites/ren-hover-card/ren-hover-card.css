@@ -9,6 +9,9 @@
 .ren-hover-card {
   position-anchor: --ren-hover-card-anchor;
   position: absolute;
+  position-area: bottom span-all;
+  inset: auto;
+  margin-block-start: var(--space-2);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -42,15 +45,15 @@
   }
 
   /* ═══ FALLBACK POSITIONING ═══ */
-  @supports not (position-anchor: var(--x)) {
+  @supports not ((anchor-name: --ren-anchor) and
+    (position-anchor: --ren-anchor) and
+    (position-area: bottom span-all)) {
     position: fixed;
     top: auto;
     left: auto;
   }
 
   /* ═══ VIEWPORT EDGE HANDLING ═══ */
-  position-try-fallbacks: flip-block;
-
   @supports (position-try-fallbacks: flip-block) {
     position-try-fallbacks: flip-block;
   }

@@ -1,6 +1,22 @@
+const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
+
+function supportsAnchorPositioning() {
+  return (
+    typeof CSS !== 'undefined' &&
+    typeof CSS.supports === 'function' &&
+    CSS.supports('anchor-name', '--ren-anchor') &&
+    CSS.supports('position-anchor', '--ren-anchor') &&
+    CSS.supports('position-area', 'top span-all')
+  );
+}
+
+function normalizePlacement(value, fallback = 'top') {
+  return PLACEMENTS.has(value) ? value : fallback;
+}
+
 /**
  * Fallback position computation for browsers without CSS anchor positioning.
- * Used only when CSS.supports('anchor-name', '--x') returns false.
+ * Used only when full CSS anchor positioning support is unavailable.
  *
  * @param {HTMLElement} trigger - The trigger element
  * @param {HTMLElement} tooltip - The tooltip element
@@ -81,13 +97,20 @@ function computePosition(trigger, tooltip, placement = 'top', offset = 8) {
  * @fires ren-close - Fired when tooltip closes
  */
 export class RenTooltip extends HTMLElement {
-  static supportsAnchor = CSS.supports?.('anchor-name', '--x') ?? false;
+  static observedAttributes = ['placement'];
+  static supportsAnchor = supportsAnchorPositioning();
 
   #trigger = null;
   #showTimeout = null;
   #hideTimeout = null;
   #touchTimer = null;
   #listenerController = null;
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.#syncPlacement();
+    }
+  }
 
   connectedCallback() {
     this.setupTooltip();
@@ -121,6 +144,8 @@ export class RenTooltip extends HTMLElement {
     if ('popover' in HTMLElement.prototype) {
       this.setAttribute('popover', 'manual');
     }
+
+    this.#syncPlacement();
   }
 
   /**
@@ -244,7 +269,7 @@ export class RenTooltip extends HTMLElement {
   positionTooltip() {
     if (!this.#trigger || RenTooltip.supportsAnchor) return;
 
-    const placement = this.getAttribute('placement') || 'top';
+    const placement = normalizePlacement(this.getAttribute('placement'), 'top');
     const offset = parseInt(this.getAttribute('offset')) || 8;
 
     const { x, y, finalPlacement } = computePosition(
@@ -257,6 +282,11 @@ export class RenTooltip extends HTMLElement {
     this.style.left = `${x}px`;
     this.style.top = `${y}px`;
     this.setAttribute('data-side', finalPlacement);
+  }
+
+  #syncPlacement() {
+    const placement = normalizePlacement(this.getAttribute('placement'), 'top');
+    this.setAttribute('data-side', placement);
   }
 
   /**

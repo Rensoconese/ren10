@@ -51,7 +51,7 @@ requiredMarkup:
   - "Pair a .ren-tooltip-trigger (real <button> or focusable element) with a .ren-tooltip element referenced via the popover API (popovertarget / id linkage)."
   - "The tooltip carries popover attribute so it lives in the top layer; do not implement it as a plain absolutely-positioned <div>."
   - "Include .ren-tooltip-arrow as a child of .ren-tooltip when an arrow is desired; position is driven by [data-side]."
-  - "Set the desired side on the tooltip via data-side=\"top|right|bottom|left\"; CSS uses inset-area + position-try-fallbacks: flip-block for safe placement."
+  - "Set the desired side on the tooltip via data-side=\"top|right|bottom|left\"; CSS uses position-area + position-try-fallbacks: flip-block for safe placement."
   - "Tooltip content must be plain text — no buttons, links, or form fields (those break the contract; use ren-popover instead)."
 
 forbiddenPatterns:

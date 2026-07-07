@@ -1,5 +1,6 @@
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
 .ren-tooltip {
+  position: absolute;
   background: var(--color-gray-900);
   color: white;
   border-radius: var(--radius-md);
@@ -12,13 +13,13 @@
   white-space: normal;
   line-height: 1.4;
   margin: 0;
+  inset: auto;
 
   /* Anchor positioning (modern browsers) */
   position-anchor: --tooltip-anchor;
 
   /* Default: above the trigger with automatic fallback */
-  inset-area: top span-all;
-  margin-bottom: var(--space-1);
+  position-area: top span-all;
 
   /* Automatic flip when near viewport edges */
   position-try-fallbacks: flip-block;
@@ -63,16 +64,11 @@
 /* ═══ PLACEMENT VARIANTS ═══ */
 /* Bottom */
 .ren-tooltip[data-side="bottom"] {
-  & .ren-tooltip-arrow {
-    bottom: -3px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-  }
-}
+  position-area: bottom span-all;
+  margin-block-start: var(--space-1);
+  margin-block-end: 0;
+  margin-inline: 0;
 
-/* Top (default) */
-.ren-tooltip[data-side="top"],
-.ren-tooltip:not([data-side]) {
   & .ren-tooltip-arrow {
     top: -3px;
     left: 50%;
@@ -80,21 +76,46 @@
   }
 }
 
+/* Top (default) */
+.ren-tooltip[data-side="top"],
+.ren-tooltip:not([data-side]) {
+  position-area: top span-all;
+  margin-block-start: 0;
+  margin-block-end: var(--space-1);
+  margin-inline: 0;
+
+  & .ren-tooltip-arrow {
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
 /* Right */
 .ren-tooltip[data-side="right"] {
+  position-area: right span-all;
+  margin-block: 0;
+  margin-inline-start: var(--space-1);
+  margin-inline-end: 0;
+
   & .ren-tooltip-arrow {
-    right: -3px;
+    left: -3px;
     top: 50%;
-    transform: translateY(-50%) rotate(315deg);
+    transform: translateY(-50%) rotate(135deg);
   }
 }
 
 /* Left */
 .ren-tooltip[data-side="left"] {
+  position-area: left span-all;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: var(--space-1);
+
   & .ren-tooltip-arrow {
-    left: -3px;
+    right: -3px;
     top: 50%;
-    transform: translateY(-50%) rotate(135deg);
+    transform: translateY(-50%) rotate(315deg);
   }
 }
 
@@ -118,8 +139,10 @@
   }
 }
 
-/* ═══ FALLBACK FOR BROWSERS WITHOUT ANCHOR POSITIONING ═══ */
-@supports not (anchor-name: --x) {
+/* ═══ FALLBACK FOR BROWSERS WITHOUT COMPLETE ANCHOR POSITIONING ═══ */
+@supports not ((anchor-name: --ren-anchor) and
+  (position-anchor: --ren-anchor) and
+  (position-area: top span-all)) {
   .ren-tooltip {
     position: absolute;
     inset: auto auto auto auto;
