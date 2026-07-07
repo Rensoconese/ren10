@@ -23,6 +23,37 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Accessibility milestones
 
+## [0.9.2] — 2026-07-07
+
+Focus: **modern CSS Anchor Positioning for overlay components.** Patch
+release for the `position-area` modernization merged in
+`feat/anchor-positioning-modernization`.
+
+### Changed
+
+- **Popover and tooltip placement now use `position-area`.** Legacy
+  `inset-area` usage was replaced with the current Anchor Positioning
+  property, while preserving the existing JS positioning fallback for
+  unsupported browsers.
+- **Overlay `placement` now mirrors to `data-side`.** `ren-popover` and
+  `ren-tooltip` keep their public `placement` API, but sync it to the
+  same side attribute used by CSS arrows and modern anchor positioning.
+- **Hover card anchor positioning is explicit.** `ren-hover-card` now
+  declares `position-area` and uses the same complete anchor-support
+  fallback query as the rest of the overlay family.
+- **Date picker anchor fallbacks are stricter.** Single-date and
+  range-date dropdowns now gate their fallback positioning on complete
+  anchor support instead of a partial `anchor()` check.
+- **Anchor positioning support is documented centrally.**
+  `base/enhancements.css` now captures the canonical `@supports`
+  criteria for anchor naming, anchor association, and `position-area`.
+
+### Added
+
+- **Regression coverage for overlay placement.** Component tests now
+  assert that popover and tooltip `placement` values mirror to
+  `data-side`, including invalid-value fallback behavior.
+
 ## [0.9.1] — 2026-07-07
 
 Focus: **CLI bugfixes and popover contract alignment.** Patch release for
@@ -1150,7 +1181,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.9.1...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.9.2...HEAD
+[0.9.2]: https://github.com/Rensoconese/ren10/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/Rensoconese/ren10/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Rensoconese/ren10/compare/v0.8.6...v0.9.0
 [0.8.6]: https://github.com/Rensoconese/ren10/compare/v0.8.5...v0.8.6
