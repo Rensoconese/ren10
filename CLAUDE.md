@@ -21,7 +21,7 @@ Hard rules, validation commands, and golden examples all live in
 `AGENTS.md`. Do not duplicate them here.
 
 <!-- RENDS:START -->
-RenDS v0.9.1 · vanilla HTML/CSS/JS · Light DOM · 53 components
+RenDS v0.9.2 · vanilla HTML/CSS/JS · Light DOM · 53 components
 
 WORKFLOW — discover before writing UI:
 1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.
