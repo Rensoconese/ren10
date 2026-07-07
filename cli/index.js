@@ -199,7 +199,7 @@ const COMMAND_SPECS = [
     description: 'Install, update, or remove generated RenDS context in agent docs',
     arguments: [],
     options: [
-      { flag: '--agent <codex|claude|cursor|all>', type: 'enum', choices: ['codex', 'claude', 'cursor', 'all'], description: 'Target agent file preset' },
+      { flag: '--agent <codex|claude|cursor|windsurf|all>', type: 'enum', choices: ['codex', 'claude', 'cursor', 'windsurf', 'all'], description: 'Target agent file preset' },
       { flag: '--agent-docs-path <path>', type: 'string', description: 'Explicit relative path to write' },
       { flag: '--remove', type: 'boolean', description: 'Remove generated RenDS block' },
       { flag: '--json', type: 'boolean', description: 'Emit typed JSON' },
@@ -616,10 +616,20 @@ function copyComponentFile(src, dest) {
     return;
   }
 
-  const rewritten = fs
-    .readFileSync(src, 'utf8')
-    .replace(/from\s+(['"])\.\.\/\.\.\/\.\.\/utils\//g, 'from $1../../utils/');
+  const raw = fs.readFileSync(src, 'utf8');
+  const rewritten = rewriteUtilsImports(raw);
   fs.writeFileSync(dest, rewritten);
+}
+
+/**
+ * Rewrites deep utils imports (from package source layout) to the shallower
+ * layout that consumers get after `ren10 add` (one fewer ../ level).
+ * This must be applied consistently in add, upgrade (on write), and remove
+ * (when detecting modifications).
+ */
+function rewriteUtilsImports(content) {
+  if (typeof content !== 'string') return content;
+  return content.replace(/from\s+(['"])\.\.\/\.\.\/\.\.\/utils\//g, 'from $1../../utils/');
 }
 
 /**
@@ -706,10 +716,8 @@ async function cmdInit() {
   copyDir(path.join(RENDS_ROOT, 'base'), baseDir);
   success('Created rends/base/');
 
-  // Copy themes (preset themes + hex→tokens generator).
-  // appearance.css is opt-in (not auto-imported in index.css below) so the
-  // user pays nothing if they don't use [data-theme]. The generator is a
-  // pure ES module the user can import at build time.
+  // Copy themes (preset themes + hex→tokens generator). appearance.css is
+  // imported by default so density / shape attributes work immediately.
   const themesDir = path.join(rendsDir, 'themes');
   fs.mkdirSync(themesDir, { recursive: true });
   copyFile(
@@ -750,6 +758,7 @@ async function cmdInit() {
 
 @import './tokens/index.css';
 @import './base/index.css';
+@import './themes/appearance.css';
 @import './components/index.css';
 `;
   fs.writeFileSync(indexPath, indexContent);
@@ -773,7 +782,7 @@ async function cmdInit() {
     if (shapeKey)   attrParts.push(`data-shape="${shapeKey}"`);
     console.log(`${c.bold}Add these attributes to your ${c.cyan}<html>${c.reset}${c.bold} element:${c.reset}`);
     console.log(`  ${c.cyan}<html ${attrParts.join(' ')}>${c.reset}\n`);
-    console.log(`${c.dim}themes/appearance.css already declares the matching CSS — no extra import needed.${c.reset}\n`);
+    console.log(`${c.dim}themes/appearance.css is imported by default and declares the styles for data-density / data-shape.${c.reset}\n`);
   }
 }
 
@@ -1429,7 +1438,8 @@ async function cmdAgentDocs() {
  * Inspect the packaged RenDS knowledge graph.
  */
 async function cmdKnowledge() {
-  const subcommand = args[1] || 'path';
+  // Find first non-flag positional as subcommand (bare "knowledge --json" should still work as "path")
+  const subcommand = stripCommandFlags(args.slice(1))[0] || 'path';
   const knowledgeDir = path.join(RENDS_ROOT, 'knowledge');
   const sqlitePath = path.join(knowledgeDir, 'ren10-graph.sqlite');
   const jsonPath = path.join(knowledgeDir, 'ren10-graph.json');
@@ -1605,7 +1615,10 @@ async function cmdRemove() {
         const upstream = path.join(srcDir, f);
         if (!fs.existsSync(local) || !fs.existsSync(upstream)) return false;
         try {
-          return fs.readFileSync(local, 'utf8') !== fs.readFileSync(upstream, 'utf8');
+          const localContent = fs.readFileSync(local, 'utf8');
+          const upstreamRaw = fs.readFileSync(upstream, 'utf8');
+          const upstreamForConsumer = f.endsWith('.js') ? rewriteUtilsImports(upstreamRaw) : upstreamRaw;
+          return localContent !== upstreamForConsumer;
         } catch {
           return false;
         }
@@ -1716,7 +1729,8 @@ async function cmdUpgrade() {
         const upstream = path.join(srcDir, f);
         if (!fs.existsSync(upstream)) return null;
         const localContent    = fs.existsSync(local) ? fs.readFileSync(local, 'utf8') : null;
-        const upstreamContent = fs.readFileSync(upstream, 'utf8');
+        const upstreamRaw = fs.readFileSync(upstream, 'utf8');
+        const upstreamContent = f.endsWith('.js') ? rewriteUtilsImports(upstreamRaw) : upstreamRaw;
         if (localContent === upstreamContent) return null;
         return { file: f, local, upstream, localContent, upstreamContent };
       })

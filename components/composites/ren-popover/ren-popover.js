@@ -1,5 +1,3 @@
-import { createFocusTrap } from '../../../utils/focus-trap.js';
-
 let nextPopoverId = 0;
 const FOCUSABLE_SELECTOR = [
   'a[href]',
@@ -100,7 +98,6 @@ export class RenPopover extends HTMLElement {
   #trigger = null;
   #triggerController = null;
   #dismissController = null;
-  #focusTrap = null;
 
   connectedCallback() {
     this.setupPopover();
@@ -273,14 +270,11 @@ export class RenPopover extends HTMLElement {
       this.classList.add('ren-open');
     }
 
-    this.setAttribute('aria-modal', 'true');
+    // Popover is explicitly non-modal (see component.md).
+    // No aria-modal or focus trap — those are for ren-dialog / ren-sheet.
+    this.setAttribute('aria-modal', 'false');
     this.#trigger?.setAttribute('aria-expanded', 'true');
-    this.#focusTrap?.deactivate();
-    this.#focusTrap = createFocusTrap(this, {
-      returnFocus: this.#trigger,
-      autoFocus: true,
-    });
-    this.#focusTrap.activate();
+    // Note: no focus trap for non-modal popover.
     requestAnimationFrame(() => this.#focusInitialElement());
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
   }
@@ -290,6 +284,12 @@ export class RenPopover extends HTMLElement {
    */
   close() {
     if (!this.isOpen()) return;
+
+    const activeElement = document.activeElement;
+    const shouldRestoreFocus =
+      this.#trigger &&
+      activeElement instanceof HTMLElement &&
+      this.contains(activeElement);
 
     this.setAttribute('data-state', 'closed');
 
@@ -305,9 +305,9 @@ export class RenPopover extends HTMLElement {
 
     this.setAttribute('aria-modal', 'false');
     this.#trigger?.setAttribute('aria-expanded', 'false');
-    const focusTrap = this.#focusTrap;
-    this.#focusTrap = null;
-    focusTrap?.deactivate();
+    if (shouldRestoreFocus) {
+      this.#trigger.focus({ preventScroll: true });
+    }
     this.dispatchEvent(new CustomEvent('ren-close', { bubbles: true }));
   }
 
@@ -338,8 +338,6 @@ export class RenPopover extends HTMLElement {
    * @private
    */
   cleanup() {
-    this.#focusTrap?.deactivate();
-    this.#focusTrap = null;
     this.#triggerController?.abort();
     this.#triggerController = null;
     this.#dismissController?.abort();

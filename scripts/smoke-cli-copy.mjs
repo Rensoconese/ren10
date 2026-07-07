@@ -38,9 +38,16 @@ function run(args) {
     console.error(result.stderr);
     throw new Error(`ren10 ${args.join(' ')} failed with exit ${result.status}`);
   }
+
+  return result.stdout;
 }
 
-run(['init']);
+run(['init', '--shape', 'sharp']);
+const generatedIndex = fs.readFileSync(path.join(tmp, 'rends', 'index.css'), 'utf8');
+if (!generatedIndex.includes("@import './themes/appearance.css';")) {
+  throw new Error('init scaffold did not import themes/appearance.css');
+}
+
 run(['add', 'dialog', 'popover', 'progress', 'scroll-area']);
 
 const copiedModules = [
@@ -73,6 +80,28 @@ for (const modulePath of copiedModules) {
       throw new Error(`${path.relative(tmp, modulePath)} imports missing ${specifier}`);
     }
   }
+}
+
+const upgradeDryRun = run(['upgrade', 'dialog', '--force', '--dry-run']);
+if (!upgradeDryRun.includes('already up to date')) {
+  throw new Error('upgrade dry-run should not report changes for a freshly added JS component');
+}
+
+run(['upgrade', 'dialog', '--force']);
+
+const dialogModule = path.join(tmp, 'rends', 'components', 'dialog', 'ren-dialog.js');
+if (!fs.readFileSync(dialogModule, 'utf8').includes("from '../../utils/focus-trap.js'")) {
+  throw new Error('upgrade rewrote dialog imports back to the package source layout');
+}
+
+run(['remove', 'dialog']);
+if (fs.existsSync(path.join(tmp, 'rends', 'components', 'dialog'))) {
+  throw new Error('remove should delete an unmodified freshly added JS component');
+}
+
+const componentIndex = fs.readFileSync(path.join(tmp, 'rends', 'components', 'index.css'), 'utf8');
+if (componentIndex.includes("./dialog/")) {
+  throw new Error('remove should delete the dialog @import from components/index.css');
 }
 
 console.log('RenDS CLI copy smoke: OK');
