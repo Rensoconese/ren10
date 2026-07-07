@@ -42,6 +42,7 @@
 
 /* ═══ TRIGGER BUTTON (Shows Current Color) ═══ */
 .ren-color-picker-trigger {
+  anchor-name: --ren-color-picker-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -106,6 +107,11 @@
 /* ═══ DROPDOWN CONTAINER (Popover) ═══ */
 .ren-color-picker-dropdown {
   position: absolute;
+  position-anchor: --ren-color-picker-anchor;
+  position-area: bottom span-all;
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  inset: auto;
+  margin: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -133,6 +139,44 @@
       opacity: 0;
       transform: scale(0.95);
     }
+  }
+}
+
+.ren-color-picker-dropdown[data-side="bottom"],
+.ren-color-picker-dropdown:not([data-side]) {
+  position-area: bottom span-all;
+  margin-block-start: var(--space-2);
+  margin-block-end: 0;
+  margin-inline: 0;
+}
+
+.ren-color-picker-dropdown[data-side="top"] {
+  position-area: top span-all;
+  margin-block-start: 0;
+  margin-block-end: var(--space-2);
+  margin-inline: 0;
+}
+
+.ren-color-picker-dropdown[data-side="right"] {
+  position-area: right span-all;
+  margin-block: 0;
+  margin-inline-start: var(--space-2);
+  margin-inline-end: 0;
+}
+
+.ren-color-picker-dropdown[data-side="left"] {
+  position-area: left span-all;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: var(--space-2);
+}
+
+@supports not ((anchor-name: --ren-anchor) and
+  (position-anchor: --ren-anchor) and
+  (position-area: bottom span-all)) {
+  .ren-color-picker-dropdown {
+    position: absolute;
+    inset: auto;
   }
 }
 

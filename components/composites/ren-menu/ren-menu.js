@@ -9,6 +9,7 @@
  *
  * Attributes:
  *   placement:     'bottom-start' (default) | 'bottom-end' | 'top-start' | 'top-end'
+ *                  | 'right-start' | 'right-end' | 'left-start' | 'left-end'
  *                  - Controls menu position relative to trigger
  *
  * Markup:
@@ -40,7 +41,22 @@
 import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
 import { createDismissable } from '../../../utils/dismissable.js';
 
+const MENU_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+const MENU_ALIGNS = new Set(['start', 'end']);
+
+function normalizeMenuPlacement(value) {
+  const [sideValue, alignValue] = String(value || 'bottom-start')
+    .toLowerCase()
+    .split('-');
+  const side = MENU_SIDES.has(sideValue) ? sideValue : 'bottom';
+  const align = MENU_ALIGNS.has(alignValue) ? alignValue : 'start';
+
+  return { side, align };
+}
+
 export class RenMenu extends HTMLElement {
+  static observedAttributes = ['placement'];
+
   #trigger = null;
   #isOpen = false;
   #keyboardNav = null;
@@ -68,6 +84,15 @@ export class RenMenu extends HTMLElement {
    */
   disconnectedCallback() {
     this.cleanup();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.syncPlacement();
+      if (this.#isOpen) {
+        this.positionMenu();
+      }
+    }
   }
 
   /* ═══ INITIALIZATION ═══ */
@@ -100,6 +125,8 @@ export class RenMenu extends HTMLElement {
     if ('popover' in HTMLElement.prototype) {
       this.setAttribute('popover', 'manual');
     }
+
+    this.syncPlacement();
 
     // Ensure all items have correct roles if not already set
     this.querySelectorAll(
@@ -212,26 +239,48 @@ export class RenMenu extends HTMLElement {
   /* ═══ POSITIONING ═══ */
 
   /**
+   * Mirror preferred placement to public data attributes.
+   */
+  syncPlacement() {
+    const { side, align } = normalizeMenuPlacement(this.getAttribute('placement'));
+
+    this.setAttribute('data-side', side);
+    this.setAttribute('data-align', align);
+  }
+
+  /**
    * Position the menu relative to trigger element
    * @private
    */
   positionMenu() {
     if (!this.#trigger) return;
 
-    const placement = this.getAttribute('placement') || 'bottom-start';
+    const placement = normalizeMenuPlacement(this.getAttribute('placement'));
     const triggerRect = this.#trigger.getBoundingClientRect();
     const menuRect = this.getBoundingClientRect();
+    const gap = 8;
+    const margin = 8;
 
-    // Calculate initial position based on placement
+    let finalSide = placement.side;
     let left = triggerRect.left;
-    let top = triggerRect.bottom + 8;
+    let top = triggerRect.bottom + gap;
 
-    if (placement.includes('end')) {
+    if (placement.align === 'end') {
       left = triggerRect.right - menuRect.width;
     }
 
-    if (placement.includes('top')) {
-      top = triggerRect.top - menuRect.height - 8;
+    if (placement.side === 'top') {
+      top = triggerRect.top - menuRect.height - gap;
+    } else if (placement.side === 'right') {
+      left = triggerRect.right + gap;
+      top = placement.align === 'end'
+        ? triggerRect.bottom - menuRect.height
+        : triggerRect.top;
+    } else if (placement.side === 'left') {
+      left = triggerRect.left - menuRect.width - gap;
+      top = placement.align === 'end'
+        ? triggerRect.bottom - menuRect.height
+        : triggerRect.top;
     }
 
     // Viewport collision detection
@@ -240,26 +289,51 @@ export class RenMenu extends HTMLElement {
       height: window.innerHeight,
     };
 
-    // Clamp horizontal position
-    if (left < 8) {
-      left = 8;
-    } else if (left + menuRect.width > viewport.width - 8) {
-      left = viewport.width - menuRect.width - 8;
+    if (
+      placement.side === 'bottom' &&
+      top + menuRect.height > viewport.height - margin &&
+      triggerRect.top - menuRect.height - gap >= margin
+    ) {
+      finalSide = 'top';
+      top = triggerRect.top - menuRect.height - gap;
+    } else if (
+      placement.side === 'top' &&
+      top < margin &&
+      triggerRect.bottom + menuRect.height + gap <= viewport.height - margin
+    ) {
+      finalSide = 'bottom';
+      top = triggerRect.bottom + gap;
+    } else if (
+      placement.side === 'right' &&
+      left + menuRect.width > viewport.width - margin &&
+      triggerRect.left - menuRect.width - gap >= margin
+    ) {
+      finalSide = 'left';
+      left = triggerRect.left - menuRect.width - gap;
+    } else if (
+      placement.side === 'left' &&
+      left < margin &&
+      triggerRect.right + menuRect.width + gap <= viewport.width - margin
+    ) {
+      finalSide = 'right';
+      left = triggerRect.right + gap;
     }
 
-    // Clamp vertical position (flip if needed)
-    if (top < 8) {
-      top = triggerRect.bottom + 8;
-    } else if (top + menuRect.height > viewport.height - 8) {
-      const topPlacement = triggerRect.top - menuRect.height - 8;
-      if (topPlacement >= 8) {
-        top = topPlacement;
-      } else {
-        // Constrain height if menu doesn't fit
-        top = 8;
-      }
+    // Clamp horizontal and vertical position to viewport.
+    if (left < margin) {
+      left = margin;
+    } else if (left + menuRect.width > viewport.width - margin) {
+      left = viewport.width - menuRect.width - margin;
     }
 
+    if (top < margin) {
+      top = margin;
+    } else if (top + menuRect.height > viewport.height - margin) {
+      top = viewport.height - menuRect.height - margin;
+    }
+
+    this.setAttribute('data-side', finalSide);
+    this.setAttribute('data-align', placement.align);
     this.style.left = `${left}px`;
     this.style.top = `${top}px`;
   }

@@ -164,7 +164,17 @@ const PRESETS = {
   },
 };
 
+const DATE_RANGE_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+
+function normalizeDateRangeSide(value) {
+  const side = String(value || 'bottom').toLowerCase().split('-')[0];
+
+  return DATE_RANGE_SIDES.has(side) ? side : 'bottom';
+}
+
 export class RenDateRangePicker extends HTMLElement {
+  static observedAttributes = ['placement'];
+
   constructor() {
     super();
 
@@ -251,6 +261,12 @@ export class RenDateRangePicker extends HTMLElement {
     }
 
     document.removeEventListener('click', this.handleDocumentClick);
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.syncPlacement();
+    }
   }
 
   /* ═══ RENDER FULL COMPONENT ═══ */
@@ -384,6 +400,18 @@ export class RenDateRangePicker extends HTMLElement {
     this.summaryEl = summary;
     this.applyBtn = applyBtn;
     this.cancelBtn = cancelBtn;
+
+    this.syncPlacement();
+  }
+
+  /* ═══ MIRROR PLACEMENT TO PUBLIC DATA ATTRIBUTES ═══ */
+  syncPlacement() {
+    const side = normalizeDateRangeSide(this.getAttribute('placement'));
+
+    this.setAttribute('data-side', side);
+    if (this.dropdown) {
+      this.dropdown.setAttribute('data-side', side);
+    }
   }
 
   /* ═══ SET UP EVENT LISTENERS ═══ */
@@ -630,6 +658,8 @@ export class RenDateRangePicker extends HTMLElement {
       this.leftMonth = new Date(this.confirmedStart.getFullYear(), this.confirmedStart.getMonth());
       this.rightMonth = new Date(this.leftMonth.getFullYear(), this.leftMonth.getMonth() + 1);
     }
+
+    this.syncPlacement();
 
     try {
       this.dropdown.showPopover();

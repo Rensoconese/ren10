@@ -263,11 +263,21 @@ function normalizeHex(hex) {
   return result ? rgbToHex(result.r, result.g, result.b, result.a) : null;
 }
 
+const COLOR_PICKER_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+
+function normalizeColorPickerSide(value) {
+  const side = String(value || 'bottom').toLowerCase().split('-')[0];
+
+  return COLOR_PICKER_SIDES.has(side) ? side : 'bottom';
+}
+
 /* ═════════════════════════════════════════════════════════════════════
    COLOR PICKER WEB COMPONENT
    ═════════════════════════════════════════════════════════════════════ */
 
 export class RenColorPicker extends HTMLElement {
+  static observedAttributes = ['placement'];
+
   #isOpen = false;
   #hsv = { h: 0, s: 100, v: 100, a: 1 };
   #format = 'hex'; // 'hex', 'rgb', 'hsl'
@@ -290,6 +300,12 @@ export class RenColorPicker extends HTMLElement {
     this.handleFormatToggle = this.handleFormatToggle.bind(this);
     this.handleSwatchClick = this.handleSwatchClick.bind(this);
     this.handleEyedropper = this.handleEyedropper.bind(this);
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.#syncPlacement();
+    }
   }
 
   connectedCallback() {
@@ -337,6 +353,8 @@ export class RenColorPicker extends HTMLElement {
       this.#trigger.setAttribute('popovertarget', popoverId);
     }
 
+    this.#syncPlacement();
+
     // ═══ POPULATE POPOVER ON OPEN ═══
     this.#popover.addEventListener('toggle', (e) => {
       if (e.newState === 'open') {
@@ -364,6 +382,15 @@ export class RenColorPicker extends HTMLElement {
   /* ═════════════════════════════════════════════════════════════════
      RENDERING METHODS
      ═════════════════════════════════════════════════════════════════ */
+
+  #syncPlacement() {
+    const side = normalizeColorPickerSide(this.getAttribute('placement'));
+
+    this.setAttribute('data-side', side);
+    if (this.#popover) {
+      this.#popover.setAttribute('data-side', side);
+    }
+  }
 
   /**
    * Render the trigger button showing the selected color
