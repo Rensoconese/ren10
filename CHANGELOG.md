@@ -17,23 +17,39 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Fixed
 
-- **Package export smoke coverage.** Added `test:exports` to verify every
-  public subpath resolves without extension-doubling (`.js.js`,
-  `.css.css`) and wired it into `npm test`.
-- **CLI copy smoke coverage.** Added `smoke:cli-copy` to install a component
-  into a temporary consumer project and import the copied JS, catching broken
-  utility-relative imports before publish.
-- **Interactive component robustness.** Hardened `ren-form`, `ren-popover`,
-  `ren-calendar`, `ren-carousel`, `ren-sidebar`, `ren-table`,
-  `ren-command`, `ren-select`, `ren-tooltip`, and `ren-color-picker` around
-  unsafe summary rendering, focus/ARIA state, reduced motion, storage-denied
-  contexts, lifecycle cleanup, and table render cost.
-
 ### Removed
 
 ### Security
 
 ### Accessibility milestones
+
+## [0.9.1] — 2026-07-07
+
+Focus: **CLI bugfixes and popover contract alignment.** Patch release for
+issues found after the 0.9.0 agent-ready package.
+
+### Fixed
+
+- **CLI utility import normalization.** `ren10 add`, `remove`, and `upgrade`
+  now compare and write copied JS components against the consumer layout
+  (`../../utils/`) instead of the package source layout (`../../../utils/`),
+  preventing false local override detection and broken `upgrade --force`
+  imports.
+- **`ren10 init --shape` / `--density` scaffold.** Generated
+  `rends/index.css` now imports `./themes/appearance.css` by default, so the
+  printed `data-density` / `data-shape` attributes work immediately.
+- **`ren-popover` non-modal behavior.** The component contract and runtime now
+  agree: popovers keep `aria-modal="false"` and do not trap focus, while still
+  restoring focus to the trigger when closed from inside.
+- **Agent CLI manifest and knowledge graph commands.** The machine-readable
+  manifest now lists `windsurf` in the `agent-docs --agent` enum, and bare
+  `ren10 knowledge --json` resolves to the `knowledge.path` response.
+
+### Added
+
+- **Regression coverage for 0.9.1 flows.** CLI smoke tests now cover
+  `init --shape`, JS component add / upgrade / remove import preservation, and
+  bare `knowledge --json`.
 
 ## [0.9.0] — 2026-05-16
 
@@ -1134,7 +1150,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.9.1...HEAD
+[0.9.1]: https://github.com/Rensoconese/ren10/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Rensoconese/ren10/compare/v0.8.6...v0.9.0
 [0.8.6]: https://github.com/Rensoconese/ren10/compare/v0.8.5...v0.8.6
 [0.8.5]: https://github.com/Rensoconese/ren10/compare/v0.8.4...v0.8.5
