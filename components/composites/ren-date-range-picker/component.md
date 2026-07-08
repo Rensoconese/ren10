@@ -28,7 +28,7 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 selectionCriteria:
   useWhen:
     - "User needs to pick a contiguous date range (start + end) confirmed by an explicit Apply action."
-    - "UI needs dual side-by-side calendars (left = start month, right = next month) inside a popover."
+    - "UI needs dual side-by-side calendars (left = start month, right = next month) inside a CSS-anchor-positioned popover."
     - "Preset shortcuts like Last 7 / Last 30 / This Month / Last Month should be selectable as a sidebar listbox."
     - "Form submission needs two ISO-string fields named `<name>-start` and `<name>-end` via injected hidden inputs."
     - "Selection has Apply/Cancel semantics — draft state on outside-click or Cancel must revert to the previously confirmed range."
@@ -53,11 +53,12 @@ requiredMarkup:
   - "The dropdown root carries role=\"dialog\", aria-label, and popover=\"manual\"; presets render inside role=\"listbox\" with each preset as role=\"option\" + data-preset=\"<key>\"."
   - "Footer must contain .ren-date-range-summary (aria-live=\"polite\"), .ren-date-range-cancel, and .ren-date-range-apply — Apply is disabled until both endpoints are set."
   - "Use `name=\"…\"` on the host so the component injects <input type=\"hidden\" name=\"<name>-start\"> and `…-end` for form submission."
+  - "Use placement=\"bottom\" by default; the host and .ren-date-range-dropdown mirror the preferred side to data-side."
 
 forbiddenPatterns:
   - "Wiring presets to a single ren-calendar instead of using both calendarLeft/calendarRight — the host depends on having two ren-calendar children to call setRange on."
   - "Skipping the Apply button and writing directly to the trigger — Cancel/outside-click revert depends on a draft vs confirmed split."
-  - "Hardcoding the dropdown width or breakpoint — the component uses container-type: inline-size with @container ren-date-range to switch to a stacked layout under 500px."
+  - "Hardcoding dropdown placement offsets or breakpoints — use placement/data-side for side preference, and keep the container-type: inline-size @container ren-date-range layout under 500px."
   - "Adding extra inline color tokens to .ren-date-range-preset[aria-selected=\"true\"] — the highlighted preset already styles via --color-accent-subtle / --color-accent."
   - "Calling showPopover() directly from outside — use the host's open() / close() / handleApply() / handleCancel() so draft/confirmed state stays consistent."
 
@@ -125,6 +126,8 @@ Use the docs page and source files listed below for full examples before adding 
 ## States And Attributes
 
 - `[aria-selected]`
+- `[data-side]`
+- `placement`
 - `:active`
 - `:focus-visible`
 - `:hover`

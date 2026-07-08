@@ -13,7 +13,7 @@
  * - Optional multi-select mode
  * - Option groups and separators
  * - Form submission integration
- * - Automatic positioning below/above trigger
+ * - Preferred placement with viewport-aware positioning
  * - Fallback styling for native select elements
  * - Respects prefers-reduced-motion
  *
@@ -34,6 +34,19 @@ import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
 import { createDismissable } from '../../../utils/dismissable.js';
 import { autoId } from '../../../utils/id-generator.js';
 
+const SELECT_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+const SELECT_ALIGNS = new Set(['start', 'end']);
+
+function normalizeSelectPlacement(value) {
+  const [sideValue, alignValue] = String(value || 'bottom')
+    .toLowerCase()
+    .split('-');
+  const side = SELECT_SIDES.has(sideValue) ? sideValue : 'bottom';
+  const align = SELECT_ALIGNS.has(alignValue) ? alignValue : 'start';
+
+  return { side, align };
+}
+
 /**
  * Compute dropdown position relative to trigger element.
  * Falls back above if not enough space below.
@@ -41,37 +54,91 @@ import { autoId } from '../../../utils/id-generator.js';
  * @private
  * @param {HTMLElement} trigger - Trigger button element
  * @param {HTMLElement} content - Dropdown content element
- * @returns {Object} Position with top, left, flipped properties
+ * @param {Object} placement - Normalized placement object
+ * @returns {Object} Position with top, left, flipped, side, and align properties
  */
-function computePosition(trigger, content) {
+function computePosition(trigger, content, placement = normalizeSelectPlacement()) {
   const triggerRect = trigger.getBoundingClientRect();
   const contentRect = content.getBoundingClientRect();
   const viewport = {
     width: window.innerWidth,
     height: window.innerHeight,
   };
+  const gap = 8;
+  const margin = 16;
 
-  // Position below trigger
-  let top = triggerRect.bottom + 8;
+  let finalSide = placement.side;
   let flipped = false;
+  let top = triggerRect.bottom + gap;
+  let left = triggerRect.left;
 
-  // Check if content extends past bottom of viewport
-  if (top + contentRect.height > viewport.height && triggerRect.top - contentRect.height > 0) {
-    // Flip to above
-    top = triggerRect.top - contentRect.height - 8;
+  if (placement.align === 'end') {
+    left = triggerRect.right - contentRect.width;
+  }
+
+  if (placement.side === 'top') {
+    top = triggerRect.top - contentRect.height - gap;
+  } else if (placement.side === 'right') {
+    top = placement.align === 'end'
+      ? triggerRect.bottom - contentRect.height
+      : triggerRect.top;
+    left = triggerRect.right + gap;
+  } else if (placement.side === 'left') {
+    top = placement.align === 'end'
+      ? triggerRect.bottom - contentRect.height
+      : triggerRect.top;
+    left = triggerRect.left - contentRect.width - gap;
+  }
+
+  if (
+    placement.side === 'bottom' &&
+    top + contentRect.height > viewport.height - margin &&
+    triggerRect.top - contentRect.height - gap >= margin
+  ) {
+    top = triggerRect.top - contentRect.height - gap;
+    finalSide = 'top';
+    flipped = true;
+  } else if (
+    placement.side === 'top' &&
+    top < margin &&
+    triggerRect.bottom + contentRect.height + gap <= viewport.height - margin
+  ) {
+    top = triggerRect.bottom + gap;
+    finalSide = 'bottom';
+    flipped = true;
+  } else if (
+    placement.side === 'right' &&
+    left + contentRect.width > viewport.width - margin &&
+    triggerRect.left - contentRect.width - gap >= margin
+  ) {
+    left = triggerRect.left - contentRect.width - gap;
+    finalSide = 'left';
+    flipped = true;
+  } else if (
+    placement.side === 'left' &&
+    left < margin &&
+    triggerRect.right + contentRect.width + gap <= viewport.width - margin
+  ) {
+    left = triggerRect.right + gap;
+    finalSide = 'right';
     flipped = true;
   }
 
-  // Left alignment, clamped to viewport
-  let left = triggerRect.left;
-  if (left + triggerRect.width > viewport.width) {
-    left = viewport.width - triggerRect.width - 16;
+  if (left + contentRect.width > viewport.width - margin) {
+    left = viewport.width - contentRect.width - margin;
   }
-  if (left < 0) {
-    left = 16;
+  if (left < margin) {
+    left = margin;
   }
 
-  return { top, left, flipped };
+  if (top + contentRect.height > viewport.height - margin) {
+    top = viewport.height - contentRect.height - margin;
+  }
+  if (top < margin) {
+    top = margin;
+  }
+
+  return { top, left, flipped, side: finalSide, align: placement.align };
 }
 
 /**
@@ -83,6 +150,8 @@ function computePosition(trigger, content) {
  * @extends HTMLElement
  */
 export class RenSelect extends HTMLElement {
+  static observedAttributes = ['placement'];
+
   #trigger = null;
   #content = null;
   #items = [];
@@ -118,6 +187,15 @@ export class RenSelect extends HTMLElement {
     this.cleanup();
   }
 
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.syncPlacement();
+      if (this.#isOpen) {
+        this.positionContent();
+      }
+    }
+  }
+
   /* ─────────────────────────────────────────────────────────────
      SETUP & INITIALIZATION
      ───────────────────────────────────────────────────────────── */
@@ -141,6 +219,7 @@ export class RenSelect extends HTMLElement {
    */
   setupComponent() {
     this.classList.add('ren-select');
+    this.syncPlacement();
 
     // Check for size variant
     if (this.hasAttribute('size')) {
@@ -173,6 +252,7 @@ export class RenSelect extends HTMLElement {
 
     // Cache items
     this.updateItems();
+    this.syncPlacement();
   }
 
   /**
@@ -567,13 +647,32 @@ export class RenSelect extends HTMLElement {
    * @private
    */
   positionContent() {
-    const { top, left, flipped } = computePosition(this.#trigger, this.#content);
+    const placement = normalizeSelectPlacement(this.getAttribute('placement'));
+    const { top, left, flipped, side, align } = computePosition(this.#trigger, this.#content, placement);
 
     this.#content.style.position = 'fixed';
     this.#content.style.top = `${top}px`;
     this.#content.style.left = `${left}px`;
     this.#content.style.width = `${this.#trigger.offsetWidth}px`;
     this.#content.setAttribute('data-flipped', flipped ? 'true' : 'false');
+    this.#content.setAttribute('data-side', side);
+    this.#content.setAttribute('data-align', align);
+    this.setAttribute('data-side', side);
+    this.setAttribute('data-align', align);
+  }
+
+  /**
+   * Mirror preferred placement to public data attributes.
+   */
+  syncPlacement() {
+    const { side, align } = normalizeSelectPlacement(this.getAttribute('placement'));
+
+    this.setAttribute('data-side', side);
+    this.setAttribute('data-align', align);
+    if (this.#content) {
+      this.#content.setAttribute('data-side', side);
+      this.#content.setAttribute('data-align', align);
+    }
   }
 
   /* ─────────────────────────────────────────────────────────────

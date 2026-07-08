@@ -31,7 +31,7 @@ selectionCriteria:
     - "You need keyboard navigation (Arrow keys, Home/End, typeahead) plus click-outside / Escape dismissal."
     - "Items must support menuitem, menuitemcheckbox, menuitemradio, separators, group labels, danger styling, and right-aligned shortcut text."
     - "Right-click context menus reuse the same chrome via <ren-context-menu> (extends RenMenu) at pointer coordinates."
-    - "Positioning needs viewport-aware placement (bottom-start / bottom-end / top-start / top-end) with native Popover API support."
+    - "Positioning needs viewport-aware placement (bottom-start / bottom-end / top-start / top-end, with right/left also accepted) with native Popover API support."
   avoidWhen:
     - "User is selecting a single value to commit into a form field — use ren-select."
     - "User is filtering a combobox of suggestions — use ren-combobox."
@@ -53,6 +53,7 @@ requiredMarkup:
   - "Visual separators use <div class=\"ren-menu-separator\"> and group titles use <div class=\"ren-menu-label\">; do not use <hr> or <h*> for these slots."
   - "Disabled items set aria-disabled=\"true\"; the component skips them in keyboard navigation and selection."
   - "Set data-value=\"…\" on items so the dispatched ren-menu-select event carries that value in detail.value (falls back to textContent)."
+  - "Use placement=\"bottom-start\" by default; the host mirrors the resolved side/alignment to data-side=\"top|right|bottom|left\" and data-align=\"start|end\"."
 
 forbiddenPatterns:
   - "Using <a href> for menu items that perform JS actions — use <button> and listen to ren-menu-select."
@@ -118,8 +119,11 @@ Use the docs page and source files listed below for full examples before adding 
 - `[aria-checked]`
 - `[aria-disabled]`
 - `[data-closing]`
+- `[data-align]`
 - `[data-highlighted]`
 - `[data-menu-trigger]`
+- `[data-side]`
+- `placement`
 - `:active`
 - `:hover`
 

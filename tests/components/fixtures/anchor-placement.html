@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script type="module" src="../../../components/composites/ren-popover/ren-popover.js"></script>
   <script type="module" src="../../../components/composites/ren-tooltip/ren-tooltip.js"></script>
+  <script type="module" src="../../../components/composites/ren-menu/ren-menu.js"></script>
+  <script type="module" src="../../../components/composites/ren-select/ren-select.js"></script>
+  <script type="module" src="../../../components/composites/ren-combobox/ren-combobox.js"></script>
+  <script type="module" src="../../../components/composites/ren-color-picker/ren-color-picker.js"></script>
+  <script type="module" src="../../../components/composites/ren-calendar/ren-calendar.js"></script>
+  <script type="module" src="../../../components/composites/ren-date-picker/ren-date-picker.js"></script>
+  <script type="module" src="../../../components/composites/ren-date-range-picker/ren-date-range-picker.js"></script>
 </head>
 <body>
   <button id="popover-trigger" type="button" data-popover-trigger>Open filters</button>
@@ -16,5 +23,25 @@
     Save
     <ren-tooltip id="tooltip" placement="bottom">Save changes</ren-tooltip>
   </button>
+
+  <button id="menu-trigger" type="button" data-menu-trigger>Actions</button>
+  <ren-menu id="menu" trigger-id="menu-trigger" placement="top-start">
+    <button type="button" class="ren-menu-item">Edit</button>
+  </ren-menu>
+
+  <ren-select id="select" placement="left">
+    <button type="button" class="ren-select-trigger" data-select-trigger>Choose</button>
+    <div class="ren-select-content" data-select-content>
+      <div class="ren-select-item" data-select-item data-value="one">One</div>
+    </div>
+  </ren-select>
+
+  <ren-combobox id="combobox" placement="top">
+    <div class="ren-combobox-item" data-value="ar">Argentina</div>
+  </ren-combobox>
+
+  <ren-color-picker id="color" placement="right" value="#007aff"></ren-color-picker>
+  <ren-date-picker id="date" placement="top"></ren-date-picker>
+  <ren-date-range-picker id="range" placement="left"></ren-date-range-picker>
 </body>
 </html>

@@ -32,6 +32,7 @@ selectionCriteria:
     - "Grouped options or items with secondary descriptions are needed."
     - "Async loading states (.ren-combobox-loading) or empty states (.ren-combobox-empty) are required."
     - "Single-select with a text-input affordance is the right control (input visible at rest)."
+    - "The inline list needs a preferred top/bottom opening side via placement without becoming a Popover API overlay."
   avoidWhen:
     - "Users pick from a short fixed list without filtering — use ren-select."
     - "Multi-select with tag chips is required — use a dedicated multi-select / ren-multiselect."
@@ -54,6 +55,7 @@ requiredMarkup:
   - "Use .ren-combobox-item-label and .ren-combobox-item-description inside items for two-line content; do not nest extra layout divs."
   - "Empty state lives in <div class=\"ren-combobox-empty\" hidden> and the loading state in <div class=\"ren-combobox-loading\" hidden>."
   - "Group items inside <div class=\"ren-combobox-group\"> with a leading <div class=\"ren-combobox-group-label\">."
+  - "Use placement=\"bottom\" by default; the host and .ren-combobox-list mirror placement to data-side. Top changes the absolute list fallback to open above the input."
 
 forbiddenPatterns:
   - "Replacing <input> with a contentEditable div — breaks IME, autofill, and form submission."
@@ -107,7 +109,9 @@ Use the docs page and source files listed below for full examples before adding 
 
 - `[aria-disabled]`
 - `[aria-selected]`
+- `[data-side]`
 - `[data-highlighted]`
+- `placement`
 - `:disabled`
 - `:hover`
 

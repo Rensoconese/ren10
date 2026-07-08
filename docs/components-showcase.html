@@ -2501,14 +2501,14 @@
            ═══════════════════════════════════════════════════════════ -->
       <section id="combobox" class="demo-section">
         <h2>Combobox</h2>
-        <p class="demo-description">Searchable dropdown with type-ahead filtering. Uses Popover API for the dropdown and <code>aria-selected</code> for selection.</p>
+        <p class="demo-description">Searchable dropdown with type-ahead filtering. Mirrors placement to <code>data-side</code> and uses <code>aria-selected</code> for selection.</p>
 
         <div style="max-width: 320px;">
-          <div class="ren-combobox" id="demo-combobox">
+          <div class="ren-combobox" id="demo-combobox" data-side="bottom">
             <input type="text" class="ren-combobox-input" placeholder="Search framework..." aria-label="Search framework"
                    style="anchor-name: --cb-1;">
             <button class="ren-combobox-clear" aria-label="Clear" style="display: none;">&times;</button>
-            <div class="ren-combobox-content" popover style="position-anchor: --cb-1;">
+            <div class="ren-combobox-content" popover data-side="bottom" style="position-anchor: --cb-1;">
               <div class="ren-combobox-group">
                 <div class="ren-combobox-group-label">Popular</div>
                 <button class="ren-combobox-item" aria-selected="false">React</button>
@@ -2644,10 +2644,10 @@
            ═══════════════════════════════════════════════════════════ -->
       <section id="color-picker" class="demo-section">
         <h2>Color Picker</h2>
-        <p class="demo-description">Full-featured color picker with saturation canvas, hue/alpha sliders, HEX/RGB/HSL inputs, eyedropper, and preset swatches. Uses Popover API.</p>
+        <p class="demo-description">Full-featured color picker with saturation canvas, hue/alpha sliders, HEX/RGB/HSL inputs, eyedropper, and preset swatches. Uses Popover API with <code>data-side</code> placement.</p>
 
         <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-start;">
-          <div class="ren-color-picker" id="demo-color-picker">
+          <div class="ren-color-picker" id="demo-color-picker" data-side="bottom">
             <button class="ren-color-picker-trigger"
                     popovertarget="demo-cp-dropdown"
                     style="anchor-name: --cp-1;"
@@ -2655,7 +2655,7 @@
               <span class="ren-color-picker-trigger-swatch" style="background: #6366f1;"></span>
               <span class="ren-color-picker-trigger-value">#6366f1</span>
             </button>
-            <div class="ren-color-picker-dropdown" id="demo-cp-dropdown" popover
+            <div class="ren-color-picker-dropdown" id="demo-cp-dropdown" popover data-side="bottom"
                  style="position-anchor: --cp-1;">
               <div class="ren-color-picker-saturation" style="background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, #6366f1); height: 150px; border-radius: var(--radius-md); position: relative; cursor: crosshair;">
                 <div class="ren-color-picker-saturation-handle" style="position: absolute; width: 16px; height: 16px; border: 2px solid var(--color-surface); border-radius: 50%; box-shadow: 0 0 0 1px rgba(0,0,0,.3); top: 30%; right: 20%; transform: translate(50%, -50%);"></div>
@@ -2990,7 +2990,7 @@
            ═══════════════════════════════════════════════════════════ -->
       <section id="menu" class="demo-section">
         <h2>Menu</h2>
-        <p class="demo-description">Dropdown menu with items, groups, separators, checkboxes, radio items, and shortcuts. Popover API-based.</p>
+        <p class="demo-description">Dropdown menu with items, groups, separators, checkboxes, radio items, and shortcuts. Popover API-based with <code>data-side</code> / <code>data-align</code>.</p>
 
         <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
           <div>
@@ -2999,7 +2999,7 @@
                     style="anchor-name: --menu-1;">
               Actions ▾
             </button>
-            <div class="ren-menu" id="demo-menu-1" popover
+            <div class="ren-menu" id="demo-menu-1" popover data-side="bottom" data-align="start"
                  style="position-anchor: --menu-1;">
               <div class="ren-menu-label">File</div>
               <button class="ren-menu-item">
