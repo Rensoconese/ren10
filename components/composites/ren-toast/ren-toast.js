@@ -289,12 +289,6 @@ function buildToast(id, opts) {
 function showOnViewport(viewport, opts) {
   const id = opts.id || generateId();
 
-  if (!opts.durationExplicit && !opts.statusExplicit) {
-    const tokenDuration = getComputedStyle(viewport).getPropertyValue('--ren-toast-duration').trim();
-    const parsedDuration = parseFloat(tokenDuration);
-    if (Number.isFinite(parsedDuration) && parsedDuration >= 0) opts.duration = parsedDuration;
-  }
-
   // If a toast with this id exists, replace it
   const existing = viewport.querySelector(`[data-toast-id="${CSS.escape(id)}"]`);
   if (existing) {
@@ -307,6 +301,27 @@ function showOnViewport(viewport, opts) {
 
   const toast = buildToast(id, opts);
   viewport.appendChild(toast);
+
+  // Resolve the closest effective token scope, including overrides on the
+  // generated toast itself. Explicit duration/status options remain
+  // authoritative.
+  if (!opts.durationExplicit && !opts.statusExplicit) {
+    const tokenDuration = getComputedStyle(toast)
+      .getPropertyValue('--ren-toast-duration')
+      .trim();
+    const parsedDuration = parseFloat(tokenDuration);
+    if (Number.isFinite(parsedDuration) && parsedDuration >= 0) {
+      opts.duration = parsedDuration;
+      const progress = toast.querySelector('.ren-toast-progress');
+      if (opts.duration > 0) {
+        toast.setAttribute('data-duration', String(opts.duration));
+        if (progress) progress.style.transition = `width ${opts.duration}ms linear`;
+      } else if (progress) {
+        progress.remove();
+        toast.removeAttribute('data-duration');
+      }
+    }
+  }
 
   if (!opts.durationExplicit && opts.duration > 0) toast.setAttribute('data-duration', String(opts.duration));
 

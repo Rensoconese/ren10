@@ -23,7 +23,8 @@ Status: DONE_WITH_CONCERNS
 - `npm run lint:css` ✅
 - `npm run test:components` ✅ 46 passed (Desktop Light + Dark)
 
-## Concerns / follow-up
+## Follow-up resolution
 
-- Full `npm run lint` remains expected RED only because Task 4's 14 unresolved aliases are intentionally preserved.
-- Runtime toast duration is read from the viewport/root computed style; if a consumer scopes `--ren-toast-duration` only on a pre-existing individual toast node, a future API refinement could read the node before constructing progress markup.
+- Scoped toast duration now resolves from `getComputedStyle(toast)` after insertion, so selector-level overrides are honored while explicit duration/status remain authoritative. Progress transition and timer are updated without scheduling an additional animation frame.
+- RED coverage added for the scoped runtime read; focused component test passes in Desktop Light and Dark.
+- `npm run lint:css` and `npm run lint:tokens` pass. Full `npm run lint` remains expected RED only because Task 4's 14 unresolved aliases are intentionally preserved.

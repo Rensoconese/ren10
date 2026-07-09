@@ -52,6 +52,7 @@
       --ren-ai-gap: 19px;
       --ren-dialog-bg: rgb(7 8 9);
     }
+    .toast-scope .ren-toast { --ren-toast-duration: 1234ms; }
   </style>
 </head>
 <body>
@@ -109,6 +110,7 @@
       <nav id="scoped-nav" class="ren-nav"><a href="#">Nav</a></nav>
       <div id="scoped-command" class="ren-command">Command</div>
       <section id="scoped-ai" class="ren-ai">AI</section>
+      <ren-toast-viewport id="scoped-toast-viewport" class="toast-scope"></ren-toast-viewport>
     </section>
   </main>
 </body>

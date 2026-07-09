@@ -1,6 +1,7 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
 const path = require('path');
+const fs = require('fs');
 
 const FIXTURE_URL =
   'file://' + path.resolve(__dirname, 'fixtures/component-token-overrides.html');
@@ -55,5 +56,11 @@ test.describe('Primitive Appearance API contract', () => {
     await expect.poll(() => page.locator('#scoped-table tr').evaluate((element) => getComputedStyle(element).height)).toBe('49px');
     await expect.poll(() => page.locator('#scoped-nav').evaluate((element) => getComputedStyle(element).height)).toBe('61px');
     await expect.poll(() => page.locator('#scoped-command').evaluate((element) => getComputedStyle(element).width)).toBe('371px');
+  });
+
+  test('toast duration honors an individual toast scoped token', async ({ page }) => {
+    const source = fs.readFileSync(path.resolve(__dirname, '../../components/composites/ren-toast/ren-toast.js'), 'utf8');
+    expect(source).toContain('getComputedStyle(toast)');
+    expect(source).not.toContain('getComputedStyle(viewport)');
   });
 });
