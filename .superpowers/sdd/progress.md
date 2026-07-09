@@ -42,17 +42,25 @@
 - Main-agent verification: foundation fixture 10/10, validator unit, CSS/token lint pass
 - Inventory: 14 unresolved aliases; 0 unconsumed; 0 contract-absent
 
-## Current
-
 ### Task 4 — Undefined custom properties and real cascade layers
 
-- Status: ready after Task 3 review artifacts are committed
-- Expected post-task inventory: unresolved aliases reduced to zero; five populated cascade layers
-- Base commit: task-3 closure documentation commit
+- Implementation commit: `bd751ca`
+- TDD evidence: cascade fixture RED/GREEN; aliases, opaque surfaces, utility layer, and app override covered
+- Independent review: `APPROVED`, no Critical/Important findings
+- Main-agent verification: `npm run lint`, components 54/54, exports pass; analyzer 0/0/0
+- Note: `agent:check` knowledge artifact remains stale and is explicitly handed to Task 12; Task 4 code itself is green
+
+## Current
+
+### Task 5 — Theme contrast, AAA mode, and progressive enhancement
+
+- Status: ready after Task 4 review artifacts are committed
+- Expected: all nine themes AA-valid, real AAA scope, no-JS content visible
+- Base commit: task-4 closure documentation commit
 - Review status: pending
 
 ## Pending
 
-- Tasks 5–12: remaining P1 remediation and hard gate
+- Tasks 6–12: remaining P1 remediation and hard gate
 - Tasks 13–16: P2 remediation
 - Task 17: fresh audit, escaped-finding fixes, exhaustive future-additions plan, final integration
