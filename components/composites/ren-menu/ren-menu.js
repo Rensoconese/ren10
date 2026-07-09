@@ -66,6 +66,7 @@ export class RenMenu extends HTMLElement {
   #boundTriggerClick = null;
   #boundTriggerKeydown = null;
   #returnFocus = true;
+  #closeTimer = null;
 
   constructor() {
     super();
@@ -520,7 +521,8 @@ export class RenMenu extends HTMLElement {
     const animationDuration = getComputedStyle(this).animationDuration;
     const duration = parseFloat(animationDuration) * 1000;
 
-    setTimeout(() => {
+    if (this.#closeTimer) clearTimeout(this.#closeTimer);
+    this.#closeTimer = setTimeout(() => {
       this.removeAttribute('data-closing');
 
       if ('popover' in HTMLElement.prototype) {
@@ -537,6 +539,7 @@ export class RenMenu extends HTMLElement {
       if (this.#returnFocus && this.#trigger && document.contains(this.#trigger)) {
         this.#trigger.focus();
       }
+      this.#closeTimer = null;
     }, Math.min(duration, 150)); // Cap at 150ms
 
     this.dispatchEvent(new CustomEvent('ren-menu-close', { bubbles: true }));
@@ -564,6 +567,7 @@ export class RenMenu extends HTMLElement {
    */
   cleanup() {
     this.close();
+    if (this.#closeTimer) clearTimeout(this.#closeTimer);
     this.teardownKeyboardNav();
     this.teardownDismissable();
 

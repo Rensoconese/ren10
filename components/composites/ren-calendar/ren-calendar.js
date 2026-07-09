@@ -49,7 +49,7 @@ export class RenCalendar extends HTMLElement {
     /* ═══ PARSE DATE ATTRIBUTES ═══ */
     const valueAttr = this.getAttribute('value');
     if (valueAttr) {
-      const parsed = new Date(valueAttr);
+      const parsed = this.parseDate(valueAttr);
       if (!isNaN(parsed)) {
         this.selectedDate = parsed;
         this.currentDate = new Date(parsed);
@@ -57,10 +57,10 @@ export class RenCalendar extends HTMLElement {
     }
 
     const minAttr = this.getAttribute('min');
-    if (minAttr) this.minDate = new Date(minAttr);
+    if (minAttr) this.minDate = this.parseDate(minAttr);
 
     const maxAttr = this.getAttribute('max');
-    if (maxAttr) this.maxDate = new Date(maxAttr);
+    if (maxAttr) this.maxDate = this.parseDate(maxAttr);
 
     /* ═══ RENDER CALENDAR ═══ */
     this.render();
@@ -429,8 +429,8 @@ export class RenCalendar extends HTMLElement {
       return;
     }
 
-    this.rangeStart = new Date(start);
-    this.rangeEnd = new Date(end);
+    this.rangeStart = this.parseDate(start);
+    this.rangeEnd = this.parseDate(end);
     this.render();
   }
 
@@ -479,7 +479,13 @@ export class RenCalendar extends HTMLElement {
 
   /* ═══ CONVERT DATE TO ISO STRING ═══ */
   dateToString(date) {
-    return date.toISOString().split('T')[0];
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+  }
+
+  parseDate(value) {
+    if (value instanceof Date) return new Date(value.getTime());
+    const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : new Date(value);
   }
 
   /* ═══ PUBLIC METHODS ═══ */
@@ -500,11 +506,11 @@ export class RenCalendar extends HTMLElement {
   /* ═══ SET VALUE ═══ */
   setValue(value) {
     if (this.mode === 'single' && typeof value === 'string') {
-      this.selectedDate = new Date(value);
+    this.selectedDate = this.parseDate(value);
       this.render();
     } else if (this.mode === 'range' && value && typeof value === 'object') {
-      this.rangeStart = new Date(value.start);
-      this.rangeEnd = new Date(value.end);
+      this.rangeStart = this.parseDate(value.start);
+      this.rangeEnd = this.parseDate(value.end);
       this.render();
     } else if (this.mode === 'multiple' && Array.isArray(value)) {
       this.selectedDates = new Set(value);
