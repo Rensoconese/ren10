@@ -71,7 +71,8 @@
   "scripts": {
     "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
-    "lint": "npm run lint:css && npm run lint:tokens",
+    "lint:contracts": "node scripts/check-css-contracts.mjs",
+    "lint": "npm run lint:css && npm run lint:tokens && npm run lint:contracts",
     "test": "npm run test:all",
     "test:all": "npm run test:a11y && npm run test:components && npm run test:visual -- --project=\"Desktop Light\" && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",

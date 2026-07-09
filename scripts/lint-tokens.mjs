@@ -28,9 +28,9 @@
  *   npm run lint:tokens
  */
 
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { dirname, join, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = resolve(__dirname, '..');
@@ -88,14 +88,14 @@ const isGrayscaleAlpha = (inner) => {
   return isWhite || isBlack;
 };
 
-async function walk(dir) {
+export async function walkCssFiles(dir) {
   const out = [];
   const entries = await readdir(dir, { withFileTypes: true });
   for (const entry of entries) {
     const path = join(dir, entry.name);
     if (entry.isDirectory()) {
       if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
-      out.push(...(await walk(path)));
+      out.push(...(await walkCssFiles(path)));
     } else if (entry.isFile() && entry.name.endsWith('.css')) {
       out.push(path);
     }
@@ -190,7 +190,7 @@ async function main() {
   const componentsDir = join(PKG_ROOT, 'components');
   let componentFiles;
   try {
-    componentFiles = await walk(componentsDir);
+    componentFiles = await walkCssFiles(componentsDir);
   } catch (err) {
     if (err.code === 'ENOENT') {
       console.log('No components/ directory; skipping token lint.');
@@ -224,4 +224,9 @@ async function main() {
   process.exit(1);
 }
 
-await main();
+const isDirectRun =
+  process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+
+if (isDirectRun) {
+  await main();
+}
