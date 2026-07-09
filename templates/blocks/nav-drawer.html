@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Drawer Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS navbar drawer block built with vanilla HTML, CSS, and ren-sheet.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rb-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rb-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rb-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rb-preview {
+      overflow: hidden;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .rb-nav {
+      min-height: 72px;
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .rb-brand {
+      min-height: var(--touch-min);
+      color: var(--color-text);
+      text-decoration: none;
+      font-weight: var(--weight-bold);
+    }
+
+    .rb-brand-mark {
+      width: 32px;
+      height: 32px;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    .rb-menu-icon {
+      gap: 4px;
+      width: 18px;
+    }
+
+    .rb-menu-icon span {
+      display: block;
+      height: 2px;
+      background: currentColor;
+      border-radius: var(--radius-full);
+    }
+
+    .rb-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rb-hero h2 {
+      max-width: 13ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rb-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    .rb-drawer-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rb-drawer-links a {
+      min-height: var(--touch-min);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: var(--text-3xl);
+      font-weight: var(--weight-bold);
+      line-height: 1.1;
+      border-radius: var(--radius-md);
+    }
+
+    .rb-drawer-links a:hover {
+      color: var(--color-accent);
+    }
+
+    .rb-drawer-links a:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rb-drawer-meta {
+      margin-block-start: var(--space-8);
+      color: var(--color-text-muted);
+      font-style: normal;
+    }
+
+    .rb-drawer-meta strong {
+      color: var(--color-text);
+      font-size: var(--text-sm);
+    }
+
+    .rb-drawer-meta a {
+      color: var(--color-text);
+    }
+
+    .rb-social a {
+      min-height: var(--touch-min);
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+    }
+
+    .rb-social a:hover {
+      color: var(--color-text);
+    }
+
+    @media (max-width: 640px) {
+      .rb-nav {
+        padding-inline: var(--space-4);
+      }
+
+      .rb-nav-actions .ren-btn:not(.ren-btn-icon) {
+        display: none;
+      }
+
+      .rb-drawer-links a {
+        font-size: var(--text-2xl);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell">
+    <header class="rb-page-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Drawer</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Drawer</h1>
+      <p class="lede">
+        A compact navigation block with a brand, primary action, and edge drawer.
+        It uses semantic navigation markup, RenDS buttons, and the sheet composite.
+      </p>
+    </header>
+
+    <section class="rb-preview" aria-label="Navbar drawer preview">
+      <nav class="rb-nav ren-row-spread" aria-label="Example site">
+        <a class="rb-brand ren-row" href="#">
+          <span class="rb-brand-mark ren-center" aria-hidden="true">A</span>
+          <span>Atlas Studio</span>
+        </a>
+        <div class="rb-nav-actions ren-cluster">
+          <a class="ren-btn ren-btn-secondary" href="#">Book a call</a>
+          <button class="ren-btn ren-btn-icon" type="button" data-sheet-trigger="rb-nav-drawer" aria-label="Open navigation menu">
+            <span class="rb-menu-icon ren-stack-sm" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+        </div>
+      </nav>
+
+      <div class="rb-hero ren-stack">
+        <h2>Clearer systems for growing teams.</h2>
+        <p>
+          A quiet marketing surface showing how the drawer keeps primary navigation
+          available without crowding the first viewport.
+        </p>
+        <p>
+          <a class="ren-btn" href="#">Start a project</a>
+          <a class="ren-btn ren-btn-ghost" href="#">View services</a>
+        </p>
+      </div>
+    </section>
+
+    <ren-sheet side="right" size="md" id="rb-nav-drawer">
+      <header class="ren-sheet-header">
+        <h2 class="ren-sheet-title">Navigation</h2>
+        <button type="button" class="ren-sheet-close" data-sheet-close aria-label="Close navigation menu">×</button>
+      </header>
+      <div class="ren-sheet-body">
+        <ul class="rb-drawer-links ren-stack-sm">
+          <li><a href="#" data-sheet-close>Work</a></li>
+          <li><a href="#" data-sheet-close>Services</a></li>
+          <li><a href="#" data-sheet-close>Process</a></li>
+          <li><a href="#" data-sheet-close>Notes</a></li>
+          <li><a href="#" data-sheet-close>Contact</a></li>
+        </ul>
+        <address class="rb-drawer-meta ren-stack">
+          <strong>Get in touch</strong>
+          <a href="mailto:hello@example.com">hello@example.com</a>
+          <span>Buenos Aires, Argentina</span>
+        </address>
+        <div class="rb-social ren-cluster" aria-label="Social links">
+          <a href="#">LinkedIn</a>
+          <a href="#">Instagram</a>
+          <a href="#">X</a>
+        </div>
+      </div>
+      <footer class="ren-sheet-footer">
+        <a class="ren-btn ren-btn-full" href="#" data-sheet-close>Book a call</a>
+      </footer>
+    </ren-sheet>
+  </main>
+
+  <script type="module" src="../../components/composites/ren-sheet/ren-sheet.js"></script>
+</body>
+</html>
