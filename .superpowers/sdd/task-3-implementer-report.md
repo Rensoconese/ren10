@@ -1,6 +1,6 @@
 # Task 3 implementer report
 
-Status: DONE_WITH_CONCERNS
+Status: DONE
 
 ## RED / GREEN
 
@@ -28,3 +28,4 @@ Status: DONE_WITH_CONCERNS
 - Scoped toast duration now resolves from `getComputedStyle(toast)` after insertion, so selector-level overrides are honored while explicit duration/status remain authoritative. Progress transition and timer are updated without scheduling an additional animation frame.
 - RED coverage added for the scoped runtime read; focused component test passes in Desktop Light and Dark.
 - `npm run lint:css` and `npm run lint:tokens` pass. Full `npm run lint` remains expected RED only because Task 4's 14 unresolved aliases are intentionally preserved.
+- Independent re-review after the scoped-toast fix: APPROVED, no Critical/Important findings.

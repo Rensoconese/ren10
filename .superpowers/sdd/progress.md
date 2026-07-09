@@ -34,18 +34,25 @@
 - Main-agent verification: foundation 6/6, `test:a11y` 376/376, `lint:css` and `lint:tokens` pass
 - Inventory: 129/129 primitive tokens consumed; 14 unresolved + 178 composite/pattern unconsumed + 0 absent = 192
 
-## Current
-
 ### Task 3 — Composite and pattern Appearance API consumption
 
-- Status: preparing implementer brief
-- Audit map: 138 composite + 40 pattern tokens; runtime consumers and composition edge cases are explicit in the plan
-- Expected post-task inventory: 14 unresolved custom properties only
-- Base commit: task-2 closure documentation commit
+- Implementation commits: `b80b629`, `cfbbf3`
+- TDD evidence: composite/pattern fixture RED/GREEN; runtime-read checker RED/GREEN; scoped toast RED/GREEN
+- Independent review: initial Important on toast scope; corrected and re-reviewed `APPROVED`, no Critical/Important findings
+- Main-agent verification: foundation fixture 10/10, validator unit, CSS/token lint pass
+- Inventory: 14 unresolved aliases; 0 unconsumed; 0 contract-absent
+
+## Current
+
+### Task 4 — Undefined custom properties and real cascade layers
+
+- Status: ready after Task 3 review artifacts are committed
+- Expected post-task inventory: unresolved aliases reduced to zero; five populated cascade layers
+- Base commit: task-3 closure documentation commit
 - Review status: pending
 
 ## Pending
 
-- Tasks 3–12: remaining P1 remediation and hard gate
+- Tasks 5–12: remaining P1 remediation and hard gate
 - Tasks 13–16: P2 remediation
 - Task 17: fresh audit, escaped-finding fixes, exhaustive future-additions plan, final integration
