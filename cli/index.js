@@ -1410,7 +1410,7 @@ async function cmdAgentDocs() {
   if (hasFlag('--remove')) {
     const removed = [];
     for (const target of targets) {
-      if (removeGeneratedBlock(path.join(RENDS_ROOT, target))) removed.push(target);
+      if (removeGeneratedBlock(path.join(process.cwd(), target))) removed.push(target);
     }
     if (hasFlag('--json')) {
       jsonOut('agent-docs.remove', { removed });
@@ -1423,7 +1423,7 @@ async function cmdAgentDocs() {
   const block = generatedAgentBlock();
   const written = [];
   for (const target of targets) {
-    injectGeneratedBlock(path.join(RENDS_ROOT, safeAgentDocsPath(target)), block);
+    injectGeneratedBlock(path.join(process.cwd(), safeAgentDocsPath(target)), block);
     written.push(target);
   }
   if (hasFlag('--json')) {

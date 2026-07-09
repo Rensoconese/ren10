@@ -62,7 +62,8 @@
     },
     "./utils": {
       "import": "./utils/index.js"
-    }
+    },
+    "./utils/*": "./utils/*"
   },
   "sideEffects": [
     "*.css",
@@ -72,6 +73,7 @@
     "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "lint:contracts": "node scripts/check-css-contracts.mjs",
+    "check:public-contracts": "node scripts/check-public-contracts.mjs",
     "lint": "npm run lint:css && npm run lint:tokens && npm run lint:contracts",
     "test": "npm run test:all",
     "test:all": "npm run test:a11y && npm run test:components && npm run test:visual -- --project=\"Desktop Light\" && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy",
@@ -83,6 +85,7 @@
     "test:exports": "node scripts/verify-package-exports.mjs",
     "test:knowledge-package": "npm run knowledge:check",
     "smoke:cli-copy": "node scripts/smoke-cli-copy.mjs",
+    "smoke:installed": "node scripts/smoke-installed-package.mjs",
     "agent:smoke": "node scripts/smoke-agent-cli.mjs",
     "agent:skill:check": "node scripts/check-agent-skill.mjs",
     "agent:skill:pack": "node scripts/pack-agent-skill.mjs",
