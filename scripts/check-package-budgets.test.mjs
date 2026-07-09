@@ -1,0 +1,12 @@
+import { execFileSync } from 'node:child_process';
+import { readFileSync } from 'node:fs';
+import crypto from 'node:crypto';
+import path from 'node:path';
+const root = path.resolve(import.meta.dirname, '..');
+const digest = (file) => crypto.createHash('sha256').update(readFileSync(path.join(root, 'dist', file))).digest('hex');
+execFileSync('node', ['scripts/build-css-bundles.mjs'], { cwd: root, stdio: 'ignore' });
+const before = ['ren10.css','ren10.min.css','ren10-foundation.css','ren10-foundation.min.css','ren10-components.css','ren10-components.min.css'].map(digest);
+execFileSync('node', ['scripts/build-css-bundles.mjs'], { cwd: root, stdio: 'ignore' });
+const after = ['ren10.css','ren10.min.css','ren10-foundation.css','ren10-foundation.min.css','ren10-components.css','ren10-components.min.css'].map(digest);
+if (JSON.stringify(before) !== JSON.stringify(after)) throw new Error('CSS bundle build is not deterministic');
+console.log('Bundle determinism: OK');

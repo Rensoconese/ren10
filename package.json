@@ -16,6 +16,7 @@
   },
   "files": [
     "index.css",
+    "dist/",
     "ren-design.md",
     "AGENTS.md",
     "CLAUDE.md",
@@ -46,6 +47,7 @@
     ".": {
       "import": "./index.css"
     },
+    "./dist/*": "./dist/*",
     "./components/*": {
       "import": "./components/*"
     },
@@ -94,7 +96,10 @@
     "agent:check": "npm run agent:smoke && npm run agent:skill:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
     "knowledge:build": "node scripts/build-knowledge-graph.mjs",
     "knowledge:check": "node scripts/check-knowledge-graph.mjs",
-    "knowledge:query": "node scripts/query-knowledge-graph.mjs"
+    "knowledge:query": "node scripts/query-knowledge-graph.mjs",
+    "build:bundles": "node scripts/build-css-bundles.mjs",
+    "check:budgets": "npm run build:bundles && node scripts/check-package-budgets.mjs"
+    ,"test:budgets": "node scripts/check-package-budgets.test.mjs"
   },
   "keywords": [
     "design-system",
