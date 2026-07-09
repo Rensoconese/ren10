@@ -121,6 +121,10 @@ export class RenForm extends HTMLElement {
   connectedCallback() {
     this._form = this.querySelector('form.ren-form');
     if (!this._form) return;
+    if (!this.hasAttribute('dir')) {
+      const locale = this.getAttribute('lang') || document.documentElement.lang || '';
+      if (/^(ar|fa|he|ur)(-|$)/i.test(locale)) this.setAttribute('dir', 'rtl');
+    }
 
     this._initElements();
     this._attachEventListeners();
