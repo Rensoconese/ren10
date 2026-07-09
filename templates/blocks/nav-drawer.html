@@ -107,6 +107,8 @@
 
     .rb-drawer-links a {
       min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
       color: var(--color-text);
       text-decoration: none;
       font-size: var(--text-3xl);
@@ -139,8 +141,16 @@
       color: var(--color-text);
     }
 
+    .rb-social-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
     .rb-social a {
       min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
       color: var(--color-text-muted);
       text-decoration: none;
       font-size: var(--text-sm);
@@ -149,6 +159,11 @@
 
     .rb-social a:hover {
       color: var(--color-text);
+    }
+
+    .rb-social a:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
     }
 
     @media (max-width: 640px) {
@@ -242,22 +257,24 @@
       </header>
       <div class="ren-sheet-body">
         <ul class="rb-drawer-links ren-stack-sm">
-          <li><a href="#" data-sheet-close>Work</a></li>
-          <li><a href="#" data-sheet-close>Services</a></li>
-          <li><a href="#" data-sheet-close>Process</a></li>
-          <li><a href="#" data-sheet-close>Notes</a></li>
-          <li><a href="#" data-sheet-close>Contact</a></li>
+          <li><a class="ren-row" href="#" data-sheet-close>Work</a></li>
+          <li><a class="ren-row" href="#" data-sheet-close>Services</a></li>
+          <li><a class="ren-row" href="#" data-sheet-close>Process</a></li>
+          <li><a class="ren-row" href="#" data-sheet-close>Notes</a></li>
+          <li><a class="ren-row" href="#" data-sheet-close>Contact</a></li>
         </ul>
         <address class="rb-drawer-meta ren-stack">
           <strong>Get in touch</strong>
           <a href="mailto:hello@example.com">hello@example.com</a>
           <span>Buenos Aires, Argentina</span>
         </address>
-        <div class="rb-social ren-cluster" aria-label="Social links">
-          <a href="#">LinkedIn</a>
-          <a href="#">Instagram</a>
-          <a href="#">X</a>
-        </div>
+        <nav class="rb-social" aria-label="Social links">
+          <ul class="rb-social-list ren-cluster">
+            <li><a class="ren-row" href="#">LinkedIn</a></li>
+            <li><a class="ren-row" href="#">Instagram</a></li>
+            <li><a class="ren-row" href="#">X</a></li>
+          </ul>
+        </nav>
       </div>
       <footer class="ren-sheet-footer">
         <a class="ren-btn ren-btn-full" href="#" data-sheet-close>Book a call</a>
