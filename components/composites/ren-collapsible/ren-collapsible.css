@@ -111,3 +111,6 @@
     transition: none;
   }
 }
+/* Appearance API bridge */
+.ren-collapsible, .ren-accordion { border-color: var(--ren-collapse-border, var(--color-border)); border-radius: var(--ren-collapse-radius, var(--radius-lg)); background: var(--ren-collapse-bg, var(--color-surface)); transition-duration: var(--ren-collapse-duration, var(--duration-normal)); transition-timing-function: var(--ren-collapse-easing, var(--ease-out)); }
+.ren-collapsible > summary, .ren-accordion > summary { padding: var(--ren-collapse-padding, var(--space-4)); font-size: var(--ren-collapse-trigger-font, var(--label-lg-size)); font-weight: var(--ren-collapse-trigger-weight, var(--weight-semibold)); }

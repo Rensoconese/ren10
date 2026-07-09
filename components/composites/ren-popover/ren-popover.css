@@ -202,3 +202,15 @@
     }
   }
 }
+/* Appearance API bridge */
+.ren-popover {
+  width: var(--ren-popover-width, 280px);
+  max-width: var(--ren-popover-width, 280px);
+  padding: var(--ren-popover-padding, var(--space-4));
+  border-radius: var(--ren-popover-radius, var(--radius-lg));
+  background: var(--ren-popover-bg, var(--color-surface-overlay));
+  border-color: var(--ren-popover-border-color, var(--color-border));
+  box-shadow: var(--ren-popover-shadow, var(--shadow-lg));
+  transition-duration: var(--ren-popover-duration, var(--duration-normal));
+  transition-timing-function: var(--ren-popover-easing, var(--ease-out));
+}

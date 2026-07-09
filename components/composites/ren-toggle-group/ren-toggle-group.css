@@ -147,3 +147,6 @@
     transition: none;
   }
 }
+/* Appearance API bridge */
+.ren-toggle-group { min-block-size: var(--ren-toggle-height, var(--size-lg)); padding-inline: var(--ren-toggle-padding-x, var(--space-4)); font-size: var(--ren-toggle-font-size, var(--label-size)); font-weight: var(--ren-toggle-font-weight, var(--label-weight)); border-radius: var(--ren-toggle-radius, var(--radius-md)); background: var(--ren-toggle-bg, var(--color-fill)); color: var(--ren-toggle-color, var(--color-text-muted)); }
+.ren-toggle-group [aria-pressed="true"], .ren-toggle-group [data-state="on"] { background: var(--ren-toggle-active-bg, var(--color-surface)); color: var(--ren-toggle-active-color, var(--color-text)); }

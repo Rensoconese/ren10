@@ -15,6 +15,7 @@ try {
   const runtimeFile = join(fixtureRoot, 'components/demo/demo.js');
   const lexicalComponentFile = join(fixtureRoot, 'components/demo/lexical.css');
   const lexicalRuntimeFile = join(fixtureRoot, 'components/demo/lexical.js');
+  const runtimeReadFile = join(fixtureRoot, 'components/demo/runtime-read.js');
   const contractFile = join(fixtureRoot, 'components/demo/component.md');
 
   await mkdir(join(fixtureRoot, 'tokens/component'), { recursive: true });
@@ -65,6 +66,10 @@ element.style.setProperty('--runtime-value', '10px');
 `,
   );
   await writeFile(
+    runtimeReadFile,
+    `const delay = getComputedStyle(element).getPropertyValue('--ren-demo-bg');\n`,
+  );
+  await writeFile(
     contractFile,
     'The `--ren-demo-` family includes `--ren-demo-anchor` and the required `--ren-contract-missing` token.\n',
   );
@@ -105,6 +110,15 @@ element.style.setProperty('--runtime-value', '10px');
   });
 
   assert.deepEqual(contractResult.contractAbsent, ['--ren-contract-missing']);
+
+  const runtimeReadResult = await analyzeCssContracts({
+    packageRoot: fixtureRoot,
+    cssFiles: [appearanceTokenFile, componentFile],
+    jsFiles: [runtimeReadFile],
+    contractFiles: [],
+    appearanceTokenFile,
+  });
+  assert.deepEqual(runtimeReadResult.unconsumed, []);
 } finally {
   await rm(fixtureRoot, { recursive: true, force: true });
 }

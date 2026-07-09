@@ -229,7 +229,15 @@ export class RenTooltip extends HTMLElement {
   scheduleShow() {
     this.clearTimeouts();
 
-    const delay = parseInt(this.getAttribute('show-delay')) || 500;
+    const tokenDelay = getComputedStyle(this).getPropertyValue('--ren-tooltip-delay').trim();
+    const attrDelay = this.getAttribute('show-delay');
+    const parsedAttrDelay = attrDelay == null ? Number.NaN : parseInt(attrDelay, 10);
+    const parsedTokenDelay = parseInt(tokenDelay, 10);
+    const delay = Number.isFinite(parsedAttrDelay)
+      ? parsedAttrDelay
+      : Number.isFinite(parsedTokenDelay)
+        ? parsedTokenDelay
+        : 500;
     this.#showTimeout = setTimeout(() => {
       this.show();
     }, delay);

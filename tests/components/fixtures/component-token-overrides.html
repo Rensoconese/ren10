@@ -11,6 +11,18 @@
   <link rel="stylesheet" href="../../../components/primitives/ren-switch/ren-switch.css">
   <link rel="stylesheet" href="../../../themes/appearance.css">
   <link rel="stylesheet" href="../../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../../components/composites/ren-dialog/ren-dialog.css">
+  <link rel="stylesheet" href="../../../components/composites/ren-tooltip/ren-tooltip.css">
+  <link rel="stylesheet" href="../../../components/composites/ren-popover/ren-popover.css">
+  <link rel="stylesheet" href="../../../components/composites/ren-tabs/ren-tabs.css">
+  <link rel="stylesheet" href="../../../components/composites/ren-calendar/ren-calendar.css">
+  <link rel="stylesheet" href="../../../components/composites/ren-menu/ren-menu.css">
+  <link rel="stylesheet" href="../../../components/patterns/ren-sidebar/ren-sidebar.css">
+  <link rel="stylesheet" href="../../../components/patterns/ren-table/ren-table.css">
+  <link rel="stylesheet" href="../../../components/patterns/ren-form/ren-form.css">
+  <link rel="stylesheet" href="../../../components/patterns/ren-nav/ren-nav.css">
+  <link rel="stylesheet" href="../../../components/patterns/ren-command/ren-command.css">
+  <link rel="stylesheet" href="../../../components/patterns/ren-ai/ren-ai.css">
   <style>
     :root {
       --ren-btn-radius: 17px;
@@ -26,6 +38,19 @@
       --ren-field-border-color: rgb(65 43 21);
       --ren-badge-radius: 11px;
       --ren-switch-width: 70px;
+      --ren-dialog-width: 321px;
+      --ren-tooltip-delay: 37ms;
+      --ren-popover-width: 333px;
+      --ren-tabs-height: 42px;
+      --ren-calendar-width: 351px;
+      --ren-menu-width: 361px;
+      --ren-sidebar-width: 271px;
+      --ren-table-row-height: 49px;
+      --ren-field-height: 53px;
+      --ren-nav-height: 61px;
+      --ren-command-width: 371px;
+      --ren-ai-gap: 19px;
+      --ren-dialog-bg: rgb(7 8 9);
     }
   </style>
 </head>
@@ -71,6 +96,19 @@
         <span id="scoped-switch" class="ren-switch-track"></span>
         <span>Scoped switch</span>
       </label>
+
+      <dialog id="scoped-dialog" class="ren-dialog" open>Dialog</dialog>
+      <div id="scoped-tooltip" class="ren-tooltip">Tooltip</div>
+      <div id="scoped-popover" class="ren-popover">Popover</div>
+      <div id="scoped-tabs" class="ren-tabs"><button type="button">Tab</button></div>
+      <div id="scoped-calendar" class="ren-calendar">Calendar</div>
+      <div id="scoped-menu" class="ren-menu">Menu</div>
+      <aside id="scoped-sidebar" class="ren-sidebar">Sidebar</aside>
+      <table id="scoped-table" class="ren-table"><tbody><tr><td>Table</td></tr></tbody></table>
+      <form id="scoped-form" class="ren-form"><input type="text"></form>
+      <nav id="scoped-nav" class="ren-nav"><a href="#">Nav</a></nav>
+      <div id="scoped-command" class="ren-command">Command</div>
+      <section id="scoped-ai" class="ren-ai">AI</section>
     </section>
   </main>
 </body>

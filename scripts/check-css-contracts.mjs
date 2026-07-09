@@ -156,6 +156,16 @@ function scanRuntimeAssignments(source) {
   return assignments;
 }
 
+function scanRuntimeReads(source) {
+  const reads = [];
+  const matcher = /getComputedStyle\s*\([^)]*\)\s*\.getPropertyValue\s*\(\s*(['"])(--[\w-]+)\1\s*\)/g;
+  let match;
+  while ((match = matcher.exec(source))) {
+    reads.push({ token: match[2], index: match.index });
+  }
+  return reads;
+}
+
 function scanVarReferences(source) {
   const references = [];
   const matcher = /\bvar\(\s*(--[\w-]+)/g;
@@ -272,6 +282,9 @@ export async function analyzeCssContracts({
         path: rel,
         line: lineAt(source, assignment.index),
       });
+    }
+    for (const read of scanRuntimeReads(source)) {
+      appearanceConsumers.add(read.token);
     }
   }
 

@@ -306,3 +306,8 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* Appearance API bridge */
+.ren-sidebar { inline-size: var(--ren-sidebar-width, 260px); background: var(--ren-sidebar-bg, var(--color-surface-sunken)); border-color: var(--ren-sidebar-border, var(--color-border)); transition-duration: var(--ren-sidebar-duration, var(--duration-normal)); transition-timing-function: var(--ren-sidebar-easing, var(--ease-out)); }
+.ren-sidebar.is-collapsed, .ren-sidebar[data-collapsed="true"] { inline-size: var(--ren-sidebar-collapsed-width, 60px); }
+.ren-sidebar a, .ren-sidebar button { min-block-size: var(--ren-sidebar-item-height, var(--size-lg)); padding: var(--ren-sidebar-item-padding, var(--space-2) var(--space-3)); border-radius: var(--ren-sidebar-item-radius, var(--radius-md)); }
+.ren-sidebar a[aria-current="page"], .ren-sidebar a[data-active] { background: var(--ren-sidebar-active-bg, var(--color-accent-subtle)); color: var(--ren-sidebar-active-color, var(--color-accent)); }

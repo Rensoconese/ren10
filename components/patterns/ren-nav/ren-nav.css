@@ -201,3 +201,7 @@
     color: var(--ren-accent);
   }
 }
+/* Appearance API bridge */
+.ren-nav { min-block-size: var(--ren-nav-height, 3.5rem); padding-inline: var(--ren-nav-padding-x, var(--space-4)); background: var(--ren-nav-bg, var(--color-surface)); border-color: var(--ren-nav-border, var(--color-border)); gap: var(--ren-nav-gap, var(--space-6)); }
+.ren-nav a { color: var(--ren-nav-link-color, var(--color-text-muted)); }
+.ren-nav a[aria-current="page"], .ren-nav a[data-active] { color: var(--ren-nav-link-active, var(--color-text)); }

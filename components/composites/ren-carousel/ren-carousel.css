@@ -506,3 +506,8 @@
   height: auto;
   display: block;
 }
+/* Appearance API bridge */
+.ren-carousel { gap: var(--ren-carousel-gap, var(--space-4)); border-radius: var(--ren-carousel-radius, var(--radius-lg)); transition-duration: var(--ren-carousel-duration, var(--duration-normal)); transition-timing-function: var(--ren-carousel-easing, var(--ease-out)); }
+.ren-carousel .ren-carousel-arrow { inline-size: var(--ren-carousel-arrow-size, var(--size-lg)); block-size: var(--ren-carousel-arrow-size, var(--size-lg)); }
+.ren-carousel .ren-carousel-dot { inline-size: var(--ren-carousel-dot-size, 8px); block-size: var(--ren-carousel-dot-size, 8px); background: var(--ren-carousel-dot-color, var(--color-fill)); }
+.ren-carousel .ren-carousel-dot[aria-current="true"], .ren-carousel .ren-carousel-dot.is-active { background: var(--ren-carousel-dot-active, var(--color-accent)); }

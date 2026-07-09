@@ -592,3 +592,8 @@
     transition-duration: 0.01ms !important;
   }
 }
+/* Appearance API bridge */
+.ren-color-picker { inline-size: var(--ren-cp-width, 280px); border-radius: var(--ren-cp-radius, var(--radius-lg)); background: var(--ren-cp-bg, var(--color-surface-overlay)); box-shadow: var(--ren-cp-shadow, var(--shadow-lg)); }
+.ren-color-picker .ren-color-picker-swatch { inline-size: var(--ren-cp-swatch-size, 24px); block-size: var(--ren-cp-swatch-size, 24px); }
+.ren-color-picker .ren-color-picker-handle { inline-size: var(--ren-cp-handle-size, 16px); block-size: var(--ren-cp-handle-size, 16px); }
+.ren-color-picker .ren-color-picker-track { block-size: var(--ren-cp-track-height, 12px); }

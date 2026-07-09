@@ -312,3 +312,6 @@
     font-family: var(--ren-font-mono, 'Monaco', 'Menlo', monospace);
   }
 }
+/* Appearance API bridge */
+.ren-command { inline-size: var(--ren-command-width, min(95vw, 560px)); max-block-size: var(--ren-command-max-height, 340px); border-radius: var(--ren-command-radius, var(--radius-xl)); background: var(--ren-command-bg, var(--color-surface-overlay)); border-color: var(--ren-command-border, var(--color-border)); box-shadow: var(--ren-command-shadow, var(--shadow-xl)); }
+.ren-command [role="option"], .ren-command-item { min-block-size: var(--ren-command-item-height, var(--size-lg)); border-radius: var(--ren-command-item-radius, var(--radius-md)); }

@@ -118,3 +118,8 @@
   margin-block: var(--space-1);
   margin-inline: 0;
 }
+/* Appearance API bridge */
+.ren-toolbar { min-block-size: var(--ren-toolbar-height, var(--size-lg)); padding: var(--ren-toolbar-padding, var(--space-1)); border-radius: var(--ren-toolbar-radius, var(--radius-lg)); background: var(--ren-toolbar-bg, var(--color-surface-raised)); border-color: var(--ren-toolbar-border, var(--color-border)); }
+.ren-toolbar button, .ren-toolbar [role="button"] { inline-size: var(--ren-toolbar-item-size, var(--size-md)); block-size: var(--ren-toolbar-item-size, var(--size-md)); border-radius: var(--ren-toolbar-item-radius, var(--radius-sm)); }
+.ren-toolbar button:hover, .ren-toolbar [role="button"]:hover { background: var(--ren-toolbar-item-hover, var(--color-fill)); }
+.ren-toolbar button[aria-pressed="true"], .ren-toolbar [data-state="on"] { background: var(--ren-toolbar-active-bg, var(--color-accent-subtle)); }

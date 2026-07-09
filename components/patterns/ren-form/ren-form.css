@@ -316,3 +316,9 @@
     transition: none;
   }
 }
+/* Appearance API bridge delegates field chrome to the primitive family. */
+.ren-form input, .ren-form select, .ren-form textarea { min-block-size: var(--ren-field-height, var(--size-lg)); padding-inline: var(--ren-field-padding-x, var(--space-3)); padding-block: var(--ren-field-padding-y, var(--space-2)); font-size: var(--ren-field-font-size, var(--body-size)); border-radius: var(--ren-field-radius, var(--radius-md)); border: var(--ren-field-border-width, var(--stroke-1)) solid var(--ren-field-border-color, var(--color-border-interactive)); background: var(--ren-field-bg, var(--color-input-bg)); color: var(--ren-field-color, var(--color-text)); }
+.ren-form input::placeholder, .ren-form textarea::placeholder { color: var(--ren-field-placeholder, var(--color-input-placeholder)); }
+.ren-form input:focus, .ren-form select:focus, .ren-form textarea:focus { border-color: var(--ren-field-focus-color, var(--color-input-border-focus)); }
+.ren-form [aria-invalid="true"] { border-color: var(--ren-field-error-color, var(--color-input-error-border)); }
+.ren-form [aria-invalid="false"] { border-color: var(--ren-field-success-color, var(--color-success)); }

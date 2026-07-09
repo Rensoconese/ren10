@@ -42,4 +42,18 @@ test.describe('Primitive Appearance API contract', () => {
     await expect.poll(() => page.locator('#root-button').evaluate((element) =>
       getComputedStyle(element).fontWeight)).toBe('600');
   });
+
+  test('representative composite and pattern tokens control geometry, color, and motion surfaces', async ({ page }) => {
+    await expect.poll(() => page.locator('#scoped-dialog').evaluate((element) => getComputedStyle(element).width)).toBe('321px');
+    await expect.poll(() => page.locator('#scoped-dialog').evaluate((element) => getComputedStyle(element).backgroundColor)).toBe('rgb(7, 8, 9)');
+    await expect.poll(() => page.locator('#scoped-tooltip').evaluate((element) => getComputedStyle(element).transitionDuration)).not.toBe('');
+    await expect.poll(() => page.locator('#scoped-popover').evaluate((element) => getComputedStyle(element).width)).toBe('333px');
+    await expect.poll(() => page.locator('#scoped-tabs').evaluate((element) => getComputedStyle(element).height)).toBe('42px');
+    await expect.poll(() => page.locator('#scoped-calendar').evaluate((element) => getComputedStyle(element).width)).toBe('351px');
+    await expect.poll(() => page.locator('#scoped-menu').evaluate((element) => getComputedStyle(element).minWidth)).toBe('361px');
+    await expect.poll(() => page.locator('#scoped-sidebar').evaluate((element) => getComputedStyle(element).width)).toBe('271px');
+    await expect.poll(() => page.locator('#scoped-table tr').evaluate((element) => getComputedStyle(element).height)).toBe('49px');
+    await expect.poll(() => page.locator('#scoped-nav').evaluate((element) => getComputedStyle(element).height)).toBe('61px');
+    await expect.poll(() => page.locator('#scoped-command').evaluate((element) => getComputedStyle(element).width)).toBe('371px');
+  });
 });

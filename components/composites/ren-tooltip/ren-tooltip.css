@@ -179,3 +179,15 @@
     }
   }
 }
+/* Appearance API bridge */
+.ren-tooltip {
+  background: var(--ren-tooltip-bg, var(--color-text));
+  color: var(--ren-tooltip-color, var(--color-text-inverted));
+  font-size: var(--ren-tooltip-font-size, var(--caption-sm-size));
+  padding-inline: var(--ren-tooltip-padding-x, var(--space-3));
+  padding-block: var(--ren-tooltip-padding-y, var(--space-1));
+  border-radius: var(--ren-tooltip-radius, var(--radius-md));
+  box-shadow: var(--ren-tooltip-shadow, var(--shadow-sm));
+  transition-duration: var(--ren-tooltip-duration, var(--duration-fast));
+  transition-timing-function: var(--ren-tooltip-easing, var(--ease-out));
+}

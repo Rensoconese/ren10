@@ -126,8 +126,7 @@
 /* ═══════════════════════════════════════════════
    DIALOG
    ═══════════════════════════════════════════════ */
-.ren-dialog,
-.ren-alert-dialog {
+:where(:root, [data-theme]) {
   --ren-dialog-width:        min(90vw, 500px);
   --ren-dialog-padding:      var(--space-6);
   --ren-dialog-radius:       var(--radius-xl);
@@ -145,7 +144,7 @@
 /* ═══════════════════════════════════════════════
    SHEET
    ═══════════════════════════════════════════════ */
-.ren-sheet {
+:where(:root, [data-theme]) {
   --ren-sheet-width:      320px;
   --ren-sheet-bg:         var(--color-surface-overlay);
   --ren-sheet-border:     var(--color-border);
@@ -162,7 +161,7 @@
 /* ═══════════════════════════════════════════════
    TOOLTIP
    ═══════════════════════════════════════════════ */
-.ren-tooltip {
+:where(:root, [data-theme]) {
   --ren-tooltip-bg:        var(--color-text);
   --ren-tooltip-color:     var(--color-text-inverted);
   --ren-tooltip-font-size: var(--caption-sm-size);
@@ -180,7 +179,7 @@
 /* ═══════════════════════════════════════════════
    POPOVER
    ═══════════════════════════════════════════════ */
-.ren-popover {
+:where(:root, [data-theme]) {
   --ren-popover-width:        280px;
   --ren-popover-bg:           var(--color-surface-overlay);
   --ren-popover-border-color: var(--color-border);
@@ -196,7 +195,7 @@
 /* ═══════════════════════════════════════════════
    TABS
    ═══════════════════════════════════════════════ */
-.ren-tabs {
+:where(:root, [data-theme]) {
   --ren-tabs-height:         var(--size-lg);
   --ren-tabs-font-size:      var(--label-size);
   --ren-tabs-font-weight:    var(--label-weight);
@@ -243,7 +242,7 @@
 /* ═══════════════════════════════════════════════
    SLIDER
    ═══════════════════════════════════════════════ */
-.ren-slider {
+:where(:root, [data-theme]) {
   --ren-slider-track-height:  6px;
   --ren-slider-track-radius:  var(--radius-full);
   --ren-slider-track-bg:      var(--color-fill);
@@ -261,7 +260,7 @@
 /* ═══════════════════════════════════════════════
    TOGGLE GROUP
    ═══════════════════════════════════════════════ */
-.ren-toggle-group {
+:where(:root, [data-theme]) {
   --ren-toggle-height:       var(--size-lg);
   --ren-toggle-padding-x:    var(--space-4);
   --ren-toggle-font-size:    var(--label-size);
@@ -366,7 +365,7 @@
 /* ═══════════════════════════════════════════════
    NAV
    ═══════════════════════════════════════════════ */
-.ren-nav {
+:where(:root, [data-theme]) {
   --ren-nav-height:       3.5rem;
   --ren-nav-bg:           var(--color-surface);
   --ren-nav-border:       var(--color-border);
@@ -379,7 +378,7 @@
 /* ═══════════════════════════════════════════════
    SIDEBAR
    ═══════════════════════════════════════════════ */
-.ren-sidebar {
+:where(:root, [data-theme]) {
   --ren-sidebar-width:         260px;
   --ren-sidebar-collapsed-width: 60px;
   --ren-sidebar-bg:            var(--color-surface-sunken);
@@ -398,7 +397,7 @@
 /* ═══════════════════════════════════════════════
    COMMAND
    ═══════════════════════════════════════════════ */
-.ren-command {
+:where(:root, [data-theme]) {
   --ren-command-width:      min(95vw, 560px);
   --ren-command-max-height: 340px;
   --ren-command-radius:     var(--radius-xl);
@@ -412,8 +411,7 @@
 /* ═══════════════════════════════════════════════
    TABLE
    ═══════════════════════════════════════════════ */
-.ren-table,
-ren-table {
+:where(:root, [data-theme]) {
   --ren-table-header-bg:    var(--color-surface-sunken);
   --ren-table-header-color: var(--color-text-muted);
   --ren-table-header-weight:var(--weight-semibold);
@@ -429,7 +427,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    MENU
    ═══════════════════════════════════════════════ */
-.ren-menu {
+:where(:root, [data-theme]) {
   --ren-menu-width:        200px;
   --ren-menu-padding:      var(--space-1);
   --ren-menu-radius:       var(--radius-lg);
@@ -450,7 +448,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    CALENDAR
    ═══════════════════════════════════════════════ */
-.ren-calendar {
+:where(:root, [data-theme]) {
   --ren-calendar-width:       280px;
   --ren-calendar-day-size:    var(--size-md);
   --ren-calendar-radius:      var(--radius-lg);
@@ -465,7 +463,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    TOAST
    ═══════════════════════════════════════════════ */
-.ren-toast {
+:where(:root, [data-theme]) {
   --ren-toast-width:       360px;
   --ren-toast-padding:     var(--space-4);
   --ren-toast-radius:      var(--radius-lg);
@@ -483,7 +481,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    DROPZONE
    ═══════════════════════════════════════════════ */
-.ren-dropzone {
+:where(:root, [data-theme]) {
   --ren-dropzone-padding:      var(--space-8);
   --ren-dropzone-radius:       var(--radius-lg);
   --ren-dropzone-border-color: var(--color-border-strong);
@@ -497,7 +495,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    EMPTY STATE
    ═══════════════════════════════════════════════ */
-.ren-empty-state {
+:where(:root, [data-theme]) {
   --ren-empty-padding:     var(--space-10);
   --ren-empty-icon-size:   3rem;
   --ren-empty-gap:         var(--space-3);
@@ -509,8 +507,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    COLLAPSIBLE / ACCORDION
    ═══════════════════════════════════════════════ */
-.ren-collapsible,
-.ren-accordion {
+:where(:root, [data-theme]) {
   --ren-collapse-radius:       var(--radius-lg);
   --ren-collapse-border:       var(--color-border);
   --ren-collapse-bg:           var(--color-surface);
@@ -526,7 +523,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    TOOLBAR
    ═══════════════════════════════════════════════ */
-.ren-toolbar {
+:where(:root, [data-theme]) {
   --ren-toolbar-height:      var(--size-lg);
   --ren-toolbar-padding:     var(--space-1);
   --ren-toolbar-radius:      var(--radius-lg);
@@ -541,7 +538,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    COLOR PICKER
    ═══════════════════════════════════════════════ */
-.ren-color-picker {
+:where(:root, [data-theme]) {
   --ren-cp-width:       280px;
   --ren-cp-radius:      var(--radius-lg);
   --ren-cp-bg:          var(--color-surface-overlay);
@@ -554,7 +551,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    CAROUSEL
    ═══════════════════════════════════════════════ */
-.ren-carousel {
+:where(:root, [data-theme]) {
   --ren-carousel-gap:        var(--space-4);
   --ren-carousel-radius:     var(--radius-lg);
   --ren-carousel-arrow-size: var(--size-lg);

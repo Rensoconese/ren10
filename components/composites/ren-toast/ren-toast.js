@@ -180,8 +180,10 @@ function generateId() {
 
 function normalize(input, statusOverride) {
   const opts = typeof input === 'string' ? { title: input } : { ...input };
+  opts.statusExplicit = statusOverride != null || opts.status != null;
   if (statusOverride) opts.status = statusOverride;
   if (!opts.status) opts.status = 'info';
+  opts.durationExplicit = opts.duration != null;
   if (opts.duration == null) opts.duration = DEFAULT_DURATIONS[opts.status] ?? 4000;
   if (opts.dismissible == null) opts.dismissible = true;
   return opts;
@@ -287,6 +289,12 @@ function buildToast(id, opts) {
 function showOnViewport(viewport, opts) {
   const id = opts.id || generateId();
 
+  if (!opts.durationExplicit && !opts.statusExplicit) {
+    const tokenDuration = getComputedStyle(viewport).getPropertyValue('--ren-toast-duration').trim();
+    const parsedDuration = parseFloat(tokenDuration);
+    if (Number.isFinite(parsedDuration) && parsedDuration >= 0) opts.duration = parsedDuration;
+  }
+
   // If a toast with this id exists, replace it
   const existing = viewport.querySelector(`[data-toast-id="${CSS.escape(id)}"]`);
   if (existing) {
@@ -299,6 +307,8 @@ function showOnViewport(viewport, opts) {
 
   const toast = buildToast(id, opts);
   viewport.appendChild(toast);
+
+  if (!opts.durationExplicit && opts.duration > 0) toast.setAttribute('data-duration', String(opts.duration));
 
   // Schedule auto-dismiss
   if (opts.duration > 0) {

@@ -264,3 +264,17 @@
 .ren-menu::-webkit-scrollbar-thumb:hover {
   background: var(--color-text-muted);
 }
+/* Appearance API bridge */
+.ren-menu {
+  min-inline-size: var(--ren-menu-width, 200px);
+  padding: var(--ren-menu-padding, var(--space-1));
+  border-radius: var(--ren-menu-radius, var(--radius-lg));
+  background: var(--ren-menu-bg, var(--color-surface-overlay));
+  border-color: var(--ren-menu-border, var(--color-border));
+  box-shadow: var(--ren-menu-shadow, var(--shadow-lg));
+  transition-duration: var(--ren-menu-duration, var(--duration-fast));
+  transition-timing-function: var(--ren-menu-easing, var(--ease-out));
+}
+.ren-menu-item { min-block-size: var(--ren-menu-item-height, var(--size-md)); padding: var(--ren-menu-item-padding, var(--space-2) var(--space-3)); border-radius: var(--ren-menu-item-radius, var(--radius-sm)); }
+.ren-menu-item:hover, .ren-menu-item[data-highlighted] { background: var(--ren-menu-item-hover-bg, var(--color-fill)); }
+.ren-menu-item-danger { color: var(--ren-menu-danger-color, var(--color-danger)); }

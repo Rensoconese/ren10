@@ -351,3 +351,14 @@
     min-height: 40px;
   }
 }
+/* Appearance API bridge */
+.ren-calendar {
+  inline-size: var(--ren-calendar-width, 280px);
+  border-radius: var(--ren-calendar-radius, var(--radius-lg));
+  background: var(--ren-calendar-bg, var(--color-surface));
+  border-color: var(--ren-calendar-border, var(--color-border));
+}
+.ren-calendar [data-day], .ren-calendar-day { inline-size: var(--ren-calendar-day-size, var(--size-md)); block-size: var(--ren-calendar-day-size, var(--size-md)); }
+.ren-calendar [data-today] { background: var(--ren-calendar-today-bg, var(--color-accent-subtle)); }
+.ren-calendar [aria-selected="true"], .ren-calendar [data-selected] { background: var(--ren-calendar-selected-bg, var(--color-accent)); color: var(--ren-calendar-selected-color, var(--color-on-accent)); }
+.ren-calendar [data-range], .ren-calendar-range { background: var(--ren-calendar-range-bg, var(--color-accent-subtle)); }

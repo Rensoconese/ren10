@@ -193,3 +193,16 @@
     transition: none;
   }
 }
+/* Appearance API bridge */
+.ren-tabs {
+  min-block-size: var(--ren-tabs-height, var(--size-lg));
+  font-size: var(--ren-tabs-font-size, var(--label-size));
+  font-weight: var(--ren-tabs-font-weight, var(--label-weight));
+  color: var(--ren-tabs-color, var(--color-text-muted));
+  border-color: var(--ren-tabs-border-color, var(--color-border));
+  gap: var(--ren-tabs-gap, 0);
+  transition-duration: var(--ren-tabs-duration, var(--duration-fast));
+  transition-timing-function: var(--ren-tabs-easing, var(--ease-out));
+}
+.ren-tabs [aria-selected="true"], .ren-tabs [data-state="active"] { color: var(--ren-tabs-active-color, var(--color-text)); }
+.ren-tabs [data-indicator], .ren-tabs-indicator { background: var(--ren-tabs-indicator-color, var(--color-accent)); }
