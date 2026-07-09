@@ -156,6 +156,7 @@ export class RenCarousel extends HTMLElement {
       case 'fade':
         this._isFade = this.hasAttribute('fade');
         this._updateFadeVariant();
+        this._setupIntersectionObserver();
         break;
     }
   }
@@ -174,6 +175,13 @@ export class RenCarousel extends HTMLElement {
   }
 
   _initialize() {
+    // Rebuilds must tear down observers and generated navigation first. This
+    // keeps removal-to-empty and mode changes from retaining stale state.
+    this._intersectionObserver?.disconnect();
+    this._intersectionObserver = null;
+    this.querySelector('.ren-carousel-dots')?.remove();
+    this.querySelectorAll('.ren-carousel-prev, .ren-carousel-next').forEach((el) => el.remove());
+    this.querySelector('.ren-carousel-counter')?.remove();
     // Set up ARIA attributes
     this.setAttribute('role', 'group');
     this.setAttribute('aria-roledescription', 'carousel');
@@ -199,11 +207,19 @@ export class RenCarousel extends HTMLElement {
     );
 
     if (this._slides.length === 0) {
+      this._totalSlides = 0;
+      this._currentIndex = 0;
+      this._dots = [];
+      this._dotsContainer = null;
+      this._prevButton = null;
+      this._nextButton = null;
+      this._counterElement = null;
       console.warn('RenCarousel: No slides found');
       return;
     }
 
     this._totalSlides = this._slides.length;
+    this._currentIndex = Math.max(0, Math.min(this._currentIndex, this._totalSlides - 1));
 
     // Set up slides with ARIA attributes
     this._slides.forEach((slide, index) => {
@@ -223,9 +239,7 @@ export class RenCarousel extends HTMLElement {
 
     // Apply variant classes
     this._applySlidePerViewClass();
-    if (this._isFade) {
-      this._updateFadeVariant();
-    }
+    this._updateFadeVariant();
 
     // Set up Intersection Observer to track active slide
     this._setupIntersectionObserver();
@@ -326,13 +340,13 @@ export class RenCarousel extends HTMLElement {
   }
 
   _setupIntersectionObserver() {
+    if (this._intersectionObserver) {
+      this._intersectionObserver.disconnect();
+      this._intersectionObserver = null;
+    }
     if (this._isFade) {
       // For fade mode, we'll handle active state differently
       return;
-    }
-
-    if (this._intersectionObserver) {
-      this._intersectionObserver.disconnect();
     }
 
     const options = {
