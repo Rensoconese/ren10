@@ -50,17 +50,25 @@
 - Main-agent verification: `npm run lint`, components 54/54, exports pass; analyzer 0/0/0
 - Note: `agent:check` knowledge artifact remains stale and is explicitly handed to Task 12; Task 4 code itself is green
 
-## Current
-
 ### Task 5 — Theme contrast, AAA mode, and progressive enhancement
 
-- Status: ready after Task 4 review artifacts are committed
-- Expected: all nine themes AA-valid, real AAA scope, no-JS content visible
-- Base commit: task-4 closure documentation commit
+- Implementation commit: `a7dfcf3`
+- TDD evidence: nine-theme RED/GREEN, shipped AAA computed RED/GREEN, no-JS FOUC RED/GREEN
+- Independent review: `APPROVED`, no Critical/Important/Minor findings
+- Main-agent verification: theme 94/94, focused foundation 22/22, lint, exports, and a11y 376/376
+- P1 foundation inventory remains 0/0/0
+
+## Current
+
+### Task 6 — Forms and field contract
+
+- Status: ready after Task 5 review artifacts are committed
+- Expected: native validity, async submit, steps, repeated values, reconnect-safe fields
+- Base commit: task-5 closure documentation commit
 - Review status: pending
 
 ## Pending
 
-- Tasks 6–12: remaining P1 remediation and hard gate
+- Tasks 7–12: remaining P1 remediation and hard gate
 - Tasks 13–16: P2 remediation
 - Task 17: fresh audit, escaped-finding fixes, exhaustive future-additions plan, final integration
