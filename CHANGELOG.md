@@ -21,6 +21,8 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Security
 
+- Hardened release, compatibility, and agent-skill checks.
+
 ### Accessibility milestones
 
 ## [0.9.2] — 2026-07-07
