@@ -21,8 +21,7 @@
 /* ═══════════════════════════════════════════════
    BUTTON
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-btn-height:       var(--size-lg);
   --ren-btn-padding-x:    var(--space-4);
   --ren-btn-padding-y:    var(--space-2);
@@ -52,8 +51,7 @@
 /* ═══════════════════════════════════════════════
    CARD
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-card-bg:            var(--color-surface-raised);
   --ren-card-border-color:  var(--color-border);
   --ren-card-border-width:  var(--stroke-1);
@@ -67,8 +65,7 @@
 /* ═══════════════════════════════════════════════
    INPUT / FIELD
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-field-height:        var(--size-lg);
   --ren-field-padding-x:     var(--space-3);
   --ren-field-padding-y:     var(--space-2);
@@ -87,8 +84,7 @@
 /* ═══════════════════════════════════════════════
    BADGE
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-badge-height:      auto;
   --ren-badge-padding-x:   0.55em;
   --ren-badge-font-size:   var(--text-xs);
@@ -101,8 +97,7 @@
 /* ═══════════════════════════════════════════════
    TAG
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-tag-height:       auto;
   --ren-tag-padding-x:    0.65em;
   --ren-tag-font-size:    var(--caption-size);
@@ -117,8 +112,7 @@
 /* ═══════════════════════════════════════════════
    BANNER / ALERT
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-banner-padding:      var(--space-3) var(--space-4);
   --ren-banner-radius:       var(--radius-md);
   --ren-banner-border-width: var(--stroke-1);
@@ -220,8 +214,7 @@
 /* ═══════════════════════════════════════════════
    CHECKBOX & SWITCH
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-checkbox-size:        1.25rem;
   --ren-checkbox-radius:      var(--radius-sm);
   --ren-checkbox-border:      var(--color-border-interactive);
@@ -234,8 +227,7 @@
   --ren-checkbox-easing:      var(--ease-playful);
 }
 
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-switch-width:       3.1875rem;  /* 51px Apple HIG */
   --ren-switch-height:      1.9375rem;  /* 31px Apple HIG */
   --ren-switch-thumb-size:  1.6875rem;  /* 27px */
@@ -284,8 +276,7 @@
 /* ═══════════════════════════════════════════════
    AVATAR
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-avatar-size:     var(--avatar-md);
   --ren-avatar-radius:   var(--radius-full);
   --ren-avatar-bg:       var(--color-fill);
@@ -297,8 +288,7 @@
 /* ═══════════════════════════════════════════════
    BREADCRUMB
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-breadcrumb-font-size:  var(--caption-size);
   --ren-breadcrumb-color:      var(--color-text-muted);
   --ren-breadcrumb-active-color: var(--color-text);
@@ -309,8 +299,7 @@
 /* ═══════════════════════════════════════════════
    PAGINATION
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-pagination-size:        var(--size-lg);
   --ren-pagination-font-size:   var(--label-size);
   --ren-pagination-radius:      var(--radius-md);
@@ -324,8 +313,7 @@
 /* ═══════════════════════════════════════════════
    PROGRESS
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-progress-height:     8px;
   --ren-progress-radius:     var(--radius-full);
   --ren-progress-bg:         var(--color-fill);
@@ -339,8 +327,7 @@
 /* ═══════════════════════════════════════════════
    SPINNER
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-spinner-size:   var(--icon-lg);
   --ren-spinner-width:  2.5px;
   --ren-spinner-color:  var(--color-accent);
@@ -350,8 +337,7 @@
 /* ═══════════════════════════════════════════════
    SKELETON
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-skeleton-bg:      var(--color-fill);
   --ren-skeleton-shine:   var(--color-fill-hover);
   --ren-skeleton-radius:  var(--radius-sm);
@@ -361,8 +347,7 @@
 /* ═══════════════════════════════════════════════
    SEPARATOR
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-separator-color:  var(--color-separator);
   --ren-separator-width:  var(--stroke-1);
   --ren-separator-margin: var(--space-4);
@@ -371,8 +356,7 @@
 /* ═══════════════════════════════════════════════
    LINK
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-link-color:       var(--color-text-link);
   --ren-link-hover-color: var(--color-text-link-hover);
   --ren-link-underline:   1px;
@@ -586,8 +570,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    KBD
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-kbd-bg:          var(--color-surface-sunken);
   --ren-kbd-border:      var(--color-border-strong);
   --ren-kbd-color:       var(--color-text);
@@ -600,8 +583,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    ICON
    ═══════════════════════════════════════════════ */
-:root,
-[data-theme] {
+:where(:root, [data-theme]) {
   --ren-icon-size:       var(--icon-md);
   --ren-icon-color:      currentColor;
   --ren-icon-fill:       currentColor;

@@ -35,4 +35,11 @@ test.describe('Primitive Appearance API contract', () => {
     await expect.poll(() => page.locator('#scoped-switch').evaluate((element) =>
       getComputedStyle(element).width)).toBe('70px');
   });
+
+  test('theme component overrides survive a later component-token import', async ({ page }) => {
+    await expect.poll(() => page.locator('#root-card').evaluate((element) =>
+      getComputedStyle(element).borderRadius)).toBe('18px');
+    await expect.poll(() => page.locator('#root-button').evaluate((element) =>
+      getComputedStyle(element).fontWeight)).toBe('600');
+  });
 });
