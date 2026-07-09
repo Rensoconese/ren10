@@ -53,7 +53,7 @@ html {
 body {
   min-height: 100dvh;
   line-height: var(--leading-normal, 1.5);
-  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-family: var(--font-body, var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif));
   font-size: var(--body-size, 1rem);
   color: var(--color-text);
   background-color: var(--color-surface);
@@ -186,14 +186,6 @@ hr {
   scrollbar-width: thin;
 }
 
-/* ─── Reduced motion: instant everything ─── */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
+/* Reduced motion is handled by semantic/component tokens. A global wildcard
+   clamp would also cancel intentional alternatives (for example the spinner's
+   gentle feedback) and makes computed motion contracts impossible to inspect. */

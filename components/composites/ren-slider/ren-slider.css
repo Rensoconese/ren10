@@ -337,8 +337,8 @@
 @media (prefers-reduced-motion: reduce) {
   .ren-slider,
   .ren-slider * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
   }
 }
 /* Appearance API bridge; pseudo-elements intentionally have no selector whitespace. */

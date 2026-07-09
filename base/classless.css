@@ -10,6 +10,7 @@
 
 /* ─── Headings ─── */
 h1 {
+  font-family: var(--font-heading, var(--font-sans, sans-serif));
   font-size: var(--display-md-size);
   font-weight: var(--display-md-weight);
   line-height: var(--display-md-leading);
@@ -19,6 +20,7 @@ h1 {
 }
 
 h2 {
+  font-family: var(--font-heading, var(--font-sans, sans-serif));
   font-size: var(--title-lg-size);
   font-weight: var(--title-lg-weight);
   line-height: var(--title-lg-leading);
@@ -27,6 +29,7 @@ h2 {
 }
 
 h3 {
+  font-family: var(--font-heading, var(--font-sans, sans-serif));
   font-size: var(--title-md-size);
   font-weight: var(--title-md-weight);
   line-height: var(--title-md-leading);
@@ -35,6 +38,7 @@ h3 {
 }
 
 h4 {
+  font-family: var(--font-heading, var(--font-sans, sans-serif));
   font-size: var(--title-sm-size);
   font-weight: var(--title-sm-weight);
   line-height: var(--title-sm-leading);
@@ -43,6 +47,7 @@ h4 {
 }
 
 h5 {
+  font-family: var(--font-heading, var(--font-sans, sans-serif));
   font-size: var(--headline-size);
   font-weight: var(--headline-weight);
   line-height: var(--headline-leading);
@@ -51,6 +56,7 @@ h5 {
 }
 
 h6 {
+  font-family: var(--font-heading, var(--font-sans, sans-serif));
   font-size: var(--body-size);
   font-weight: var(--weight-semibold);
   line-height: var(--leading-normal);

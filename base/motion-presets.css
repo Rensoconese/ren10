@@ -243,7 +243,7 @@
   .ren-anim-slide-left-in, .ren-anim-slide-left-out,
   .ren-anim-slide-right-in, .ren-anim-slide-right-out,
   .ren-anim-blur-in, .ren-anim-blur-out {
-    animation-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
     animation-name: ren-fade-in !important;
     animation-timing-function: linear !important;
   }

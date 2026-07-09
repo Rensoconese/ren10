@@ -331,25 +331,19 @@
    DENSITY PRESETS (combine with any theme)
    ═══════════════════════════════════════════════ */
 [data-density="compact"] {
-  --size-sm:  1.5rem;
-  --size-md:  2rem;
-  --size-lg:  2.5rem;
-  --size-xl:  3rem;
-  --space-unit: 0.375rem;
+  --space-density-card: var(--space-4);
+  --space-density-form: var(--space-3);
+  --space-density-row: var(--space-2);
 }
 
 [data-density="comfortable"] {
-  --size-sm:  2.25rem;
-  --size-md:  2.75rem;
-  --size-lg:  3.25rem;
-  --size-xl:  3.75rem;
-  --space-unit: 0.625rem;
+  --space-density-card: var(--space-card-padding);
+  --space-density-form: var(--space-form-gap);
+  --space-density-row: var(--space-3);
 }
 
 [data-density="spacious"] {
-  --size-sm:  2.5rem;
-  --size-md:  3rem;
-  --size-lg:  3.5rem;
-  --size-xl:  4rem;
-  --space-unit: 0.875rem;
+  --space-density-card: var(--space-8);
+  --space-density-form: var(--space-6);
+  --space-density-row: var(--space-4);
 }

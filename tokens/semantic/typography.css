@@ -8,6 +8,10 @@
    ============================================ */
 
 :root {
+  /* Theme overrides may provide distinctive families; the semantic defaults
+     remain usable when appearance.css is not loaded. */
+  --font-body: var(--font-sans, system-ui, sans-serif);
+  --font-heading: var(--font-body);
   /* ─── Display — Hero and page titles ─── */
   --display-lg-size:     var(--text-5xl);
   --display-lg-weight:   var(--weight-bold);
