@@ -1,8 +1,8 @@
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
 .ren-tooltip {
   position: absolute;
-  background: var(--color-gray-900);
-  color: white;
+  background: var(--ren-tooltip-bg, var(--color-text));
+  color: var(--ren-tooltip-color, var(--color-text-inverted));
   border-radius: var(--radius-md);
   padding: var(--space-1) var(--space-2);
   font-size: var(--size-caption, 0.75rem);
@@ -56,7 +56,7 @@
   position: absolute;
   width: 6px;
   height: 6px;
-  background: var(--color-gray-900);
+  background: var(--ren-tooltip-bg, var(--color-text));
   transform: rotate(45deg);
   z-index: -1;
 }

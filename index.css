@@ -24,4 +24,5 @@
 @layer reset, tokens, base, components, utilities;
 
 @import './tokens/index.css' layer(tokens);
-@import './base/index.css' layer(base);
+@import './base/index.css';
+@import './components/index.css';

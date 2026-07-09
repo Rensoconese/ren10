@@ -5,6 +5,8 @@ const fs = require('fs');
 
 const FIXTURE_URL =
   'file://' + path.resolve(__dirname, 'fixtures/component-token-overrides.html');
+const CASCADE_FIXTURE_URL =
+  'file://' + path.resolve(__dirname, 'fixtures/cascade-contract.html');
 
 test.describe('Primitive Appearance API contract', () => {
   test.beforeEach(async ({ page }) => {
@@ -62,5 +64,35 @@ test.describe('Primitive Appearance API contract', () => {
     const source = fs.readFileSync(path.resolve(__dirname, '../../components/composites/ren-toast/ren-toast.js'), 'utf8');
     expect(source).toContain('getComputedStyle(toast)');
     expect(source).not.toContain('getComputedStyle(viewport)');
+  });
+});
+
+test.describe('Cascade and semantic token contract', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto(CASCADE_FIXTURE_URL);
+  });
+
+  test('surfaces are opaque and tooltip exposes semantic public bridge', async ({ page }) => {
+    for (const id of ['tooltip', 'nav', 'sidebar', 'command']) {
+      await expect.poll(() => page.locator(`#${id}`).evaluate((el) => getComputedStyle(el).backgroundColor)).not.toMatch(/transparent|rgba\(0, 0, 0, 0\)/);
+    }
+    await expect.poll(() => page.locator('#tooltip').evaluate((el) => getComputedStyle(el).color)).not.toBe('');
+  });
+
+  test('unlayered application CSS overrides every RenDS layer without important', async ({ page }) => {
+    await expect.poll(() => page.locator('#app-override').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(1, 2, 3)');
+    await expect.poll(() => page.locator('#app-override').evaluate((el) => getComputedStyle(el).color)).toBe('rgb(4, 5, 6)');
+  });
+
+  test('utilities are top-level and visually hidden utility is effective', async ({ page }) => {
+    const result = await page.locator('#visually-hidden').evaluate((el) => ({
+      width: getComputedStyle(el).width,
+      clipPath: getComputedStyle(el).clipPath
+    }));
+    expect(result.width).toBe('1px');
+    expect(result.clipPath).toContain('50%');
+    const source = fs.readFileSync(path.resolve(__dirname, '../../index.css'), 'utf8');
+    expect(source).toContain('@layer reset, tokens, base, components, utilities;');
+    expect(source).toContain("@import './components/index.css';");
   });
 });

@@ -13,11 +13,11 @@
    ============================================ */
 
 @import './reset.css' layer(reset);
-@import './classless.css';
-@import './utilities.css';
-@import './layouts.css';
-@import './grid.css';
-@import './glass.css';
-@import './motion-alternatives.css';
-@import './motion-presets.css';
-@import './enhancements.css';
+@import './classless.css' layer(base);
+@import './utilities.css' layer(utilities);
+@import './layouts.css' layer(base);
+@import './grid.css' layer(base);
+@import './glass.css' layer(base);
+@import './motion-alternatives.css' layer(base);
+@import './motion-presets.css' layer(base);
+@import './enhancements.css' layer(base);

@@ -65,7 +65,7 @@ forbiddenPatterns:
 tokenPolicy:
   allowed:
     - "Public component tokens listed in Public Token API: --ren-command-bg, --ren-command-border, --ren-command-item-height, --ren-command-item-radius, --ren-command-max-height, --ren-command-radius, --ren-command-shadow, --ren-command-width."
-    - "Semantic surface / text tokens consumed by selectors: --ren-surface, --ren-border, --ren-text, --ren-text-muted, --ren-text-faint, --ren-fill, --ren-fill-hover, --ren-separator."
+    - "Semantic surface / text tokens consumed by selectors: --color-surface, --color-border, --color-text, --color-text-muted, --color-text-faint, --color-fill, --color-fill-hover, --color-separator."
     - "Spacing / motion tokens: --ren-space-*, --ren-radius-*, --duration-enter, --duration-overlay, --duration-state, --ease-enter, --ease-state-change."
     - "Z-index token: --ren-z-modal."
   forbidden:

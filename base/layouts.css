@@ -307,7 +307,7 @@
 
 .ren-container-name {
   container-type: inline-size;
-  container-name: var(--container-name);
+  container-name: var(--container-name, none);
 }
 
 /* Common responsive patterns using container queries */

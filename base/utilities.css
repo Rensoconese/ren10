@@ -10,7 +10,8 @@
 /* ─── Screen Reader Only ───
    Visually hidden but accessible to screen readers.
    Essential for a11y labels, skip links, etc. */
-.ren-sr-only {
+.ren-sr-only,
+.ren-visually-hidden {
   position: absolute;
   width: 1px;
   height: 1px;
