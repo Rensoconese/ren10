@@ -26,14 +26,22 @@
 - Main-agent verification: unit fixture, token lint, CSS lint, and diff check pass
 - Intentional remediation inventory: 14 unresolved + 307 unconsumed + 0 contract-absent = 321
 
-## Current
-
 ### Task 2 — Appearance API defaults and primitive consumption
 
+- Implementation commits: `0a7f150`, `07f1882`, `fa8995d`, `627dce2`
+- TDD evidence: primitive overrides RED/GREEN; theme import-order RED/GREEN; docs contrast RED/GREEN
+- Independent final review: `APPROVED`, no Critical/Important findings
+- Main-agent verification: foundation 6/6, `test:a11y` 376/376, `lint:css` and `lint:tokens` pass
+- Inventory: 129/129 primitive tokens consumed; 14 unresolved + 178 composite/pattern unconsumed + 0 absent = 192
+
+## Current
+
+### Task 3 — Composite and pattern Appearance API consumption
+
 - Status: preparing implementer brief
-- Audit map: 129 primitive tokens across 18 families; radio has no public family
-- Expected post-task inventory: 178 unconsumed composite/pattern tokens
-- Base commit: task-closure documentation commit
+- Audit map: 138 composite + 40 pattern tokens; runtime consumers and composition edge cases are explicit in the plan
+- Expected post-task inventory: 14 unresolved custom properties only
+- Base commit: task-2 closure documentation commit
 - Review status: pending
 
 ## Pending

@@ -132,6 +132,10 @@
 **Files:**
 - Modify: all CSS under `components/composites/*/` that has a central `--ren-*` family
 - Modify: all CSS under `components/patterns/*/` that has a central `--ren-*` family
+- Modify: `components/composites/ren-tooltip/ren-tooltip.js`
+- Modify: `components/composites/ren-toast/ren-toast.js`
+- Modify: `scripts/check-css-contracts.mjs`
+- Modify: `scripts/check-css-contracts.test.mjs`
 - Modify: `tests/components/fixtures/component-token-overrides.html`
 - Modify: `tests/components/foundation-contract.spec.cjs`
 
@@ -149,13 +153,17 @@
 
 - [ ] **Step 3: Replace direct values with public token consumption**
 
-  Preserve semantic fallbacks in the central defaults and modifier semantics in local classes. Do not create public tokens not already declared by a contract.
+  Move all 138 composite and 40 pattern defaults from component-local selectors to `:where(:root, [data-theme])` scopes before consuming them. Preserve semantic fallbacks in the central defaults and modifier semantics in local classes. Do not create public tokens not already declared by a contract. Keep `--ren-hover-card-anchor` classified as a CSS dashed identifier, not an Appearance token.
+
+  Runtime tokens must have runtime consumers: `ren-tooltip` reads `--ren-tooltip-delay` for hover/focus scheduling, and `ren-toast` reads `--ren-toast-duration` for its default dwell/progress timer while explicit status/options remain authoritative. Extend the contract checker and fixture to recognize literal `getComputedStyle(...).getPropertyValue('--ren-*')` reads; never add a cosmetic CSS `var()` solely to silence the validator.
+
+  Correct the known implementation hazards while wiring the public properties: slider thumb pseudo-element selectors, menu/context-menu inheritance, date-picker/date-range calendar composition, and calendar width/day-size propagation. Preserve compact/small variants for the later P2 touch audit.
 
 - [ ] **Step 4: Verify all 309 central tokens are consumed**
 
   Run: `npm run lint:contracts`
 
-  Expected: zero unconsumed Appearance tokens.
+  Expected: zero unconsumed Appearance tokens, zero new unresolved properties, and zero false contract tokens for dashed identifiers. The checker must report runtime reads as consumers and must not report a token as consumed if only an inert CSS declaration was added.
 
 - [ ] **Step 5: Commit**
 
