@@ -75,6 +75,8 @@ export class RenCarousel extends HTMLElement {
     this._isAutoplayActive = false;
     this._scrollTimeout = null;
     this._intersectionObserver = null;
+    this._contentObserver = null;
+    this._refreshQueued = false;
 
     this._autoplayMs = 0;
     this._shouldLoop = false;
@@ -89,6 +91,7 @@ export class RenCarousel extends HTMLElement {
   connectedCallback() {
     this._parseAttributes();
     this._initialize();
+    this._observeContent();
     this._attachReducedMotionListener();
     this._attachEventListeners();
     if (this._autoplayMs > 0) {
@@ -101,8 +104,33 @@ export class RenCarousel extends HTMLElement {
     if (this._intersectionObserver) {
       this._intersectionObserver.disconnect();
     }
+    this._contentObserver?.disconnect();
+    this._contentObserver = null;
     this._detachReducedMotionListener();
     this._detachEventListeners();
+  }
+
+  _observeContent() {
+    if (typeof MutationObserver === 'undefined' || this._contentObserver) return;
+    this._contentObserver = new MutationObserver((mutations) => {
+      // Ignore mutations caused by our generated controls; refresh only when
+      // slide/viewport content actually changes.
+      if (!mutations.some((m) => [...m.addedNodes, ...m.removedNodes].some(
+        (node) => node.nodeType === Node.ELEMENT_NODE &&
+          (node.classList?.contains('ren-carousel-slide') ||
+            node.classList?.contains('ren-carousel-viewport'))
+      ))) return;
+      if (this._refreshQueued) return;
+      this._refreshQueued = true;
+      queueMicrotask(() => {
+        this._refreshQueued = false;
+        if (!this.isConnected) return;
+        this._contentObserver?.disconnect();
+        this._initialize();
+        this._contentObserver?.observe(this, { childList: true, subtree: true });
+      });
+    });
+    this._contentObserver.observe(this, { childList: true, subtree: true });
   }
 
   attributeChangedCallback(name, oldValue, newValue) {

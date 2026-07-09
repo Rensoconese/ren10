@@ -66,9 +66,13 @@ export class RenAccordion extends HTMLElement {
     super();
     /** @private */ this._useNativeExclusive = false;
     /** @private */ this._groupName = '';
+    this._listenerController = null;
+    this._handleToggleBound = (event) => this._handleToggle(event);
   }
 
   connectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
     this.classList.add('ren-accordion');
 
     // Determine mode (exclusive or multiple)
@@ -83,13 +87,21 @@ export class RenAccordion extends HTMLElement {
     this._applyNativeExclusive();
 
     // Listen for toggle events on all child details (event delegation)
-    this.addEventListener('toggle', this._handleToggle.bind(this), true);
+    this.addEventListener('toggle', this._handleToggleBound, {
+      capture: true,
+      signal: this._listenerController.signal,
+    });
 
     // Apply default open items
     const defaultValue = this.getAttribute('default-value');
     if (defaultValue) {
       this._setDefaultOpen(defaultValue);
     }
+  }
+
+  disconnectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   /**
