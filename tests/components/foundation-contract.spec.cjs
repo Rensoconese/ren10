@@ -7,6 +7,8 @@ const FIXTURE_URL =
   'file://' + path.resolve(__dirname, 'fixtures/component-token-overrides.html');
 const CASCADE_FIXTURE_URL =
   'file://' + path.resolve(__dirname, 'fixtures/cascade-contract.html');
+const PROGRESSIVE_FIXTURE_URL =
+  'file://' + path.resolve(__dirname, 'fixtures/theme-progressive-contract.html');
 
 test.describe('Primitive Appearance API contract', () => {
   test.beforeEach(async ({ page }) => {
@@ -65,6 +67,38 @@ test.describe('Primitive Appearance API contract', () => {
     expect(source).toContain('getComputedStyle(toast)');
     expect(source).not.toContain('getComputedStyle(viewport)');
   });
+});
+
+test.describe('Theme progressive enhancement contract', () => {
+  test('server-rendered custom-element content remains visible before upgrade', async ({ page }) => {
+    await page.goto(PROGRESSIVE_FIXTURE_URL);
+    for (const id of ['field', 'accordion', 'nav', 'form', 'tooltip']) {
+      await expect.poll(() => page.locator(`#${id}`).evaluate((el) => ({
+        opacity: Number.parseFloat(getComputedStyle(el).opacity),
+        text: el.textContent.trim()
+      }))).toMatchObject({ opacity: expect.any(Number) });
+      const state = await page.locator(`#${id}`).evaluate((el) => ({ opacity: Number.parseFloat(getComputedStyle(el).opacity), text: el.textContent.trim() }));
+      expect(state.opacity).toBeGreaterThan(0);
+      expect(state.text.length).toBeGreaterThan(0);
+    }
+  });
+
+  for (const colorScheme of ['light', 'dark']) {
+    test(`AAA scope computes at least 7:1 in ${colorScheme} mode`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme });
+      await page.goto(PROGRESSIVE_FIXTURE_URL);
+      const ratio = await page.evaluate(() => {
+        const rgb = (value) => value.match(/[\d.]+/g).slice(0, 3).map(Number).map((v) => v / 255);
+        const lum = (value) => rgb(value).map((v) => v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+        const text = getComputedStyle(document.querySelector('#aaa-text'));
+        const accent = getComputedStyle(document.querySelector('#aaa-accent'));
+        const contrast = (fg, bg) => { const a = lum(fg); const b = lum(bg); return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05); };
+        return { text: contrast(text.color, text.backgroundColor), accent: contrast(accent.color, accent.backgroundColor) };
+      });
+      expect(ratio.text).toBeGreaterThanOrEqual(7);
+      expect(ratio.accent).toBeGreaterThanOrEqual(7);
+    });
+  }
 });
 
 test.describe('Cascade and semantic token contract', () => {

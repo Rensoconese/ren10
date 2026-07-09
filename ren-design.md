@@ -964,6 +964,16 @@ tokens — no component changes. Use AAA when targeting audiences with low
 vision or when a client spec demands it; the system has been regression
 tested under AAA with the `smoke-create-generator` script.
 
+The shipped `[data-contrast="aaa"]` scope also sets normal foreground,
+surface, and on-accent pairs to a computed contrast of at least 7:1 in light
+and dark color schemes. It is intentionally ordered after named theme rules,
+so the opt-in wins when both attributes are present.
+
+Custom elements are progressive enhancements: server-rendered light-DOM
+content is visible before registration and remains usable without JavaScript.
+Applications may opt into a temporary hidden state with `[data-ren-pending]`;
+RenDS does not hide every `:not(:defined)` custom element globally.
+
 ---
 
 ## Typography

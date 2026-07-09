@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" data-theme="forest" data-contrast="aaa">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="../../../index.css">
+  <link rel="stylesheet" href="../../../themes/appearance.css">
+  <style>body { background: var(--color-surface); color: var(--color-text); } #aaa-text { background: var(--color-surface); } #aaa-accent { background: var(--color-accent); color: var(--color-on-accent); }</style>
+</head>
+<body>
+  <ren-field id="field"><label for="name">Name</label><input id="name" name="name"></ren-field>
+  <ren-accordion id="accordion"><button type="button">Details</button><p>Accessible details</p></ren-accordion>
+  <ren-nav id="nav"><a href="#main">Main</a></ren-nav>
+  <ren-form id="form"><form><button type="submit">Save</button></form></ren-form>
+  <ren-tooltip id="tooltip"><button type="button" aria-label="Help">?</button><span>Helpful text</span></ren-tooltip>
+  <p id="aaa-text">AAA normal text</p>
+  <button id="aaa-accent" type="button">AAA accent</button>
+</body>
+</html>

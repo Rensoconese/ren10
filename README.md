@@ -149,6 +149,13 @@ const { css, report } = generateTheme('#5b6cff', { level: 'AA' });
 document.head.insertAdjacentHTML('beforeend', `<style>${css}</style>`);
 ```
 
+For higher-legibility interfaces, opt into the shipped AAA scope with
+`data-contrast="aaa"` on the root (or a subtree). It sets normal text and
+solid accent pairs to at least 7:1 in both color schemes. Custom elements are
+progressive enhancements and remain visible without JavaScript; use the
+explicit `[data-ren-pending]` attribute only when an application deliberately
+needs to hide content while an upgrade is pending.
+
 There's also an interactive UI at `themes/preview.html` you can open locally to dial in the palette before committing the generated CSS.
 
 ### CSS Cascade Layers

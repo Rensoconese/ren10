@@ -63,6 +63,7 @@
   --color-accent-hover:  light-dark(#15803D, #86EFAC);
   --color-accent-active: light-dark(#166534, #BBF7D0);
   --color-accent-subtle: light-dark(#F0FDF4, #052E16);
+  --color-on-accent:     light-dark(#000000, #000000);
 
   --color-surface:        light-dark(#FAFDF7, #0A120A);
   --color-surface-raised: light-dark(#FFFFFF, #111F11);
@@ -81,6 +82,7 @@
   --color-accent-hover:  light-dark(#C2410C, #FDBA74);
   --color-accent-active: light-dark(#9A3412, #FED7AA);
   --color-accent-subtle: light-dark(#FFF7ED, #431407);
+  --color-on-accent:     light-dark(#000000, #000000);
 
   --color-surface:        light-dark(#FFFBF5, #120E0A);
   --color-surface-raised: light-dark(#FFFFFF, #1C1610);
@@ -277,6 +279,25 @@
 
 [data-theme="light"] {
   color-scheme: light;
+}
+
+/* AAA contrast scope: normal text and solid accent pairs are >= 7:1 in
+   either color scheme. Place after named themes so this opt-in wins. */
+[data-contrast="aaa"] {
+  --color-text:            light-dark(#111111, #FFFFFF);
+  --color-text-primary:    var(--color-text);
+  --color-text-secondary:  light-dark(#111111, #FFFFFF);
+  --color-text-muted:      light-dark(#111111, #FFFFFF);
+  --color-surface:         light-dark(#FFFFFF, #000000);
+  --color-surface-raised:  light-dark(#FFFFFF, #000000);
+  --color-surface-sunken:  light-dark(#FFFFFF, #000000);
+  --color-accent:          light-dark(#111111, #FFFFFF);
+  --color-accent-hover:    light-dark(#000000, #FFFFFF);
+  --color-accent-active:   light-dark(#000000, #FFFFFF);
+  --color-accent-strong:   light-dark(#111111, #FFFFFF);
+  --color-on-accent:       light-dark(#FFFFFF, #000000);
+  --color-text-link:       var(--color-accent-strong);
+  --color-focus-ring:      var(--color-accent);
 }
 
 /* ═══════════════════════════════════════════════
