@@ -229,6 +229,13 @@ export class RenTooltip extends HTMLElement {
   scheduleShow() {
     this.clearTimeouts();
 
+    // Reduced-motion users should not wait through an animation-oriented
+    // reveal delay; the tooltip remains available on focus/hover.
+    if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.show();
+      return;
+    }
+
     const tokenDelay = getComputedStyle(this).getPropertyValue('--ren-tooltip-delay').trim();
     const attrDelay = this.getAttribute('show-delay');
     const parsedAttrDelay = attrDelay == null ? Number.NaN : parseInt(attrDelay, 10);

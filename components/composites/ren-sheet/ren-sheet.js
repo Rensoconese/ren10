@@ -48,6 +48,7 @@ export class RenSheet extends HTMLElement {
   #titleId;
   #upgraded = false;
   #returnFocus = null;
+  #abortController = null;
 
   // Touch swipe
   #startX = 0;
@@ -55,7 +56,13 @@ export class RenSheet extends HTMLElement {
   #dragging = false;
 
   connectedCallback() {
-    if (this.#upgraded) return;
+    if (!this.#abortController || this.#abortController.signal.aborted) {
+      this.#abortController = new AbortController();
+    }
+    if (this.#upgraded) {
+      this.#wire();
+      return;
+    }
     this.#upgraded = true;
     autoId(this, 'sheet');
     this.#enhance();
@@ -66,6 +73,12 @@ export class RenSheet extends HTMLElement {
       // Defer to ensure dialog is connected
       queueMicrotask(() => this.show());
     }
+  }
+
+  disconnectedCallback() {
+    this.#abortController?.abort();
+    this.#dragging = false;
+    if (this.#dialog?.open) this.close();
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -134,24 +147,25 @@ export class RenSheet extends HTMLElement {
   /* ─── Wiring ─── */
 
   #wire() {
+    const { signal } = this.#abortController;
     // Backdrop click: native <dialog> dispatches click on the dialog itself
     // when the user clicks on the backdrop. e.target === dialog → it was the
     // backdrop, not content inside.
     this.#dialog.addEventListener('click', (e) => {
       if (!this.#isDismissible()) return;
       if (e.target === this.#dialog) this.close();
-    });
+    }, { signal });
 
     // Esc — handled natively, but we intercept to honor dismissible=false
     this.#dialog.addEventListener('cancel', (e) => {
       if (!this.#isDismissible()) e.preventDefault();
-    });
+    }, { signal });
 
     // [data-sheet-close] anywhere inside
     this.#dialog.addEventListener('click', (e) => {
       const closer = e.target.closest('[data-sheet-close]');
       if (closer && this.#dialog.contains(closer)) this.close();
-    });
+    }, { signal });
 
     // Swipe to dismiss
     this.#dialog.addEventListener('touchstart', (e) => {
@@ -159,7 +173,7 @@ export class RenSheet extends HTMLElement {
       this.#startX = e.touches[0].clientX;
       this.#startY = e.touches[0].clientY;
       this.#dragging = true;
-    }, { passive: true });
+    }, { passive: true, signal });
 
     this.#dialog.addEventListener('touchmove', (e) => {
       if (!this.#dragging) return;
@@ -176,11 +190,11 @@ export class RenSheet extends HTMLElement {
         this.#dragging = false;
         this.close();
       }
-    }, { passive: true });
+    }, { passive: true, signal });
 
     this.#dialog.addEventListener('touchend', () => {
       this.#dragging = false;
-    });
+    }, { signal });
   }
 
   #isDismissible() {

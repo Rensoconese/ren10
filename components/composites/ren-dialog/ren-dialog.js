@@ -43,7 +43,8 @@ import { createFocusTrap } from '../../../utils/focus-trap.js';
 export class RenDialog extends HTMLElement {
   #dialogElement = null;
   #focusTrap = null;
-  #abortController = new AbortController();
+  #abortController = null;
+  #returnFocus = null;
   #inertElements = new WeakMap();
 
   static observedAttributes = ['open', 'alert', 'size'];
@@ -54,12 +55,16 @@ export class RenDialog extends HTMLElement {
   }
 
   connectedCallback() {
+    if (!this.#abortController || this.#abortController.signal.aborted) {
+      this.#abortController = new AbortController();
+    }
     this.#initializeDialogElement();
     this.#wireupTriggers();
   }
 
   disconnectedCallback() {
-    this.#abortController.abort();
+    this.#abortController?.abort();
+    if (this.#dialogElement?.open) this.#setInert(false);
     this.#teardownFocusTrap();
   }
 
@@ -84,6 +89,7 @@ export class RenDialog extends HTMLElement {
    */
   show() {
     if (!this.#dialogElement?.open) {
+      this.#returnFocus = document.activeElement;
       this.#dialogElement.showModal();
       this.#setInert(true);
       this.setAttribute('open', '');
@@ -116,6 +122,10 @@ export class RenDialog extends HTMLElement {
       this.removeAttribute('open');
       this.setAttribute('data-state', 'closed');
       this.#teardownFocusTrap();
+      if (this.#returnFocus && document.contains(this.#returnFocus)) {
+        this.#returnFocus.focus({ preventScroll: true });
+      }
+      this.#returnFocus = null;
       this.dispatchEvent(
         new CustomEvent('ren-close', {
           bubbles: true,
