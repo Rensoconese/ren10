@@ -21,7 +21,8 @@
 /* ═══════════════════════════════════════════════
    BUTTON
    ═══════════════════════════════════════════════ */
-.ren-btn {
+:root,
+[data-theme] {
   --ren-btn-height:       var(--size-lg);
   --ren-btn-padding-x:    var(--space-4);
   --ren-btn-padding-y:    var(--space-2);
@@ -36,75 +37,77 @@
   --ren-btn-bg-hover:     var(--color-accent-hover);
   --ren-btn-bg-active:    var(--color-accent-active);
   --ren-btn-color:        var(--color-on-accent);
-  --ren-btn-border-color: transparent;
+  --ren-btn-border-color: var(--color-accent);
 
   /* Focus ring */
-  --ren-btn-ring-color:   var(--color-accent);
-  --ren-btn-ring-offset:  2px;
-  --ren-btn-ring-width:   2px;
+  --ren-btn-ring-color:   var(--color-focus-ring);
+  --ren-btn-ring-offset:  var(--ring-offset-width);
+  --ren-btn-ring-width:   var(--ring-width);
 
   /* Motion */
-  --ren-btn-duration:     var(--duration-fast);
-  --ren-btn-easing:       var(--ease-out);
+  --ren-btn-duration:     var(--duration-state);
+  --ren-btn-easing:       var(--ease-enter);
 }
 
 /* ═══════════════════════════════════════════════
    CARD
    ═══════════════════════════════════════════════ */
-.ren-card {
+:root,
+[data-theme] {
   --ren-card-bg:            var(--color-surface-raised);
   --ren-card-border-color:  var(--color-border);
   --ren-card-border-width:  var(--stroke-1);
   --ren-card-radius:        var(--radius-lg);
-  --ren-card-padding:       var(--space-5);
+  --ren-card-padding:       var(--space-4);
   --ren-card-shadow:        none;
   --ren-card-header-gap:    var(--space-1);
-  --ren-card-gap:           0;
+  --ren-card-gap:           0px;
 }
 
 /* ═══════════════════════════════════════════════
    INPUT / FIELD
    ═══════════════════════════════════════════════ */
-.ren-field input,
-.ren-field textarea,
-.ren-field select {
+:root,
+[data-theme] {
   --ren-field-height:        var(--size-lg);
   --ren-field-padding-x:     var(--space-3);
   --ren-field-padding-y:     var(--space-2);
   --ren-field-font-size:     var(--body-size);
   --ren-field-radius:        var(--radius-md);
-  --ren-field-border-color:  var(--color-border);
+  --ren-field-border-color:  var(--color-border-interactive);
   --ren-field-border-width:  var(--stroke-1);
-  --ren-field-bg:            var(--color-surface);
+  --ren-field-bg:            var(--color-input-bg);
   --ren-field-color:         var(--color-text);
-  --ren-field-placeholder:   var(--color-text-muted);
-  --ren-field-focus-color:   var(--color-accent);
-  --ren-field-error-color:   var(--color-danger);
+  --ren-field-placeholder:   var(--color-input-placeholder);
+  --ren-field-focus-color:   var(--color-input-border-focus);
+  --ren-field-error-color:   var(--color-input-error-border);
   --ren-field-success-color: var(--color-success);
 }
 
 /* ═══════════════════════════════════════════════
    BADGE
    ═══════════════════════════════════════════════ */
-.ren-badge {
-  --ren-badge-height:      var(--size-xs);
-  --ren-badge-padding-x:   var(--space-2);
-  --ren-badge-font-size:   var(--caption-sm-size);
+:root,
+[data-theme] {
+  --ren-badge-height:      auto;
+  --ren-badge-padding-x:   0.55em;
+  --ren-badge-font-size:   var(--text-xs);
   --ren-badge-font-weight: var(--weight-semibold);
   --ren-badge-radius:      var(--radius-full);
   --ren-badge-bg:          var(--color-fill);
-  --ren-badge-color:       var(--color-text);
+  --ren-badge-color:       var(--color-text-secondary);
 }
 
 /* ═══════════════════════════════════════════════
    TAG
    ═══════════════════════════════════════════════ */
-.ren-tag {
-  --ren-tag-height:       var(--size-sm);
-  --ren-tag-padding-x:    var(--space-3);
-  --ren-tag-font-size:    var(--label-sm-size);
-  --ren-tag-font-weight:  var(--label-weight);
-  --ren-tag-radius:       var(--radius-md);
+:root,
+[data-theme] {
+  --ren-tag-height:       auto;
+  --ren-tag-padding-x:    0.65em;
+  --ren-tag-font-size:    var(--caption-size);
+  --ren-tag-font-weight:  var(--weight-medium);
+  --ren-tag-radius:       var(--radius-full);
   --ren-tag-bg:           var(--color-fill);
   --ren-tag-color:        var(--color-text);
   --ren-tag-border-color: var(--color-border);
@@ -114,14 +117,15 @@
 /* ═══════════════════════════════════════════════
    BANNER / ALERT
    ═══════════════════════════════════════════════ */
-.ren-banner {
-  --ren-banner-padding:      var(--space-4);
-  --ren-banner-radius:       var(--radius-lg);
+:root,
+[data-theme] {
+  --ren-banner-padding:      var(--space-3) var(--space-4);
+  --ren-banner-radius:       var(--radius-md);
   --ren-banner-border-width: var(--stroke-1);
   --ren-banner-gap:          var(--space-3);
   --ren-banner-icon-size:    var(--icon-lg);
   --ren-banner-bg:           var(--color-info-subtle);
-  --ren-banner-border-color: var(--color-info);
+  --ren-banner-border-color: color-mix(in oklch, var(--color-info), transparent 70%);
   --ren-banner-color:        var(--color-text);
 }
 
@@ -216,30 +220,32 @@
 /* ═══════════════════════════════════════════════
    CHECKBOX & SWITCH
    ═══════════════════════════════════════════════ */
-.ren-checkbox {
+:root,
+[data-theme] {
   --ren-checkbox-size:        1.25rem;
   --ren-checkbox-radius:      var(--radius-sm);
-  --ren-checkbox-border:      var(--color-border-strong);
+  --ren-checkbox-border:      var(--color-border-interactive);
   --ren-checkbox-checked-bg:  var(--color-accent);
   --ren-checkbox-checked-color: var(--color-on-accent);
   --ren-checkbox-gap:         var(--space-2);
 
   /* Motion */
-  --ren-checkbox-duration:    var(--duration-normal);
-  --ren-checkbox-easing:      var(--ease-spring);
+  --ren-checkbox-duration:    var(--duration-state);
+  --ren-checkbox-easing:      var(--ease-playful);
 }
 
-.ren-switch {
+:root,
+[data-theme] {
   --ren-switch-width:       3.1875rem;  /* 51px Apple HIG */
   --ren-switch-height:      1.9375rem;  /* 31px Apple HIG */
   --ren-switch-thumb-size:  1.6875rem;  /* 27px */
-  --ren-switch-bg:          var(--color-fill);
+  --ren-switch-bg:          var(--color-fill-active);
   --ren-switch-checked-bg:  var(--color-success);
   --ren-switch-thumb-color: var(--white);
 
   /* Motion */
-  --ren-switch-duration:    var(--duration-normal);
-  --ren-switch-easing:      var(--ease-snappy);
+  --ren-switch-duration:    var(--duration-state);
+  --ren-switch-easing:      var(--ease-state-change);
 }
 
 /* ═══════════════════════════════════════════════
@@ -278,30 +284,33 @@
 /* ═══════════════════════════════════════════════
    AVATAR
    ═══════════════════════════════════════════════ */
-.ren-avatar {
+:root,
+[data-theme] {
   --ren-avatar-size:     var(--avatar-md);
   --ren-avatar-radius:   var(--radius-full);
   --ren-avatar-bg:       var(--color-fill);
-  --ren-avatar-color:    var(--color-text-muted);
-  --ren-avatar-font-size:var(--label-size);
+  --ren-avatar-color:    var(--color-text-secondary);
+  --ren-avatar-font-size:var(--text-sm);
   --ren-avatar-border:   2px solid var(--color-surface);
 }
 
 /* ═══════════════════════════════════════════════
    BREADCRUMB
    ═══════════════════════════════════════════════ */
-.ren-breadcrumb {
-  --ren-breadcrumb-font-size:  var(--label-size);
+:root,
+[data-theme] {
+  --ren-breadcrumb-font-size:  var(--caption-size);
   --ren-breadcrumb-color:      var(--color-text-muted);
   --ren-breadcrumb-active-color: var(--color-text);
-  --ren-breadcrumb-separator:  '›';
-  --ren-breadcrumb-gap:        var(--space-2);
+  --ren-breadcrumb-separator:  var(--breadcrumb-separator, '\203A');
+  --ren-breadcrumb-gap:        var(--space-1);
 }
 
 /* ═══════════════════════════════════════════════
    PAGINATION
    ═══════════════════════════════════════════════ */
-.ren-pagination {
+:root,
+[data-theme] {
   --ren-pagination-size:        var(--size-lg);
   --ren-pagination-font-size:   var(--label-size);
   --ren-pagination-radius:      var(--radius-md);
@@ -315,42 +324,46 @@
 /* ═══════════════════════════════════════════════
    PROGRESS
    ═══════════════════════════════════════════════ */
-.ren-progress {
+:root,
+[data-theme] {
   --ren-progress-height:     8px;
   --ren-progress-radius:     var(--radius-full);
   --ren-progress-bg:         var(--color-fill);
   --ren-progress-fill:       var(--color-accent);
 
   /* Motion */
-  --ren-progress-duration:   var(--duration-normal);
-  --ren-progress-easing:     var(--ease-out);
+  --ren-progress-duration:   var(--duration-state);
+  --ren-progress-easing:     var(--ease-enter);
 }
 
 /* ═══════════════════════════════════════════════
    SPINNER
    ═══════════════════════════════════════════════ */
-.ren-spinner {
-  --ren-spinner-size:   1.25rem;
-  --ren-spinner-width:  2px;
+:root,
+[data-theme] {
+  --ren-spinner-size:   var(--icon-lg);
+  --ren-spinner-width:  2.5px;
   --ren-spinner-color:  var(--color-accent);
-  --ren-spinner-speed:  0.75s;
+  --ren-spinner-speed:  1s;
 }
 
 /* ═══════════════════════════════════════════════
    SKELETON
    ═══════════════════════════════════════════════ */
-.ren-skeleton {
+:root,
+[data-theme] {
   --ren-skeleton-bg:      var(--color-fill);
-  --ren-skeleton-shine:   var(--color-surface);
-  --ren-skeleton-radius:  var(--radius-md);
-  --ren-skeleton-speed:   1.5s;
+  --ren-skeleton-shine:   var(--color-fill-hover);
+  --ren-skeleton-radius:  var(--radius-sm);
+  --ren-skeleton-speed:   var(--duration-loop-slow);
 }
 
 /* ═══════════════════════════════════════════════
    SEPARATOR
    ═══════════════════════════════════════════════ */
-.ren-separator {
-  --ren-separator-color:  var(--color-border);
+:root,
+[data-theme] {
+  --ren-separator-color:  var(--color-separator);
   --ren-separator-width:  var(--stroke-1);
   --ren-separator-margin: var(--space-4);
 }
@@ -358,7 +371,8 @@
 /* ═══════════════════════════════════════════════
    LINK
    ═══════════════════════════════════════════════ */
-.ren-link {
+:root,
+[data-theme] {
   --ren-link-color:       var(--color-text-link);
   --ren-link-hover-color: var(--color-text-link-hover);
   --ren-link-underline:   1px;
@@ -572,22 +586,24 @@ ren-table {
 /* ═══════════════════════════════════════════════
    KBD
    ═══════════════════════════════════════════════ */
-.ren-kbd {
+:root,
+[data-theme] {
   --ren-kbd-bg:          var(--color-surface-sunken);
   --ren-kbd-border:      var(--color-border-strong);
   --ren-kbd-color:       var(--color-text);
-  --ren-kbd-font-size:   var(--caption-sm-size);
+  --ren-kbd-font-size:   var(--caption-size);
   --ren-kbd-font-family: var(--font-mono);
-  --ren-kbd-padding:     var(--space-0-5) var(--space-2);
+  --ren-kbd-padding:     0.1em 0.4em;
   --ren-kbd-radius:      var(--radius-sm);
 }
 
 /* ═══════════════════════════════════════════════
    ICON
    ═══════════════════════════════════════════════ */
-.ren-icon {
-  --ren-icon-size:       var(--size-md);
-  --ren-icon-color:      var(--color-text);
+:root,
+[data-theme] {
+  --ren-icon-size:       var(--icon-md);
+  --ren-icon-color:      currentColor;
   --ren-icon-fill:       currentColor;
 }
 

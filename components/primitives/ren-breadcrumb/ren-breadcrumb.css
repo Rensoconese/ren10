@@ -23,31 +23,27 @@
      </nav>
    ============================================ */
 
-.ren-breadcrumb {
-  --breadcrumb-separator: '\203A';  /* › */
-}
-
 .ren-breadcrumb > ol {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--ren-breadcrumb-gap);
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: var(--caption-size, var(--text-sm));
+  font-size: var(--ren-breadcrumb-font-size);
 }
 
 .ren-breadcrumb > ol > li {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  color: var(--color-text-muted);
+  gap: var(--ren-breadcrumb-gap);
+  color: var(--ren-breadcrumb-color);
 }
 
 /* Separator */
 .ren-breadcrumb > ol > li + li::before {
-  content: var(--breadcrumb-separator);
+  content: var(--ren-breadcrumb-separator);
   color: var(--color-text-faint);
   font-size: 1.1em;
   margin-inline-end: var(--space-1);
@@ -55,7 +51,7 @@
 
 /* Links */
 .ren-breadcrumb a {
-  color: var(--color-text-muted);
+  color: var(--ren-breadcrumb-color);
   text-decoration: none;
   padding: var(--space-1) 0;
   border-radius: var(--radius-sm);
@@ -75,7 +71,7 @@
 
 /* Current page (last item) */
 .ren-breadcrumb [aria-current="page"] {
-  color: var(--color-text);
+  color: var(--ren-breadcrumb-active-color);
   font-weight: var(--weight-medium);
   text-decoration: none;
   pointer-events: none;

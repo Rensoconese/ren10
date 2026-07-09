@@ -29,9 +29,10 @@
 
 /* ─── Base Card ─── */
 .ren-card {
-  background-color: var(--color-surface-raised);
-  border: var(--stroke-1) solid var(--color-border);
-  border-radius: var(--radius-lg);
+  background-color: var(--ren-card-bg);
+  border: var(--ren-card-border-width) solid var(--ren-card-border-color);
+  border-radius: var(--ren-card-radius);
+  box-shadow: var(--ren-card-shadow);
   overflow: hidden;
 }
 
@@ -40,8 +41,8 @@
 .ren-card-header {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
-  padding: var(--space-4) var(--space-4) 0;
+  gap: var(--ren-card-header-gap);
+  padding: var(--ren-card-padding) var(--ren-card-padding) 0;
 }
 
 /* Title and description are typically applied to <h2>/<h3>/<h4> and <p>
@@ -64,7 +65,7 @@
 }
 
 .ren-card-body {
-  padding: var(--space-4);
+  padding: var(--ren-card-padding);
 }
 
 /* Remove top padding when body follows header */
@@ -72,11 +73,18 @@
   padding-top: var(--space-3);
 }
 
+/* Optional spacing between documented card sections without forcing a new
+   flex/grid layout on the card root. */
+.ren-card > :is(.ren-card-header, .ren-card-body, .ren-card-footer, .ren-card-footer-border)
+  + :is(.ren-card-header, .ren-card-body, .ren-card-footer, .ren-card-footer-border) {
+  margin-block-start: var(--ren-card-gap);
+}
+
 .ren-card-footer {
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 0 var(--space-4) var(--space-4);
+  padding: 0 var(--ren-card-padding) var(--ren-card-padding);
 }
 
 /* Footer at bottom with border (for action-heavy cards) */
@@ -84,7 +92,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--ren-card-padding);
   border-top: var(--stroke-1) solid var(--color-border-muted);
 }
 
@@ -98,16 +106,16 @@
 
 /* When card has no sections, just padding */
 .ren-card > :first-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer) {
-  padding-top: var(--space-4);
+  padding-top: var(--ren-card-padding);
 }
 
 .ren-card > :last-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer) {
-  padding-bottom: var(--space-4);
+  padding-bottom: var(--ren-card-padding);
 }
 
 /* Simple card (no sections) */
 .ren-card-simple {
-  padding: var(--space-4);
+  padding: var(--ren-card-padding);
 }
 
 /* ─── Variants ─── */

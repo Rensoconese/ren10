@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../../../tokens/index.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-card/ren-card.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-badge/ren-badge.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-switch/ren-switch.css">
+  <style>
+    :root {
+      --ren-btn-radius: 17px;
+      --ren-card-bg: rgb(1 2 3);
+      --ren-field-border-color: rgb(12 34 56);
+      --ren-badge-radius: 7px;
+      --ren-switch-width: 60px;
+    }
+
+    .token-scope {
+      --ren-btn-radius: 23px;
+      --ren-card-bg: rgb(4 5 6);
+      --ren-field-border-color: rgb(65 43 21);
+      --ren-badge-radius: 11px;
+      --ren-switch-width: 70px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section aria-label="Root token overrides">
+      <button id="root-button" class="ren-btn" type="button">Root button</button>
+
+      <article id="root-card" class="ren-card">
+        <div class="ren-card-body">Root card</div>
+      </article>
+
+      <div class="ren-field">
+        <label class="ren-field-label" for="root-field">Root field</label>
+        <input id="root-field" class="ren-input" type="text">
+      </div>
+
+      <span id="root-badge" class="ren-badge">Root badge</span>
+
+      <label class="ren-switch">
+        <input type="checkbox" role="switch">
+        <span id="root-switch" class="ren-switch-track"></span>
+        <span>Root switch</span>
+      </label>
+    </section>
+
+    <section class="token-scope" aria-label="Scoped token overrides">
+      <button id="scoped-button" class="ren-btn" type="button">Scoped button</button>
+
+      <article id="scoped-card" class="ren-card">
+        <div class="ren-card-body">Scoped card</div>
+      </article>
+
+      <div class="ren-field">
+        <label class="ren-field-label" for="scoped-field">Scoped field</label>
+        <input id="scoped-field" class="ren-input" type="text">
+      </div>
+
+      <span id="scoped-badge" class="ren-badge">Scoped badge</span>
+
+      <label class="ren-switch">
+        <input type="checkbox" role="switch">
+        <span id="scoped-switch" class="ren-switch-track"></span>
+        <span>Scoped switch</span>
+      </label>
+    </section>
+  </main>
+</body>
+</html>

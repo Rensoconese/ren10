@@ -17,18 +17,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-2);
+  gap: var(--ren-btn-gap);
 
   /* Sizing — default md */
-  min-height: var(--size-lg);        /* 44px touch target */
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--label-lg-size);
-  font-weight: var(--label-lg-weight);
+  min-height: var(--ren-btn-height);        /* 44px touch target */
+  padding: var(--ren-btn-padding-y) var(--ren-btn-padding-x);
+  font-size: var(--ren-btn-font-size);
+  font-weight: var(--ren-btn-font-weight);
   line-height: 1;
 
   /* Appearance */
-  border: var(--stroke-1) solid transparent;
-  border-radius: var(--radius-md);
+  border: var(--ren-btn-border-width) solid var(--ren-btn-border-color);
+  border-radius: var(--ren-btn-radius);
   cursor: pointer;
   user-select: none;
   white-space: nowrap;
@@ -36,12 +36,12 @@
 
   /* Transition — intent: tactile feedback on hover/press/focus */
   transition:
-    background-color var(--duration-state) var(--ease-enter),
-    border-color var(--duration-state) var(--ease-enter),
-    color var(--duration-state) var(--ease-enter),
-    box-shadow var(--duration-state) var(--ease-enter),
+    background-color var(--ren-btn-duration) var(--ren-btn-easing),
+    border-color var(--ren-btn-duration) var(--ren-btn-easing),
+    color var(--ren-btn-duration) var(--ren-btn-easing),
+    box-shadow var(--ren-btn-duration) var(--ren-btn-easing),
     transform var(--duration-tactile) var(--ease-enter),
-    opacity var(--duration-state) var(--ease-enter);
+    opacity var(--ren-btn-duration) var(--ren-btn-easing);
 }
 
 /* Active press effect */
@@ -54,21 +54,21 @@
 /* Primary (default) */
 .ren-btn:not(.ren-btn-secondary):not(.ren-btn-ghost):not(.ren-btn-outline):not(.ren-btn-danger):not(.ren-btn-link):not(.ren-btn-accent),
 .ren-btn-primary {
-  background-color: var(--color-accent);
-  color: var(--color-on-accent);
-  border-color: var(--color-accent);
+  background-color: var(--ren-btn-bg);
+  color: var(--ren-btn-color);
+  border-color: var(--ren-btn-border-color);
 }
 
 .ren-btn:not(.ren-btn-secondary):not(.ren-btn-ghost):not(.ren-btn-outline):not(.ren-btn-danger):not(.ren-btn-link):not(.ren-btn-accent):hover:not(:disabled):not([aria-disabled="true"]),
 .ren-btn-primary:hover:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(--color-accent-hover);
-  border-color: var(--color-accent-hover);
+  background-color: var(--ren-btn-bg-hover);
+  border-color: var(--ren-btn-bg-hover);
 }
 
 .ren-btn:not(.ren-btn-secondary):not(.ren-btn-ghost):not(.ren-btn-outline):not(.ren-btn-danger):not(.ren-btn-link):not(.ren-btn-accent):active:not(:disabled):not([aria-disabled="true"]),
 .ren-btn-primary:active:not(:disabled):not([aria-disabled="true"]) {
-  background-color: var(--color-accent-active);
-  border-color: var(--color-accent-active);
+  background-color: var(--ren-btn-bg-active);
+  border-color: var(--ren-btn-bg-active);
 }
 
 /* Secondary */
@@ -298,6 +298,6 @@
 
 /* ─── Focus ─── */
 .ren-btn:focus-visible {
-  outline: var(--ring-width) solid var(--color-focus-ring);
-  outline-offset: var(--ring-offset-width);
+  outline: var(--ren-btn-ring-width) solid var(--ren-btn-ring-color);
+  outline-offset: var(--ren-btn-ring-offset);
 }

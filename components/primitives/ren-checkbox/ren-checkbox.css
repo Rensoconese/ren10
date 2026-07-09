@@ -20,7 +20,7 @@
 .ren-checkbox {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--ren-checkbox-gap);
   cursor: pointer;
   font-size: var(--body-size);
   font-weight: var(--weight-regular);
@@ -48,16 +48,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.25rem;   /* 20px */
-  height: 1.25rem;
+  width: var(--ren-checkbox-size);   /* 20px */
+  height: var(--ren-checkbox-size);
   flex-shrink: 0;
-  border: 2px solid var(--color-border-strong);
-  border-radius: var(--radius-sm);
+  border: 2px solid var(--ren-checkbox-border);
+  border-radius: var(--ren-checkbox-radius);
   background-color: transparent;
   transition:
-    background-color var(--duration-state) var(--ease-enter),
-    border-color var(--duration-state) var(--ease-enter),
-    transform var(--duration-tactile) var(--ease-playful);
+    background-color var(--ren-checkbox-duration) var(--ease-enter),
+    border-color var(--ren-checkbox-duration) var(--ease-enter),
+    transform var(--duration-tactile) var(--ren-checkbox-easing);
 }
 
 /* Checkmark (hidden by default) */
@@ -66,10 +66,10 @@
   display: block;
   width: 0.45rem;
   height: 0.7rem;
-  border: solid var(--color-on-accent);
+  border: solid var(--ren-checkbox-checked-color);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg) scale(0);
-  transition: transform var(--duration-state) var(--ease-playful);
+  transition: transform var(--ren-checkbox-duration) var(--ren-checkbox-easing);
   margin-top: -2px;
 }
 
@@ -77,8 +77,8 @@
 
 /* Checked */
 .ren-checkbox > input:checked + .ren-checkbox-control {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  background-color: var(--ren-checkbox-checked-bg);
+  border-color: var(--ren-checkbox-checked-bg);
 }
 
 .ren-checkbox > input:checked + .ren-checkbox-control::after {
@@ -114,15 +114,15 @@
 
 /* Indeterminate */
 .ren-checkbox > input:indeterminate + .ren-checkbox-control {
-  background-color: var(--color-accent);
-  border-color: var(--color-accent);
+  background-color: var(--ren-checkbox-checked-bg);
+  border-color: var(--ren-checkbox-checked-bg);
 }
 
 .ren-checkbox > input:indeterminate + .ren-checkbox-control::after {
   border: none;
   width: 0.6rem;
   height: 2px;
-  background-color: var(--color-on-accent);
+  background-color: var(--ren-checkbox-checked-color);
   transform: none;
   margin: 0;
   border-radius: 1px;

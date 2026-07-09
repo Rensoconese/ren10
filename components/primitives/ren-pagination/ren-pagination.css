@@ -27,7 +27,7 @@
 .ren-pagination {
   display: flex;
   align-items: center;
-  gap: var(--space-1);
+  gap: var(--ren-pagination-gap);
 }
 
 /* ─── Page items ─── */
@@ -37,15 +37,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: var(--touch-min);
-  min-height: var(--touch-min);
+  min-width: var(--ren-pagination-size);
+  min-height: var(--ren-pagination-size);
   padding: var(--space-1) var(--space-2);
-  font-size: var(--label-size, var(--text-sm));
+  font-size: var(--ren-pagination-font-size);
   font-weight: var(--weight-medium);
   color: var(--color-text);
   text-decoration: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--ren-pagination-radius);
   border: var(--stroke-1) solid transparent;
+  background-color: var(--ren-pagination-bg);
   transition:
     background-color var(--duration-tactile) var(--ease-enter),
     border-color var(--duration-tactile) var(--ease-enter);
@@ -55,7 +56,7 @@
 .ren-pagination-item:hover,
 .ren-pagination-prev:hover,
 .ren-pagination-next:hover {
-  background-color: var(--color-fill);
+  background-color: var(--ren-pagination-hover-bg);
 }
 
 .ren-pagination-item:active,
@@ -73,8 +74,8 @@
 
 /* Current page */
 .ren-pagination-item[aria-current="page"] {
-  background-color: var(--color-accent);
-  color: var(--color-on-accent);
+  background-color: var(--ren-pagination-active-bg);
+  color: var(--ren-pagination-active-color);
   pointer-events: none;
 }
 

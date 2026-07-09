@@ -170,7 +170,7 @@
 
   /* Subtle component tuning */
   --ren-card-radius:   var(--radius-xl);
-  --ren-btn-weight:    var(--weight-semibold);
+  --ren-btn-font-weight: var(--weight-semibold);
 }
 
 /* ═══════════════════════════════════════════════
@@ -263,7 +263,7 @@
   --font-heading: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
 
-  --ren-btn-weight: var(--weight-medium);
+  --ren-btn-font-weight: var(--weight-medium);
 }
 
 /* ═══════════════════════════════════════════════

@@ -33,9 +33,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 1.25rem;   /* 20px — default md */
-  height: 1.25rem;
-  color: currentColor;
+  width: var(--ren-icon-size);   /* 20px — default md */
+  height: var(--ren-icon-size);
+  color: var(--ren-icon-color);
+  fill: var(--ren-icon-fill);
 }
 
 .ren-icon > svg {

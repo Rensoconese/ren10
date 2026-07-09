@@ -20,13 +20,13 @@
   display: block;
   background: linear-gradient(
     90deg,
-    var(--color-fill) 25%,
-    var(--color-fill-hover) 50%,
-    var(--color-fill) 75%
+    var(--ren-skeleton-bg) 25%,
+    var(--ren-skeleton-shine) 50%,
+    var(--ren-skeleton-bg) 75%
   );
   background-size: 200% 100%;
-  animation: ren-skeleton-pulse var(--duration-loop-slow) var(--ease-loop-pulse) infinite;
-  border-radius: var(--radius-sm);
+  animation: ren-skeleton-pulse var(--ren-skeleton-speed) var(--ease-loop-pulse) infinite;
+  border-radius: var(--ren-skeleton-radius);
   min-height: 1rem;
 }
 
@@ -64,6 +64,6 @@
 @media (prefers-reduced-motion: reduce) {
   .ren-skeleton {
     animation: none;
-    background: var(--color-fill);
+    background: var(--ren-skeleton-bg);
   }
 }

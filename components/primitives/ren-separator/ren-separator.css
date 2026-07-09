@@ -12,20 +12,20 @@
 
 .ren-separator {
   border: none;
-  background-color: var(--color-separator);
+  background-color: var(--ren-separator-color);
 }
 
 /* Horizontal (default) */
 .ren-separator,
 .ren-separator-horizontal {
   width: 100%;
-  height: 1px;
-  margin-block: var(--space-4);
+  height: var(--ren-separator-width);
+  margin-block: var(--ren-separator-margin);
 }
 
 /* Vertical */
 .ren-separator-vertical {
-  width: 1px;
+  width: var(--ren-separator-width);
   height: auto;
   align-self: stretch;
   margin-inline: var(--space-3);
@@ -38,13 +38,13 @@
   gap: var(--space-3);
   color: var(--color-text-muted);
   font-size: var(--caption-size);
-  margin-block: var(--space-4);
+  margin-block: var(--ren-separator-margin);
 }
 
 .ren-separator-label::before,
 .ren-separator-label::after {
   content: '';
   flex: 1;
-  height: 1px;
-  background-color: var(--color-separator);
+  height: var(--ren-separator-width);
+  background-color: var(--ren-separator-color);
 }

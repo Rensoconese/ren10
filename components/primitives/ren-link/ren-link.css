@@ -16,12 +16,13 @@
 /* ─── Base Link ─── */
 .ren-link {
   display: inline;
-  color: var(--color-text-link);
+  color: var(--ren-link-color);
+  font-weight: var(--ren-link-font-weight, inherit);
   background: none;
   text-decoration: underline;
   text-decoration-color: color-mix(in oklch, var(--color-text-link), transparent 60%);
   text-underline-offset: 0.15em;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: var(--ren-link-underline);
   cursor: pointer;
   transition:
     color var(--duration-tactile) var(--ease-enter),
@@ -31,11 +32,11 @@
 }
 
 .ren-link:hover {
-  color: var(--color-text-link-hover);
+  color: var(--ren-link-hover-color);
   background: none;
   text-decoration: underline;
   text-decoration-color: color-mix(in oklch, var(--color-text-link-hover), transparent 30%);
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: calc(var(--ren-link-underline) * 2);
 }
 
 .ren-link:active {

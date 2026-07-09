@@ -23,14 +23,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--avatar-md);     /* 40px default */
-  height: var(--avatar-md);
-  border-radius: var(--radius-full);
+  width: var(--ren-avatar-size);     /* 40px default */
+  height: var(--ren-avatar-size);
+  border-radius: var(--ren-avatar-radius);
   overflow: hidden;
-  background-color: var(--color-fill);
-  color: var(--color-text-secondary);
+  background-color: var(--ren-avatar-bg);
+  color: var(--ren-avatar-color);
   font-weight: var(--weight-semibold);
-  font-size: var(--text-sm);
+  font-size: var(--ren-avatar-font-size);
   flex-shrink: 0;
   user-select: none;
 }
@@ -81,7 +81,7 @@
 }
 
 .ren-avatar-group > .ren-avatar {
-  border: 2px solid var(--color-surface);
+  border: var(--ren-avatar-border);
   margin-inline-start: -0.5rem;
 }
 
