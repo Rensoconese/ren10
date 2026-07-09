@@ -1403,7 +1403,7 @@
    Use the composed --transition-* tokens when you
    need a ready-to-paste `transition:` value.
 
-   All tokens automatically collapse to 0.01ms under
+   All tokens automatically collapse to 0ms under
    prefers-reduced-motion via tokens/primitives/motion.css.
    ============================================ */
 
@@ -5435,7 +5435,7 @@ sup, sub {
   @media (prefers-reduced-motion: reduce) {
     ::view-transition-old(*),
     ::view-transition-new(*) {
-      animation-duration: 0.01ms;
+      animation-duration: 0ms;
     }
   }
 }

@@ -1403,7 +1403,7 @@
    Use the composed --transition-* tokens when you
    need a ready-to-paste `transition:` value.
 
-   All tokens automatically collapse to 0.01ms under
+   All tokens automatically collapse to 0ms under
    prefers-reduced-motion via tokens/primitives/motion.css.
    ============================================ */
 
@@ -5435,7 +5435,7 @@ sup, sub {
   @media (prefers-reduced-motion: reduce) {
     ::view-transition-old(*),
     ::view-transition-new(*) {
-      animation-duration: 0.01ms;
+      animation-duration: 0ms;
     }
   }
 }
@@ -10741,8 +10741,8 @@ ren-dialog {
 @media (prefers-reduced-motion: reduce) {
   .ren-slider,
   .ren-slider * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
   }
 }
 /* Appearance API bridge; pseudo-elements intentionally have no selector whitespace. */
@@ -14604,9 +14604,9 @@ ren-dialog {
   .ren-color-picker-channel-input,
   .ren-color-picker-format-toggle,
   .ren-color-picker-swatch {
-    animation-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
     animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    transition-duration: 0ms !important;
   }
 }
 /* Appearance API bridge */
@@ -15787,8 +15787,8 @@ ren-dialog {
 @media (prefers-reduced-motion: reduce) {
   .ren-sidebar,
   .ren-sidebar * {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
   }
 }
 /* Appearance API bridge */
