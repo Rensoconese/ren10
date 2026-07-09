@@ -17,16 +17,27 @@
 - Plan commit: `890236b`
 - Evidence: placeholder scan clean; `git diff --check` clean; 17 ordered tasks with P1 gate and final re-audit
 
-## Current
-
 ### Task 1 — CSS contract validators
 
-- Status: ready for implementer
-- Base commit: `890236b`
+- Implementation commits: `2024424`, `2e83095`
+- TDD evidence: original fixture RED on missing module; GREEN on exact required assertions
+- Review correction: runtime mentions inside line/block comments, strings, and templates no longer simulate assignments
+- Independent re-review: `APPROVED`, no Critical/Important findings
+- Main-agent verification: unit fixture, token lint, CSS lint, and diff check pass
+- Intentional remediation inventory: 14 unresolved + 307 unconsumed + 0 contract-absent = 321
+
+## Current
+
+### Task 2 — Appearance API defaults and primitive consumption
+
+- Status: preparing implementer brief
+- Audit map: 129 primitive tokens across 18 families; radio has no public family
+- Expected post-task inventory: 178 unconsumed composite/pattern tokens
+- Base commit: task-closure documentation commit
 - Review status: pending
 
 ## Pending
 
-- Tasks 2–12: P1 remediation and hard gate
+- Tasks 3–12: remaining P1 remediation and hard gate
 - Tasks 13–16: P2 remediation
 - Task 17: fresh audit, escaped-finding fixes, exhaustive future-additions plan, final integration

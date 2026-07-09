@@ -77,6 +77,7 @@
 
 **Files:**
 - Modify: `tokens/component/tokens.css`
+- Modify: `themes/appearance.css`
 - Modify: all CSS under `components/primitives/*/`
 - Create: `tests/components/fixtures/component-token-overrides.html`
 - Create: `tests/components/foundation-contract.spec.cjs`
@@ -102,6 +103,8 @@
 
 - [ ] **Step 3: Move central defaults to an inheritable scope and consume every primitive token**
 
+  Before wiring a token, reconcile its default with the current computed CSS and the colocated contract so activating the API does not silently redesign the component. In particular, normalize icon, spinner, field, checkbox/radio border, switch, tag, skeleton, breadcrumb, and `--ren-btn-font-weight` defaults identified by the Task 2 audit.
+
   Component rules must read their public properties, for example:
 
   ```css
@@ -118,7 +121,7 @@
 
   Run the Playwright test, `npm run lint:contracts`, and `npm run lint:css`.
 
-  Expected: primitive override tests pass; remaining unconsumed diagnostics only name composite/pattern families.
+  Expected: primitive override tests pass; all 129 primitive tokens are consumed and exactly 178 unconsumed diagnostics remain, naming only composite/pattern families. Compare representative light/dark computed styles before and after the wiring to catch unintended visual default changes.
 
 - [ ] **Step 5: Commit**
 
