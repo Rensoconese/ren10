@@ -63,6 +63,9 @@ export class RenMenu extends HTMLElement {
   #dismissable = null;
   #animationFrame = null;
   #boundItemClick = null;
+  #boundTriggerClick = null;
+  #boundTriggerKeydown = null;
+  #returnFocus = true;
 
   constructor() {
     super();
@@ -179,9 +182,10 @@ export class RenMenu extends HTMLElement {
    */
   attachTriggerListeners() {
     if (!this.#trigger) return;
-
-    this.#trigger.addEventListener('click', (e) => this.handleTriggerClick(e));
-    this.#trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e));
+    this.#boundTriggerClick = (e) => this.handleTriggerClick(e);
+    this.#boundTriggerKeydown = (e) => this.handleTriggerKeydown(e);
+    this.#trigger.addEventListener('click', this.#boundTriggerClick);
+    this.#trigger.addEventListener('keydown', this.#boundTriggerKeydown);
   }
 
   /**
@@ -466,6 +470,7 @@ export class RenMenu extends HTMLElement {
     if (this.#isOpen) return;
 
     this.#isOpen = true;
+    this.#returnFocus = true;
     this.setAttribute('data-state', 'open');
     this.setupKeyboardNav();
     this.setupDismissable();
@@ -529,6 +534,9 @@ export class RenMenu extends HTMLElement {
       }
 
       this.#trigger?.setAttribute('aria-expanded', 'false');
+      if (this.#returnFocus && this.#trigger && document.contains(this.#trigger)) {
+        this.#trigger.focus();
+      }
     }, Math.min(duration, 150)); // Cap at 150ms
 
     this.dispatchEvent(new CustomEvent('ren-menu-close', { bubbles: true }));
@@ -568,8 +576,8 @@ export class RenMenu extends HTMLElement {
     }
 
     if (this.#trigger) {
-      this.#trigger.removeEventListener('click', (e) => this.handleTriggerClick(e));
-      this.#trigger.removeEventListener('keydown', (e) => this.handleTriggerKeydown(e));
+      this.#trigger.removeEventListener('click', this.#boundTriggerClick);
+      this.#trigger.removeEventListener('keydown', this.#boundTriggerKeydown);
     }
   }
 }

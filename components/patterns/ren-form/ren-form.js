@@ -542,7 +542,7 @@ export class RenForm extends HTMLElement {
       if (!input) return;
 
       const rules = field.getAttribute('data-rules') ?? input.getAttribute('data-rules') ?? '';
-      const error = this._runValidators(rules, input.value, input.name);
+      const error = this._nativeValidationError(input) || this._runValidators(rules, input.value, input.name);
 
       if (error) {
         this._setFieldError(field, input, error);

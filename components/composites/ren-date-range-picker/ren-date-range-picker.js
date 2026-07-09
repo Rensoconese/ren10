@@ -239,10 +239,10 @@ export class RenDateRangePicker extends HTMLElement {
     const startAttr = this.getAttribute('start');
     const endAttr = this.getAttribute('end');
     if (startAttr && endAttr) {
-      this.confirmedStart = new Date(startAttr);
-      this.confirmedEnd = new Date(endAttr);
-      this.draftStart = new Date(startAttr);
-      this.draftEnd = new Date(endAttr);
+      this.confirmedStart = this.parseDate(startAttr);
+      this.confirmedEnd = this.parseDate(endAttr);
+      this.draftStart = this.parseDate(startAttr);
+      this.draftEnd = this.parseDate(endAttr);
       this.leftMonth = new Date(this.confirmedStart.getFullYear(), this.confirmedStart.getMonth());
       this.rightMonth = new Date(this.leftMonth.getFullYear(), this.leftMonth.getMonth() + 1);
     }
@@ -794,7 +794,16 @@ export class RenDateRangePicker extends HTMLElement {
 
   /* ═══ DATE TO ISO STRING ═══ */
   dateToString(date) {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  parseDate(value) {
+    if (value instanceof Date) return new Date(value.getTime());
+    const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : new Date(value);
   }
 
   /* ═══ DAYS BETWEEN TWO DATES ═══ */
@@ -817,10 +826,10 @@ export class RenDateRangePicker extends HTMLElement {
 
   /* ═══ SET VALUE ═══ */
   setValue(start, end) {
-    this.confirmedStart = new Date(start);
-    this.confirmedEnd = new Date(end);
-    this.draftStart = new Date(start);
-    this.draftEnd = new Date(end);
+    this.confirmedStart = this.parseDate(start);
+    this.confirmedEnd = this.parseDate(end);
+    this.draftStart = this.parseDate(start);
+    this.draftEnd = this.parseDate(end);
     this.updateTriggerDisplay();
     this.updateHiddenInputs();
   }

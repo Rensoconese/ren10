@@ -22,6 +22,9 @@ export function initContextMenu(menuId) {
 
   if (menu.dataset.renContextMenuInitialized === 'true') return;
   menu.dataset.renContextMenuInitialized = 'true';
+  const controller = new AbortController();
+  menu.__renContextController = controller;
+  let returnTrigger = null;
 
   menu.setAttribute('popover', 'manual');
 
@@ -45,6 +48,7 @@ export function initContextMenu(menuId) {
     }
 
     menu.setAttribute('data-state', 'closed');
+    if (returnTrigger && document.contains(returnTrigger)) returnTrigger.focus();
   };
 
   const show = (x, y) => {
@@ -85,16 +89,18 @@ export function initContextMenu(menuId) {
   triggers.forEach((trigger) => {
     trigger.addEventListener('contextmenu', (e) => {
       e.preventDefault();
+      returnTrigger = trigger;
       show(e.clientX, e.clientY);
-    });
+    }, { signal: controller.signal });
 
     trigger.addEventListener('keydown', (e) => {
       if (e.key !== 'ContextMenu' && !(e.key === 'F10' && e.shiftKey)) return;
 
       e.preventDefault();
       const rect = trigger.getBoundingClientRect();
+      returnTrigger = trigger;
       show(rect.left + 8, rect.bottom + 8);
-    });
+    }, { signal: controller.signal });
   });
 
   // Keyboard navigation inside menu
@@ -117,14 +123,14 @@ export function initContextMenu(menuId) {
       document.activeElement?.click();
       close();
     }
-  });
+  }, { signal: controller.signal });
 
   // Close on item click
   menu.addEventListener('click', (e) => {
     if (e.target.closest('.ren-menu-item')) {
       close();
     }
-  });
+  }, { signal: controller.signal });
 
   const isMenuOrTrigger = (target) =>
     target instanceof Node &&
@@ -137,7 +143,7 @@ export function initContextMenu(menuId) {
         close();
       }
     },
-    true
+    { capture: true, signal: controller.signal }
   );
 
   document.addEventListener(
@@ -147,8 +153,16 @@ export function initContextMenu(menuId) {
         close();
       }
     },
-    true
+    { capture: true, signal: controller.signal }
   );
+}
+
+export function destroyContextMenu(menuId) {
+  const menu = document.getElementById(menuId);
+  if (!menu) return;
+  menu.__renContextController?.abort();
+  delete menu.__renContextController;
+  delete menu.dataset.renContextMenuInitialized;
 }
 
 /**
