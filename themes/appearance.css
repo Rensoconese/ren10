@@ -284,21 +284,41 @@
 /* AAA contrast scope: normal text and solid accent pairs are >= 7:1 in
    either color scheme. Place after named themes so this opt-in wins. */
 [data-contrast="aaa"] {
-  --color-text:            light-dark(#111111, #FFFFFF);
+  /* Explicit light fallback keeps AAA deterministic in engines without
+     complete light-dark() custom-property support. */
+  --color-text:            #111111;
   --color-text-primary:    var(--color-text);
-  --color-text-secondary:  light-dark(#111111, #FFFFFF);
-  --color-text-muted:      light-dark(#111111, #FFFFFF);
-  --color-surface:         light-dark(#FFFFFF, #000000);
-  --color-surface-raised:  light-dark(#FFFFFF, #000000);
-  --color-surface-sunken:  light-dark(#FFFFFF, #000000);
-  --color-accent:          light-dark(#111111, #FFFFFF);
-  --color-accent-hover:    light-dark(#000000, #FFFFFF);
-  --color-accent-active:   light-dark(#000000, #FFFFFF);
-  --color-accent-strong:   light-dark(#111111, #FFFFFF);
-  --color-on-accent:       light-dark(#FFFFFF, #000000);
+  --color-text-secondary:  #111111;
+  --color-text-muted:      #111111;
+  --color-surface:         #FFFFFF;
+  --color-surface-raised:  #FFFFFF;
+  --color-surface-sunken:  #FFFFFF;
+  --color-accent:          #111111;
+  --color-accent-hover:    #000000;
+  --color-accent-active:   #000000;
+  --color-accent-strong:   #111111;
+  --color-on-accent:       #FFFFFF;
   --color-text-link:       var(--color-accent-strong);
   --color-focus-ring:      var(--color-accent);
 }
+
+@media (prefers-color-scheme: dark) {
+  [data-contrast="aaa"] {
+    --color-text: #FFFFFF;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #FFFFFF;
+    --color-text-muted: #FFFFFF;
+    --color-surface: #000000;
+    --color-surface-raised: #000000;
+    --color-surface-sunken: #000000;
+    --color-accent: #FFFFFF;
+    --color-accent-hover: #FFFFFF;
+    --color-accent-active: #FFFFFF;
+    --color-accent-strong: #FFFFFF;
+    --color-on-accent: #000000;
+  }
+}
+
 
 /* ═══════════════════════════════════════════════
    SHAPE PRESETS (combine with any color theme)
