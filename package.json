@@ -105,6 +105,8 @@
     "build:bundles": "node scripts/build-css-bundles.mjs",
     "check:budgets": "npm run build:bundles && node scripts/check-package-budgets.mjs",
     "test:budgets": "node scripts/check-package-budgets.test.mjs"
+    ,"snapshots:update": "node scripts/generate-token-snapshot.mjs --update && node scripts/generate-contract-snapshot.mjs --update"
+    ,"snapshots:check": "node scripts/generate-token-snapshot.mjs && node scripts/generate-contract-snapshot.mjs"
   },
   "keywords": [
     "design-system",
