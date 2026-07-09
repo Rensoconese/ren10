@@ -25,6 +25,7 @@ export {
 
 // Keyboard navigation (roving tabindex)
 export { createKeyboardNav } from './keyboard-nav.js';
+export { configureRenDebug, renDebug, isRenDebugEnabled } from './debug.js';
 
 // Dismissable layers (click outside + Escape)
 export {
