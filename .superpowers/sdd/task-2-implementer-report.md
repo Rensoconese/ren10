@@ -109,7 +109,7 @@ npm run test:a11y
 # 376 tests passed (docs/tokens included in light/dark contrast and axe checks)
 
 npm run lint
-# passed (CSS, token policy, and contract inventory: 14 unresolved / 178 unconsumed / 0 absent)
+# expected RED: the CSS and token-policy stages pass; `lint:contracts` exits 1 for 14 unresolved + 178 unconsumed + 0 absent
 ```
 
 ## Residual risks / review focus
