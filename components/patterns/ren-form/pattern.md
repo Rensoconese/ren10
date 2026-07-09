@@ -169,7 +169,10 @@ Multi-step form with progress:
 - Submitting state: component sets `[data-submitting]` on `<ren-form>` and
   disables submit buttons while the `ren-submit` consumer is async.
 - Events:
-  - `ren-submit` — `detail.values` (validated form data).
+  - `ren-submit` — `detail.values` (validated form data). Repeated names are arrays.
+    Register async work with `event.detail.waitUntil(promise)`; the
+    `[data-submitting]` state remains until every registered promise settles.
+    A rejected promise emits `ren-submit-error` with `detail.error`.
   - `ren-invalid` — `detail.errors` (rule failures).
 - Static API: `RenForm.registerValidator(name, fn)` for custom validators.
 
