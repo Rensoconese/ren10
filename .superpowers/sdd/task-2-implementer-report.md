@@ -13,6 +13,11 @@ Status: **DONE**
 
 ## TDD evidence
 
+### Task 2 regression RED/GREEN
+
+- Specificity regression: the added foundation assertion fails against the old `:root, [data-theme]` selectors when `tokens/component/tokens.css` is imported after theme CSS (theme radius/weight are overwritten). Wrapping defaults in `:where(:root, [data-theme])` restores the expected cascade; focused foundation contract is now **6 passed** across Desktop Light/Dark.
+- Documentation contrast regression: the token docs preview previously rendered a hotpink button at 2.64:1 and documented the stale `--ren-btn-border` hook. The preview and examples now use the real `--ren-btn-border-color` API with the semantic `--color-ai`/`--color-on-ai` pair; docs accessibility and contrast checks are green.
+
 ### RED
 
 Command:
@@ -99,6 +104,12 @@ npm run lint:tokens
 
 npm run lint:contracts
 # expected RED: 14 unresolved, 178 unconsumed, 0 contract-absent
+
+npm run test:a11y
+# 376 tests passed (docs/tokens included in light/dark contrast and axe checks)
+
+npm run lint
+# passed (CSS, token policy, and contract inventory: 14 unresolved / 178 unconsumed / 0 absent)
 ```
 
 ## Residual risks / review focus
