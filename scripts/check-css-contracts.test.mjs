@@ -13,6 +13,8 @@ try {
   const appearanceTokenFile = join(fixtureRoot, 'tokens/component/tokens.css');
   const componentFile = join(fixtureRoot, 'components/demo/demo.css');
   const runtimeFile = join(fixtureRoot, 'components/demo/demo.js');
+  const lexicalComponentFile = join(fixtureRoot, 'components/demo/lexical.css');
+  const lexicalRuntimeFile = join(fixtureRoot, 'components/demo/lexical.js');
   const contractFile = join(fixtureRoot, 'components/demo/component.md');
 
   await mkdir(join(fixtureRoot, 'tokens/component'), { recursive: true });
@@ -43,6 +45,26 @@ try {
 `,
   );
   await writeFile(
+    lexicalComponentFile,
+    `.lexical-demo {
+  inline-size: var(--runtime-value);
+  min-inline-size: var(--comment-line);
+  max-inline-size: var(--comment-block);
+  min-block-size: var(--string-code);
+  max-block-size: var(--template-code);
+}
+`,
+  );
+  await writeFile(
+    lexicalRuntimeFile,
+    `// element.style.setProperty('--comment-line', '10px');
+/* element.style.setProperty('--comment-block', '10px'); */
+const fakeString = "element.style.setProperty('--string-code', '10px')";
+const fakeTemplate = \`element.style.setProperty('--template-code', '10px')\`;
+element.style.setProperty('--runtime-value', '10px');
+`,
+  );
+  await writeFile(
     contractFile,
     'The `--ren-demo-` family includes `--ren-demo-anchor` and the required `--ren-contract-missing` token.\n',
   );
@@ -58,6 +80,21 @@ try {
   assert.deepEqual(result.unresolved, ['--missing']);
   assert.deepEqual(result.unconsumed, ['--ren-demo-bg']);
   assert.equal(result.errors.length, 2);
+
+  const lexicalResult = await analyzeCssContracts({
+    packageRoot: fixtureRoot,
+    cssFiles: [appearanceTokenFile, lexicalComponentFile],
+    jsFiles: [lexicalRuntimeFile],
+    contractFiles: [],
+    appearanceTokenFile,
+  });
+
+  assert.deepEqual(lexicalResult.unresolved, [
+    '--comment-block',
+    '--comment-line',
+    '--string-code',
+    '--template-code',
+  ]);
 
   const contractResult = await analyzeCssContracts({
     packageRoot: fixtureRoot,

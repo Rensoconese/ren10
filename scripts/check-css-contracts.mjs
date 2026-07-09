@@ -26,7 +26,6 @@ export const INTENTIONAL_INSTANCE_PROPERTIES = new Set([
 
 const CUSTOM_PROPERTY_DECLARATION = /(--[\w-]+)\s*:/g;
 const CONTRACT_TOKEN = /--ren-[a-z0-9][\w-]*/gi;
-const SET_PROPERTY = /\.style\.setProperty\(\s*(['"])(--[\w-]+)\1/g;
 
 function toPosix(path) {
   return path.split(/[\\/]/).join('/');
@@ -91,49 +90,70 @@ function maskCommentsAndStrings(source) {
   return result;
 }
 
-function maskComments(source) {
-  let result = '';
-  let mode = 'code';
+function skipQuoted(source, start, quote) {
+  for (let i = start + 1; i < source.length; i += 1) {
+    if (source[i] === '\\' && source[i + 1] !== undefined) {
+      i += 1;
+    } else if (source[i] === quote) {
+      return i + 1;
+    }
+  }
+  return source.length;
+}
 
-  for (let i = 0; i < source.length; i += 1) {
+function scanRuntimeAssignments(source) {
+  const assignments = [];
+  const method = '.style.setProperty';
+
+  for (let i = 0; i < source.length; ) {
     const char = source[i];
     const next = source[i + 1];
 
-    if (mode === 'comment') {
-      if (char === '*' && next === '/') {
-        result += '  ';
-        i += 1;
-        mode = 'code';
-      } else {
-        result += char === '\n' ? '\n' : ' ';
-      }
-      continue;
-    }
-
-    if (mode === 'single' || mode === 'double') {
-      const quote = mode === 'single' ? "'" : '"';
-      result += char;
-      if (char === '\\' && next !== undefined) {
-        result += next;
-        i += 1;
-      } else if (char === quote) {
-        mode = 'code';
-      }
+    if (char === '/' && next === '/') {
+      const lineEnd = source.indexOf('\n', i + 2);
+      i = lineEnd === -1 ? source.length : lineEnd;
       continue;
     }
 
     if (char === '/' && next === '*') {
-      result += '  ';
-      i += 1;
-      mode = 'comment';
-    } else {
-      result += char;
-      if (char === "'") mode = 'single';
-      if (char === '"') mode = 'double';
+      const commentEnd = source.indexOf('*/', i + 2);
+      i = commentEnd === -1 ? source.length : commentEnd + 2;
+      continue;
     }
+
+    if (char === "'" || char === '"' || char === '`') {
+      i = skipQuoted(source, i, char);
+      continue;
+    }
+
+    if (!source.startsWith(method, i)) {
+      i += 1;
+      continue;
+    }
+
+    let cursor = i + method.length;
+    while (/\s/.test(source[cursor] ?? '')) cursor += 1;
+    if (source[cursor] !== '(') {
+      i += method.length;
+      continue;
+    }
+
+    cursor += 1;
+    while (/\s/.test(source[cursor] ?? '')) cursor += 1;
+    const quote = source[cursor];
+    if (quote !== "'" && quote !== '"') {
+      i += method.length;
+      continue;
+    }
+
+    const valueStart = cursor + 1;
+    const valueEnd = skipQuoted(source, cursor, quote) - 1;
+    const token = source.slice(valueStart, valueEnd);
+    if (/^--[\w-]+$/.test(token)) assignments.push({ token, index: i });
+    i = Math.max(valueEnd + 1, i + method.length);
   }
 
-  return result;
+  return assignments;
 }
 
 function scanVarReferences(source) {
@@ -245,15 +265,12 @@ export async function analyzeCssContracts({
 
   for (const file of jsFiles) {
     const source = await readFile(file, 'utf8');
-    const masked = maskComments(source);
     const rel = toPosix(relative(packageRoot, file));
-    let match;
 
-    SET_PROPERTY.lastIndex = 0;
-    while ((match = SET_PROPERTY.exec(masked))) {
-      addLocation(runtimeAssignments, match[2], {
+    for (const assignment of scanRuntimeAssignments(source)) {
+      addLocation(runtimeAssignments, assignment.token, {
         path: rel,
-        line: lineAt(masked, match.index),
+        line: lineAt(source, assignment.index),
       });
     }
   }
