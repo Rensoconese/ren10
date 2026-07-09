@@ -30,7 +30,7 @@ selectionCriteria:
     - "Hover or keyboard-focus over a trigger should reveal a richer-than-tooltip preview (header + body + footer)."
     - "The preview is informational and non-essential — user can ignore it without losing access to the action."
     - "Show/hide should respect intent: 200ms show delay, 300ms hide grace area so the cursor can move into the card."
-    - "Need anchor positioning + viewport flip via CSS position-try-fallbacks (no JS positioning)."
+    - "Need anchor positioning via position-area + viewport flip via CSS position-try-fallbacks (no JS positioning)."
     - "Trigger keyboard accessibility via focusin/focusout, not just :hover."
   avoidWhen:
     - "The trigger is a primary action and the disclosure is required for the task — use ren-popover (click-driven) or ren-dialog."

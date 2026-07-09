@@ -39,9 +39,17 @@
 
 import { autoId } from '../../../utils/id-generator.js';
 
+const COMBOBOX_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+
+function normalizeComboboxSide(value) {
+  const side = String(value || 'bottom').toLowerCase().split('-')[0];
+
+  return COMBOBOX_SIDES.has(side) ? side : 'bottom';
+}
+
 export class RenCombobox extends HTMLElement {
   static get observedAttributes() {
-    return ['value', 'placeholder', 'disabled'];
+    return ['value', 'placeholder', 'disabled', 'placement'];
   }
 
   #input;
@@ -82,6 +90,8 @@ export class RenCombobox extends HTMLElement {
       this.#input.disabled = this.hasAttribute('disabled');
     } else if (name === 'value' && newVal !== oldVal) {
       this.#selectByValue(newVal, { silent: true });
+    } else if (name === 'placement' && newVal !== oldVal) {
+      this.#syncPlacement();
     }
   }
 
@@ -166,6 +176,17 @@ export class RenCombobox extends HTMLElement {
     this.appendChild(this.#list);
     this.appendChild(this.#hidden);
     this.appendChild(this.#liveRegion);
+
+    this.#syncPlacement();
+  }
+
+  #syncPlacement() {
+    const side = normalizeComboboxSide(this.getAttribute('placement'));
+
+    this.setAttribute('data-side', side);
+    if (this.#list) {
+      this.#list.setAttribute('data-side', side);
+    }
   }
 
   #decorateItems() {

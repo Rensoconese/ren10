@@ -12,9 +12,19 @@
 
    Usage:
    <ren-date-picker placeholder="Select date" format="long" mode="single"></ren-date-picker>
-   ══════════════════════════════════════════════════════════════════ */
+  ══════════════════════════════════════════════════════════════════ */
+
+const DATE_PICKER_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+
+function normalizeDatePickerSide(value) {
+  const side = String(value || 'bottom').toLowerCase().split('-')[0];
+
+  return DATE_PICKER_SIDES.has(side) ? side : 'bottom';
+}
 
 export class RenDatePicker extends HTMLElement {
+  static observedAttributes = ['placement'];
+
   constructor() {
     super();
 
@@ -79,6 +89,8 @@ export class RenDatePicker extends HTMLElement {
       this.dropdown.appendChild(this.calendar);
     }
 
+    this.syncPlacement();
+
     /* ═══ LISTEN TO CALENDAR EVENTS ═══ */
     this.calendar.addEventListener('ren-date-select', this.handleCalendarSelect);
 
@@ -106,6 +118,12 @@ export class RenDatePicker extends HTMLElement {
     }
 
     document.removeEventListener('click', this.handleDocumentClick);
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'placement' && oldValue !== newValue) {
+      this.syncPlacement();
+    }
   }
 
   /* ═══ RENDER COMPONENT STRUCTURE ═══ */
@@ -137,6 +155,16 @@ export class RenDatePicker extends HTMLElement {
       dropdown.setAttribute('popover', 'manual');
 
       this.appendChild(dropdown);
+    }
+  }
+
+  /* ═══ MIRROR PLACEMENT TO PUBLIC DATA ATTRIBUTES ═══ */
+  syncPlacement() {
+    const side = normalizeDatePickerSide(this.getAttribute('placement'));
+
+    this.setAttribute('data-side', side);
+    if (this.dropdown) {
+      this.dropdown.setAttribute('data-side', side);
     }
   }
 
@@ -217,6 +245,8 @@ export class RenDatePicker extends HTMLElement {
     if (!this.dropdown) return;
 
     /* ═══ SET UP POPOVER AND POSITIONING ═══ */
+    this.syncPlacement();
+
     try {
       this.dropdown.showPopover();
     } catch (e) {

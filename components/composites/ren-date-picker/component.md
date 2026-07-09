@@ -28,7 +28,7 @@ Load this file after `ren-design.md` and before generating, editing, or reviewin
 selectionCriteria:
   useWhen:
     - "User needs to pick a single date (or a single contiguous range) from a calendar popover."
-    - "Trigger should be a button-like control that opens a positioned popover (anchor positioning) with an embedded <ren-calendar>."
+    - "Trigger should be a button-like control that opens a positioned popover (CSS anchor positioning with position-area) with an embedded <ren-calendar>."
     - "The form needs an ISO-string value submitted via a hidden input under a given name."
     - "Preset shortcuts (Today, Tomorrow, This Week) should appear alongside the calendar grid."
     - "Mobile must adapt to a bottom sheet automatically; desktop floats below the trigger."
@@ -53,11 +53,12 @@ requiredMarkup:
   - "The dropdown surface is a <div class=\"ren-date-picker-dropdown\" popover=\"manual\"> — keep the popover attribute so showPopover()/hidePopover() work."
   - "Inside the dropdown render a <ren-calendar> child; the host syncs its mode/locale/min/max attributes onto it."
   - "If you need form submission, set name=\"…\" on <ren-date-picker> so the auto-injected <input type=\"hidden\"> carries the ISO value."
+  - "Use placement=\"bottom\" by default; the host and .ren-date-picker-dropdown mirror the preferred side to data-side."
 
 forbiddenPatterns:
   - "Styling a <div> or <span> as the trigger instead of a real <button> — keyboard activation and aria-expanded depend on the button."
   - "Replacing the inner <ren-calendar> with raw markup — the host wires ren-date-select events directly to the calendar element."
-  - "Hardcoding popover positioning offsets via inline styles — rely on anchor-name: --ren-date-picker-anchor and position-anchor in the stylesheet."
+  - "Hardcoding popover positioning offsets via inline styles — rely on anchor-name: --ren-date-picker-anchor, position-anchor, and position-area in the stylesheet."
   - "Toggling the dropdown by setting display: none — use open()/close()/toggle() on the host so aria-expanded and popover state stay in sync."
   - "Wrapping a native <input type=\"date\"> in .ren-date-picker — the component expects to own its trigger and popover."
 
@@ -114,6 +115,8 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## States And Attributes
 
+- `[data-side]`
+- `placement`
 - `:active`
 - `:focus-visible`
 - `:hover`

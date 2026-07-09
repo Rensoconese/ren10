@@ -31,7 +31,7 @@ selectionCriteria:
     - "Multiple output formats are needed (HEX / RGB / HSL) with a toggle."
     - "Manual entry through hex + channel inputs and preset swatches is required."
     - "Eyedropper integration (EyeDropper API) is desired when supported."
-    - "The control opens in a popover anchored to a trigger button showing the current color."
+    - "The control opens in a popover anchored to a trigger button showing the current color, with placement=\"top|right|bottom|left\" mirrored to data-side."
   avoidWhen:
     - "Users only need to pick from a small fixed palette — render a list of ren-swatch / radio buttons."
     - "A native <input type=\"color\"> is sufficient (no alpha, no format toggle, no presets)."
@@ -46,7 +46,7 @@ canonicalImports:
   notes:
     - "If the page already imports rends/components/index.css, do not import the CSS again."
     - "JS is required: HSV ↔ HEX / RGB / HSL conversion, canvas painting, drag handles, and the popover open/close are all implemented in JS."
-    - "The dropdown uses the native Popover API; older browsers fall back to position: absolute + JS toggling."
+    - "The dropdown uses the native Popover API plus CSS anchor positioning via position-area; older browsers fall back to local absolute positioning."
 
 requiredMarkup:
   - "Root <div class=\"ren-color-picker\"> contains a trigger button and a .ren-color-picker-dropdown popover; do not flatten the structure."
@@ -54,6 +54,7 @@ requiredMarkup:
   - "Saturation/brightness area renders a <canvas class=\"ren-color-picker-saturation-canvas\"> inside .ren-color-picker-saturation; do not replace with a gradient div."
   - "Hue handle and alpha handle are decorative thumbs (no tab stops) — keyboard input lives on the hex / channel inputs."
   - "Swatch grid items are real <button class=\"ren-color-picker-swatch\"> with aria-selected on the active swatch."
+  - "Use placement=\"bottom\" by default; the host and .ren-color-picker-dropdown mirror the preferred side to data-side."
 
 forbiddenPatterns:
   - "Replacing the canvas with a CSS gradient div — drag math relies on canvas pixel sampling."
@@ -131,6 +132,8 @@ Use the docs page and source files listed below for full examples before adding 
 
 - `[aria-expanded]`
 - `[aria-selected]`
+- `[data-side]`
+- `placement`
 - `:disabled`
 - `:focus-visible`
 - `:hover`

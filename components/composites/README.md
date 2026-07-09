@@ -188,7 +188,7 @@ Dropdown menu with keyboard navigation, typeahead, checkbox and radio items.
 ```
 
 **Classes:** `.ren-menu-item`, `.ren-menu-item-danger`, `.ren-menu-separator`, `.ren-menu-label`, `.ren-menu-icon`, `.ren-menu-shortcut`
-**Attributes:** `placement` (bottom-start|bottom-end|top-start|top-end), `trigger-id`
+**Attributes:** `placement` (bottom-start|bottom-end|top-start|top-end|right-start|right-end|left-start|left-end), `trigger-id`
 **API:** `open()`, `close()`, `isOpen()`
 **Events:** `ren-menu-select`, `ren-menu-open`, `ren-menu-close`
 **Accessibility:** Arrow key nav, typeahead, checkbox/radio support, click-outside dismissal.

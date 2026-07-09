@@ -33,6 +33,7 @@ selectionCriteria:
     - "You need optional grouping (.ren-select-group + .ren-select-label) or separators between options."
     - "You need multi-select chips (.ren-select-chips, .ren-select-chip) with removal affordances."
     - "You need hidden form-input integration for submission alongside custom dropdown UI."
+    - "The dropdown needs a preferred placement via placement=\"top|right|bottom|left\" while preserving viewport flip fallback."
   avoidWhen:
     - "A bare <select> styled via base/primitive-zero would meet the requirements."
     - "The control is binary state — use ren-checkbox, ren-switch, or ren-toggle."
@@ -54,6 +55,7 @@ requiredMarkup:
   - "The trigger displays .ren-select-value when something is chosen and .ren-select-placeholder when empty — do not collapse them into one node."
   - "Set name on <ren-select> when the value must submit with a form; the component injects the hidden input automatically."
   - "Use .ren-select-group + .ren-select-label for grouped options and .ren-select-separator between groups; do not invent dividers."
+  - "Use placement=\"bottom\" by default; the host and .ren-select-content mirror the resolved side to data-side and data-align."
 
 forbiddenPatterns:
   - "Substituting a <div role=\"button\"> for the [data-select-trigger] <button> — the trigger must be a real button."
@@ -125,9 +127,13 @@ Use the docs page and source files listed below for full examples before adding 
 - `[aria-expanded]`
 - `[aria-selected]`
 - `[data-highlighted]`
+- `[data-align]`
+- `[data-flipped]`
 - `[data-select-content]`
 - `[data-select-item]`
 - `[data-select-trigger]`
+- `[data-side]`
+- `placement`
 - `:disabled`
 - `:focus-visible`
 - `:hover`

@@ -118,3 +118,18 @@
     }
   }
 }
+
+/* ═══ ANCHOR POSITIONING ═══
+   Canonical feature query for anchored overlays.
+   Components should treat CSS anchor positioning as available only when the
+   browser supports anchor naming, anchor association, and the current
+   position-area property (not the legacy inset-area alias).
+   ─────────────────────────────────────────────────────────────────────── */
+
+@supports (anchor-name: --ren-anchor) and
+  (position-anchor: --ren-anchor) and
+  (position-area: block-end span-all) {
+  :root {
+    --ren-supports-anchor-positioning: 1;
+  }
+}

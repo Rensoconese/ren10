@@ -102,6 +102,77 @@ test.describe('Interaction hardening regressions', () => {
     await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('trigger');
   });
 
+  test('anchored overlays mirror placement to data-side', async ({ page }) => {
+    await page.goto(`${staticServer.origin}/tests/components/fixtures/anchor-placement.html`);
+    await page.evaluate(() => Promise.all([
+      customElements.whenDefined('ren-popover'),
+      customElements.whenDefined('ren-tooltip'),
+      customElements.whenDefined('ren-menu'),
+      customElements.whenDefined('ren-select'),
+      customElements.whenDefined('ren-combobox'),
+      customElements.whenDefined('ren-color-picker'),
+      customElements.whenDefined('ren-date-picker'),
+      customElements.whenDefined('ren-date-range-picker'),
+    ]));
+
+    await expect(page.locator('#popover')).toHaveAttribute('data-side', 'right');
+    await expect(page.locator('#tooltip')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#menu')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#select')).toHaveAttribute('data-side', 'left');
+    await expect(page.locator('#combobox')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#color')).toHaveAttribute('data-side', 'right');
+    await expect(page.locator('#date')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#range')).toHaveAttribute('data-side', 'left');
+
+    await expect(page.locator('#select .ren-select-content')).toHaveAttribute('data-side', 'left');
+    await expect(page.locator('#combobox .ren-combobox-list')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#color .ren-color-picker-dropdown')).toHaveAttribute('data-side', 'right');
+    await expect(page.locator('#date .ren-date-picker-dropdown')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#range .ren-date-range-dropdown')).toHaveAttribute('data-side', 'left');
+
+    await page.evaluate(() => {
+      document.querySelector('#popover')?.setAttribute('placement', 'left');
+      document.querySelector('#tooltip')?.setAttribute('placement', 'top');
+      document.querySelector('#menu')?.setAttribute('placement', 'bottom-end');
+      document.querySelector('#select')?.setAttribute('placement', 'right');
+      document.querySelector('#combobox')?.setAttribute('placement', 'bottom');
+      document.querySelector('#color')?.setAttribute('placement', 'bottom');
+      document.querySelector('#date')?.setAttribute('placement', 'right');
+      document.querySelector('#range')?.setAttribute('placement', 'bottom');
+    });
+
+    await expect(page.locator('#popover')).toHaveAttribute('data-side', 'left');
+    await expect(page.locator('#tooltip')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#menu')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#menu')).toHaveAttribute('data-align', 'end');
+    await expect(page.locator('#select')).toHaveAttribute('data-side', 'right');
+    await expect(page.locator('#combobox')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#color')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#date')).toHaveAttribute('data-side', 'right');
+    await expect(page.locator('#range')).toHaveAttribute('data-side', 'bottom');
+
+    await page.evaluate(() => {
+      document.querySelector('#popover')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#tooltip')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#menu')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#select')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#combobox')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#color')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#date')?.setAttribute('placement', 'diagonal');
+      document.querySelector('#range')?.setAttribute('placement', 'diagonal');
+    });
+
+    await expect(page.locator('#popover')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#tooltip')).toHaveAttribute('data-side', 'top');
+    await expect(page.locator('#menu')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#menu')).toHaveAttribute('data-align', 'start');
+    await expect(page.locator('#select')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#combobox')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#color')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#date')).toHaveAttribute('data-side', 'bottom');
+    await expect(page.locator('#range')).toHaveAttribute('data-side', 'bottom');
+  });
+
   test('ren-calendar keeps exactly one enabled gridcell tabbable after month navigation', async ({ page }) => {
     await page.goto(`${staticServer.origin}/tests/components/fixtures/calendar-roving.html`);
     await page.evaluate(() => customElements.whenDefined('ren-calendar'));

@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.9.0**
+Current version: **0.9.3**
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.

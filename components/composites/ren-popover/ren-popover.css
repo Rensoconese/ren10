@@ -1,5 +1,6 @@
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
 .ren-popover {
+  position: absolute;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -9,14 +10,14 @@
   z-index: var(--z-popover, 1000);
   pointer-events: auto;
   margin: 0;
+  inset: auto;
   border-top: none;
 
   /* Anchor positioning (modern browsers) */
   position-anchor: --popover-anchor;
 
   /* Default: below the trigger with automatic fallback */
-  inset-area: bottom span-all;
-  margin-top: var(--space-2);
+  position-area: bottom span-all;
 
   /* Automatic flip when near viewport edges */
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -63,15 +64,11 @@
 /* Bottom (default) */
 .ren-popover[data-side="bottom"],
 .ren-popover:not([data-side]) {
-  & .ren-popover-arrow {
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-  }
-}
+  position-area: bottom span-all;
+  margin-block-start: var(--space-2);
+  margin-block-end: 0;
+  margin-inline: 0;
 
-/* Top */
-.ren-popover[data-side="top"] {
   & .ren-popover-arrow {
     top: -4px;
     left: 50%;
@@ -79,21 +76,45 @@
   }
 }
 
+/* Top */
+.ren-popover[data-side="top"] {
+  position-area: top span-all;
+  margin-block-start: 0;
+  margin-block-end: var(--space-2);
+  margin-inline: 0;
+
+  & .ren-popover-arrow {
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
 /* Right */
 .ren-popover[data-side="right"] {
+  position-area: right span-all;
+  margin-block: 0;
+  margin-inline-start: var(--space-2);
+  margin-inline-end: 0;
+
   & .ren-popover-arrow {
-    right: -4px;
+    left: -4px;
     top: 50%;
-    transform: translateY(-50%) rotate(315deg);
+    transform: translateY(-50%) rotate(135deg);
   }
 }
 
 /* Left */
 .ren-popover[data-side="left"] {
+  position-area: left span-all;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: var(--space-2);
+
   & .ren-popover-arrow {
-    left: -4px;
+    right: -4px;
     top: 50%;
-    transform: translateY(-50%) rotate(135deg);
+    transform: translateY(-50%) rotate(315deg);
   }
 }
 
@@ -140,8 +161,10 @@
   }
 }
 
-/* ═══ FALLBACK FOR BROWSERS WITHOUT ANCHOR POSITIONING ═══ */
-@supports not (anchor-name: --x) {
+/* ═══ FALLBACK FOR BROWSERS WITHOUT COMPLETE ANCHOR POSITIONING ═══ */
+@supports not ((anchor-name: --ren-anchor) and
+  (position-anchor: --ren-anchor) and
+  (position-area: bottom span-all)) {
   .ren-popover {
     position: absolute;
     inset: auto auto auto auto;
