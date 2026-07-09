@@ -226,8 +226,10 @@ export class RenCarousel extends HTMLElement {
       slide.setAttribute('role', 'group');
       slide.setAttribute('aria-roledescription', 'slide');
       slide.setAttribute('aria-label', `Slide ${index + 1} of ${this._totalSlides}`);
-      if (index === 0) {
+      if (index === this._currentIndex) {
         slide.setAttribute('aria-current', 'true');
+      } else {
+        slide.removeAttribute('aria-current');
       }
       slide.tabIndex = 0;
     });

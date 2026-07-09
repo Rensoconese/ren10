@@ -51,10 +51,11 @@ test.describe('Lifecycle, reactivity and ARIA contracts', () => {
       const viewport = host.querySelector('.ren-carousel-viewport');
       [...viewport.querySelectorAll('.ren-carousel-slide')].forEach((slide) => slide.remove());
       await new Promise((resolve) => setTimeout(resolve, 10));
-      return { index: host._currentIndex, total: host._totalSlides, controls: host.querySelectorAll('.ren-carousel-dots,.ren-carousel-counter,.ren-carousel-prev,.ren-carousel-next').length };
+      return { index: host._currentIndex, total: host._totalSlides, current: host.querySelectorAll('[aria-current="true"]').length, controls: host.querySelectorAll('.ren-carousel-dots,.ren-carousel-counter,.ren-carousel-prev,.ren-carousel-next').length };
     });
     expect(result.index).toBe(0);
     expect(result.total).toBe(0);
+    expect(result.current).toBe(0);
     expect(result.controls).toBe(0);
   });
 
