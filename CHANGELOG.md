@@ -13,7 +13,17 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- Added deterministic token/contract snapshots, reusable browser test utilities,
+  localized async form validation, RTL inference, form persistence, and fuzz
+  coverage.
+- Added opt-in diagnostics, compatibility/deprecation documentation, the
+  GitHub Pages playground reference, performance and supply-chain contracts,
+  and scheduled cross-browser audits.
+
 ### Changed
+
+- AAA contrast fallbacks now behave consistently across Chromium, Firefox, and
+  WebKit.
 
 ### Fixed
 
