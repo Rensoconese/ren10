@@ -47,6 +47,16 @@
       transform: translateY(-2px);
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      .bb-card {
+        transition: none;
+      }
+
+      .bb-card:hover {
+        transform: none;
+      }
+    }
+
     .bb-card:focus-visible {
       outline: var(--ring-width) solid var(--color-focus-ring);
       outline-offset: var(--ring-offset);
