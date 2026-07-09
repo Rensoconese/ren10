@@ -105,6 +105,7 @@
     "build:bundles": "node scripts/build-css-bundles.mjs",
     "check:budgets": "npm run build:bundles && node scripts/check-package-budgets.mjs",
     "test:budgets": "node scripts/check-package-budgets.test.mjs"
+    ,"test:form-fuzz": "node components/patterns/ren-form/ren-form.fuzz.test.js"
     ,"snapshots:update": "node scripts/generate-token-snapshot.mjs --update && node scripts/generate-contract-snapshot.mjs --update"
     ,"snapshots:check": "node scripts/generate-token-snapshot.mjs && node scripts/generate-contract-snapshot.mjs"
   },

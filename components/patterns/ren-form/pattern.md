@@ -175,6 +175,11 @@ Multi-step form with progress:
     A rejected promise emits `ren-submit-error` with `detail.error`.
   - `ren-invalid` — `detail.errors` (rule failures).
 - Static API: `RenForm.registerValidator(name, fn)` for custom validators.
+  Validators may return a Promise; `validateAsync()` and submit await it.
+  Use `RenForm.registerMessages(locale, messages)` to localize `required`,
+  `email`, `pattern`, `min`, `max`, and `invalid` messages. Set `lang` on
+  `<ren-form>` (or `<html>`) for locale selection. `data-persist="key"`
+  stores/restores values in `localStorage`; call `reset()` to clear it.
 
 ## Variants and Public Selectors
 
