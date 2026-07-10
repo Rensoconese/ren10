@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "capturedFor": "ren10@0.9.3",
+  "capturedAt": "2026-07-10",
+  "metrics": {
+    "unpackedBytes": { "baseline": 18819526, "allowedDelta": 0, "target": 18819526 },
+    "tarballBytes": { "baseline": 3395509, "allowedDelta": 0, "target": 3395509 },
+    "fullCssBytes": { "baseline": 511592, "allowedDelta": 0, "target": 511592 },
+    "minCssBytes": { "baseline": 290990, "allowedDelta": 0, "target": 290990 },
+    "knowledgeJsonBytes": { "baseline": 4172667, "allowedDelta": 0, "target": 4172667 },
+    "knowledgeSqliteBytes": { "baseline": 9293824, "allowedDelta": 0, "target": 9293824 },
+    "requestCount": { "baseline": 85, "allowedDelta": -84, "target": 1 },
+    "cliRssBytes": { "baseline": 44335104, "allowedDelta": 8388608, "target": 52723712 }
+  },
+  "rationale": {
+    "package": "0.9.3 release-candidate npm pack measurements; zero growth allowed.",
+    "requestCount": "The source import graph needs 85 CSS requests; the published full bundle must need one.",
+    "cliRssBytes": "Median of three manifest --json runs; 8 MiB covers Node/platform allocator variance without a broad ceiling."
+  }
+}

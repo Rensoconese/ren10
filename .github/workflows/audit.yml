@@ -20,11 +20,23 @@ jobs:
       - run: npm run lint
       - run: npm run snapshots:check
       - run: npm run check:public-contracts
+      - if: matrix.browser == 'chromium'
+        run: npm run smoke:installed
+      - if: matrix.browser == 'chromium'
+        run: npm run check:budgets
+      - if: matrix.browser == 'chromium'
+        run: npm run audit:runtime
+      - if: matrix.browser == 'chromium'
+        run: npm run audit:full
+      - if: matrix.browser == 'chromium'
+        run: npm run check:release
+      - if: matrix.browser == 'chromium'
+        run: npm run check:supply-chain
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run test:a11y
-        env: { PLAYWRIGHT_BROWSER: ${{ matrix.browser }} }
+        env: { PLAYWRIGHT_BROWSER: "${{ matrix.browser }}" }
       - if: matrix.browser == 'chromium'
-        run: npm run test:visual -- --project="Desktop Light"
+        run: npm run test:visual:linux
       - uses: actions/upload-artifact@v4
         if: always()
         with:

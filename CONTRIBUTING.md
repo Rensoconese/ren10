@@ -24,17 +24,20 @@ You don't need to install RenDS itself — every demo file references the source
 ## Running tests
 
 ```bash
-npm test                  # default Playwright run
+npm test                  # portable local suite (same as test:portable)
+npm run test:portable     # a11y/components/theme/evals/package; no snapshots
 npm run test:a11y         # axe-core accessibility audit (required before merging)
-npm run test:visual       # visual regression (8 Chromium projects × light/dark)
+npm run test:visual:linux # authoritative Chromium/Linux snapshot gate (CI/release)
 npm run test:components   # per-component scoped a11y + render
 npm run lint              # stylelint + eslint
 ```
 
-If `test:visual` reports diffs you intended, regenerate baselines:
+Visual baselines are Linux-specific. Run `npm run test:visual:linux` in the
+Linux CI/container rather than from Darwin. If the Linux gate reports intended
+diffs, regenerate baselines there with:
 
 ```bash
-npm run test:visual -- --update-snapshots
+npm run test:visual -- --project="Desktop Light" --update-snapshots
 ```
 
 Commit the new PNGs alongside your CSS change.

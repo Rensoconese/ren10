@@ -37,7 +37,17 @@ jobs:
 
       - run: npm run smoke:cli-copy
 
-      - run: npm pack --dry-run
+      - run: npm run smoke:installed
+
+      - run: npm run check:budgets
+
+      - run: npm run audit:runtime
+
+      - run: npm run audit:full
+
+      - run: npm run check:release
+
+      - run: npm run check:supply-chain
 
       - name: Cache Playwright browsers
         id: playwright-cache
@@ -54,7 +64,7 @@ jobs:
 
       - run: npm run test:components
 
-      - run: npm run test:visual -- --project="Desktop Light"
+      - run: npm run test:visual:linux
 
       - name: Verify tag matches package.json version
         run: |
