@@ -88,6 +88,7 @@ export class RenToastViewport extends HTMLElement {
   disconnectedCallback() {
     this._listenerController?.abort();
     this._listenerController = null;
+    resumeTimersFor(this);
   }
 }
 

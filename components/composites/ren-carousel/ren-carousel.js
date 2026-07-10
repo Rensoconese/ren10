@@ -77,6 +77,7 @@ export class RenCarousel extends HTMLElement {
     this._intersectionObserver = null;
     this._contentObserver = null;
     this._refreshQueued = false;
+    this._nextSlideId = 0;
 
     this._autoplayMs = 0;
     this._shouldLoop = false;
@@ -223,7 +224,16 @@ export class RenCarousel extends HTMLElement {
 
     // Set up slides with ARIA attributes
     this._slides.forEach((slide, index) => {
-      if (!slide.id) slide.id = `${this.id}-slide-${index + 1}`;
+      if (!slide.id) {
+        let generatedId;
+        do {
+          generatedId = `${this.id}-slide-${++this._nextSlideId}`;
+        } while (
+          this._slides.some((candidate) => candidate !== slide && candidate.id === generatedId) ||
+          this.ownerDocument?.getElementById(generatedId)
+        );
+        slide.id = generatedId;
+      }
       slide.setAttribute('role', 'group');
       slide.setAttribute('aria-roledescription', 'slide');
       slide.setAttribute('aria-label', `Slide ${index + 1} of ${this._totalSlides}`);

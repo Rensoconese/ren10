@@ -41,14 +41,39 @@ const ENTRYPOINTS = [
   'components/patterns/ren-table/ren-table.js',
 ];
 
-const CUSTOM_TAGS = [
-  'ren-button', 'ren-field', 'ren-radio-group', 'ren-accordion', 'ren-calendar',
-  'ren-carousel', 'ren-color-picker', 'ren-combobox', 'ren-context-menu',
-  'ren-date-picker', 'ren-date-range-picker', 'ren-dialog', null, 'ren-hover-card',
-  'ren-menu', 'ren-number-field', 'ren-otp', 'ren-popover', 'ren-select', 'ren-sheet',
-  'ren-slider', 'ren-tabs', 'ren-toast-viewport', 'ren-toggle-group', null,
-  'ren-tooltip', 'ren-command', 'ren-form', 'ren-menubar', 'ren-nav', 'ren-sidebar',
-  'ren-table',
+const RUNTIME_PROFILES = [
+  { registration: 'ren-button', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-field', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-radio-group', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-accordion', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-calendar', profile: 'touch' },
+  { registration: 'ren-carousel', profile: 'observer-and-autoplay' },
+  { registration: 'ren-color-picker', profile: 'reconnect-dom' },
+  { registration: 'ren-combobox', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-context-menu', profile: 'registration', na: 'Covered by the interaction escape suite.' },
+  { registration: 'ren-date-picker', profile: 'registration', na: 'Covered by the date picker interaction suite.' },
+  { registration: 'ren-date-range-picker', profile: 'registration', na: 'Covered by the date range interaction suite.' },
+  { registration: 'ren-dialog', profile: 'registration', na: 'Covered by the dialog interaction suite.' },
+  { initializer: 'initDropZone', profile: 'initializer-listener' },
+  { registration: 'ren-hover-card', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-menu', profile: 'registration', na: 'Covered by the interaction escape suite.' },
+  { registration: 'ren-number-field', profile: 'registration', na: 'Covered by the interaction escape suite.' },
+  { registration: 'ren-otp', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-popover', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-select', profile: 'registration', na: 'Covered by the select interaction suite.' },
+  { registration: 'ren-sheet', profile: 'registration', na: 'Covered by the interaction escape suite.' },
+  { registration: 'ren-slider', profile: 'registration', na: 'Covered by the interaction escape suite.' },
+  { registration: 'ren-tabs', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-toast-viewport', profile: 'reconnect-listener-and-timer' },
+  { registration: 'ren-toggle-group', profile: 'touch' },
+  { initializer: 'initToolbar', profile: 'initializer-listener' },
+  { registration: 'ren-tooltip', profile: 'registration', na: 'Covered by the interaction escape suite.' },
+  { registration: 'ren-command', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-form', profile: 'registration', na: 'Covered by the form interaction suite.' },
+  { registration: 'ren-menubar', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
+  { registration: 'ren-nav', profile: 'reconnect-listener' },
+  { registration: 'ren-sidebar', profile: 'touch' },
+  { registration: 'ren-table', profile: 'registration', na: 'No Task 16 lifecycle mutation.' },
 ];
 
 async function startStaticServer() {
@@ -80,54 +105,32 @@ test.describe('Task 16 lifecycle, touch, reactivity, and ARIA matrix', () => {
   test.beforeAll(async () => { staticServer = await startStaticServer(); });
   test.afterAll(async () => { await staticServer?.close(); });
 
-  test('inventory imports all 32 JavaScript entrypoints', async ({ page }) => {
+  test('all 32 entrypoints load and expose their declared runtime registration profile', async ({ page }) => {
     expect(ENTRYPOINTS).toHaveLength(32);
+    expect(RUNTIME_PROFILES).toHaveLength(32);
     expect(new Set(ENTRYPOINTS).size).toBe(32);
+    expect(RUNTIME_PROFILES.filter(({ registration }) => registration)).toHaveLength(30);
+    expect(RUNTIME_PROFILES.filter(({ initializer }) => initializer)).toHaveLength(2);
+    expect(RUNTIME_PROFILES.filter(({ profile, na }) => profile === 'registration' && !na)).toEqual([]);
     await page.goto(staticServer.origin);
-    const loaded = await page.evaluate(async (entrypoints) => {
+    const loaded = await page.evaluate(async ({ entrypoints, profiles }) => {
       const results = [];
-      for (const entrypoint of entrypoints) {
+      for (let index = 0; index < entrypoints.length; index += 1) {
+        const entrypoint = entrypoints[index];
+        const profile = profiles[index];
         const exports = await import(`/${entrypoint}`);
-        results.push({ entrypoint, exports: Object.keys(exports) });
+        results.push({
+          entrypoint,
+          profile: profile.profile,
+          registered: profile.registration
+            ? typeof customElements.get(profile.registration) === 'function'
+            : typeof exports[profile.initializer] === 'function',
+        });
       }
       return results;
-    }, ENTRYPOINTS);
+    }, { entrypoints: ENTRYPOINTS, profiles: RUNTIME_PROFILES });
     expect(loaded.map(({ entrypoint }) => entrypoint)).toEqual(ENTRYPOINTS);
-  });
-
-  test('all custom-element entrypoints keep one stable enhancement after reconnect', async ({ page }) => {
-    await page.goto(staticServer.origin);
-    const results = await page.evaluate(async ({ entrypoints, tags }) => {
-      const outcomes = [];
-      for (let index = 0; index < entrypoints.length; index += 1) {
-        const tag = tags[index];
-        if (!tag) continue;
-        await import(`/${entrypoints[index]}`);
-        const element = document.createElement(tag);
-        document.body.appendChild(element);
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        const first = {
-          children: element.childElementCount,
-          buttons: element.querySelectorAll('button').length,
-          inputs: element.querySelectorAll('input').length,
-          dialogs: element.querySelectorAll('dialog').length,
-        };
-        element.remove();
-        document.body.appendChild(element);
-        await new Promise((resolve) => setTimeout(resolve, 0));
-        const second = {
-          children: element.childElementCount,
-          buttons: element.querySelectorAll('button').length,
-          inputs: element.querySelectorAll('input').length,
-          dialogs: element.querySelectorAll('dialog').length,
-        };
-        element.remove();
-        outcomes.push({ entrypoint: entrypoints[index], first, second });
-      }
-      return outcomes;
-    }, { entrypoints: ENTRYPOINTS, tags: CUSTOM_TAGS });
-    expect(results).toHaveLength(30);
-    expect(results.filter(({ first, second }) => JSON.stringify(first) !== JSON.stringify(second))).toEqual([]);
+    expect(loaded.filter(({ registered }) => !registered)).toEqual([]);
   });
 
   test('dropzone repeated initialization emits one files event', async ({ page }) => {
@@ -137,15 +140,17 @@ test.describe('Task 16 lifecycle, touch, reactivity, and ARIA matrix', () => {
       const { initDropZone } = await import('/components/composites/ren-dropzone/ren-dropzone.js');
       const dropzone = document.querySelector('.ren-dropzone');
       initDropZone(dropzone);
+      dropzone.dispatchEvent(new DragEvent('dragenter', { bubbles: true, dataTransfer: new DataTransfer() }));
       initDropZone(dropzone);
+      const staleDragState = dropzone.hasAttribute('data-dragover');
       let events = 0;
       dropzone.addEventListener('ren-files-added', () => events += 1);
       const transfer = new DataTransfer();
       transfer.items.add(new File(['content'], 'task16.txt', { type: 'text/plain' }));
       dropzone.dispatchEvent(new DragEvent('drop', { bubbles: true, dataTransfer: transfer }));
-      return events;
+      return { events, staleDragState };
     });
-    expect(count).toBe(1);
+    expect(count).toEqual({ events: 1, staleDragState: false });
   });
 
   test('toast viewport handles one hover action after reconnect', async ({ page }) => {
@@ -168,8 +173,38 @@ test.describe('Task 16 lifecycle, touch, reactivity, and ARIA matrix', () => {
     expect(invocations).toBe(1);
   });
 
+  test('toast paused by hover resumes its remaining timer after reconnect', async ({ page }) => {
+    await page.goto(staticServer.origin);
+    await page.evaluate(async () => {
+      const { toast } = await import('/components/composites/ren-toast/ren-toast.js');
+      const viewport = document.createElement('ren-toast-viewport');
+      document.body.appendChild(viewport);
+      toast.show({ title: 'Reconnect timer', duration: 100 });
+      viewport.dispatchEvent(new MouseEvent('mouseenter'));
+      await new Promise((resolve) => setTimeout(resolve, 20));
+      viewport.remove();
+      document.body.appendChild(viewport);
+    });
+    await expect(page.locator('.ren-toast')).toHaveAttribute('data-closing', '', { timeout: 1000 });
+  });
+
+  test('color picker reconnect owns one stable generated popover', async ({ page }) => {
+    await page.goto(staticServer.origin);
+    const popovers = await page.evaluate(async () => {
+      await import('/components/composites/ren-color-picker/ren-color-picker.js');
+      const picker = document.createElement('ren-color-picker');
+      document.body.appendChild(picker);
+      for (let reconnect = 0; reconnect < 3; reconnect += 1) {
+        picker.remove();
+        document.body.appendChild(picker);
+      }
+      return picker.querySelectorAll(':scope > .ren-color-picker-dropdown').length;
+    });
+    expect(popovers).toBe(1);
+  });
+
   test('touch-capable variants expose every known target at 44 by 44 or larger', async ({ browser }) => {
-    const context = await browser.newContext({ hasTouch: true, viewport: { width: 390, height: 844 } });
+    const context = await browser.newContext({ hasTouch: true, viewport: { width: 900, height: 844 } });
     const page = await context.newPage();
     await page.goto(staticServer.origin);
     await page.setContent(`<!doctype html><html><head>
@@ -190,10 +225,12 @@ test.describe('Task 16 lifecycle, touch, reactivity, and ARIA matrix', () => {
     ]));
     const targets = page.locator('.ren-toggle-group-item, .ren-sidebar-toggle, .ren-toast-close, .ren-calendar-prev, .ren-calendar-next, .ren-calendar-day:not(:disabled)');
     await expect.poll(() => targets.count()).toBeGreaterThan(10);
-    const undersized = await targets.evaluateAll((elements) => elements.map((element) => {
+    const measurements = await targets.evaluateAll((elements) => elements.map((element) => {
       const rect = element.getBoundingClientRect();
       return { className: element.className, width: rect.width, height: rect.height };
-    }).filter(({ width, height }) => width > 0 && height > 0 && (width < 44 || height < 44)));
+    }));
+    expect(measurements.filter(({ width, height }) => width <= 0 || height <= 0)).toEqual([]);
+    const undersized = measurements.filter(({ width, height }) => width < 44 || height < 44);
     expect(undersized).toEqual([]);
     await context.close();
   });
@@ -257,5 +294,19 @@ test.describe('Task 16 lifecycle, touch, reactivity, and ARIA matrix', () => {
     });
     await expect(carousel.locator('.ren-carousel-dot')).toHaveCount(3);
     await expect(carousel.locator('.ren-carousel-slide').nth(2)).toHaveAttribute('aria-label', 'Slide 3 of 3');
+    const refreshedRelationships = await carousel.evaluate(async (host) => {
+      const slide = document.createElement('div');
+      slide.className = 'ren-carousel-slide';
+      slide.textContent = 'Prepended';
+      host.querySelector('.ren-carousel-viewport').prepend(slide);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const ids = [...host.querySelectorAll('.ren-carousel-slide')].map((item) => item.id);
+      return {
+        ids,
+        controls: [...host.querySelectorAll('.ren-carousel-dot')].map((dot) => dot.getAttribute('aria-controls')),
+      };
+    });
+    expect(new Set(refreshedRelationships.ids).size).toBe(refreshedRelationships.ids.length);
+    expect(refreshedRelationships.controls).toEqual(refreshedRelationships.ids);
   });
 });

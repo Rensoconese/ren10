@@ -24,6 +24,7 @@ export function initDropZone(dropzone) {
   if (!dropzone) return null;
 
   dropzoneControllers.get(dropzone)?.abort();
+  delete dropzone.dataset.dragover;
   const controller = new AbortController();
   dropzoneControllers.set(dropzone, controller);
   const { signal } = controller;
