@@ -14,6 +14,7 @@ class RenNav extends HTMLElement {
     this._links = [];
     this._isOpen = false;
     this._dropdowns = new Map();
+    this._listenerController = null;
   }
 
   connectedCallback() {
@@ -34,9 +35,13 @@ class RenNav extends HTMLElement {
   }
 
   _attachEventListeners() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     // Toggle button click
     if (this._toggleBtn) {
-      this._toggleBtn.addEventListener('click', () => this._toggleMenu());
+      this._toggleBtn.addEventListener('click', () => this._toggleMenu(), { signal });
     }
 
     // Close menu on link click
@@ -45,7 +50,7 @@ class RenNav extends HTMLElement {
         if (this._isOpen) {
           this._closeMenu();
         }
-      });
+      }, { signal });
     });
 
     // Close on Escape
@@ -53,22 +58,23 @@ class RenNav extends HTMLElement {
       if (e.key === KEYBOARD_CODES.Escape && this._isOpen) {
         this._closeMenu();
       }
-    });
+    }, { signal });
 
     // Handle window resize
     window.addEventListener('resize', () => {
       this._updateMobileState();
-    });
+    }, { signal });
 
     // Close menu on outside click
     document.addEventListener('click', (e) => {
       if (this._isOpen && !this.contains(e.target)) {
         this._closeMenu();
       }
-    });
+    }, { signal });
   }
 
   _initDropdowns() {
+    const signal = this._listenerController?.signal;
     const dropdownToggles = this.querySelectorAll('[data-dropdown]');
     dropdownToggles.forEach(toggle => {
       const popoverId = toggle.getAttribute('aria-controls');
@@ -79,13 +85,13 @@ class RenNav extends HTMLElement {
           toggle.addEventListener('click', (e) => {
             e.stopPropagation();
             this._toggleDropdown(toggle, popover);
-          });
+          }, { signal });
 
           // Close dropdown on item click
           popover.querySelectorAll('a, button').forEach(item => {
             item.addEventListener('click', () => {
               this._closeDropdown(toggle, popover);
-            });
+            }, { signal });
           });
         }
       }
@@ -146,17 +152,8 @@ class RenNav extends HTMLElement {
   }
 
   _removeEventListeners() {
-    if (this._toggleBtn) {
-      this._toggleBtn.removeEventListener('click', () => this._toggleMenu());
-    }
-
-    this._links.forEach(link => {
-      link.removeEventListener('click', () => {
-        if (this._isOpen) {
-          this._closeMenu();
-        }
-      });
-    });
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   // Public API

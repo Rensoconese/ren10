@@ -18,8 +18,15 @@
  * @param {HTMLElement} dropzone
  * @returns {HTMLElement}
  */
+const dropzoneControllers = new WeakMap();
+
 export function initDropZone(dropzone) {
   if (!dropzone) return null;
+
+  dropzoneControllers.get(dropzone)?.abort();
+  const controller = new AbortController();
+  dropzoneControllers.set(dropzone, controller);
+  const { signal } = controller;
 
   let dragCounter = 0;
   const input = dropzone.querySelector('.ren-dropzone-input');
@@ -37,7 +44,7 @@ export function initDropZone(dropzone) {
     e.preventDefault();
     dragCounter++;
     dropzone.dataset.dragover = '';
-  });
+  }, { signal });
 
   dropzone.addEventListener('dragleave', () => {
     dragCounter--;
@@ -45,11 +52,11 @@ export function initDropZone(dropzone) {
       dragCounter = 0;
       delete dropzone.dataset.dragover;
     }
-  });
+  }, { signal });
 
   dropzone.addEventListener('dragover', (e) => {
     e.preventDefault();
-  });
+  }, { signal });
 
   dropzone.addEventListener('drop', (e) => {
     e.preventDefault();
@@ -58,14 +65,14 @@ export function initDropZone(dropzone) {
     if (e.dataTransfer?.files?.length) {
       handleFiles(e.dataTransfer.files);
     }
-  });
+  }, { signal });
 
   if (input) {
     input.addEventListener('change', () => {
       if (input.files?.length) {
         handleFiles(input.files);
       }
-    });
+    }, { signal });
   }
 
   return dropzone;

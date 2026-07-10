@@ -340,12 +340,15 @@ export class RenColorPicker extends HTMLElement {
     }
 
     // ═══ RENDER DROPDOWN (will be populated on open) ═══
-    const popoverId = `ren-color-picker-${Math.random().toString(36).slice(2)}`;
-    this.#popover = document.createElement('div');
-    this.#popover.className = 'ren-color-picker-dropdown';
+    this.#popover = this.querySelector(':scope > .ren-color-picker-dropdown');
+    if (!this.#popover) {
+      this.#popover = document.createElement('div');
+      this.#popover.className = 'ren-color-picker-dropdown';
+      this.appendChild(this.#popover);
+    }
+    const popoverId = this.#popover.id || `ren-color-picker-${Math.random().toString(36).slice(2)}`;
     this.#popover.id = popoverId;
     this.#popover.setAttribute('popover', 'auto');
-    this.appendChild(this.#popover);
 
     if (this.#trigger) {
       this.#trigger.setAttribute('aria-haspopup', 'dialog');

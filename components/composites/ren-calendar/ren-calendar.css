@@ -362,3 +362,13 @@
 .ren-calendar [data-today] { background: var(--ren-calendar-today-bg, var(--color-accent-subtle)); }
 .ren-calendar [aria-selected="true"], .ren-calendar [data-selected] { background: var(--ren-calendar-selected-bg, var(--color-accent)); color: var(--ren-calendar-selected-color, var(--color-on-accent)); }
 .ren-calendar [data-range], .ren-calendar-range { background: var(--ren-calendar-range-bg, var(--color-accent-subtle)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-calendar .ren-calendar-nav button,
+  .ren-calendar .ren-calendar-day {
+    inline-size: calc(var(--touch-min) + var(--stroke-1));
+    block-size: calc(var(--touch-min) + var(--stroke-1));
+    min-inline-size: calc(var(--touch-min) + var(--stroke-1));
+    min-block-size: calc(var(--touch-min) + var(--stroke-1));
+  }
+}

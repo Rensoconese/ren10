@@ -223,6 +223,7 @@ export class RenCarousel extends HTMLElement {
 
     // Set up slides with ARIA attributes
     this._slides.forEach((slide, index) => {
+      if (!slide.id) slide.id = `${this.id}-slide-${index + 1}`;
       slide.setAttribute('role', 'group');
       slide.setAttribute('aria-roledescription', 'slide');
       slide.setAttribute('aria-label', `Slide ${index + 1} of ${this._totalSlides}`);
@@ -260,7 +261,6 @@ export class RenCarousel extends HTMLElement {
     // Create dots container
     this._dotsContainer = document.createElement('ul');
     this._dotsContainer.className = 'ren-carousel-dots';
-    this._dotsContainer.setAttribute('role', 'tablist');
     this._dotsContainer.setAttribute('aria-label', 'Carousel pagination');
 
     // Create individual dots
@@ -268,9 +268,8 @@ export class RenCarousel extends HTMLElement {
       const dot = document.createElement('button');
       dot.className = 'ren-carousel-dot';
       dot.setAttribute('type', 'button');
-      dot.setAttribute('role', 'tab');
       dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
-      dot.setAttribute('aria-controls', this.id);
+      dot.setAttribute('aria-controls', this._slides[index].id);
       if (index === 0) {
         dot.setAttribute('aria-current', 'true');
       }
@@ -317,8 +316,8 @@ export class RenCarousel extends HTMLElement {
 
     this._counterElement = document.createElement('div');
     this._counterElement.className = 'ren-carousel-counter';
-    this._counterElement.setAttribute('aria-live', 'polite');
     this._counterElement.setAttribute('aria-atomic', 'true');
+    this._syncLiveRegion();
 
     this.appendChild(this._counterElement);
   }
@@ -480,6 +479,10 @@ export class RenCarousel extends HTMLElement {
     }
   }
 
+  _syncLiveRegion() {
+    this._counterElement?.setAttribute('aria-live', this._isAutoplayActive ? 'off' : 'polite');
+  }
+
   /* ═══ AUTOPLAY ═══ */
 
   _prefersReducedMotion() {
@@ -519,6 +522,7 @@ export class RenCarousel extends HTMLElement {
     this._isAutoplayActive = true;
     this.setAttribute('data-autoplay', '');
     this.setAttribute('data-autoplay-duration', `${this._autoplayMs}ms`);
+    this._syncLiveRegion();
 
     // Start autoplay
     this._autoplayInterval = setInterval(() => {
@@ -534,6 +538,7 @@ export class RenCarousel extends HTMLElement {
     this._isAutoplayActive = false;
     this.removeAttribute('data-autoplay');
     this.removeAttribute('data-autoplay-duration');
+    this._syncLiveRegion();
   }
 
   pause() {

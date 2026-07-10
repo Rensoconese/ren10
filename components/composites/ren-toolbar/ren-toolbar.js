@@ -19,8 +19,14 @@
 /**
  * @param {HTMLElement} toolbar
  */
+const toolbarControllers = new WeakMap();
+
 export function initToolbar(toolbar) {
   if (!toolbar || toolbar.getAttribute('role') !== 'toolbar') return;
+
+  toolbarControllers.get(toolbar)?.abort();
+  const controller = new AbortController();
+  toolbarControllers.set(toolbar, controller);
 
   const getItems = () =>
     [...toolbar.querySelectorAll('.ren-toolbar-item:not(:disabled):not([aria-disabled="true"])')];
@@ -52,7 +58,7 @@ export function initToolbar(toolbar) {
       items[next].setAttribute('tabindex', '0');
       items[next].focus();
     }
-  });
+  }, { signal: controller.signal });
 }
 
 /**

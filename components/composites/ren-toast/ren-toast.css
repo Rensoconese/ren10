@@ -378,3 +378,10 @@
 }
 /* Appearance API bridge */
 .ren-toast { inline-size: var(--ren-toast-width, 360px); padding: var(--ren-toast-padding, var(--space-4)); border-radius: var(--ren-toast-radius, var(--radius-lg)); background: var(--ren-toast-bg, var(--color-surface-raised)); border-color: var(--ren-toast-border, var(--color-border)); box-shadow: var(--ren-toast-shadow, var(--shadow-lg)); gap: var(--ren-toast-gap, var(--space-3)); animation-duration: var(--ren-toast-anim-duration, var(--duration-normal)); animation-timing-function: var(--ren-toast-easing, var(--ease-out)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-toast-close {
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+  }
+}

@@ -60,6 +60,10 @@ const VALID_POSITIONS = new Set([
 
 export class RenToastViewport extends HTMLElement {
   connectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     this.classList.add('ren-toast-viewport');
     if (!this.hasAttribute('data-position')) {
       this.setAttribute('data-position', 'bottom-right');
@@ -73,12 +77,17 @@ export class RenToastViewport extends HTMLElement {
     if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
 
     // Pause timers on hover or keyboard focus
-    this.addEventListener('mouseenter', () => pauseTimersFor(this));
-    this.addEventListener('mouseleave', () => resumeTimersFor(this));
-    this.addEventListener('focusin', () => pauseTimersFor(this));
+    this.addEventListener('mouseenter', () => pauseTimersFor(this), { signal });
+    this.addEventListener('mouseleave', () => resumeTimersFor(this), { signal });
+    this.addEventListener('focusin', () => pauseTimersFor(this), { signal });
     this.addEventListener('focusout', (e) => {
       if (!this.contains(e.relatedTarget)) resumeTimersFor(this);
-    });
+    }, { signal });
+  }
+
+  disconnectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 }
 

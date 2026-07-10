@@ -311,3 +311,10 @@
 .ren-sidebar.is-collapsed, .ren-sidebar[data-collapsed="true"] { inline-size: var(--ren-sidebar-collapsed-width, 60px); }
 .ren-sidebar a, .ren-sidebar button { min-block-size: var(--ren-sidebar-item-height, var(--size-lg)); padding: var(--ren-sidebar-item-padding, var(--space-2) var(--space-3)); border-radius: var(--ren-sidebar-item-radius, var(--radius-md)); }
 .ren-sidebar a[aria-current="page"], .ren-sidebar a[data-active] { background: var(--ren-sidebar-active-bg, var(--color-accent-subtle)); color: var(--ren-sidebar-active-color, var(--color-accent)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-sidebar-toggle {
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+  }
+}
