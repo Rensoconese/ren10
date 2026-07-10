@@ -393,7 +393,9 @@ function buildComponentDetail(key, meta, { dense = false } = {}) {
     layer: meta.layer,
     description: meta.description,
     files: meta.files.map((file) => `components/${meta.layer}/${meta.dir}/${file}`),
-    deps: meta.deps ?? [],
+    utils: meta.utils ?? [],
+    components: meta.components ?? [],
+    deps: [...(meta.utils ?? []), ...(meta.components ?? [])],
     usage: meta.usage,
     contractPath: `components/${meta.layer}/${meta.dir}/${contractNameFor(meta)}`,
     cssPath: fs.existsSync(cssPath) ? relFromRoot(cssPath) : null,
@@ -407,7 +409,7 @@ function buildComponentDetail(key, meta, { dense = false } = {}) {
     detail.dense = [
       `${meta.dir}|${meta.layer}|${meta.description}`,
       `contract=${detail.contractPath}`,
-      `imports=${detail.files.join(',')}${detail.deps.length ? `; deps=${detail.deps.join(',')}` : ''}`,
+      `imports=${detail.files.join(',')}${detail.utils.length ? `; utils=${detail.utils.join(',')}` : ''}${detail.components.length ? `; components=${detail.components.join(',')}` : ''}`,
       detail.useWhen.length ? `use=${detail.useWhen.join('; ')}` : null,
       detail.avoidWhen.length ? `avoid=${detail.avoidWhen.join('; ')}` : null,
       `usage=${String(meta.usage).replace(/\s+/g, ' ').trim()}`,
@@ -622,14 +624,19 @@ function copyComponentFile(src, dest) {
 }
 
 /**
- * Rewrites deep utils imports (from package source layout) to the shallower
- * layout that consumers get after `ren10 add` (one fewer ../ level).
+ * Rewrites package-source imports to the flat consumer layout used by
+ * `ren10 add`: utils move one level closer and component directories use
+ * registry keys instead of their source `ren-*` directory names.
  * This must be applied consistently in add, upgrade (on write), and remove
  * (when detecting modifications).
  */
 function rewriteUtilsImports(content) {
   if (typeof content !== 'string') return content;
-  return content.replace(/from\s+(['"])\.\.\/\.\.\/\.\.\/utils\//g, 'from $1../../utils/');
+  let rewritten = content.replace(/from\s+(['"])\.\.\/\.\.\/\.\.\/utils\//g, 'from $1../../utils/');
+  for (const [name, meta] of Object.entries(REGISTRY)) {
+    rewritten = rewritten.replaceAll(`../${meta.dir}/`, `../${name}/`);
+  }
+  return rewritten;
 }
 
 /**
@@ -863,13 +870,13 @@ function addOneComponent(rendsDir, componentArg, opts = {}) {
     if (!silent) success(`Copied ${componentName}/${file}`);
   });
 
-  // Copy JS deps from utils/ if the component declares any.
-  if (meta.deps && meta.deps.length > 0) {
+  // Copy JS dependencies from utils/.
+  if (meta.utils && meta.utils.length > 0) {
     const utilsDir = path.join(rendsDir, 'utils');
     fs.mkdirSync(utilsDir, { recursive: true });
 
     const srcUtilsDir = path.join(RENDS_ROOT, 'utils');
-    meta.deps.forEach((dep) => {
+    meta.utils.forEach((dep) => {
       const srcDep = path.join(srcUtilsDir, dep);
       const destDep = path.join(utilsDir, dep);
       if (fs.existsSync(srcDep) && !fs.existsSync(destDep)) {
@@ -918,6 +925,29 @@ function addOneComponent(rendsDir, componentArg, opts = {}) {
   return meta;
 }
 
+function resolveComponentGraph(componentNames) {
+  const resolved = [];
+  const visited = new Set();
+  const visiting = new Set();
+
+  const visit = (componentName) => {
+    const name = componentName.toLowerCase();
+    if (visited.has(name)) return;
+    if (visiting.has(name)) error(`Circular component dependency detected at "${name}".`);
+    const meta = getComponent(name);
+    if (!meta) error(`Unknown component dependency "${name}".`);
+
+    visiting.add(name);
+    for (const dependency of meta.components || []) visit(dependency);
+    visiting.delete(name);
+    visited.add(name);
+    resolved.push(name);
+  };
+
+  componentNames.forEach(visit);
+  return resolved;
+}
+
 async function cmdAdd() {
   const cwd = process.cwd();
   const rendsDir = path.join(cwd, 'rends');
@@ -943,9 +973,15 @@ async function cmdAdd() {
   }
 
   const added = [];
-  for (const componentArg of positional) {
-    const meta = addOneComponent(rendsDir, componentArg);
-    if (meta) added.push(meta);
+  const requested = new Set(positional.map((name) => name.toLowerCase()));
+  const known = positional.filter((name) => {
+    if (getComponent(name.toLowerCase())) return true;
+    addOneComponent(rendsDir, name);
+    return false;
+  });
+  for (const componentName of resolveComponentGraph(known)) {
+    const meta = addOneComponent(rendsDir, componentName, { silent: !requested.has(componentName) });
+    if (meta && requested.has(componentName)) added.push(meta);
   }
 
   if (added.length === 0) {
@@ -1115,8 +1151,11 @@ async function cmdComponent() {
   console.log(`\n${c.bold}Contract:${c.reset} ${detail.contractPath}`);
   console.log(`${c.bold}Files:${c.reset}`);
   for (const file of detail.files) console.log(`  ${c.cyan}${file}${c.reset}`);
-  if (detail.deps.length) {
-    console.log(`${c.bold}Deps:${c.reset} ${detail.deps.join(', ')}`);
+  if (detail.utils.length) {
+    console.log(`${c.bold}Utils:${c.reset} ${detail.utils.join(', ')}`);
+  }
+  if (detail.components.length) {
+    console.log(`${c.bold}Components:${c.reset} ${detail.components.join(', ')}`);
   }
   if (detail.useWhen.length) {
     console.log(`\n${c.bold}Use when:${c.reset}`);
@@ -1685,23 +1724,28 @@ async function cmdUpgrade() {
 
   // Determine which components to consider. Without positional names,
   // upgrade everything we find installed.
-  let targets;
+  let rootTargets;
   if (positional.length > 0) {
-    targets = positional.map((a) => a.toLowerCase());
+    rootTargets = positional.map((a) => a.toLowerCase());
   } else {
     const componentsDir = path.join(rendsDir, 'components');
     if (!fs.existsSync(componentsDir)) {
       error('rends/components/ not found.');
     }
-    targets = fs
+    rootTargets = fs
       .readdirSync(componentsDir)
       .filter((f) => fs.statSync(path.join(componentsDir, f)).isDirectory());
   }
 
-  if (targets.length === 0) {
+  if (rootTargets.length === 0) {
     info('No installed components to upgrade.');
     return;
   }
+
+  const requestedTargets = new Set(rootTargets);
+  const knownRootTargets = rootTargets.filter((name) => getComponent(name));
+  const unknownRootTargets = rootTargets.filter((name) => !getComponent(name));
+  const targets = [...resolveComponentGraph(knownRootTargets), ...unknownRootTargets];
 
   let upgraded = 0, unchanged = 0, skipped = 0;
   const prompt = await loadPromptModule();
@@ -1716,8 +1760,17 @@ async function cmdUpgrade() {
 
     const localDir = path.join(rendsDir, 'components', name);
     if (!fs.existsSync(localDir)) {
-      info(`Skipped "${name}" — not installed.`);
-      skipped++;
+      if (requestedTargets.has(name)) {
+        info(`Skipped "${name}" — not installed.`);
+        skipped++;
+      } else if (dryRun) {
+        success(`(dry-run) would add missing dependency ${name}/`);
+        upgraded++;
+      } else {
+        addOneComponent(rendsDir, name, { silent: true });
+        success(`Added missing dependency ${name}/`);
+        upgraded++;
+      }
       continue;
     }
 
@@ -1736,20 +1789,28 @@ async function cmdUpgrade() {
       })
       .filter(Boolean);
 
-    if (changes.length === 0) {
+    const missingUtils = (meta.utils || []).filter(
+      (dependency) => !fs.existsSync(path.join(rendsDir, 'utils', dependency))
+    );
+    const repairCount = changes.length + missingUtils.length;
+
+    if (changes.length === 0 && missingUtils.length === 0) {
       unchanged++;
       continue;
     }
 
-    console.log(`\n${c.bold}${name}${c.reset} ${c.dim}— ${changes.length} file(s) differ${c.reset}`);
+    console.log(`\n${c.bold}${name}${c.reset} ${c.dim}— ${repairCount} file(s) differ${c.reset}`);
     for (const ch of changes) {
       console.log(`  ${c.yellow}~${c.reset} ${ch.file}`);
+    }
+    for (const dependency of missingUtils) {
+      console.log(`  ${c.yellow}+${c.reset} utils/${dependency}`);
     }
 
     let action = 'y';
     if (!force) {
       action = await prompt(
-        `Overwrite ${changes.length} file(s) in ${name}? [y]es / [n]o / [d]iff / [a]bort: `
+        `Repair ${repairCount} file(s) for ${name}? [y]es / [n]o / [d]iff / [a]bort: `
       );
       action = (action || '').toLowerCase().charAt(0) || 'n';
 
@@ -1772,12 +1833,18 @@ async function cmdUpgrade() {
 
     if (action === 'y') {
       if (dryRun) {
-        success(`(dry-run) would overwrite ${changes.length} file(s) in ${name}/`);
+        success(`(dry-run) would repair ${repairCount} file(s) for ${name}/`);
       } else {
         for (const ch of changes) {
           fs.writeFileSync(ch.local, ch.upstreamContent);
         }
-        success(`Upgraded ${name} (${changes.length} file(s))`);
+        for (const dependency of missingUtils) {
+          copyFile(
+            path.join(RENDS_ROOT, 'utils', dependency),
+            path.join(rendsDir, 'utils', dependency)
+          );
+        }
+        success(`Upgraded ${name} (${repairCount} file(s))`);
       }
       upgraded++;
     } else {

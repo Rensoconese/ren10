@@ -11,7 +11,8 @@ export const REGISTRY = {
     dir: 'ren-button',
     description: 'Versatile button with variants, sizes, icon support, loading state',
     files: ['ren-button.css', 'ren-button.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-button>Click me</ren-button>
 <ren-button variant="primary">Primary</ren-button>
 <ren-button variant="secondary" size="sm">Cancel</ren-button>`,
@@ -23,7 +24,8 @@ export const REGISTRY = {
     dir: 'ren-field',
     description: 'Form field wrapper with label, error, description',
     files: ['ren-field.css', 'ren-field.js'],
-    deps: ['id-generator.js'],
+    utils: ['id-generator.js'],
+    components: [],
     usage: `<ren-field>
   <label for="username">Username</label>
   <input id="username" type="text">
@@ -37,7 +39,8 @@ export const REGISTRY = {
     dir: 'ren-checkbox',
     description: 'Native checkbox with checked, indeterminate, focus, and disabled states',
     files: ['ren-checkbox.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<label class="ren-checkbox">
   <input type="checkbox">
   <span class="ren-checkbox-control"></span>
@@ -51,7 +54,8 @@ export const REGISTRY = {
     dir: 'ren-switch',
     description: 'Toggle switch built on native checkbox with role="switch"',
     files: ['ren-switch.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<label class="ren-switch">
   <input type="checkbox" role="switch">
   <span class="ren-switch-track"></span>
@@ -65,7 +69,8 @@ export const REGISTRY = {
     dir: 'ren-badge',
     description: 'Small label with variants and sizes',
     files: ['ren-badge.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<span class="ren-badge">New</span>
 <span class="ren-badge ren-badge-primary">Active</span>
 <span class="ren-badge ren-badge-sm">v1.0</span>`,
@@ -77,7 +82,8 @@ export const REGISTRY = {
     dir: 'ren-radio',
     description: 'Radio button group with keyboard navigation',
     files: ['ren-radio.css', 'ren-radio.js'],
-    deps: ['keyboard-nav.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js'],
+    components: [],
     usage: `<ren-radio name="option">
   <input type="radio" id="opt1" value="a">
   <label for="opt1">Option A</label>
@@ -92,7 +98,8 @@ export const REGISTRY = {
     dir: 'ren-progress',
     description: 'Progress bar with determinate/indeterminate modes',
     files: ['ren-progress.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<div class="ren-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65">
   <div class="ren-progress-bar" style="width: 65%"></div>
 </div>
@@ -105,7 +112,8 @@ export const REGISTRY = {
     dir: 'ren-icon',
     description: 'Icon wrapper for SVG with size and color variants',
     files: ['ren-icon.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-icon class="ren-icon-sm"><svg>...</svg></ren-icon>
 <ren-icon class="ren-icon-lg">🎨</ren-icon>`,
   },
@@ -116,7 +124,8 @@ export const REGISTRY = {
     dir: 'ren-avatar',
     description: 'User avatar with image, initials fallback, status dot, and sizes',
     files: ['ren-avatar.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<span class="ren-avatar"><img src="/u.jpg" alt="Jane Doe"></span>
 <span class="ren-avatar ren-avatar-lg">JD</span>
 <span class="ren-avatar" data-status="online">JD</span>`,
@@ -128,7 +137,8 @@ export const REGISTRY = {
     dir: 'ren-banner',
     description: 'Full-width announcement or status banner with variants',
     files: ['ren-banner.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<div class="ren-banner ren-banner-info" role="status">
   <p>Heads up: maintenance window tonight at 10pm UTC.</p>
   <button class="ren-banner-close" aria-label="Dismiss">×</button>
@@ -141,7 +151,8 @@ export const REGISTRY = {
     dir: 'ren-breadcrumb',
     description: 'Hierarchical navigation trail with separators',
     files: ['ren-breadcrumb.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<nav class="ren-breadcrumb" aria-label="Breadcrumb">
   <ol>
     <li><a href="/">Home</a></li>
@@ -157,7 +168,8 @@ export const REGISTRY = {
     dir: 'ren-card',
     description: 'Surface container with header, body, footer sections',
     files: ['ren-card.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<article class="ren-card">
   <header class="ren-card-header"><h3>Title</h3></header>
   <div class="ren-card-body">Content goes here.</div>
@@ -171,7 +183,8 @@ export const REGISTRY = {
     dir: 'ren-kbd',
     description: 'Keyboard key indicator for shortcuts',
     files: ['ren-kbd.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `Press <kbd class="ren-kbd">⌘</kbd>+<kbd class="ren-kbd">K</kbd> to search.`,
   },
 
@@ -181,7 +194,8 @@ export const REGISTRY = {
     dir: 'ren-link',
     description: 'Styled link with underline, external icon, and variants',
     files: ['ren-link.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<a href="/docs" class="ren-link">Read the docs</a>
 <a href="https://example.com" class="ren-link ren-link-external">External</a>`,
   },
@@ -192,7 +206,8 @@ export const REGISTRY = {
     dir: 'ren-pagination',
     description: 'Page navigation controls with prev/next and page numbers',
     files: ['ren-pagination.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<nav class="ren-pagination" aria-label="Pagination">
   <a href="?page=1" aria-label="Previous">‹</a>
   <a href="?page=1">1</a>
@@ -208,7 +223,8 @@ export const REGISTRY = {
     dir: 'ren-separator',
     description: 'Visual or semantic divider (horizontal/vertical)',
     files: ['ren-separator.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<hr class="ren-separator">
 <div class="ren-separator ren-separator-vertical" role="separator" aria-orientation="vertical"></div>`,
   },
@@ -219,7 +235,8 @@ export const REGISTRY = {
     dir: 'ren-skeleton',
     description: 'Loading placeholder shape (text, circle, rect) with shimmer',
     files: ['ren-skeleton.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<div class="ren-skeleton ren-skeleton-text"></div>
 <div class="ren-skeleton ren-skeleton-circle"></div>
 <div class="ren-skeleton" style="width:200px;height:120px"></div>`,
@@ -231,7 +248,8 @@ export const REGISTRY = {
     dir: 'ren-spinner',
     description: 'Indeterminate loading spinner respecting reduced-motion',
     files: ['ren-spinner.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<span class="ren-spinner" role="status" aria-label="Loading"></span>
 <span class="ren-spinner ren-spinner-lg"></span>`,
   },
@@ -242,7 +260,8 @@ export const REGISTRY = {
     dir: 'ren-tag',
     description: 'Pill-shaped tag/chip with optional dismiss button',
     files: ['ren-tag.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<span class="ren-tag">design</span>
 <span class="ren-tag ren-tag-removable">a11y
   <button class="ren-tag-close" aria-label="Remove">×</button>
@@ -256,7 +275,8 @@ export const REGISTRY = {
     dir: 'ren-dialog',
     description: 'Modal dialog with backdrop, animations, focus trap',
     files: ['ren-dialog.css', 'ren-dialog.js'],
-    deps: ['focus-trap.js', 'dismissable.js', 'id-generator.js'],
+    utils: ['focus-trap.js'],
+    components: [],
     usage: `<ren-dialog>
   <dialog class="ren-dialog">
     <h2>Confirm</h2>
@@ -273,7 +293,8 @@ export const REGISTRY = {
     dir: 'ren-popover',
     description: 'Floating popover with anchor positioning',
     files: ['ren-popover.css', 'ren-popover.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-popover>
   <button slot="trigger">Open</button>
   <div class="ren-popover">Content</div>
@@ -286,7 +307,8 @@ export const REGISTRY = {
     dir: 'ren-tooltip',
     description: 'Accessible tooltip with positioning and delay',
     files: ['ren-tooltip.css', 'ren-tooltip.js'],
-    deps: ['id-generator.js'],
+    utils: [],
+    components: [],
     usage: `<ren-tooltip content="Help text">
   <button>Hover me</button>
 </ren-tooltip>`,
@@ -298,7 +320,8 @@ export const REGISTRY = {
     dir: 'ren-tabs',
     description: 'Tab interface with keyboard navigation',
     files: ['ren-tabs.css', 'ren-tabs.js'],
-    deps: ['keyboard-nav.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js', 'id-generator.js'],
+    components: [],
     usage: `<ren-tabs>
   <button role="tab">Tab 1</button>
   <button role="tab">Tab 2</button>
@@ -313,7 +336,8 @@ export const REGISTRY = {
     dir: 'ren-accordion',
     description: 'Collapsible accordion sections',
     files: ['ren-accordion.css', 'ren-accordion.js'],
-    deps: ['id-generator.js'],
+    utils: [],
+    components: [],
     usage: `<ren-accordion>
   <details>
     <summary>Section 1</summary>
@@ -332,7 +356,8 @@ export const REGISTRY = {
     dir: 'ren-menu',
     description: 'Dropdown menu with keyboard navigation',
     files: ['ren-menu.css', 'ren-menu.js'],
-    deps: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js', 'dismissable.js'],
+    components: ['context-menu'],
     usage: `<ren-menu>
   <button slot="trigger">Menu</button>
   <ul role="menu" class="ren-menu">
@@ -348,7 +373,8 @@ export const REGISTRY = {
     dir: 'ren-select',
     description: 'Custom select dropdown with search support',
     files: ['ren-select.css', 'ren-select.js'],
-    deps: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js'],
+    components: [],
     usage: `<ren-select name="choice">
   <option>Select...</option>
   <option value="a">Option A</option>
@@ -362,7 +388,8 @@ export const REGISTRY = {
     dir: 'ren-toast',
     description: 'Toast notifications with dismiss action',
     files: ['ren-toast.css', 'ren-toast.js'],
-    deps: ['live-region.js'],
+    utils: ['live-region.js'],
+    components: [],
     usage: `<ren-toast role="status" aria-live="polite">
   Message sent successfully
   <button aria-label="Dismiss">×</button>
@@ -375,7 +402,8 @@ export const REGISTRY = {
     dir: 'ren-slider',
     description: 'Range slider with keyboard support',
     files: ['ren-slider.css', 'ren-slider.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-slider min="0" max="100" value="50">
   <input type="range">
   <output>50</output>
@@ -388,7 +416,8 @@ export const REGISTRY = {
     dir: 'ren-toggle-group',
     description: 'Grouped toggle buttons with selection',
     files: ['ren-toggle-group.css', 'ren-toggle-group.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-toggle-group>
   <button>Left</button>
   <button>Center</button>
@@ -402,7 +431,8 @@ export const REGISTRY = {
     dir: 'ren-combobox',
     description: 'Autocomplete input with list filtering',
     files: ['ren-combobox.css', 'ren-combobox.js'],
-    deps: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js'],
+    utils: ['id-generator.js'],
+    components: [],
     usage: `<ren-combobox autocomplete="list">
   <input type="text" placeholder="Search...">
   <ul role="listbox" class="ren-combobox-list">
@@ -417,7 +447,8 @@ export const REGISTRY = {
     dir: 'ren-sheet',
     description: 'Side panel drawer with slide animation',
     files: ['ren-sheet.css', 'ren-sheet.js'],
-    deps: ['focus-trap.js', 'dismissable.js'],
+    utils: ['id-generator.js'],
+    components: [],
     usage: `<ren-sheet>
   <button slot="trigger">Open Drawer</button>
   <aside class="ren-sheet">
@@ -432,7 +463,8 @@ export const REGISTRY = {
     dir: 'ren-hover-card',
     description: 'Card that appears on hover/focus',
     files: ['ren-hover-card.css', 'ren-hover-card.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-hover-card>
   <button>Hover me</button>
   <div class="ren-hover-card-content">Preview content</div>
@@ -445,7 +477,8 @@ export const REGISTRY = {
     dir: 'ren-scroll-area',
     description: 'Scrollable area with custom scrollbars',
     files: ['ren-scroll-area.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<div class="ren-scroll-area" tabindex="0" role="region" aria-label="Scrollable content">
   <div>Long content...</div>
 </div>`,
@@ -457,7 +490,8 @@ export const REGISTRY = {
     dir: 'ren-number-field',
     description: 'Input for numbers with increment/decrement',
     files: ['ren-number-field.css', 'ren-number-field.js'],
-    deps: ['id-generator.js'],
+    utils: [],
+    components: [],
     usage: `<ren-number-field>
   <label>Quantity</label>
   <input type="number" min="0" max="10">
@@ -470,7 +504,8 @@ export const REGISTRY = {
     dir: 'ren-otp',
     description: 'One-time password input with auto-focus',
     files: ['ren-otp.css', 'ren-otp.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-otp length="6">
   <input type="text" maxlength="1">
   <input type="text" maxlength="1">
@@ -484,7 +519,8 @@ export const REGISTRY = {
     dir: 'ren-calendar',
     description: 'Date picker calendar interface',
     files: ['ren-calendar.css', 'ren-calendar.js'],
-    deps: ['id-generator.js'],
+    utils: ['local-date.js'],
+    components: [],
     usage: `<ren-calendar selected="2025-03-15">
   <table role="grid">...</table>
 </ren-calendar>`,
@@ -496,7 +532,8 @@ export const REGISTRY = {
     dir: 'ren-date-picker',
     description: 'Input with calendar dropdown',
     files: ['ren-date-picker.css', 'ren-date-picker.js'],
-    deps: ['dismissable.js', 'id-generator.js'],
+    utils: [],
+    components: ['calendar'],
     usage: `<ren-date-picker>
   <input type="date">
   <ren-calendar></ren-calendar>
@@ -509,7 +546,8 @@ export const REGISTRY = {
     dir: 'ren-carousel',
     description: 'Slide carousel with pagination',
     files: ['ren-carousel.css', 'ren-carousel.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-carousel auto-play interval="5000">
   <div class="ren-carousel-slide">Slide 1</div>
   <div class="ren-carousel-slide">Slide 2</div>
@@ -524,7 +562,8 @@ export const REGISTRY = {
     dir: 'ren-alert-dialog',
     description: 'Modal alert for destructive or blocking confirmations',
     files: ['ren-alert-dialog.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<dialog class="ren-alert-dialog" role="alertdialog" aria-labelledby="ad-title">
   <h2 id="ad-title">Delete project?</h2>
   <p>This action cannot be undone.</p>
@@ -541,7 +580,8 @@ export const REGISTRY = {
     dir: 'ren-collapsible',
     description: 'Single expandable region built on native <details>',
     files: ['ren-collapsible.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<details class="ren-collapsible">
   <summary>Show more</summary>
   <p>Hidden content revealed when expanded.</p>
@@ -554,7 +594,8 @@ export const REGISTRY = {
     dir: 'ren-color-picker',
     description: 'Color input with swatches, hex field, and native picker',
     files: ['ren-color-picker.css', 'ren-color-picker.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-color-picker value="#5b6cff">
   <input type="color">
   <input type="text" class="ren-color-picker-hex">
@@ -567,7 +608,8 @@ export const REGISTRY = {
     dir: 'ren-context-menu',
     description: 'Right-click / long-press menu with keyboard support',
     files: ['ren-context-menu.css', 'ren-context-menu.js'],
-    deps: ['dismissable.js', 'keyboard-nav.js'],
+    utils: [],
+    components: [],
     usage: `<div class="ren-context-menu-trigger" data-context="editor-actions" tabindex="0">Right-click me</div>
 <ren-context-menu id="editor-actions">
   <button class="ren-menu-item" role="menuitem">Copy</button>
@@ -581,7 +623,8 @@ export const REGISTRY = {
     dir: 'ren-date-range-picker',
     description: 'Two-calendar picker for start/end date selection',
     files: ['ren-date-range-picker.css', 'ren-date-range-picker.js'],
-    deps: ['dismissable.js', 'id-generator.js'],
+    utils: [],
+    components: ['calendar'],
     usage: `<ren-date-range-picker>
   <input type="text" placeholder="Start">
   <input type="text" placeholder="End">
@@ -594,7 +637,8 @@ export const REGISTRY = {
     dir: 'ren-dropzone',
     description: 'Drag-and-drop file upload area with keyboard fallback',
     files: ['ren-dropzone.css', 'ren-dropzone.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-dropzone accept="image/*" multiple>
   <label>
     <input type="file" multiple>
@@ -609,7 +653,8 @@ export const REGISTRY = {
     dir: 'ren-toolbar',
     description: 'Horizontal group of controls with roving tabindex',
     files: ['ren-toolbar.css', 'ren-toolbar.js'],
-    deps: ['keyboard-nav.js'],
+    utils: [],
+    components: [],
     usage: `<ren-toolbar role="toolbar" aria-label="Formatting">
   <button>Bold</button>
   <button>Italic</button>
@@ -624,7 +669,8 @@ export const REGISTRY = {
     dir: 'ren-nav',
     description: 'Responsive navigation bar with mobile menu',
     files: ['ren-nav.css', 'ren-nav.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-nav class="ren-nav">
   <a href="/" class="ren-nav-brand">Logo</a>
   <ul class="ren-nav-menu">
@@ -640,7 +686,8 @@ export const REGISTRY = {
     dir: 'ren-sidebar',
     description: 'Collapsible sidebar with persistence',
     files: ['ren-sidebar.css', 'ren-sidebar.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-sidebar class="ren-sidebar">
   <nav class="ren-sidebar-nav">
     <a href="#">Link 1</a>
@@ -655,7 +702,8 @@ export const REGISTRY = {
     dir: 'ren-command',
     description: 'Command/search palette with keyboard shortcuts',
     files: ['ren-command.css', 'ren-command.js'],
-    deps: ['focus-trap.js', 'dismissable.js'],
+    utils: [],
+    components: [],
     usage: `<ren-command open>
   <input class="ren-command-input" placeholder="Type a command...">
   <ul class="ren-command-list">
@@ -671,7 +719,8 @@ export const REGISTRY = {
     dir: 'ren-table',
     description: 'Sortable, responsive data table',
     files: ['ren-table.css', 'ren-table.js'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<ren-table class="ren-table">
   <thead>
     <tr><th>Name</th><th>Email</th></tr>
@@ -687,8 +736,9 @@ export const REGISTRY = {
     layer: 'patterns',
     dir: 'ren-form',
     description: 'Styled form wrapper with validation styling',
-    files: ['ren-form.css', 'ren-form.js'],
-    deps: [],
+    files: ['ren-form.css', 'ren-form.js', 'serialize.js'],
+    utils: [],
+    components: ['field'],
     usage: `<ren-form class="ren-form">
   <ren-field>
     <label>Email</label>
@@ -704,7 +754,8 @@ export const REGISTRY = {
     dir: 'ren-menubar',
     description: 'Top-level menu bar with submenu support',
     files: ['ren-menubar.css', 'ren-menubar.js'],
-    deps: ['keyboard-nav.js', 'id-generator.js'],
+    utils: [],
+    components: [],
     usage: `<ren-menubar class="ren-menubar">
   <div role="menubar">
     <button role="menuitem">File</button>
@@ -719,7 +770,8 @@ export const REGISTRY = {
     dir: 'ren-ai',
     description: 'AI chat surface — message bubbles, prompt input, streaming caret',
     files: ['ren-ai.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<section class="ren-ai">
   <div class="ren-ai-thread">
     <div class="ren-ai-msg ren-ai-msg-user">Summarize this PR.</div>
@@ -738,7 +790,8 @@ export const REGISTRY = {
     dir: 'ren-empty-state',
     description: 'Friendly placeholder for zero-data screens with optional CTA',
     files: ['ren-empty-state.css'],
-    deps: [],
+    utils: [],
+    components: [],
     usage: `<div class="ren-empty-state">
   <ren-icon class="ren-icon-xl">📭</ren-icon>
   <h3>No messages yet</h3>
