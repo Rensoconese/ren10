@@ -4118,6 +4118,7 @@ ren-dialog {
 .ren-select {
   position: relative;
   display: inline-flex;
+  flex-direction: column;
   width: 100%;
   font-family: inherit;
 }
@@ -4382,6 +4383,7 @@ ren-dialog {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1);
+  width: 100%;
 }
 
 .ren-select-chip {
@@ -4848,6 +4850,13 @@ ren-dialog {
 }
 /* Appearance API bridge */
 .ren-toast { inline-size: var(--ren-toast-width, 360px); padding: var(--ren-toast-padding, var(--space-4)); border-radius: var(--ren-toast-radius, var(--radius-lg)); background: var(--ren-toast-bg, var(--color-surface-raised)); border-color: var(--ren-toast-border, var(--color-border)); box-shadow: var(--ren-toast-shadow, var(--shadow-lg)); gap: var(--ren-toast-gap, var(--space-3)); animation-duration: var(--ren-toast-anim-duration, var(--duration-normal)); animation-timing-function: var(--ren-toast-easing, var(--ease-out)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-toast-close {
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+  }
+}
 /* ═══ REN SLIDER COMPONENT ═══ */
 
 /* ═══ BASE WRAPPER ═══ */
@@ -5120,14 +5129,20 @@ ren-dialog {
     width: 100%;
     height: 6px;
     border-radius: var(--radius-full);
-    background: var(--color-fill-active);
+    background: linear-gradient(
+      to right,
+      var(--color-fill-active) 0 var(--value-start, 0%),
+      var(--ren-slider-fill-color, var(--color-accent)) var(--value-start, 0%) var(--value-end, 100%),
+      var(--color-fill-active) var(--value-end, 100%) 100%
+    );
     pointer-events: none;
     margin: 0;
     padding: 0;
   }
 
   & input[type="range"] {
-    position: relative;
+    position: absolute;
+    inset: 0;
     width: 100%;
     z-index: 5;
     margin: 0;
@@ -5138,8 +5153,9 @@ ren-dialog {
     height: 20px;
     border-radius: var(--radius-full);
     outline: none;
+    pointer-events: none;
 
-    & ::-webkit-slider-thumb {
+    &::-webkit-slider-thumb {
       appearance: none;
       -webkit-appearance: none;
       width: 20px;
@@ -5151,6 +5167,7 @@ ren-dialog {
       cursor: pointer;
       transition: var(--transition-tactile);
       z-index: 6;
+      pointer-events: auto;
 
       &:hover {
         transform: scale(1.1);
@@ -5161,7 +5178,7 @@ ren-dialog {
       }
     }
 
-    & ::-moz-range-thumb {
+    &::-moz-range-thumb {
       width: 20px;
       height: 20px;
       border-radius: 50%;
@@ -5171,6 +5188,7 @@ ren-dialog {
       cursor: pointer;
       transition: var(--transition-tactile);
       z-index: 6;
+      pointer-events: auto;
 
       &:hover {
         transform: scale(1.1);
@@ -5354,6 +5372,14 @@ ren-dialog {
 /* Appearance API bridge */
 .ren-toggle-group { min-block-size: var(--ren-toggle-height, var(--size-lg)); padding-inline: var(--ren-toggle-padding-x, var(--space-4)); font-size: var(--ren-toggle-font-size, var(--label-size)); font-weight: var(--ren-toggle-font-weight, var(--label-weight)); border-radius: var(--ren-toggle-radius, var(--radius-md)); background: var(--ren-toggle-bg, var(--color-fill)); color: var(--ren-toggle-color, var(--color-text-muted)); }
 .ren-toggle-group [aria-pressed="true"], .ren-toggle-group [data-state="on"] { background: var(--ren-toggle-active-bg, var(--color-surface)); color: var(--ren-toggle-active-color, var(--color-text)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-toggle-group.ren-toggle-group-sm .ren-toggle-group-item,
+  .ren-toggle-group .ren-toggle-group-item {
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+  }
+}
 /**
  * RenDS — Combobox
  * =================
@@ -7166,6 +7192,16 @@ ren-dialog {
 .ren-calendar [data-today] { background: var(--ren-calendar-today-bg, var(--color-accent-subtle)); }
 .ren-calendar [aria-selected="true"], .ren-calendar [data-selected] { background: var(--ren-calendar-selected-bg, var(--color-accent)); color: var(--ren-calendar-selected-color, var(--color-on-accent)); }
 .ren-calendar [data-range], .ren-calendar-range { background: var(--ren-calendar-range-bg, var(--color-accent-subtle)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-calendar .ren-calendar-nav button,
+  .ren-calendar .ren-calendar-day {
+    inline-size: calc(var(--touch-min) + var(--stroke-1));
+    block-size: calc(var(--touch-min) + var(--stroke-1));
+    min-inline-size: calc(var(--touch-min) + var(--stroke-1));
+    min-block-size: calc(var(--touch-min) + var(--stroke-1));
+  }
+}
 /* ═══ REN DATE PICKER WEB COMPONENT ═══
    A composable date picker that wraps the calendar component
    with an input field and popover dropdown.
@@ -10242,6 +10278,13 @@ ren-dialog {
 .ren-sidebar.is-collapsed, .ren-sidebar[data-collapsed="true"] { inline-size: var(--ren-sidebar-collapsed-width, 60px); }
 .ren-sidebar a, .ren-sidebar button { min-block-size: var(--ren-sidebar-item-height, var(--size-lg)); padding: var(--ren-sidebar-item-padding, var(--space-2) var(--space-3)); border-radius: var(--ren-sidebar-item-radius, var(--radius-md)); }
 .ren-sidebar a[aria-current="page"], .ren-sidebar a[data-active] { background: var(--ren-sidebar-active-bg, var(--color-accent-subtle)); color: var(--ren-sidebar-active-color, var(--color-accent)); }
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  .ren-sidebar-toggle {
+    min-inline-size: var(--touch-min);
+    min-block-size: var(--touch-min);
+  }
+}
 .ren-command {
   position: fixed;
   top: 50%;
