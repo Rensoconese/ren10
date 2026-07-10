@@ -111,6 +111,7 @@ export class RenForm extends HTMLElement {
     this._successMessage = null;
     this._listenerController = null;
     this._persistKey = null;
+    this._submitButtonStates = new Map();
   }
 
   static registerValidator(name, fn) {
@@ -233,10 +234,14 @@ export class RenForm extends HTMLElement {
 
   async _handleSubmit(e) {
     e.preventDefault();
+    if (this._isSubmitting) return;
+
+    this._isSubmitting = true;
 
     const result = await this.validateAsync();
 
     if (!result.valid) {
+      this._isSubmitting = false;
       this.dispatchEvent(
         new CustomEvent('ren-invalid', {
           detail: { errors: result.errors },
@@ -251,8 +256,7 @@ export class RenForm extends HTMLElement {
 
     // Success
     this._hideErrorSummary();
-    this._isSubmitting = true;
-    this.setAttribute('data-submitting', '');
+    this._setSubmittingState(true);
 
     const values = this.getValues();
     const completions = [];
@@ -262,6 +266,7 @@ export class RenForm extends HTMLElement {
       } },
       bubbles: true,
       composed: true,
+      cancelable: true,
     });
 
     this.dispatchEvent(event);
@@ -270,9 +275,31 @@ export class RenForm extends HTMLElement {
     catch (error) {
       this.dispatchEvent(new CustomEvent('ren-submit-error', { detail: { error }, bubbles: true, composed: true }));
     } finally {
+      this._setSubmittingState(false);
       this._isSubmitting = false;
-      this.removeAttribute('data-submitting');
     }
+  }
+
+  _setSubmittingState(isSubmitting) {
+    this.toggleAttribute('data-submitting', isSubmitting);
+    this._form?.toggleAttribute('data-submitting', isSubmitting);
+
+    if (isSubmitting) {
+      this._submitButtonStates.clear();
+      const submitButtons = this._form?.querySelectorAll(
+        'button:not([type]), button[type="submit"], input[type="submit"], input[type="image"]'
+      ) || [];
+      submitButtons.forEach((button) => {
+        this._submitButtonStates.set(button, button.disabled);
+        button.disabled = true;
+      });
+      return;
+    }
+
+    this._submitButtonStates.forEach((wasDisabled, button) => {
+      if (button.isConnected) button.disabled = wasDisabled;
+    });
+    this._submitButtonStates.clear();
   }
 
   _validateField(field, input) {
@@ -503,8 +530,8 @@ export class RenForm extends HTMLElement {
 
   reset() {
     this._form.reset();
+    this._setSubmittingState(false);
     this._isSubmitting = false;
-    this.removeAttribute('data-submitting');
     this._errors.clear();
     this._touched.clear();
     this._debounceTimers.forEach((timer) => clearTimeout(timer));

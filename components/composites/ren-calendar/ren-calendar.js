@@ -1,3 +1,5 @@
+import { formatLocalDate, parseLocalDate } from '../../../utils/local-date.js';
+
 /* ═══ REN CALENDAR WEB COMPONENT ═══
    A fully accessible, keyboard-navigable calendar for date selection.
 
@@ -398,7 +400,7 @@ export class RenCalendar extends HTMLElement {
   focusDateAtIndex(index) {
     const buttons = this.querySelectorAll('.ren-calendar-day');
     if (buttons[index] && !buttons[index].disabled) {
-      this.focusedDate = new Date(buttons[index].dataset.date);
+      this.focusedDate = parseLocalDate(buttons[index].dataset.date);
       this.updateTabIndex();
       buttons[index].focus();
     }
@@ -441,7 +443,7 @@ export class RenCalendar extends HTMLElement {
     if (this.mode === 'range') {
       eventData = { range: { start: this.rangeStart, end: this.rangeEnd } };
     } else if (this.mode === 'multiple') {
-      eventData = { dates: Array.from(this.selectedDates).map((d) => new Date(d)) };
+      eventData = { dates: Array.from(this.selectedDates).map((d) => parseLocalDate(d)) };
     }
 
     this.dispatchEvent(
@@ -479,13 +481,11 @@ export class RenCalendar extends HTMLElement {
 
   /* ═══ CONVERT DATE TO ISO STRING ═══ */
   dateToString(date) {
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    return formatLocalDate(date);
   }
 
   parseDate(value) {
-    if (value instanceof Date) return new Date(value.getTime());
-    const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])) : new Date(value);
+    return parseLocalDate(value);
   }
 
   /* ═══ PUBLIC METHODS ═══ */

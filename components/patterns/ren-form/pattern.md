@@ -172,7 +172,9 @@ Multi-step form with progress:
   - `ren-submit` — `detail.values` (validated form data). Repeated names are arrays.
     Register async work with `event.detail.waitUntil(promise)`; the
     `[data-submitting]` state remains until every registered promise settles.
-    A rejected promise emits `ren-submit-error` with `detail.error`.
+    The event is cancelable so consumers may call `preventDefault()` when they
+    own submission. A rejected promise emits `ren-submit-error` with
+    `detail.error`.
   - `ren-invalid` — `detail.errors` (rule failures).
 - Static API: `RenForm.registerValidator(name, fn)` for custom validators.
   Validators may return a Promise; `validateAsync()` and submit await it.

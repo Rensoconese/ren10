@@ -66,3 +66,6 @@ export {
   motionUnmount,
   applyStagger,
 } from './motion.js';
+
+// Civil-date parsing and formatting (timezone-safe YYYY-MM-DD values)
+export { parseLocalDate, formatLocalDate, clampLocalDate } from './local-date.js';
