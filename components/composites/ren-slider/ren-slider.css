@@ -282,7 +282,8 @@
   }
 
   & input[type="range"] {
-    position: relative;
+    position: absolute;
+    inset: 0;
     width: 100%;
     z-index: 5;
     margin: 0;
@@ -293,8 +294,9 @@
     height: 20px;
     border-radius: var(--radius-full);
     outline: none;
+    pointer-events: none;
 
-    & ::-webkit-slider-thumb {
+    &::-webkit-slider-thumb {
       appearance: none;
       -webkit-appearance: none;
       width: 20px;
@@ -306,6 +308,7 @@
       cursor: pointer;
       transition: var(--transition-tactile);
       z-index: 6;
+      pointer-events: auto;
 
       &:hover {
         transform: scale(1.1);
@@ -316,7 +319,7 @@
       }
     }
 
-    & ::-moz-range-thumb {
+    &::-moz-range-thumb {
       width: 20px;
       height: 20px;
       border-radius: 50%;
@@ -326,6 +329,7 @@
       cursor: pointer;
       transition: var(--transition-tactile);
       z-index: 6;
+      pointer-events: auto;
 
       &:hover {
         transform: scale(1.1);

@@ -132,6 +132,12 @@ export function initContextMenu(menuOrId) {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       items[(current - 1 + items.length) % items.length]?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      items[0]?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      items.at(-1)?.focus();
     } else if (e.key === 'Escape') {
       close();
     } else if (e.key === 'Enter' || e.key === ' ') {

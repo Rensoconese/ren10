@@ -108,6 +108,38 @@ test.describe('Task 17 form, local-date, and select escapes', () => {
     await expect(page.locator('#already-disabled')).toBeDisabled();
   });
 
+  test('ren-form releases the submit guard when an async validator rejects', async ({ page }) => {
+    await page.goto(staticServer.origin);
+    await page.evaluate(async () => {
+      const { RenForm } = await import('/components/patterns/ren-form/ren-form.js');
+      RenForm.registerValidator('task17Reject', () => Promise.reject(new Error('validator unavailable')));
+      document.body.innerHTML = `
+        <ren-form id="rejecting-host">
+          <form class="ren-form" novalidate>
+            <ren-field data-rules="task17Reject"><input name="code" value="ok"></ren-field>
+            <button id="rejecting-submit" type="submit">Save</button>
+          </form>
+        </ren-form>`;
+      await customElements.whenDefined('ren-form');
+      window.__validationErrors = 0;
+      window.__successfulSubmits = 0;
+      const host = document.querySelector('#rejecting-host');
+      host.addEventListener('ren-submit-error', () => window.__validationErrors += 1);
+      host.addEventListener('ren-submit', () => window.__successfulSubmits += 1);
+    });
+
+    await page.locator('#rejecting-submit').click();
+    await expect.poll(() => page.evaluate(() => window.__validationErrors)).toBe(1);
+    await expect(page.locator('#rejecting-host')).not.toHaveAttribute('data-submitting', '');
+
+    await page.evaluate(async () => {
+      const { RenForm } = await import('/components/patterns/ren-form/ren-form.js');
+      RenForm.registerValidator('task17Reject', () => null);
+    });
+    await page.locator('#rejecting-submit').click();
+    await expect.poll(() => page.evaluate(() => window.__successfulSubmits)).toBe(1);
+  });
+
   test('local-date public utilities and calendar keyboard focus preserve the civil date', async ({ browser }) => {
     const context = await browser.newContext({ timezoneId: 'America/Argentina/Buenos_Aires' });
     const page = await context.newPage();
@@ -170,11 +202,13 @@ test.describe('Task 17 form, local-date, and select escapes', () => {
 
     await expect.poll(() => page.evaluate(() => document.querySelector('#select').value)).toEqual(['a', 'b']);
     await expect(page.locator('.ren-select-chip')).toHaveCount(2);
+    await expect(page.locator('.ren-select-trigger .ren-select-chip-remove')).toHaveCount(0);
     await expect.poll(() => page.evaluate(() => new FormData(document.querySelector('#form')).getAll('skills')))
       .toEqual(['a', 'b']);
     await expect(page.locator('[data-select-item][data-value="b"]')).toHaveAttribute('aria-disabled', 'false');
 
-    await page.evaluate(() => document.querySelector('.ren-select-chip-remove[data-value="a"]').click());
+    await page.locator('.ren-select-chip-remove[data-value="a"]').focus();
+    await page.keyboard.press('Enter');
 
     await expect.poll(() => page.evaluate(() => document.querySelector('#select').value)).toEqual(['b']);
     await expect(page.locator('.ren-select-chip')).toHaveCount(1);

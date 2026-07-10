@@ -76,9 +76,12 @@ export class RenSheet extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.#abortController?.abort();
     this.#dragging = false;
-    if (this.#dialog?.open) this.close();
+    if (this.#dialog?.open) {
+      this.#dialog.close();
+      this.#reconcileNativeClose();
+    }
+    this.#abortController?.abort();
   }
 
   attributeChangedCallback(name, oldVal, newVal) {

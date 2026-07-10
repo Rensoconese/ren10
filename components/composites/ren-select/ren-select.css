@@ -21,6 +21,7 @@
 .ren-select {
   position: relative;
   display: inline-flex;
+  flex-direction: column;
   width: 100%;
   font-family: inherit;
 }
@@ -285,6 +286,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-1);
+  width: 100%;
 }
 
 .ren-select-chip {

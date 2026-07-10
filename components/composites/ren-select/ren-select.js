@@ -773,12 +773,16 @@ export class RenSelect extends HTMLElement {
   updateTriggerDisplay() {
     const placeholder = this.getAttribute('placeholder') || 'Select an option';
 
+    this.querySelector(':scope > .ren-select-chips[data-ren-select-chips]')?.remove();
+
     // Clear trigger content
     this.#trigger.innerHTML = '';
 
     if (this.hasAttribute('multiple') && this.#selectedValue.length > 0) {
       const chips = document.createElement('span');
       chips.className = 'ren-select-chips';
+      chips.setAttribute('data-ren-select-chips', '');
+      const selectedLabels = [];
       this.#selectedValue.forEach((value) => {
         const item = this.#items.find((option) => option.getAttribute('data-value') === value);
         if (!item) return;
@@ -787,6 +791,7 @@ export class RenSelect extends HTMLElement {
         chip.className = 'ren-select-chip';
         const label = document.createElement('span');
         label.textContent = item.textContent?.trim() || value;
+        selectedLabels.push(label.textContent);
         const remove = document.createElement('button');
         remove.type = 'button';
         remove.className = 'ren-select-chip-remove';
@@ -806,7 +811,12 @@ export class RenSelect extends HTMLElement {
         chip.append(label, remove);
         chips.appendChild(chip);
       });
-      this.#trigger.appendChild(chips);
+      this.insertBefore(chips, this.#trigger);
+
+      const valueSpan = document.createElement('span');
+      valueSpan.className = 'ren-select-value';
+      valueSpan.textContent = selectedLabels.join(', ');
+      this.#trigger.appendChild(valueSpan);
     } else if (!this.#selectedValue || !this.#selectedItem) {
       // Show placeholder
       const placeholderSpan = document.createElement('span');

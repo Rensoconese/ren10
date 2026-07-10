@@ -78,6 +78,10 @@ test.describe('Task 17 interaction escapes', () => {
     await trigger.focus();
     await page.keyboard.press('Shift+F10');
     await expect(page.locator('ren-context-menu')).toHaveAttribute('data-state', 'open');
+    await page.keyboard.press('End');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Paste');
+    await page.keyboard.press('Home');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.textContent?.trim())).toBe('Copy');
     await page.keyboard.press('Escape');
     await expect.poll(() => page.evaluate(() => document.activeElement?.hasAttribute('data-context'))).toBe(true);
     await trigger.focus();
@@ -139,6 +143,28 @@ test.describe('Task 17 interaction escapes', () => {
     await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('sheet-trigger');
   });
 
+  test('sheet clears open state when detached and can open after reconnect', async ({ page }) => {
+    await page.evaluate(async () => {
+      document.body.innerHTML = `
+        <button id="detach-trigger">Open</button>
+        <div id="mount"><ren-sheet id="detach-sheet"><h2>Sheet</h2></ren-sheet></div>`;
+      await import('/components/composites/ren-sheet/ren-sheet.js');
+      await customElements.whenDefined('ren-sheet');
+      const sheet = document.querySelector('#detach-sheet');
+      sheet.show();
+      sheet.remove();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      window.__detachedSheetOpenAttribute = sheet.hasAttribute('open');
+      document.querySelector('#mount').appendChild(sheet);
+    });
+
+    await expect.poll(() => page.evaluate(() => window.__detachedSheetOpenAttribute)).toBe(false);
+    await expect(page.locator('#detach-sheet')).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.querySelector('#detach-sheet').open)).toBe(false);
+    await page.evaluate(() => document.querySelector('#detach-sheet').show());
+    await expect(page.locator('#detach-sheet')).toHaveAttribute('open', '');
+  });
+
   test('number field stepper buttons never submit their containing form', async ({ page }) => {
     await page.evaluate(async () => {
       document.body.innerHTML = '<form id="quantity-form"><ren-number-field value="1"></ren-number-field></form>';
@@ -169,6 +195,10 @@ test.describe('Task 17 interaction escapes', () => {
   });
 
   test('dual slider preserves its tuple API and event detail', async ({ page }) => {
+    await page.addStyleTag({ path: path.join(
+      PKG_ROOT,
+      'components/composites/ren-slider/ren-slider.css'
+    ) });
     await page.evaluate(async () => {
       document.body.innerHTML = `
         <ren-slider id="price" type="range">
@@ -192,6 +222,16 @@ test.describe('Task 17 interaction escapes', () => {
 
     await expect.poll(() => page.evaluate(() => document.querySelector('#price').value)).toEqual([25, 70]);
     await expect.poll(() => page.evaluate(() => window.__sliderInput)).toEqual([25, 70]);
+    const geometry = await page.evaluate(() => {
+      const rail = document.querySelector('.ren-slider-range').getBoundingClientRect();
+      return [...document.querySelectorAll('#price input')].map((input) => {
+        const rect = input.getBoundingClientRect();
+        return { left: rect.left, width: rect.width, railLeft: rail.left, railWidth: rail.width };
+      });
+    });
+    expect(geometry.every(({ left, width, railLeft, railWidth }) =>
+      Math.abs(left - railLeft) < 1 && Math.abs(width - railWidth) < 1
+    )).toBe(true);
   });
 
   test('keyboard navigation includes aria-disabled=false and skips only true', async ({ page }) => {

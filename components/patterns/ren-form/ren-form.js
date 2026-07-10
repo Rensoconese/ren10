@@ -238,7 +238,19 @@ export class RenForm extends HTMLElement {
 
     this._isSubmitting = true;
 
-    const result = await this.validateAsync();
+    let result;
+    try {
+      result = await this.validateAsync();
+    } catch (error) {
+      this._isSubmitting = false;
+      this._setSubmittingState(false);
+      this.dispatchEvent(new CustomEvent('ren-submit-error', {
+        detail: { error },
+        bubbles: true,
+        composed: true,
+      }));
+      return;
+    }
 
     if (!result.valid) {
       this._isSubmitting = false;

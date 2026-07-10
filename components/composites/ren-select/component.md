@@ -54,7 +54,7 @@ requiredMarkup:
   - "Each option is a <div data-select-item data-value=\"...\"> inside .ren-select-content; rely on data-select-item, not arbitrary children."
   - "The trigger displays .ren-select-value when something is chosen and .ren-select-placeholder when empty — do not collapse them into one node."
   - "Set name on <ren-select> when the value must submit with a form; the component injects the hidden input automatically."
-  - "With multiple, value is an ordered array and the component injects one same-name hidden input per selected value so FormData preserves repeated entries."
+  - "With multiple, value is an ordered array and the component injects one same-name hidden input per selected value so FormData preserves repeated entries. Removable chips render as a sibling of the button trigger so interactive controls are never nested."
   - "Use .ren-select-group + .ren-select-label for grouped options and .ren-select-separator between groups; do not invent dividers."
   - "Use placement=\"bottom\" by default; the host and .ren-select-content mirror the resolved side to data-side and data-align."
 
