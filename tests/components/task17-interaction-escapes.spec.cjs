@@ -263,6 +263,99 @@ test.describe('Task 17 interaction escapes', () => {
     expect(geometry.every(({ left, width, railLeft, railWidth }) =>
       Math.abs(left - railLeft) < 1 && Math.abs(width - railWidth) < 1
     )).toBe(true);
+
+    await page.evaluate(() => {
+      document.querySelector('#price').value = [40, 60];
+    });
+    await page.getByLabel('Minimum').focus();
+    await page.keyboard.press('ArrowRight');
+    await page.getByLabel('Maximum').focus();
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(() => page.evaluate(() => document.querySelector('#price').value)).toEqual([41, 59]);
+
+    await page.evaluate(() => {
+      document.querySelector('#price').value = [50, 50];
+    });
+    await page.getByLabel('Minimum').focus();
+    await page.keyboard.press('ArrowRight');
+    await page.getByLabel('Maximum').focus();
+    await page.keyboard.press('ArrowLeft');
+    await expect.poll(() => page.evaluate(() => document.querySelector('#price').value)).toEqual([50, 50]);
+  });
+
+  test('vertical dual slider separates coincident thumbs on the vertical axis', async ({ page }) => {
+    await page.addStyleTag({ path: path.join(
+      PKG_ROOT,
+      'components/composites/ren-slider/ren-slider.css'
+    ) });
+    await page.evaluate(async () => {
+      document.body.innerHTML = `
+        <ren-slider id="vertical-price" class="ren-slider-vertical">
+          <div class="ren-slider-range">
+            <div class="ren-slider-track-input"></div>
+            <input aria-label="Vertical minimum" type="range" min="0" max="100" value="50">
+            <input aria-label="Vertical maximum" type="range" min="0" max="100" value="50">
+          </div>
+        </ren-slider>`;
+      await import('/components/composites/ren-slider/ren-slider.js');
+      await customElements.whenDefined('ren-slider');
+    });
+
+    const dragTo = async (endPercent) => {
+      await page.evaluate(() => {
+        document.querySelector('#vertical-price').value = [50, 50];
+      });
+      const rail = await page.locator('#vertical-price .ren-slider-range').boundingBox();
+      await page.mouse.move(rail.x + rail.width * 0.5, rail.y + rail.height * 0.5);
+      await page.mouse.down();
+      await page.mouse.move(rail.x + rail.width * 0.5, rail.y + rail.height * endPercent, { steps: 4 });
+      await page.mouse.up();
+      return page.evaluate(() => document.querySelector('#vertical-price').value);
+    };
+
+    expect(await dragTo(0.25)).toEqual([50, 75]);
+    expect(await dragTo(0.75)).toEqual([25, 50]);
+  });
+
+  test('coincident dual slider never moves an individually disabled thumb', async ({ page }) => {
+    await page.addStyleTag({ path: path.join(
+      PKG_ROOT,
+      'components/composites/ren-slider/ren-slider.css'
+    ) });
+    await page.evaluate(async () => {
+      document.body.innerHTML = `
+        <ren-slider id="disabled-price">
+          <div class="ren-slider-range">
+            <div class="ren-slider-track-input"></div>
+            <input aria-label="Disabled minimum" disabled type="range" min="0" max="100" value="50">
+            <input aria-label="Enabled maximum" type="range" min="0" max="100" value="50">
+          </div>
+        </ren-slider>`;
+      await import('/components/composites/ren-slider/ren-slider.js');
+      await customElements.whenDefined('ren-slider');
+    });
+
+    const dragTo = async (endPercent) => {
+      const rail = await page.locator('#disabled-price .ren-slider-range').boundingBox();
+      await page.mouse.move(rail.x + rail.width * 0.5, rail.y + rail.height * 0.5);
+      await page.mouse.down();
+      await page.mouse.move(rail.x + rail.width * endPercent, rail.y + rail.height * 0.5, { steps: 4 });
+      await page.mouse.up();
+      return page.evaluate(() => document.querySelector('#disabled-price').value);
+    };
+
+    expect(await dragTo(0.3)).toEqual([50, 50]);
+    expect(await dragTo(0.7)).toEqual([50, 70]);
+
+    await page.evaluate(() => {
+      const slider = document.querySelector('#disabled-price');
+      const [lower, upper] = slider.querySelectorAll('input');
+      lower.disabled = false;
+      upper.disabled = true;
+      slider.value = [50, 50];
+    });
+    expect(await dragTo(0.7)).toEqual([50, 50]);
+    expect(await dragTo(0.3)).toEqual([30, 50]);
   });
 
   test('keyboard navigation includes aria-disabled=false and skips only true', async ({ page }) => {

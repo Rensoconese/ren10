@@ -128,12 +128,22 @@ export class RenSlider extends HTMLElement {
     );
   }
 
-  valueFromPointer(input, clientX) {
+  isVerticalRange() {
+    return this.classList.contains('ren-slider-vertical');
+  }
+
+  pointerPosition(event) {
+    return this.isVerticalRange() ? -event.clientY : event.clientX;
+  }
+
+  valueFromPointer(input, event) {
     const rect = this.range.getBoundingClientRect();
     const min = Number(input.min || 0);
     const max = Number(input.max || 100);
     const step = input.step === 'any' ? 0 : Number(input.step || 1);
-    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const ratio = this.isVerticalRange()
+      ? Math.max(0, Math.min(1, (rect.bottom - event.clientY) / rect.height))
+      : Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
     let value = min + ratio * (max - min);
     if (step > 0) value = min + Math.round((value - min) / step) * step;
     return Math.max(min, Math.min(max, value));
@@ -143,11 +153,14 @@ export class RenSlider extends HTMLElement {
     if (this.inputs.length !== 2 || this.disabled) return;
     const [lower, upper] = this.inputs;
     if (lower.valueAsNumber !== upper.valueAsNumber) return;
+    const enabledInputs = this.inputs.filter((input) => !input.disabled);
+    if (enabledInputs.length === 0) return;
 
     event.preventDefault();
     this.pointerDrag = {
       pointerId: event.pointerId,
-      startX: event.clientX,
+      startPosition: this.pointerPosition(event),
+      enabledInputs,
       activeInput: null,
     };
     this.range.setPointerCapture?.(event.pointerId);
@@ -159,12 +172,14 @@ export class RenSlider extends HTMLElement {
     event.preventDefault();
 
     if (!drag.activeInput) {
-      if (event.clientX === drag.startX) return;
-      drag.activeInput = event.clientX < drag.startX ? this.inputs[0] : this.inputs[1];
+      const position = this.pointerPosition(event);
+      if (position === drag.startPosition) return;
+      const directionalInput = position < drag.startPosition ? this.inputs[0] : this.inputs[1];
+      drag.activeInput = directionalInput.disabled ? drag.enabledInputs[0] : directionalInput;
       drag.activeInput.focus();
     }
 
-    drag.activeInput.value = this.valueFromPointer(drag.activeInput, event.clientX);
+    drag.activeInput.value = this.valueFromPointer(drag.activeInput, event);
     drag.activeInput.dispatchEvent(new Event('input', { bubbles: true }));
   }
 
