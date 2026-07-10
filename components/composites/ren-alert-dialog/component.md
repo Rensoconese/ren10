@@ -91,7 +91,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-alert-dialog">...</div>
+<dialog class="ren-alert-dialog" aria-labelledby="delete-title" aria-describedby="delete-description"><h2 id="delete-title" class="ren-alert-dialog-title">Delete project?</h2><p id="delete-description" class="ren-alert-dialog-description">This cannot be undone.</p><div class="ren-alert-dialog-actions"><button type="button" class="ren-btn ren-btn-secondary">Cancel</button><button type="button" class="ren-btn ren-btn-danger">Delete</button></div></dialog>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

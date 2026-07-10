@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-tooltip">...</div>
+<button class="ren-tooltip-trigger" type="button" aria-label="More information">Info<ren-tooltip id="info-tip" placement="top">More information</ren-tooltip></button>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

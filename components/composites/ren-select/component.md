@@ -97,7 +97,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-select">...</div>
+<ren-select name="country"><button type="button" data-select-trigger><span class="ren-select-value"></span><span class="ren-select-placeholder">Choose a country</span></button><div class="ren-select-content" data-select-content role="listbox"><div data-select-item data-value="ar">Argentina</div><div data-select-item data-value="uy">Uruguay</div></div></ren-select>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

@@ -98,7 +98,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-table">...</div>
+<ren-table data-page-size="10"><div class="ren-table-wrapper"><table class="ren-table"><thead class="ren-table-header"><tr><th class="ren-th ren-th-sortable" data-column="name">Name</th></tr></thead><tbody><tr class="ren-tr" data-row-id="1"><td class="ren-td">Jane Doe</td></tr></tbody></table></div></ren-table>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

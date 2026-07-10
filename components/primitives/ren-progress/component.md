@@ -92,7 +92,10 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-progress">...</div>
+<div class="ren-progress" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="65">
+  <div class="ren-progress-bar" style="width: 65%"></div>
+</div>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

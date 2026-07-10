@@ -95,7 +95,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-command">...</div>
+<ren-command><dialog class="ren-command"><div class="ren-command-input-wrapper"><input class="ren-command-input" type="text" aria-label="Search commands"></div><ul class="ren-command-list"><li><button class="ren-command-item" type="button" data-value="save">Save</button></li></ul><div class="ren-command-empty" hidden>No commands found</div></dialog></ren-command>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

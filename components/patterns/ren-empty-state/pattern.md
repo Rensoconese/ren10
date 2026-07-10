@@ -90,7 +90,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-empty-state">...</div>
+<section class="ren-empty-state"><div class="ren-empty-state-icon" aria-hidden="true">□</div><h2 class="ren-empty-state-title">No projects</h2><p class="ren-empty-state-description">Create a project to get started.</p><div class="ren-empty-state-actions"><button class="ren-btn" type="button">Create project</button></div></section>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

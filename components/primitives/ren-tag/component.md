@@ -90,7 +90,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-tag">...</div>
+<span class="ren-tag ren-tag-removable">Accessibility<button class="ren-tag-dismiss" type="button" aria-label="Remove Accessibility">×</button></span>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

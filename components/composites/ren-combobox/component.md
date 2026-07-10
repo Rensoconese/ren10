@@ -96,7 +96,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-combobox">...</div>
+<div class="ren-combobox"><input class="ren-combobox-input" aria-label="Country"><div class="ren-combobox-list" role="listbox"><div class="ren-combobox-item" role="option"><span class="ren-combobox-item-label">Argentina</span></div><div class="ren-combobox-empty" hidden>No results</div><div class="ren-combobox-loading" hidden>Loading</div></div></div>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

@@ -91,7 +91,12 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-checkbox">...</div>
+<label class="ren-checkbox">
+  <input type="checkbox" name="updates">
+  <span class="ren-checkbox-control"></span>
+  <span>Email updates</span>
+</label>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

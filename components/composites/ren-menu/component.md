@@ -94,7 +94,9 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-menu">...</div>
+<button id="actions-trigger" type="button" data-menu-trigger>Actions</button>
+<ren-menu trigger-id="actions-trigger" placement="bottom-start"><button class="ren-menu-item" role="menuitem" data-value="edit">Edit</button><button class="ren-menu-item" role="menuitem" data-value="duplicate">Duplicate</button></ren-menu>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

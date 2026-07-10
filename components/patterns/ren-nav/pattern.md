@@ -97,7 +97,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-nav">...</div>
+<ren-nav><nav class="ren-nav" aria-label="Primary"><a class="ren-nav-brand" href="/">RenDS</a><ul id="primary-links" class="ren-nav-links"><li><a class="ren-nav-link" href="/docs" aria-current="page">Docs</a></li></ul><button class="ren-nav-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Toggle menu"><span></span><span></span><span></span></button></nav></ren-nav>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

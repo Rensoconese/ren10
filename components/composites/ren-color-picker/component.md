@@ -95,7 +95,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-color-picker">...</div>
+<div class="ren-color-picker"><button class="ren-color-picker-trigger" type="button" aria-expanded="false">Choose color</button><div class="ren-color-picker-dropdown" popover="manual"><div class="ren-color-picker-saturation"><canvas class="ren-color-picker-saturation-canvas"></canvas></div><input class="ren-color-picker-hex" aria-label="Hex color" value="#007aff"></div></div>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

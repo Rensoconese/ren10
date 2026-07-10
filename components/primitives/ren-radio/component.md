@@ -92,7 +92,11 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-radio">...</div>
+<ren-radio-group>
+  <label class="ren-radio"><input type="radio" name="plan" value="basic"><span class="ren-radio-control"></span><span>Basic</span></label>
+  <label class="ren-radio"><input type="radio" name="plan" value="pro"><span class="ren-radio-control"></span><span>Pro</span></label>
+</ren-radio-group>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

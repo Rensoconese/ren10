@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-hover-card">...</div>
+<button id="profile-trigger" type="button">Jane Doe</button><ren-hover-card data-hover-trigger="#profile-trigger"><div class="ren-hover-card"><div class="ren-hover-card-header"><h3>Jane Doe</h3></div><div class="ren-hover-card-body">Product designer</div></div></ren-hover-card>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

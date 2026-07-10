@@ -94,7 +94,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-date-range-picker">...</div>
+<ren-date-range-picker name="stay" placement="bottom"><button class="ren-date-range-trigger" type="button" aria-haspopup="dialog" aria-expanded="false">Choose dates</button><div class="ren-date-range-dropdown" role="dialog" aria-label="Choose date range" popover="manual"><div class="ren-date-range-summary" aria-live="polite">No dates selected</div><button class="ren-date-range-cancel" type="button">Cancel</button><button class="ren-date-range-apply" type="button" disabled>Apply</button></div></ren-date-range-picker>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

@@ -90,7 +90,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-breadcrumb">...</div>
+<nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Settings</li></ol></nav>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

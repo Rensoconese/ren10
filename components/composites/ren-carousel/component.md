@@ -94,7 +94,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-carousel">...</div>
+<ren-carousel aria-label="Featured articles"><div class="ren-carousel-viewport"><div class="ren-carousel-slide">First article</div><div class="ren-carousel-slide">Second article</div></div></ren-carousel>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

@@ -92,7 +92,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-dropzone">...</div>
+<div class="ren-dropzone"><input class="ren-dropzone-input" type="file" multiple><div class="ren-dropzone-content"><span class="ren-dropzone-icon" aria-hidden="true">↑</span><strong class="ren-dropzone-title">Upload files</strong><span class="ren-dropzone-description">Drag files here or browse</span></div></div>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

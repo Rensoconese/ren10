@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-number-field">...</div>
+<ren-number-field min="0" max="10" step="1" value="2"><button class="ren-number-field-decrement" type="button" aria-label="Decrease">−</button><input class="ren-number-field-input" type="number" aria-label="Quantity"><button class="ren-number-field-increment" type="button" aria-label="Increase">+</button></ren-number-field>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

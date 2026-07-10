@@ -95,7 +95,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-slider">...</div>
+<label for="volume">Volume</label><ren-slider show-value><div class="ren-slider-track"><input id="volume" type="range" min="0" max="100" step="1" value="50"></div></ren-slider>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.
