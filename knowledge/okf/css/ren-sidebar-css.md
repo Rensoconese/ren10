@@ -1,0 +1,334 @@
+---
+type: "RenDS CSS"
+title: ren-sidebar.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/patterns/ren-sidebar/ren-sidebar.css
+sourcePath: components/patterns/ren-sidebar/ren-sidebar.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-sidebar.css
+
+Source path: `components/patterns/ren-sidebar/ren-sidebar.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+.ren-sidebar-layout {
+  display: flex;
+  min-height: 100dvh;
+  background-color: var(--ren-bg);
+}
+
+.ren-sidebar {
+  --sidebar-width: var(--ren-sidebar-width, 16rem);
+  --sidebar-collapsed-width: var(--ren-sidebar-collapsed-width, 4rem);
+
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background-color: var(--ren-surface-sunken);
+  border-inline-end: 1px solid var(--ren-border);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--duration-enter) var(--ease-state-change), transform var(--duration-enter) var(--ease-state-change);
+  overflow: hidden;
+  z-index: 50;
+
+  &[data-collapsed] {
+    width: var(--sidebar-collapsed-width);
+
+    & .ren-sidebar-item-text {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      transition: opacity var(--duration-enter) var(--ease-state-change), width var(--duration-enter) var(--ease-state-change);
+    }
+
+    & .ren-sidebar-section-label {
+      opacity: 0;
+      width: 0;
+      overflow: hidden;
+      transition: opacity var(--duration-enter) var(--ease-state-change), width var(--duration-enter) var(--ease-state-change);
+    }
+
+    & .ren-sidebar-item {
+      justify-content: center;
+      position: relative;
+
+      &:hover::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        inset-inline-start: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        margin-inline-start: var(--ren-space-2, 0.5rem);
+        padding: var(--ren-space-2, 0.5rem) var(--ren-space-3, 0.75rem);
+        background-color: var(--ren-text);
+        color: var(--ren-surface);
+        border-radius: 0.375rem;
+        font-size: var(--ren-caption-size, 0.75rem);
+        white-space: nowrap;
+        z-index: 1000;
+        pointer-events: none;
+      }
+    }
+  }
+
+  @media (max-width: 48rem) {
+    position: fixed;
+    top: 0;
+    inset-inline-start: 0;
+    height: 100dvh;
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    transition: transform var(--duration-enter) var(--ease-state-change);
+
+    &[data-open] {
+      transform: translateX(0);
+      box-shadow: 4px 0 12px rgb(0 0 0 / 0.15);
+    }
+
+    &[data-collapsed] {
+      transform: translateX(-100%);
+      width: var(--sidebar-width);
+    }
+  }
+}
+
+.ren-sidebar-header {
+  padding: var(--ren-space-3, 0.75rem) var(--ren-space-4, 1rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--ren-border);
+  flex-shrink: 0;
+
+  @media (max-width: 48rem) {
+    padding: var(--ren-space-3, 0.75rem) var(--ren-space-4, 1rem);
+  }
+}
+
+.ren-sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--ren-space-2, 0.5rem);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ren-border) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--ren-border);
+    border-radius: 3px;
+
+    &:hover {
+      background-color: var(--ren-text-muted);
+    }
+  }
+}
+
+.ren-sidebar-footer {
+  padding: var(--ren-space-3, 0.75rem) var(--ren-space-4, 1rem);
+  border-top: 1px solid var(--ren-border);
+  flex-shrink: 0;
+
+  @media (max-width: 48rem) {
+    padding: var(--ren-space-3, 0.75rem) var(--ren-space-4, 1rem);
+  }
+}
+
+.ren-sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ren-space-1, 0.25rem);
+}
+
+.ren-sidebar-section {
+  margin-top: var(--ren-space-4, 1rem);
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.ren-sidebar-section-label {
+  padding: var(--ren-space-1, 0.25rem) var(--ren-space-3, 0.75rem);
+  font-size: var(--ren-caption-size, 0.75rem);
+  font-weight: 600;
+  color: var(--ren-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: opacity var(--duration-enter) var(--ease-state-change);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.ren-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ren-space-3, 0.75rem);
+  padding: var(--ren-space-2, 0.5rem) var(--ren-space-3, 0.75rem);
+  border-radius: 0.375rem;
+  color: var(--ren-text-muted);
+  font-size: var(--ren-label-size, 0.875rem);
+  cursor: pointer;
+  transition: background-color var(--duration-state) var(--ease-state-change), color var(--duration-state) var(--ease-state-change);
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+
+  &:hover {
+    background-color: var(--ren-fill);
+    color: var(--ren-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ren-accent);
+    outline-offset: -2px;
+  }
+
+  &.active,
+  &[aria-current="page"] {
+    background-color: var(--ren-accent-subtle);
+    color: var(--ren-accent);
+    font-weight: 500;
+
+    & .ren-sidebar-item-icon {
+      color: var(--ren-accent);
+    }
+  }
+
+  &[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.ren-sidebar-item-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--ren-text-muted);
+  transition: color var(--duration-state) var(--ease-state-change);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ren-sidebar-item-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity var(--duration-enter) var(--ease-state-change), width var(--duration-enter) var(--ease-state-change);
+}
+
+.ren-sidebar-divider {
+  height: 1px;
+  background-color: var(--ren-separator);
+  margin: var(--ren-space-2, 0.5rem) 0;
+}
+
+.ren-sidebar-toggle {
+  background: none;
+  border: none;
+  padding: var(--ren-space-2, 0.5rem);
+  cursor: pointer;
+  color: var(--ren-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 0.375rem;
+  transition: background-color var(--duration-state) var(--ease-state-change), color var(--duration-state) var(--ease-state-change);
+
+  &:hover {
+    background-color: var(--ren-fill);
+    color: var(--ren-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ren-accent);
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 48rem) {
+    display: none;
+  }
+}
+
+.ren-sidebar-main {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ren-border) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--ren-border);
+    border-radius: 3px;
+
+    &:hover {
+      background-color: var(--ren-text-muted);
+    }
+  }
+
+  @media (max-width: 48rem) {
+    margin-inline-start: 0;
+  }
+}
+
+.ren-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgb(0 0 0 / 0.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-enter) var(--ease-state-change);
+  z-index: 40;
+
+  @media (max-width: 48rem) {
+    .ren-sidebar[data-open] ~ & {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-sidebar,
+  .ren-sidebar * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

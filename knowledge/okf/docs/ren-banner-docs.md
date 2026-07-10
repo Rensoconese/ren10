@@ -1,0 +1,286 @@
+---
+type: "RenDS Docs Page"
+title: "ren-banner docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-banner.html
+sourcePath: docs/components/ren-banner.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-banner docs
+
+Source path: `docs/components/ren-banner.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banner — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
+  </style>
+</head>
+<body>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html" aria-current="page">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Banner</li></ol></nav>
+        <p class="dx-kicker">Primitive</p>
+        <h1>Banner <span class="dx-api-badge dx-api-badge-css" title="Works without any JavaScript">CSS-only</span></h1>
+        <p class="lede">Page-level callouts for system messages: maintenance windows, success confirmations, errors, neutral announcements. Five status variants, optional icon, action slot, dismissible.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>A Banner sits above (or inside) a content region and announces something the user should know before continuing. Use them for app-wide notices ("Scheduled maintenance Saturday"), success feedback after a critical action, or contextual warnings inside a form.</p>
+        <div class="dx-callout">
+          <p><strong>Banner vs Toast vs Dialog.</strong> Banner is persistent and contextual. Toast is transient. Dialog blocks. Pick based on how important the message is and whether the user has to act on it.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="ren-banner ren-banner-info" role="status">
+              <span class="ren-banner-icon" aria-hidden="true">ℹ</span>
+              <div class="ren-banner-content">
+                <p class="ren-banner-title">Scheduled maintenance</p>
+                <p class="ren-banner-message">The service will be briefly unavailable Saturday 2 AM – 3 AM ART.</p>
+              </div>
+              <button class="ren-banner-dismiss" type="button" aria-label="Dismiss">×</button>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-banner ren-banner-info" role="status"&gt;
+  &lt;span class="ren-banner-icon" aria-hidden="true"&gt;ℹ&lt;/span&gt;
+  &lt;div class="ren-banner-content"&gt;
+    &lt;p class="ren-banner-title"&gt;Scheduled maintenance&lt;/p&gt;
+    &lt;p class="ren-banner-message"&gt;The service will be briefly unavailable…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button class="ren-banner-dismiss" aria-label="Dismiss"&gt;×&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Status</p>
+        <h2>Variants</h2>
+        <div class="dx-vgrid">
+          <div class="dx-vrow"><span class="dx-vrow-label">Status</span><div class="dx-vrow-items">
+            <div class="ren-banner ren-banner-success" role="status"><span class="ren-banner-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><div class="ren-banner-content"><p class="ren-banner-title">Saved</p></div></div>
+            <div class="ren-banner ren-banner-warning" role="status"><span class="ren-banner-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></span><div class="ren-banner-content"><p class="ren-banner-title">Approaching plan limit</p></div></div>
+            <div class="ren-banner ren-banner-danger" role="alert"><span class="ren-banner-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span><div class="ren-banner-content"><p class="ren-banner-title">Sync failed</p><p class="ren-banner-message">Check your connection and retry.</p></div></div>
+            <div class="ren-banner ren-banner-info" role="status"><span class="ren-banner-icon">ℹ</span><div class="ren-banner-content"><p class="ren-banner-title">New version available</p></div></div>
+            <div class="ren-banner ren-banner-neutral" role="status"><span class="ren-banner-icon">·</span><div class="ren-banner-content"><p class="ren-banner-title">Read-only mode</p></div></div>
+          </div></div>
+
+          <div class="dx-vrow"><span class="dx-vrow-label">With action</span><div class="dx-vrow-items">
+            <div class="ren-banner ren-banner-warning" role="status">
+              <span class="ren-banner-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></span>
+              <div class="ren-banner-content">
+                <p class="ren-banner-title">Verify your email</p>
+                <p class="ren-banner-message">Some features are limited until you confirm.</p>
+              </div>
+              <div class="ren-banner-actions">
+                <button class="ren-btn ren-btn-secondary ren-btn-sm">Resend</button>
+              </div>
+            </div>
+          </div></div>
+
+          <div class="dx-vrow"><span class="dx-vrow-label">Compact</span><div class="dx-vrow-items">
+            <div class="ren-banner ren-banner-info ren-banner-compact" role="status">
+              <span class="ren-banner-icon">ℹ</span>
+              <div class="ren-banner-content"><p class="ren-banner-title">Cookies are required for sign-in.</p></div>
+            </div>
+          </div></div>
+
+          <div class="dx-vrow"><span class="dx-vrow-label">Full-bleed</span><div class="dx-vrow-items">
+            <div class="ren-banner ren-banner-danger ren-banner-full" role="alert" style="border-radius: 0; margin-inline: calc(var(--space-3) * -1);">
+              <span class="ren-banner-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span>
+              <div class="ren-banner-content"><p class="ren-banner-title">Service degraded — see status page</p></div>
+            </div>
+          </div></div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-banner</code></td><td>Base. Flex row with icon · content · actions · dismiss.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-success</code> / <code class="dx-api-name">-warning</code> / <code class="dx-api-name">-danger</code> / <code class="dx-api-name">-info</code> / <code class="dx-api-name">-neutral</code></td><td>Status variants. Tints icon, accent border, and subtle background.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-icon</code></td><td>Leading icon slot. Use a real SVG or a unicode glyph; mark <code>aria-hidden</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-content</code></td><td>Title + optional message. The message reflows under the title when present.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-title</code></td><td>Bold one-liner.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-message</code></td><td>Secondary line. Optional.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-actions</code></td><td>Trailing slot for one or two buttons. Right-aligned.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-dismiss</code></td><td>The × close button. Always pair with <code>aria-label</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-compact</code></td><td>Tighter padding, smaller icon. For inline contexts.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-banner-full</code></td><td>Full-bleed, no border-radius. For app-wide bars at the top of the layout.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <ul>
+          <li><strong>Use <code>role="status"</code></strong> for non-critical banners (info / success / neutral / warning) — screen readers announce when idle.</li>
+          <li><strong>Use <code>role="alert"</code></strong> for danger banners — they interrupt the current announcement.</li>
+          <li><strong>Don't rely on color alone</strong> — the icon and the title text should make the status clear without color.</li>
+          <li><strong>Dismiss button</strong>: always include <code>aria-label="Dismiss"</code> (or more specific). Don't make dismissal the only way to act on a critical message.</li>
+        </ul>
+        <div class="dx-callout">
+          <p><strong>Don't auto-dismiss banners.</strong> Unlike Toast, banners are persistent — the user reads them in their own time. Auto-hiding defeats the purpose.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+        <h3>App-wide notice at top of page</h3>
+        <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-banner ren-banner-warning ren-banner-full" role="status"&gt;
+  &lt;span class="ren-banner-icon"&gt;&lt;!-- alert SVG --&gt;&lt;/span&gt;
+  &lt;div class="ren-banner-content"&gt;
+    &lt;p class="ren-banner-title"&gt;Read-only mode — database migration in progress&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></div>
+
+        <h3>Empty-state hint inside a card</h3>
+        <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-banner ren-banner-info ren-banner-compact" role="status"&gt;
+  &lt;span class="ren-banner-icon"&gt;ℹ&lt;/span&gt;
+  &lt;div class="ren-banner-content"&gt;
+    &lt;p class="ren-banner-title"&gt;No invoices yet&lt;/p&gt;
+    &lt;p class="ren-banner-message"&gt;Your first invoice will appear here once you onboard a client.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-banner-actions"&gt;
+    &lt;button class="ren-btn ren-btn-primary ren-btn-sm"&gt;Add client&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></div>
+      </section>
+
+    </main>
+  </div>
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

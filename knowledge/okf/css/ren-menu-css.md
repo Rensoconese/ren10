@@ -1,0 +1,292 @@
+---
+type: "RenDS CSS"
+title: ren-menu.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-menu/ren-menu.css
+sourcePath: components/composites/ren-menu/ren-menu.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-menu.css
+
+Source path: `components/composites/ren-menu/ren-menu.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ═══ MENU CONTAINER ═══ */
+.ren-menu {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 0.5rem);
+  box-shadow: var(--shadow-lg, 0 10px 25px rgb(0, 0, 0, 0.1));
+  padding-block: var(--space-1, 0.25rem);
+  min-width: 12rem;
+  z-index: var(--z-dropdown, 1000);
+  position: absolute;
+  animation: ren-menu-open var(--duration-enter) var(--ease-enter);
+  visibility: hidden;
+  opacity: 0;
+  inset: auto auto auto auto;
+  margin: 0;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+/* ═══ MENU OPEN STATE ═══ */
+.ren-menu[popover]:popover-open,
+.ren-menu.ren-open {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* ═══ MENU ITEM BASE ═══ */
+.ren-menu-item {
+  padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2, 0.5rem);
+  cursor: pointer;
+  font-size: var(--size-body, 1rem);
+  color: var(--color-text);
+  border-radius: var(--radius-sm, 0.25rem);
+  min-height: 2rem;
+  /* Tactile hover/focus — shared preset from semantic motion tokens */
+  transition: var(--transition-tactile);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.ren-menu-item:hover,
+.ren-menu-item[data-highlighted] {
+  background-color: var(--color-fill);
+  color: var(--color-text);
+}
+
+.ren-menu-item:active {
+  background-color: var(--color-fill-hover);
+}
+
+/* ═══ MENU ITEM DISABLED STATE ═══ */
+.ren-menu-item[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ═══ MENU ITEM DANGER VARIANT ═══ */
+.ren-menu-item.ren-menu-item-danger:hover,
+.ren-menu-item.ren-menu-item-danger[data-highlighted] {
+  background-color: var(--color-danger-subtle);
+  color: var(--color-danger);
+}
+
+/* ═══ MENU ITEM ICON ═══ */
+.ren-menu-item-icon {
+  flex-shrink: 0;
+  width: var(--size-icon-md, 1.25rem);
+  height: var(--size-icon-md, 1.25rem);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ═══ MENU ITEM SHORTCUT/LABEL ═══ */
+.ren-menu-item-shortcut {
+  margin-inline-start: auto;
+  font-size: var(--size-caption, 0.75rem);
+  color: var(--color-text-muted);
+  font-family: monospace;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ═══ MENU ITEM DESCRIPTION ═══ */
+.ren-menu-item-description {
+  font-size: var(--size-caption, 0.75rem);
+  color: var(--color-text-muted);
+  line-height: 1.3;
+}
+
+/* ═══ MENU SEPARATOR ═══ */
+.ren-menu-separator {
+  height: 1px;
+  background: var(--color-border);
+  margin-block: var(--space-1, 0.25rem);
+}
+
+/* ═══ MENU LABEL/GROUP HEADER ═══ */
+.ren-menu-label {
+  padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
+  font-size: var(--size-caption, 0.75rem);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ═══ MENU GROUP ═══ */
+.ren-menu-group {
+  display: contents;
+}
+
+/* ═══ CHECKBOX MENU ITEM ═══ */
+.ren-menu-checkbox-item,
+.ren-menu-radio-item {
+  position: relative;
+  padding-inline-start: calc(var(--space-3, 0.75rem) + 20px + var(--space-2, 0.5rem));
+}
+
+.ren-menu-checkbox-item::before,
+.ren-menu-radio-item::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: var(--space-3, 0.75rem);
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-radius: 2px;
+  background: white;
+  /* Tactile — shared semantic preset */
+  transition: var(--transition-tactile);
+}
+
+.ren-menu-radio-item::before {
+  border-radius: 50%;
+}
+
+/* ═══ CHECKBOX/RADIO CHECKED STATE ═══ */
+.ren-menu-checkbox-item[aria-checked="true"]::before,
+.ren-menu-radio-item[aria-checked="true"]::before {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.ren-menu-checkbox-item[aria-checked="true"]::after,
+.ren-menu-radio-item[aria-checked="true"]::after {
+  content: '';
+  position: absolute;
+  inset-inline-start: calc(var(--space-3, 0.75rem) + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ren-menu-checkbox-item[aria-checked="true"]::after {
+  width: 8px;
+  height: 4px;
+  border-inline-start: 2px solid white;
+  border-bottom: 2px solid white;
+  transform: translateY(-55%) rotate(-45deg);
+}
+
+.ren-menu-radio-item[aria-checked="true"]::after {
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes ren-menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ═══ CLOSING STATE WITH ANIMATION ═══ */
+.ren-menu[data-closing] {
+  animation: ren-menu-close var(--duration-exit) var(--ease-exit) forwards;
+}
+
+@keyframes ren-menu-close {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
+/* ═══ RESPECTS MOTION PREFERENCES ═══
+   Semantic --duration-* already collapse to 0ms under reduced-motion
+   (see tokens/semantic/motion.css). We keep this block as a
+   belt-and-suspenders fallback and to drop the scale/translate
+   keyframe so the menu simply appears/disappears in place. */
+@media (prefers-reduced-motion: reduce) {
+  .ren-menu {
+    animation: none;
+    transition: opacity var(--duration-enter);
+  }
+
+  .ren-menu:not(.ren-open) {
+    opacity: 0;
+  }
+
+  .ren-menu-item {
+    transition: background-color 0s, color 0s;
+  }
+
+  .ren-menu[data-closing] {
+    animation: none;
+  }
+}
+
+/* ═══ NATIVE POPOVER API SUPPORT ═══ */
+@supports (selector(:popover-open)) {
+  .ren-menu[popover] {
+    visibility: visible;
+    opacity: 0;
+    transition: opacity var(--duration-enter) var(--ease-enter),
+                overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+                display var(--duration-enter) var(--ease-enter) allow-discrete;
+    animation: none;
+  }
+
+  @starting-style {
+    .ren-menu[popover]:popover-open {
+      opacity: 0;
+    }
+  }
+
+  .ren-menu[popover]:popover-open {
+    opacity: 1;
+  }
+}
+
+/* ═══ SCROLLBAR STYLING ═══ */
+.ren-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ren-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ren-menu::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.ren-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

@@ -1,0 +1,183 @@
+---
+type: "RenDS CSS"
+title: ren-alert-dialog.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-alert-dialog/ren-alert-dialog.css
+sourcePath: components/composites/ren-alert-dialog/ren-alert-dialog.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-alert-dialog.css
+
+Source path: `components/composites/ren-alert-dialog/ren-alert-dialog.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Alert Dialog Component
+   ============================================
+   Confirmation dialog that blocks interaction.
+   Extends native <dialog> like ren-dialog but:
+   - No dismiss on outside click (::backdrop blocks)
+   - No dismiss on Escape (optional)
+   - Requires explicit action (confirm/cancel)
+
+   Minimal JS: just showModal() and close().
+
+   Usage:
+     <dialog class="ren-alert-dialog" id="confirm">
+       <div class="ren-alert-dialog-icon">⚠</div>
+       <h2 class="ren-alert-dialog-title">Delete item?</h2>
+       <p class="ren-alert-dialog-description">
+         This action cannot be undone.
+       </p>
+       <div class="ren-alert-dialog-actions">
+         <button class="ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">
+           Cancel
+         </button>
+         <button class="ren-btn-danger" onclick="this.closest('dialog').close('confirm')">
+           Delete
+         </button>
+       </div>
+     </dialog>
+
+   Open: document.getElementById('confirm').showModal()
+   Result: dialog.addEventListener('close', () => dialog.returnValue)
+   ============================================ */
+
+.ren-alert-dialog {
+  container-type: inline-size;
+  container-name: ren-alert-dialog;
+
+  /* Structure */
+  margin: auto;
+  padding: var(--space-6);
+  border: none;
+
+  /* Sizing */
+  max-width: 24rem;
+  width: 90vw;
+
+  /* Appearance */
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  text-align: center;
+
+  /* Animation — semantic tokens keep this in sync with ren-dialog
+     and respect prefers-reduced-motion via tokens/semantic/motion.css. */
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity   var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay   var(--duration-enter) var(--ease-enter) allow-discrete,
+    display   var(--duration-enter) var(--ease-enter) allow-discrete;
+}
+
+/* Entry animation */
+@starting-style {
+  .ren-alert-dialog[open] {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Exit */
+.ren-alert-dialog:not([open]) {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Backdrop — shared overlay transition keeps all scrims in sync. */
+.ren-alert-dialog::backdrop {
+  background-color: var(--color-overlay);
+  transition: var(--transition-overlay);
+}
+
+@starting-style {
+  .ren-alert-dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+/* ─── Icon (optional) ─── */
+.ren-alert-dialog-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--icon-xl);
+  height: var(--icon-xl);
+  margin: 0 auto var(--space-3);
+  font-size: var(--text-xl);
+  background-color: var(--color-fill);
+  border-radius: var(--radius-full);
+}
+
+/* Danger icon */
+.ren-alert-dialog-icon-danger {
+  background-color: var(--color-danger-subtle);
+  color: var(--color-danger);
+}
+
+/* Warning icon */
+.ren-alert-dialog-icon-warning {
+  background-color: var(--color-warning-subtle);
+  color: var(--color-warning);
+}
+
+/* ─── Title ─── */
+.ren-alert-dialog-title {
+  font-size: var(--title-sm-size, var(--text-lg));
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+/* ─── Description ─── */
+.ren-alert-dialog-description {
+  font-size: var(--body-size);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+  margin-bottom: var(--space-5);
+}
+
+/* ─── Actions ─── */
+.ren-alert-dialog-actions {
+  display: flex;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+/* Stack actions when dialog is narrow */
+@container ren-alert-dialog (max-width: 24rem) {
+  .ren-alert-dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .ren-alert-dialog-actions > * {
+    width: 100%;
+  }
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .ren-alert-dialog {
+    transition: none;
+  }
+  .ren-alert-dialog::backdrop {
+    transition: none;
+  }
+}

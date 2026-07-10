@@ -1,0 +1,509 @@
+---
+type: "RenDS Docs Page"
+title: "ren-select docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-select.html
+sourcePath: docs/components/ren-select.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-select docs
+
+Source path: `docs/components/ren-select.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Demo block */
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: visible; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { padding: var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: var(--space-3); align-items: flex-start; }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
+    .dx-anatomy { margin: var(--space-4) 0; display: grid; gap: var(--space-4); }
+    .dx-anatomy-num { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--color-text); color: var(--color-surface); font-size: var(--text-xs); font-weight: var(--weight-bold); flex-shrink: 0; }
+    .dx-anatomy-stage { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-6) var(--space-5); }
+    .dx-anatomy-stage-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0 0 var(--space-3); }
+    .dx-anatomy-parts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    @media (max-width: 720px) { .dx-anatomy-parts { grid-template-columns: 1fr; } }
+    .dx-anatomy-part { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); display: grid; gap: var(--space-2); }
+    .dx-anatomy-part-header { display: flex; align-items: center; gap: var(--space-2); }
+    .dx-anatomy-part-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text); }
+    .dx-anatomy-part-desc { font-size: var(--text-sm); line-height: 1.5; color: var(--color-text-secondary); margin: 0; }
+    .dx-anatomy-part-desc code { font-size: 0.85em; }
+
+    /* Mock select preview for anatomy */
+    .demo-select { position: relative; width: 240px; }
+    .demo-select-trigger {
+      display: flex; align-items: center; justify-content: space-between; gap: var(--space-2);
+      width: 100%; min-height: 40px;
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-input-bg); color: var(--color-text);
+      border: 1px solid var(--color-input-border); border-radius: var(--radius-md);
+      cursor: pointer; font: inherit; font-size: var(--body-size);
+      transition: border-color 150ms;
+    }
+    .demo-select-trigger:hover { border-color: var(--color-border-strong); }
+    .demo-select-trigger[aria-expanded="true"] {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px var(--color-accent-subtle);
+    }
+    .demo-select-list {
+      list-style: none; margin: 0; padding: var(--space-1);
+      position: absolute; top: calc(100% + var(--space-1)); inset-inline: 0;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border); border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      z-index: 5;
+    }
+    .demo-select-list[hidden] { display: none; }
+    .demo-select-item {
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-sm);
+      cursor: pointer; font-size: var(--text-sm);
+    }
+    .demo-select-item:hover, .demo-select-item[data-highlighted] { background: var(--color-fill); }
+    .demo-select-item[aria-selected="true"] { color: var(--color-accent); font-weight: var(--weight-medium); }
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span><span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html" aria-current="page">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Select</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Select <span class="dx-api-badge dx-api-badge-hybrid" title="Renders without JS; JS adds enhancements">Hybrid</span></h1>
+        <p class="lede">A custom-styled dropdown for choosing one option from a list. Renders a trigger button and a popover list using the native Popover API where supported. Keyboard-accessible by default — typeahead, arrow keys, Home/End, Escape — and fully WAI-ARIA listbox compliant.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Use a Select when the options need richer rendering than a native <code>&lt;select&gt;</code> can offer — icons, descriptions, group separators, custom layouts. For plain text options under ~10 items in a form, prefer the native element via <a href="ren-field.html" class="ren-link">Form Field</a>; the platform's behavior is hard to beat for accessibility and mobile pickers.</p>
+        <div class="dx-callout">
+          <p><strong>The trigger is a button, not an input.</strong> Selects don't accept typed input; they show a list and let the user pick. If you need free-text + suggestions, use <a href="ren-combobox.html" class="ren-link">Combobox</a> instead.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Parts</p>
+        <h2>Anatomy</h2>
+        <p>A Select has three parts in the DOM: the trigger that's always visible, the listbox content that floats on open, and the items inside.</p>
+        <div class="dx-anatomy">
+          <div class="dx-anatomy-stage">
+            <p class="dx-anatomy-stage-label">Assembled</p>
+            <div style="display: flex; justify-content: center;">
+              <div class="demo-select" data-anatomy>
+                <button type="button" class="demo-select-trigger" aria-haspopup="listbox" aria-expanded="false">
+                  <span>Argentina</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="dx-anatomy-parts">
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">1</span><span class="dx-anatomy-part-name">Container</span></div>
+              <p class="dx-anatomy-part-desc"><code>&lt;ren-select&gt;</code> wrapper. Holds trigger + content. Owns selection state and exposes a <code>name</code>/<code>value</code> API for forms.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">2</span><span class="dx-anatomy-part-name">Trigger</span></div>
+              <p class="dx-anatomy-part-desc"><code>.ren-select-trigger</code> button with <code>aria-haspopup="listbox"</code>. Shows the selected value or a placeholder. Click or Enter opens the list.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">3</span><span class="dx-anatomy-part-name">Content</span></div>
+              <p class="dx-anatomy-part-desc"><code>.ren-select-content</code> with <code>role="listbox"</code>. Floats on open via the Popover API. Closes on Escape, click outside, or selection.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header"><span class="dx-anatomy-num">4</span><span class="dx-anatomy-part-name">Item</span></div>
+              <p class="dx-anatomy-part-desc"><code>.ren-select-item</code> with <code>role="option"</code> and <code>data-value</code>. Optional <code>data-highlighted</code> for keyboard focus, <code>aria-selected</code> for the active choice.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Click the trigger to open. Use Up/Down to navigate, Enter to select, Escape to close.</p>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="demo-select" id="select-demo">
+              <button type="button" class="demo-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="select-demo-list">
+                <span data-value-display>Select a country</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <ul class="demo-select-list" id="select-demo-list" role="listbox" hidden>
+                <li class="demo-select-item" role="option" data-value="ar">Argentina</li>
+                <li class="demo-select-item" role="option" data-value="br">Brazil</li>
+                <li class="demo-select-item" role="option" data-value="cl">Chile</li>
+                <li class="demo-select-item" role="option" data-value="mx">Mexico</li>
+                <li class="demo-select-item" role="option" data-value="us">United States</li>
+              </ul>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-select name="country" placeholder="Select a country"&gt;
+  &lt;button class="ren-select-trigger"&gt;
+    &lt;span class="ren-select-value"&gt;&lt;/span&gt;
+    &lt;span class="ren-select-icon"&gt;…&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;div class="ren-select-content" popover&gt;
+    &lt;div class="ren-select-item" data-value="ar"&gt;Argentina&lt;/div&gt;
+    &lt;div class="ren-select-item" data-value="br"&gt;Brazil&lt;/div&gt;
+    &lt;div class="ren-select-item" data-value="cl"&gt;Chile&lt;/div&gt;
+    &lt;div class="ren-select-item" data-value="mx"&gt;Mexico&lt;/div&gt;
+    &lt;div class="ren-select-item" data-value="us"&gt;United States&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/ren-select&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <div class="dx-vgrid">
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Sizes</span>
+            <div class="dx-vrow-items">
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Three sizes via <code>size="sm|md|lg"</code> on <code>&lt;ren-select&gt;</code> — generates <code>.ren-select-sm</code>, <code>-md</code> (default), or <code>-lg</code>. The trigger height matches the matching <code>.ren-input</code> size so selects line up with text fields in the same form.</p>
+            </div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">With icon</span>
+            <div class="dx-vrow-items">
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Each <code>.ren-select-item</code> can hold any markup — an icon, a description, a badge. The component just routes selection by <code>data-value</code>.</p>
+            </div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">With description</span>
+            <div class="dx-vrow-items">
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Add a secondary line per item with <code>.ren-select-item-description</code>. Useful for Plan pickers (name + price) or Locale pickers (name + native script).</p>
+            </div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Disabled</span>
+            <div class="dx-vrow-items">
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Add <code>disabled</code> on the trigger to lock the whole field. <code>aria-disabled</code> on individual <code>.ren-select-item</code> elements skips them in keyboard navigation.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-select</code></td><td>Wrapper. Establishes the relative positioning context for the popover.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-trigger</code></td><td>The button users see. Should be a real <code>&lt;button type="button"&gt;</code>. Holds <code>aria-haspopup="listbox"</code> and <code>aria-expanded</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-value</code></td><td>The slot where the selected option's display text appears.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-placeholder</code></td><td>Replaces <code>.ren-select-value</code> styling when nothing is selected — muted color.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-icon</code></td><td>The chevron at the trigger's end. Rotates 180° while the listbox is open.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-content</code></td><td>The floating list. Use with <code>popover</code> attribute and <code>role="listbox"</code>. Auto-positioned by the component.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-item</code></td><td>One option. Use with <code>role="option"</code> and a <code>data-value</code>. <code>aria-selected="true"</code> marks the chosen one.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-select-sm</code> / <code class="dx-api-name">-lg</code></td><td>Size modifiers. Default trigger is medium (44 px touch target).</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Web Component attributes</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">name</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>Form field name. Submitted via a hidden input so the value travels with the form.</td></tr>
+            <tr><td><code class="dx-api-name">value</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>Initial selected value. Must match a <code>data-value</code> on one of the items.</td></tr>
+            <tr><td><code class="dx-api-name">placeholder</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">"Select an option"</span></td><td>Trigger text when nothing is selected.</td></tr>
+            <tr><td><code class="dx-api-name">placement</code></td><td><span class="dx-api-type">"top" | "right" | "bottom" | "left"</span></td><td><span class="dx-api-default">"bottom"</span></td><td>Preferred side for the listbox. Reflected to <code>data-side</code>; may flip when viewport space requires it.</td></tr>
+            <tr><td><code class="dx-api-name">size</code></td><td><span class="dx-api-type">"sm" | "md" | "lg"</span></td><td><span class="dx-api-default">"md"</span></td><td>Visual size variant.</td></tr>
+            <tr><td><code class="dx-api-name">disabled</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>Prevents opening. Adds <code>aria-disabled</code>.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript API</h3>
+        <table class="dx-api">
+          <thead><tr><th>Member</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">value</code></td><td>Getter / setter. Reads or assigns the selected value. Setting triggers <code>ren-change</code>.</td></tr>
+            <tr><td><code class="dx-api-name">selectedItem</code></td><td>Getter. The currently selected <code>.ren-select-item</code> element (or null).</td></tr>
+            <tr><td><code class="dx-api-name">open()</code> / <code class="dx-api-name">close()</code></td><td>Programmatically toggle the listbox.</td></tr>
+            <tr><td><code class="dx-api-name">isOpen</code></td><td>Boolean getter. True while the listbox is visible.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="dx-api">
+          <thead><tr><th>Event</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">ren-change</code></td><td>Fires when the selection changes. <code>event.detail</code>: <code>{ value, item }</code>.</td></tr>
+            <tr><td><code class="dx-api-name">ren-open</code> / <code class="dx-api-name">ren-close</code></td><td>Fire when the listbox opens or closes. No detail.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <p>Implements the WAI-ARIA Listbox pattern via the trigger + popover combination.</p>
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow"><span class="keys"><kbd>Space</kbd> / <kbd>Enter</kbd></span><span>On the trigger: opens the listbox. On a list item: selects it and closes.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>↑</kbd> / <kbd>↓</kbd></span><span>Move highlight through the items. Wraps at the ends.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Home</kbd> / <kbd>End</kbd></span><span>Jump to the first or last item.</span></div>
+          <div class="dx-keyrow"><span class="keys">Type to filter</span><span>Typeahead — types build a buffer that highlights the first matching item. Buffer clears after 500 ms idle.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Esc</kbd></span><span>Closes the listbox without changing the selection. Focus returns to the trigger.</span></div>
+        </div>
+        <h3>Labelling</h3>
+        <p>Wrap the Select inside a <a href="ren-field.html" class="ren-link">Form Field</a> so the label, description and error get auto-wired. Or set <code>aria-label</code> directly on the trigger if there's no visible label.</p>
+        <div class="dx-callout">
+          <p><strong>Avoid putting too many items in one Select.</strong> Past ~15, switch to a <a href="ren-combobox.html" class="ren-link">Combobox</a> with search. Typeahead helps but doesn't scale to hundreds.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Inside a Form Field</h3>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-field&gt;
+  &lt;label&gt;Country&lt;/label&gt;
+  &lt;ren-select name="country" placeholder="Select your country"&gt;
+    &lt;button class="ren-select-trigger"&gt;
+      &lt;span class="ren-select-value"&gt;&lt;/span&gt;
+      &lt;span class="ren-select-icon"&gt;…&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div class="ren-select-content" popover&gt;
+      &lt;div class="ren-select-item" data-value="ar"&gt;Argentina&lt;/div&gt;
+      &lt;div class="ren-select-item" data-value="br"&gt;Brazil&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/ren-select&gt;
+&lt;/ren-field&gt;</code></pre>
+
+        <h3>React to selection</h3>
+        <div class="dx-pre" tabindex="0"><code>document.querySelector('ren-select')
+  .addEventListener('ren-change', (e) =&gt; {
+    console.log('Selected', e.detail.value);
+    updatePreview(e.detail.value);
+  });</code></pre>
+
+        <h3>Items with icons + descriptions</h3>
+        <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-select-item" data-value="basic"&gt;
+  &lt;span class="ren-select-item-icon"&gt;&lt;!-- icon SVG --&gt;&lt;/span&gt;
+  &lt;span&gt;
+    &lt;strong&gt;Basic&lt;/strong&gt;
+    &lt;span class="ren-select-item-description"&gt;$9 per month&lt;/span&gt;
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="../../components/composites/ren-select/ren-select.js"></script>
+  <script>
+    // Demo wiring — vanilla, works without the Web Component.
+    document.querySelectorAll('.demo-select').forEach(root => {
+      const trigger = root.querySelector('.demo-select-trigger');
+      const list = root.querySelector('.demo-select-list');
+      const display = root.querySelector('[data-value-display]');
+      if (!trigger || !list) return;
+
+      const items = list.querySelectorAll('.demo-select-item');
+      let highlightIdx = -1;
+
+      const open = () => {
+        list.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        const selected = list.querySelector('[aria-selected="true"]');
+        highlightIdx = selected ? Array.from(items).indexOf(selected) : 0;
+        highlight(highlightIdx);
+      };
+      const close = () => {
+        list.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+        items.forEach(i => i.removeAttribute('data-highlighted'));
+      };
+      const highlight = (i) => {
+        items.forEach((it, idx) => it.toggleAttribute('data-highlighted', idx === i));
+      };
+      const select = (item) => {
+        items.forEach(i => i.removeAttribute('aria-selected'));
+        item.setAttribute('aria-selected', 'true');
+        if (display) display.textContent = item.textContent.trim();
+        close();
+        trigger.focus();
+      };
+
+      trigger.addEventListener('click', () => list.hidden ? open() : close());
+      items.forEach(item => item.addEventListener('click', () => select(item)));
+
+      trigger.addEventListener('keydown', (e) => {
+        if ((e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') && list.hidden) {
+          e.preventDefault();
+          open();
+        }
+      });
+      list.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { e.preventDefault(); close(); trigger.focus(); }
+        else if (e.key === 'ArrowDown') { e.preventDefault(); highlightIdx = (highlightIdx + 1) % items.length; highlight(highlightIdx); }
+        else if (e.key === 'ArrowUp')   { e.preventDefault(); highlightIdx = (highlightIdx - 1 + items.length) % items.length; highlight(highlightIdx); }
+        else if (e.key === 'Home')      { e.preventDefault(); highlightIdx = 0; highlight(highlightIdx); }
+        else if (e.key === 'End')       { e.preventDefault(); highlightIdx = items.length - 1; highlight(highlightIdx); }
+        else if (e.key === 'Enter')     { e.preventDefault(); if (highlightIdx >= 0) select(items[highlightIdx]); }
+      });
+      list.tabIndex = -1;
+
+      // Click outside closes
+      document.addEventListener('click', (e) => {
+        if (!root.contains(e.target) && !list.hidden) close();
+      });
+
+      // Make sure the list is keyboard reachable when open
+      const observer = new MutationObserver(() => { if (!list.hidden) list.focus(); });
+      observer.observe(list, { attributes: true, attributeFilter: ['hidden'] });
+    });
+  </script>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

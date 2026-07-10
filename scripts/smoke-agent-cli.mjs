@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -51,6 +53,12 @@ if (!manifest.commands?.some((command) => command.name === 'build')) {
 if (!manifest.docs?.['agent-ready-roadmap']) {
   throw new Error('manifest is missing the agent-ready roadmap docs topic');
 }
+const knowledgeCommand = manifest.commands?.find((command) => command.name === 'knowledge');
+for (const option of ['--format <graph|okf>', '--out <path>', '--path <path>']) {
+  if (!knowledgeCommand?.options?.some((item) => item.flag === option)) {
+    throw new Error(`manifest knowledge command is missing ${option}`);
+  }
+}
 
 const globalManifest = json(['--json'], 'manifest');
 if (globalManifest.version !== manifest.version) {
@@ -79,8 +87,8 @@ if (evals.path !== 'evals/README.md' || !evals.body) {
 }
 
 const knowledgePath = json(['knowledge', 'path', '--json'], 'knowledge.path');
-if (!knowledgePath.sqlitePath || !knowledgePath.jsonPath) {
-  throw new Error('knowledge path JSON is missing graph paths');
+if (!knowledgePath.sqlitePath || !knowledgePath.jsonPath || !knowledgePath.okfPath) {
+  throw new Error('knowledge path JSON is missing graph or OKF paths');
 }
 
 const bareKnowledgePath = json(['knowledge', '--json'], 'knowledge.path');
@@ -91,6 +99,53 @@ if (bareKnowledgePath.sqlitePath !== knowledgePath.sqlitePath) {
 const knowledgeQuery = json(['knowledge', 'query', 'ren-toast status', '--json', '--limit', '3'], 'knowledge.query');
 if (knowledgeQuery.results.length === 0 || knowledgeQuery.limit !== 3) {
   throw new Error('knowledge query JSON returned no limited results');
+}
+
+const okfTempRoot = mkdtempSync(path.join(os.tmpdir(), 'rends-okf-smoke-'));
+try {
+  const okfDir = path.join(okfTempRoot, 'okf');
+  const okfVizPath = path.join(okfDir, 'viz.html');
+  const okfExport = json(['knowledge', 'export', '--format', 'okf', '--out', okfDir, '--json'], 'knowledge.export');
+  if (okfExport.format !== 'okf' || okfExport.concepts < 50 || !okfExport.indexPath) {
+    throw new Error('knowledge export OKF JSON did not report the expected bundle shape');
+  }
+
+  const toastConceptPath = path.join(okfDir, 'components', 'composites', 'ren-toast.md');
+  if (!existsSync(toastConceptPath)) {
+    throw new Error('knowledge export OKF did not write the ren-toast concept');
+  }
+  const toastConcept = readFileSync(toastConceptPath, 'utf8');
+  if (!toastConcept.startsWith('---\n') || !toastConcept.includes('sourcePath: components/composites/ren-toast')) {
+    throw new Error('ren-toast OKF concept is missing YAML frontmatter or sourcePath');
+  }
+
+  const okfCheck = json(['knowledge', 'check', '--format', 'okf', '--path', okfDir, '--json'], 'knowledge.check');
+  if (okfCheck.format !== 'okf' || okfCheck.ok !== true || okfCheck.concepts !== okfExport.concepts) {
+    throw new Error('knowledge check --format okf did not validate the exported bundle');
+  }
+
+  const okfVisualize = json(['knowledge', 'visualize', '--path', okfDir, '--out', okfVizPath, '--json'], 'knowledge.visualize');
+  if (okfVisualize.format !== 'okf' || !existsSync(okfVizPath)) {
+    throw new Error('knowledge visualize did not write the OKF viewer');
+  }
+  const okfViz = readFileSync(okfVizPath, 'utf8');
+  if (!okfViz.includes('RenDS Knowledge Bundle') || !okfViz.includes('component:composite:ren-toast')) {
+    throw new Error('OKF viewer is missing expected RenDS bundle content');
+  }
+
+  const protectedDir = path.join(okfTempRoot, 'existing-content');
+  const protectedFile = path.join(protectedDir, 'keep.txt');
+  mkdirSync(protectedDir);
+  writeFileSync(protectedFile, 'keep');
+  const unsafeExport = spawnSync(process.execPath, [cli, 'knowledge', 'export', '--format', 'okf', '--out', protectedDir], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  if (unsafeExport.status === 0 || !existsSync(protectedFile)) {
+    fail('knowledge export overwrote a non-RenDS output directory', unsafeExport);
+  }
+} finally {
+  rmSync(okfTempRoot, { recursive: true, force: true });
 }
 
 const search = json(['search', 'dialog workflow', '--json', '--limit', '4'], 'search');

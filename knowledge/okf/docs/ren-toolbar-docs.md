@@ -1,0 +1,213 @@
+---
+type: "RenDS Docs Page"
+title: "ren-toolbar docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-toolbar.html
+sourcePath: docs/components/ren-toolbar.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-toolbar docs
+
+Source path: `docs/components/ren-toolbar.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toolbar — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .demo-tb { display: flex; align-items: center; gap: var(--space-1); padding: var(--space-2); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+    .demo-tb button { padding: 6px var(--space-2); background: transparent; border: 0; border-radius: var(--radius-sm); cursor: pointer; font-size: var(--text-sm); color: var(--color-text); }
+    .demo-tb button:hover, .demo-tb button:focus-visible { background: var(--color-fill); }
+    .demo-tb button[aria-pressed="true"] { background: var(--color-fill); color: var(--color-text); font-weight: var(--weight-semibold); }
+    .demo-tb-sep { width: 1px; align-self: stretch; background: var(--color-border); margin-inline: var(--space-1); }
+  </style>
+</head>
+<body>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html" aria-current="page">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Toolbar</li></ol></nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Toolbar <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
+        <p class="lede">Grouped row of action buttons with arrow-key navigation. For editor toolbars, canvas controls, table headers — anywhere a tight cluster of related actions needs roving-tabindex keyboard support.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Toolbars present a row of actions as a single tab-stop. <kbd>Tab</kbd> enters the toolbar; arrow keys navigate between actions; <kbd>Tab</kbd> again leaves it. This avoids the "press Tab 12 times to get past the formatting bar" anti-pattern.</p>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="demo-tb" role="toolbar" aria-label="Text formatting">
+              <button type="button" aria-pressed="false" tabindex="0">Undo</button>
+              <button type="button" aria-pressed="false" tabindex="-1">Redo</button>
+              <span class="demo-tb-sep" role="separator" aria-orientation="vertical"></span>
+              <button type="button" aria-pressed="true" tabindex="-1"><strong>B</strong></button>
+              <button type="button" aria-pressed="false" tabindex="-1"><em>I</em></button>
+              <button type="button" aria-pressed="false" tabindex="-1"><u>U</u></button>
+              <span class="demo-tb-sep" role="separator" aria-orientation="vertical"></span>
+              <button type="button" tabindex="-1">≡</button>
+              <button type="button" tabindex="-1">⊞</button>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-toolbar aria-label="Text formatting"&gt;
+  &lt;button&gt;Undo&lt;/button&gt;
+  &lt;button&gt;Redo&lt;/button&gt;
+  &lt;hr role="separator"&gt;
+  &lt;button aria-pressed="true"&gt;&lt;b&gt;B&lt;/b&gt;&lt;/button&gt;
+  &lt;button aria-pressed="false"&gt;&lt;i&gt;I&lt;/i&gt;&lt;/button&gt;
+&lt;/ren-toolbar&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-toolbar</code></td><td>The wrapper. <code>role="toolbar"</code>. Inline-flex row with consistent gap.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toolbar-separator</code></td><td>Vertical divider. Use a <code>&lt;span&gt;</code> with <code>role="separator"</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toolbar-group</code></td><td>Optional sub-grouping for related actions inside the toolbar.</td></tr>
+          </tbody>
+        </table>
+        <p>The Web Component handles the roving tabindex automatically — buttons inside <code>&lt;ren-toolbar&gt;</code> get the right <code>tabindex</code> attributes on mount.</p>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow"><span class="keys"><kbd>Tab</kbd></span><span>Enter / leave the toolbar.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>←</kbd> / <kbd>→</kbd></span><span>Move focus between buttons. Wraps at the ends.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Home</kbd> / <kbd>End</kbd></span><span>Jump to the first / last button.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Enter</kbd> / <kbd>Space</kbd></span><span>Activate the focused button.</span></div>
+        </div>
+        <p>Always set <code>aria-label</code> on the toolbar so screen readers announce its purpose ("Text formatting toolbar").</p>
+      </section>
+
+    </main>
+  </div>
+  <script type="module" src="../../components/composites/ren-toolbar/ren-toolbar.js"></script>
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

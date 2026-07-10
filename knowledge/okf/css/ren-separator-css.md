@@ -1,0 +1,76 @@
+---
+type: "RenDS CSS"
+title: ren-separator.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-separator/ren-separator.css
+sourcePath: components/primitives/ren-separator/ren-separator.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-separator.css
+
+Source path: `components/primitives/ren-separator/ren-separator.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Separator
+   ============================================
+   Horizontal or vertical divider with optional
+   label. CSS-only, no JS needed.
+
+   Usage:
+     <hr class="ren-separator">
+     <div class="ren-separator-vertical"></div>
+     <div class="ren-separator-label">or</div>
+   ============================================ */
+
+.ren-separator {
+  border: none;
+  background-color: var(--color-separator);
+}
+
+/* Horizontal (default) */
+.ren-separator,
+.ren-separator-horizontal {
+  width: 100%;
+  height: 1px;
+  margin-block: var(--space-4);
+}
+
+/* Vertical */
+.ren-separator-vertical {
+  width: 1px;
+  height: auto;
+  align-self: stretch;
+  margin-inline: var(--space-3);
+}
+
+/* With label (e.g. "or" between auth options) */
+.ren-separator-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--caption-size);
+  margin-block: var(--space-4);
+}
+
+.ren-separator-label::before,
+.ren-separator-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-separator);
+}

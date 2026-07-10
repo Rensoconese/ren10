@@ -1,0 +1,136 @@
+---
+type: "RenDS CSS"
+title: ren-empty-state.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/patterns/ren-empty-state/ren-empty-state.css
+sourcePath: components/patterns/ren-empty-state/ren-empty-state.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-empty-state.css
+
+Source path: `components/patterns/ren-empty-state/ren-empty-state.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Empty State Pattern
+   ============================================
+   Reusable pattern for empty/no-data states.
+   CSS-only. No JS needed.
+
+   Use inside any data container (table, list,
+   card) when there's nothing to display.
+
+   Inspired by Polaris: every data component
+   should have a documented empty state.
+
+   Usage:
+     <div class="ren-empty-state">
+       <div class="ren-empty-state-icon">📦</div>
+       <h3 class="ren-empty-state-title">No products yet</h3>
+       <p class="ren-empty-state-description">
+         Add your first product to get started.
+       </p>
+       <div class="ren-empty-state-actions">
+         <button class="ren-btn">Add product</button>
+       </div>
+     </div>
+
+   Compact (inline):
+     <div class="ren-empty-state ren-empty-state-compact">
+       <p class="ren-empty-state-description">No results found.</p>
+     </div>
+   ============================================ */
+
+.ren-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-8) var(--space-4);
+  max-width: 28rem;
+  margin-inline: auto;
+}
+
+/* ─── Icon / Illustration ─── */
+.ren-empty-state-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  font-size: var(--text-3xl);
+  color: var(--color-text-muted);
+  background-color: var(--color-fill);
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-4);
+}
+
+/* ─── Title ─── */
+.ren-empty-state-title {
+  font-size: var(--title-sm-size, var(--text-lg));
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+
+/* ─── Description ─── */
+.ren-empty-state-description {
+  font-size: var(--body-size);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+  margin-bottom: var(--space-4);
+  max-width: var(--width-prose);
+}
+
+.ren-empty-state-description:last-child {
+  margin-bottom: 0;
+}
+
+/* ─── Actions ─── */
+.ren-empty-state-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ─── Compact variant (for inline empty states) ─── */
+.ren-empty-state-compact {
+  padding: var(--space-6) var(--space-4);
+}
+
+.ren-empty-state-compact .ren-empty-state-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2);
+}
+
+.ren-empty-state-compact .ren-empty-state-title {
+  font-size: var(--body-size);
+}
+
+.ren-empty-state-compact .ren-empty-state-description {
+  font-size: var(--caption-size, var(--text-sm));
+}
+
+/* ─── Bordered variant (for use inside cards/tables) ─── */
+.ren-empty-state-bordered {
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  margin: var(--space-4);
+}

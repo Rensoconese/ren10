@@ -1,0 +1,189 @@
+---
+type: "RenDS JavaScript"
+title: ren-context-menu.js
+description: "RenDS JavaScript generated from the RenDS knowledge graph."
+id: file:components/composites/ren-context-menu/ren-context-menu.js
+sourcePath: components/composites/ren-context-menu/ren-context-menu.js
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - javascript
+  - ren10
+  - rends
+---
+
+# ren-context-menu.js
+
+Source path: `components/composites/ren-context-menu/ren-context-menu.js`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Context Menu Controller
+   ============================================
+   Handles right-click trigger, positioning,
+   and keyboard navigation.
+
+   Usage:
+     import { initContextMenu } from './ren-context-menu.js';
+     initContextMenu('my-ctx-menu');
+
+   Or auto-init all:
+     import { initAllContextMenus } from './ren-context-menu.js';
+     initAllContextMenus();
+   ============================================ */
+
+/**
+ * @param {string} menuId - The popover element ID
+ */
+export function initContextMenu(menuId) {
+  const menu = document.getElementById(menuId);
+  if (!menu) return;
+
+  if (menu.dataset.renContextMenuInitialized === 'true') return;
+  menu.dataset.renContextMenuInitialized = 'true';
+
+  menu.setAttribute('popover', 'manual');
+
+  // Find all triggers for this menu
+  const triggers = [...document.querySelectorAll(`[data-context="${menuId}"]`)];
+  const itemSelector = '.ren-menu-item:not(:disabled):not([aria-disabled="true"])';
+
+  const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
+
+  const close = () => {
+    if (!isOpen()) return;
+
+    if ('hidePopover' in menu && menu.matches(':popover-open')) {
+      try {
+        menu.hidePopover();
+      } catch (e) {
+        // Popover may have already been closed by the browser.
+      }
+    } else {
+      menu.classList.remove('ren-open');
+    }
+
+    menu.setAttribute('data-state', 'closed');
+  };
+
+  const show = (x, y) => {
+    if (isOpen()) {
+      close();
+    }
+
+    // Position menu at cursor
+    menu.style.left = `${x}px`;
+    menu.style.top = `${y}px`;
+
+    if ('showPopover' in menu) {
+      try {
+        menu.showPopover();
+      } catch (e) {
+        // Popover may already be open during rapid repeated contextmenu events.
+      }
+    } else {
+      menu.classList.add('ren-open');
+    }
+
+    menu.setAttribute('data-state', 'open');
+
+    // Adjust if overflows viewport
+    const rect = menu.getBoundingClientRect();
+    if (rect.right > window.innerWidth) {
+      menu.style.left = `${Math.max(8, x - rect.width)}px`;
+    }
+    if (rect.bottom > window.innerHeight) {
+      menu.style.top = `${Math.max(8, y - rect.height)}px`;
+    }
+
+    // Focus first item
+    const firstItem = menu.querySelector(itemSelector);
+    firstItem?.focus();
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      show(e.clientX, e.clientY);
+    });
+
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key !== 'ContextMenu' && !(e.key === 'F10' && e.shiftKey)) return;
+
+      e.preventDefault();
+      const rect = trigger.getBoundingClientRect();
+      show(rect.left + 8, rect.bottom + 8);
+    });
+  });
+
+  // Keyboard navigation inside menu
+  menu.addEventListener('keydown', (e) => {
+    const items = [...menu.querySelectorAll(itemSelector)];
+    if (items.length === 0) return;
+
+    const current = items.indexOf(document.activeElement);
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      items[(current + 1) % items.length]?.focus();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      items[(current - 1 + items.length) % items.length]?.focus();
+    } else if (e.key === 'Escape') {
+      close();
+    } else if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      document.activeElement?.click();
+      close();
+    }
+  });
+
+  // Close on item click
+  menu.addEventListener('click', (e) => {
+    if (e.target.closest('.ren-menu-item')) {
+      close();
+    }
+  });
+
+  const isMenuOrTrigger = (target) =>
+    target instanceof Node &&
+    (menu.contains(target) || triggers.some((trigger) => trigger.contains(target)));
+
+  document.addEventListener(
+    'pointerdown',
+    (e) => {
+      if (isOpen() && !isMenuOrTrigger(e.target)) {
+        close();
+      }
+    },
+    true
+  );
+
+  document.addEventListener(
+    'contextmenu',
+    (e) => {
+      if (isOpen() && !isMenuOrTrigger(e.target)) {
+        close();
+      }
+    },
+    true
+  );
+}
+
+/**
+ * Auto-init all context menus.
+ */
+export function initAllContextMenus() {
+  const menuIds = new Set();
+  document.querySelectorAll('[data-context]').forEach((el) => {
+    menuIds.add(el.dataset.context);
+  });
+  menuIds.forEach(initContextMenu);
+}

@@ -1,6 +1,6 @@
 {
   "name": "ren10",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
@@ -88,8 +88,8 @@
     "agent:manifest": "node cli/index.js manifest --json",
     "agent:doctor": "node cli/index.js doctor",
     "agent:check": "npm run agent:smoke && npm run agent:skill:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
-    "knowledge:build": "node scripts/build-knowledge-graph.mjs",
-    "knowledge:check": "node scripts/check-knowledge-graph.mjs",
+    "knowledge:build": "node scripts/build-knowledge-graph.mjs && node scripts/build-knowledge-bundle.mjs",
+    "knowledge:check": "node scripts/check-knowledge-graph.mjs && node scripts/check-knowledge-bundle.mjs",
     "knowledge:query": "node scripts/query-knowledge-graph.mjs"
   },
   "keywords": [

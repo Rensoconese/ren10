@@ -1,0 +1,265 @@
+---
+type: "RenDS CSS"
+title: ren-hover-card.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-hover-card/ren-hover-card.css
+sourcePath: components/composites/ren-hover-card/ren-hover-card.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-hover-card.css
+
+Source path: `components/composites/ren-hover-card/ren-hover-card.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ═══ REN HOVER CARD COMPONENT ═══ */
+
+/* ═══ TRIGGER ELEMENT ═══ */
+.ren-hover-card-trigger {
+  anchor-name: --ren-hover-card-anchor;
+}
+
+/* ═══ BASE CARD ═══ */
+.ren-hover-card {
+  position-anchor: --ren-hover-card-anchor;
+  position: absolute;
+  position-area: bottom span-all;
+  inset: auto;
+  margin-block-start: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-4);
+  max-width: 20rem;
+  min-width: 15rem;
+  z-index: 1000;
+
+  /* ═══ POPOVER API ═══
+     Semantic tokens keep hover-card in sync with tooltip + popover. */
+  &:popover-open {
+    animation: ren-hover-card-in var(--duration-enter) var(--ease-enter) both;
+  }
+
+  /* ═══ ARROW STYLING ═══ */
+  &::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: inherit;
+    border: inherit;
+    border-inline-end: none;
+    border-bottom: none;
+    transform: rotate(45deg);
+    z-index: -1;
+    top: -4px;
+    left: 50%;
+    margin-inline-start: -4px;
+  }
+
+  /* ═══ FALLBACK POSITIONING ═══ */
+  @supports not ((anchor-name: --ren-anchor) and
+    (position-anchor: --ren-anchor) and
+    (position-area: bottom span-all)) {
+    position: fixed;
+    top: auto;
+    left: auto;
+  }
+
+  /* ═══ VIEWPORT EDGE HANDLING ═══ */
+  @supports (position-try-fallbacks: flip-block) {
+    position-try-fallbacks: flip-block;
+  }
+}
+
+/* ═══ ANIMATION ═══ */
+@starting-style {
+  .ren-hover-card:popover-open {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+}
+
+@keyframes ren-hover-card-in {
+  from {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ═══ SECTIONS ═══ */
+.ren-hover-card-header {
+  margin-bottom: var(--space-3);
+
+  & h3,
+  & h4 {
+    margin: 0 0 var(--space-0-5) 0;
+    font-size: var(--font-size-body);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  & p {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+  }
+}
+
+.ren-hover-card-body {
+  margin-bottom: var(--space-3);
+  font-size: var(--font-size-body-sm);
+  color: var(--color-text);
+  line-height: 1.5;
+
+  & :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.ren-hover-card-footer {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+
+  & button,
+  & a {
+    font-size: var(--font-size-body-sm);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-tactile);
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-hover-card {
+    &:popover-open {
+      animation: none;
+      opacity: 1;
+      translate: 0 0;
+    }
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+/* ═══ DARK MODE SUPPORT (OPTIONAL) ═══ */
+@media (prefers-color-scheme: dark) {
+  .ren-hover-card {
+    /* ═══ USES CSS VARIABLES - AUTO ADAPTS ═══ */
+  }
+}
+
+/* ═══ MOBILE RESPONSIVENESS ═══
+   Hover cards keep a media query here because they're
+   positioned absolutely relative to the viewport, and
+   the constraint is viewport space, not container width. */
+@media (max-width: 640px) {
+  .ren-hover-card {
+    max-width: calc(100vw - var(--space-4));
+    min-width: auto;
+    width: calc(100vw - var(--space-4));
+  }
+}
+
+/* ═══ LOADING STATE ═══ */
+.ren-hover-card.ren-hover-card-loading {
+  pointer-events: none;
+
+  & .ren-hover-card-body {
+    opacity: 0.6;
+  }
+}
+
+/* ═══ DISABLED STATE ═══ */
+.ren-hover-card.ren-hover-card-disabled {
+  display: none;
+}
+
+/* ═══ CUSTOM VARIANTS ═══ */
+.ren-hover-card {
+  &.ren-hover-card-sm {
+    padding: var(--space-2);
+    max-width: 15rem;
+    min-width: 12rem;
+
+    & .ren-hover-card-header {
+      margin-bottom: var(--space-2);
+
+      & h3,
+      & h4 {
+        font-size: var(--font-size-body-sm);
+        margin-bottom: var(--space-0-25);
+      }
+    }
+
+    & .ren-hover-card-body {
+      margin-bottom: var(--space-2);
+      font-size: var(--font-size-xs);
+    }
+  }
+
+  &.ren-hover-card-lg {
+    padding: var(--space-5);
+    max-width: 25rem;
+    min-width: 18rem;
+
+    & .ren-hover-card-header {
+      margin-bottom: var(--space-4);
+
+      & h3,
+      & h4 {
+        font-size: var(--font-size-body);
+      }
+    }
+
+    & .ren-hover-card-body {
+      margin-bottom: var(--space-4);
+      font-size: var(--font-size-body);
+    }
+  }
+}
+
+/* ═══ INNER LINKS STYLING ═══ */
+.ren-hover-card a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  transition: var(--transition-tactile);
+
+  &:hover {
+    color: var(--color-accent-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}

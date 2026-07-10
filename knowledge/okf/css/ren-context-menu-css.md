@@ -1,0 +1,106 @@
+---
+type: "RenDS CSS"
+title: ren-context-menu.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-context-menu/ren-context-menu.css
+sourcePath: components/composites/ren-context-menu/ren-context-menu.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-context-menu.css
+
+Source path: `components/composites/ren-context-menu/ren-context-menu.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Context Menu Component
+   ============================================
+   Right-click menu using Popover API.
+   Reuses ren-menu styles for items.
+   Minimal JS for right-click trigger + positioning.
+
+   Usage:
+     <div class="ren-context-menu-trigger" data-context="my-ctx-menu">
+       Right-click this area
+     </div>
+
+     <div id="my-ctx-menu" class="ren-context-menu" popover>
+       <button class="ren-menu-item">Cut</button>
+       <button class="ren-menu-item">Copy</button>
+       <button class="ren-menu-item">Paste</button>
+       <hr class="ren-menu-separator">
+       <button class="ren-menu-item ren-menu-item-danger">Delete</button>
+     </div>
+   ============================================ */
+
+.ren-context-menu {
+  /* Reset popover defaults */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  inset: auto;
+
+  /* Menu appearance (matches ren-menu) */
+  background: var(--color-surface);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding-block: var(--space-1);
+  min-width: 10rem;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  /* Position set by JS */
+  position: fixed;
+
+  /* Animation — semantic tokens keep context-menu in sync with
+     ren-menu / ren-popover. Collapses to 0ms under reduce. */
+  opacity: 0;
+  transform: scale(0.95);
+  transform-origin: top left;
+  transition:
+    opacity var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+    display var(--duration-enter) var(--ease-enter) allow-discrete;
+}
+
+.ren-context-menu:popover-open,
+.ren-context-menu.ren-open {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@starting-style {
+  .ren-context-menu:popover-open {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* ─── Reuse menu item styles ─── */
+/* Already defined in ren-menu.css:
+   .ren-menu-item, .ren-menu-separator, etc.
+   Import ren-menu.css alongside this file.
+*/
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .ren-context-menu {
+    transition: none;
+  }
+}

@@ -1,0 +1,223 @@
+---
+type: "RenDS Docs Page"
+title: "ren-empty-state docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-empty-state.html
+sourcePath: docs/components/ren-empty-state.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-empty-state docs
+
+Source path: `docs/components/ren-empty-state.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empty State — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .demo-empty { text-align: center; padding: var(--space-8) var(--space-5); }
+    .demo-empty-icon { color: var(--color-text-muted); margin-bottom: var(--space-3); display: inline-flex; }
+    .demo-empty-icon svg { width: 40px; height: 40px; }
+    .demo-empty-title { font-size: var(--text-lg); font-weight: var(--weight-semibold); margin: 0 0 var(--space-1); }
+    .demo-empty-desc { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0 0 var(--space-4); max-width: 38ch; margin-inline: auto; line-height: 1.55; }
+  </style>
+</head>
+<body>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html" aria-current="page">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Empty State</li></ol></nav>
+        <p class="dx-kicker">Pattern</p>
+        <h1>Empty State <span class="dx-api-badge dx-api-badge-css" title="Works without any JavaScript">CSS-only</span></h1>
+        <p class="lede">"Nothing here yet" panels — the first impression a user has of a feature before they've created data. Icon, headline, supporting copy, and one clear next action. Get them right and the empty page becomes onboarding.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Use an empty state when a list, table, or section has no content yet. The structure is rigid for a reason — it makes empty pages feel intentional instead of broken: a small illustration, a one-line headline ("No invoices yet"), one short paragraph of context, and a single primary action to get started.</p>
+        <div class="dx-callout">
+          <p><strong>Empty states are onboarding in disguise.</strong> First-time users land here. Phrase the copy as encouragement, not as an apology — "Create your first project" beats "Sorry, you have no projects".</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="ren-empty-state demo-empty">
+              <div class="demo-empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
+              <h2 class="demo-empty-title">No projects yet</h2>
+              <p class="demo-empty-desc">Projects are how you organize your work. Create one to start inviting collaborators and tracking progress.</p>
+              <button class="ren-btn ren-btn-primary">Create your first project</button>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-empty-state"&gt;
+  &lt;div class="ren-empty-state-icon"&gt;
+    &lt;!-- SVG illustration --&gt;
+  &lt;/div&gt;
+  &lt;h2 class="ren-empty-state-title"&gt;No projects yet&lt;/h2&gt;
+  &lt;p class="ren-empty-state-desc"&gt;
+    Projects are how you organize your work. Create one to start
+    inviting collaborators and tracking progress.
+  &lt;/p&gt;
+  &lt;button class="ren-btn ren-btn-primary"&gt;Create your first project&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-empty-state</code></td><td>The container. Center-aligned, generous vertical padding.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-empty-state-icon</code></td><td>The illustration slot. Sized to ~64–80 px square.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-empty-state-title</code></td><td>Headline. Use a real heading tag (<code>h2</code> or <code>h3</code>) at the right document level.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-empty-state-desc</code></td><td>Supporting copy — one or two lines max. Capped to ~38ch for readability.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-empty-state-actions</code></td><td>Optional cluster for one or two action buttons. Right-align primary action when there are two.</td></tr>
+          </tbody>
+        </table>
+        <h3>Variants</h3>
+        <ul>
+          <li><strong>First run</strong> — the default. "Get started" tone.</li>
+          <li><strong>Search returned nothing</strong> — different copy. "No results for 'foo'. Try a different keyword."</li>
+          <li><strong>Filtered out</strong> — "All your items are in another tab. Clear filters to see them."</li>
+          <li><strong>Permission</strong> — "You don't have access. Ask an admin to invite you."</li>
+        </ul>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <ul>
+          <li>The illustration is decorative — wrap it in <code>aria-hidden="true"</code> so screen readers skip it.</li>
+          <li>The headline is a real <code>&lt;h2&gt;</code> or <code>&lt;h3&gt;</code> at the appropriate document level. Don't use a styled <code>&lt;p&gt;</code>.</li>
+          <li>The action button is reachable by Tab. If there's just one action, make it the page's primary CTA.</li>
+          <li>Don't replace the empty state with a permanent loading spinner — show a skeleton during load, then the empty state when the response arrives.</li>
+        </ul>
+        <div class="dx-callout">
+          <p><strong>Empty states deserve copy review.</strong> The wording is the entire pattern — bad copy makes a beautifully designed empty state feel hollow. Have someone read it cold and confirm they know what to do next.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

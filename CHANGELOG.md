@@ -23,6 +23,29 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Accessibility milestones
 
+## [0.9.4] — 2026-07-10
+
+Focus: **portable RenDS knowledge for agents and tools.** This release keeps
+the colocated Markdown contracts authoritative while adding a deterministic,
+plain-file projection of the packaged graph.
+
+### Added
+
+- **RenDS Knowledge Bundle.** `knowledge/okf/**/*.md` exports every graph node
+  as an OKF-style Markdown concept with YAML frontmatter and relative links.
+- **Knowledge CLI workflows.** `ren10 knowledge export --format okf`,
+  `knowledge check --format okf`, and `knowledge visualize` support portable
+  export, parity validation, and a self-contained local HTML viewer.
+- **Release synchronization gates.** Bundle generation and checks now verify
+  deterministic output, unique concept IDs, graph parity, package exports,
+  and npm pack inclusion.
+
+### Changed
+
+- **Knowledge package contract.** JSON and SQLite remain fast generated
+  indexes; source contracts remain the single source of truth, and MCP stays
+  reserved for a later transport layer.
+
 ## [0.9.2] — 2026-07-07
 
 Focus: **modern CSS Anchor Positioning for overlay components.** Patch

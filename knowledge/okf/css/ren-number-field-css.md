@@ -1,0 +1,253 @@
+---
+type: "RenDS CSS"
+title: ren-number-field.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-number-field/ren-number-field.css
+sourcePath: components/composites/ren-number-field/ren-number-field.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-number-field.css
+
+Source path: `components/composites/ren-number-field/ren-number-field.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ═══════════════════════════════════════════════════════════════
+   REN NUMBER FIELD (STEPPER) COMPONENT
+   ═══════════════════════════════════════════════════════════════
+   A controlled number input with increment/decrement buttons.
+   Supports keyboard navigation, long-press acceleration, and
+   min/max bounds. Follows RenDS design token system.
+
+   Usage:
+   <ren-number-field min="0" max="100" step="1" value="5">
+     <button class="ren-number-field-decrement" aria-label="Decrease">−</button>
+     <input class="ren-number-field-input" type="number" value="5">
+     <button class="ren-number-field-increment" aria-label="Increase">+</button>
+   </ren-number-field>
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══ BASE WRAPPER ═══ */
+.ren-number-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: var(--stroke-1) solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-input-bg);
+  transition: var(--transition-tactile);
+
+  /* ═══ FOCUS STATE ON GROUP ═══ */
+  &:has(.ren-number-field-input:focus) {
+    border-color: var(--color-input-border-focus);
+    box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+    background-color: var(--color-input-bg-hover);
+  }
+
+  /* ═══ HOVER STATE ═══ */
+  &:hover:not(:has(:disabled)) {
+    background-color: var(--color-input-bg-hover);
+  }
+
+  /* ═══ DISABLED STATE ═══ */
+  &:has(:disabled) {
+    background-color: var(--color-disabled-bg);
+    border-color: var(--color-border);
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+/* ═══ STEPPER BUTTONS ═══ */
+.ren-number-field-decrement,
+.ren-number-field-increment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--touch-min);
+  height: var(--touch-min);
+  padding: 0 var(--space-2);
+  background: transparent;
+  border: none;
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: var(--text-lg);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  transition: var(--transition-tactile);
+
+  /* ═══ REMOVE FOCUS OUTLINE - GROUP HANDLES IT ═══ */
+  &:focus {
+    outline: none;
+  }
+
+  /* ═══ HOVER STATE ═══ */
+  &:hover:not(:disabled) {
+    background-color: var(--color-fill-hover);
+  }
+
+  /* ═══ ACTIVE STATE ═══ */
+  &:active:not(:disabled) {
+    background-color: var(--color-fill-active);
+  }
+
+  /* ═══ DISABLED STATE ═══ */
+  &:disabled {
+    color: var(--color-disabled-text);
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+/* ═══ DECREMENT BUTTON (LEFT) ═══ */
+.ren-number-field-decrement {
+  border-inline-end: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+
+  /* ═══ MINUS ICON ═══ */
+  &::before {
+    content: '−';
+  }
+}
+
+/* ═══ INCREMENT BUTTON (RIGHT) ═══ */
+.ren-number-field-increment {
+  border-inline-start: var(--stroke-1) solid var(--color-border);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+
+  /* ═══ PLUS ICON ═══ */
+  &::before {
+    content: '+';
+  }
+}
+
+/* ═══ INPUT FIELD (CENTER) ═══ */
+.ren-number-field-input {
+  flex: 1;
+  min-width: 3rem;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  font-family: var(--font-mono);
+  font-weight: 500;
+  color: var(--color-text);
+  text-align: center;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: text;
+
+  /* ═══ HIDE NATIVE NUMBER SPINNER ═══ */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  /* ═══ PLACEHOLDER ═══ */
+  &::placeholder {
+    color: var(--color-input-placeholder);
+  }
+
+  /* ═══ DISABLED ═══ */
+  &:disabled {
+    cursor: not-allowed;
+    color: var(--color-disabled-text);
+  }
+}
+
+/* ═══ VARIANT: SMALL ═══ */
+.ren-number-field-sm {
+  height: var(--size-sm);
+  border-radius: var(--radius-sm);
+
+  & .ren-number-field-decrement,
+  & .ren-number-field-increment {
+    min-width: var(--size-sm);
+    height: var(--size-sm);
+    padding: 0 var(--space-1);
+    font-size: var(--text-sm);
+  }
+
+  & .ren-number-field-decrement {
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  }
+
+  & .ren-number-field-increment {
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  & .ren-number-field-input {
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-sm);
+  }
+}
+
+/* ═══ VARIANT: LARGE ═══ */
+.ren-number-field-lg {
+  height: var(--size-lg);
+  border-radius: var(--radius-lg);
+
+  & .ren-number-field-decrement,
+  & .ren-number-field-increment {
+    min-width: var(--size-lg);
+    height: var(--size-lg);
+    padding: 0 var(--space-3);
+    font-size: var(--text-lg);
+  }
+
+  & .ren-number-field-decrement {
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+
+  & .ren-number-field-increment {
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+
+  & .ren-number-field-input {
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-lg);
+  }
+}
+
+/* ═══ ERROR STATE ═══ */
+.ren-number-field[data-invalid] {
+  border-color: var(--color-danger);
+
+  &:focus-within {
+    box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+  }
+}
+
+/* ═══ SUCCESS STATE ═══ */
+.ren-number-field[data-valid] {
+  border-color: var(--color-success);
+
+  &:focus-within {
+    box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+  }
+}
+
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-number-field,
+  .ren-number-field-decrement,
+  .ren-number-field-increment {
+    transition: none;
+  }
+}

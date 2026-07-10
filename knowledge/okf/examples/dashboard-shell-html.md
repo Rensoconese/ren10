@@ -1,0 +1,157 @@
+---
+type: "RenDS Example"
+title: dashboard-shell.html
+description: "RenDS Example generated from the RenDS knowledge graph."
+id: example:examples/dashboard-shell.html
+sourcePath: examples/dashboard-shell.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - example
+  - ren10
+  - rends
+---
+
+# dashboard-shell.html
+
+Source path: `examples/dashboard-shell.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!doctype html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RenDS · Dashboard shell example</title>
+
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+
+  <script type="module" src="../components/patterns/ren-sidebar/ren-sidebar.js"></script>
+  <script type="module" src="../components/primitives/ren-button/ren-button.js"></script>
+  <script type="module" src="../components/primitives/ren-field/ren-field.js"></script>
+</head>
+<body>
+  <!--
+    App shell: ren-sidebar-layout = sidebar (left) + main (right).
+    Sidebar persists across routes; main hosts the page-level content.
+    Layout uses ren-stack-lg to space large sections inside main.
+  -->
+  <div class="ren-sidebar-layout">
+    <ren-sidebar class="ren-sidebar" aria-label="Primary">
+      <div class="ren-sidebar-header">
+        <a class="ren-sidebar-item" href="/" aria-label="Acme home">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⌂</span>
+          <span class="ren-sidebar-item-text">Acme</span>
+        </a>
+      </div>
+
+      <nav class="ren-sidebar-nav" aria-label="Main">
+        <a class="ren-sidebar-item active" href="/dashboard" aria-current="page">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">📊</span>
+          <span class="ren-sidebar-item-text">Dashboard</span>
+        </a>
+        <a class="ren-sidebar-item" href="/projects">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">📁</span>
+          <span class="ren-sidebar-item-text">Projects</span>
+        </a>
+        <a class="ren-sidebar-item" href="/team">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">👥</span>
+          <span class="ren-sidebar-item-text">Team</span>
+        </a>
+        <a class="ren-sidebar-item" href="/billing">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">💳</span>
+          <span class="ren-sidebar-item-text">Billing</span>
+        </a>
+      </nav>
+
+      <div class="ren-sidebar-section">
+        <div class="ren-sidebar-section-label">Account</div>
+        <a class="ren-sidebar-item" href="/settings">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⚙</span>
+          <span class="ren-sidebar-item-text">Settings</span>
+        </a>
+      </div>
+
+      <button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"></button>
+    </ren-sidebar>
+
+    <main class="ren-sidebar-main">
+      <div class="ren-center-wide ren-stack-lg" style="padding: var(--space-6)">
+        <!-- Page header -->
+        <header class="ren-row-spread">
+          <div class="ren-stack-xs">
+            <h1>Dashboard</h1>
+            <p style="color: var(--color-text-muted)">Welcome back, Renato.</p>
+          </div>
+          <div class="ren-cluster">
+            <button class="ren-btn ren-btn-secondary" type="button">Export</button>
+            <button class="ren-btn" type="button">New project</button>
+          </div>
+        </header>
+
+        <!-- Stat tiles -->
+        <section class="ren-grid-3" aria-label="Key metrics">
+          <article class="ren-card">
+            <div class="ren-card-header">
+              <p class="ren-card-description">Active users</p>
+            </div>
+            <div class="ren-card-body ren-row-spread">
+              <strong style="font-size: var(--text-4xl)">12,438</strong>
+              <span class="ren-badge ren-badge-success">+8.2%</span>
+            </div>
+          </article>
+
+          <article class="ren-card">
+            <div class="ren-card-header">
+              <p class="ren-card-description">Revenue (MRR)</p>
+            </div>
+            <div class="ren-card-body ren-row-spread">
+              <strong style="font-size: var(--text-4xl)">$48.2k</strong>
+              <span class="ren-badge ren-badge-success">+3.1%</span>
+            </div>
+          </article>
+
+          <article class="ren-card">
+            <div class="ren-card-header">
+              <p class="ren-card-description">Churn</p>
+            </div>
+            <div class="ren-card-body ren-row-spread">
+              <strong style="font-size: var(--text-4xl)">1.4%</strong>
+              <span class="ren-badge ren-badge-danger">+0.3%</span>
+            </div>
+          </article>
+        </section>
+
+        <!-- Recent activity -->
+        <section class="ren-card ren-stack">
+          <header class="ren-card-header ren-row-spread">
+            <h2 class="ren-card-title">Recent projects</h2>
+            <a class="ren-link" href="/projects">View all</a>
+          </header>
+          <div class="ren-card-body">
+            <table class="ren-table">
+              <caption class="ren-sr-only">Recent projects</caption>
+              <thead>
+                <tr><th scope="col">Name</th><th scope="col">Owner</th><th scope="col">Status</th><th scope="col">Updated</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Atlas</td><td>Renato</td><td><span class="ren-badge ren-badge-success">Active</span></td><td>2m ago</td></tr>
+                <tr><td>Mercury</td><td>Sofía</td><td><span class="ren-badge ren-badge-warning">Paused</span></td><td>1h ago</td></tr>
+                <tr><td>Nimbus</td><td>Iván</td><td><span class="ren-badge">Draft</span></td><td>Yesterday</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+---
+type: "RenDS CSS"
+title: ren-date-picker.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-date-picker/ren-date-picker.css
+sourcePath: components/composites/ren-date-picker/ren-date-picker.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-date-picker.css
+
+Source path: `components/composites/ren-date-picker/ren-date-picker.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ═══ REN DATE PICKER WEB COMPONENT ═══
+   A composable date picker that wraps the calendar component
+   with an input field and popover dropdown.
+   Uses Popover API for positioning with CSS anchor positioning.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ═══ BASE WRAPPER ═══ */
+.ren-date-picker {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  position: relative;
+}
+
+/* ═══ TRIGGER INPUT ═══ */
+.ren-date-picker-trigger {
+  anchor-name: --ren-date-picker-anchor;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--body-size);
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition-tactile);
+  min-height: var(--touch-min);
+
+  &:hover:not([disabled]) {
+    border-color: var(--color-border-strong);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-color: var(--color-accent);
+  }
+
+  &[disabled] {
+    background: var(--color-fill);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  /* ═══ PLACEHOLDER TEXT ═══ */
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+
+  /* ═══ CALENDAR ICON (::after) ═══ */
+  &::after {
+    content: '📅';
+    font-size: 1.25em;
+    flex-shrink: 0;
+    pointer-events: none;
+  }
+}
+
+/* ═══ TRIGGER TEXT CONTENT ═══ */
+.ren-date-picker-value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ═══ EMPTY STATE ═══ */
+.ren-date-picker-trigger.ren-date-picker-empty {
+  color: var(--color-text-muted);
+
+  .ren-date-picker-value {
+    display: none;
+  }
+
+  &::before {
+    content: attr(data-placeholder);
+    color: var(--color-text-muted);
+  }
+}
+
+/* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
+.ren-date-picker-dropdown {
+  position-anchor: --ren-date-picker-anchor;
+  position: absolute;
+  position-area: bottom span-all;
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  inset: auto;
+  margin: 0;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  max-width: 400px;
+
+  /* ═══ POPOVER API ═══ */
+  &[popover] {
+    padding: 0;
+    margin: 0;
+  }
+
+  &:popover-open {
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    animation: ren-date-picker-popup-in var(--duration-enter) var(--ease-enter) both;
+  }
+}
+
+.ren-date-picker-dropdown[data-side="bottom"],
+.ren-date-picker-dropdown:not([data-side]) {
+  position-area: bottom span-all;
+  margin-block-start: var(--space-2);
+  margin-block-end: 0;
+  margin-inline: 0;
+}
+
+.ren-date-picker-dropdown[data-side="top"] {
+  position-area: top span-all;
+  margin-block-start: 0;
+  margin-block-end: var(--space-2);
+  margin-inline: 0;
+}
+
+.ren-date-picker-dropdown[data-side="right"] {
+  position-area: right span-all;
+  margin-block: 0;
+  margin-inline-start: var(--space-2);
+  margin-inline-end: 0;
+}
+
+.ren-date-picker-dropdown[data-side="left"] {
+  position-area: left span-all;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: var(--space-2);
+}
+
+/* ═══ FALLBACK POSITIONING (no complete anchor support) ═══ */
+@supports not ((anchor-name: --ren-anchor) and
+  (position-anchor: --ren-anchor) and
+  (position-area: bottom span-all)) {
+  .ren-date-picker-dropdown {
+    position: fixed;
+    top: auto;
+    left: auto;
+  }
+}
+
+/* ═══ ANIMATION: POPUP IN ═══ */
+@starting-style {
+  .ren-date-picker-dropdown:popover-open {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+}
+
+@keyframes ren-date-picker-popup-in {
+  from {
+    opacity: 0;
+    translate: 0 -8px;
+  }
+
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ═══ CALENDAR INSIDE DROPDOWN ═══ */
+.ren-date-picker-dropdown .ren-calendar {
+  border: none;
+  box-shadow: none;
+  background: var(--color-surface-raised);
+  padding: var(--space-3);
+}
+
+/* ═══ PRESETS SECTION ═══ */
+.ren-date-picker-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.ren-date-picker-preset {
+  padding: var(--space-1-5) var(--space-3);
+  background: var(--color-fill);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  cursor: pointer;
+  transition: var(--transition-tactile);
+
+  &:hover {
+    background: var(--color-fill-hover);
+    border-color: var(--color-border-strong);
+  }
+
+  &:active {
+    background: var(--color-fill-active);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  &[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ═══ RANGE MODE: SHOW START AND END ═══ */
+.ren-date-picker.ren-date-picker-range .ren-date-picker-value::after {
+  content: ' → ';
+  margin: 0 var(--space-1);
+}
+
+/* ═══ DISABLED STATE ═══ */
+.ren-date-picker[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
+
+  .ren-date-picker-trigger {
+    cursor: not-allowed;
+  }
+}
+
+/* ═══ REDUCED MOTION SUPPORT ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-date-picker-dropdown:popover-open {
+    animation: none;
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .ren-date-picker-dropdown {
+    transition: none;
+  }
+}
+
+/* ═══ DARK MODE SUPPORT ═══ */
+@media (prefers-color-scheme: dark) {
+  .ren-date-picker-trigger,
+  .ren-date-picker-dropdown {
+    /* ═══ USES CSS VARIABLES - AUTO ADAPTS ═══ */
+  }
+}
+
+/* ═══ MOBILE RESPONSIVENESS ═══ */
+@media (max-width: 480px) {
+  .ren-date-picker-dropdown {
+    position: fixed !important;
+    inset: auto 0 0 0 !important;
+    max-width: none;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    max-height: 80vh;
+    overflow-y: auto;
+
+    &:popover-open {
+      animation: ren-date-picker-mobile-in var(--duration-enter) var(--ease-enter) both;
+    }
+  }
+
+  @starting-style {
+    .ren-date-picker-dropdown:popover-open {
+      translate: 0 100%;
+      opacity: 0;
+    }
+  }
+
+  @keyframes ren-date-picker-mobile-in {
+    from {
+      translate: 0 100%;
+      opacity: 0;
+    }
+
+    to {
+      translate: 0 0;
+      opacity: 1;
+    }
+  }
+}
+
+/* ═══ ERROR STATE ═══ */
+.ren-date-picker.ren-date-picker-error {
+  .ren-date-picker-trigger {
+    border-color: var(--color-danger);
+
+    &:focus-visible {
+      outline-color: var(--color-danger);
+      border-color: var(--color-danger);
+    }
+  }
+}
+
+/* ═══ SUCCESS STATE ═══ */
+.ren-date-picker.ren-date-picker-success {
+  .ren-date-picker-trigger {
+    border-color: var(--color-success);
+
+    &:focus-visible {
+      outline-color: var(--color-success);
+      border-color: var(--color-success);
+    }
+  }
+}
+
+/* ═══ FORM INTEGRATION ═══ */
+.ren-date-picker {
+  /* ═══ ALLOW FORM STYLING ═══ */
+
+  input[type='hidden'] {
+    display: none;
+  }
+}

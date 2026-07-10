@@ -1,0 +1,124 @@
+---
+type: "RenDS Example"
+title: app-sidebar.html
+description: "RenDS Example generated from the RenDS knowledge graph."
+id: example:examples/app-sidebar.html
+sourcePath: examples/app-sidebar.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - example
+  - ren10
+  - rends
+---
+
+# app-sidebar.html
+
+Source path: `examples/app-sidebar.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!doctype html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RenDS · App sidebar example</title>
+
+  <link rel="stylesheet" href="../index.css">
+  <link rel="stylesheet" href="../components/index.css">
+
+  <script type="module" src="../components/patterns/ren-sidebar/ren-sidebar.js"></script>
+</head>
+<body>
+  <!--
+    App shell with collapsible sidebar.
+    Use this as the outer skeleton for any authenticated multi-page product.
+    The sidebar is the only navigation; routes go in the sidebar.
+  -->
+  <div class="ren-sidebar-layout">
+    <ren-sidebar class="ren-sidebar" aria-label="Primary">
+      <div class="ren-sidebar-header">
+        <a class="ren-sidebar-item" href="/" aria-label="Acme home">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⌂</span>
+          <span class="ren-sidebar-item-text">Acme</span>
+        </a>
+      </div>
+
+      <nav class="ren-sidebar-nav" aria-label="Workspace">
+        <a class="ren-sidebar-item active" href="/inbox" aria-current="page">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">📥</span>
+          <span class="ren-sidebar-item-text">Inbox</span>
+        </a>
+        <a class="ren-sidebar-item" href="/today">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">📅</span>
+          <span class="ren-sidebar-item-text">Today</span>
+        </a>
+        <a class="ren-sidebar-item" href="/upcoming">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⏭</span>
+          <span class="ren-sidebar-item-text">Upcoming</span>
+        </a>
+      </nav>
+
+      <div class="ren-sidebar-section">
+        <div class="ren-sidebar-section-label">Projects</div>
+        <a class="ren-sidebar-item" href="/p/atlas">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">●</span>
+          <span class="ren-sidebar-item-text">Atlas</span>
+        </a>
+        <a class="ren-sidebar-item" href="/p/mercury">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">●</span>
+          <span class="ren-sidebar-item-text">Mercury</span>
+        </a>
+        <a class="ren-sidebar-item" href="/p/nimbus">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">●</span>
+          <span class="ren-sidebar-item-text">Nimbus</span>
+        </a>
+      </div>
+
+      <div class="ren-sidebar-footer">
+        <a class="ren-sidebar-item" href="/help">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">？</span>
+          <span class="ren-sidebar-item-text">Help</span>
+        </a>
+        <a class="ren-sidebar-item" href="/settings">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⚙</span>
+          <span class="ren-sidebar-item-text">Settings</span>
+        </a>
+      </div>
+
+      <button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"></button>
+    </ren-sidebar>
+
+    <main class="ren-sidebar-main">
+      <div class="ren-stack-lg" style="padding: var(--space-6)">
+        <header class="ren-row-spread">
+          <h1>Inbox</h1>
+          <button class="ren-btn" type="button">New task</button>
+        </header>
+
+        <ul class="ren-stack" style="list-style: none; padding: 0; margin: 0">
+          <li class="ren-card ren-card-interactive ren-row-spread" tabindex="0">
+            <span>Review the Q3 launch checklist</span>
+            <span class="ren-badge ren-badge-warning">Today</span>
+          </li>
+          <li class="ren-card ren-card-interactive ren-row-spread" tabindex="0">
+            <span>Approve invoice from Iván</span>
+            <span class="ren-badge">Tomorrow</span>
+          </li>
+          <li class="ren-card ren-card-interactive ren-row-spread" tabindex="0">
+            <span>Plan offsite logistics</span>
+            <span class="ren-badge">Next week</span>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

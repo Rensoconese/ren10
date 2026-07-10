@@ -1,0 +1,683 @@
+---
+type: "RenDS CSS"
+title: ren-ai.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/patterns/ren-ai/ren-ai.css
+sourcePath: components/patterns/ren-ai/ren-ai.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-ai.css
+
+Source path: `components/patterns/ren-ai/ren-ai.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Carbon for AI Patterns
+   ============================================
+   Design patterns for AI-generated content.
+   Inspired by IBM Carbon for AI.
+
+   Components:
+   - AI Message bubble (streaming + complete)
+   - AI Typing indicator
+   - AI Citation / Source reference
+   - AI Confidence indicator
+   - AI Regenerate action
+   - AI Prompt input
+   - AI Slug (inline AI label)
+
+   All CSS-only where possible, minimal JS for
+   streaming text animation.
+   ============================================ */
+
+/* ═══════════════════════════════════════════════
+   AI SLUG — Inline "AI" label
+   ═══════════════════════════════════════════════ */
+.ren-ai-slug {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-0-5) var(--space-2);
+  font-size: var(--caption-sm-size);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-ai);
+  background: color-mix(in srgb, var(--color-ai) 10%, transparent);
+  border-radius: var(--radius-sm);
+  line-height: 1;
+}
+
+.ren-ai-slug::before {
+  content: '✦';
+  font-size: 0.75em;
+}
+
+/* ═══════════════════════════════════════════════
+   AI MESSAGE — Chat bubble for AI responses
+   ═══════════════════════════════════════════════ */
+.ren-ai-message {
+  position: relative;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-ai-subtle) 70%, var(--color-surface-raised));
+  border: var(--stroke-1) solid var(--color-border);
+  line-height: var(--leading-relaxed);
+}
+
+.ren-ai-message-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+  font-size: var(--label-size);
+}
+
+.ren-ai-message-content {
+  font-size: var(--body-size);
+  color: var(--color-text);
+}
+
+.ren-ai-message-content p:last-child {
+  margin-bottom: 0;
+}
+
+.ren-ai-message-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--stroke-1) solid var(--color-border-muted);
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+}
+
+/* ═══════════════════════════════════════════════
+   AI STREAMING — Typing animation
+   ═══════════════════════════════════════════════ */
+.ren-ai-streaming .ren-ai-message-content::after {
+  content: '▊';
+  display: inline;
+  animation: ren-ai-blink 0.8s step-end infinite;
+  color: var(--color-ai);
+  margin-inline-start: 1px;
+}
+
+@keyframes ren-ai-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-streaming .ren-ai-message-content::after {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   AI TYPING INDICATOR — "AI is thinking..."
+   ═══════════════════════════════════════════════ */
+.ren-ai-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+}
+
+.ren-ai-typing-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.ren-ai-typing-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-ai);
+  animation: ren-ai-dot-bounce 1.4s ease-in-out infinite;
+}
+
+.ren-ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+.ren-ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes ren-ai-dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40%           { transform: translateY(-4px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-typing-dots span {
+    animation: ren-ai-dot-fade 1.4s ease-in-out infinite;
+  }
+  @keyframes ren-ai-dot-fade {
+    0%, 80%, 100% { opacity: 0.3; }
+    40%           { opacity: 1; }
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   AI CITATION — Source reference
+   ═══════════════════════════════════════════════ */
+.ren-ai-citation {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-0-5) var(--space-2);
+  font-size: var(--caption-sm-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-ai);
+  background: color-mix(in srgb, var(--color-ai) 8%, transparent);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--duration-tactile) var(--ease-enter);
+  vertical-align: super;
+  line-height: 1;
+}
+
+.ren-ai-citation:hover {
+  background: color-mix(in srgb, var(--color-ai) 14%, transparent);
+}
+
+/* Citation list at bottom of message */
+.ren-ai-sources {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: var(--stroke-1) solid var(--color-border-muted);
+}
+
+.ren-ai-source {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+  font-size: var(--caption-size);
+  text-decoration: none;
+  color: var(--color-text);
+  transition: background var(--duration-tactile) var(--ease-enter);
+}
+
+.ren-ai-source:hover {
+  background: var(--color-fill);
+}
+
+.ren-ai-source-number {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--caption-sm-size);
+  font-weight: var(--weight-bold);
+  color: var(--color-ai);
+  background: color-mix(in srgb, var(--color-ai) 10%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.ren-ai-source-title {
+  font-weight: var(--weight-medium);
+}
+
+.ren-ai-source-url {
+  color: var(--color-text-muted);
+  font-size: var(--caption-sm-size);
+}
+
+/* ═══════════════════════════════════════════════
+   AI CONFIDENCE — Certainty indicator
+   ═══════════════════════════════════════════════ */
+.ren-ai-confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+}
+
+.ren-ai-confidence-bar {
+  width: 3rem;
+  height: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-fill);
+  overflow: hidden;
+}
+
+.ren-ai-confidence-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-state) var(--ease-enter);
+}
+
+.ren-ai-confidence[data-level="high"] .ren-ai-confidence-fill {
+  width: 100%;
+  background: var(--color-success);
+}
+
+.ren-ai-confidence[data-level="medium"] .ren-ai-confidence-fill {
+  width: 66%;
+  background: var(--color-warning);
+}
+
+.ren-ai-confidence[data-level="low"] .ren-ai-confidence-fill {
+  width: 33%;
+  background: var(--color-danger);
+}
+
+/* ═══════════════════════════════════════════════
+   AI ACTIONS — Regenerate, Copy, Feedback
+   ═══════════════════════════════════════════════ */
+.ren-ai-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.ren-ai-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--duration-tactile) var(--ease-enter);
+  min-height: var(--size-sm);
+}
+
+.ren-ai-action:hover {
+  color: var(--color-text);
+  background: var(--color-fill);
+}
+
+.ren-ai-action:active {
+  transform: scale(0.95);
+}
+
+.ren-ai-action[data-active="true"] {
+  color: var(--color-ai);
+}
+
+/* Feedback buttons (thumbs up/down) */
+.ren-ai-action-thumbs {
+  display: inline-flex;
+  gap: 0;
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.ren-ai-action-thumbs .ren-ai-action {
+  border-radius: 0;
+  padding: var(--space-1) var(--space-2);
+}
+
+.ren-ai-action-thumbs .ren-ai-action + .ren-ai-action {
+  border-inline-start: var(--stroke-1) solid var(--color-border);
+}
+
+/* ═══════════════════════════════════════════════
+   AI PROMPT INPUT — Chat-style input
+   ═══════════════════════════════════════════════ */
+.ren-ai-prompt {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  transition: border-color var(--duration-tactile) var(--ease-enter);
+}
+
+.ren-ai-prompt:focus-within {
+  border-color: var(--color-ai);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ai) 15%, transparent);
+}
+
+.ren-ai-prompt-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--body-size);
+  color: var(--color-text);
+  resize: none;
+  outline: none;
+  min-height: 1.5rem;
+  max-height: 8rem;
+  field-sizing: content;
+  line-height: var(--leading-normal);
+}
+
+.ren-ai-prompt-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.ren-ai-prompt-send {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--size-md);
+  height: var(--size-md);
+  border: none;
+  border-radius: var(--radius-full);
+  background: var(--color-ai);
+  color: var(--color-on-ai);
+  cursor: pointer;
+  transition: all var(--duration-tactile) var(--ease-enter);
+  font-size: var(--text-lg);
+}
+
+.ren-ai-prompt-send:hover {
+  background: var(--color-ai-hover);
+  transform: scale(1.05);
+}
+
+.ren-ai-prompt-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ═══════════════════════════════════════════════
+   AI SKELETON — Loading placeholder for AI
+   ═══════════════════════════════════════════════ */
+.ren-ai-skeleton {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-ai-subtle) 55%, var(--color-surface-raised));
+  border: var(--stroke-1) solid var(--color-border-muted);
+}
+
+.ren-ai-skeleton-line {
+  height: 0.875rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-fill) 25%,
+    color-mix(in srgb, var(--color-ai) 6%, var(--color-fill)) 50%,
+    var(--color-fill) 75%
+  );
+  background-size: 200% 100%;
+  animation: ren-ai-shimmer 1.5s ease-in-out infinite;
+}
+
+.ren-ai-skeleton-line + .ren-ai-skeleton-line {
+  margin-top: var(--space-2);
+}
+
+.ren-ai-skeleton-line:last-child {
+  width: 60%;
+}
+
+@keyframes ren-ai-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-skeleton-line {
+    animation: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   AI ERROR — Message failure state
+   ═══════════════════════════════════════════════ */
+.ren-ai-error {
+  position: relative;
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-danger) 6%, var(--color-surface-raised));
+  border: var(--stroke-1) solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ren-ai-error-message {
+  color: var(--color-text);
+  font-size: var(--body-size);
+  line-height: 1.5;
+}
+
+.ren-ai-error-message::before {
+  content: '⚠ ';
+  color: var(--color-danger);
+  margin-inline-end: var(--space-1);
+}
+
+/* ═══════════════════════════════════════════════
+   AI ACTION VARIANTS — Regenerate, edit-and-resend
+   These extend the existing .ren-ai-action base.
+   ═══════════════════════════════════════════════ */
+.ren-ai-action-regenerate::before {
+  content: '↻';
+  margin-inline-end: var(--space-1);
+  font-size: 1.1em;
+  display: inline-block;
+  /* Subtle hint that this re-runs inference */
+  transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+}
+
+.ren-ai-action-regenerate:hover::before {
+  transform: rotate(-45deg);
+}
+
+.ren-ai-action-edit::before {
+  content: '✎';
+  margin-inline-end: var(--space-1);
+  font-size: 1.05em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-action-regenerate::before {
+    transition: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   AI FILE CHIP — Uploaded file reference
+   Compact pill showing a file the user attached,
+   with icon, name, size, and remove affordance.
+   ═══════════════════════════════════════════════ */
+.ren-ai-file-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface-raised);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--caption-size);
+  max-width: 220px;
+}
+
+.ren-ai-file-chip-icon {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  color: var(--color-text-muted);
+  display: grid;
+  place-items: center;
+}
+
+.ren-ai-file-chip-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-text);
+  font-weight: var(--weight-medium);
+}
+
+.ren-ai-file-chip-size {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--caption-sm-size);
+}
+
+.ren-ai-file-chip-remove {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.ren-ai-file-chip-remove:hover,
+.ren-ai-file-chip-remove:focus-visible {
+  background: var(--color-fill);
+  color: var(--color-text);
+}
+
+.ren-ai-file-chip-remove:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   AI TOOL CALL — Model invoking a tool / function
+   Collapsible block built on native <details>
+   so JS is optional. Status via data-status.
+   ═══════════════════════════════════════════════ */
+.ren-ai-tool-call {
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  margin-block: var(--space-2);
+  overflow: hidden;
+}
+
+.ren-ai-tool-call-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-sunken);
+  font-size: var(--caption-size);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.ren-ai-tool-call-header::-webkit-details-marker { display: none; }
+
+.ren-ai-tool-call-header::before {
+  content: '▸';
+  font-size: 0.75em;
+  color: var(--color-text-muted);
+  transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+}
+
+.ren-ai-tool-call[open] > .ren-ai-tool-call-header::before {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ren-ai-tool-call-header::before {
+    transition: none;
+  }
+}
+
+.ren-ai-tool-call-name {
+  font-family: var(--font-mono);
+  color: var(--color-text);
+}
+
+.ren-ai-tool-call-status {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--caption-sm-size);
+  font-weight: var(--weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border: var(--stroke-1) solid transparent;
+}
+
+.ren-ai-tool-call[data-status="pending"] .ren-ai-tool-call-status {
+  color: var(--color-text-muted);
+  background: var(--color-fill);
+}
+
+.ren-ai-tool-call[data-status="running"] .ren-ai-tool-call-status {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 15%, transparent);
+}
+
+.ren-ai-tool-call[data-status="success"] .ren-ai-tool-call-status {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 15%, transparent);
+}
+
+.ren-ai-tool-call[data-status="error"] .ren-ai-tool-call-status {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 15%, transparent);
+}
+
+.ren-ai-tool-call-args,
+.ren-ai-tool-call-result {
+  padding: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--caption-size);
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.ren-ai-tool-call-args {
+  border-bottom: var(--stroke-1) solid var(--color-border-muted);
+}
+
+.ren-ai-tool-call-result {
+  background: var(--color-surface);
+}
+
+.ren-ai-tool-call[data-status="error"] .ren-ai-tool-call-result {
+  background: color-mix(in srgb, var(--color-danger) 4%, var(--color-surface));
+  color: var(--color-text);
+}

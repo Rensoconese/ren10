@@ -1,0 +1,366 @@
+---
+type: "RenDS CSS"
+title: ren-field.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-field/ren-field.css
+sourcePath: components/primitives/ren-field/ren-field.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-field.css
+
+Source path: `components/primitives/ren-field/ren-field.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Field Component (Input + Label + Error)
+   ============================================
+   Wraps any form control with label, description,
+   and error message — all properly wired with ARIA.
+
+   Works as pure CSS classes OR as <ren-field>.
+
+   Structure:
+   .ren-field
+     .ren-field-label       (label element)
+     .ren-field-control     (input/select/textarea wrapper)
+     .ren-field-description (helper text)
+     .ren-field-error       (error message)
+   ============================================ */
+
+/* ─── Field Container ─── */
+.ren-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+/* ─── Label ─── */
+.ren-field-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  color: var(--color-text);
+}
+
+/* Required indicator */
+.ren-field-label[data-required]::after {
+  content: '*';
+  color: var(--color-danger);
+  font-weight: var(--weight-bold);
+}
+
+/* ─── Input / Control ─── */
+.ren-input {
+  display: block;
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: var(--stroke-1) solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--duration-state) var(--ease-enter),
+    background-color var(--duration-state) var(--ease-enter),
+    box-shadow var(--duration-state) var(--ease-enter);
+}
+
+.ren-input:hover:not(:disabled):not(:focus) {
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-input:focus {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-input:disabled {
+  background-color: var(--color-input-disabled-bg);
+  color: var(--color-input-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.ren-input::placeholder {
+  color: var(--color-input-placeholder);
+  opacity: 1;
+}
+
+/* ─── Textarea ─── */
+textarea.ren-input {
+  field-sizing: content;  /* Auto-grow with content — no JS needed */
+  min-height: calc(var(--touch-min) * 2);
+  max-height: 20rem;      /* Prevent runaway growth */
+  resize: vertical;
+}
+
+/* ─── Select ─── */
+select.ren-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238E8E93' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-inline-end: var(--space-10);
+}
+
+@supports (appearance: base-select) {
+  /* ── Opt-in ── */
+  select.ren-input,
+  select.ren-input::picker(select) {
+    appearance: base-select;
+  }
+
+  /* ── Trigger ── */
+  select.ren-input {
+    display: flex;
+    align-items: center;
+    background-image: none;
+    padding-inline-end: var(--space-3);
+  }
+
+  select.ren-input::picker-icon {
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    margin-inline-start: auto;
+    padding-inline-start: var(--space-3);
+    transition: rotate var(--duration-tactile) var(--ease-enter);
+  }
+
+  select.ren-input:open::picker-icon {
+    rotate: 180deg;
+  }
+
+  select.ren-input option::checkmark {
+    display: none;
+  }
+
+  /* ── Dropdown ── */
+  select.ren-input::picker(select) {
+    background: var(--color-surface-overlay);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 20px rgb(0, 0, 0, 0.08),
+                0 1px 3px rgb(0, 0, 0, 0.06);
+    padding: var(--space-1);
+    margin-block-start: var(--space-1);
+    overflow: clip;
+  }
+
+  /* ── Options ── */
+  select.ren-input option {
+    display: flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    border-radius: 4px;
+    color: var(--color-text);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  select.ren-input option + option {
+    margin-block-start: 1px;
+  }
+
+  select.ren-input option:hover {
+    background: light-dark(var(--gray-50), var(--gray-800));
+  }
+
+  select.ren-input option:focus-visible,
+  select.ren-input option:active {
+    outline: 2px solid var(--color-accent);
+    outline-offset: -2px;
+    background: light-dark(var(--gray-50), var(--gray-800));
+  }
+
+  select.ren-input option:checked:not(:disabled) {
+    background: light-dark(var(--blue-50), var(--blue-900));
+    color: light-dark(var(--blue-700), var(--blue-200));
+    font-weight: var(--weight-medium);
+  }
+
+  select.ren-input option:checked:not(:disabled)::after {
+    content: "✓";
+    margin-inline-start: auto;
+    color: light-dark(var(--blue-600), var(--blue-300));
+    font-weight: var(--weight-bold);
+  }
+
+  select.ren-input option:checked:hover {
+    background: light-dark(var(--blue-100), var(--blue-800));
+  }
+
+  select.ren-input option:disabled {
+    color: light-dark(var(--gray-500), var(--gray-400));
+    cursor: not-allowed;
+  }
+
+  select.ren-input option[hidden] {
+    display: none;
+  }
+
+  /* ── Optgroups ── */
+  select.ren-input optgroup {
+    padding: var(--space-1) 0;
+    padding-inline-start: 0;
+  }
+
+  select.ren-input optgroup:not(:first-of-type) {
+    border-block-start: 1px solid var(--color-border);
+    margin-block-start: var(--space-2);
+    padding-block-start: var(--space-2);
+  }
+
+  select.ren-input optgroup > legend,
+  select.ren-input optgroup > label {
+    padding: var(--space-1) var(--space-3);
+    margin-inline-start: var(--space-3);
+  }
+
+  /* ── Open state ── */
+  select.ren-input:open {
+    border-color: var(--color-input-border-focus);
+    box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  }
+}
+
+/* ─── Input Sizes ─── */
+.ren-input-sm {
+  min-height: var(--size-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.ren-input-lg {
+  min-height: var(--size-xl);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-lg);
+}
+
+/* ─── Input with icon ─── */
+.ren-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ren-input-icon {
+  position: absolute;
+  left: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  display: flex;
+}
+
+.ren-input-icon + .ren-input,
+.ren-input-wrapper > .ren-input:has(+ .ren-input-icon) {
+  padding-inline-start: calc(var(--space-3) + var(--icon-lg) + var(--space-2));
+}
+
+.ren-input-icon-end {
+  position: absolute;
+  right: var(--space-3);
+  color: var(--color-text-muted);
+  pointer-events: none;
+  display: flex;
+}
+
+/* ─── Description ─── */
+.ren-field-description {
+  font-size: var(--caption-size);
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+  margin: 0;
+}
+
+/* ─── Error Message ─── */
+.ren-field-error {
+  font-size: var(--caption-size);
+  color: var(--color-danger);
+  line-height: var(--leading-normal);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Error state on input */
+.ren-field[data-invalid] .ren-input,
+.ren-input[aria-invalid="true"],
+.ren-input-error {
+  border-color: var(--color-input-error-border);
+}
+
+.ren-field[data-invalid] .ren-input:focus,
+.ren-input[aria-invalid="true"]:focus,
+.ren-input-error:focus {
+  box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+  border-color: var(--color-input-error-border);
+}
+
+/* Error state on label */
+.ren-field[data-invalid] .ren-field-label {
+  color: var(--color-danger);
+}
+
+/* ─── Success state ─── */
+.ren-field[data-valid] .ren-input,
+.ren-input-success {
+  border-color: var(--color-success);
+}
+
+.ren-field[data-valid] .ren-input:focus,
+.ren-input-success:focus {
+  box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+}
+
+/* ─── Modern Validation (no JS needed) ─── */
+/* Only show validation state AFTER user interaction */
+.ren-input:user-invalid {
+  border-color: var(--color-input-error-border);
+}
+
+.ren-input:user-invalid:focus {
+  box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+  border-color: var(--color-input-error-border);
+}
+
+.ren-input:user-valid {
+  border-color: var(--color-success);
+}
+
+.ren-input:user-valid:focus {
+  box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+}
+
+/* Show/hide error and success messages based on validation */
+.ren-field:has(.ren-input:user-invalid) .ren-field-label {
+  color: var(--color-danger);
+}
+
+.ren-field:has(.ren-input:user-invalid) .ren-field-error {
+  display: flex;
+}
+
+.ren-field:has(.ren-input:user-valid) .ren-field-error {
+  display: none;
+}

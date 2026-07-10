@@ -1,0 +1,791 @@
+---
+type: "RenDS Docs Page"
+title: "ren-field docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-field.html
+sourcePath: docs/components/ren-field.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-field docs
+
+Source path: `docs/components/ren-field.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Field — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Page-specific styles — chrome and tables live in shell.css */
+
+    /* Demo block: preview frame + code block, stacked */
+    .dx-demo {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: var(--space-4) 0;
+    }
+    .dx-demo-preview {
+      background: var(--color-surface-raised);
+      padding: var(--space-6) var(--space-5);
+    }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* Variant rows */
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      padding-top: var(--space-3);
+    }
+    .dx-vrow-items {
+      padding: var(--space-4);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+    @media (max-width: 720px) {
+      .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); }
+      .dx-vrow-label { padding-top: 0; }
+    }
+
+    /* Anatomy */
+    .dx-anatomy { margin: var(--space-4) 0; display: grid; gap: var(--space-4); }
+    .dx-anatomy-num {
+      display: inline-grid; place-items: center;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--color-text); color: var(--color-surface);
+      font-size: var(--text-xs); font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .dx-anatomy-stage {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6) var(--space-5);
+    }
+    .dx-anatomy-stage-label {
+      font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--color-text-muted); font-weight: var(--weight-semibold);
+      margin: 0 0 var(--space-3);
+    }
+    .dx-anatomy-parts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+    @media (max-width: 720px) { .dx-anatomy-parts { grid-template-columns: 1fr; } }
+    .dx-anatomy-part {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: grid;
+      gap: var(--space-2);
+    }
+    .dx-anatomy-part-header { display: flex; align-items: center; gap: var(--space-2); }
+    .dx-anatomy-part-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text); }
+    .dx-anatomy-part-desc { font-size: var(--text-sm); line-height: 1.5; color: var(--color-text-secondary); margin: 0; }
+    .dx-anatomy-part-desc code { font-size: 0.85em; }
+
+    /* Custom element fallback display */
+    ren-field { display: block; }
+
+    /* Form row helper for the examples section */
+    .demo-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+    @media (max-width: 540px) { .demo-form-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar (shell.css) -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar + content shell -->
+  <div class="dx-shell dx-shell-grid">
+
+    <!-- Persistent sidebar -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html" aria-current="page">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="dx-content">
+
+      <!-- Page header -->
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Field</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Primitive</p>
+        <h1>Field <span class="dx-api-badge dx-api-badge-hybrid" title="Renders without JS; JS adds enhancements">Hybrid</span></h1>
+        <p class="lede">The smallest accessible unit of a form: label, input, helper text, error message — wired together. Use the CSS classes directly, or wrap your markup in <code>&lt;ren-field&gt;</code> and let the component generate IDs and ARIA attributes for you.</p>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           1. OVERVIEW
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>A form field is the building block of every form in your app. RenDS gives you two ways to compose it: write the classes manually if you like full control, or wrap semantic HTML in <code>&lt;ren-field&gt;</code> and the component will fill in the parts that humans regularly forget — generated <code>id</code>s, the <code>for</code> attribute on the label, <code>aria-describedby</code> for the helper text, <code>aria-errormessage</code> for validation messages, and <code>data-required</code> on the label when the input is required.</p>
+
+        <p>The visual styling lives entirely in CSS. The Web Component is a thin layer of accessibility wiring on top — your form still works without it, just with fewer ARIA hooks.</p>
+
+        <div class="dx-callout">
+          <p><strong>Use one field per question.</strong> A field bundles a label and one input. Don't reuse the wrapper to group several inputs — for that, use a <code>fieldset</code> with a <code>legend</code> instead.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           2. ANATOMY
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Parts</p>
+        <h2>Anatomy</h2>
+        <p>A complete field has four content parts plus the container. Description and error are optional.</p>
+
+        <div class="dx-anatomy">
+          <div class="dx-anatomy-stage">
+            <p class="dx-anatomy-stage-label">Assembled</p>
+            <div class="ren-field" style="max-width: 360px; margin-inline: auto;">
+              <label class="ren-field-label" data-required for="anatomy-email">Work email</label>
+              <input class="ren-input" type="email" id="anatomy-email" placeholder="name@example.com" aria-describedby="anatomy-email-desc">
+              <span class="ren-field-description" id="anatomy-email-desc">We'll send the verification link here.</span>
+            </div>
+          </div>
+
+          <div class="dx-anatomy-parts">
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">1</span>
+                <span class="dx-anatomy-part-name">Container</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-field</code> wrapper. Stacks the parts vertically with a small gap. Use <code>&lt;ren-field&gt;</code> if you want auto-wiring.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">2</span>
+                <span class="dx-anatomy-part-name">Label</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>&lt;label class="ren-field-label"&gt;</code>. Always paired to its input via <code>for</code>. Add <code>data-required</code> for the asterisk.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">3</span>
+                <span class="dx-anatomy-part-name">Control</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>&lt;input class="ren-input"&gt;</code> — or <code>&lt;textarea&gt;</code> / <code>&lt;select&gt;</code> with the same class. The control owns its native validation.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">4</span>
+                <span class="dx-anatomy-part-name">Description</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-field-description</code>. Helper text under the input. Linked to the input via <code>aria-describedby</code>.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">5</span>
+                <span class="dx-anatomy-part-name">Error</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-field-error</code> with <code>role="alert"</code>. Hidden until the field is invalid. Replaces / supplements the description on error.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           3. DEMO
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Type something invalid and the error appears. Click the field to focus and the focus ring follows the accent color.</p>
+
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="ren-field" style="max-width: 380px; margin-inline: auto;">
+              <label class="ren-field-label" for="demo-email">Email address</label>
+              <input class="ren-input" type="email" id="demo-email" placeholder="name@example.com" aria-describedby="demo-email-desc">
+              <span class="ren-field-description" id="demo-email-desc">We'll never share your email with anyone.</span>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-field&gt;
+  &lt;label&gt;Email address&lt;/label&gt;
+  &lt;input type="email" placeholder="name@example.com"&gt;
+  &lt;span data-description&gt;We'll never share your email with anyone.&lt;/span&gt;
+&lt;/ren-field&gt;</code></pre>
+        </div>
+
+        <p>Same field written without the Web Component — explicit classes, manual <code>for</code> and <code>aria-describedby</code> wiring:</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-field"&gt;
+  &lt;label class="ren-field-label" for="email"&gt;Email address&lt;/label&gt;
+  &lt;input class="ren-input" type="email" id="email"
+         placeholder="name@example.com"
+         aria-describedby="email-desc"&gt;
+  &lt;span class="ren-field-description" id="email-desc"&gt;
+    We'll never share your email with anyone.
+  &lt;/span&gt;
+&lt;/div&gt;</code></pre>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           4. VARIANTS
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <p>The same field structure adapts to different control types and visual densities.</p>
+
+        <div class="dx-vgrid">
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Sizes</span>
+            <div class="dx-vrow-items">
+              <div class="ren-field">
+                <label class="ren-field-label" for="size-sm">Small</label>
+                <input class="ren-input ren-input-sm" id="size-sm" placeholder="ren-input-sm">
+              </div>
+              <div class="ren-field">
+                <label class="ren-field-label" for="size-md">Medium (default)</label>
+                <input class="ren-input" id="size-md" placeholder="ren-input">
+              </div>
+              <div class="ren-field">
+                <label class="ren-field-label" for="size-lg">Large</label>
+                <input class="ren-input ren-input-lg" id="size-lg" placeholder="ren-input-lg">
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">States</span>
+            <div class="dx-vrow-items">
+              <div class="ren-field">
+                <label class="ren-field-label" for="state-default">Default</label>
+                <input class="ren-input" id="state-default" placeholder="Type here">
+              </div>
+              <div class="ren-field">
+                <label class="ren-field-label" for="state-disabled">Disabled</label>
+                <input class="ren-input" id="state-disabled" placeholder="Disabled" disabled>
+              </div>
+              <div class="ren-field" data-invalid>
+                <label class="ren-field-label" for="state-invalid">Invalid</label>
+                <input class="ren-input" id="state-invalid" value="not-an-email" aria-invalid="true" aria-errormessage="state-invalid-err">
+                <span class="ren-field-error" role="alert" id="state-invalid-err">Please enter a valid email address.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Required</span>
+            <div class="dx-vrow-items">
+              <div class="ren-field">
+                <label class="ren-field-label" data-required for="req-name">Full name</label>
+                <input class="ren-input" id="req-name" required placeholder="Required field">
+                <span class="ren-field-description">Marked with an asterisk via <code>data-required</code> on the label.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">With icon</span>
+            <div class="dx-vrow-items">
+              <div class="ren-field">
+                <label class="ren-field-label" for="icon-search">Search</label>
+                <div class="ren-input-wrapper">
+                  <span class="ren-input-icon" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  </span>
+                  <input class="ren-input" type="search" id="icon-search" placeholder="Search projects…">
+                </div>
+              </div>
+              <div class="ren-field">
+                <label class="ren-field-label" for="icon-money">Amount</label>
+                <div class="ren-input-wrapper">
+                  <input class="ren-input" type="number" id="icon-money" placeholder="0.00">
+                  <span class="ren-input-icon ren-input-icon-end" aria-hidden="true" style="font-size: var(--text-sm); color: var(--color-text-muted);">USD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Textarea</span>
+            <div class="dx-vrow-items">
+              <div class="ren-field">
+                <label class="ren-field-label" for="multi-msg">Message</label>
+                <textarea class="ren-input" id="multi-msg" rows="4" placeholder="Tell us what's on your mind…"></textarea>
+                <span class="ren-field-description">Same <code>.ren-input</code> class works on <code>&lt;textarea&gt;</code>.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Select</span>
+            <div class="dx-vrow-items">
+              <div class="ren-field">
+                <label class="ren-field-label" for="multi-country">Country</label>
+                <select class="ren-input" id="multi-country">
+                  <option>Argentina</option>
+                  <option>Chile</option>
+                  <option>Mexico</option>
+                  <option>United States</option>
+                </select>
+                <span class="ren-field-description">Native <code>&lt;select&gt;</code> with the same class. For a custom-styled dropdown, use <code>ren-select</code>.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           5. API
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <p>Apply directly if you don't use the Web Component. The visual styling is identical either way.</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">.ren-field</code></td>
+              <td>Container. Vertical flex stack with a small gap between label, control, and description / error.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-field-label</code></td>
+              <td>Label styling. Use on the actual <code>&lt;label&gt;</code> tag so the click-to-focus behavior works natively.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-field-label[data-required]</code></td>
+              <td>Adds a red asterisk after the label text via <code>::after</code>. Set automatically when the input has <code>required</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-input</code></td>
+              <td>Base input style. Works on <code>&lt;input&gt;</code>, <code>&lt;textarea&gt;</code>, and <code>&lt;select&gt;</code>. 44 px touch target, focus ring, hover, disabled.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-input-sm</code> / <code class="dx-api-name">.ren-input-lg</code></td>
+              <td>Size modifiers. Default (no modifier) is medium (44 px). Small is denser; large is more prominent.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-input-wrapper</code></td>
+              <td>Use to nest an icon (or any decoration) alongside the input. Acts as a relative container.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-input-icon</code> / <code class="dx-api-name">.ren-input-icon-end</code></td>
+              <td>Place an icon before (default) or after (<code>-end</code>) the input. The input is automatically padded so the icon doesn't overlap text.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-field-description</code></td>
+              <td>Helper text. Muted color, smaller font. Should be linked to the input via <code>aria-describedby</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-field-error</code></td>
+              <td>Error message. Danger color. Hidden by default; shown when the field has <code>data-invalid</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-field[data-invalid]</code></td>
+              <td>Invalid container state. Recolors the input border and shows the error region.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-input-error</code></td>
+              <td>Apply on the input directly to force the invalid look without using <code>data-invalid</code> on the wrapper.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Web Component attributes</h3>
+        <p>Set on the <code>&lt;ren-field&gt;</code> wrapper. The component watches them and re-syncs ARIA state when changed.</p>
+        <table class="dx-api dx-api-cols-4">
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">data-invalid</code></td>
+              <td><span class="dx-api-type">boolean</span></td>
+              <td><span class="dx-api-default">false</span></td>
+              <td>Presence shows the error region and sets <code>aria-invalid="true"</code> on the input. Removed automatically when the input becomes valid again on <code>input</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Auto-wiring (the value prop)</h3>
+        <p>What <code>&lt;ren-field&gt;</code> sets automatically when it mounts. You can write the simplest possible HTML — semantic tags, no IDs — and the component fills in the rest.</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Wired up</th>
+              <th>How</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Label ↔ Input</td>
+              <td>Input gets a generated <code>id</code>; label gets a matching <code>for</code> attribute.</td>
+            </tr>
+            <tr>
+              <td>Description ↔ Input</td>
+              <td>Description gets a generated <code>id</code>; input's <code>aria-describedby</code> is appended (existing values preserved).</td>
+            </tr>
+            <tr>
+              <td>Error ↔ Input</td>
+              <td>Error gets a generated <code>id</code>; input's <code>aria-errormessage</code> is set. Error gets <code>role="alert"</code> + <code>aria-live="polite"</code>.</td>
+            </tr>
+            <tr>
+              <td>Required indicator</td>
+              <td>If the input has <code>required</code>, the label gets <code>data-required</code> (renders the asterisk).</td>
+            </tr>
+            <tr>
+              <td>Validation listener</td>
+              <td>Listens for native <code>invalid</code> events; sets <code>data-invalid</code> on the field and reveals the error message. Clears on next valid <code>input</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript methods</h3>
+        <p>Available on every <code>&lt;ren-field&gt;</code> instance.</p>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">setError(message)</code></td>
+              <td>Marks the field invalid and writes the error message into the error region. Use for server-side validation results.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">clearError()</code></td>
+              <td>Removes the invalid state and hides the error region.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">invalid</code></td>
+              <td>Boolean getter / setter. Reads the current invalid state, or assigns one (same as <code>setError</code> / <code>clearError</code>).</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="dx-pre" tabindex="0"><code>const field = document.querySelector('ren-field');
+
+// After a server response
+if (response.error) {
+  field.setError('That email is already taken.');
+} else {
+  field.clearError();
+}</code></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           6. ACCESSIBILITY
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <p>Form accessibility lives in three relationships: label-to-input, description-to-input, and error-to-input. The Web Component wires all three. If you're using the CSS classes alone, you set them by hand — this section is your checklist.</p>
+
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Tab</kbd></span>
+            <span>Moves focus into the input. Disabled inputs are skipped.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Shift</kbd> + <kbd>Tab</kbd></span>
+            <span>Moves focus backward.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys">Click on the label</span>
+            <span>Focuses the paired input — only works when the label has a <code>for</code> attribute matching the input's <code>id</code> (or wraps the input directly).</span>
+          </div>
+        </div>
+
+        <h3>What the component sets</h3>
+        <p>When you wrap your markup in <code>&lt;ren-field&gt;</code>, the following ARIA wiring is automatic:</p>
+        <ul>
+          <li><code>label[for]</code> ↔ <code>input[id]</code></li>
+          <li><code>aria-describedby</code> on the input pointing at the description</li>
+          <li><code>aria-errormessage</code> on the input pointing at the error</li>
+          <li><code>aria-invalid="true"</code> when the field is in an invalid state</li>
+          <li><code>role="alert"</code> and <code>aria-live="polite"</code> on the error so screen readers announce it</li>
+        </ul>
+
+        <h3>Validation messaging</h3>
+        <p>Two paths, both supported:</p>
+        <ul>
+          <li><strong>Native HTML5</strong>: add <code>required</code>, <code>type="email"</code>, <code>pattern</code>, etc. to the input. The browser's <code>invalid</code> event flips the field into the invalid state automatically.</li>
+          <li><strong>Programmatic</strong>: call <code>field.setError("custom message")</code> after a server response. The same DOM hooks render the same way.</li>
+        </ul>
+
+        <div class="dx-callout">
+          <p><strong>Always pair the label.</strong> A bare input with a placeholder is not a labelled input. Screen readers announce nothing meaningful. Even a visually hidden label (<code>.ren-sr-only</code>) is better than no label.</p>
+        </div>
+
+        <h3>Don't trap focus inside the field</h3>
+        <p>The field is just a wrapper. Tab and Shift+Tab move out of it normally. Don't add <code>tabindex</code> to the wrapper — focus belongs on the input itself.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           7. EXAMPLES
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Login form</h3>
+        <p>Two required fields, primary submit. Native HTML5 validation handles the empty state.</p>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <form style="max-width: 360px; margin-inline: auto; display: flex; flex-direction: column; gap: var(--space-4);">
+              <div class="ren-field">
+                <label class="ren-field-label" data-required for="login-email">Email</label>
+                <input class="ren-input" type="email" id="login-email" required autocomplete="email">
+              </div>
+              <div class="ren-field">
+                <label class="ren-field-label" data-required for="login-password">Password</label>
+                <input class="ren-input" type="password" id="login-password" required autocomplete="current-password">
+              </div>
+              <button type="submit" class="ren-btn ren-btn-primary">Sign in</button>
+            </form>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;form&gt;
+  &lt;ren-field&gt;
+    &lt;label&gt;Email&lt;/label&gt;
+    &lt;input type="email" required autocomplete="email"&gt;
+  &lt;/ren-field&gt;
+
+  &lt;ren-field&gt;
+    &lt;label&gt;Password&lt;/label&gt;
+    &lt;input type="password" required autocomplete="current-password"&gt;
+  &lt;/ren-field&gt;
+
+  &lt;button type="submit" class="ren-btn ren-btn-primary"&gt;Sign in&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+        </div>
+
+        <h3>Server-side error</h3>
+        <p>Submit, get an error from the API, attach it to the right field.</p>
+        <div class="dx-pre" tabindex="0"><code>const form = document.querySelector('form');
+const emailField = form.querySelector('ren-field:has(input[type="email"])');
+
+form.addEventListener('submit', async (e) =&gt; {
+  e.preventDefault();
+  emailField.clearError();
+
+  const res = await fetch('/api/signup', { method: 'POST', body: new FormData(form) });
+  const data = await res.json();
+
+  if (data.error?.field === 'email') {
+    emailField.setError(data.error.message);
+    emailField.querySelector('input').focus();
+    return;
+  }
+
+  location.assign('/dashboard');
+});</code></pre>
+
+        <h3>Search box with icon</h3>
+        <p>Wrap the input in <code>.ren-input-wrapper</code> with an icon for a leading affordance.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-field&gt;
+  &lt;label class="ren-sr-only"&gt;Search&lt;/label&gt;
+  &lt;div class="ren-input-wrapper"&gt;
+    &lt;span class="ren-input-icon" aria-hidden="true"&gt;
+      &lt;!-- search SVG --&gt;
+    &lt;/span&gt;
+    &lt;input type="search" placeholder="Search projects…"&gt;
+  &lt;/div&gt;
+&lt;/ren-field&gt;</code></pre>
+
+        <h3>Two fields side by side</h3>
+        <p>The field is a normal block. Drop them into any layout primitive — here, a 2-column grid.</p>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="demo-form-row">
+              <div class="ren-field">
+                <label class="ren-field-label" for="row-first">First name</label>
+                <input class="ren-input" id="row-first" autocomplete="given-name">
+              </div>
+              <div class="ren-field">
+                <label class="ren-field-label" for="row-last">Last name</label>
+                <input class="ren-input" id="row-last" autocomplete="family-name">
+              </div>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-grid-2"&gt;
+  &lt;ren-field&gt;
+    &lt;label&gt;First name&lt;/label&gt;
+    &lt;input autocomplete="given-name"&gt;
+  &lt;/ren-field&gt;
+
+  &lt;ren-field&gt;
+    &lt;label&gt;Last name&lt;/label&gt;
+    &lt;input autocomplete="family-name"&gt;
+  &lt;/ren-field&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Web Component registration — adds auto-wiring on top of the CSS-only baseline -->
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

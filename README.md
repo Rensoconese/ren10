@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.9.3**
+Current version: **0.9.4**
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
@@ -210,6 +210,9 @@ npx ren10 knowledge query "ren-ai"       Search contracts, selectors, tokens, do
 npx ren10 knowledge query "ren-ai" --json  Emit typed JSON results
 npx ren10 knowledge query "ren-ai" --source-json  Force JSON graph source
 npx ren10 knowledge check                Validate packaged graph files
+npx ren10 knowledge export --format okf --out knowledge/okf  Export portable Markdown
+npx ren10 knowledge check --format okf   Validate graph/bundle parity
+npx ren10 knowledge visualize --out knowledge/okf/viz.html  Build local viewer
 npx ren10 help                           Show help
 ```
 

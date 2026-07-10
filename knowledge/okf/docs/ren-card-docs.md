@@ -1,0 +1,682 @@
+---
+type: "RenDS Docs Page"
+title: "ren-card docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-card.html
+sourcePath: docs/components/ren-card.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-card docs
+
+Source path: `docs/components/ren-card.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Page-specific styles — chrome lives in shell.css */
+
+    /* ═══════════════════════════════════════════════════════════
+       Component-page specific patterns
+       ═══════════════════════════════════════════════════════════ */
+
+    /* Demo block */
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview {
+      background: var(--color-surface-raised);
+      padding: var(--space-6) var(--space-5);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      align-items: center;
+      justify-content: center;
+      min-height: 96px;
+    }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* Variant grid */
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-3); background: var(--color-surface); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
+
+    /* Anatomy */
+    .dx-anatomy { margin: var(--space-4) 0; display: grid; gap: var(--space-4); }
+    .dx-anatomy-num { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--color-text); color: var(--color-surface); font-size: var(--text-xs); font-weight: var(--weight-bold); flex-shrink: 0; }
+    .dx-anatomy-stage { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-6); display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+    .dx-anatomy-stage-label { font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); font-weight: var(--weight-semibold); margin: 0; }
+    .dx-anatomy-parts { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
+    @media (max-width: 720px) { .dx-anatomy-parts { grid-template-columns: 1fr; } }
+    .dx-anatomy-part { background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-4); display: grid; gap: var(--space-3); }
+    .dx-anatomy-part-header { display: flex; align-items: center; gap: var(--space-2); }
+    .dx-anatomy-part-name { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text); }
+    .dx-anatomy-part-spec {
+      background: var(--color-surface-sunken);
+      border: 1px dashed var(--color-border);
+      border-radius: var(--radius-sm);
+      min-height: 72px;
+      padding: var(--space-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-text);
+    }
+    .dx-anatomy-part-desc { font-size: var(--text-sm); line-height: 1.5; color: var(--color-text-secondary); margin: 0; }
+    .dx-anatomy-part-desc code { font-size: 0.85em; }
+
+    /* Body p reset for demos that use raw <p> inside .ren-card-body (the title
+       and description resets now live in ren-card.css itself, post-fix). */
+    .dx-demo-preview .ren-card-body p,
+    .dx-anatomy-stage .ren-card-body p { margin: 0; }
+
+    /* .dx-api and .dx-keys live in shell.css so every reference table
+       on every component page shares the same column boundary. */
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+
+    <!-- Persistent sidebar — same nav as the catalog so context is never lost -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html" aria-current="page">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="dx-content">
+
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Card</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Primitive</p>
+        <h1>Card <span class="dx-api-badge dx-api-badge-css" title="Works without any JavaScript">CSS-only</span></h1>
+        <p class="lede">A flexible content container with optional header, body, and footer sections. Five visual variants, status accents, and built-in interactive / selectable patterns. Pure CSS — no JavaScript required.</p>
+      </header>
+
+    <!-- 1. OVERVIEW -->
+    <section class="dx-section" id="overview">
+      <p class="dx-kicker">About</p>
+      <h2>Overview</h2>
+      <p>A card groups related content into a single visual unit — a profile, a stat, a settings panel, a list item, an article preview. RenDS gives you one base component with optional header / body / footer slots, five visual variants, and three interaction states (static, interactive, selectable).</p>
+
+      <p>Cards are entirely CSS-driven. There's no <code>&lt;ren-card&gt;</code> Web Component because there's nothing for JS to do — the structure is plain HTML, the variants are class modifiers, and the interactivity (hover, focus, selection) is handled by CSS pseudo-classes plus standard ARIA attributes.</p>
+
+      <h3>When to use</h3>
+      <ul>
+        <li>To group a chunk of content (text + actions + metadata) that the user will visually scan as a single unit.</li>
+        <li>To present a list of similar items (a grid of products, posts, profiles, settings groups).</li>
+        <li>For status surfaces — use the <code>data-status</code> attribute to signal success, warning, danger, or info at a glance.</li>
+      </ul>
+
+      <h3>When not to use</h3>
+      <ul>
+        <li>For a single line of content — a card adds visual weight that body text doesn't need. Use a paragraph or a banner.</li>
+        <li>For a modal dialog — that's <code>ren-dialog</code>, which traps focus and dims the rest of the page.</li>
+        <li>For navigation between pages — wrap an anchor or use <code>ren-link</code>; cards make poor primary navigation.</li>
+      </ul>
+
+      <div class="dx-callout">
+        <p><strong>Cards are containers, not components.</strong> They don't dictate what goes inside. Mix and match — drop in a button group, an avatar, a chart, a form. The card supplies the surface; you supply the content.</p>
+      </div>
+    </section>
+
+    <!-- 2. ANATOMY -->
+    <section class="dx-section" id="anatomy">
+      <p class="dx-kicker">Structure</p>
+      <h2>Anatomy</h2>
+      <p>A card has a container plus three optional section slots. Each slot has its own padding rules so they nest cleanly without you fighting margins.</p>
+
+      <div class="dx-anatomy">
+        <div class="dx-anatomy-stage">
+          <p class="dx-anatomy-stage-label">Assembled</p>
+          <div class="ren-card" style="max-width: 320px; width: 100%;">
+            <div class="ren-card-header">
+              <h4 class="ren-card-title" style="margin: 0;">Project update</h4>
+              <p class="ren-card-description" style="margin: 0;">Last edited 2 hours ago</p>
+            </div>
+            <div class="ren-card-body">
+              <p style="margin: 0;">Dashboard ready for review. All components passed a11y audit.</p>
+            </div>
+            <div class="ren-card-footer">
+              <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm">Dismiss</button>
+              <button type="button" class="ren-btn ren-btn-primary ren-btn-sm">View</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="dx-anatomy-parts">
+
+          <div class="dx-anatomy-part">
+            <div class="dx-anatomy-part-header">
+              <span class="dx-anatomy-num" aria-hidden="true">1</span>
+              <span class="dx-anatomy-part-name">Container (.ren-card)</span>
+            </div>
+            <div class="dx-anatomy-part-spec" aria-hidden="true">
+              <div style="width: 80%; height: 56px; background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-lg);"></div>
+            </div>
+            <p class="dx-anatomy-part-desc">The outer surface. Sets background (<code>--color-surface-raised</code>), border, radius, and clips children with <code>overflow: hidden</code>.</p>
+          </div>
+
+          <div class="dx-anatomy-part">
+            <div class="dx-anatomy-part-header">
+              <span class="dx-anatomy-num" aria-hidden="true">2</span>
+              <span class="dx-anatomy-part-name">Header (.ren-card-header)</span>
+            </div>
+            <div class="dx-anatomy-part-spec" aria-hidden="true">
+              <div class="ren-card" style="width: 100%;">
+                <div class="ren-card-header">
+                  <h4 class="ren-card-title">Title here</h4>
+                  <p class="ren-card-description">Description below</p>
+                </div>
+                <div class="ren-card-body">
+                  <p style="margin: 0; opacity: 0.35; font-size: var(--text-sm);">…body…</p>
+                </div>
+              </div>
+            </div>
+            <p class="dx-anatomy-part-desc">Optional. Top section for title + description. Stack of <code>.ren-card-title</code> + <code>.ren-card-description</code>.</p>
+          </div>
+
+          <div class="dx-anatomy-part">
+            <div class="dx-anatomy-part-header">
+              <span class="dx-anatomy-num" aria-hidden="true">3</span>
+              <span class="dx-anatomy-part-name">Body (.ren-card-body)</span>
+            </div>
+            <div class="dx-anatomy-part-spec" aria-hidden="true">
+              <div class="ren-card" style="width: 100%;">
+                <div class="ren-card-header">
+                  <p class="ren-card-description" style="opacity: 0.35;">…header…</p>
+                </div>
+                <div class="ren-card-body">
+                  <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">Main content goes here.</p>
+                </div>
+              </div>
+            </div>
+            <p class="dx-anatomy-part-desc">The main content area. Padded uniformly. When following a header, top padding tightens automatically.</p>
+          </div>
+
+          <div class="dx-anatomy-part">
+            <div class="dx-anatomy-part-header">
+              <span class="dx-anatomy-num" aria-hidden="true">4</span>
+              <span class="dx-anatomy-part-name">Footer (.ren-card-footer)</span>
+            </div>
+            <div class="dx-anatomy-part-spec" aria-hidden="true">
+              <div class="ren-card" style="width: 100%;">
+                <div class="ren-card-body">
+                  <p style="margin: 0; opacity: 0.35; font-size: var(--text-sm);">…body…</p>
+                </div>
+                <div class="ren-card-footer">
+                  <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm" tabindex="-1">Cancel</button>
+                  <button type="button" class="ren-btn ren-btn-primary ren-btn-sm" tabindex="-1">Save</button>
+                </div>
+              </div>
+            </div>
+            <p class="dx-anatomy-part-desc">Optional. Bottom row for actions. Use <code>.ren-card-footer-border</code> for a separating line above the footer.</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. DEMO -->
+    <section class="dx-section" id="demo">
+      <p class="dx-kicker">Live</p>
+      <h2>Demo</h2>
+      <p>The default card with all three sections. Drop in your own content — RenDS won't fight you.</p>
+
+      <div class="dx-demo">
+        <div class="dx-demo-preview">
+          <div class="ren-card" style="max-width: 360px; width: 100%;">
+            <div class="ren-card-header">
+              <h4 class="ren-card-title" style="margin: 0;">Welcome back</h4>
+              <p class="ren-card-description" style="margin: 0;">Pick up where you left off</p>
+            </div>
+            <div class="ren-card-body">
+              <p style="margin: 0;">Three drafts saved, two pull requests waiting for review, and a deployment scheduled for tomorrow.</p>
+            </div>
+            <div class="ren-card-footer">
+              <button type="button" class="ren-btn ren-btn-ghost ren-btn-sm">Later</button>
+              <button type="button" class="ren-btn ren-btn-primary ren-btn-sm">Open dashboard</button>
+            </div>
+          </div>
+        </div>
+        <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-card"&gt;
+  &lt;div class="ren-card-header"&gt;
+    &lt;h4 class="ren-card-title"&gt;Welcome back&lt;/h4&gt;
+    &lt;p class="ren-card-description"&gt;Pick up where you left off&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-card-body"&gt;
+    &lt;p&gt;Three drafts saved, two pull requests waiting for review…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-card-footer"&gt;
+    &lt;button class="ren-btn ren-btn-ghost ren-btn-sm"&gt;Later&lt;/button&gt;
+    &lt;button class="ren-btn ren-btn-primary ren-btn-sm"&gt;Open dashboard&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <p>Sections are all optional. A card with only <code>.ren-card-body</code> works. A card with no sections at all (just children) auto-pads its first and last child via <code>:first-child</code> / <code>:last-child</code> selectors.</p>
+    </section>
+
+    <!-- 4. VARIANTS -->
+    <section class="dx-section" id="variants">
+      <p class="dx-kicker">Catalog</p>
+      <h2>Variants</h2>
+      <p>Five visual variants — pick the one that matches the card's role. Plus three interaction states layered on top, and four status accents for at-a-glance signals.</p>
+
+      <div class="dx-vgrid">
+
+        <div class="dx-vrow">
+          <span class="dx-vrow-label">Visual</span>
+          <div class="dx-vrow-items" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
+            <div class="ren-card">
+              <div class="ren-card-body"><strong>Default</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Surface + border</p></div>
+            </div>
+            <div class="ren-card ren-card-elevated">
+              <div class="ren-card-body"><strong>Elevated</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Shadow, no border</p></div>
+            </div>
+            <div class="ren-card ren-card-outline">
+              <div class="ren-card-body"><strong>Outline</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Border, transparent bg</p></div>
+            </div>
+            <div class="ren-card ren-card-ghost">
+              <div class="ren-card-body"><strong>Ghost</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">No surface, grouping only</p></div>
+            </div>
+            <div class="ren-card ren-card-sunken">
+              <div class="ren-card-body"><strong>Sunken</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Recessed surface</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dx-vrow">
+          <span class="dx-vrow-label">Interaction</span>
+          <div class="dx-vrow-items" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+            <div class="ren-card ren-card-interactive" tabindex="0">
+              <div class="ren-card-body"><strong>Interactive</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Hover lifts, click feedback</p></div>
+            </div>
+            <div class="ren-card ren-card-selectable" tabindex="0">
+              <div class="ren-card-body"><strong>Selectable</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Click to set <code>aria-selected</code></p></div>
+            </div>
+            <div class="ren-card ren-card-selectable" tabindex="0" aria-selected="true">
+              <div class="ren-card-body"><strong>Selectable (selected)</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Accent border + ring</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dx-vrow">
+          <span class="dx-vrow-label">Status</span>
+          <div class="dx-vrow-items" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+            <div class="ren-card" data-status="success">
+              <div class="ren-card-body"><strong>Success</strong></div>
+            </div>
+            <div class="ren-card" data-status="warning">
+              <div class="ren-card-body"><strong>Warning</strong></div>
+            </div>
+            <div class="ren-card" data-status="danger">
+              <div class="ren-card-body"><strong>Danger</strong></div>
+            </div>
+            <div class="ren-card" data-status="info">
+              <div class="ren-card-body"><strong>Info</strong></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. API -->
+    <section class="dx-section" id="api">
+      <p class="dx-kicker">Reference</p>
+      <h2>API</h2>
+      <p>CSS classes only. There is no Web Component for card.</p>
+
+      <h3>Container</h3>
+      <table class="dx-api">
+        <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code class="dx-api-name">.ren-card</code></td><td>Base container. Required.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-elevated</code></td><td>Removes border, adds <code>--shadow-md</code>. For floating UI.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-outline</code></td><td>Border only, transparent background. Lighter weight.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-ghost</code></td><td>Removes both border and background. Pure structural grouping.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-sunken</code></td><td>Inverted depth — sits below the surface. Use sparingly.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Sections</h3>
+      <table class="dx-api">
+        <thead><tr><th>Class</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td><code class="dx-api-name">.ren-card-header</code></td><td>Top section. Stack of title + description with auto-spacing.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-title</code></td><td>Heading inside the header. Set on the actual heading tag (<code>&lt;h3&gt;</code>, <code>&lt;h4&gt;</code>, etc).</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-description</code></td><td>Subtitle / metadata under the title. Muted color.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-body</code></td><td>Main content. Self-padded.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-footer</code></td><td>Bottom row, no separator. For action clusters.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-footer-border</code></td><td>Footer with a top border separator. Heavier visual weight.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-simple</code></td><td>Quick padding shorthand for cards without explicit sections.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Interaction</h3>
+      <table class="dx-api">
+        <thead><tr><th>Class / attribute</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code class="dx-api-name">.ren-card-interactive</code></td><td>Hover lift + shadow + border emphasis. Adds <code>cursor: pointer</code>, focus ring on <code>:focus-visible</code>. Wrap in or apply to a focusable element (<code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, or <code>tabindex="0"</code>).</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-selectable</code></td><td>Hover swaps border to accent. Combine with <code>aria-selected="true"</code> or <code>data-selected</code> for the chosen state.</td></tr>
+          <tr><td><code class="dx-api-name">[data-status="success|warning|danger|info"]</code></td><td>Adds a 3px accent border on top in the matching status color. Stacks with any visual variant.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Layout helper</h3>
+      <table class="dx-api">
+        <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+        <tbody>
+          <tr><td><code class="dx-api-name">.ren-card-group</code></td><td>Auto-fill grid of cards at <code>min(100%, 280px)</code> per column. Drop on the parent of the cards.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-cover</code></td><td>For a full-bleed image at the top of a card. <code>width: 100%; object-fit: cover</code>.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 6. ACCESSIBILITY -->
+    <section class="dx-section" id="a11y">
+      <p class="dx-kicker">Inclusive by default</p>
+      <h2>Accessibility</h2>
+      <p>Static cards are non-interactive — they're just visual containers and don't need any ARIA. Interactive and selectable cards inherit semantics from the wrapping element you choose.</p>
+
+      <h3>Static cards</h3>
+      <ul>
+        <li>Use semantic content inside — proper heading levels (<code>&lt;h2&gt;</code>–<code>&lt;h4&gt;</code>) for titles, real <code>&lt;p&gt;</code> tags for prose, real <code>&lt;button&gt;</code>s for actions.</li>
+        <li>Don't add ARIA roles to the card itself — it's a generic <code>&lt;div&gt;</code> by intent.</li>
+        <li>For status accents, the visual <code>data-status="danger"</code> top border isn't enough on its own. Pair with a text label, an icon, or an <code>aria-describedby</code> for screen reader users.</li>
+      </ul>
+
+      <h3>Interactive cards</h3>
+      <p>If the entire card is clickable, wrap the card content in an <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code>, or set <code>tabindex="0"</code> + <code>role="button"</code> if neither makes sense.</p>
+      <div class="dx-keys">
+        <div class="dx-keyrow"><span class="keys"><kbd class="ren-kbd">Tab</kbd></span><span>Moves focus into the interactive card.</span></div>
+        <div class="dx-keyrow"><span class="keys"><kbd class="ren-kbd">Enter</kbd></span><span>Activates the card (follows the wrapping <code>&lt;a&gt;</code> or fires <code>&lt;button&gt;</code>'s click).</span></div>
+        <div class="dx-keyrow"><span class="keys"><kbd class="ren-kbd">Space</kbd></span><span>Activates if the wrapper is a <code>&lt;button&gt;</code>. Anchors don't respond to Space — use Enter.</span></div>
+      </div>
+
+      <div class="dx-callout">
+        <p><strong>Don't nest interactive elements.</strong> An interactive card that contains a button creates a confusing focus order — Tab, Tab, Tab to land somewhere predictable. Pick one: either the whole card is clickable, or the card has internal buttons. Not both.</p>
+      </div>
+
+      <h3>Selectable cards (radio / checkbox patterns)</h3>
+      <ul>
+        <li>For exclusive choice (one of N), wrap each card in a <code>&lt;label&gt;</code> with a hidden <code>&lt;input type="radio"&gt;</code>, or use <code>role="radio"</code> + <code>aria-checked</code>.</li>
+        <li>For multi-select, use <code>role="checkbox"</code> + <code>aria-checked</code>, or a hidden <code>&lt;input type="checkbox"&gt;</code> in a label.</li>
+        <li>Set <code>aria-selected="true"</code> on the chosen card so screen readers announce "selected". The CSS targets both <code>aria-selected</code> and <code>data-selected</code> for the accent ring.</li>
+      </ul>
+
+      <h3>Reduced motion</h3>
+      <p>The hover-lift on interactive cards uses <code>--duration-tactile</code> and respects <code>prefers-reduced-motion</code> via the semantic motion tokens. Users who request reduced motion get a quieter transition (color change without scale).</p>
+    </section>
+
+    <!-- 7. EXAMPLES -->
+    <section class="dx-section" id="examples">
+      <p class="dx-kicker">Recipes</p>
+      <h2>Examples</h2>
+      <p>Common compositions. Copy the markup, swap the content.</p>
+
+      <h3>KPI / stat card</h3>
+      <p>For dashboards. One number, one label, optional trend.</p>
+      <div class="dx-demo">
+        <div class="dx-demo-preview">
+          <div class="ren-card" style="max-width: 240px; width: 100%;">
+            <div class="ren-card-body">
+              <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Active users</p>
+              <p style="margin: var(--space-1) 0 0; font-size: var(--text-3xl); font-weight: var(--weight-bold); line-height: 1.1;">12,430</p>
+              <p style="margin: var(--space-2) 0 0; font-size: var(--text-sm); color: var(--color-success); font-weight: var(--weight-medium);">↑ 12.5% vs last month</p>
+            </div>
+          </div>
+        </div>
+        <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-card"&gt;
+  &lt;div class="ren-card-body"&gt;
+    &lt;p class="stat-label"&gt;Active users&lt;/p&gt;
+    &lt;p class="stat-value"&gt;12,430&lt;/p&gt;
+    &lt;p class="stat-trend"&gt;↑ 12.5% vs last month&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <h3>Selectable plan card (radio pattern)</h3>
+      <p>For pricing tiers, plan switchers, theme pickers.</p>
+      <div class="dx-demo">
+        <div class="dx-demo-preview" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-3); width: 100%;">
+          <label class="ren-card ren-card-selectable" style="cursor: pointer; display: block;">
+            <input type="radio" name="plan-demo" style="position: absolute; opacity: 0; pointer-events: none;">
+            <div class="ren-card-body">
+              <strong>Free</strong>
+              <p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">$0/mo · 3 projects</p>
+            </div>
+          </label>
+          <label class="ren-card ren-card-selectable" style="cursor: pointer; display: block;" aria-selected="true">
+            <input type="radio" name="plan-demo" style="position: absolute; opacity: 0; pointer-events: none;" checked>
+            <div class="ren-card-body">
+              <strong>Pro</strong>
+              <p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">$12/mo · unlimited</p>
+            </div>
+          </label>
+          <label class="ren-card ren-card-selectable" style="cursor: pointer; display: block;">
+            <input type="radio" name="plan-demo" style="position: absolute; opacity: 0; pointer-events: none;">
+            <div class="ren-card-body">
+              <strong>Team</strong>
+              <p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">$32/mo · 10 seats</p>
+            </div>
+          </label>
+        </div>
+        <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;label class="ren-card ren-card-selectable"&gt;
+  &lt;input type="radio" name="plan" /&gt;
+  &lt;div class="ren-card-body"&gt;
+    &lt;strong&gt;Pro&lt;/strong&gt;
+    &lt;p&gt;$12/mo · unlimited&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/label&gt;</code></pre>
+      </div>
+
+      <h3>Article preview (interactive card with cover)</h3>
+      <p>Wrap the whole card in <code>&lt;a&gt;</code> so the entire surface is one click target.</p>
+      <div class="dx-demo">
+        <div class="dx-demo-preview">
+          <a href="#" class="ren-card ren-card-interactive" style="display: block; max-width: 320px; width: 100%; text-decoration: none; color: inherit;">
+            <div style="aspect-ratio: 16/9; background: var(--color-accent-subtle); border-bottom: 1px solid var(--color-border);"></div>
+            <div class="ren-card-header">
+              <h4 class="ren-card-title" style="margin: 0;">From Tailwind to vanilla in a weekend</h4>
+              <p class="ren-card-description" style="margin: 0;">5 min read · Engineering</p>
+            </div>
+            <div class="ren-card-body">
+              <p style="margin: 0;">How we replaced a 180&nbsp;KB toolchain with a CSS-first design system and shipped faster.</p>
+            </div>
+          </a>
+        </div>
+        <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;a href="/post/123" class="ren-card ren-card-interactive"&gt;
+  &lt;div class="cover"&gt;&lt;/div&gt;
+  &lt;div class="ren-card-header"&gt;
+    &lt;h4 class="ren-card-title"&gt;From Tailwind to vanilla…&lt;/h4&gt;
+    &lt;p class="ren-card-description"&gt;5 min read · Engineering&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-card-body"&gt;
+    &lt;p&gt;How we replaced a 180 KB toolchain…&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/a&gt;</code></pre>
+      </div>
+
+      <h3>Danger-zone card</h3>
+      <p>For destructive actions in settings panels. Status border + danger button.</p>
+      <div class="dx-demo">
+        <div class="dx-demo-preview">
+          <div class="ren-card" data-status="danger" style="max-width: 480px; width: 100%;">
+            <div class="ren-card-header">
+              <h4 class="ren-card-title" style="margin: 0;">Delete account</h4>
+              <p class="ren-card-description" style="margin: 0;">Permanently remove your account and all associated data.</p>
+            </div>
+            <div class="ren-card-footer-border" style="justify-content: flex-end;">
+              <button type="button" class="ren-btn ren-btn-danger ren-btn-sm">Delete account</button>
+            </div>
+          </div>
+        </div>
+        <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-card" data-status="danger"&gt;
+  &lt;div class="ren-card-header"&gt;
+    &lt;h4 class="ren-card-title"&gt;Delete account&lt;/h4&gt;
+    &lt;p class="ren-card-description"&gt;Permanently remove…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="ren-card-footer-border"&gt;
+    &lt;button class="ren-btn ren-btn-danger ren-btn-sm"&gt;Delete account&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+
+      <h3>Card group (auto-grid)</h3>
+      <p>One class on the parent gives you a responsive grid of cards.</p>
+      <div class="dx-demo">
+        <div class="dx-demo-preview">
+          <div class="ren-card-group" style="width: 100%;">
+            <div class="ren-card"><div class="ren-card-body"><strong>Item one</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">Auto-sized</p></div></div>
+            <div class="ren-card"><div class="ren-card-body"><strong>Item two</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">Wraps responsively</p></div></div>
+            <div class="ren-card"><div class="ren-card-body"><strong>Item three</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">No JS needed</p></div></div>
+          </div>
+        </div>
+        <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-card-group"&gt;
+  &lt;div class="ren-card"&gt;…&lt;/div&gt;
+  &lt;div class="ren-card"&gt;…&lt;/div&gt;
+  &lt;div class="ren-card"&gt;…&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+    </section>
+
+    </main>
+
+  </div>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

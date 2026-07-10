@@ -1,6 +1,6 @@
-# RenDS Knowledge Graph
+# RenDS Knowledge
 
-Packaged graph for agents and tools that need to understand RenDS from the
+Packaged knowledge for agents and tools that need to understand RenDS from the
 installed `ren10` npm package.
 
 ## Files
@@ -8,6 +8,13 @@ installed `ren10` npm package.
 - `ren10-graph.sqlite` — primary SQLite database with FTS5 search.
 - `ren10-graph.json` — fallback graph for agents that can read files but
   cannot open SQLite.
+- `okf/**/*.md` — portable RenDS Knowledge Bundle with YAML frontmatter and
+  relative links between concepts.
+
+The colocated RenDS contracts (`component.md`, `pattern.md`, and the foundation
+contracts) remain authoritative. JSON, SQLite, and the Markdown bundle are
+deterministic indexes generated from repository source; do not edit them by
+hand.
 
 ## CLI
 
@@ -22,6 +29,9 @@ npx ren10 knowledge
 npx ren10 knowledge query "ren-toast status"
 npx ren10 knowledge query "ren-toast status" --json
 npx ren10 knowledge check
+npx ren10 knowledge export --format okf --out knowledge/okf
+npx ren10 knowledge check --format okf
+npx ren10 knowledge visualize --out knowledge/okf/viz.html
 ```
 
 The query command prefers SQLite when the local `sqlite3` CLI is available and
@@ -64,5 +74,5 @@ Edges:
 - `uses_token`
 - `used_by_example`
 
-This graph is generated from the repository source. Do not edit the generated
-SQLite or JSON files by hand.
+See `docs/knowledge-graph.md` for the stable RenDS Knowledge Bundle contract,
+frontmatter fields, validation guarantees, and future MCP boundary.

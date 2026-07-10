@@ -1,0 +1,207 @@
+---
+type: "RenDS CSS"
+title: ren-tooltip.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-tooltip/ren-tooltip.css
+sourcePath: components/composites/ren-tooltip/ren-tooltip.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-tooltip.css
+
+Source path: `components/composites/ren-tooltip/ren-tooltip.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
+.ren-tooltip {
+  position: absolute;
+  background: var(--color-gray-900);
+  color: white;
+  border-radius: var(--radius-md);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--size-caption, 0.75rem);
+  max-width: 15rem;
+  pointer-events: none;
+  z-index: var(--z-tooltip, 2000);
+  overflow-wrap: break-word;
+  white-space: normal;
+  line-height: 1.4;
+  margin: 0;
+  inset: auto;
+
+  /* Anchor positioning (modern browsers) */
+  position-anchor: --tooltip-anchor;
+
+  /* Default: above the trigger with automatic fallback */
+  position-area: top span-all;
+
+  /* Automatic flip when near viewport edges */
+  position-try-fallbacks: flip-block;
+
+  /* Smooth transitions — semantic tokens keep tooltip in sync with the
+     rest of the overlay family (popover, menu, dialog). Collapses to
+     0ms under prefers-reduced-motion via tokens/semantic/motion.css. */
+  opacity: 0;
+  transform: translateY(4px) scale(0.95);
+  transition:
+    opacity var(--duration-enter) var(--ease-enter),
+    transform var(--duration-enter) var(--ease-enter),
+    overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+    display var(--duration-enter) var(--ease-enter) allow-discrete;
+}
+
+/* ═══ TOOLTIP OPEN STATE ═══ */
+.ren-tooltip:popover-open,
+.ren-tooltip.ren-open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ═══ TOOLTIP OPEN WITH @starting-style ═══ */
+@starting-style {
+  .ren-tooltip:popover-open {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+}
+
+/* ═══ TOOLTIP ARROW/CARET ═══ */
+.ren-tooltip-arrow {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: var(--color-gray-900);
+  transform: rotate(45deg);
+  z-index: -1;
+}
+
+/* ═══ PLACEMENT VARIANTS ═══ */
+/* Bottom */
+.ren-tooltip[data-side="bottom"] {
+  position-area: bottom span-all;
+  margin-block-start: var(--space-1);
+  margin-block-end: 0;
+  margin-inline: 0;
+
+  & .ren-tooltip-arrow {
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(225deg);
+  }
+}
+
+/* Top (default) */
+.ren-tooltip[data-side="top"],
+.ren-tooltip:not([data-side]) {
+  position-area: top span-all;
+  margin-block-start: 0;
+  margin-block-end: var(--space-1);
+  margin-inline: 0;
+
+  & .ren-tooltip-arrow {
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+}
+
+/* Right */
+.ren-tooltip[data-side="right"] {
+  position-area: right span-all;
+  margin-block: 0;
+  margin-inline-start: var(--space-1);
+  margin-inline-end: 0;
+
+  & .ren-tooltip-arrow {
+    left: -3px;
+    top: 50%;
+    transform: translateY(-50%) rotate(135deg);
+  }
+}
+
+/* Left */
+.ren-tooltip[data-side="left"] {
+  position-area: left span-all;
+  margin-block: 0;
+  margin-inline-start: 0;
+  margin-inline-end: var(--space-1);
+
+  & .ren-tooltip-arrow {
+    right: -3px;
+    top: 50%;
+    transform: translateY(-50%) rotate(315deg);
+  }
+}
+
+/* ═══ RESPECTS MOTION PREFERENCES ═══
+   Semantic tokens already collapse to 0ms under reduce, but we keep
+   this belt-and-suspenders block so the transform-half can be skipped
+   entirely (no scale bounce) while overlay/display discrete swaps
+   still happen. */
+@media (prefers-reduced-motion: reduce) {
+  .ren-tooltip {
+    transition: opacity var(--duration-enter), transform var(--duration-enter),
+                overlay var(--duration-enter) allow-discrete,
+                display var(--duration-enter) allow-discrete;
+  }
+
+  @starting-style {
+    .ren-tooltip:popover-open {
+      opacity: 0;
+      transform: scale(1);
+    }
+  }
+}
+
+/* ═══ FALLBACK FOR BROWSERS WITHOUT COMPLETE ANCHOR POSITIONING ═══ */
+@supports not ((anchor-name: --ren-anchor) and
+  (position-anchor: --ren-anchor) and
+  (position-area: top span-all)) {
+  .ren-tooltip {
+    position: absolute;
+    inset: auto auto auto auto;
+  }
+
+  .ren-tooltip-trigger {
+    position: relative;
+  }
+
+  /* Fallback animations */
+  .ren-tooltip {
+    animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
+  }
+
+  .ren-tooltip:popover-open,
+  .ren-tooltip.ren-open {
+    animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
+  }
+
+  @keyframes ren-tooltip-fallback-open {
+    from {
+      opacity: 0;
+      transform: translateY(4px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ren-tooltip {
+      animation: none;
+    }
+  }
+}

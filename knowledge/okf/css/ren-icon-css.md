@@ -1,0 +1,147 @@
+---
+type: "RenDS CSS"
+title: ren-icon.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-icon/ren-icon.css
+sourcePath: components/primitives/ren-icon/ren-icon.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-icon.css
+
+Source path: `components/primitives/ren-icon/ren-icon.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Icon Component
+   ============================================
+   Icon sizing, coloring, and animation utilities.
+   Works with any SVG or icon font.
+
+   The base class provides inline layout,
+   color inheritance, and shrink-to-fit.
+
+   Usage:
+     <span class="ren-icon ren-icon-md">
+       <svg>...</svg>
+     </span>
+
+     <button>
+       <span class="ren-icon ren-icon-lg ren-icon-success">
+         <svg>...</svg>
+       </span>
+       Export
+     </button>
+
+     <span class="ren-icon ren-icon-spin ren-icon-xl">
+       <svg>...</svg>
+     </span>
+   ============================================ */
+
+/* ═══════════════════════════════
+   ICON BASE
+   ═══════════════════════════════ */
+
+.ren-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;   /* 20px — default md */
+  height: 1.25rem;
+  color: currentColor;
+}
+
+.ren-icon > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ─── Sizes ─── */
+
+.ren-icon-xs {
+  width: 0.75rem;   /* 12px */
+  height: 0.75rem;
+}
+
+.ren-icon-sm {
+  width: 1rem;      /* 16px */
+  height: 1rem;
+}
+
+.ren-icon-md {
+  width: 1.25rem;   /* 20px */
+  height: 1.25rem;
+}
+
+.ren-icon-lg {
+  width: 1.5rem;    /* 24px */
+  height: 1.5rem;
+}
+
+.ren-icon-xl {
+  width: 2rem;      /* 32px */
+  height: 2rem;
+}
+
+.ren-icon-2xl {
+  width: 3rem;      /* 48px */
+  height: 3rem;
+}
+
+/* ─── Color Variants ─── */
+
+.ren-icon-primary {
+  color: var(--color-accent);
+}
+
+.ren-icon-success {
+  color: var(--color-success);
+}
+
+.ren-icon-warning {
+  color: var(--color-warning);
+}
+
+.ren-icon-danger {
+  color: var(--color-danger);
+}
+
+.ren-icon-muted {
+  color: var(--color-text-secondary);
+}
+
+/* ─── Animation ─── */
+
+.ren-icon-spin {
+  animation: ren-icon-spin var(--duration-loop) var(--ease-loop) infinite;
+}
+
+@keyframes ren-icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .ren-icon-spin {
+    animation: none;
+  }
+}

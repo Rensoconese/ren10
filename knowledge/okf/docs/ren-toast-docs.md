@@ -1,0 +1,427 @@
+---
+type: "RenDS Docs Page"
+title: "ren-toast docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-toast.html
+sourcePath: docs/components/ren-toast.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-toast docs
+
+Source path: `docs/components/ren-toast.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: center; }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-text-muted); padding-top: var(--space-3); }
+    .dx-vrow-items { padding: var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: var(--space-3); }
+    @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
+
+    /* Static toast preview */
+    .demo-toast {
+      display: flex; align-items: flex-start; gap: var(--space-3);
+      width: 320px;
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+    .demo-toast-icon { flex-shrink: 0; width: 20px; height: 20px; display: grid; place-items: center; }
+    .demo-toast-icon-success { color: var(--color-success); }
+    .demo-toast-icon-warning { color: var(--color-warning); }
+    .demo-toast-icon-danger { color: var(--color-danger); }
+    .demo-toast-icon-info { color: var(--color-info); }
+    .demo-toast-body { flex: 1; min-width: 0; }
+    .demo-toast-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); margin: 0 0 2px; }
+    .demo-toast-desc { font-size: var(--text-xs); color: var(--color-text-muted); margin: 0; line-height: 1.5; }
+    .demo-toast-close { background: transparent; border: 0; padding: 2px; color: var(--color-text-muted); cursor: pointer; line-height: 1; }
+    .demo-toast-close:hover { color: var(--color-text); }
+  </style>
+</head>
+<body>
+
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span></a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html" aria-current="page">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Toast</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Toast <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
+        <p class="lede">Transient notifications that appear in a corner of the screen and dismiss themselves after a few seconds. Announced to screen readers via live regions, dismissible by swipe / click, and stackable when several fire at once.</p>
+      </header>
+
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Use toasts for low-importance, transient feedback: "Saved", "Copied to clipboard", "Connection restored". They're the right primitive when you need to acknowledge an action without interrupting the user's flow. For high-stakes feedback (errors that block a flow), use a Dialog or an inline error message inside a <a href="ren-field.html" class="ren-link">Form Field</a> instead.</p>
+        <div class="dx-callout">
+          <p><strong>Don't put critical actions in a toast.</strong> Toasts disappear; users miss them. If the user must read the message or perform an action in response, use a Dialog. Toast is for fire-and-forget acknowledgement.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Parts</p>
+        <h2>Anatomy</h2>
+        <p>A toast lives in a fixed-position viewport (one per corner of the screen) and contains an icon, title, optional description, and an optional action.</p>
+        <div style="background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-6) var(--space-5); margin: var(--space-4) 0; display: flex; justify-content: center;">
+          <div class="demo-toast" role="status">
+            <span class="demo-toast-icon demo-toast-icon-success">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+            </span>
+            <div class="demo-toast-body">
+              <p class="demo-toast-title">Project saved</p>
+              <p class="demo-toast-desc">Your changes are visible to the team.</p>
+            </div>
+            <button class="demo-toast-close" aria-label="Dismiss">×</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Trigger a toast from the buttons below. The viewport renders in the bottom-right corner of this page; toasts auto-dismiss after 4 seconds, or click the × to dismiss early.</p>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="success">Success</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="info">Info</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="warning">Warning</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="danger">Danger</button>
+            <button type="button" class="ren-btn ren-btn-secondary" data-toast="action">With action</button>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>// Imperative API — most common usage
+window.toast.success('Project saved', { description: 'Your changes are live.' });
+window.toast.info('Sync started');
+window.toast.warning('Rate limit approaching');
+window.toast.danger('Delete failed', { description: 'Please try again.' });
+window.toast.show({ title: 'Email sent', action: { label: 'Undo', onClick: () =&gt; rollback() } });</code></pre>
+        </div>
+
+        <!-- Toast viewport: a single instance is auto-created if missing.
+             Drop one in explicitly to control position. -->
+        <ren-toast-viewport data-position="bottom-right"></ren-toast-viewport>
+      </section>
+
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <div class="dx-vgrid">
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Status colors</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Four status variants: <code>success</code>, <code>info</code>, <code>warning</code>, <code>danger</code>. Each tints the icon and the left border in the matching semantic color.</p></div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Position</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">The viewport supports six positions via <code>data-position</code>: <code>top-right</code>, <code>top-left</code>, <code>top-center</code>, <code>bottom-right</code> (default), <code>bottom-left</code>, <code>bottom-center</code>. Pick one for your whole app.</p></div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">With action</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Add an inline action button — <strong>Undo</strong>, <strong>Retry</strong>, <strong>View</strong>. Best paired with a slightly longer auto-dismiss timeout so the user has time to react.</p></div>
+          </div>
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Persistent</span>
+            <div class="dx-vrow-items"><p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Set <code>duration: 0</code> to disable auto-dismiss — the user must close it manually. Use sparingly; reserve for important state changes the user has to acknowledge.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-toast-viewport</code></td><td>Fixed-position container. One per app, picks a corner via <code>data-position</code>. Has <code>aria-live="polite"</code> so screen readers announce additions.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast</code></td><td>Single notification. Card-like surface with shadow. Slides in from the viewport's edge.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast-icon</code></td><td>Leading status icon. Color matches the toast's variant.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast-body</code></td><td>Title + optional description region.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast-title</code></td><td>The bold one-line message.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast-description</code></td><td>Secondary line with detail. Muted color.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast-action</code></td><td>Inline action button. Use a real <code>&lt;button&gt;</code>; pair with a callback in the JS API.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toast-close</code></td><td>Dismiss × button. Always present, sized to be tappable on touch.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript API</h3>
+        <p>The component exposes a global <code>window.toast</code> with one method per status, plus a generic <code>show()</code>. Status methods return an <code>id</code> you can later pass to <code>toast.dismiss(id)</code>.</p>
+        <table class="dx-api dx-api-cols-3">
+          <thead><tr><th>Method</th><th>Returns</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">toast.success(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Green check, polite announce.</td></tr>
+            <tr><td><code class="dx-api-name">toast.info(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Blue info, polite.</td></tr>
+            <tr><td><code class="dx-api-name">toast.warning(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Amber, polite.</td></tr>
+            <tr><td><code class="dx-api-name">toast.danger(title, options?)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Red, <em>assertive</em> announce — screen readers interrupt.</td></tr>
+            <tr><td><code class="dx-api-name">toast.show(options)</code></td><td><span class="dx-api-type">string (id)</span></td><td>Full control. <code>{ title, description, status, duration, action }</code>.</td></tr>
+            <tr><td><code class="dx-api-name">toast.dismiss(id)</code></td><td><span class="dx-api-type">void</span></td><td>Dismiss a specific toast by the id returned from <code>show</code>/status methods.</td></tr>
+            <tr><td><code class="dx-api-name">toast.dismissAll()</code></td><td><span class="dx-api-type">void</span></td><td>Dismiss every visible toast (useful on route change).</td></tr>
+            <tr><td><code class="dx-api-name">toast.promise(promise, opts)</code></td><td><span class="dx-api-type">Promise</span></td><td>Shows a loading toast that swaps to success/error when the promise settles. <code>opts: { loading, success, error }</code> — each can be a string or function of the resolved/rejected value.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Options</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Option</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">title</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>The bold message. Required.</td></tr>
+            <tr><td><code class="dx-api-name">description</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>Optional secondary line.</td></tr>
+            <tr><td><code class="dx-api-name">status</code></td><td><span class="dx-api-type">"success" | "info" | "warning" | "danger"</span></td><td><span class="dx-api-default">"info"</span></td><td>Visual variant.</td></tr>
+            <tr><td><code class="dx-api-name">duration</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">4000</span></td><td>Auto-dismiss after N ms. Pass <code>0</code> for persistent.</td></tr>
+            <tr><td><code class="dx-api-name">action</code></td><td><span class="dx-api-type">{ label, onClick }</span></td><td><span class="dx-api-default">—</span></td><td>Inline action button. Click runs <code>onClick</code> then dismisses.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <p>Toasts are tricky for accessibility — they appear without focus and disappear without warning. RenDS handles the announcement via live regions; you handle the message phrasing.</p>
+        <h3>Live region behavior</h3>
+        <ul>
+          <li><strong>Success / info / warning</strong> use <code>aria-live="polite"</code> — announced when the screen reader is idle.</li>
+          <li><strong>Danger</strong> uses <code>aria-live="assertive"</code> — interrupts the current announcement. Reserve for genuine errors.</li>
+        </ul>
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow"><span class="keys"><kbd>F6</kbd></span><span>Moves focus to the toast viewport. Useful when an action is present and the user wants to act before it dismisses.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Esc</kbd></span><span>While focused on a toast: dismisses it.</span></div>
+          <div class="dx-keyrow"><span class="keys"><kbd>Tab</kbd></span><span>Cycles through the action button and the close button inside a toast.</span></div>
+        </div>
+        <div class="dx-callout">
+          <p><strong>Pause auto-dismiss on hover and focus.</strong> The viewport pauses the dismiss timer when the user hovers over it or any toast inside receives focus — they're trying to read it.</p>
+        </div>
+      </section>
+
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Confirm a save</h3>
+        <div class="dx-pre" tabindex="0"><code>async function save() {
+  await api.save();
+  toast.success('Saved', { description: 'Visible to the team in a few seconds.' });
+}</code></pre>
+
+        <h3>Undoable delete</h3>
+        <div class="dx-pre" tabindex="0"><code>function deleteRow(id) {
+  const backup = removeOptimistically(id);
+
+  toast.show({
+    title: 'Row deleted',
+    duration: 7000,
+    action: {
+      label: 'Undo',
+      onClick: () =&gt; restore(backup),
+    },
+  });
+}</code></pre>
+
+        <h3>Persistent error with retry</h3>
+        <div class="dx-pre" tabindex="0"><code>toast.danger('Connection lost', {
+  description: 'Reconnecting…',
+  duration: 0,            // sticks until dismissed
+  action: { label: 'Retry now', onClick: () =&gt; reconnect() },
+});</code></pre>
+
+        <h3>Dismiss a toast programmatically</h3>
+        <p>Status methods return an <code>id</code>. Store it and pass it to <code>toast.dismiss</code> when the underlying state changes.</p>
+        <div class="dx-pre" tabindex="0"><code>// Show a persistent "uploading" toast, dismiss when done.
+const uploadId = toast.info('Uploading…', { duration: 0 });
+
+try {
+  await uploadFile(file);
+  toast.dismiss(uploadId);
+  toast.success('Upload complete');
+} catch (err) {
+  toast.dismiss(uploadId);
+  toast.danger('Upload failed', { description: err.message });
+}</code></pre>
+
+        <h3>Track an async operation with toast.promise</h3>
+        <p>One call covers loading → success / error. The toast updates in place.</p>
+        <div class="dx-pre" tabindex="0"><code>toast.promise(api.saveProfile(data), {
+  loading: 'Saving profile…',
+  success: 'Profile saved',
+  error:   (err) =&gt; `Couldn't save: ${err.message}`,
+});</code></pre>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="../../components/composites/ren-toast/ren-toast.js"></script>
+  <script type="module">
+    // Wait for the viewport's custom element to register, then wire demo buttons
+    // to the real `window.toast` API.
+    await customElements.whenDefined('ren-toast-viewport');
+
+    document.querySelectorAll('[data-toast]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const kind = btn.getAttribute('data-toast');
+        switch (kind) {
+          case 'success':
+            window.toast.success('Project saved', { description: 'Your changes are visible to the team.' });
+            break;
+          case 'info':
+            window.toast.info('Sync started', { description: 'Pulling the latest changes…' });
+            break;
+          case 'warning':
+            window.toast.warning('Rate limit', { description: "You're close to your hourly limit." });
+            break;
+          case 'danger':
+            window.toast.danger('Delete failed', { description: 'Please try again.' });
+            break;
+          case 'action':
+            window.toast.show({
+              title: 'Email sent',
+              description: 'To 12 recipients.',
+              status: 'info',
+              action: { label: 'Undo', onClick: () => window.toast.success('Undone') },
+            });
+            break;
+        }
+      });
+    });
+  </script>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

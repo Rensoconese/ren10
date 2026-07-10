@@ -1,0 +1,229 @@
+---
+type: "RenDS CSS"
+title: ren-nav.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/patterns/ren-nav/ren-nav.css
+sourcePath: components/patterns/ren-nav/ren-nav.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-nav.css
+
+Source path: `components/patterns/ren-nav/ren-nav.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+.ren-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--ren-space-2, 0.5rem) var(--ren-space-4, 1rem);
+  background-color: var(--ren-surface);
+  border-bottom: 1px solid var(--ren-border);
+  min-height: 3.5rem;
+  transition: backdrop-filter var(--duration-overlay) var(--ease-state-change), background-color var(--duration-overlay) var(--ease-state-change);
+
+  &[data-open] .ren-nav-links,
+  &:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+    display: flex;
+  }
+
+  &.ren-nav-sticky {
+    position: sticky;
+    top: 0;
+    z-index: var(--ren-z-sticky, 100);
+    backdrop-filter: blur(8px);
+    background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
+  }
+
+  &.ren-nav-transparent {
+    background-color: transparent;
+    border-bottom-color: transparent;
+  }
+}
+
+.ren-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--ren-space-2, 0.5rem);
+  font-weight: 600;
+  font-size: var(--ren-title-sm-size, 1.125rem);
+  color: var(--ren-text);
+  text-decoration: none;
+  flex-shrink: 0;
+
+  &:focus-visible {
+    outline: 2px solid var(--ren-accent);
+    outline-offset: 2px;
+    border-radius: 0.375rem;
+  }
+}
+
+.ren-nav-links {
+  display: flex;
+  align-items: center;
+  gap: var(--ren-space-1, 0.25rem);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @media (max-width: 48rem) {
+    display: none;
+    position: absolute;
+    top: 3.5rem;
+    inset-inline: 0;
+    flex-direction: column;
+    gap: 0;
+    background-color: var(--ren-surface);
+    border-bottom: 1px solid var(--ren-border);
+    padding: var(--ren-space-2, 0.5rem) 0;
+    animation: slideDown var(--duration-enter) var(--ease-enter);
+    z-index: 1000;
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+.ren-nav-link {
+  padding: var(--ren-space-2, 0.5rem) var(--ren-space-3, 0.75rem);
+  color: var(--ren-text-muted);
+  font-size: var(--ren-label-size, 0.875rem);
+  border-radius: 0.375rem;
+  transition: background-color var(--duration-state) var(--ease-state-change), color var(--duration-state) var(--ease-state-change);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--ren-fill);
+    color: var(--ren-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ren-accent);
+    outline-offset: -2px;
+  }
+
+  &[aria-current="page"],
+  &.active {
+    color: var(--ren-accent);
+    font-weight: 500;
+    background-color: var(--ren-accent-subtle);
+  }
+
+  @media (max-width: 48rem) {
+    padding: var(--ren-space-2, 0.5rem) var(--ren-space-4, 1rem);
+    border-radius: 0;
+
+    &:hover {
+      background-color: var(--ren-fill);
+    }
+  }
+}
+
+.ren-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--ren-space-2, 0.5rem);
+  margin-inline-start: auto;
+}
+
+.ren-nav-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 0.375rem;
+  background: none;
+  border: none;
+  padding: var(--ren-space-2, 0.5rem);
+  cursor: pointer;
+  color: var(--ren-text);
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 0.375rem;
+  transition: background-color var(--duration-state) var(--ease-state-change);
+
+  &:hover {
+    background-color: var(--ren-fill);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--ren-accent);
+    outline-offset: 2px;
+  }
+
+  & span {
+    width: 1.5rem;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 1px;
+    transition: transform var(--duration-route) var(--ease-state-change), opacity var(--duration-route) var(--ease-state-change);
+    transform-origin: center;
+  }
+
+  &[aria-expanded="true"] {
+    & span:nth-child(1) {
+      transform: rotate(45deg) translateY(0.5rem);
+    }
+
+    & span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    & span:nth-child(3) {
+      transform: rotate(-45deg) translateY(-0.5rem);
+    }
+  }
+
+  @media (max-width: 48rem) {
+    display: flex;
+  }
+}
+
+.ren-nav-dropdown {
+  position: relative;
+
+  & [popover] {
+    padding: var(--ren-space-1, 0.25rem);
+    background-color: var(--ren-surface);
+    border: 1px solid var(--ren-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    margin-top: var(--ren-space-1, 0.25rem);
+    list-style: none;
+    padding-inline-start: 0;
+
+    &[popover] {
+      inset: auto auto auto auto;
+    }
+  }
+
+  & .ren-nav-link[aria-expanded="true"] {
+    background-color: var(--ren-fill);
+    color: var(--ren-accent);
+  }
+}

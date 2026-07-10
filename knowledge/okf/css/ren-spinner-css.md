@@ -1,0 +1,81 @@
+---
+type: "RenDS CSS"
+title: ren-spinner.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-spinner/ren-spinner.css
+sourcePath: components/primitives/ren-spinner/ren-spinner.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-spinner.css
+
+Source path: `components/primitives/ren-spinner/ren-spinner.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Spinner
+   ============================================
+   Circular loading indicator. CSS-only animation
+   that respects prefers-reduced-motion (falls
+   back to a gentle opacity pulse instead of
+   rotating).
+
+   Usage:
+     <span class="ren-spinner" role="status"
+           aria-label="Loading"></span>
+     <span class="ren-spinner ren-spinner-lg"></span>
+
+   Accessibility:
+     - Provide role="status" and aria-label for SR
+     - On dark surfaces use .ren-spinner-light
+   ============================================ */
+
+.ren-spinner {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2.5px solid var(--color-fill-active);
+  border-top-color: var(--color-accent);
+  border-radius: var(--radius-full);
+  animation: ren-spin var(--duration-loop) var(--ease-loop-smooth) infinite;
+}
+
+/* ─── Sizes ─── */
+.ren-spinner-xs { width: 0.875rem; height: 0.875rem; border-width: 2px; }
+.ren-spinner-sm { width: 1rem;     height: 1rem;     border-width: 2px; }
+.ren-spinner-lg { width: 2rem;     height: 2rem;     border-width: 3px; }
+.ren-spinner-xl { width: 3rem;     height: 3rem;     border-width: 3px; }
+
+/* ─── Color variants ─── */
+.ren-spinner-light {
+  border-color: rgb(255, 255, 255, 0.3);
+  border-top-color: var(--white);
+}
+
+@keyframes ren-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Reduced motion: pulse opacity instead of rotating */
+@media (prefers-reduced-motion: reduce) {
+  .ren-spinner {
+    animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
+  }
+
+  @keyframes ren-spin-gentle {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.4; }
+  }
+}

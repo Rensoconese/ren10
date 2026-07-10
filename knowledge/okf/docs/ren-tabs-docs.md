@@ -1,0 +1,851 @@
+---
+type: "RenDS Docs Page"
+title: "ren-tabs docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-tabs.html
+sourcePath: docs/components/ren-tabs.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-tabs docs
+
+Source path: `docs/components/ren-tabs.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabs — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Page-specific styles — chrome and tables live in shell.css */
+
+    /* Custom element default — <div class="ren-tabs"> is display: inline by default,
+       which collapses its panels. Force a block layout. */
+    ren-tabs {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    /* Demo block: preview frame + code block, stacked */
+    .dx-demo {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: var(--space-4) 0;
+    }
+    .dx-demo-preview {
+      background: var(--color-surface-raised);
+      padding: var(--space-6) var(--space-5);
+      min-height: 96px;
+    }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* Variant rows — labeled groups of demos */
+    .dx-vgrid { display: grid; gap: var(--space-6); margin: var(--space-4) 0; }
+    .dx-vrow { display: grid; grid-template-columns: 140px 1fr; gap: var(--space-4); align-items: start; }
+    .dx-vrow-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      padding-top: var(--space-3);
+    }
+    .dx-vrow-items {
+      padding: var(--space-4);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+    @media (max-width: 720px) {
+      .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); }
+      .dx-vrow-label { padding-top: 0; }
+    }
+
+    /* Anatomy */
+    .dx-anatomy {
+      margin: var(--space-4) 0;
+      display: grid;
+      gap: var(--space-4);
+    }
+    .dx-anatomy-num {
+      display: inline-grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--color-text);
+      color: var(--color-surface);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-bold);
+      flex-shrink: 0;
+    }
+    .dx-anatomy-stage {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-6) var(--space-5);
+    }
+    .dx-anatomy-stage-label {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-text-muted);
+      font-weight: var(--weight-semibold);
+      margin: 0 0 var(--space-3);
+    }
+    .dx-anatomy-parts {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-3);
+    }
+    @media (max-width: 720px) { .dx-anatomy-parts { grid-template-columns: 1fr; } }
+    .dx-anatomy-part {
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      display: grid;
+      gap: var(--space-2);
+    }
+    .dx-anatomy-part-header {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+    .dx-anatomy-part-name {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+    }
+    .dx-anatomy-part-desc {
+      font-size: var(--text-sm);
+      line-height: 1.5;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+    .dx-anatomy-part-desc code { font-size: 0.85em; }
+
+    /* Vertical tabs row — 1 col label · 2 col content for the orientation demo */
+    .demo-vertical-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: var(--space-6);
+      align-items: start;
+    }
+    .demo-vertical-grid .ren-tab-list {
+      flex-direction: column;
+      border-bottom: none;
+      border-inline-end: 1px solid var(--color-border);
+      padding-inline-end: var(--space-3);
+      gap: var(--space-1);
+    }
+    .demo-vertical-grid .ren-tab {
+      justify-content: flex-start;
+      border-bottom: none;
+      border-inline-end: 2px solid transparent;
+    }
+    .demo-vertical-grid .ren-tab[aria-selected="true"] {
+      border-inline-end-color: var(--color-accent);
+      border-bottom-color: transparent;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top bar (shell.css) -->
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../index.html">Docs</a>
+        <a href="../components.html" aria-current="page">Components</a>
+        <a href="../../templates/index.html">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sidebar + content shell -->
+  <div class="dx-shell dx-shell-grid">
+
+    <!-- Persistent sidebar -->
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html" aria-current="page">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <!-- Content -->
+    <main class="dx-content">
+
+      <!-- Page header -->
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+          <ol>
+            <li><a href="../index.html" class="ren-link-plain">Docs</a></li>
+            <li><a href="../components.html" class="ren-link-plain">Components</a></li>
+            <li aria-current="page">Tabs</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Composite</p>
+        <h1>Tabs <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
+        <p class="lede">Switch between content panels without leaving the page. Implements the ARIA tablist pattern with full keyboard navigation, three visual variants, and horizontal or vertical orientation. Wrap your tabs in <code>&lt;ren-tabs&gt;</code> and the keyboard, ARIA, and selection state are wired automatically.</p>
+      </header>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           1. OVERVIEW
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="overview">
+        <p class="dx-kicker">About</p>
+        <h2>Overview</h2>
+        <p>Tabs let a user step through several views of related content within the same screen — settings categories, dataset filters, code-vs-preview toggles. The component handles the parts that are easy to get wrong: roving tabindex, arrow-key navigation, ARIA selection state, panel visibility.</p>
+
+        <p>You write the markup as if it were already accessible (semantic <code>&lt;button role="tab"&gt;</code> elements paired with <code>&lt;div role="tabpanel"&gt;</code>), wrap the whole thing in <code>&lt;ren-tabs&gt;</code>, and the component fills in <code>aria-controls</code>, <code>aria-labelledby</code>, <code>aria-selected</code>, <code>id</code>s, and the <code>hidden</code> state on inactive panels.</p>
+
+        <div class="dx-callout">
+          <p><strong>Tabs are for sibling views, not navigation.</strong> If clicking a "tab" should change the URL or load a new page, use <code>ren-nav</code> or plain links instead. Tabs imply that all the content already exists on this page and you're just switching the view.</p>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           2. ANATOMY
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="anatomy">
+        <p class="dx-kicker">Parts</p>
+        <h2>Anatomy</h2>
+        <p>A tabs component is built from three nested layers. Each has a single responsibility.</p>
+
+        <div class="dx-anatomy">
+          <div class="dx-anatomy-stage">
+            <p class="dx-anatomy-stage-label">Assembled</p>
+            <div class="ren-tabs">
+              <div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Anatomy preview">
+                <button role="tab" class="ren-tab" type="button">Overview</button>
+                <button role="tab" class="ren-tab" type="button">Activity</button>
+                <button role="tab" class="ren-tab" type="button">Settings</button>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel">
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">The <strong>Overview</strong> panel content lives here. Switch tabs above to see the others.</p>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel" hidden>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">The <strong>Activity</strong> panel — typically a feed of recent events.</p>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel" hidden>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">The <strong>Settings</strong> panel — a form for configuring the resource.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-anatomy-parts">
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">1</span>
+                <span class="dx-anatomy-part-name">Container</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>&lt;ren-tabs&gt;</code> wrapper. Holds the tablist and the panels. Wires up the ARIA, keyboard, and selection state.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">2</span>
+                <span class="dx-anatomy-part-name">Tab list</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-tab-list</code> with <code>role="tablist"</code>. The row of triggers. Add a variant modifier for the visual style.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">3</span>
+                <span class="dx-anatomy-part-name">Tab</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>&lt;button class="ren-tab" role="tab"&gt;</code>. One per panel. Always a button — never a link — because activating it doesn't navigate.</p>
+            </div>
+            <div class="dx-anatomy-part">
+              <div class="dx-anatomy-part-header">
+                <span class="dx-anatomy-num">4</span>
+                <span class="dx-anatomy-part-name">Panel</span>
+              </div>
+              <p class="dx-anatomy-part-desc"><code>.ren-tab-panel</code> with <code>role="tabpanel"</code>. One per tab, in the same order. Inactive panels get <code>hidden</code> automatically.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           3. DEMO
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Click the tabs below or focus one and use the arrow keys. Tab and Shift+Tab move in and out of the tablist; arrow keys move between tabs.</p>
+
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <div class="ren-tabs">
+              <div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Project sections">
+                <button role="tab" class="ren-tab" type="button">Overview</button>
+                <button role="tab" class="ren-tab" type="button">Activity</button>
+                <button role="tab" class="ren-tab" type="button">Members</button>
+                <button role="tab" class="ren-tab" type="button">Settings</button>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel">
+                <h3 style="font-size: var(--text-base); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2);">Project overview</h3>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.55;">A quick summary of the project's status, owner, and last activity. Most users land here first.</p>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel" hidden>
+                <h3 style="font-size: var(--text-base); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2);">Recent activity</h3>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.55;">A feed of the last few events — commits, comments, status changes. Filter by member from the sidebar.</p>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel" hidden>
+                <h3 style="font-size: var(--text-base); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2);">Team members</h3>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.55;">People with access to this project, their roles, and the last time they were active. Owners can invite or remove.</p>
+              </div>
+              <div role="tabpanel" class="ren-tab-panel" hidden>
+                <h3 style="font-size: var(--text-base); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2);">Project settings</h3>
+                <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.55;">Name, description, visibility, danger-zone actions. Changes are saved as you go.</p>
+              </div>
+            </div>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-tabs&gt;
+  &lt;div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Project sections"&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;Overview&lt;/button&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;Activity&lt;/button&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;Members&lt;/button&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;Settings&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div role="tabpanel" class="ren-tab-panel"&gt;Overview content&lt;/div&gt;
+  &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;Activity content&lt;/div&gt;
+  &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;Members content&lt;/div&gt;
+  &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;Settings content&lt;/div&gt;
+&lt;/ren-tabs&gt;</code></pre>
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           4. VARIANTS
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="variants">
+        <p class="dx-kicker">Shapes</p>
+        <h2>Variants</h2>
+        <p>Three visual styles, two orientations, two activation modes. Pick by context: underline for primary navigation within a page, pills for filter / segmented controls, enclosed for "documents in folders" metaphors.</p>
+
+        <div class="dx-vgrid">
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Underline</span>
+            <div class="dx-vrow-items">
+              <div class="ren-tabs">
+                <div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Underline variant">
+                  <button role="tab" class="ren-tab" type="button">First</button>
+                  <button role="tab" class="ren-tab" type="button">Second</button>
+                  <button role="tab" class="ren-tab" type="button">Third</button>
+                </div>
+                <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Default style. Selected tab gets a 2 px accent underline.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Second panel.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Third panel.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Pills</span>
+            <div class="dx-vrow-items">
+              <div class="ren-tabs">
+                <div role="tablist" class="ren-tab-list ren-tab-list-pills" aria-label="Pills variant">
+                  <button role="tab" class="ren-tab" type="button">All</button>
+                  <button role="tab" class="ren-tab" type="button">Active</button>
+                  <button role="tab" class="ren-tab" type="button">Archived</button>
+                </div>
+                <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Pills feel like a segmented control — good for filters and view modes.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Active items.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Archived items.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Enclosed</span>
+            <div class="dx-vrow-items">
+              <div class="ren-tabs">
+                <div role="tablist" class="ren-tab-list ren-tab-list-enclosed" aria-label="Enclosed variant">
+                  <button role="tab" class="ren-tab" type="button">README</button>
+                  <button role="tab" class="ren-tab" type="button">License</button>
+                  <button role="tab" class="ren-tab" type="button">Changelog</button>
+                </div>
+                <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted); border: 1px solid var(--color-border); border-top: none; padding: var(--space-4); border-radius: 0 0 var(--radius-md) var(--radius-md);">Enclosed gives the "files in a folder" metaphor. Pair with a bordered panel.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted); border: 1px solid var(--color-border); border-top: none; padding: var(--space-4); border-radius: 0 0 var(--radius-md) var(--radius-md);">License contents.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted); border: 1px solid var(--color-border); border-top: none; padding: var(--space-4); border-radius: 0 0 var(--radius-md) var(--radius-md);">Changelog entries.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Vertical</span>
+            <div class="dx-vrow-items">
+              <div class="ren-tabs" data-orientation="vertical">
+                <div class="demo-vertical-grid">
+                  <div role="tablist" class="ren-tab-list" aria-label="Vertical tabs" aria-orientation="vertical">
+                    <button role="tab" class="ren-tab" type="button">Profile</button>
+                    <button role="tab" class="ren-tab" type="button">Account</button>
+                    <button role="tab" class="ren-tab" type="button">Billing</button>
+                  </div>
+                  <div>
+                    <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Profile settings — name, avatar, bio.</div>
+                    <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Account — email, password, 2FA.</div>
+                    <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Billing — plan, invoices, payment method.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dx-vrow">
+            <span class="dx-vrow-label">Default</span>
+            <div class="dx-vrow-items">
+              <div class="ren-tabs" data-default="1">
+                <div role="tablist" class="ren-tab-list ren-tab-list-pills" aria-label="Default tab demo">
+                  <button role="tab" class="ren-tab" type="button">Day</button>
+                  <button role="tab" class="ren-tab" type="button">Week</button>
+                  <button role="tab" class="ren-tab" type="button">Month</button>
+                </div>
+                <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Day stats.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Week stats — opens by default via <code>default-value="1"</code>.</div>
+                <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Month stats.</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           5. API
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+
+        <h3>CSS classes</h3>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Effect</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">.ren-tabs</code></td>
+              <td>Container. Sets up the inline-size container query so tabs can adapt to their available width.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-tab-list</code></td>
+              <td>The row of tab buttons. Used with <code>role="tablist"</code>. Has a default underline divider.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-tab-list-underline</code></td>
+              <td>Default visual variant. Selected tab gets a 2 px accent underline; the rest sit on a divider line.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-tab-list-pills</code></td>
+              <td>Segmented-control look. Selected tab fills with <code>--color-fill</code>. No underline divider.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-tab-list-enclosed</code></td>
+              <td>"Folder tab" look. Selected tab merges into the panel below with a shared border.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-tab</code></td>
+              <td>Single tab button. Always a <code>&lt;button type="button"&gt;</code> with <code>role="tab"</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">.ren-tab-panel</code></td>
+              <td>One content region. Used with <code>role="tabpanel"</code>. Inactive panels get <code>hidden</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Web Component attributes</h3>
+        <p>Set on the <code>&lt;ren-tabs&gt;</code> wrapper. Re-rendered on the fly when changed.</p>
+        <table class="dx-api dx-api-cols-4">
+          <thead>
+            <tr>
+              <th>Attribute</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">activation</code></td>
+              <td><span class="dx-api-type">"manual" | "automatic"</span></td>
+              <td><span class="dx-api-default">"manual"</span></td>
+              <td>Manual: arrow keys move focus; <kbd>Enter</kbd> / <kbd>Space</kbd> selects. Automatic: arrow keys select immediately.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">orientation</code></td>
+              <td><span class="dx-api-type">"horizontal" | "vertical"</span></td>
+              <td><span class="dx-api-default">"horizontal"</span></td>
+              <td>Sets which arrow keys cycle the tabs (Left/Right vs Up/Down) and the <code>aria-orientation</code> attribute.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">default-value</code></td>
+              <td><span class="dx-api-type">number | string</span></td>
+              <td><span class="dx-api-default">0</span></td>
+              <td>Index (e.g. <code>"1"</code>) or tab <code>id</code> to select on mount.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>JavaScript API</h3>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Member</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">selectedIndex</code></td>
+              <td>Getter. Index of the currently selected tab.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">selectedTab</code></td>
+              <td>Getter. The selected <code>&lt;button role="tab"&gt;</code> element, or <code>null</code> if none.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">selectedPanel</code></td>
+              <td>Getter. The currently visible <code>&lt;div role="tabpanel"&gt;</code> element.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">tabs</code> / <code class="dx-api-name">panels</code></td>
+              <td>Getters. Arrays of all tab and panel elements, in document order.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">selectTabByIndex(index)</code></td>
+              <td>Programmatically select a tab by its index. Fires <code>ren-tab-change</code>.</td>
+            </tr>
+            <tr>
+              <td><code class="dx-api-name">selectTabById(id)</code></td>
+              <td>Programmatically select a tab by its <code>id</code>. Fires <code>ren-tab-change</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="dx-api">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Detail</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code class="dx-api-name">ren-tab-change</code></td>
+              <td>Bubbles and is composed. Fires whenever a tab becomes selected. <code>event.detail</code>: <code>{ tab, panel, index, id }</code>.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="dx-pre" tabindex="0"><code>const tabs = document.querySelector('ren-tabs');
+
+tabs.addEventListener('ren-tab-change', (e) =&gt; {
+  console.log('Now showing:', e.detail.id, '(index', e.detail.index + ')');
+});
+
+// Programmatic switch
+tabs.selectTabByIndex(2);</code></div>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           6. ACCESSIBILITY
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="a11y">
+        <p class="dx-kicker">Inclusive by default</p>
+        <h2>Accessibility</h2>
+        <p>The component implements the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/tabs/" target="_blank" rel="noopener" class="ren-link">WAI-ARIA Tabs pattern</a> end-to-end. You provide the markup; it provides the wiring.</p>
+
+        <h3>Keyboard</h3>
+        <div class="dx-keys">
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Tab</kbd></span>
+            <span>Moves focus into the tablist. Subsequent <kbd>Tab</kbd> moves to the active panel, then out of the component entirely.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>←</kbd> / <kbd>→</kbd> (horizontal) or <kbd>↑</kbd> / <kbd>↓</kbd> (vertical)</span>
+            <span>Move between tabs. In manual mode, focus only; in automatic mode, focus + select.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Enter</kbd> / <kbd>Space</kbd></span>
+            <span>Select the focused tab (manual mode). Already selected in automatic mode.</span>
+          </div>
+          <div class="dx-keyrow">
+            <span class="keys"><kbd>Home</kbd> / <kbd>End</kbd></span>
+            <span>Jump to the first or last tab.</span>
+          </div>
+        </div>
+
+        <h3>ARIA wiring</h3>
+        <p>You don't need to write any of the ARIA attributes — the component sets them on mount. What gets wired:</p>
+        <ul>
+          <li><code>role="tablist"</code>, <code>role="tab"</code>, <code>role="tabpanel"</code> if missing.</li>
+          <li><code>aria-controls</code> on each tab pointing at its panel's <code>id</code>.</li>
+          <li><code>aria-labelledby</code> on each panel pointing at its tab's <code>id</code>.</li>
+          <li><code>aria-selected="true|false"</code> kept in sync with the active tab.</li>
+          <li><code>aria-orientation="vertical"</code> when <code>orientation="vertical"</code>.</li>
+        </ul>
+
+        <h3>Manual vs automatic activation</h3>
+        <p>Default is <strong>manual</strong> — arrow keys move focus, the user explicitly presses <kbd>Enter</kbd> or <kbd>Space</kbd> to switch panels. Use this when each panel is expensive to render or has side effects (data fetching, scroll position reset).</p>
+        <p>Use <strong>automatic</strong> when panels are cheap and the user is browsing — arrow keys feel snappier when each one immediately swaps the view.</p>
+
+        <div class="dx-callout">
+          <p><strong>Always provide an <code>aria-label</code> on the tablist</strong> when there's no visible heading describing what the tabs control. "Project sections" reads well; an unlabelled tablist is announced as just "tab list, 4 tabs" with no context.</p>
+        </div>
+
+        <h3>Motion</h3>
+        <p>The active-tab indicator uses the <code>--transition-tactile</code> motion token. Under <code>prefers-reduced-motion: reduce</code> the transition is disabled — the underline / fill snaps instead of sliding.</p>
+      </section>
+
+      <!-- ═══════════════════════════════════════════════════════════
+           7. EXAMPLES
+           ═══════════════════════════════════════════════════════════ -->
+      <section class="dx-section" id="examples">
+        <p class="dx-kicker">Patterns</p>
+        <h2>Examples</h2>
+
+        <h3>Settings page</h3>
+        <p>A vertical tablist on the left, panels on the right. The pattern most settings UIs converge on.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-tabs orientation="vertical"&gt;
+  &lt;div class="settings-grid"&gt;  &lt;!-- your own grid layout --&gt;
+    &lt;div role="tablist" class="ren-tab-list" aria-label="Settings" aria-orientation="vertical"&gt;
+      &lt;button role="tab" class="ren-tab" type="button"&gt;Profile&lt;/button&gt;
+      &lt;button role="tab" class="ren-tab" type="button"&gt;Account&lt;/button&gt;
+      &lt;button role="tab" class="ren-tab" type="button"&gt;Billing&lt;/button&gt;
+      &lt;button role="tab" class="ren-tab" type="button"&gt;Notifications&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div&gt;
+      &lt;div role="tabpanel" class="ren-tab-panel"&gt;Profile form&lt;/div&gt;
+      &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;Account form&lt;/div&gt;
+      &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;Billing&lt;/div&gt;
+      &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;Notifications&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/ren-tabs&gt;</code></div>
+
+        <h3>Filter pills</h3>
+        <p>Pills work well as a filter row above a list. Pair with <code>activation="automatic"</code> so the list updates as the user arrow-keys through the options.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-tabs activation="automatic"&gt;
+  &lt;div role="tablist" class="ren-tab-list ren-tab-list-pills" aria-label="Filter projects"&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;All&lt;/button&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;Active&lt;/button&gt;
+    &lt;button role="tab" class="ren-tab" type="button"&gt;Archived&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;div role="tabpanel" class="ren-tab-panel"&gt;... rendered list ...&lt;/div&gt;
+  &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;...&lt;/div&gt;
+  &lt;div role="tabpanel" class="ren-tab-panel" hidden&gt;...&lt;/div&gt;
+&lt;/ren-tabs&gt;</code></div>
+
+        <h3>Lazy-load panels on tab change</h3>
+        <p>Listen to <code>ren-tab-change</code> and fetch panel content on demand instead of rendering everything upfront.</p>
+        <div class="dx-pre" tabindex="0"><code>const tabs = document.querySelector('#project-tabs');
+
+tabs.addEventListener('ren-tab-change', async (e) =&gt; {
+  const panel = e.detail.panel;
+  if (panel.dataset.loaded) return;
+
+  panel.innerHTML = '&lt;div class="ren-skeleton skeleton-text"&gt;&lt;/div&gt;';
+  const data = await fetch(`/api/${e.detail.id}`).then(r =&gt; r.json());
+  panel.innerHTML = renderPanel(data);
+  panel.dataset.loaded = 'true';
+});</code></div>
+
+        <h3>Sync the active tab with the URL hash</h3>
+        <p>Useful for shareable links and back-button support.</p>
+        <div class="dx-pre" tabindex="0"><code>const tabs = document.querySelector('#project-tabs');
+
+// Restore from hash on load
+if (location.hash) {
+  tabs.selectTabById(location.hash.slice(1));
+}
+
+// Update hash when the user switches tabs
+tabs.addEventListener('ren-tab-change', (e) =&gt; {
+  history.replaceState(null, '', `#${e.detail.id}`);
+});</code></div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Web Component registration (handles arrow keys, ARIA wiring, etc.) -->
+  <script type="module" src="../../components/composites/ren-tabs/ren-tabs.js"></script>
+
+  <!-- Demo wiring — vanilla, runs against div.ren-tabs containers.
+       Toggles aria-selected and the hidden attribute on paired panels.
+       Falls back gracefully if there's no JS, since the first panel
+       starts visible in the markup. -->
+  <script>
+    document.querySelectorAll('.ren-tabs').forEach(container => {
+      const tabs = container.querySelectorAll('[role="tab"]');
+      const panels = container.querySelectorAll('[role="tabpanel"]');
+      if (!tabs.length || !panels.length) return;
+
+      // Initial selection: data-default attribute, then any aria-selected="true",
+      // then index 0.
+      let initialIndex = parseInt(container.getAttribute('data-default'), 10);
+      if (isNaN(initialIndex)) {
+        initialIndex = Array.from(tabs).findIndex(t => t.getAttribute('aria-selected') === 'true');
+      }
+      if (initialIndex < 0 || initialIndex >= tabs.length) initialIndex = 0;
+
+      const select = (index) => {
+        tabs.forEach((t, j) => {
+          const active = j === index;
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+          t.setAttribute('tabindex', active ? '0' : '-1');
+          if (panels[j]) panels[j].toggleAttribute('hidden', !active);
+        });
+      };
+
+      select(initialIndex);
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => select(i));
+        tab.addEventListener('keydown', (e) => {
+          const isVertical = container.getAttribute('data-orientation') === 'vertical';
+          const next = isVertical ? 'ArrowDown' : 'ArrowRight';
+          const prev = isVertical ? 'ArrowUp' : 'ArrowLeft';
+          let target = null;
+          if (e.key === next) target = (i + 1) % tabs.length;
+          else if (e.key === prev) target = (i - 1 + tabs.length) % tabs.length;
+          else if (e.key === 'Home') target = 0;
+          else if (e.key === 'End') target = tabs.length - 1;
+          if (target !== null) {
+            e.preventDefault();
+            select(target);
+            tabs[target].focus();
+          }
+        });
+      });
+    });
+  </script>
+
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

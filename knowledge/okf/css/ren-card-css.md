@@ -1,0 +1,229 @@
+---
+type: "RenDS CSS"
+title: ren-card.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-card/ren-card.css
+sourcePath: components/primitives/ren-card/ren-card.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-card.css
+
+Source path: `components/primitives/ren-card/ren-card.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Card Component
+   ============================================
+   Versatile container with header, body, footer.
+   CSS-only. No JS needed.
+
+   Constraint-driven: limited variants on purpose
+   to ensure consistent UI across projects.
+
+   Usage:
+     <div class="ren-card">
+       <div class="ren-card-header">
+         <h3 class="ren-card-title">Title</h3>
+         <p class="ren-card-description">Description here</p>
+       </div>
+       <div class="ren-card-body">
+         Content
+       </div>
+       <div class="ren-card-footer">
+         <button class="ren-btn">Action</button>
+       </div>
+     </div>
+
+   Minimal:
+     <div class="ren-card">
+       <p>Just content, no sections needed.</p>
+     </div>
+   ============================================ */
+
+/* ─── Base Card ─── */
+.ren-card {
+  background-color: var(--color-surface-raised);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* ─── Sections ─── */
+
+.ren-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4) var(--space-4) 0;
+}
+
+/* Title and description are typically applied to <h2>/<h3>/<h4> and <p>
+   respectively, which carry browser-default margins that fight the header's
+   `gap`. Reset them here so .ren-card-header's flex gap is the actual visual
+   gap, regardless of the underlying tag. */
+.ren-card-title {
+  font-size: var(--title-sm-size, var(--text-lg));
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  line-height: var(--leading-snug);
+  margin: 0;
+}
+
+.ren-card-description {
+  font-size: var(--caption-size, var(--text-sm));
+  color: var(--color-text-muted);
+  line-height: var(--leading-normal);
+  margin: 0;
+}
+
+.ren-card-body {
+  padding: var(--space-4);
+}
+
+/* Remove top padding when body follows header */
+.ren-card-header + .ren-card-body {
+  padding-top: var(--space-3);
+}
+
+.ren-card-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+/* Footer at bottom with border (for action-heavy cards) */
+.ren-card-footer-border {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  border-top: var(--stroke-1) solid var(--color-border-muted);
+}
+
+/* When the bordered footer follows the header directly (no body in between),
+   tighten the top padding so the divider line sits visually close to the
+   description, not floating ~17px below it (which is what you get from the
+   default --space-3 padding plus line-height extra of the description text). */
+.ren-card-header + .ren-card-footer-border {
+  padding-top: var(--space-2);
+}
+
+/* When card has no sections, just padding */
+.ren-card > :first-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer) {
+  padding-top: var(--space-4);
+}
+
+.ren-card > :last-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer) {
+  padding-bottom: var(--space-4);
+}
+
+/* Simple card (no sections) */
+.ren-card-simple {
+  padding: var(--space-4);
+}
+
+/* ─── Variants ─── */
+
+/* Elevated — more shadow, no border */
+.ren-card-elevated {
+  border-color: transparent;
+  box-shadow: var(--shadow-md);
+}
+
+/* Outline — emphasis border, no background difference */
+.ren-card-outline {
+  background-color: transparent;
+}
+
+/* Ghost — no border, no bg (content grouping) */
+.ren-card-ghost {
+  background-color: transparent;
+  border: none;
+}
+
+/* Sunken — recessed appearance */
+.ren-card-sunken {
+  background-color: var(--color-surface-sunken);
+  border-color: transparent;
+}
+
+/* ─── Interactive Card ─── */
+
+.ren-card-interactive {
+  cursor: pointer;
+  transition:
+    box-shadow var(--duration-state) var(--ease-enter),
+    border-color var(--duration-state) var(--ease-enter),
+    transform var(--duration-tactile) var(--ease-enter);
+}
+
+.ren-card-interactive:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-md);
+}
+
+.ren-card-interactive:active {
+  transform: scale(0.99);
+}
+
+.ren-card-interactive:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}
+
+/* ─── Selectable Card ─── */
+
+.ren-card-selectable {
+  cursor: pointer;
+  transition:
+    border-color var(--duration-state) var(--ease-enter),
+    box-shadow var(--duration-state) var(--ease-enter);
+}
+
+.ren-card-selectable:hover {
+  border-color: var(--color-accent);
+}
+
+.ren-card-selectable[aria-selected="true"],
+.ren-card-selectable[data-selected] {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
+}
+
+/* ─── Status accent (top border) ─── */
+
+.ren-card[data-status="success"] { border-top: 3px solid var(--color-success); }
+.ren-card[data-status="warning"] { border-top: 3px solid var(--color-warning); }
+.ren-card[data-status="danger"]  { border-top: 3px solid var(--color-danger); }
+.ren-card[data-status="info"]    { border-top: 3px solid var(--color-info); }
+
+/* ─── Card with cover image ─── */
+
+.ren-card-cover {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+/* ─── Card Group (grid of cards) ─── */
+
+.ren-card-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--space-4);
+}

@@ -19,6 +19,12 @@ import {
   querySqliteGraph,
   sqliteAvailable,
 } from './knowledge-search.js';
+import {
+  checkOkfBundle,
+  okfDefaultOutDir,
+  visualizeOkfBundle,
+  writeOkfBundle,
+} from './knowledge-okf.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RENDS_ROOT = path.resolve(__dirname, '..');
@@ -50,7 +56,7 @@ const RESPONSE_TYPES = {
   build: ['build.help', 'build.kit'],
   doctor: ['doctor'],
   'agent-docs': ['agent-docs.write', 'agent-docs.remove'],
-  knowledge: ['knowledge.path', 'knowledge.check', 'knowledge.query'],
+  knowledge: ['knowledge.path', 'knowledge.check', 'knowledge.query', 'knowledge.export', 'knowledge.visualize'],
 };
 
 const DOC_TOPICS = {
@@ -208,12 +214,15 @@ const COMMAND_SPECS = [
   },
   {
     name: 'knowledge',
-    description: 'Inspect and query the packaged RenDS knowledge graph',
+    description: 'Inspect, query, and export the packaged RenDS knowledge graph',
     arguments: [{ name: 'subcommand', required: false }],
     options: [
       { flag: '--json', type: 'boolean', description: 'Emit typed JSON for query results' },
       { flag: '--limit <n>', type: 'number', description: 'Maximum query results' },
       { flag: '--source-json', type: 'boolean', description: 'Force JSON graph source instead of SQLite' },
+      { flag: '--format <graph|okf>', type: 'enum', choices: ['graph', 'okf'], description: 'Knowledge output/check format' },
+      { flag: '--out <path>', type: 'string', description: 'Output path for export or visualize' },
+      { flag: '--path <path>', type: 'string', description: 'Existing OKF bundle path for check or visualize' },
     ],
     json: true,
   },
@@ -294,7 +303,7 @@ function stripCommandFlags(values) {
     if (value === '--json' || value === '--dense' || value === '--list' || value === '--remove' || value === '--source-json') {
       continue;
     }
-    if (value === '--limit' || value === '--agent' || value === '--agent-docs-path') {
+    if (value === '--limit' || value === '--agent' || value === '--agent-docs-path' || value === '--format' || value === '--out' || value === '--path') {
       i++;
       continue;
     }
@@ -1303,7 +1312,12 @@ async function cmdDoctor() {
     aiHints === 53 ? undefined : 'Add or restore aiHints blocks in every component/pattern contract.',
   );
 
-  const knowledgeFiles = ['knowledge/README.md', 'knowledge/ren10-graph.json', 'knowledge/ren10-graph.sqlite'];
+  const knowledgeFiles = [
+    'knowledge/README.md',
+    'knowledge/ren10-graph.json',
+    'knowledge/ren10-graph.sqlite',
+    'knowledge/okf/index.md',
+  ];
   const missingKnowledge = knowledgeFiles.filter((file) => !exists(file));
   add(
     'knowledge',
@@ -1434,8 +1448,8 @@ async function cmdAgentDocs() {
 }
 
 /**
- * Command: ren10 knowledge [path|query|check]
- * Inspect the packaged RenDS knowledge graph.
+ * Command: ren10 knowledge [path|query|check|export|visualize]
+ * Inspect the packaged RenDS knowledge graph and portable bundle.
  */
 async function cmdKnowledge() {
   // Find first non-flag positional as subcommand (bare "knowledge --json" should still work as "path")
@@ -1443,15 +1457,21 @@ async function cmdKnowledge() {
   const knowledgeDir = path.join(RENDS_ROOT, 'knowledge');
   const sqlitePath = path.join(knowledgeDir, 'ren10-graph.sqlite');
   const jsonPath = path.join(knowledgeDir, 'ren10-graph.json');
+  const okfPath = okfDefaultOutDir(RENDS_ROOT);
+  const resolveCliPath = (rawPath, fallback) => (rawPath ? path.resolve(process.cwd(), rawPath) : fallback);
 
   if (subcommand === 'path' || subcommand === 'paths') {
     const data = {
       sqlitePath,
       jsonPath,
+      okfPath,
       commands: [
         'npx ren10 knowledge query "ren-toast status"',
         'npx ren10 knowledge query "ren-toast status" --json',
         'npx ren10 knowledge check',
+        'npx ren10 knowledge export --format okf --out knowledge/okf',
+        'npx ren10 knowledge check --format okf',
+        'npx ren10 knowledge visualize --out knowledge/okf/viz.html',
       ],
     };
     if (hasFlag('--json')) {
@@ -1461,15 +1481,54 @@ async function cmdKnowledge() {
     console.log(`\n${c.bold}RenDS Knowledge Graph${c.reset}\n`);
     console.log(`  SQLite: ${c.cyan}${sqlitePath}${c.reset}`);
     console.log(`  JSON:   ${c.cyan}${jsonPath}${c.reset}`);
+    console.log(`  OKF:    ${c.cyan}${okfPath}${c.reset}`);
     console.log(`\n${c.dim}Query with:${c.reset}`);
     console.log(`  ${c.cyan}npx ren10 knowledge query "ren-toast status"${c.reset}`);
     console.log(`  ${c.cyan}npx ren10 knowledge query "ren-toast status" --json${c.reset}`);
     console.log(`\n${c.dim}Validate packaged graph:${c.reset}`);
     console.log(`  ${c.cyan}npx ren10 knowledge check${c.reset}\n`);
+    console.log(`${c.dim}Export portable OKF bundle:${c.reset}`);
+    console.log(`  ${c.cyan}npx ren10 knowledge export --format okf --out knowledge/okf${c.reset}`);
+    console.log(`  ${c.cyan}npx ren10 knowledge check --format okf${c.reset}`);
+    console.log(`  ${c.cyan}npx ren10 knowledge visualize --out knowledge/okf/viz.html${c.reset}\n`);
+    return;
+  }
+
+  if (subcommand === 'export') {
+    const format = optionValue('--format', 'okf');
+    if (format !== 'okf') error(`Unsupported knowledge export format: ${format}. Use "okf".`);
+    const outDir = resolveCliPath(optionValue('--out'), okfPath);
+    const result = writeOkfBundle({
+      root: RENDS_ROOT,
+      graphPath: jsonPath,
+      outDir,
+      packageJsonPath: path.join(RENDS_ROOT, 'package.json'),
+    });
+    if (hasFlag('--json')) {
+      jsonOut('knowledge.export', result);
+      return;
+    }
+    console.log(`RenDS OKF bundle written: ${c.cyan}${result.outDir}${c.reset}`);
+    console.log(`Concepts: ${result.concepts}`);
     return;
   }
 
   if (subcommand === 'check') {
+    if (optionValue('--format', 'graph') === 'okf') {
+      const bundleDir = resolveCliPath(optionValue('--path'), okfPath);
+      const result = checkOkfBundle({ root: RENDS_ROOT, graphPath: jsonPath, bundleDir });
+      if (!result.ok) {
+        if (hasFlag('--json')) jsonError(result.messages.join('\n'), 'ERR_KNOWLEDGE_CHECK_FAILED');
+        error(result.messages.join('\n'));
+      }
+      if (hasFlag('--json')) {
+        jsonOut('knowledge.check', result);
+        return;
+      }
+      console.log(`RenDS OKF bundle OK: ${result.concepts} concepts.`);
+      return;
+    }
+
     if (!fs.existsSync(jsonPath)) error(`Knowledge JSON not found: ${jsonPath}`);
     const graph = loadJsonGraph(jsonPath);
     const messages = [];
@@ -1514,8 +1573,23 @@ async function cmdKnowledge() {
     return;
   }
 
+  if (subcommand === 'visualize') {
+    const format = optionValue('--format', 'okf');
+    if (format !== 'okf') error(`Unsupported knowledge visualize format: ${format}. Use "okf".`);
+    const bundleDir = resolveCliPath(optionValue('--path'), okfPath);
+    const outPath = resolveCliPath(optionValue('--out'), path.join(bundleDir, 'viz.html'));
+    const result = visualizeOkfBundle({ bundleDir, outPath });
+    if (hasFlag('--json')) {
+      jsonOut('knowledge.visualize', result);
+      return;
+    }
+    console.log(`RenDS OKF viewer written: ${c.cyan}${result.outPath}${c.reset}`);
+    console.log(`Concepts: ${result.concepts}`);
+    return;
+  }
+
   if (subcommand !== 'query') {
-    error(`Unknown knowledge command: ${subcommand}. Use "path", "query", or "check".`);
+    error(`Unknown knowledge command: ${subcommand}. Use "path", "query", "check", "export", or "visualize".`);
   }
 
   const queryArgs = stripCommandFlags(args.slice(2));
@@ -1932,7 +2006,9 @@ ${c.bold}Commands:${c.reset}
   scales            List available type scale ratios
   knowledge         Show packaged graph paths
   knowledge query   Query the packaged knowledge graph (SQLite, JSON fallback)
-  knowledge check   Validate packaged knowledge graph files
+  knowledge export  Export the portable OKF-style Markdown bundle
+  knowledge check   Validate the graph or OKF bundle
+  knowledge visualize  Build a local HTML viewer for an OKF bundle
   help, -h          Show this help message
   version, -v       Show version
 
@@ -1974,6 +2050,9 @@ ${c.bold}Examples:${c.reset}
   npx ren10 knowledge query "ren-toast status"
   npx ren10 knowledge query "ren-toast status" --json
   npx ren10 knowledge check
+  npx ren10 knowledge export --format okf --out knowledge/okf
+  npx ren10 knowledge check --format okf
+  npx ren10 knowledge visualize --out knowledge/okf/viz.html
 
 ${c.bold}Docs:${c.reset}
   https://github.com/Rensoconese/ren10

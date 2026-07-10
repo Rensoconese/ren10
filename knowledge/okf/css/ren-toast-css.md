@@ -1,0 +1,404 @@
+---
+type: "RenDS CSS"
+title: ren-toast.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-toast/ren-toast.css
+sourcePath: components/composites/ren-toast/ren-toast.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-toast.css
+
+Source path: `components/composites/ren-toast/ren-toast.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/**
+ * RenDS — Toast Notification System CSS
+ * =====================================
+ * Styles for notification toasts with animations,
+ * positioning, variants, and responsive behavior.
+ */
+
+/* ═══ VIEWPORT CONTAINER ═══ */
+.ren-toast-viewport {
+  position: fixed;
+  z-index: var(--z-toast, 9999);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-height: 100dvh;
+  overflow: hidden;
+  pointer-events: none;
+  max-width: min(420px, calc(100vw - 2rem));
+}
+
+/* Position variants */
+.ren-toast-viewport[data-position="top-right"] {
+  top: var(--space-4);
+  right: var(--space-4);
+  flex-direction: column;
+}
+
+.ren-toast-viewport[data-position="top-left"] {
+  top: var(--space-4);
+  left: var(--space-4);
+  flex-direction: column;
+}
+
+.ren-toast-viewport[data-position="top-center"] {
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column;
+}
+
+.ren-toast-viewport[data-position="bottom-right"] {
+  bottom: var(--space-4);
+  right: var(--space-4);
+  flex-direction: column-reverse;
+}
+
+.ren-toast-viewport[data-position="bottom-left"] {
+  bottom: var(--space-4);
+  left: var(--space-4);
+  flex-direction: column-reverse;
+}
+
+.ren-toast-viewport[data-position="bottom-center"] {
+  bottom: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  flex-direction: column-reverse;
+}
+
+/* ═══ TOAST CONTAINER ═══ */
+.ren-toast {
+  pointer-events: auto;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-width: 20rem;
+  max-width: 100%;
+  position: relative;
+  overflow: hidden;
+  /* Enter + exit use semantic tokens so global motion tuning cascades here. */
+  animation: ren-toast-fade-in var(--duration-enter) var(--ease-enter);
+}
+
+.ren-toast[data-closing] {
+  animation: ren-toast-fade-out var(--duration-exit) var(--ease-exit);
+  opacity: 0;
+}
+
+/* Slide-in animations by position */
+.ren-toast-viewport[data-position="top-right"] .ren-toast,
+.ren-toast-viewport[data-position="bottom-right"] .ren-toast {
+  animation: ren-toast-slide-in-right var(--duration-enter) var(--ease-enter);
+}
+
+.ren-toast-viewport[data-position="top-right"] .ren-toast[data-closing],
+.ren-toast-viewport[data-position="bottom-right"] .ren-toast[data-closing] {
+  animation: ren-toast-slide-out-right var(--duration-exit) var(--ease-exit);
+}
+
+.ren-toast-viewport[data-position="top-left"] .ren-toast,
+.ren-toast-viewport[data-position="bottom-left"] .ren-toast {
+  animation: ren-toast-slide-in-left var(--duration-enter) var(--ease-enter);
+}
+
+.ren-toast-viewport[data-position="top-left"] .ren-toast[data-closing],
+.ren-toast-viewport[data-position="bottom-left"] .ren-toast[data-closing] {
+  animation: ren-toast-slide-out-left var(--duration-exit) var(--ease-exit);
+}
+
+.ren-toast-viewport[data-position="top-center"] .ren-toast,
+.ren-toast-viewport[data-position="bottom-center"] .ren-toast {
+  animation: ren-toast-fade-in var(--duration-enter) var(--ease-enter);
+}
+
+/* ═══ TOAST CONTENT STRUCTURE ═══ */
+.ren-toast-icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Body wraps title + description + actions */
+.ren-toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ren-toast-title {
+  font-weight: var(--font-weight-semibold, 600);
+  font-size: var(--text-sm);
+  line-height: var(--leading-5);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.ren-toast-description {
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  margin: var(--space-1) 0 0;
+}
+
+.ren-toast-actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+
+/* The action button itself (the docs name it .ren-toast-action; we layer it
+   on top of the standard .ren-btn variants for consistent styling). */
+.ren-toast-action {
+  /* Inherits its visual from .ren-btn ren-btn-ghost ren-btn-sm — this rule
+     is just a hook for consumers who want to override per-toast. */
+}
+
+.ren-toast-close {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  font-size: 18px;
+  line-height: 1;
+  /* Tactile (hover/focus/press) — uses shared semantic preset */
+  transition: var(--transition-tactile);
+}
+
+.ren-toast-close:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text);
+}
+
+.ren-toast-close:active {
+  background-color: var(--color-surface-active);
+}
+
+/* ═══ TOAST VARIANTS ═══ */
+/* Success */
+.ren-toast-success {
+  background: color-mix(in srgb, var(--color-success-subtle) 65%, var(--color-surface-raised));
+}
+
+.ren-toast-success .ren-toast-icon {
+  color: var(--color-success);
+}
+
+/* Error / Danger */
+.ren-toast-error,
+.ren-toast-danger {
+  background: color-mix(in srgb, var(--color-danger-subtle) 65%, var(--color-surface-raised));
+}
+
+.ren-toast-error .ren-toast-icon,
+.ren-toast-danger .ren-toast-icon {
+  color: var(--color-danger);
+}
+
+/* Warning */
+.ren-toast-warning {
+  background: color-mix(in srgb, var(--color-warning-subtle) 65%, var(--color-surface-raised));
+}
+
+.ren-toast-warning .ren-toast-icon {
+  color: var(--color-warning);
+}
+
+/* Info */
+.ren-toast-info {
+  background: color-mix(in srgb, var(--color-info-subtle) 65%, var(--color-surface-raised));
+}
+
+.ren-toast-info .ren-toast-icon {
+  color: var(--color-info);
+}
+
+/* Loading */
+.ren-toast-loading .ren-toast-icon {
+  animation: ren-spinner-rotate 0.8s linear infinite;
+}
+
+/* ═══ PROGRESS BAR ═══ */
+.ren-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--color-accent);
+  transition: width linear;
+}
+
+/* ═══ SWIPE STATE ═══ */
+.ren-toast[data-swiping] {
+  transition: none;
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes ren-toast-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ren-toast-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ren-toast-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes ren-toast-slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes ren-toast-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ren-toast-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes ren-spinner-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ═══ REDUCED MOTION ═══
+   Belt-and-suspenders: semantic --duration-* already collapse
+   to 0ms under reduced-motion (see tokens/semantic/motion.css),
+   so the animations above become instant. We keep this block
+   to force a plain fade (no slide) as an Apple-HIG alternative,
+   and to stop the loading spinner. */
+@media (prefers-reduced-motion: reduce) {
+  .ren-toast,
+  .ren-toast[data-closing],
+  .ren-toast-viewport[data-position="top-right"] .ren-toast,
+  .ren-toast-viewport[data-position="bottom-right"] .ren-toast,
+  .ren-toast-viewport[data-position="top-left"] .ren-toast,
+  .ren-toast-viewport[data-position="bottom-left"] .ren-toast,
+  .ren-toast-viewport[data-position="top-center"] .ren-toast,
+  .ren-toast-viewport[data-position="bottom-center"] .ren-toast {
+    animation: ren-toast-fade-in var(--duration-micro) linear !important;
+  }
+
+  .ren-toast[data-closing] {
+    animation: ren-toast-fade-out var(--duration-micro) linear !important;
+  }
+
+  .ren-toast-loading .ren-toast-icon {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 640px) {
+  .ren-toast-viewport {
+    max-width: calc(100vw - 1rem);
+    bottom: var(--space-3);
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto;
+  }
+
+  .ren-toast-viewport[data-position="top-right"],
+  .ren-toast-viewport[data-position="top-left"],
+  .ren-toast-viewport[data-position="top-center"] {
+    bottom: auto;
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto;
+    transform: none;
+  }
+
+  .ren-toast-viewport[data-position="bottom-right"],
+  .ren-toast-viewport[data-position="bottom-left"],
+  .ren-toast-viewport[data-position="bottom-center"] {
+    bottom: var(--space-3);
+    left: var(--space-2);
+    right: var(--space-2);
+    width: auto;
+    transform: none;
+  }
+
+  .ren-toast {
+    min-width: unset;
+    width: 100%;
+  }
+}

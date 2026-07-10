@@ -1,0 +1,167 @@
+---
+type: "RenDS Docs Page"
+title: "ren-form docs"
+description: "RenDS Docs Page generated from the RenDS knowledge graph."
+id: docs:docs/components/ren-form.html
+sourcePath: docs/components/ren-form.html
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - docs-page
+  - ren10
+  - rends
+---
+
+# ren-form docs
+
+Source path: `docs/components/ren-form.html`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Validation — RenDS Components</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
+    .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+  </style>
+</head>
+<body>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+
+  <div class="dx-shell dx-shell-grid">
+    <aside class="dx-sidebar" aria-label="Site navigation">
+      <h3>Guides</h3>
+      <ul>
+        <li><a href="../getting-started.html">Getting Started</a></li>
+        <li><a href="../theming.html">Theming</a></li>
+        <li><a href="../accessibility.html">Accessibility</a></li>
+        <li><a href="../cli.html">CLI</a></li>
+      </ul>
+
+      <h3>Foundations</h3>
+      <ul>
+        <li><a href="../primitive-zero.html">Primitive Zero</a></li>
+        <li><a href="../tokens.html">Tokens</a></li>
+        <li><a href="../layouts.html">Layouts</a></li>
+      </ul>
+
+      <h3>Primitives</h3>
+      <ul>
+        <li><a href="ren-button.html">Button</a></li>
+        <li><a href="ren-card.html">Card</a></li>
+        <li><a href="ren-badge.html">Badge</a></li>
+        <li><a href="ren-tag.html">Tag</a></li>
+        <li><a href="ren-link.html">Link</a></li>
+        <li><a href="ren-banner.html">Banner</a></li>
+        <li><a href="ren-breadcrumb.html">Breadcrumb</a></li>
+        <li><a href="ren-pagination.html">Pagination</a></li>
+        <li><a href="ren-separator.html">Separator</a></li>
+        <li><a href="ren-avatar.html">Avatar</a></li>
+        <li><a href="ren-spinner.html">Spinner</a></li>
+        <li><a href="ren-skeleton.html">Skeleton</a></li>
+        <li><a href="ren-kbd.html">Keyboard Key</a></li>
+        <li><a href="ren-icon.html">Icons</a></li>
+        <li><a href="ren-field.html">Field</a></li>
+        <li><a href="ren-checkbox.html">Checkbox</a></li>
+        <li><a href="ren-switch.html">Switch</a></li>
+        <li><a href="ren-radio.html">Radio</a></li>
+        <li><a href="ren-progress.html">Progress</a></li>
+      </ul>
+
+      <h3>Composites</h3>
+      <ul>
+        <li><a href="ren-tabs.html">Tabs</a></li>
+        <li><a href="ren-accordion.html">Accordion</a></li>
+        <li><a href="ren-dialog.html">Dialog</a></li>
+        <li><a href="ren-alert-dialog.html">Alert Dialog</a></li>
+        <li><a href="ren-toast.html">Toast</a></li>
+        <li><a href="ren-tooltip.html">Tooltip</a></li>
+        <li><a href="ren-popover.html">Popover</a></li>
+        <li><a href="ren-hover-card.html">Hover Card</a></li>
+        <li><a href="ren-sheet.html">Sheet</a></li>
+        <li><a href="ren-collapsible.html">Collapsible</a></li>
+        <li><a href="ren-toolbar.html">Toolbar</a></li>
+        <li><a href="ren-dropzone.html">Dropzone</a></li>
+        <li><a href="ren-combobox.html">Combobox</a></li>
+        <li><a href="ren-slider.html">Slider</a></li>
+        <li><a href="ren-toggle-group.html">Toggle Group</a></li>
+        <li><a href="ren-scroll-area.html">Scroll Area</a></li>
+        <li><a href="ren-select.html">Select</a></li>
+        <li><a href="ren-menu.html">Menu</a></li>
+        <li><a href="ren-menubar.html">Menubar</a></li>
+        <li><a href="ren-context-menu.html">Context Menu</a></li>
+        <li><a href="ren-command.html">Command Palette</a></li>
+        <li><a href="ren-number-field.html">Number Field</a></li>
+        <li><a href="ren-otp.html">Input OTP</a></li>
+        <li><a href="ren-color-picker.html">Color Picker</a></li>
+        <li><a href="ren-calendar.html">Calendar</a></li>
+        <li><a href="ren-date-picker.html">Date Picker</a></li>
+        <li><a href="ren-date-range-picker.html">Date Range Picker</a></li>
+        <li><a href="ren-carousel.html">Carousel</a></li>
+      </ul>
+
+      <h3>Patterns</h3>
+      <ul>
+        <li><a href="ren-nav.html">Nav</a></li>
+        <li><a href="ren-sidebar.html">Sidebar</a></li>
+        <li><a href="ren-empty-state.html">Empty State</a></li>
+        <li><a href="ren-table.html">Data Table</a></li>
+        <li><a href="ren-form.html" aria-current="page">Form Validation</a></li>
+        <li><a href="ren-ai.html">AI Patterns</a></li>
+      </ul>
+
+      <h3>Reference</h3>
+      <ul>
+        <li><a href="../components.html">Components catalog</a></li>
+</ul>
+    </aside>
+
+    <main class="dx-content">
+      <header class="dx-header">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Form Validation</li></ol></nav>
+        <p class="dx-kicker">Pattern</p>
+        <h1>Form Validation <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
+        <p class="lede">Conventions for inline error messages, summary banners, and submit-button state. Browser-native HTML5 validation does most of the work; this pattern documents how to wire the rest.</p>
+      </header>
+      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Form validation is a pattern, not a component — it's how Field, Banner, Button and Toast cooperate when a form is wrong or submitted. Use HTML5 attributes (<code>required</code>, <code>type</code>, <code>pattern</code>, <code>min</code>, <code>max</code>) for client-side; show server-side errors via <code>setError()</code> on each Field.</p></section>
+      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch; max-width: 420px; margin-inline: auto; gap: var(--space-3);"><div class="ren-banner ren-banner-danger" role="alert"><span class="ren-banner-icon"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></span><div class="ren-banner-content"><p class="ren-banner-title">2 fields need your attention</p></div></div><div class="ren-field" data-invalid><label class="ren-field-label" for="vd-email">Email</label><input class="ren-input" id="vd-email" value="not-an-email" aria-invalid="true"><span class="ren-field-error" role="alert">Please enter a valid email address.</span></div><div class="ren-field"><label class="ren-field-label" data-required for="vd-pw">Password</label><input class="ren-input" id="vd-pw" type="password" required></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;form novalidate&gt;
+  &lt;ren-field&gt;
+    &lt;label&gt;Email&lt;/label&gt;
+    &lt;input type="email" required&gt;
+  &lt;/ren-field&gt;
+
+  &lt;button type="submit"&gt;Save&lt;/button&gt;
+&lt;/form&gt;</code></pre></div></section>
+      <section class="dx-section" id="api"><p class="dx-kicker">Patterns</p><h2>Pieces</h2><ul><li><strong>HTML5 attributes</strong>: <code>required</code>, <code>type="email"</code>, <code>pattern</code>, <code>min</code>, <code>max</code>, <code>minlength</code>, <code>maxlength</code>.</li><li><strong>Per-field errors</strong>: <a href="ren-field.html" class="ren-link">Form Field</a> shows <code>aria-invalid</code> + the error message.</li><li><strong>Form-level summary</strong>: a <a href="ren-banner.html" class="ren-link">Banner</a> at the top with the count of errors and links to each one (skip-to-error pattern).</li><li><strong>Server-side errors</strong>: after a failed submit, call <code>field.setError(message)</code> for each invalid field.</li><li><strong>Submit button state</strong>: <code>data-loading</code> while submitting; disabled until the form has any input on touch (don't disable proactively before the user types — it's confusing).</li></ul></section>
+      <section class="dx-section" id="multi-step"><p class="dx-kicker">Variant</p><h2>Multi-step forms</h2><p>Use a multi-step form when a single page would feel overwhelming or when steps depend on previous answers. <code>ren-form</code> supports multi-step via the <code>data-steps</code> attribute on the host and a <code>.ren-stepper</code> progress indicator.</p><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch;"><ol class="ren-stepper" style="display: flex; gap: var(--space-3); list-style: none; padding: 0; margin: 0 0 var(--space-4); justify-content: space-between;"><li style="display: flex; align-items: center; gap: var(--space-2);"><span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-success); color: var(--color-on-success); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-bold);"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg></span><span style="font-size: var(--text-sm); color: var(--color-text-muted);">Account</span></li><li style="display: flex; align-items: center; gap: var(--space-2);"><span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-accent); color: var(--color-on-accent); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-bold);">2</span><span style="font-size: var(--text-sm); font-weight: var(--weight-semibold);">Profile</span></li><li style="display: flex; align-items: center; gap: var(--space-2);"><span style="width: 24px; height: 24px; border-radius: 50%; background: var(--color-fill); color: var(--color-text-muted); display: grid; place-items: center; font-size: var(--text-xs); font-weight: var(--weight-bold);">3</span><span style="font-size: var(--text-sm); color: var(--color-text-muted);">Plan</span></li></ol><p style="font-size: var(--text-sm); color: var(--color-text-muted); margin: 0;">Step 2 of 3 — current step content goes here.</p></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-form data-steps="3"&gt;
+  &lt;ol class="ren-stepper" aria-label="Setup progress"&gt;
+    &lt;li data-completed&gt;Account&lt;/li&gt;
+    &lt;li aria-current="step"&gt;Profile&lt;/li&gt;
+    &lt;li&gt;Plan&lt;/li&gt;
+  &lt;/ol&gt;
+  &lt;fieldset data-step="1"&gt;…&lt;/fieldset&gt;
+  &lt;fieldset data-step="2" data-active&gt;…&lt;/fieldset&gt;
+  &lt;fieldset data-step="3"&gt;…&lt;/fieldset&gt;
+&lt;/ren-form&gt;</code></pre></div><h3>Stepper API</h3><table class="dx-api"><thead><tr><th>Class / attribute</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-stepper</code></td><td>The progress indicator. Numbered ol with completed / current / pending states.</td></tr><tr><td><code class="dx-api-name">[aria-current="step"]</code></td><td>Marks the active step.</td></tr><tr><td><code class="dx-api-name">[data-completed]</code></td><td>Marks a past step (checkmark fill).</td></tr><tr><td><code class="dx-api-name">[data-steps="N"]</code> on host</td><td>Declares the total number of steps.</td></tr><tr><td><code class="dx-api-name">[data-active]</code> on fieldset</td><td>Marks the currently visible step; others are hidden.</td></tr></tbody></table><h3>Pattern checklist</h3><ul><li>Validate the current step before <kbd>Next</kbd> advances.</li><li>Allow free <kbd>Back</kbd> navigation — don't lose prior data.</li><li>Save progress to <code>localStorage</code> or the server so the user can leave and resume.</li><li>Last step is "Review" — show all entered data before final submit.</li><li>Autofocus the first input on each step change.</li><li>Announce progress via a polite live region: "Step 2 of 3."</li></ul><div class="dx-callout"><p><strong>Status of <code>.ren-stepper</code>:</strong> the stepper is an internal CSS pattern of <code>ren-form</code>, not a standalone component. There is no <code>ren-stepper</code> primitive, Web Component, or separate JS — it's a styled <code>&lt;ol&gt;</code> that consumer code drives. If you need a reusable Stepper outside a multi-step form (e.g. an onboarding tour, or a wizard not tied to a single form), open an issue — it's on the backlog.</p></div></section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Use <code>novalidate</code> on the form so you control validation timing instead of letting the browser show its own popup before submission.</li><li>Validate on <strong>blur</strong> (not on every keystroke) for first-time entry; revalidate on input after the field has been marked invalid once.</li><li>Move focus to the first invalid field after a failed submit.</li><li>Summary banner uses <code>role="alert"</code> so screen readers announce the error count immediately.</li><li>For multi-step flows: each step is its own <code>&lt;fieldset&gt;</code> with its own focus management; the stepper uses <code>aria-current="step"</code> on the active item.</li></ul></section>
+    </main>
+  </div>
+  <script src="../../site/shell.js" defer></script>
+</body>
+</html>

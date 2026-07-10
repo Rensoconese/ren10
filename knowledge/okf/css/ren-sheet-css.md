@@ -1,0 +1,324 @@
+---
+type: "RenDS CSS"
+title: ren-sheet.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-sheet/ren-sheet.css
+sourcePath: components/composites/ren-sheet/ren-sheet.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-sheet.css
+
+Source path: `components/composites/ren-sheet/ren-sheet.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* Hide the dialog when it isn't open. The browser default for
+   `<dialog>` without `open` is `display: none`, but the rule below
+   sets `display: flex` for layout, so without this explicit reset
+   the sheet would render in-flow on every page load. */
+.ren-sheet:not([open]) {
+  display: none;
+}
+
+.ren-sheet {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  border: none;
+
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: 0;
+
+  /* Header/body/footer stack: body grows, footer pins to the bottom */
+  display: flex;
+  flex-direction: column;
+
+  z-index: 50;
+  max-width: 100%;
+  max-height: 100%;
+  touch-action: none; /* Prevent scroll chaining; swipe-to-dismiss handled by JS */
+
+  &[data-side='right'] {
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+
+    width: min(24rem, 90vw);
+    height: 100dvh;
+
+    @starting-style {
+      translate: 100% 0;
+    }
+
+    translate: 0 0;
+  }
+
+  &[data-side='left'] {
+    inset-inline-start: 0;
+    top: 0;
+    bottom: 0;
+
+    width: min(24rem, 90vw);
+    height: 100dvh;
+
+    @starting-style {
+      translate: -100% 0;
+    }
+
+    translate: 0 0;
+  }
+
+  &[data-side='bottom'] {
+    bottom: 0;
+    inset-inline: 0;
+
+    width: 100vw;
+    max-height: 85dvh;
+
+    @starting-style {
+      translate: 0 100%;
+    }
+
+    translate: 0 0;
+  }
+
+  &[data-side='top'] {
+    top: 0;
+    inset-inline: 0;
+
+    width: 100vw;
+    max-height: 85dvh;
+
+    @starting-style {
+      translate: 0 -100%;
+    }
+
+    translate: 0 0;
+  }
+
+  /* Size variants */
+  &.-sm {
+    width: min(18rem, 90vw);
+  }
+
+  &.-md {
+    width: min(24rem, 90vw);
+  }
+
+  &.-lg {
+    width: min(32rem, 90vw);
+  }
+
+  &.-xl {
+    width: min(42rem, 90vw);
+  }
+
+  &.-full {
+    width: 100vw;
+    height: 100dvh;
+  }
+
+  /* Transitions — semantic tokens keep sheet in sync with ren-dialog and
+     friends; --duration-enter / --ease-enter collapse to 0ms under
+     prefers-reduced-motion via tokens/semantic/motion.css. */
+  transition: translate var(--duration-enter) var(--ease-enter),
+    opacity var(--duration-enter) var(--ease-enter);
+  transition-behavior: allow-discrete;
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+
+    @starting-style {
+      opacity: 0;
+    }
+
+    opacity: 1;
+  }
+
+  /* Shadow on appropriate edge */
+  &[data-side='right'] {
+    box-shadow: -12px 0 32px rgb(0, 0, 0, 0.12);
+  }
+
+  &[data-side='left'] {
+    box-shadow: 12px 0 32px rgb(0, 0, 0, 0.12);
+  }
+
+  &[data-side='bottom'] {
+    box-shadow: 0 -12px 32px rgb(0, 0, 0, 0.12);
+  }
+
+  &[data-side='top'] {
+    box-shadow: 0 12px 32px rgb(0, 0, 0, 0.12);
+  }
+
+  /* Backdrop animations — enter uses --duration-enter / --ease-enter,
+     close uses the exit pair so the scrim fades at a slightly brisker
+     clip than the entry, matching the rest of the overlay family. */
+  &[open]::backdrop {
+    animation: ren-sheet-backdrop-open var(--duration-enter) var(--ease-enter) forwards;
+  }
+
+  &::backdrop {
+    @starting-style {
+      opacity: 0;
+    }
+
+    opacity: 1;
+    background: var(--color-overlay);
+    backdrop-filter: blur(4px);
+
+    animation: ren-sheet-backdrop-close var(--duration-exit) var(--ease-exit) forwards;
+  }
+
+  &:modal::backdrop {
+    background: var(--color-overlay);
+    backdrop-filter: blur(4px);
+  }
+}
+
+.ren-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: var(--space-6);
+  padding-block: var(--space-4);
+
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ren-sheet-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.ren-sheet-description {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: var(--space-2) 0 0 0;
+}
+
+.ren-sheet-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: var(--space-8);
+  height: var(--space-8);
+
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  font-size: 1.5rem;
+  color: var(--color-text-muted);
+
+  transition: var(--transition-tactile);
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:active {
+    color: var(--color-text-muted);
+  }
+}
+
+.ren-sheet-body {
+  flex: 1;
+  padding: var(--space-6);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-fill-active) transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-fill-active);
+    border-radius: var(--radius-full);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-fill-hover);
+  }
+}
+
+.ren-sheet-footer {
+  display: flex;
+  gap: var(--space-3);
+
+  padding: var(--space-6);
+  padding-block: var(--space-4);
+
+  border-top: 1px solid var(--color-border);
+}
+
+.ren-sheet-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: var(--space-3);
+
+  margin-bottom: var(--space-4);
+
+  &::before {
+    content: '';
+    display: block;
+
+    width: 40px;
+    height: 4px;
+
+    background: var(--color-fill);
+    border-radius: var(--radius-full);
+  }
+}
+
+@keyframes ren-sheet-backdrop-open {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ren-sheet-backdrop-close {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}

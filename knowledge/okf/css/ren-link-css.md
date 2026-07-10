@@ -1,0 +1,156 @@
+---
+type: "RenDS CSS"
+title: ren-link.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-link/ren-link.css
+sourcePath: components/primitives/ren-link/ren-link.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-link.css
+
+Source path: `components/primitives/ren-link/ren-link.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Link Component
+   ============================================
+   Styled anchor with variants.
+   CSS-only. No JS needed.
+
+   44px touch target on mobile via min-height.
+   Accessible focus ring on keyboard navigation.
+
+   Usage:
+     <a href="/page" class="ren-link">Standard link</a>
+     <a href="/page" class="ren-link ren-link-muted">Subtle link</a>
+     <a href="/page" class="ren-link ren-link-external">External ↗</a>
+   ============================================ */
+
+/* ─── Base Link ─── */
+.ren-link {
+  display: inline;
+  color: var(--color-text-link);
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--color-text-link), transparent 60%);
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+  transition:
+    color var(--duration-tactile) var(--ease-enter),
+    text-decoration-color var(--duration-tactile) var(--ease-enter);
+  /* Inline elements: ensure touch target via padding */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ren-link:hover {
+  color: var(--color-text-link-hover);
+  background: none;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--color-text-link-hover), transparent 30%);
+  text-decoration-thickness: 2px;
+}
+
+.ren-link:active {
+  opacity: 0.8;
+}
+
+.ren-link:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Muted / Subtle ─── */
+.ren-link-muted {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.ren-link-muted:hover {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+/* ─── Unstyled (inherits parent color) ─── */
+.ren-link-plain {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ren-link-plain:hover {
+  text-decoration: underline;
+}
+
+/* ─── External link indicator ─── */
+.ren-link-external::after {
+  content: ' ↗';
+  font-size: 0.85em;
+  text-decoration: none;
+  display: inline;
+}
+
+/* ─── Nav link (block-level, with padding for touch target) ─── */
+.ren-link-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-min);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--duration-tactile) var(--ease-enter),
+    color var(--duration-tactile) var(--ease-enter);
+}
+
+.ren-link-nav:hover {
+  background-color: var(--color-fill);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.ren-link-nav[aria-current="page"],
+.ren-link-nav[data-active] {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
+  font-weight: var(--weight-medium);
+}
+
+.ren-link-nav:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+
+/* ─── Skip link (a11y) ─── */
+.ren-link-skip {
+  position: absolute;
+  top: -100%;
+  left: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+  border-radius: var(--radius-md);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+  z-index: 9999;
+  transition: top var(--duration-tactile) var(--ease-enter);
+}
+
+.ren-link-skip:focus {
+  top: var(--space-3);
+}

@@ -1,0 +1,399 @@
+---
+type: "RenDS CSS"
+title: ren-select.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/composites/ren-select/ren-select.css
+sourcePath: components/composites/ren-select/ren-select.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-select.css
+
+Source path: `components/composites/ren-select/ren-select.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ═══════════════════════════════════════════════════════════════════
+   RenDS — Select Component
+   ═══════════════════════════════════════════════════════════════════
+   Custom, accessible select/dropdown component with full keyboard nav,
+   ARIA support, and multi-select capability.
+
+   Structure:
+   .ren-select (container)
+     .ren-select-trigger (button showing selected value)
+       .ren-select-value (the displayed text)
+       .ren-select-placeholder (when nothing selected)
+       .ren-select-icon (chevron)
+     .ren-select-content (dropdown listbox)
+       .ren-select-item (option)
+       .ren-select-group (optional grouping)
+       .ren-select-label (group header)
+       .ren-select-separator (divider between groups)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ═══ SELECT CONTAINER ═══ */
+.ren-select {
+  position: relative;
+  display: inline-flex;
+  width: 100%;
+  font-family: inherit;
+}
+
+/* ═══ SELECT TRIGGER (Button) ═══ */
+.ren-select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+
+  /* Input styling */
+  width: 100%;
+  min-height: var(--touch-min);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--body-size);
+  font-family: inherit;
+  color: var(--color-text);
+  background-color: var(--color-input-bg);
+  border: var(--stroke-1) solid var(--color-input-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: start;
+  white-space: nowrap;
+
+  /* Semantic preset keeps trigger hover/focus in sync with other
+     tactile inputs (button, checkbox, text field). */
+  transition: var(--transition-tactile);
+}
+
+.ren-select-trigger:hover:not(:disabled):not([aria-expanded="true"]) {
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-select-trigger:focus-visible {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-select-trigger[aria-expanded="true"] {
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  background-color: var(--color-input-bg-hover);
+}
+
+.ren-select-trigger:disabled {
+  background-color: var(--color-input-disabled-bg);
+  color: var(--color-input-disabled-text);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ═══ SELECT VALUE / PLACEHOLDER ═══ */
+.ren-select-value {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-text);
+}
+
+.ren-select-placeholder {
+  color: var(--color-input-placeholder);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ═══ SELECT ICON (Chevron) ═══ */
+.ren-select-icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--duration-micro) var(--ease-enter);
+  pointer-events: none;
+}
+
+.ren-select-trigger[aria-expanded="true"] .ren-select-icon {
+  transform: rotate(180deg);
+}
+
+/* SVG chevron icon styling */
+.ren-select-icon svg {
+  width: 100%;
+  height: 100%;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ═══ SELECT CONTENT (Dropdown Listbox) ═══ */
+.ren-select-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: var(--space-1);
+  background: var(--color-surface);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding-block: var(--space-2);
+  max-height: 15rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  z-index: var(--z-dropdown, 1000);
+
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-4px) scale(0.98);
+  animation: ren-select-close var(--duration-exit) var(--ease-exit) forwards;
+}
+
+/* ═══ SELECT CONTENT OPEN STATE ═══ */
+.ren-select-content[popover]:popover-open,
+.ren-select-content.ren-open {
+  visibility: visible;
+  opacity: 1;
+  animation: ren-select-open var(--duration-enter) var(--ease-enter);
+}
+
+@keyframes ren-select-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ren-select-close {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+
+/* ═══ SELECT ITEM (Option) ═══ */
+.ren-select-item {
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  cursor: pointer;
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  /* Micro-duration keeps option hover snappy; tokens/semantic/motion
+     collapses this to 0ms under reduced-motion. */
+  transition:
+    background-color var(--duration-micro) var(--ease-enter),
+    color var(--duration-micro) var(--ease-enter);
+  white-space: nowrap;
+  user-select: none;
+  min-height: 2rem;
+}
+
+.ren-select-item:hover:not([aria-disabled="true"]),
+.ren-select-item[data-highlighted] {
+  background-color: var(--color-fill);
+  color: var(--color-text);
+}
+
+.ren-select-item[aria-selected="true"] {
+  background-color: var(--color-accent-subtle);
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.ren-select-item[aria-selected="true"]::before {
+  content: '';
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+.ren-select-item[aria-selected="true"]::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70%;
+}
+
+.ren-select-item[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ═══ SELECT GROUP ═══ */
+.ren-select-group {
+  display: block;
+  padding-block: var(--space-1);
+}
+
+/* ═══ SELECT GROUP LABEL ═══ */
+.ren-select-label {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--caption-size);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ═══ SELECT SEPARATOR ═══ */
+.ren-select-separator {
+  height: var(--stroke-1);
+  background: var(--color-border);
+  margin-block: var(--space-1);
+}
+
+/* ═══ SELECT EMPTY STATE ═══ */
+.ren-select-empty {
+  padding: var(--space-3) var(--space-4);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--body-size);
+  white-space: nowrap;
+}
+
+/* ═══ SIZE VARIANTS ═══ */
+.ren-select-sm .ren-select-trigger {
+  min-height: var(--size-sm);
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-sm);
+}
+
+.ren-select-lg .ren-select-trigger {
+  min-height: var(--size-xl);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-lg);
+}
+
+/* ═══ MULTI-SELECT CHIPS/TAGS ═══ */
+.ren-select-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.ren-select-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-fill);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+
+.ren-select-chip-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: var(--transition-tactile);
+}
+
+.ren-select-chip-remove:hover {
+  color: var(--color-text);
+}
+
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  .ren-select-trigger,
+  .ren-select-icon,
+  .ren-select-item {
+    transition: none;
+  }
+
+  .ren-select-content {
+    animation: none;
+    opacity: 0;
+  }
+
+  .ren-select-content.ren-open {
+    opacity: 1;
+  }
+}
+
+/* ═══ SCROLLBAR STYLING ═══ */
+.ren-select-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ren-select-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ren-select-content::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.ren-select-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* ═══ NATIVE POPOVER API SUPPORT ═══ */
+@supports (selector(:popover-open)) {
+  .ren-select-content[popover] {
+    visibility: visible;
+    opacity: 0;
+    transition: opacity var(--duration-enter) var(--ease-enter),
+                overlay var(--duration-enter) var(--ease-enter) allow-discrete,
+                display var(--duration-enter) var(--ease-enter) allow-discrete;
+    animation: none;
+  }
+
+  @starting-style {
+    .ren-select-content[popover]:popover-open {
+      opacity: 0;
+    }
+  }
+
+  .ren-select-content[popover]:popover-open {
+    opacity: 1;
+  }
+}

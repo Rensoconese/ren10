@@ -1,0 +1,111 @@
+---
+type: "RenDS CSS"
+title: ren-badge.css
+description: "RenDS CSS generated from the RenDS knowledge graph."
+id: file:components/primitives/ren-badge/ren-badge.css
+sourcePath: components/primitives/ren-badge/ren-badge.css
+packageName: ren10
+packageVersion: 0.9.4
+generatedFrom: knowledge/ren10-graph.json
+stability: generated
+tags:
+  - css
+  - ren10
+  - rends
+---
+
+# ren-badge.css
+
+Source path: `components/primitives/ren-badge/ren-badge.css`
+
+## Relationships
+
+_No outgoing relationships._
+
+## Source Content
+
+/* ============================================
+   RenDS — Badge
+   ============================================
+   Small inline label for status, counts, or tags.
+   CSS-only, no JS needed.
+
+   Sibling primitives that used to live here are
+   now in their own folders:
+     - ren-separator
+     - ren-avatar
+     - ren-spinner
+     - ren-skeleton
+     - ren-kbd
+
+   Usage:
+     <span class="ren-badge">3</span>
+     <span class="ren-badge ren-badge-success">Active</span>
+     <span class="ren-badge-dot ren-badge-dot-danger"></span>
+   ============================================ */
+
+.ren-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 0.15em 0.55em;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  line-height: 1.5;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+  /* Default: neutral */
+  background-color: var(--color-fill);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Variants ─── */
+.ren-badge-primary {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+.ren-badge-secondary {
+  background-color: var(--color-fill-hover);
+  color: var(--color-text);
+}
+
+.ren-badge-success {
+  background-color: var(--color-success-subtle);
+  color: var(--color-success-strong);
+}
+
+.ren-badge-warning {
+  background-color: var(--color-warning-subtle);
+  color: var(--color-warning-strong);
+}
+
+.ren-badge-danger {
+  background-color: var(--color-danger-subtle);
+  color: var(--color-danger-strong);
+}
+
+.ren-badge-info {
+  background-color: var(--color-info-subtle);
+  color: var(--color-info-strong);
+}
+
+/* Outline variant */
+.ren-badge-outline {
+  background-color: transparent;
+  border: var(--stroke-1) solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+/* ─── Dot indicator (no text) ─── */
+.ren-badge-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  padding: 0;
+  border-radius: var(--radius-full);
+  background-color: var(--color-accent);
+}
+
+.ren-badge-dot-success { background-color: var(--color-success); }
+.ren-badge-dot-warning { background-color: var(--color-warning); }
+.ren-badge-dot-danger  { background-color: var(--color-danger); }
