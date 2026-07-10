@@ -19,16 +19,52 @@ function requiredMarkupSection(contract) {
 function requiredTagGroups(contract) {
   return requiredMarkupSection(contract)
     .split('\n')
-    .filter((line) => /(?:- "Always (?:render|use|wrap)|- "(?:The )?[Rr]oot(?: element)? (?:must be|is))/i.test(line))
-    .map((line) => [...line.matchAll(/<([a-z][a-z0-9-]*)\b/gi)].map((match) => match[1].toLowerCase()))
+    .filter((line) => /- "(?:<|Always\b|Place one\b|(?:The )?[Rr]oot\b)/i.test(line))
+    .map((line) => {
+      const positive = line.split(/(?:;|—|\bnever\b|\bdo not\b)/i)[0];
+      const tags = [...positive.matchAll(/<([a-z][a-z0-9-]*)\b/gi)]
+        .map((match) => match[1].toLowerCase());
+      return tags.length > 0 ? [tags[0]] : [];
+    })
     .filter((tags) => tags.length > 0);
 }
 
-export function validateContractMarkup(name, contract) {
+const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
+
+function validateHtmlStructure(name, markup) {
+  const errors = [];
+  const stack = [];
+  const ids = new Set([...markup.matchAll(/\bid=["']([^"']+)["']/gi)].map((match) => match[1]));
+  const tags = markup.matchAll(/<\/?([a-z][a-z0-9-]*)\b[^>]*>/gi);
+  for (const match of tags) {
+    const source = match[0];
+    const tag = match[1].toLowerCase();
+    if (source.startsWith('</')) {
+      const current = stack.pop();
+      if (current !== tag) errors.push(`${name}: invalid HTML nesting, expected </${current || 'none'}> before </${tag}>`);
+      continue;
+    }
+    if (!source.endsWith('/>') && !VOID_TAGS.has(tag)) stack.push(tag);
+  }
+  if (stack.length > 0) errors.push(`${name}: unclosed HTML tag <${stack.at(-1)}>`);
+
+  for (const match of markup.matchAll(/\b(?:aria-controls|aria-labelledby|aria-describedby|for)=["']([^"']+)["']/gi)) {
+    for (const reference of match[1].trim().split(/\s+/)) {
+      if (reference && !ids.has(reference)) errors.push(`${name}: ARIA/label reference #${reference} does not exist`);
+    }
+  }
+  return errors;
+}
+
+export function validateContractMarkup(name, contract, expectedHost = null) {
   const errors = [];
   const markup = canonicalMarkup(contract);
   if (!markup) return [`${name}: missing Canonical Markup html block`];
   if (/(?:\.\.\.|…)/.test(markup)) errors.push(`${name}: placeholder Canonical Markup`);
+  errors.push(...validateHtmlStructure(name, markup));
+  if (expectedHost && !new RegExp(`<${expectedHost}\\b`, 'i').test(markup)) {
+    errors.push(`${name}: Canonical Markup must include <${expectedHost}> custom-element host`);
+  }
 
   for (const tags of requiredTagGroups(contract)) {
     if (!tags.some((tag) => new RegExp(`<${tag}\\b`, 'i').test(markup))) {
@@ -57,6 +93,13 @@ export function compareEventMetadata(expected, documented) {
     const actualDetail = [...actual.detail].sort();
     if (JSON.stringify(actualDetail) !== JSON.stringify(expectedDetail)) {
       errors.push(`${event.component} ${event.event}: detail metadata mismatch`);
+    }
+  }
+  for (const event of documented) {
+    if (!expected.some((candidate) =>
+      candidate.component === event.component && candidate.event === event.event
+    )) {
+      errors.push(`${event.component} ${event.event}: unexpected event metadata`);
     }
   }
   return errors;
@@ -122,27 +165,47 @@ function topLevelObjectKeys(objectSource) {
   return keys;
 }
 
-function runtimeEventMetadata(source, event) {
-  const marker = `CustomEvent('${event.event}'`;
-  const markerIndex = source.indexOf(marker);
-  const doubleQuoteIndex = source.indexOf(`CustomEvent("${event.event}"`);
-  const eventIndex = markerIndex === -1 ? doubleQuoteIndex : markerIndex;
-  if (eventIndex === -1) return null;
-  const callStart = source.indexOf('(', eventIndex);
-  const snippet = balancedSlice(source, callStart, '(', ')');
+function eventMetadataFromSnippet(source, eventIndex, component, event, snippet) {
   const detailIndex = snippet.indexOf('detail:');
   const detailStart = detailIndex === -1 ? -1 : snippet.indexOf('{', detailIndex);
-  const detail = detailStart === -1
+  let detail = detailStart === -1
     ? []
     : topLevelObjectKeys(balancedSlice(snippet, detailStart, '{', '}'));
+  if (detailStart === -1) {
+    const identifier = detailIndex !== -1
+      ? snippet.slice(detailIndex + 7).match(/^\s*([A-Za-z_$][\w$]*)/)?.[1]
+      : (/\bdetail\s*[,}]/.test(snippet) ? 'detail' : null);
+    if (identifier) {
+      const prefix = source.slice(Math.max(0, eventIndex - 2500), eventIndex);
+      const keys = new Set();
+      const assignmentPattern = new RegExp(`\\b${identifier}\\s*=\\s*\\{`, 'g');
+      for (const assignment of prefix.matchAll(assignmentPattern)) {
+        const objectStart = prefix.indexOf('{', assignment.index);
+        for (const key of topLevelObjectKeys(balancedSlice(prefix, objectStart, '{', '}'))) keys.add(key);
+      }
+      const propertyPattern = new RegExp(`\\b${identifier}\\.([A-Za-z_$][\\w$]*)\\s*=`, 'g');
+      for (const property of prefix.matchAll(propertyPattern)) keys.add(property[1]);
+      detail = [...keys];
+    }
+  }
   return {
-    component: event.component,
-    event: event.event,
+    component,
+    event,
     bubbles: /\bbubbles:\s*true\b/.test(snippet),
     composed: /\bcomposed:\s*true\b/.test(snippet),
     cancelable: /\bcancelable:\s*true\b/.test(snippet),
     detail,
   };
+}
+
+export function runtimeEventMetadata(source, component) {
+  const events = [];
+  for (const match of source.matchAll(/CustomEvent\(\s*['"](ren-[a-z0-9-]+)['"]/gi)) {
+    const callStart = source.indexOf('(', match.index);
+    const snippet = balancedSlice(source, callStart, '(', ')');
+    events.push(eventMetadataFromSnippet(source, match.index, component, match[1], snippet));
+  }
+  return events;
 }
 
 function docsEventMetadata(html, manifest) {
@@ -153,24 +216,46 @@ function docsEventMetadata(html, manifest) {
       candidate.includes(`<code>${event.event}</code>`)
     );
     if (!row) return { component: event.component, event: event.event, detail: [] };
-    const yesCount = (row.match(/dx-flag-yes/g) || []).length;
-    const detailCell = row.match(/<td><code>\{([^}]*)\}<\/code><\/td>\s*$/)?.[1] || '';
+    const cells = [...row.matchAll(/<td>([\s\S]*?)<\/td>/g)].map((match) => match[1]);
+    const detailCell = cells[5]?.match(/<code>\{([^}]*)\}<\/code>/)?.[1] || '';
     const detail = detailCell.split(',').map((key) => key.trim().split(/[:(]/)[0]).filter(Boolean);
     return {
       component: event.component,
       event: event.event,
-      bubbles: yesCount >= 1,
-      composed: yesCount >= 2,
-      cancelable: event.cancelable,
+      bubbles: cells[2]?.includes('dx-flag-yes') || false,
+      composed: cells[3]?.includes('dx-flag-yes') || false,
+      cancelable: cells[4]?.includes('dx-flag-yes') || false,
       detail,
     };
   });
 }
 
+if (process.argv.includes('--print-runtime-events')) {
+  const printed = [];
+  for (const layer of ['primitives', 'composites', 'patterns']) {
+    const base = path.join(root, 'components', layer);
+    for (const dir of fs.readdirSync(base)) {
+      const sourcePath = path.join(base, dir, `${dir}.js`);
+      if (!fs.existsSync(sourcePath)) continue;
+      const source = fs.readFileSync(sourcePath, 'utf8');
+      for (const event of runtimeEventMetadata(source, dir)) {
+        printed.push({ ...event, source: path.relative(root, sourcePath) });
+      }
+    }
+  }
+  console.log(JSON.stringify(printed, null, 2));
+  process.exit(0);
+}
+
 const fixtureIndex = process.argv.indexOf('--contract-fixture');
 if (fixtureIndex !== -1) {
   const fixture = fs.readFileSync(path.resolve(process.argv[fixtureIndex + 1]), 'utf8');
-  const fixtureErrors = validateContractMarkup('fixture', fixture);
+  const hostIndex = process.argv.indexOf('--expected-host');
+  const fixtureErrors = validateContractMarkup(
+    hostIndex === -1 ? 'fixture' : process.argv[hostIndex + 1],
+    fixture,
+    hostIndex === -1 ? null : process.argv[hostIndex + 1]
+  );
   if (fixtureErrors.length) {
     console.error(fixtureErrors.map((error) => `✗ ${error}`).join('\n'));
     process.exit(1);
@@ -200,7 +285,11 @@ for (const [name, meta] of Object.entries(REGISTRY)) {
   else {
     const source = fs.readFileSync(contract, 'utf8');
     if (!source.includes('## aiHints')) errors.push(`${name}: missing aiHints`);
-    errors.push(...validateContractMarkup(name, source));
+    const jsFile = path.join(dir, `${meta.dir}.js`);
+    const expectedHost = meta.layer !== 'primitives' && fs.existsSync(jsFile) && new RegExp(`customElements\\.define\\(['\"]ren-${name}['\"]`).test(fs.readFileSync(jsFile, 'utf8'))
+      ? `ren-${name}`
+      : null;
+    errors.push(...validateContractMarkup(name, source, expectedHost));
   }
   for (const file of meta.files) if (!fs.existsSync(path.join(dir, file))) errors.push(`${name}: missing ${file}`);
   if (/TODO|your-component|<ren-(?:component|example)\b/i.test(meta.usage)) errors.push(`${name}: placeholder usage`);
@@ -208,32 +297,40 @@ for (const [name, meta] of Object.entries(REGISTRY)) {
 }
 
 const runtimeEvents = new Set();
+const runtimeEventManifest = [];
 for (const layer of ['primitives', 'composites', 'patterns']) {
   const base = path.join(root, 'components', layer);
   for (const dir of fs.readdirSync(base)) {
     const js = path.join(base, dir, `${dir}.js`);
     if (!fs.existsSync(js)) continue;
     const source = fs.readFileSync(js, 'utf8');
-    for (const match of source.matchAll(/CustomEvent\(['"](ren-[a-z0-9-]+)/gi)) runtimeEvents.add(match[1]);
+    for (const event of runtimeEventMetadata(source, dir)) {
+      event.source = path.relative(root, js);
+      runtimeEvents.add(event.event);
+      const existing = runtimeEventManifest.find((candidate) =>
+        candidate.component === event.component && candidate.event === event.event
+      );
+      if (existing) {
+        const mismatches = compareEventMetadata([existing], [event]);
+        if (mismatches.length) errors.push(`${dir} ${event.event}: inconsistent runtime emissions`);
+      } else runtimeEventManifest.push(event);
+    }
   }
 }
-const contractDocs = fs.readdirSync(path.join(root, 'components'), { recursive: true })
-  .filter((file) => /(?:component|pattern)\.md$/.test(file))
-  .map((file) => fs.readFileSync(path.join(root, 'components', file), 'utf8')).join('\n');
 const eventsHtml = fs.readFileSync(path.join(root, 'docs/foundations/events.html'), 'utf8');
-const docs = contractDocs + eventsHtml;
-for (const event of runtimeEvents) {
-  const documented = docs.includes(event) || (event.endsWith('-close') && docs.includes(`${event.slice(0, -6)}-open`));
-  if (!documented) errors.push(`event undocumented: ${event}`);
-}
 
-const runtimeEventManifest = PUBLIC_EVENTS.map((event) => {
-  const runtime = fs.readFileSync(path.join(root, event.source), 'utf8');
-  return runtimeEventMetadata(runtime, event);
-}).filter(Boolean);
+const manifestKeys = new Set();
 for (const event of PUBLIC_EVENTS) {
-  if (!runtimeEventManifest.some((runtime) => runtime.event === event.event && runtime.component === event.component)) {
+  const key = `${event.component}:${event.event}`;
+  if (manifestKeys.has(key)) errors.push(`${key}: duplicate public event manifest entry`);
+  manifestKeys.add(key);
+  const runtime = runtimeEventManifest.find((candidate) =>
+    candidate.event === event.event && candidate.component === event.component
+  );
+  if (!runtime) {
     errors.push(`${event.component} ${event.event}: missing runtime emission`);
+  } else if (runtime.source !== event.source) {
+    errors.push(`${event.component} ${event.event}: source metadata mismatch`);
   }
 }
 errors.push(...compareEventMetadata(PUBLIC_EVENTS, runtimeEventManifest));
