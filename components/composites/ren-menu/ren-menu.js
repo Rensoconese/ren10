@@ -586,111 +586,11 @@ export class RenMenu extends HTMLElement {
   }
 }
 
-/**
- * RenDS — <ren-context-menu> Web Component
- * ===========================================
- * Context menu component that extends ren-menu.
- * Opens on right-click (contextmenu event) at pointer coordinates.
- *
- * Attributes:
- *   Same as ren-menu
- *
- * Markup:
- *   <div data-context-menu-trigger id="target">Right-click me</div>
- *   <ren-context-menu trigger-id="target">
- *     <button class="ren-menu-item" role="menuitem">Copy</button>
- *     <button class="ren-menu-item" role="menuitem">Cut</button>
- *     <button class="ren-menu-item" role="menuitem">Paste</button>
- *   </ren-context-menu>
- *
- * Events:
- *   Same as ren-menu (ren-menu-select, ren-menu-open, ren-menu-close)
- *   Plus: ren-context-menu-open with { x, y, target }
- */
-export class RenContextMenu extends RenMenu {
-  #contextMenuX = 0;
-  #contextMenuY = 0;
-
-  /**
-   * Lifecycle: Element inserted into DOM
-   */
-  connectedCallback() {
-    super.connectedCallback();
-    this.attachContextMenuListener();
-  }
-
-  /**
-   * Attach contextmenu event listener to trigger
-   * @private
-   */
-  attachContextMenuListener() {
-    const trigger = this.getTrigger();
-    if (!trigger) return;
-
-    trigger.addEventListener('contextmenu', (e) => this.handleContextMenu(e));
-  }
-
-  /**
-   * Handle right-click to open context menu at pointer position
-   * @private
-   */
-  handleContextMenu(e) {
-    e.preventDefault();
-
-    this.#contextMenuX = e.clientX;
-    this.#contextMenuY = e.clientY;
-
-    // Close any existing menu first
-    if (this.isOpen()) {
-      this.close();
-    }
-
-    // Open at pointer position
-    this.open();
-
-    // Apply pointer positioning instead of trigger-based positioning
-    requestAnimationFrame(() => {
-      const menuRect = this.getBoundingClientRect();
-      const viewport = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-
-      let left = this.#contextMenuX;
-      let top = this.#contextMenuY;
-
-      // Clamp to viewport
-      if (left + menuRect.width > viewport.width) {
-        left = viewport.width - menuRect.width - 8;
-      }
-      if (top + menuRect.height > viewport.height) {
-        top = viewport.height - menuRect.height - 8;
-      }
-
-      left = Math.max(8, left);
-      top = Math.max(8, top);
-
-      this.style.left = `${left}px`;
-      this.style.top = `${top}px`;
-    });
-
-    this.dispatchEvent(
-      new CustomEvent('ren-context-menu-open', {
-        bubbles: true,
-        detail: {
-          x: this.#contextMenuX,
-          y: this.#contextMenuY,
-          target: e.target,
-        },
-      })
-    );
-  }
-}
-
 if (!customElements.get('ren-menu')) {
   customElements.define('ren-menu', RenMenu);
 }
 
-if (!customElements.get('ren-context-menu')) {
-  customElements.define('ren-context-menu', RenContextMenu);
-}
+// Compatibility export: context-menu behavior and registration are owned by
+// the colocated context-menu module so importing either historical path cannot
+// install a second implementation.
+export { RenContextMenu } from '../ren-context-menu/ren-context-menu.js';

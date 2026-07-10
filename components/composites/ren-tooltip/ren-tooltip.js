@@ -157,9 +157,11 @@ export class RenTooltip extends HTMLElement {
 
     if (this.#trigger) {
       // Wire aria-describedby relationship
-      if (!this.#trigger.hasAttribute('aria-describedby')) {
-        this.#trigger.setAttribute('aria-describedby', this.id);
-      }
+      const describedBy = new Set(
+        (this.#trigger.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)
+      );
+      describedBy.add(this.id);
+      this.#trigger.setAttribute('aria-describedby', [...describedBy].join(' '));
 
       // Set up anchor relationship if CSS anchors are supported
       if (RenTooltip.supportsAnchor) {
@@ -368,6 +370,16 @@ export class RenTooltip extends HTMLElement {
     this.clearTimeouts();
     this.#listenerController?.abort();
     this.#listenerController = null;
+    if (this.#trigger) {
+      const describedBy = (this.#trigger.getAttribute('aria-describedby') || '')
+        .split(/\s+/)
+        .filter((token) => token && token !== this.id);
+      if (describedBy.length > 0) {
+        this.#trigger.setAttribute('aria-describedby', describedBy.join(' '));
+      } else {
+        this.#trigger.removeAttribute('aria-describedby');
+      }
+    }
   }
 
   /**

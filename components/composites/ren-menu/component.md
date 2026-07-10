@@ -30,7 +30,7 @@ selectionCriteria:
     - "A trigger button needs to open a list of imperative commands (Edit, Duplicate, Delete) with role=\"menu\"."
     - "You need keyboard navigation (Arrow keys, Home/End, typeahead) plus click-outside / Escape dismissal."
     - "Items must support menuitem, menuitemcheckbox, menuitemradio, separators, group labels, danger styling, and right-aligned shortcut text."
-    - "Right-click context menus reuse the same chrome via <ren-context-menu> (extends RenMenu) at pointer coordinates."
+    - "Right-click context menus reuse the same chrome via the colocated ren-context-menu module at pointer coordinates."
     - "Positioning needs viewport-aware placement (bottom-start / bottom-end / top-start / top-end, with right/left also accepted) with native Popover API support."
   avoidWhen:
     - "User is selecting a single value to commit into a form field — use ren-select."
@@ -44,7 +44,7 @@ canonicalImports:
   js:
     - "rends/components/composites/ren-menu/ren-menu.js"
   notes:
-    - "JS depends on utils/keyboard-nav.js and utils/dismissable.js — keep the relative paths intact when copying files."
+    - "JS depends on utils/keyboard-nav.js and utils/dismissable.js; its compatibility export delegates ren-context-menu registration to the colocated context-menu module."
     - "If the page already imports rends/components/index.css, do not import the CSS again."
 
 requiredMarkup:

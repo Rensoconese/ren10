@@ -53,6 +53,7 @@ requiredMarkup:
   - "Pair the input with a real <label for=\"...\"> or set aria-label / aria-labelledby on the input for an accessible name."
   - "Use show-value attribute on <ren-slider> to opt into the .ren-slider-value readout; use label attribute to inject a .ren-slider-label."
   - "Dual-thumb range mode wraps two <input type=\"range\"> elements inside .ren-slider-range with a .ren-slider-track-input visual rail."
+  - "In dual-thumb mode the value property and ren-slider-input / ren-slider-change detail.value are a two-number tuple in input order."
   - "Tick marks use .ren-slider-marks > .ren-slider-mark > (.ren-slider-mark-tick + .ren-slider-mark-label); preserve that structure."
 
 forbiddenPatterns:
@@ -124,6 +125,7 @@ Use the docs page and source files listed below for full examples before adding 
 - `:disabled`
 - `:focus-visible`
 - `:hover`
+- `type="range"`
 
 ## Public Token API
 

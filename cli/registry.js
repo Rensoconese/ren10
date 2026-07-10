@@ -568,12 +568,10 @@ export const REGISTRY = {
     description: 'Right-click / long-press menu with keyboard support',
     files: ['ren-context-menu.css', 'ren-context-menu.js'],
     deps: ['dismissable.js', 'keyboard-nav.js'],
-    usage: `<ren-context-menu>
-  <div class="ren-context-menu-trigger">Right-click me</div>
-  <ul role="menu" class="ren-context-menu">
-    <li role="menuitem">Copy</li>
-    <li role="menuitem">Paste</li>
-  </ul>
+    usage: `<div class="ren-context-menu-trigger" data-context="editor-actions" tabindex="0">Right-click me</div>
+<ren-context-menu id="editor-actions">
+  <button class="ren-menu-item" role="menuitem">Copy</button>
+  <button class="ren-menu-item" role="menuitem">Paste</button>
 </ren-context-menu>`,
   },
 

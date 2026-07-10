@@ -161,10 +161,18 @@ export class RenSheet extends HTMLElement {
       if (!this.#isDismissible()) e.preventDefault();
     }, { signal });
 
+    // Escape and <form method="dialog"> close the native dialog directly.
+    // Reconcile the host and public lifecycle from the native close event.
+    this.#dialog.addEventListener('close', () => {
+      this.#reconcileNativeClose();
+    }, { signal });
+
     // [data-sheet-close] anywhere inside
     this.#dialog.addEventListener('click', (e) => {
       const closer = e.target.closest('[data-sheet-close]');
-      if (closer && this.#dialog.contains(closer)) this.close();
+      if (closer && this.#dialog.contains(closer)) {
+        this.close(closer.getAttribute('data-sheet-close') || '');
+      }
     }, { signal });
 
     // Swipe to dismiss
@@ -222,9 +230,12 @@ export class RenSheet extends HTMLElement {
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
   }
 
-  close() {
+  close(returnValue = '') {
     if (!this.#dialog || !this.#dialog.open) return;
-    this.#dialog.close();
+    this.#dialog.close(returnValue);
+  }
+
+  #reconcileNativeClose() {
     this.removeAttribute('open');
 
     // Restore focus to the element that opened the sheet
@@ -233,7 +244,11 @@ export class RenSheet extends HTMLElement {
     }
     this.#returnFocus = null;
 
-    this.dispatchEvent(new CustomEvent('ren-close', { bubbles: true }));
+    this.dispatchEvent(new CustomEvent('ren-close', {
+      bubbles: true,
+      composed: true,
+      detail: { returnValue: this.#dialog.returnValue || '' },
+    }));
   }
 
   get open() {

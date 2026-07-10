@@ -270,7 +270,12 @@
     width: 100%;
     height: 6px;
     border-radius: var(--radius-full);
-    background: var(--color-fill-active);
+    background: linear-gradient(
+      to right,
+      var(--color-fill-active) 0 var(--value-start, 0%),
+      var(--ren-slider-fill-color, var(--color-accent)) var(--value-start, 0%) var(--value-end, 100%),
+      var(--color-fill-active) var(--value-end, 100%) 100%
+    );
     pointer-events: none;
     margin: 0;
     padding: 0;

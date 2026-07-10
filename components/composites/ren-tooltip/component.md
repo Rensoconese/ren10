@@ -78,6 +78,7 @@ accessibility:
     - "Tooltip text must meet contrast for the chosen --ren-tooltip-bg / --ren-tooltip-color pair (default dark bg / white text is WCAG AA against typical surfaces)."
     - "Touch users: tooltips should not be the only way to reveal essential info — provide a visible label or alternate disclosure for touch."
     - "Tooltip is pointer-events: none and never receives focus — if the content needs interaction, switch to ren-popover."
+    - "The component appends its ID to any existing aria-describedby token list and removes only that owned token on disconnect."
 ```
 
 ## Required Imports

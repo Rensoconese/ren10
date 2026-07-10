@@ -51,7 +51,7 @@ canonicalImports:
 
 requiredMarkup:
   - "Declare the trigger region with data-context=\"<menu-id>\" on any element; do not use inline oncontextmenu attributes."
-  - "Menu root is <div id=\"<menu-id>\" class=\"ren-context-menu\" popover> — the popover attribute is required, not optional."
+  - "Menu root is <ren-context-menu id=\"<menu-id>\">; the component applies the .ren-context-menu, role=menu, and manual popover semantics."
   - "Items are real <button class=\"ren-menu-item\"> elements; separators are <hr class=\"ren-menu-separator\">."
   - "Destructive actions use .ren-menu-item-danger (defined in ren-menu.css); do not invent custom danger classes."
   - "Position is set by JS — do not write inline top/left on the menu element."
@@ -95,7 +95,11 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-context-menu">...</div>
+<div data-context="editor-actions" tabindex="0">Right-click me</div>
+<ren-context-menu id="editor-actions">
+  <button class="ren-menu-item" role="menuitem">Copy</button>
+  <button class="ren-menu-item" role="menuitem">Paste</button>
+</ren-context-menu>
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.
@@ -111,6 +115,7 @@ Use the docs page and source files listed below for full examples before adding 
 
 - `[aria-disabled]`
 - `[data-context]`
+- `trigger-id`
 
 ## Public Token API
 

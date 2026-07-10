@@ -117,6 +117,10 @@ Use the docs page and source files listed below for full examples before adding 
 - `:active`
 - `:hover`
 
+`close(returnValue)` and native `<form method="dialog">` closure emit exactly
+one `ren-close` with `detail.returnValue`, while clearing host `open` and
+restoring focus to the opener.
+
 ## Public Token API
 
 - `--ren-sheet-backdrop`

@@ -14,10 +14,12 @@
    ============================================ */
 
 /**
- * @param {string} menuId - The popover element ID
+ * @param {string|HTMLElement} menuOrId - The popover element or its ID
  */
-export function initContextMenu(menuId) {
-  const menu = document.getElementById(menuId);
+export function initContextMenu(menuOrId) {
+  const menu = typeof menuOrId === 'string'
+    ? document.getElementById(menuOrId)
+    : menuOrId;
   if (!menu) return;
 
   if (menu.dataset.renContextMenuInitialized === 'true') return;
@@ -27,10 +29,18 @@ export function initContextMenu(menuId) {
   let returnTrigger = null;
 
   menu.setAttribute('popover', 'manual');
+  menu.setAttribute('role', 'menu');
+  menu.classList.add('ren-context-menu');
 
   // Find all triggers for this menu
-  const triggers = [...document.querySelectorAll(`[data-context="${menuId}"]`)];
-  const itemSelector = '.ren-menu-item:not(:disabled):not([aria-disabled="true"])';
+  const triggers = [...document.querySelectorAll(`[data-context="${menu.id}"]`)];
+  const triggerId = menu.getAttribute('trigger-id');
+  const explicitTrigger = triggerId ? document.getElementById(triggerId) : null;
+  if (explicitTrigger && !triggers.includes(explicitTrigger)) triggers.push(explicitTrigger);
+  const itemSelector = [
+    '.ren-menu-item:not(:disabled):not([aria-disabled="true"])',
+    '[role="menuitem"]:not(:disabled):not([aria-disabled="true"])',
+  ].join(', ');
 
   const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
 
@@ -51,7 +61,7 @@ export function initContextMenu(menuId) {
     if (returnTrigger && document.contains(returnTrigger)) returnTrigger.focus();
   };
 
-  const show = (x, y) => {
+  const show = (x, y, target) => {
     if (isOpen()) {
       close();
     }
@@ -84,13 +94,19 @@ export function initContextMenu(menuId) {
     // Focus first item
     const firstItem = menu.querySelector(itemSelector);
     firstItem?.focus();
+
+    menu.dispatchEvent(new CustomEvent('ren-context-menu-open', {
+      bubbles: true,
+      composed: true,
+      detail: { x, y, target },
+    }));
   };
 
   triggers.forEach((trigger) => {
     trigger.addEventListener('contextmenu', (e) => {
       e.preventDefault();
       returnTrigger = trigger;
-      show(e.clientX, e.clientY);
+      show(e.clientX, e.clientY, e.target);
     }, { signal: controller.signal });
 
     trigger.addEventListener('keydown', (e) => {
@@ -99,7 +115,7 @@ export function initContextMenu(menuId) {
       e.preventDefault();
       const rect = trigger.getBoundingClientRect();
       returnTrigger = trigger;
-      show(rect.left + 8, rect.bottom + 8);
+      show(rect.left + 8, rect.bottom + 8, e.target);
     }, { signal: controller.signal });
   });
 
@@ -157,8 +173,10 @@ export function initContextMenu(menuId) {
   );
 }
 
-export function destroyContextMenu(menuId) {
-  const menu = document.getElementById(menuId);
+export function destroyContextMenu(menuOrId) {
+  const menu = typeof menuOrId === 'string'
+    ? document.getElementById(menuOrId)
+    : menuOrId;
   if (!menu) return;
   menu.__renContextController?.abort();
   delete menu.__renContextController;
@@ -174,4 +192,24 @@ export function initAllContextMenus() {
     menuIds.add(el.dataset.context);
   });
   menuIds.forEach(initContextMenu);
+}
+
+/**
+ * Registry-friendly custom element facade over the same controller used by
+ * initContextMenu(). There is one behavior owner and one reconnect-safe
+ * AbortController regardless of which public entry point consumers use.
+ */
+export class RenContextMenu extends HTMLElement {
+  connectedCallback() {
+    if (!this.id) this.id = `ren-context-menu-${Math.random().toString(36).slice(2, 11)}`;
+    initContextMenu(this);
+  }
+
+  disconnectedCallback() {
+    destroyContextMenu(this);
+  }
+}
+
+if (!customElements.get('ren-context-menu')) {
+  customElements.define('ren-context-menu', RenContextMenu);
 }
