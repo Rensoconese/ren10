@@ -108,6 +108,27 @@ Cada uno terminó en un commit de corrección o artefacto generado, seguido por 
 
 La baseline se captura desde el árbol final, después de commitear estos dos documentos y los bundles. `scripts/package-budgets.json` es la fuente de cifras exactas y conserva delta cero para bytes/requests; RSS mantiene headroom explícito y documentado para variación del proceso.
 
+Medición final versionada:
+
+- tarball: 3,413,191 bytes; unpacked: 18,894,319 bytes; 322 entradas;
+- full CSS: 511,592 bytes; minified CSS: 290,990 bytes;
+- knowledge JSON: 4,185,898 bytes; SQLite: 9,334,784 bytes;
+- source requests: 85; bundled requests: 1;
+- CLI RSS baseline: 43,663,360 bytes; headroom explícito: 8 MiB.
+
+SHA-256 de artefactos estables (no autorreferenciales):
+
+| Artefacto | SHA-256 |
+|---|---|
+| `dist/ren10.css` | `ce65c813f0b3ce28dd6d4db3780876a08cc990c7d77da12a8064d2c4cd1b161c` |
+| `dist/ren10.min.css` | `dc165fd78180e15f58ce8a6ff5f8ce9ead110de4f3d660116394c0dccdbf3f6e` |
+| `dist/ren10-components.css` | `88e42fafab1dd8b76057985320ce8835c92fc41929a125bc2770cc117df65e45` |
+| `dist/ren10-components.min.css` | `00129397f3aadaed4252786991e0b79d39b87c6fda6c23649cca1541a2eeab9e` |
+| `knowledge/ren10-graph.json` | `c80f7d03082e64db95f827d7602cb6ab7b44aacf001bb85a3f2a34f77a0861c5` |
+| `knowledge/ren10-graph.sqlite` | `89621162b3d1830ee5f871457ecfe0d06d86dee22d967fb7e5b667774ff5b321` |
+
+El hash del `.tgz` se registra fuera del propio tarball durante release para evitar una referencia circular: el audit Markdown forma parte del packlist, por lo que insertar dentro de él el hash del contenedor cambiaría ese mismo hash.
+
 El checker mide como interfaces separadas:
 
 - tarball y unpacked bytes;

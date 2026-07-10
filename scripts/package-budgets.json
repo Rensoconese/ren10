@@ -5,8 +5,8 @@
   "capturedFrom": "clean final Task 17 source tree before the budget-baseline commit",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 18893067, "allowedDelta": 0, "target": 18893067 },
-    "tarballBytes": { "baseline": 3412753, "allowedDelta": 0, "target": 3412753 },
+    "unpackedBytes": { "baseline": 18894319, "allowedDelta": 0, "target": 18894319 },
+    "tarballBytes": { "baseline": 3413191, "allowedDelta": 0, "target": 3413191 },
     "fullCssBytes": { "baseline": 511592, "allowedDelta": 0, "target": 511592 },
     "minCssBytes": { "baseline": 290990, "allowedDelta": 0, "target": 290990 },
     "knowledgeJsonBytes": { "baseline": 4185898, "allowedDelta": 0, "target": 4185898 },
