@@ -74,7 +74,7 @@
         <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li aria-current="page">Foundations · Events</li></ol></nav>
         <p class="dx-kicker">Foundations</p>
         <h1>Events</h1>
-        <p class="lede">Every interactive RenDS component dispatches its own <code>CustomEvent</code>s. This page is the single source of truth: 35 event names across 48 component-event contracts, their <code>detail</code> shape, and bubbling behavior. Use it to integrate RenDS with your application state, analytics, or another framework.</p>
+        <p class="lede">Every interactive RenDS component dispatches its own <code>CustomEvent</code>s. This page is the single source of truth: 38 event names across 51 component-event contracts, their <code>detail</code> shape, and bubbling behavior. Use it to integrate RenDS with your application state, analytics, or another framework.</p>
       </header>
 
       <!-- 1. NAMING CONVENTION -->
@@ -109,7 +109,7 @@
       <section class="dx-section" id="catalog">
         <p class="dx-kicker">Reference</p>
         <h2>Event catalog</h2>
-        <p>35 event names across 48 component-event contracts and 25 components. <code>—</code> means the field is not explicitly set (uses the <code>CustomEvent</code> default, which is <code>false</code>).</p>
+        <p>38 event names across 51 component-event contracts and 26 components. <code>—</code> means the field is not explicitly set (uses the <code>CustomEvent</code> default, which is <code>false</code>).</p>
 
         <table class="dx-table">
           <thead>
@@ -171,6 +171,9 @@
             <tr><td><a href="../components/ren-form.html" class="ren-link">ren-form</a></td><td><code>ren-step-change</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ step, totalSteps }</code></td></tr>
             <tr><td><a href="../components/ren-menubar.html" class="ren-link">ren-menubar</a></td><td><code>ren-menubar-select</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ item, value, checked }</code></td></tr>
             <tr><td><a href="../components/ren-sidebar.html" class="ren-link">ren-sidebar</a></td><td><code>ren-sidebar-toggle</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ collapsed }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-sort</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ column, direction }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-select</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ selected }</code></td></tr>
+            <tr><td><a href="../components/ren-table.html" class="ren-link">ren-table</a></td><td><code>ren-filter</code></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-yes">true</span></td><td><span class="dx-table-flag dx-flag-no">—</span></td><td><code>{ value }</code></td></tr>
           </tbody>
         </table>
       </section>
@@ -198,12 +201,12 @@ combo.addEventListener('ren-change', (e) =&gt; {
 });</code></pre>
 
         <h3>Filtering by detail</h3>
-        <pre class="dx-pre" tabindex="0"><code>table.addEventListener('ren-row-select', (e) =&gt; {
-  if (e.detail.allSelectedIds.length === 0) {
+        <pre class="dx-pre" tabindex="0"><code>table.addEventListener('ren-select', (e) =&gt; {
+  if (e.detail.selected.length === 0) {
     bulkBar.hidden = true;
   } else {
     bulkBar.hidden = false;
-    bulkBar.querySelector('.count').textContent = e.detail.allSelectedIds.length;
+    bulkBar.querySelector('.count').textContent = e.detail.selected.length;
   }
 });</code></pre>
 

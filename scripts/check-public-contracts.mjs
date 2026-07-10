@@ -165,6 +165,36 @@ function topLevelObjectKeys(objectSource) {
   return keys;
 }
 
+function topLevelArguments(callSource) {
+  const argumentsSource = callSource.slice(1, -1);
+  const args = [];
+  let depth = 0;
+  let quote = null;
+  let escaped = false;
+  let tokenStart = 0;
+  for (let index = 0; index < argumentsSource.length; index += 1) {
+    const character = argumentsSource[index];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (character === '\\') escaped = true;
+      else if (character === quote) quote = null;
+      continue;
+    }
+    if (character === '"' || character === "'" || character === '`') {
+      quote = character;
+      continue;
+    }
+    if (character === '{' || character === '(' || character === '[') depth += 1;
+    if (character === '}' || character === ')' || character === ']') depth -= 1;
+    if (depth === 0 && character === ',') {
+      args.push(argumentsSource.slice(tokenStart, index).trim());
+      tokenStart = index + 1;
+    }
+  }
+  args.push(argumentsSource.slice(tokenStart).trim());
+  return args;
+}
+
 function eventMetadataFromSnippet(source, eventIndex, component, event, snippet) {
   const detailIndex = snippet.indexOf('detail:');
   const detailStart = detailIndex === -1 ? -1 : snippet.indexOf('{', detailIndex);
@@ -204,6 +234,31 @@ export function runtimeEventMetadata(source, component) {
     const callStart = source.indexOf('(', match.index);
     const snippet = balancedSlice(source, callStart, '(', ')');
     events.push(eventMetadataFromSnippet(source, match.index, component, match[1], snippet));
+  }
+
+  const helperPattern = /(?:^|\n)\s*(?:async\s+)?([A-Za-z_$][\w$]*)\s*\(\s*([A-Za-z_$][\w$]*)\s*,\s*([A-Za-z_$][\w$]*)[^)]*\)\s*\{/g;
+  for (const helper of source.matchAll(helperPattern)) {
+    const [definition, helperName, eventParameter] = helper;
+    const bodyStart = helper.index + definition.lastIndexOf('{');
+    const body = balancedSlice(source, bodyStart, '{', '}');
+    const dispatchPattern = new RegExp(`CustomEvent\\(\\s*${eventParameter}\\b`);
+    const dispatch = dispatchPattern.exec(body);
+    if (!dispatch) continue;
+    const dispatchStart = body.indexOf('(', dispatch.index);
+    const dispatchSnippet = balancedSlice(body, dispatchStart, '(', ')');
+    const flags = {
+      bubbles: /\bbubbles:\s*true\b/.test(dispatchSnippet),
+      composed: /\bcomposed:\s*true\b/.test(dispatchSnippet),
+      cancelable: /\bcancelable:\s*true\b/.test(dispatchSnippet),
+    };
+    const callPattern = new RegExp(`(?:this\\.)?${helperName}\\(\\s*['"](ren-[a-z0-9-]+)['"]`, 'gi');
+    for (const call of source.matchAll(callPattern)) {
+      const callStart = source.indexOf('(', call.index);
+      const callSnippet = balancedSlice(source, callStart, '(', ')');
+      const detailSource = topLevelArguments(callSnippet)[1] || '';
+      const detail = detailSource.startsWith('{') ? topLevelObjectKeys(detailSource) : [];
+      events.push({ component, event: call[1], ...flags, detail });
+    }
   }
   return events;
 }

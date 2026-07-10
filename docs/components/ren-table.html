@@ -182,7 +182,7 @@
           <li><strong>Tree / hierarchical view.</strong> Reach for a tree component (out of scope for v0.9).</li>
           <li><strong>2-3 key/value pairs per item.</strong> Use a <code>&lt;dl&gt;</code> description list.</li>
           <li><strong>A single metric.</strong> Use a stat / KPI card.</li>
-          <li><strong>Server-paged datasets bigger than memory.</strong> The built-in pager is client-side; for server pagination, listen to <code>ren-page-change</code> and fetch yourself instead of relying on <code>data-page-size</code>.</li>
+          <li><strong>Server-paged datasets bigger than memory.</strong> The built-in pager is client-side; use an external pager that fetches and replaces the table rows instead of relying on <code>data-page-size</code>.</li>
         </ul>
 
         <div class="dx-callout">
@@ -339,7 +339,7 @@
           <div class="dx-vrow">
             <div class="dx-vrow-label">Virtualization</div>
             <div class="dx-vrow-items">
-              <p><em>Not implemented in v0.9.</em> The built-in body renders all visible rows at once. For datasets &gt; ~5 000 rows, switch to server-side pagination (listen to <code>ren-page-change</code> and fetch the next page) instead of trying to render everything client-side. A windowed virtualizer is on the v1.0 roadmap.</p>
+              <p><em>Not implemented in v0.9.</em> The built-in body renders all visible rows at once. For datasets &gt; ~5 000 rows, switch to an external server-side pager that fetches and replaces rows instead of trying to render everything client-side. A windowed virtualizer is on the v1.0 roadmap.</p>
             </div>
           </div>
         </div>
@@ -413,10 +413,9 @@
         <table class="dx-api">
           <thead><tr><th>Event</th><th>Detail</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">ren-sort-change</code></td><td><code>{ column, direction }</code>. Fires after sort applies. Bubbles.</td></tr>
-            <tr><td><code class="dx-api-name">ren-row-select</code></td><td><code>{ rowId, selected, allSelectedIds: string[] }</code>. Bubbles.</td></tr>
-            <tr><td><code class="dx-api-name">ren-page-change</code></td><td><code>{ page, pageSize }</code>. Useful for server-side pagination — listen and fetch the page yourself.</td></tr>
-            <tr><td><code class="dx-api-name">ren-filter-change</code></td><td><code>{ query, matchedRows }</code>. Fires after the toolbar search filter applies.</td></tr>
+            <tr><td><code class="dx-api-name">ren-sort</code></td><td><code>{ column, direction }</code>. Fires after sort applies. Bubbles and is composed.</td></tr>
+            <tr><td><code class="dx-api-name">ren-select</code></td><td><code>{ selected }</code>. Fires after row selection changes. Bubbles and is composed.</td></tr>
+            <tr><td><code class="dx-api-name">ren-filter</code></td><td><code>{ value }</code>. Fires after the toolbar search filter applies. Bubbles and is composed.</td></tr>
           </tbody>
         </table>
       </section>
@@ -481,13 +480,13 @@
         <pre class="dx-pre" tabindex="0"><code>&lt;th class="ren-th ren-th-sortable" data-column="name"&gt;Name&lt;/th&gt;
 
 // Listen for state changes if you need to mirror to URL or analytics:
-table.addEventListener('ren-sort-change', (e) =&gt; {
+table.addEventListener('ren-sort', (e) =&gt; {
   history.replaceState(null, '', `?sort=${e.detail.column}.${e.detail.direction}`);
 });</code></pre>
 
         <h3>Server-side sorting</h3>
-        <p>Don't pre-sort the rows. Listen for <code>ren-sort-change</code> and fetch.</p>
-        <pre class="dx-pre" tabindex="0"><code>table.addEventListener('ren-sort-change', async (e) =&gt; {
+        <p>Don't pre-sort the rows. Listen for <code>ren-sort</code> and fetch.</p>
+        <pre class="dx-pre" tabindex="0"><code>table.addEventListener('ren-sort', async (e) =&gt; {
   table.dataset.loading = '';
   const rows = await fetch(`/api/users?sort=${e.detail.column}&dir=${e.detail.direction}`)
     .then(r =&gt; r.json());
@@ -496,7 +495,7 @@ table.addEventListener('ren-sort-change', (e) =&gt; {
 });</code></pre>
 
         <h3>Row selection</h3>
-        <p>Real checkboxes with <code>aria-label</code>. Listen for <code>ren-row-select</code> to enable bulk actions when at least one row is selected.</p>
+        <p>Real checkboxes with <code>aria-label</code>. Listen for <code>ren-select</code> to enable bulk actions when at least one row is selected.</p>
         <pre class="dx-pre" tabindex="0"><code>&lt;tr class="ren-tr" data-row-id="1"&gt;
   &lt;td class="ren-td ren-table-select"&gt;
     &lt;input type="checkbox" aria-label="Select row Atlas"&gt;
@@ -504,8 +503,8 @@ table.addEventListener('ren-sort-change', (e) =&gt; {
   …
 &lt;/tr&gt;
 
-table.addEventListener('ren-row-select', (e) =&gt; {
-  bulkBar.hidden = e.detail.allSelectedIds.length === 0;
+table.addEventListener('ren-select', (e) =&gt; {
+  bulkBar.hidden = e.detail.selected.length === 0;
 });</code></pre>
 
         <h3>Pagination</h3>

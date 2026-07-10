@@ -52,4 +52,7 @@ export const PUBLIC_EVENTS = [
   { component: 'ren-form', event: 'ren-step-change', bubbles: true, composed: true, cancelable: false, detail: ['step', 'totalSteps'], source: 'components/patterns/ren-form/ren-form.js' },
   { component: 'ren-menubar', event: 'ren-menubar-select', bubbles: true, composed: true, cancelable: false, detail: ['item', 'value', 'checked'], source: 'components/patterns/ren-menubar/ren-menubar.js' },
   { component: 'ren-sidebar', event: 'ren-sidebar-toggle', bubbles: true, composed: true, cancelable: false, detail: ['collapsed'], source: 'components/patterns/ren-sidebar/ren-sidebar.js' },
+  { component: 'ren-table', event: 'ren-sort', bubbles: true, composed: true, cancelable: false, detail: ['column', 'direction'], source: 'components/patterns/ren-table/ren-table.js' },
+  { component: 'ren-table', event: 'ren-select', bubbles: true, composed: true, cancelable: false, detail: ['selected'], source: 'components/patterns/ren-table/ren-table.js' },
+  { component: 'ren-table', event: 'ren-filter', bubbles: true, composed: true, cancelable: false, detail: ['value'], source: 'components/patterns/ren-table/ren-table.js' },
 ];
