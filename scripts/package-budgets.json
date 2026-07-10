@@ -2,18 +2,18 @@
   "version": 1,
   "capturedFor": "ren10@0.9.3",
   "capturedAt": "2026-07-10",
-  "capturedFrom": "clean checkout based on 3006a4c with the release-review patch applied",
+  "capturedFrom": "clean final Task 17 source tree before the budget-baseline commit",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 18829223, "allowedDelta": 0, "target": 18829223 },
-    "tarballBytes": { "baseline": 3386713, "allowedDelta": 0, "target": 3386713 },
+    "unpackedBytes": { "baseline": 18893067, "allowedDelta": 0, "target": 18893067 },
+    "tarballBytes": { "baseline": 3412753, "allowedDelta": 0, "target": 3412753 },
     "fullCssBytes": { "baseline": 511592, "allowedDelta": 0, "target": 511592 },
     "minCssBytes": { "baseline": 290990, "allowedDelta": 0, "target": 290990 },
-    "knowledgeJsonBytes": { "baseline": 4185393, "allowedDelta": 0, "target": 4185393 },
-    "knowledgeSqliteBytes": { "baseline": 9338880, "allowedDelta": 0, "target": 9338880 },
+    "knowledgeJsonBytes": { "baseline": 4185898, "allowedDelta": 0, "target": 4185898 },
+    "knowledgeSqliteBytes": { "baseline": 9334784, "allowedDelta": 0, "target": 9334784 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
-    "cliRssBytes": { "baseline": 43515904, "allowedDelta": 8388608, "target": 51904512 }
+    "cliRssBytes": { "baseline": 43663360, "allowedDelta": 8388608, "target": 52051968 }
   },
   "rationale": {
     "package": "0.9.3 release-candidate npm pack measurements; zero growth allowed.",
