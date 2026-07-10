@@ -607,7 +607,7 @@ function copyFile(src, dest) {
  * Source components live under components/<layer>/<dir>/, so JS imports that
  * point at ../../../utils/ need one fewer ../ after copying.
  */
-function copyComponentFile(src, dest) {
+function copyComponentFile(src, dest, meta, fileName) {
   const dir = path.dirname(dest);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -619,7 +619,7 @@ function copyComponentFile(src, dest) {
   }
 
   const raw = fs.readFileSync(src, 'utf8');
-  const rewritten = rewriteUtilsImports(raw);
+  const rewritten = rewriteComponentForConsumer(raw, meta, fileName);
   fs.writeFileSync(dest, rewritten);
 }
 
@@ -637,6 +637,37 @@ function rewriteUtilsImports(content) {
     rewritten = rewritten.replaceAll(`../${meta.dir}/`, `../${name}/`);
   }
   return rewritten;
+}
+
+function componentEntryFile(meta) {
+  return meta.files.find((file) => file === `${meta.dir}.js`)
+    || meta.files.find((file) => file.endsWith('.js'));
+}
+
+/**
+ * Produces the installed form of a component module. In addition to flattening
+ * package-source paths, the public entrypoint executes each direct component
+ * dependency so importing one installed component closes its runtime graph.
+ */
+function rewriteComponentForConsumer(content, meta, fileName) {
+  const rewritten = rewriteUtilsImports(content);
+  if (fileName !== componentEntryFile(meta)) return rewritten;
+
+  const dependencyImports = (meta.components || [])
+    .map((dependency) => {
+      const dependencyMeta = getComponent(dependency);
+      const dependencyEntry = dependencyMeta && componentEntryFile(dependencyMeta);
+      if (!dependencyEntry) return null;
+      const specifier = `../${dependency}/${dependencyEntry}`;
+      return rewritten.includes(`'${specifier}'`) || rewritten.includes(`"${specifier}"`)
+        ? null
+        : `import '${specifier}';`;
+    })
+    .filter(Boolean);
+
+  return dependencyImports.length > 0
+    ? `${dependencyImports.join('\n')}\n${rewritten}`
+    : rewritten;
 }
 
 /**
@@ -866,7 +897,7 @@ function addOneComponent(rendsDir, componentArg, opts = {}) {
       error(`Registry file missing for "${componentName}": ${path.relative(RENDS_ROOT, srcFile)}`);
     }
 
-    copyComponentFile(srcFile, destFile);
+    copyComponentFile(srcFile, destFile, meta, file);
     if (!silent) success(`Copied ${componentName}/${file}`);
   });
 
@@ -1656,7 +1687,9 @@ async function cmdRemove() {
         try {
           const localContent = fs.readFileSync(local, 'utf8');
           const upstreamRaw = fs.readFileSync(upstream, 'utf8');
-          const upstreamForConsumer = f.endsWith('.js') ? rewriteUtilsImports(upstreamRaw) : upstreamRaw;
+          const upstreamForConsumer = f.endsWith('.js')
+            ? rewriteComponentForConsumer(upstreamRaw, meta, f)
+            : upstreamRaw;
           return localContent !== upstreamForConsumer;
         } catch {
           return false;
@@ -1783,7 +1816,9 @@ async function cmdUpgrade() {
         if (!fs.existsSync(upstream)) return null;
         const localContent    = fs.existsSync(local) ? fs.readFileSync(local, 'utf8') : null;
         const upstreamRaw = fs.readFileSync(upstream, 'utf8');
-        const upstreamContent = f.endsWith('.js') ? rewriteUtilsImports(upstreamRaw) : upstreamRaw;
+        const upstreamContent = f.endsWith('.js')
+          ? rewriteComponentForConsumer(upstreamRaw, meta, f)
+          : upstreamRaw;
         if (localContent === upstreamContent) return null;
         return { file: f, local, upstream, localContent, upstreamContent };
       })

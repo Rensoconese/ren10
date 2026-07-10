@@ -24,6 +24,7 @@ function relativeImports(file) {
 }
 
 function assertImportClosure(consumer, componentName) {
+  const installedRoot = path.resolve(consumer, 'rends');
   const componentRoot = path.join(consumer, 'rends', 'components', componentName);
   const pending = fs.readdirSync(componentRoot)
     .filter((file) => file.endsWith('.js'))
@@ -37,10 +38,34 @@ function assertImportClosure(consumer, componentName) {
 
     for (const specifier of relativeImports(file)) {
       const resolved = path.resolve(path.dirname(file), specifier);
+      if (resolved !== installedRoot && !resolved.startsWith(`${installedRoot}${path.sep}`)) {
+        throw new Error(`${componentName}: ${path.relative(consumer, file)} imports outside consumer rends/ via ${specifier}`);
+      }
       if (!fs.existsSync(resolved)) {
         throw new Error(`${componentName}: ${path.relative(consumer, file)} imports missing ${specifier}`);
       }
       if (resolved.endsWith('.js')) pending.push(resolved);
+    }
+  }
+}
+
+function componentEntry(meta) {
+  return meta.files.find((file) => file === `${meta.dir}.js`)
+    || meta.files.find((file) => file.endsWith('.js'));
+}
+
+function assertRuntimeDependencyImports(consumer, registry, componentName) {
+  const meta = registry[componentName];
+  const entry = componentEntry(meta);
+  if (!entry || meta.components.length === 0) return;
+
+  const entryPath = path.join(consumer, 'rends', 'components', componentName, entry);
+  const imports = new Set(relativeImports(entryPath));
+  for (const dependency of meta.components) {
+    const dependencyEntry = componentEntry(registry[dependency]);
+    const expected = `../${dependency}/${dependencyEntry}`;
+    if (!imports.has(expected)) {
+      throw new Error(`${componentName}: entrypoint does not execute dependency ${expected}`);
     }
   }
 }
@@ -55,6 +80,19 @@ function componentClosure(registry, componentName, result = new Set()) {
 }
 
 try {
+  const escapeConsumer = path.join(tmp, 'escape-consumer');
+  const escapeComponent = path.join(escapeConsumer, 'rends', 'components', 'escape');
+  fs.mkdirSync(escapeComponent, { recursive: true });
+  fs.writeFileSync(path.join(escapeConsumer, 'outside.js'), 'export default true;\n');
+  fs.writeFileSync(path.join(escapeComponent, 'entry.js'), "import '../../../outside.js';\n");
+  let rejectedEscape = false;
+  try {
+    assertImportClosure(escapeConsumer, 'escape');
+  } catch (error) {
+    rejectedEscape = /outside consumer rends/.test(error.message);
+  }
+  if (!rejectedEscape) throw new Error('installed import closure accepted an escape outside consumer rends/');
+
   const packOutput = run('npm', ['pack', '--silent', '--pack-destination', tmp], root);
   const tgz = path.join(tmp, packOutput.trim().split(/\s+/).pop());
   const packageHost = path.join(tmp, 'package-host');
@@ -140,6 +178,25 @@ try {
       const installedDir = path.join(consumer, 'rends', 'components', installed);
       if (!fs.existsSync(installedDir)) throw new Error(`${name}: missing component dependency ${installed}`);
       assertImportClosure(consumer, installed);
+      assertRuntimeDependencyImports(consumer, REGISTRY, installed);
+    }
+
+    if (name === 'date-picker') {
+      const entry = pathToFileURL(path.join(
+        consumer,
+        'rends',
+        'components',
+        name,
+        componentEntry(REGISTRY[name])
+      )).href;
+      const runtime = [
+        'globalThis.HTMLElement = class {};',
+        'const definitions = new Map();',
+        'globalThis.customElements = { get: (name) => definitions.get(name), define: (name, ctor) => definitions.set(name, ctor) };',
+        `await import(${JSON.stringify(entry)});`,
+        "if (!customElements.get('ren-date-picker') || !customElements.get('ren-calendar')) process.exit(1);",
+      ].join('\n');
+      run(process.execPath, ['--input-type=module', '--eval', runtime], consumer);
     }
     fs.rmSync(consumer, { recursive: true, force: true });
   }

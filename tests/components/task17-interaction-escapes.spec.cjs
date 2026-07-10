@@ -222,6 +222,37 @@ test.describe('Task 17 interaction escapes', () => {
 
     await expect.poll(() => page.evaluate(() => document.querySelector('#price').value)).toEqual([25, 70]);
     await expect.poll(() => page.evaluate(() => window.__sliderInput)).toEqual([25, 70]);
+    await page.evaluate(() => {
+      document.querySelector('#price').value = [80, 20];
+    });
+    await expect.poll(() => page.evaluate(() => document.querySelector('#price').value)).toEqual([20, 80]);
+
+    const dragCoincidentThumb = async (endPercent) => {
+      await page.evaluate(() => {
+        document.querySelector('#price').value = [50, 50];
+      });
+      const rail = await page.locator('.ren-slider-range').boundingBox();
+      await page.mouse.move(rail.x + rail.width * 0.5, rail.y + rail.height * 0.5);
+      await page.mouse.down();
+      await page.mouse.move(rail.x + rail.width * endPercent, rail.y + rail.height * 0.5, { steps: 4 });
+      await page.mouse.up();
+      return page.evaluate(() => document.querySelector('#price').value);
+    };
+
+    expect(await dragCoincidentThumb(0.3)).toEqual([30, 50]);
+    expect(await dragCoincidentThumb(0.7)).toEqual([50, 70]);
+
+    const clamped = await page.evaluate(() => {
+      const [lower, upper] = document.querySelectorAll('#price input');
+      lower.value = '90';
+      lower.dispatchEvent(new Event('input', { bubbles: true }));
+      const afterLower = document.querySelector('#price').value;
+      upper.value = '10';
+      upper.dispatchEvent(new Event('input', { bubbles: true }));
+      return { afterLower, afterUpper: document.querySelector('#price').value };
+    });
+    expect(clamped.afterLower).toEqual([70, 70]);
+    expect(clamped.afterUpper).toEqual([70, 70]);
     const geometry = await page.evaluate(() => {
       const rail = document.querySelector('.ren-slider-range').getBoundingClientRect();
       return [...document.querySelectorAll('#price input')].map((input) => {

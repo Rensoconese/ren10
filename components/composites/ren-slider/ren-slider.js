@@ -5,6 +5,9 @@ export class RenSlider extends HTMLElement {
     super();
     this.handleInput = this.handleInput.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleRangePointerDown = this.handleRangePointerDown.bind(this);
+    this.handleRangePointerMove = this.handleRangePointerMove.bind(this);
+    this.handleRangePointerEnd = this.handleRangePointerEnd.bind(this);
   }
 
   connectedCallback() {
@@ -28,6 +31,12 @@ export class RenSlider extends HTMLElement {
       input.addEventListener('input', this.handleInput);
       input.addEventListener('change', this.handleChange);
     });
+
+    this.range = this.inputs.length === 2 ? this.querySelector('.ren-slider-range') : null;
+    this.range?.addEventListener('pointerdown', this.handleRangePointerDown, true);
+    this.range?.addEventListener('pointermove', this.handleRangePointerMove, true);
+    this.range?.addEventListener('pointerup', this.handleRangePointerEnd, true);
+    this.range?.addEventListener('pointercancel', this.handleRangePointerEnd, true);
 
     /* ═══ HANDLE LABEL DISPLAY ═══ */
     const label = this.getAttribute('label');
@@ -59,6 +68,11 @@ export class RenSlider extends HTMLElement {
       input.removeEventListener('input', this.handleInput);
       input.removeEventListener('change', this.handleChange);
     });
+    this.range?.removeEventListener('pointerdown', this.handleRangePointerDown, true);
+    this.range?.removeEventListener('pointermove', this.handleRangePointerMove, true);
+    this.range?.removeEventListener('pointerup', this.handleRangePointerEnd, true);
+    this.range?.removeEventListener('pointercancel', this.handleRangePointerEnd, true);
+    this.pointerDrag = null;
   }
 
   /* ═══ UPDATE CSS VARIABLE FOR TRACK FILL ═══ */
@@ -94,6 +108,14 @@ export class RenSlider extends HTMLElement {
 
   /* ═══ INPUT EVENT HANDLER ═══ */
   handleInput(event) {
+    if (this.inputs.length === 2) {
+      const [lower, upper] = this.inputs;
+      if (event.target === lower && lower.valueAsNumber > upper.valueAsNumber) {
+        lower.value = upper.value;
+      } else if (event.target === upper && upper.valueAsNumber < lower.valueAsNumber) {
+        upper.value = lower.value;
+      }
+    }
     this.updateValue();
     this.updateValueDisplay();
 
@@ -104,6 +126,55 @@ export class RenSlider extends HTMLElement {
         composed: true,
       })
     );
+  }
+
+  valueFromPointer(input, clientX) {
+    const rect = this.range.getBoundingClientRect();
+    const min = Number(input.min || 0);
+    const max = Number(input.max || 100);
+    const step = input.step === 'any' ? 0 : Number(input.step || 1);
+    const ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    let value = min + ratio * (max - min);
+    if (step > 0) value = min + Math.round((value - min) / step) * step;
+    return Math.max(min, Math.min(max, value));
+  }
+
+  handleRangePointerDown(event) {
+    if (this.inputs.length !== 2 || this.disabled) return;
+    const [lower, upper] = this.inputs;
+    if (lower.valueAsNumber !== upper.valueAsNumber) return;
+
+    event.preventDefault();
+    this.pointerDrag = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      activeInput: null,
+    };
+    this.range.setPointerCapture?.(event.pointerId);
+  }
+
+  handleRangePointerMove(event) {
+    const drag = this.pointerDrag;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    event.preventDefault();
+
+    if (!drag.activeInput) {
+      if (event.clientX === drag.startX) return;
+      drag.activeInput = event.clientX < drag.startX ? this.inputs[0] : this.inputs[1];
+      drag.activeInput.focus();
+    }
+
+    drag.activeInput.value = this.valueFromPointer(drag.activeInput, event.clientX);
+    drag.activeInput.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  handleRangePointerEnd(event) {
+    const drag = this.pointerDrag;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    event.preventDefault();
+    if (drag.activeInput) drag.activeInput.dispatchEvent(new Event('change', { bubbles: true }));
+    this.range.releasePointerCapture?.(event.pointerId);
+    this.pointerDrag = null;
   }
 
   /* ═══ CHANGE EVENT HANDLER ═══ */
@@ -140,7 +211,10 @@ export class RenSlider extends HTMLElement {
 
   set value(val) {
     if (!this.input) return;
-    const values = Array.isArray(val) ? val : [val];
+    const values = Array.isArray(val) ? [...val] : [val];
+    if (this.inputs.length === 2 && values.length >= 2) {
+      values.splice(0, 2, ...values.slice(0, 2).map(Number).sort((a, b) => a - b));
+    }
     this.inputs.forEach((input, index) => {
       if (values[index] !== undefined) input.value = values[index];
     });
