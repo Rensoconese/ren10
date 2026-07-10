@@ -33,7 +33,8 @@ npm run lint              # stylelint + eslint
 ```
 
 Visual baselines are Linux-specific. Run `npm run test:visual:linux` in the
-Linux CI/container rather than from Darwin. If the Linux gate reports intended
+Linux CI/container, never from a non-Linux environment (macOS, Windows, or
+another platform). If the Linux gate reports intended
 diffs, regenerate baselines there with:
 
 ```bash

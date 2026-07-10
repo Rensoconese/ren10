@@ -25,6 +25,8 @@ jobs:
       - if: matrix.browser == 'chromium'
         run: npm run check:budgets
       - if: matrix.browser == 'chromium'
+        run: npm run test:budgets
+      - if: matrix.browser == 'chromium'
         run: npm run audit:runtime
       - if: matrix.browser == 'chromium'
         run: npm run audit:full
@@ -32,6 +34,8 @@ jobs:
         run: npm run check:release
       - if: matrix.browser == 'chromium'
         run: npm run check:supply-chain
+      - if: matrix.browser == 'chromium'
+        run: npm run test:release-policy
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run test:a11y
         env: { PLAYWRIGHT_BROWSER: "${{ matrix.browser }}" }

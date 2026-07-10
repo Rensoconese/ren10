@@ -41,7 +41,7 @@ function measurePack() {
   return JSON.parse(result.stdout)[0];
 }
 
-function measureRequestCount() {
+export function measureRequestCount() {
   const css = readFileSync(path.join(root, 'dist', 'ren10.min.css'), 'utf8')
     .replace(/\/\*[\s\S]*?\*\//g, '');
   const imports = css.match(/@import\s/g) || [];
@@ -62,28 +62,18 @@ function measureSourceRequestCount(entry = 'index.css', visited = new Set()) {
 }
 
 function measureCliRssOnce() {
-  const cliArgs = [process.execPath, path.join(root, 'cli', 'index.js'), 'manifest', '--json'];
-  const args = process.platform === 'darwin'
-    ? ['-l', ...cliArgs]
-    : ['-f', 'REN10_MAX_RSS_KIB=%M', ...cliArgs];
-  const result = spawnSync('/usr/bin/time', args, {
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts', 'measure-cli-rss.mjs')], {
     cwd: root,
     encoding: 'utf8',
     stdio: ['ignore', 'ignore', 'pipe'],
   });
   if (result.status !== 0) throw new Error(`CLI RSS measurement failed: ${result.stderr}`);
-
-  if (process.platform === 'darwin') {
-    const match = result.stderr.match(/(\d+)\s+maximum resident set size/);
-    if (!match) throw new Error('CLI RSS measurement did not report Darwin max RSS');
-    return Number(match[1]);
-  }
-  const match = result.stderr.match(/REN10_MAX_RSS_KIB=(\d+)/);
-  if (!match) throw new Error('CLI RSS measurement did not report GNU max RSS');
-  return Number(match[1]) * 1024;
+  const match = result.stderr.match(/REN10_MAX_RSS_BYTES=(\d+)/);
+  if (!match) throw new Error('CLI RSS measurement did not report max RSS bytes');
+  return Number(match[1]);
 }
 
-function measureCliRssBytes() {
+export function measureCliRssBytes() {
   const samples = [measureCliRssOnce(), measureCliRssOnce(), measureCliRssOnce()]
     .sort((a, b) => a - b);
   return samples[1];
@@ -108,9 +98,6 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   const policy = JSON.parse(readFileSync(budgetFile, 'utf8'));
   const metrics = collectBudgetMetrics();
   const failures = evaluateBudgetMetrics(metrics, policy);
-  if (metrics.sourceRequestCount !== policy.metrics.requestCount.baseline) {
-    failures.push(`requestCount: source baseline changed from ${policy.metrics.requestCount.baseline} to ${metrics.sourceRequestCount}`);
-  }
   if (failures.length > 0) {
     console.error(failures.join('\n'));
     process.exit(1);

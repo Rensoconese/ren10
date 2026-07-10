@@ -41,6 +41,8 @@ jobs:
 
       - run: npm run check:budgets
 
+      - run: npm run test:budgets
+
       - run: npm run audit:runtime
 
       - run: npm run audit:full
@@ -48,6 +50,8 @@ jobs:
       - run: npm run check:release
 
       - run: npm run check:supply-chain
+
+      - run: npm run test:release-policy
 
       - name: Cache Playwright browsers
         id: playwright-cache

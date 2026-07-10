@@ -2,7 +2,11 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import crypto from 'node:crypto';
 import path from 'node:path';
-import { evaluateBudgetMetrics } from './check-package-budgets.mjs';
+import {
+  evaluateBudgetMetrics,
+  measureCliRssBytes,
+  measureRequestCount,
+} from './check-package-budgets.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const digest = (file) => crypto.createHash('sha256').update(readFileSync(path.join(root, 'dist', file))).digest('hex');
 execFileSync('node', ['scripts/build-css-bundles.mjs'], { cwd: root, stdio: 'ignore' });
@@ -26,5 +30,10 @@ for (const metric of ['unpackedBytes', 'requestCount', 'cliRssBytes']) {
   if (!diagnostics.some((message) => message.startsWith(`${metric}:`))) {
     throw new Error(`budget fixture did not diagnose ${metric}`);
   }
+}
+if (measureRequestCount() !== 1) throw new Error('bundled CSS request count must be measured as one');
+const measuredRss = measureCliRssBytes();
+if (!Number.isFinite(measuredRss) || measuredRss <= 0) {
+  throw new Error('CLI RSS must be measured portably as positive bytes');
 }
 console.log('Bundle determinism: OK');

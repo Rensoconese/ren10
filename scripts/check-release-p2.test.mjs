@@ -1,61 +1,111 @@
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
+import yaml from 'js-yaml';
+import {
+  findPublicVersionSurfaces,
+  isStableSemverAtLeast,
+  validateWorkflowPolicy,
+} from './release-policy.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const pkg = JSON.parse(read('package.json'));
-const lock = JSON.parse(read('package-lock.json'));
 const errors = [];
 const requirePolicy = (condition, message) => { if (!condition) errors.push(message); };
 
+const lockPath = path.join(root, 'package-lock.json');
+requirePolicy(fs.existsSync(lockPath), 'package-lock.json is required');
+const lock = fs.existsSync(lockPath) ? JSON.parse(fs.readFileSync(lockPath, 'utf8')) : {};
+
 requirePolicy(pkg.scripts.test === 'npm run test:portable', 'npm test must use the portable suite');
-requirePolicy(!String(pkg.scripts['test:portable']).includes('test:visual'), 'portable suite must exclude visual snapshots');
+requirePolicy(typeof pkg.scripts['test:portable'] === 'string', 'portable suite script is missing');
+const portableCommands = (pkg.scripts['test:portable'] || '').split('&&').map((command) => command.trim());
+requirePolicy(!portableCommands.some((command) => /^npm run test:visual(?::|\s|$)/.test(command)), 'portable suite must exclude visual snapshots');
+requirePolicy(portableCommands.includes('npm run test:release-policy'), 'portable suite must run release policy tests');
 requirePolicy(Boolean(pkg.scripts['test:visual:linux']), 'Linux visual gate needs a dedicated script');
 requirePolicy(pkg.scripts['audit:runtime'] === 'npm audit --omit=dev --audit-level=moderate', 'runtime moderate audit script missing');
 requirePolicy(pkg.scripts['audit:full'] === 'npm audit --audit-level=moderate', 'full moderate audit script missing');
 
-const publicVersionFiles = ['AGENTS.md', 'CLAUDE.md', '.cursorrules', '.windsurfrules', 'ren-design.md', 'docs/cli.html'];
-for (const file of publicVersionFiles) {
-  requirePolicy(!read(file).includes('0.9.2'), `${file} still exposes 0.9.2`);
-  requirePolicy(read(file).includes(pkg.version), `${file} does not expose package version ${pkg.version}`);
+const publicVersions = findPublicVersionSurfaces(root, pkg.version);
+requirePolicy(publicVersions.surfaces.filter((surface) => surface.kind === 'html').length >= 65, 'public HTML version surface inventory is incomplete');
+for (const error of publicVersions.errors) {
+  requirePolicy(false, error);
 }
+requirePolicy(lock.version === pkg.version, 'package-lock.json version must match package.json');
+requirePolicy(lock.packages?.['']?.version === pkg.version, 'package-lock root package version must match package.json');
 
 const jsYaml = lock.packages?.['node_modules/js-yaml']?.version;
-requirePolicy(jsYaml && jsYaml.localeCompare('4.1.2', undefined, { numeric: true }) >= 0, `js-yaml must be >=4.1.2, found ${jsYaml}`);
+requirePolicy(isStableSemverAtLeast(jsYaml, '4.1.2'), `js-yaml must be >=4.1.2, found ${jsYaml}`);
+for (const prerelease of ['4.1.2-alpha.1', '4.1.2-beta.1', '4.1.2-rc.1']) {
+  requirePolicy(!isStableSemverAtLeast(prerelease, '4.1.2'), `js-yaml prerelease ${prerelease} must not satisfy 4.1.2`);
+}
+requirePolicy(isStableSemverAtLeast('4.1.2', '4.1.2'), 'exact minimum semver must pass');
+requirePolicy(isStableSemverAtLeast('4.2.0', '4.1.2'), 'newer stable semver must pass');
+requirePolicy(!isStableSemverAtLeast('4.1.1', '4.1.2'), 'older semver must fail');
+requirePolicy(!isStableSemverAtLeast('not-semver', '4.1.2'), 'malformed semver must fail');
 
 const budgetPath = path.join(root, 'scripts', 'package-budgets.json');
 requirePolicy(fs.existsSync(budgetPath), 'versioned package budget targets are missing');
 if (fs.existsSync(budgetPath)) {
   const budget = JSON.parse(fs.readFileSync(budgetPath, 'utf8'));
-  for (const metric of ['unpackedBytes', 'tarballBytes', 'requestCount', 'cliRssBytes']) {
+  for (const metric of ['unpackedBytes', 'tarballBytes', 'sourceRequestCount', 'requestCount', 'cliRssBytes']) {
     requirePolicy(Number.isFinite(budget.metrics?.[metric]?.baseline), `${metric} baseline missing`);
     requirePolicy(Number.isFinite(budget.metrics?.[metric]?.allowedDelta), `${metric} allowedDelta missing`);
   }
-  requirePolicy(budget.metrics?.unpackedBytes?.allowedDelta <= 0, 'unpacked budget must not allow regression over baseline');
-  requirePolicy(budget.metrics?.requestCount?.target < budget.metrics?.requestCount?.baseline, 'request-count target must improve baseline');
+  for (const metric of ['unpackedBytes', 'tarballBytes', 'sourceRequestCount', 'requestCount']) {
+    requirePolicy(budget.metrics?.[metric]?.allowedDelta === 0, `${metric} budget must enforce zero growth`);
+    requirePolicy(budget.metrics?.[metric]?.target === budget.metrics?.[metric]?.baseline, `${metric} target must equal its clean baseline`);
+  }
 }
-
-const budgetChecker = read('scripts/check-package-budgets.mjs');
-requirePolicy(budgetChecker.includes('requestCount'), 'budget checker does not measure request count');
-requirePolicy(budgetChecker.includes('cliRssBytes'), 'budget checker does not measure CLI RSS');
 
 const requiredPackageCommands = [
   'npm run smoke:installed',
   'npm run check:budgets',
+  'npm run test:budgets',
   'npm run audit:runtime',
   'npm run audit:full',
   'npm run check:release',
   'npm run check:supply-chain',
+  'npm run test:release-policy',
 ];
-for (const workflow of ['.github/workflows/ci.yml', '.github/workflows/release.yml', '.github/workflows/audit.yml']) {
-  const source = read(workflow);
-  for (const command of requiredPackageCommands) {
-    requirePolicy(source.includes(command), `${workflow} missing ${command}`);
-  }
+const workflows = Object.fromEntries(
+  ['ci.yml', 'release.yml', 'audit.yml'].map((file) => [file, yaml.load(read(`.github/workflows/${file}`))])
+);
+for (const error of validateWorkflowPolicy(workflows, requiredPackageCommands)) requirePolicy(false, error);
+const conditionalFixture = structuredClone(workflows);
+conditionalFixture['ci.yml'].jobs.package.steps
+  .find((step) => step.run === 'npm run check:budgets').if = 'false';
+requirePolicy(
+  validateWorkflowPolicy(conditionalFixture, requiredPackageCommands)
+    .some((error) => error.includes('check:budgets') && error.includes('unconditionally')),
+  'workflow policy must reject a conditionally skipped blocking gate'
+);
+
+const missingLockRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ren10-missing-lock-'));
+try {
+  fs.writeFileSync(path.join(missingLockRoot, 'package.json'), JSON.stringify({
+    name: 'ren10',
+    version: pkg.version,
+    publishConfig: { provenance: true },
+    repository: { url: 'https://github.com/Rensoconese/ren10' },
+    scripts: {
+      'audit:runtime': 'npm audit --omit=dev --audit-level=moderate',
+      'audit:full': 'npm audit --audit-level=moderate',
+    },
+  }));
+  const missingLock = spawnSync(process.execPath, [path.join(root, 'scripts', 'check-supply-chain.mjs')], {
+    cwd: missingLockRoot,
+    encoding: 'utf8',
+  });
+  requirePolicy(missingLock.status === 1, 'missing lockfile fixture must fail');
+  requirePolicy(missingLock.stderr.includes('package-lock.json is required'), 'missing lockfile diagnostic must be reachable');
+  requirePolicy(!missingLock.stderr.includes('ENOENT'), 'missing lockfile must not throw ENOENT');
+} finally {
+  fs.rmSync(missingLockRoot, { recursive: true, force: true });
 }
-requirePolicy(read('.github/workflows/ci.yml').includes('npm run test:visual:linux'), 'CI must call the Linux visual script');
-requirePolicy(read('.github/workflows/release.yml').includes('npm run test:visual:linux'), 'release must call the Linux visual script');
 for (const file of ['CONTRIBUTING.md', 'SHIPPING.md']) {
   requirePolicy(read(file).includes('npm run test:visual:linux'), `${file} must document the Linux visual gate`);
   requirePolicy(read(file).includes('test:portable'), `${file} must document the portable local suite`);
