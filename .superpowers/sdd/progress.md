@@ -3,7 +3,7 @@
 ## Baseline
 
 - Branch: `codex/rends-p1-p2`
-- Worktree: `/Users/rensoconese/RenDS/rends-p1-p2`
+- Worktree: `/Users/rensoconese/RenDS/rends-future-additions`
 - Integrated upstream: RenDS 0.9.3 (`origin/main`)
 - User-owned source checkout files preserved: `ROADMAP.md`, `STATUS.md`, `ENHANCEMENT-PLAN.md`
 - Baseline green: lint, agent checks, a11y (368 passed, 8 skipped), components (38 passed)
@@ -58,17 +58,15 @@
 - Main-agent verification: theme 94/94, focused foundation 22/22, lint, exports, and a11y 376/376
 - P1 foundation inventory remains 0/0/0
 
-## Current
+## Final status
 
-### Task 6 — Forms and field contract
+Tasks 6–17 are complete on `codex/rends-p1-p2`.
 
-- Status: ready after Task 5 review artifacts are committed
-- Expected: native validity, async submit, steps, repeated values, reconnect-safe fields
-- Base commit: task-5 closure documentation commit
-- Review status: pending
+- Tasks 6–10: forms, local dates, selection/menu, overlays and interaction hardening are implemented with RED/GREEN browser coverage.
+- Tasks 11–12: recursive installed dependency closure and semantic public contracts cover all 53 components; public event parity is 51 component-event pairs / 38 names / 26 emitting components.
+- Tasks 13–16: foundation P2, deterministic bundles/budgets, portable release/security gates and the 32-entrypoint lifecycle/touch/ARIA matrix are complete.
+- Task 17: fresh audit, escaped-finding fixes, full verification and the approved future-additions plan are recorded in:
+  - `docs/audits/2026-07-09-rends-p1-p2-verification.md`
+  - `docs/superpowers/plans/2026-07-09-rends-future-additions.md`
 
-## Pending
-
-- Tasks 7–12: remaining P1 remediation and hard gate
-- Tasks 13–16: P2 remediation
-- Task 17: fresh audit, escaped-finding fixes, exhaustive future-additions plan, final integration
+Final verification counts: a11y 368 passed / 8 skipped; components 118 passed; themes 94 passed; installed smoke 53 isolated components; lifecycle/touch 54/54 across Chromium, Firefox and WebKit Light/Dark. Points 5 and 18 remain explicitly excluded from future work.
