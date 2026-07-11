@@ -414,4 +414,295 @@ test.describe('Navigation blocks', () => {
     await page.keyboard.press('Escape');
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
+
+  /**
+   * Visual regression guards for the mega-menu chrome defects:
+   * double chevron (classless ::after + SVG), classless details card chrome,
+   * misaligned Solutions trigger, sparse category rows, stacked feature cards,
+   * and mobile centered / nested-card rows.
+   */
+  test('desktop mega-menu chrome: single chevron, neutral details, aligned trigger', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${staticServer.origin}${MEGA_MENU}`);
+
+    const closed = await page.evaluate(() => {
+      const details = document.querySelector('.rbm-disclosure');
+      const summary = details?.querySelector(':scope > summary');
+      if (!details || !summary) return { missing: true };
+
+      const ds = getComputedStyle(details);
+      const after = getComputedStyle(summary, '::after');
+      const afterW = parseFloat(after.width) || 0;
+      const afterH = parseFloat(after.height) || 0;
+      const afterContent = String(after.content || 'none').replace(/['"]/g, '');
+      const afterVisible =
+        afterContent !== 'none' &&
+        afterContent !== '' &&
+        after.display !== 'none' &&
+        after.visibility !== 'hidden' &&
+        afterW > 1 &&
+        afterH > 1;
+      const svgChevrons = details.querySelectorAll('summary .rbm-chevron').length;
+      const product = document.querySelector('a.ren-nav-link[href="#product"]');
+      const pricing = document.querySelector('a.ren-nav-link[href="#pricing"]');
+      const pr = product?.getBoundingClientRect();
+      const sr = summary.getBoundingClientRect();
+      const prc = pricing?.getBoundingClientRect();
+
+      return {
+        missing: false,
+        borderWidth: ds.borderTopWidth,
+        borderStyle: ds.borderTopStyle,
+        marginTop: ds.marginTop,
+        marginBottom: ds.marginBottom,
+        paddingTop: ds.paddingTop,
+        paddingRight: ds.paddingRight,
+        paddingBottom: ds.paddingBottom,
+        paddingLeft: ds.paddingLeft,
+        afterVisible,
+        svgChevrons,
+        chevronSources: (afterVisible ? 1 : 0) + svgChevrons,
+        productMidY: pr ? (pr.top + pr.bottom) / 2 : null,
+        summaryMidY: (sr.top + sr.bottom) / 2,
+        pricingMidY: prc ? (prc.top + prc.bottom) / 2 : null,
+        productTop: pr?.top ?? null,
+        summaryTop: sr.top,
+      };
+    });
+
+    expect(closed.missing).toBeFalsy();
+    expect(closed.borderStyle === 'none' || closed.borderWidth === '0px', 'details outer border').toBeTruthy();
+    expect(closed.marginTop).toBe('0px');
+    expect(closed.marginBottom).toBe('0px');
+    expect(closed.paddingTop).toBe('0px');
+    expect(closed.paddingRight).toBe('0px');
+    expect(closed.paddingBottom).toBe('0px');
+    expect(closed.paddingLeft).toBe('0px');
+    expect(closed.chevronSources, `chevron sources: after=${closed.afterVisible} svg=${closed.svgChevrons}`).toBe(1);
+    expect(closed.svgChevrons).toBe(1);
+    expect(closed.afterVisible, 'classless summary::after must be neutralized').toBe(false);
+    expect(Math.abs(closed.summaryMidY - closed.productMidY)).toBeLessThanOrEqual(2);
+    expect(Math.abs(closed.summaryMidY - closed.pricingMidY)).toBeLessThanOrEqual(2);
+
+    await page.locator('.rbm-disclosure > summary').click();
+    await expect(page.locator('.rbm-disclosure')).toHaveAttribute('open', '');
+
+    const openChrome = await page.evaluate(() => {
+      const summary = document.querySelector('.rbm-disclosure > summary');
+      if (!summary) return null;
+      const ss = getComputedStyle(summary);
+      return {
+        marginBottom: ss.marginBottom,
+        paddingBottom: ss.paddingBottom,
+        borderBottomWidth: ss.borderBottomWidth,
+        borderBottomStyle: ss.borderBottomStyle,
+      };
+    });
+    expect(openChrome).toBeTruthy();
+    expect(openChrome.marginBottom).toBe('0px');
+    // No open-summary divider (classless border-block-end).
+    expect(
+      openChrome.borderBottomStyle === 'none' || openChrome.borderBottomWidth === '0px',
+      'open summary divider'
+    ).toBeTruthy();
+  });
+
+  test('desktop mega-menu content anatomy: categories, featured rows, featured surface', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(`${staticServer.origin}${MEGA_MENU}`);
+    await page.locator('.rbm-disclosure > summary').click();
+    await expect(page.locator('.rbm-panel')).toBeVisible();
+
+    const anatomy = await page.evaluate(() => {
+      const dests = Array.from(document.querySelectorAll('.rbm-dest'));
+      const destReports = dests.map((dest) => {
+        const icon = dest.querySelector('.ren-icon, .rbm-dest-icon');
+        const title = dest.querySelector('.rbm-dest-label, .rbm-dest-title');
+        const desc = dest.querySelector('.rbm-dest-desc');
+        const ir = icon?.getBoundingClientRect();
+        const iconStyle = icon ? getComputedStyle(icon) : null;
+        const titleStyle = title ? getComputedStyle(title) : null;
+        const descStyle = desc ? getComputedStyle(desc) : null;
+        const descRect = desc?.getBoundingClientRect();
+        return {
+          hasIcon: Boolean(icon),
+          iconW: ir ? Math.round(ir.width) : 0,
+          iconH: ir ? Math.round(ir.height) : 0,
+          hasTitle: Boolean(title) && (title.textContent || '').trim().length > 0,
+          titleWeight: titleStyle ? parseInt(titleStyle.fontWeight, 10) || 0 : 0,
+          hasDesc: Boolean(desc) && (desc.textContent || '').trim().length > 0,
+          descVisible:
+            Boolean(desc) &&
+            descStyle?.display !== 'none' &&
+            descStyle?.visibility !== 'hidden' &&
+            (descRect?.height || 0) > 0,
+        };
+      });
+
+      const features = Array.from(document.querySelectorAll('.rbm-feature'));
+      const featureReports = features.map((feature) => {
+        const media = feature.querySelector('.rbm-feature-media');
+        const body = feature.querySelector('.rbm-feature-body');
+        const mr = media?.getBoundingClientRect();
+        const br = body?.getBoundingClientRect();
+        const horizontal =
+          Boolean(mr && br) &&
+          mr.left < br.left - 8 &&
+          Math.abs(mr.top - br.top) < Math.max(mr.height, br.height) * 0.55;
+        const ratio = mr && mr.height > 0 ? mr.width / mr.height : 0;
+        return {
+          horizontal,
+          mediaW: mr ? Math.round(mr.width) : 0,
+          mediaH: mr ? Math.round(mr.height) : 0,
+          ratio: Number(ratio.toFixed(2)),
+        };
+      });
+
+      const featured = document.querySelector('.rbm-featured');
+      const groups = document.querySelector('.rbm-groups');
+      const panel = document.querySelector('.rbm-panel');
+      const fr = featured?.getBoundingClientRect();
+      const gr = groups?.getBoundingClientRect();
+      const featuredBg = featured ? getComputedStyle(featured).backgroundColor : '';
+      const panelBg = panel ? getComputedStyle(panel).backgroundColor : '';
+      const featuredSurface =
+        featuredBg &&
+        featuredBg !== 'rgba(0, 0, 0, 0)' &&
+        featuredBg !== 'transparent' &&
+        featuredBg !== panelBg;
+
+      const viewAll = document.querySelector('.rbm-view-all');
+      const viewAllChevron = viewAll?.querySelector('.rbm-view-all-chevron, .ren-icon');
+
+      return {
+        destCount: dests.length,
+        destReports,
+        featureCount: features.length,
+        featureReports,
+        featuredWidth: fr ? Math.round(fr.width) : 0,
+        groupsWidth: gr ? Math.round(gr.width) : 0,
+        featuredCapped: Boolean(fr && gr && fr.width < gr.width - 8),
+        featuredSurface,
+        featuredBg,
+        panelBg,
+        hasViewAllChevron: Boolean(viewAllChevron),
+      };
+    });
+
+    expect(anatomy.destCount).toBe(8);
+    for (const [i, dest] of anatomy.destReports.entries()) {
+      expect(dest.hasIcon, `dest ${i} icon`).toBe(true);
+      expect(dest.iconW, `dest ${i} icon width`).toBeGreaterThanOrEqual(22);
+      expect(dest.iconW, `dest ${i} icon width max`).toBeLessThanOrEqual(26);
+      expect(dest.iconH, `dest ${i} icon height`).toBeGreaterThanOrEqual(22);
+      expect(dest.iconH, `dest ${i} icon height max`).toBeLessThanOrEqual(26);
+      expect(dest.hasTitle, `dest ${i} title`).toBe(true);
+      expect(dest.titleWeight, `dest ${i} title weight`).toBeGreaterThanOrEqual(600);
+      expect(dest.hasDesc, `dest ${i} desc text`).toBe(true);
+      expect(dest.descVisible, `dest ${i} desc visible`).toBe(true);
+    }
+
+    expect(anatomy.featureCount).toBe(2);
+    for (const [i, feature] of anatomy.featureReports.entries()) {
+      expect(feature.horizontal, `feature ${i} horizontal media/text`).toBe(true);
+      // 3:2 media ratio (±0.2 tolerance for subpixel rounding).
+      expect(feature.ratio, `feature ${i} ratio ${feature.ratio}`).toBeGreaterThanOrEqual(1.3);
+      expect(feature.ratio, `feature ${i} ratio ${feature.ratio}`).toBeLessThanOrEqual(1.7);
+    }
+
+    expect(anatomy.featuredCapped, `featured ${anatomy.featuredWidth} vs groups ${anatomy.groupsWidth}`).toBe(
+      true
+    );
+    expect(anatomy.featuredSurface, `featuredBg=${anatomy.featuredBg} panelBg=${anatomy.panelBg}`).toBe(true);
+    expect(anatomy.hasViewAllChevron).toBe(true);
+  });
+
+  test('mobile mega-menu rows: full width, start-aligned, no nested-card details', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`${staticServer.origin}${MEGA_MENU}`);
+    await page.locator('.ren-nav-toggle').click();
+    await page.locator('.rbm-disclosure > summary').click();
+    await expect(page.locator('.rbm-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const links = document.querySelector('#rbm-primary-links');
+      const product = document.querySelector('a.ren-nav-link[href="#product"]');
+      const summary = document.querySelector('.rbm-disclosure > summary');
+      const details = document.querySelector('.rbm-disclosure');
+      if (!links || !product || !summary || !details) return { missing: true };
+
+      const linksRect = links.getBoundingClientRect();
+      const productRect = product.getBoundingClientRect();
+      const summaryRect = summary.getBoundingClientRect();
+      const productStyle = getComputedStyle(product);
+      const summaryStyle = getComputedStyle(summary);
+      const detailsStyle = getComputedStyle(details);
+
+      const widthRatio = (elRect) => (linksRect.width > 0 ? elRect.width / linksRect.width : 0);
+      const textAlignStart = (style) => {
+        const ta = style.textAlign;
+        return ta === 'start' || ta === 'left' || ta === 'match-parent' || ta === '';
+      };
+      const justifyStart = (style) => {
+        const j = style.justifyContent;
+        return j === 'flex-start' || j === 'start' || j === 'normal' || j === 'left';
+      };
+
+      // Nested-card appearance: border + radius + padding combo like classless details.
+      const borderW = parseFloat(detailsStyle.borderTopWidth) || 0;
+      const radius = parseFloat(detailsStyle.borderTopLeftRadius) || 0;
+      const padL = parseFloat(detailsStyle.paddingLeft) || 0;
+      const padR = parseFloat(detailsStyle.paddingRight) || 0;
+      const nestedCard = borderW > 0 && radius > 0 && padL + padR > 0;
+
+      const after = getComputedStyle(summary, '::after');
+      const afterW = parseFloat(after.width) || 0;
+      const afterH = parseFloat(after.height) || 0;
+      const afterContent = String(after.content || 'none').replace(/['"]/g, '');
+      const afterVisible =
+        afterContent !== 'none' &&
+        afterContent !== '' &&
+        after.display !== 'none' &&
+        afterW > 1 &&
+        afterH > 1;
+      const svgChevrons = details.querySelectorAll('summary .rbm-chevron').length;
+
+      return {
+        missing: false,
+        productWidthRatio: widthRatio(productRect),
+        summaryWidthRatio: widthRatio(summaryRect),
+        productTextAlign: productStyle.textAlign,
+        productJustify: productStyle.justifyContent,
+        productAlignSelf: productStyle.alignSelf,
+        summaryTextAlign: summaryStyle.textAlign,
+        summaryJustify: summaryStyle.justifyContent,
+        productStartAligned: textAlignStart(productStyle) && justifyStart(productStyle),
+        summaryStartAligned: textAlignStart(summaryStyle) && justifyStart(summaryStyle),
+        productLeftOffset: productRect.left - linksRect.left,
+        summaryLeftOffset: summaryRect.left - linksRect.left,
+        nestedCard,
+        detailsBorder: detailsStyle.borderTopWidth,
+        detailsPadding: `${detailsStyle.paddingTop} ${detailsStyle.paddingRight} ${detailsStyle.paddingBottom} ${detailsStyle.paddingLeft}`,
+        chevronSources: (afterVisible ? 1 : 0) + svgChevrons,
+        afterVisible,
+        svgChevrons,
+      };
+    });
+
+    expect(mobile.missing).toBeFalsy();
+    expect(mobile.productWidthRatio, `product width ratio ${mobile.productWidthRatio}`).toBeGreaterThanOrEqual(
+      0.92
+    );
+    expect(mobile.summaryWidthRatio, `summary width ratio ${mobile.summaryWidthRatio}`).toBeGreaterThanOrEqual(
+      0.92
+    );
+    expect(mobile.productStartAligned, JSON.stringify(mobile)).toBe(true);
+    expect(mobile.summaryStartAligned, JSON.stringify(mobile)).toBe(true);
+    expect(Math.abs(mobile.productLeftOffset)).toBeLessThanOrEqual(8);
+    expect(Math.abs(mobile.summaryLeftOffset)).toBeLessThanOrEqual(8);
+    expect(mobile.nestedCard, `nested card chrome: border=${mobile.detailsBorder} pad=${mobile.detailsPadding}`).toBe(
+      false
+    );
+    expect(mobile.chevronSources, `mobile chevrons after=${mobile.afterVisible} svg=${mobile.svgChevrons}`).toBe(1);
+  });
 });

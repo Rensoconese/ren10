@@ -46,8 +46,9 @@
     }
 
     .rbm-preview .ren-nav {
+      --ren-nav-height: 4.5rem; /* ~72px bar */
       position: relative;
-      min-height: var(--ren-nav-height, 3.5rem);
+      min-height: var(--ren-nav-height);
       background: var(--color-surface);
       border-bottom: 1px solid var(--color-border);
     }
@@ -69,9 +70,23 @@
       font-weight: var(--weight-bold);
     }
 
-    /* Native disclosure chrome (not layout — marker + open state only). */
+    /*
+     * Neutralize base/classless.css details/summary chrome inside the navbar.
+     * Classless adds border, radius, padding, margin, summary::after chevron,
+     * and open-summary divider — all wrong for a ren-nav trigger.
+     */
     .rbm-disclosure {
       position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rbm-disclosure[open] {
+      padding-block-end: 0;
     }
 
     .rbm-disclosure > summary {
@@ -79,6 +94,17 @@
       cursor: pointer;
       min-height: var(--touch-min);
       min-width: var(--touch-min);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: var(--space-1);
+      margin: 0;
+      padding: var(--ren-space-2, 0.5rem) var(--ren-space-3, 0.75rem);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: 0.375rem;
+      background: transparent;
     }
 
     .rbm-disclosure > summary::-webkit-details-marker {
@@ -89,7 +115,29 @@
       content: "";
     }
 
+    /* Kill classless chevron — only .rbm-chevron SVG may render. */
+    .rbm-disclosure > summary::after,
+    .rbm-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rbm-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--ren-space-2, 0.5rem);
+      border-block-end: none;
+    }
+
     .rbm-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
       transition: transform var(--duration-state) var(--ease-state-change);
     }
 
@@ -98,25 +146,29 @@
     }
 
     .rbm-panel {
-      padding: var(--space-5);
+      padding: 0;
       background: var(--color-surface);
       border-block-end: 1px solid var(--color-border);
     }
 
     .rbm-panel-inner {
       --switcher-threshold: 36rem;
-      --switcher-gap: var(--space-8);
+      --switcher-gap: 0;
       max-width: var(--width-7xl, 80rem);
       margin-inline: auto;
+      align-items: stretch;
     }
 
     .rbm-groups {
       --grid-gap: var(--space-6);
       --grid-min: 10rem;
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: var(--space-5) var(--space-6);
     }
 
     .rbm-group-title {
-      margin: 0 0 var(--space-2);
+      margin: 0 0 var(--space-3);
       color: var(--color-text-muted);
       font-size: var(--text-xs);
       font-weight: var(--weight-semibold);
@@ -131,6 +183,9 @@
     }
 
     .rbm-dest {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
       min-height: var(--touch-min);
       min-width: var(--touch-min);
       padding: var(--space-2);
@@ -152,14 +207,40 @@
       outline-offset: var(--ring-offset);
     }
 
-    .rbm-dest-label {
-      font-size: var(--text-sm);
-      font-weight: var(--weight-medium);
-      line-height: 1.3;
+    .rbm-dest-copy {
+      min-width: 0;
+      --stack-gap: var(--space-1);
     }
 
+    .rbm-dest-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+      color: var(--color-text);
+    }
+
+    .rbm-dest-desc {
+      display: block;
+      margin: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-normal);
+      line-height: 1.4;
+      color: var(--color-text-muted);
+    }
+
+    .rbm-dest:hover .rbm-dest-label {
+      color: var(--color-accent);
+    }
+
+    /* Featured column: distinct surface, capped ~28rem, narrower than categories. */
     .rbm-featured {
+      flex: 0 1 28rem;
       max-width: 28rem;
+      width: 100%;
+      padding: var(--space-5) var(--space-6);
+      background: var(--color-surface-sunken);
+      border-inline-start: 1px solid var(--color-border);
     }
 
     .rbm-feature-list {
@@ -173,7 +254,7 @@
       min-height: var(--touch-min);
       color: inherit;
       text-decoration: none;
-      background: var(--color-surface-raised);
+      background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-lg);
       overflow: hidden;
@@ -192,9 +273,21 @@
       outline-offset: var(--ring-offset);
     }
 
+    /* Desktop default: horizontal editorial row (0.6fr media / 1fr text). */
+    .rbm-feature-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 0.6fr) minmax(0, 1fr);
+      align-items: center;
+      min-height: var(--touch-min);
+    }
+
     .rbm-feature-media {
       display: block;
-      min-height: 6rem;
+      width: 100%;
+      aspect-ratio: 3 / 2;
+      height: auto;
+      min-height: 0;
+      align-self: center;
       background:
         linear-gradient(
           135deg,
@@ -213,7 +306,12 @@
     }
 
     .rbm-feature-body {
-      padding: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: var(--space-1);
     }
 
     .rbm-feature-cat {
@@ -225,7 +323,7 @@
     }
 
     .rbm-feature-title {
-      margin: var(--space-1) 0;
+      margin: 0;
       font-size: var(--text-base);
       font-weight: var(--weight-bold);
       line-height: 1.25;
@@ -233,7 +331,7 @@
     }
 
     .rbm-feature-desc {
-      margin: 0 0 var(--space-2);
+      margin: 0;
       color: var(--color-text-muted);
       font-size: var(--text-sm);
       line-height: 1.5;
@@ -243,10 +341,21 @@
       color: var(--color-accent);
       font-size: var(--text-sm);
       font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+      margin-block-start: var(--space-1);
     }
 
     .rbm-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
       margin-block-start: var(--space-3);
+      min-height: var(--touch-min);
+    }
+
+    .rbm-view-all-chevron {
+      flex-shrink: 0;
     }
 
     .rbm-hero {
@@ -282,7 +391,8 @@
      */
     @media (min-width: 48.01rem) {
       .rbm-disclosure {
-        height: var(--touch-min);
+        height: auto;
+        align-self: center;
         overflow: visible;
       }
 
@@ -295,6 +405,11 @@
         border-block-end: 1px solid var(--color-border);
         animation: rbm-panel-enter var(--duration-enter) var(--ease-enter);
       }
+
+      /* Category grid stays 2 columns on desktop. */
+      .rbm-groups.ren-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     /*
@@ -302,6 +417,7 @@
      * Core ren-nav uses absolute .ren-nav-links + a JS toggle. This block keeps
      * one tree by making links/actions in-flow when open, and reordering the
      * flex children of .ren-nav (order / wrap) so CTAs sit in the expanded region.
+     * Override ren-nav mobile align-items:center so rows stretch full width.
      */
     @media (max-width: 48rem) {
       .rbm-preview .ren-nav {
@@ -321,7 +437,31 @@
         order: 3;
         position: static;
         width: 100%;
+        align-items: stretch;
         animation: none;
+      }
+
+      .rbm-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rbm-preview .ren-nav-links .ren-nav-link,
+      .rbm-preview .rbm-disclosure,
+      .rbm-preview .rbm-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rbm-preview .rbm-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--ren-space-4, 1rem);
       }
 
       .rbm-preview .ren-nav-actions {
@@ -329,24 +469,55 @@
         display: none;
         width: 100%;
         margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
         padding: var(--space-2) var(--space-4) var(--space-4);
         border-block-start: 1px solid var(--color-border);
       }
 
       .rbm-preview .ren-nav[data-open] .ren-nav-actions,
       .rbm-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
-        /* ren-nav-actions is already display:flex from the pattern; re-show when open. */
         display: flex;
       }
 
+      .rbm-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
       .rbm-panel {
-        padding: var(--space-3) var(--space-4) var(--space-4);
+        width: 100%;
+        padding: 0;
         border-block-end: none;
-        background: var(--color-surface-sunken);
+        background: transparent;
+      }
+
+      .rbm-groups {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .rbm-groups.ren-grid-2 {
+        grid-template-columns: 1fr;
       }
 
       .rbm-featured {
         max-width: none;
+        flex: 1 1 auto;
+        width: 100%;
+        border-inline-start: none;
+        border-block-start: 1px solid var(--color-border);
+        background: var(--color-surface-sunken);
+      }
+
+      /* Mobile: articles stack image over text. */
+      .rbm-feature-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .rbm-feature-media {
+        aspect-ratio: 3 / 2;
+        width: 100%;
       }
     }
 
@@ -369,12 +540,15 @@
         position: static;
         width: 100%;
         flex-direction: column;
+        align-items: stretch;
         order: 3;
         animation: none;
       }
 
       .rbm-preview ren-nav:not(:defined) .ren-nav-actions {
         display: flex;
+        flex-direction: column;
+        align-items: stretch;
         width: 100%;
         margin-inline-start: 0;
         order: 4;
@@ -477,43 +651,55 @@
                         <h3 class="rbm-group-title" id="rbm-group-ops">Operations</h3>
                         <ul class="rbm-dest-list ren-stack-sm" aria-labelledby="rbm-group-ops">
                           <li>
-                            <a class="rbm-dest ren-row" href="#live-routing">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M2 3.5A1.5 1.5 0 0 1 3.5 2h9A1.5 1.5 0 0 1 14 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 12.5v-9zm2 1v2h2v-2H4zm4 0v2h4v-2H8zm-4 4v2h2v-2H4zm4 0v2h4v-2H8z"/>
+                            <a class="rbm-dest" href="#live-routing">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13zM6 7v3h3V7H6zm5 0v3h7V7h-7zm-5 5v3h3v-3H6zm5 0v3h7v-3h-7z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Live routing</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Live routing</span>
+                                <span class="rbm-dest-desc">Assign work as conditions change on the board.</span>
+                              </span>
                             </a>
                           </li>
                           <li>
-                            <a class="rbm-dest ren-row" href="#crew-boards">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M8 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM3.5 13.25c0-2.07 2.02-3.75 4.5-3.75s4.5 1.68 4.5 3.75V14H3.5v-.75z"/>
+                            <a class="rbm-dest" href="#crew-boards">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 3a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM5 19.5C5 16.46 8.13 14 12 14s7 2.46 7 5.5V21H5v-1.5z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Crew boards</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Crew boards</span>
+                                <span class="rbm-dest-desc">See who is free, on break, or mid-task.</span>
+                              </span>
                             </a>
                           </li>
                           <li>
-                            <a class="rbm-dest ren-row" href="#shift-handoffs">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M8 1.5a6.5 6.5 0 1 1 0 13 6.5 6.5 0 0 1 0-13zM7.25 4v4.19l2.78 1.67.75-1.24-2.28-1.37V4h-1.25z"/>
+                            <a class="rbm-dest" href="#shift-handoffs">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm-.75 4.5v6.1l4.2 2.52.75-1.25-3.45-2.07V6.5h-1.5z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Shift handoffs</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Shift handoffs</span>
+                                <span class="rbm-dest-desc">Carry open threads cleanly across shifts.</span>
+                              </span>
                             </a>
                           </li>
                           <li>
-                            <a class="rbm-dest ren-row" href="#incident-room">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M8 1.75 14.25 13H1.75L8 1.75zM7.25 6v3.5h1.5V6h-1.5zm0 5v1.5h1.5V11h-1.5z"/>
+                            <a class="rbm-dest" href="#incident-room">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 3.2 21.2 19H2.8L12 3.2zM11 9v5h2V9h-2zm0 7v2h2v-2h-2z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Incident room</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Incident room</span>
+                                <span class="rbm-dest-desc">Coordinate responders from one shared view.</span>
+                              </span>
                             </a>
                           </li>
                         </ul>
@@ -523,43 +709,55 @@
                         <h3 class="rbm-group-title" id="rbm-group-insight">Insights</h3>
                         <ul class="rbm-dest-list ren-stack-sm" aria-labelledby="rbm-group-insight">
                           <li>
-                            <a class="rbm-dest ren-row" href="#signal-map">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M2 12.5 5.5 7l2.5 3 3-5.5L14 12.5H2z"/>
+                            <a class="rbm-dest" href="#signal-map">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M3 18.5 8 10l3.5 4.5L16 6l5 12.5H3z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Signal map</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Signal map</span>
+                                <span class="rbm-dest-desc">Spot volume spikes before they stack up.</span>
+                              </span>
                             </a>
                           </li>
                           <li>
-                            <a class="rbm-dest ren-row" href="#capacity-plans">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M2 13h2V6H2v7zm5 0h2V3H7v10zm5 0h2V8h-2v5z"/>
+                            <a class="rbm-dest" href="#capacity-plans">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M4 19h3V9H4v10zm6.5 0h3V5h-3v14zM17 19h3v-7h-3v7z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Capacity plans</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Capacity plans</span>
+                                <span class="rbm-dest-desc">Balance headcount against forecast demand.</span>
+                              </span>
                             </a>
                           </li>
                           <li>
-                            <a class="rbm-dest ren-row" href="#quality-loops">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M8 2a6 6 0 1 1-5.65 4H4.1A4.5 4.5 0 1 0 8 3.5V2zm-.75 1.5v4.25l3 1.8.75-1.25-2.25-1.35V3.5h-1.5z"/>
+                            <a class="rbm-dest" href="#quality-loops">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 3a9 9 0 1 1-8.48 6H6.1A6.5 6.5 0 1 0 12 5.5V3zm-1 2.5v6.2l4.4 2.64.76-1.26-3.66-2.2V5.5H11z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Quality loops</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Quality loops</span>
+                                <span class="rbm-dest-desc">Review outcomes and feed the next shift.</span>
+                              </span>
                             </a>
                           </li>
                           <li>
-                            <a class="rbm-dest ren-row" href="#export-hub">
-                              <span class="ren-icon ren-icon-sm" aria-hidden="true">
-                                <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
-                                  <path fill="currentColor" d="M8 2.5 11.5 6H9.25v4.5h-2.5V6H4.5L8 2.5zM3 12.5h10V14H3v-1.5z"/>
+                            <a class="rbm-dest" href="#export-hub">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="24" height="24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 4.5 17 9.5h-3.25v6.5h-3.5V9.5H7L12 4.5zM5 18.5h14V20H5v-1.5z"/>
                                 </svg>
                               </span>
-                              <span class="rbm-dest-label">Export hub</span>
+                              <span class="rbm-dest-copy ren-stack-xs">
+                                <span class="rbm-dest-label">Export hub</span>
+                                <span class="rbm-dest-desc">Ship reports without leaving the console.</span>
+                              </span>
                             </a>
                           </li>
                         </ul>
@@ -571,9 +769,9 @@
                       <ul class="rbm-feature-list ren-stack-sm" aria-labelledby="rbm-featured-title">
                         <li>
                           <a class="rbm-feature" href="#article-night-ops">
-                            <article>
+                            <article class="rbm-feature-inner">
                               <span class="rbm-feature-media" aria-hidden="true"></span>
-                              <div class="rbm-feature-body ren-stack-sm">
+                              <div class="rbm-feature-body">
                                 <span class="rbm-feature-cat">Playbook</span>
                                 <h4 class="rbm-feature-title">Night ops without the noise</h4>
                                 <p class="rbm-feature-desc">
@@ -586,9 +784,9 @@
                         </li>
                         <li>
                           <a class="rbm-feature" href="#article-handoff">
-                            <article>
+                            <article class="rbm-feature-inner">
                               <span class="rbm-feature-media rbm-feature-media-alt" aria-hidden="true"></span>
-                              <div class="rbm-feature-body ren-stack-sm">
+                              <div class="rbm-feature-body">
                                 <span class="rbm-feature-cat">Case study</span>
                                 <h4 class="rbm-feature-title">Handoffs that survive a surge</h4>
                                 <p class="rbm-feature-desc">
@@ -600,7 +798,14 @@
                           </a>
                         </li>
                       </ul>
-                      <a class="rbm-view-all ren-link-nav" href="#insights">View all insights</a>
+                      <a class="rbm-view-all ren-link-nav" href="#insights">
+                        View all insights
+                        <span class="rbm-view-all-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                          <svg viewBox="0 0 16 16" width="16" height="16" focusable="false" aria-hidden="true">
+                            <path fill="currentColor" d="M6.2 3.2a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06L9.44 8 6.2 4.26a.75.75 0 0 1 0-1.06z"/>
+                          </svg>
+                        </span>
+                      </a>
                     </div>
                   </div>
                 </div>
