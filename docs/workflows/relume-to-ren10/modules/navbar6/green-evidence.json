@@ -1,0 +1,58 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "packet",
+  "captures": {
+    "desktop": ".ren10-workflow/captures/navbar6/desktop-light-open.png",
+    "mobile": ".ren10-workflow/captures/navbar6/mobile-light-nested-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "READY FOR INDEPENDENT CODEX GATE 6 — this file records implementation GREEN evidence and fresh matrix captures; Grok did only gross visual inspection and must not be treated as formal Codex visual approval. Do not advance green→reviewed until Codex independently inspects captures + DOM/CSS cascade. Grok gross notes (not approval): desktop-light-open and desktop-dark-open show one Resources chevron, three destination columns + right featured 16:9 promo under the bar, opaque panel over hero (stacking fixed); mobile-light-nested-open and mobile-js-disabled-open show single tree, start-aligned full-width rows, feature below groups, toggle present only when JS on; tablet-light-open uses desktop shell at 834px without hamburger (48rem honesty) with residual narrow-column wrap for Codex judgment. Classless summary::after neutralized; one .rmf-chevron owner.",
+  "testResults": {
+    "redPhaseA": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar6 --retries=0 --workers=1 --project=\"Desktop Light\"",
+      "result": "15 failed / 0 passed — all 404 at gotoFeaturedBlock"
+    },
+    "navbar6Green": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar6 --retries=0",
+      "result": "30 passed (15 × Desktop Light + 15 × Desktop Dark)"
+    },
+    "blocksNavigationFull": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --retries=0",
+      "result": "60 passed (navbar5/catalog preserved + navbar6)"
+    },
+    "workflowUnits": {
+      "command": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
+      "result": "114 passed, 0 failed"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "lint:css OK; lint:tokens OK; lint:contracts OK; lint:js 0 errors (29 pre-existing warnings, none from navbar6 block)"
+    },
+    "capture": {
+      "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar6/render-matrix.json --module navbar6 --output .ren10-workflow/captures",
+      "result": "12 PNG + 12 JSON under .ren10-workflow/captures/navbar6; markerCounts match matrix (12 dest, 12 desc, 1 chevron, 1 feature, 1 view-all, 3 groups) for every state"
+    },
+    "packetValidate": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar6",
+      "result": "Valid workflow packet: navbar6 (green) after red→green advance"
+    }
+  },
+  "qualityHelpers": [
+    "expectSingleVisibleAffordance",
+    "expectAligned",
+    "expectWidthRatio",
+    "expectNoOverflow",
+    "inspectNativeChrome"
+  ],
+  "blockPath": "templates/blocks/nav-mega-menu-featured.html",
+  "intentionalDifferences": [
+    "48rem ren-nav shell breakpoint (not source ~991px tablet shell)",
+    "One responsive light-DOM tree (source duplicates desktop/mobile trees)",
+    "Native details/summary mega trigger with desktop hover-open + click/keyboard + Escape",
+    "Single real feature anchor without nested button (source defect fixed)",
+    "prefers-reduced-motion zeroing of block-local motion"
+  ]
+}
