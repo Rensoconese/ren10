@@ -87,6 +87,11 @@ npm run workflow:relume:check
 npm run test:workflow
 ```
 
+`npm run test:workflow` is a development-checkout command: the published npm
+tarball intentionally includes the workflow runtime, but not its repository
+test files. The other two package scripts above are available in the packed
+runtime when their referenced workflow documents are present.
+
 `workflow:relume:check` runs `validate-all` against
 `docs/workflows/relume-to-ren10/inventory.json` and fully validates every
 `in_progress` / `accepted` packet under the sibling `modules/` directory.
