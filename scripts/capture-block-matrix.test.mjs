@@ -254,3 +254,177 @@ test('captureMatrix validates before launching the browser', async () => {
     /unsupported action type|dblclick/i,
   );
 });
+
+test('validateRenderMatrix requires a non-empty states array', () => {
+  const base = {
+    version: 1,
+    path: matrix.path,
+    root: matrix.root,
+  };
+
+  for (const [label, states] of [
+    ['missing', undefined],
+    ['null', null],
+    ['object', {}],
+    ['empty', []],
+  ]) {
+    const candidate = { ...base };
+    if (label !== 'missing') candidate.states = states;
+    const errors = validateRenderMatrix(candidate);
+    assert.ok(
+      errors.some((error) => /states/i.test(error) && /non-empty|array|required|empty/i.test(error)),
+      `${label} states must error, got ${JSON.stringify(errors)}`,
+    );
+  }
+});
+
+test('validateRenderMatrix rejects unsafe state ids', () => {
+  for (const id of ['../escape', '..', '.', '/abs', 'a/b', 'a\\b', 'C:\\\\win', '']) {
+    const errors = validateRenderMatrix(cloneMatrix({
+      states: [{ ...matrix.states[0], id }],
+    }));
+    assert.ok(
+      errors.some((error) =>
+        /unsafe|invalid|path|segment|id/i.test(error)),
+      `expected unsafe state id rejection for ${JSON.stringify(id)}, got ${JSON.stringify(errors)}`,
+    );
+  }
+});
+
+test('captureMatrix rejects unsafe moduleId and state ids before browser launch', async () => {
+  const { captureMatrix } = await import('./capture-block-matrix.mjs');
+  const root = await mkdtemp(join(tmpdir(), 'ren10-capture-path-'));
+  roots.push(root);
+  const goodMatrixPath = join(root, 'good-matrix.json');
+  const badStateMatrixPath = join(root, 'bad-state-matrix.json');
+  await writeFile(goodMatrixPath, `${JSON.stringify(matrix, null, 2)}\n`);
+  await writeFile(
+    badStateMatrixPath,
+    `${JSON.stringify(cloneMatrix({
+      states: [{ ...matrix.states[0], id: '../escape' }],
+    }), null, 2)}\n`,
+  );
+
+  const cases = [
+    {
+      label: 'module traversal',
+      options: {
+        matrixPath: goodMatrixPath,
+        moduleId: '../evil',
+        repoRoot: process.cwd(),
+        outputRoot: join(root, 'out'),
+      },
+      needle: /module|path|segment|unsafe|traversal|\.\./i,
+    },
+    {
+      label: 'module absolute',
+      options: {
+        matrixPath: goodMatrixPath,
+        moduleId: '/tmp/evil',
+        repoRoot: process.cwd(),
+        outputRoot: join(root, 'out'),
+      },
+      needle: /module|path|segment|unsafe|absolute/i,
+    },
+    {
+      label: 'module separator',
+      options: {
+        matrixPath: goodMatrixPath,
+        moduleId: 'a/b',
+        repoRoot: process.cwd(),
+        outputRoot: join(root, 'out'),
+      },
+      needle: /module|path|segment|unsafe|separator|slash/i,
+    },
+    {
+      label: 'state traversal',
+      options: {
+        matrixPath: badStateMatrixPath,
+        moduleId: 'navbar5',
+        repoRoot: process.cwd(),
+        outputRoot: join(root, 'out'),
+      },
+      needle: /state|path|segment|unsafe|id|\.\./i,
+    },
+  ];
+
+  for (const { label, options, needle } of cases) {
+    await assert.rejects(
+      () => captureMatrix(options),
+      needle,
+      `expected pre-browser rejection for ${label}`,
+    );
+  }
+});
+
+test('static server rejects symlink escape outside root', async () => {
+  const { startStaticServer } = require('../tests/utils/static-server.cjs');
+  const { symlink, mkdir } = await import('node:fs/promises');
+  const root = await mkdtemp(join(tmpdir(), 'ren10-static-symlink-'));
+  const outside = await mkdtemp(join(tmpdir(), 'ren10-static-outside-'));
+  roots.push(root, outside);
+
+  await writeFile(join(outside, 'secret.txt'), 'top-secret\n');
+  await writeFile(join(root, 'ok.html'), '<!doctype html><title>ok</title>\n');
+  await symlink(outside, join(root, 'escape-dir'));
+  await symlink(join(outside, 'secret.txt'), join(root, 'escape-file.txt'));
+
+  const nested = join(root, 'nested');
+  await mkdir(nested);
+  await symlink(join(outside, 'secret.txt'), join(nested, 'via-nested.txt'));
+
+  const server = await startStaticServer(root);
+  try {
+    const fileEscape = await fetch(`${server.origin}/escape-file.txt`);
+    assert.equal(fileEscape.status, 403, 'symlinked file outside root must be 403');
+
+    const dirEscape = await fetch(`${server.origin}/escape-dir/secret.txt`);
+    assert.equal(dirEscape.status, 403, 'path through symlinked directory outside root must be 403');
+
+    const nestedEscape = await fetch(`${server.origin}/nested/via-nested.txt`);
+    assert.equal(nestedEscape.status, 403, 'nested symlink outside root must be 403');
+
+    const missing = await fetch(`${server.origin}/missing.html`);
+    assert.equal(missing.status, 404);
+
+    const ok = await fetch(`${server.origin}/ok.html`);
+    assert.equal(ok.status, 200);
+    assert.equal(ok.headers.get('cache-control'), 'no-store');
+    assert.match(await ok.text(), /ok/);
+  } finally {
+    await server.close();
+  }
+});
+
+test('settleWithCleanup preserves primary errors and surfaces cleanup failures', async () => {
+  const { settleWithCleanup } = await import('./capture-block-matrix.mjs');
+
+  const primary = new Error('primary boom');
+  const cleanupA = new Error('cleanup A');
+  const cleanupB = new Error('cleanup B');
+
+  await assert.rejects(
+    () => settleWithCleanup(primary, [
+      async () => { throw cleanupA; },
+      async () => { throw cleanupB; },
+    ]),
+    (error) => {
+      assert.equal(error, primary);
+      assert.ok(Array.isArray(error.cleanupErrors));
+      assert.equal(error.cleanupErrors.length, 2);
+      return true;
+    },
+  );
+
+  await assert.rejects(
+    () => settleWithCleanup(undefined, [
+      async () => { throw cleanupA; },
+    ]),
+    (error) => {
+      assert.match(String(error.message || error), /cleanup/i);
+      return true;
+    },
+  );
+
+  await settleWithCleanup(undefined, [async () => {}]);
+});

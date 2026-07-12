@@ -3,7 +3,7 @@ import { chromium } from '@playwright/test';
 import { execFileSync } from 'node:child_process';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
-import { join, posix as pathPosix, resolve } from 'node:path';
+import { isAbsolute, posix as pathPosix, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const require = createRequire(import.meta.url);
@@ -14,6 +14,85 @@ const USAGE = `Usage:
 
 const ALLOWED_ACTION_TYPES = new Set(['click', 'press', 'focus']);
 const ALLOWED_THEMES = new Set(['light', 'dark']);
+
+/**
+ * True when `value` is a single safe path segment (no traversal / separators).
+ * @param {unknown} value
+ * @returns {boolean}
+ */
+export function isSafePathSegment(value) {
+  if (typeof value !== 'string' || value === '') return false;
+  if (value === '.' || value === '..') return false;
+  if (value.includes('/') || value.includes('\\') || value.includes('\0')) return false;
+  if (isAbsolute(value)) return false;
+  // Windows drive / UNC forms even when not absolute on POSIX hosts.
+  if (/^[a-zA-Z]:/.test(value) || value.startsWith('\\\\')) return false;
+  // Reject encoded or whitespace-smuggled separators.
+  if (/[\u0000-\u001f\u007f]/.test(value)) return false;
+  if (value !== value.trim()) return false;
+  return true;
+}
+
+/**
+ * Resolve `candidate` under `root` and assert the result stays inside root.
+ * @param {string} root
+ * @param {string} candidate
+ * @param {string} label
+ * @returns {string} resolved absolute path
+ */
+export function resolveContainedPath(root, candidate, label = 'path') {
+  const resolvedRoot = resolve(root);
+  const resolved = resolve(resolvedRoot, candidate);
+  const rootWithSep = resolvedRoot.endsWith(sep) ? resolvedRoot : `${resolvedRoot}${sep}`;
+  if (resolved !== resolvedRoot && !resolved.startsWith(rootWithSep)) {
+    throw new Error(`Unsafe ${label}: resolves outside output root`);
+  }
+  return resolved;
+}
+
+/**
+ * Run cleanup callbacks after an operation. Preserve a primary error when
+ * present; otherwise surface cleanup failure(s). Aggregate multiple cleanup
+ * failures on `error.cleanupErrors`.
+ * @param {unknown} primaryError
+ * @param {Array<() => unknown | Promise<unknown>>} cleanupFns
+ * @returns {Promise<void>}
+ */
+export async function settleWithCleanup(primaryError, cleanupFns = []) {
+  /** @type {Error[]} */
+  const cleanupErrors = [];
+  for (const cleanup of cleanupFns) {
+    try {
+      await cleanup();
+    } catch (error) {
+      cleanupErrors.push(error instanceof Error ? error : new Error(String(error)));
+    }
+  }
+
+  if (primaryError) {
+    if (cleanupErrors.length && primaryError && typeof primaryError === 'object') {
+      // Attach without replacing the primary failure.
+      primaryError.cleanupErrors = cleanupErrors;
+    }
+    throw primaryError;
+  }
+
+  if (cleanupErrors.length === 0) return;
+  if (cleanupErrors.length === 1) {
+    const only = cleanupErrors[0];
+    if (!/cleanup/i.test(only.message)) {
+      only.message = `Cleanup failed: ${only.message}`;
+    }
+    throw only;
+  }
+
+  const aggregate = new AggregateError(
+    cleanupErrors,
+    `Cleanup failed with ${cleanupErrors.length} errors`,
+  );
+  aggregate.cleanupErrors = cleanupErrors;
+  throw aggregate;
+}
 
 /**
  * @param {string} origin
@@ -89,13 +168,17 @@ export function validateRenderMatrix(matrix) {
     errors.push('Render matrix root selector is malformed');
   }
 
-  if (matrix.states !== undefined && !Array.isArray(matrix.states)) {
-    errors.push('Render matrix states must be an array');
+  if (!Array.isArray(matrix.states)) {
+    errors.push('Render matrix states must be a non-empty array');
+    return errors.sort();
+  }
+  if (matrix.states.length === 0) {
+    errors.push('Render matrix states must be a non-empty array');
     return errors.sort();
   }
 
   const ids = new Set();
-  for (const state of matrix.states ?? []) {
+  for (const state of matrix.states) {
     if (!state || typeof state !== 'object' || Array.isArray(state)) {
       errors.push('Render matrix state must be an object');
       continue;
@@ -107,6 +190,8 @@ export function validateRenderMatrix(matrix) {
 
     if (typeof state.id !== 'string' || state.id.trim() === '') {
       errors.push(`State ${stateId} requires a non-empty id`);
+    } else if (!isSafePathSegment(state.id)) {
+      errors.push(`State ${state.id} has unsafe path segment id`);
     } else if (ids.has(state.id)) {
       errors.push(`Duplicate render state id: ${state.id}`);
     } else {
@@ -215,6 +300,9 @@ export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot
   if (typeof moduleId !== 'string' || moduleId.trim() === '') {
     throw new Error('moduleId is required');
   }
+  if (!isSafePathSegment(moduleId)) {
+    throw new Error(`Unsafe moduleId path segment: ${moduleId}`);
+  }
   if (typeof repoRoot !== 'string' || repoRoot.trim() === '') {
     throw new Error('repoRoot is required');
   }
@@ -226,12 +314,25 @@ export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot
   const errors = validateRenderMatrix(matrix);
   if (errors.length) throw new Error(errors.join('\n'));
 
+  const resolvedOutputRoot = resolve(outputRoot);
+  const moduleRoot = resolveContainedPath(resolvedOutputRoot, moduleId, 'moduleId');
+
+  // Validate every state output path before any I/O or browser launch.
+  for (const state of matrix.states) {
+    resolveContainedPath(moduleRoot, `${state.id}.png`, `state id "${state.id}"`);
+    resolveContainedPath(moduleRoot, `${state.id}.json`, `state id "${state.id}"`);
+  }
+
   const server = await startStaticServer(repoRoot);
+  /** @type {import('@playwright/test').Browser | undefined} */
   let browser;
+  /** @type {unknown} */
+  let primaryError;
+  /** @type {number | undefined} */
+  let capturedCount;
   try {
     browser = await chromium.launch();
     const commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: repoRoot, encoding: 'utf8' }).trim();
-    const moduleRoot = join(outputRoot, moduleId);
     await mkdir(moduleRoot, { recursive: true });
 
     for (const state of matrix.states) {
@@ -249,8 +350,11 @@ export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot
         for (const action of state.actions) await runAction(page, action);
         await page.locator(matrix.root).waitFor({ state: 'visible' });
         const markerCounts = await collectMarkerCounts(page, state.expectedMarkers);
-        await page.screenshot({ path: join(moduleRoot, `${state.id}.png`), fullPage: true });
-        await writeFile(join(moduleRoot, `${state.id}.json`), `${JSON.stringify({
+
+        const pngPath = resolveContainedPath(moduleRoot, `${state.id}.png`, `state id "${state.id}"`);
+        const jsonPath = resolveContainedPath(moduleRoot, `${state.id}.json`, `state id "${state.id}"`);
+        await page.screenshot({ path: pngPath, fullPage: true });
+        await writeFile(jsonPath, `${JSON.stringify({
           id: state.id,
           url,
           viewport: state.viewport,
@@ -266,13 +370,27 @@ export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot
       }
     }
 
-    return matrix.states.length;
+    capturedCount = matrix.states.length;
+  } catch (error) {
+    primaryError = error;
   } finally {
-    if (browser) {
-      await browser.close().catch(() => {});
+    try {
+      await settleWithCleanup(primaryError, [
+        async () => {
+          if (browser) await browser.close();
+        },
+        async () => {
+          await server.close();
+        },
+      ]);
+    } catch (error) {
+      // Prefer primary (possibly with cleanupErrors attached); otherwise surface cleanup.
+      primaryError = error;
     }
-    await server.close().catch(() => {});
   }
+
+  if (primaryError) throw primaryError;
+  return capturedCount;
 }
 
 /**

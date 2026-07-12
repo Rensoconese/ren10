@@ -11,6 +11,16 @@ const CONTENT_TYPES = {
 };
 
 /**
+ * @param {string} rootPath
+ * @param {string} candidatePath
+ * @returns {boolean}
+ */
+function isInsideRoot(rootPath, candidatePath) {
+  const rootWithSep = rootPath.endsWith(path.sep) ? rootPath : `${rootPath}${path.sep}`;
+  return candidatePath === rootPath || candidatePath.startsWith(rootWithSep);
+}
+
+/**
  * Resolve a request URL to a file under `resolvedRoot`, or null when the
  * path is outside the root (including encoded traversal). Query strings and
  * fragments never affect the resolved file path.
@@ -33,11 +43,54 @@ function resolveSafeFilePath(resolvedRoot, requestUrl) {
   // Strip leading slashes so path.join never treats the URL path as absolute.
   const relativePath = pathname.replace(/^\/+/, '');
   const filePath = path.normalize(path.join(resolvedRoot, relativePath));
-  const rootWithSep = `${resolvedRoot}${path.sep}`;
-  if (filePath !== resolvedRoot && !filePath.startsWith(rootWithSep)) {
+  if (!isInsideRoot(resolvedRoot, filePath)) {
     return { forbidden: true };
   }
   return { filePath };
+}
+
+/**
+ * If the target exists, require its realpath to stay inside the real server
+ * root. Missing targets stay 404 unless an ancestor realpath escapes (symlink
+ * directory escape), which is 403.
+ * @param {string} realRoot
+ * @param {string} filePath
+ * @returns {'ok' | 'forbidden' | 'missing'}
+ */
+function assertRealpathContained(realRoot, filePath) {
+  try {
+    const realTarget = fs.realpathSync(filePath);
+    if (!isInsideRoot(realRoot, realTarget)) {
+      return 'forbidden';
+    }
+    return 'ok';
+  } catch (error) {
+    if (!error || (error.code !== 'ENOENT' && error.code !== 'ENOTDIR')) {
+      // ELOOP / EACCES / etc. — do not serve.
+      return 'forbidden';
+    }
+
+    // Walk parents: a missing leaf under a symlinked-out directory must 403.
+    let cursor = path.dirname(filePath);
+    for (;;) {
+      try {
+        const realCursor = fs.realpathSync(cursor);
+        if (!isInsideRoot(realRoot, realCursor)) {
+          return 'forbidden';
+        }
+        return 'missing';
+      } catch (parentError) {
+        if (!parentError || (parentError.code !== 'ENOENT' && parentError.code !== 'ENOTDIR')) {
+          return 'forbidden';
+        }
+        const parent = path.dirname(cursor);
+        if (parent === cursor) {
+          return 'missing';
+        }
+        cursor = parent;
+      }
+    }
+  }
 }
 
 /**
@@ -46,6 +99,13 @@ function resolveSafeFilePath(resolvedRoot, requestUrl) {
  */
 async function startStaticServer(root) {
   const resolvedRoot = path.resolve(root);
+  let realRoot;
+  try {
+    realRoot = fs.realpathSync(resolvedRoot);
+  } catch {
+    realRoot = resolvedRoot;
+  }
+
   const server = http.createServer((request, response) => {
     const resolved = resolveSafeFilePath(resolvedRoot, request.url);
     if (resolved.badRequest) {
@@ -60,10 +120,35 @@ async function startStaticServer(root) {
     }
 
     const { filePath } = resolved;
+    const containment = assertRealpathContained(realRoot, filePath);
+    if (containment === 'forbidden') {
+      response.writeHead(403, { 'content-type': 'text/plain; charset=utf-8' });
+      response.end('Forbidden');
+      return;
+    }
+    if (containment === 'missing') {
+      response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
+      response.end('Not found');
+      return;
+    }
+
     fs.readFile(filePath, (error, data) => {
       if (error) {
-        response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
-        response.end('Not found');
+        // Race: disappeared after realpath, or not a readable file.
+        if (error.code === 'ENOENT' || error.code === 'ENOTDIR') {
+          response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' });
+          response.end('Not found');
+          return;
+        }
+        response.writeHead(403, { 'content-type': 'text/plain; charset=utf-8' });
+        response.end('Forbidden');
+        return;
+      }
+      // Defense in depth: re-check realpath after read in case of replace races.
+      const postCheck = assertRealpathContained(realRoot, filePath);
+      if (postCheck !== 'ok') {
+        response.writeHead(403, { 'content-type': 'text/plain; charset=utf-8' });
+        response.end('Forbidden');
         return;
       }
       const extension = path.extname(filePath);
@@ -88,4 +173,4 @@ async function startStaticServer(root) {
   };
 }
 
-module.exports = { startStaticServer, resolveSafeFilePath };
+module.exports = { startStaticServer, resolveSafeFilePath, assertRealpathContained, isInsideRoot };
