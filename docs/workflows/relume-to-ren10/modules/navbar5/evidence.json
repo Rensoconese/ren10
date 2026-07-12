@@ -20,10 +20,16 @@
       "short": "cc091cb",
       "fullHash": "cc091cbd6dc6c490a700329e8f9777343f647f51",
       "message": "fix: capture settled workflow states",
-      "role": "Capture-runner settleDocument + Task4 ENOENT test independence. This is the implementation under visual review for settled open states."
+      "role": "Initial settleDocument (wait for finite animations) + Task4 ENOENT test independence. Superseded for fail-closed policy by failClosedCaptureFix."
+    },
+    "failClosedCaptureFix": {
+      "short": "20896b9",
+      "fullHash": "20896b921eef730dfe95901998e690eaed6dadb0",
+      "message": "fix: fail closed on unsettled captures",
+      "role": "settleDocument fails closed: page.evaluate errors propagate; finite animations remaining after bounded timeout throw named/count errors; no markers/screenshot on settle failure. This is the implementation under visual review for settled open states."
     },
     "evidenceRecord": {
-      "note": "This evidence.json is committed separately as 'docs: refresh navbar5 pilot evidence'. That docs commit is NOT the capture/implementation commit. Capture sibling JSON records implementationCaptureFix (or a later ignored recapture HEAD after the docs commit). Avoid claiming evidence-record commit === capture commit in the same committed blob (self-referential impossibility)."
+      "note": "This evidence.json is committed separately as 'docs: record fail-closed capture evidence'. That docs commit is NOT the capture/implementation commit. Capture sibling JSON records failClosedCaptureFix (or a later ignored recapture HEAD after the docs commit). Avoid claiming evidence-record commit === capture commit in the same committed blob (self-referential impossibility)."
     }
   },
   "reference": {
@@ -61,17 +67,17 @@
     "passed": true,
     "navigationSuite": {
       "command": "npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --retries=0",
-      "result": "30 passed (6.8s)",
+      "result": "30 passed (6.6s)",
       "projects": ["Desktop Light", "Desktop Dark"],
       "testsPerProject": 15,
       "recordedAgainstWorkingTree": false,
-      "baseHeadAtRun": "cc091cbd6dc6c490a700329e8f9777343f647f51",
-      "note": "Re-run after settleDocument fix commit. 15 tests × Desktop Light + Desktop Dark."
+      "baseHeadAtRun": "20896b921eef730dfe95901998e690eaed6dadb0",
+      "note": "Re-run after fail-closed settleDocument fix commit. 15 tests × Desktop Light + Desktop Dark."
     },
     "workflowUnitTests": {
       "command": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
-      "result": "72 passed, 0 failed (72 total)",
-      "note": "Includes settleDocument unit coverage (finite animation wait, infinite ignore, canceled tolerance, JS-disabled settle) and Task4 ENOENT smoke using a temp nonexistent matrix path (independent of navbar5 pilot matrix)."
+      "result": "76 passed, 0 failed (76 total)",
+      "note": "Includes fail-closed settleDocument coverage: finite wait, long finite reject (Playwright + injected), evaluate failure propagation, infinite ignore, canceled tolerance, JS-disabled stable-root path, captureMatrix no PNG/JSON on settle failure; Task4 ENOENT smoke remains matrix-independent."
     },
     "qualityHelpersAdopted": [
       "expectSingleVisibleAffordance",
@@ -101,12 +107,12 @@
     "stateCount": 10,
     "pngCount": 10,
     "jsonCount": 10,
-    "implementationCommit": "cc091cbd6dc6c490a700329e8f9777343f647f51",
-    "capturedAtHead": "cc091cbd6dc6c490a700329e8f9777343f647f51",
-    "capturedAt": "2026-07-12T19:51:56.498Z (first open state; per-state timestamps in sibling JSON)",
+    "implementationCommit": "20896b921eef730dfe95901998e690eaed6dadb0",
+    "capturedAtHead": "20896b921eef730dfe95901998e690eaed6dadb0",
+    "capturedAt": "2026-07-12T19:59:01.806Z (desktop-light-open; per-state timestamps in sibling JSON)",
     "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar5/render-matrix.json --module navbar5 --output .ren10-workflow/captures",
     "result": "Captured 10 render states for navbar5",
-    "settlePolicy": "After actions: settleDocument waits for finite document animations/transitions (bounded timeout; infinite/canceled ignored), then two animation frames or stable root geometry. No arbitrary long sleep.",
+    "settlePolicy": "After actions: settleDocument waits for finite document animations/transitions within a bounded timeout, then two animation frames or stable root geometry. Fail-closed: page.evaluate errors propagate with phase context; if finite animations remain after the deadline, throw a deterministic error naming/counting them — never markers or screenshot. Infinite animations ignored. Canceled animations tolerated only when no finite active animation remains. JS-disabled / non-firing rAF uses documented stable-root fallback; other frame-settle failures surface. No arbitrary long sleep.",
     "identifiers": [
       "desktop-light-closed",
       "desktop-light-open",
@@ -138,13 +144,13 @@
       ".rbm-feature": 2
     },
     "implementerVisualNotes": [
-      "desktop-light-open: mega panel fully opaque; category grid + featured articles visible; no hero bleed-through (prior mid-transition failure resolved by settleDocument).",
-      "desktop-dark-open: mega panel content fully visible (operations/insights/features); not an empty dark overlay (prior pre-content capture resolved).",
+      "desktop-light-open: mega panel fully opaque; category grid + featured articles visible; no hero bleed-through.",
+      "desktop-dark-open: mega panel content fully visible (operations/insights/features); not an empty dark overlay.",
       "mobile-light-nested-open: nav open + Solutions expanded; 8 destinations + 2 stacked features + CTAs; single chevron.",
       "mobile-dark-nested-open: same nested structure in dark theme; content settled and legible.",
       "mobile-js-disabled-open and desktop-reduced-motion-open: still in 10-state matrix; markers verified.",
       "Screenshots are gitignored; not claimed as committed artifacts.",
-      "Post-evidence-commit recapture: after the docs evidence commit lands, a final ignored recapture may refresh sibling JSON commit fields to that HEAD without rewriting this committed ledger to claim self-equality."
+      "Captured against fail-closed implementation 20896b9. Post-evidence-commit recapture may refresh sibling JSON commit fields to the docs HEAD without rewriting this committed ledger to claim self-equality."
     ]
   }
 }
