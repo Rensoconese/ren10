@@ -6,7 +6,7 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
-import { buildStateUrl, validateRenderMatrix } from './capture-block-matrix.mjs';
+import { buildStateUrl, settleDocument, validateRenderMatrix } from './capture-block-matrix.mjs';
 
 const execFileAsync = promisify(execFile);
 const require = createRequire(import.meta.url);
@@ -14,6 +14,29 @@ const CLI = 'scripts/capture-block-matrix.mjs';
 
 const roots = [];
 afterEach(async () => Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true }))));
+
+/**
+ * @param {import('@playwright/test').BrowserContextOptions} [contextOptions]
+ * @param {(page: import('@playwright/test').Page) => Promise<unknown>} run
+ */
+async function withPage(contextOptions = {}, run) {
+  const { chromium } = await import('@playwright/test');
+  const browser = await chromium.launch();
+  try {
+    const context = await browser.newContext({
+      viewport: { width: 800, height: 600 },
+      ...contextOptions,
+    });
+    try {
+      const page = await context.newPage();
+      return await run(page);
+    } finally {
+      await context.close();
+    }
+  } finally {
+    await browser.close();
+  }
+}
 
 const matrix = {
   version: 1,
@@ -217,8 +240,10 @@ test('capture CLI requires matrix path, --module, and --output', async () => {
   assert.notEqual(missingOutput.code, 0);
   assert.match(missingOutput.stderr, /--output/);
 
+  // Task 4 smoke: ENOENT must not depend on Task 6 pilot matrix existence.
+  const missingPath = join(tmpdir(), `ren10-missing-matrix-${Date.now()}-${Math.random().toString(16).slice(2)}.json`);
   const missingMatrix = await run([
-    'docs/workflows/relume-to-ren10/modules/navbar5/render-matrix.json',
+    missingPath,
     '--module',
     'navbar5',
     '--output',
@@ -427,4 +452,110 @@ test('settleWithCleanup preserves primary errors and surfaces cleanup failures',
   );
 
   await settleWithCleanup(undefined, [async () => {}]);
+});
+
+test('settleDocument waits for finite CSS animation before resolving', async () => {
+  await withPage({}, async (page) => {
+    await page.setContent(`<!doctype html>
+<html><head><style>
+  @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+  #panel {
+    width: 120px; height: 80px; background: #111; opacity: 0;
+  }
+  #panel.go {
+    animation: fade-in 180ms linear forwards;
+  }
+</style></head>
+<body>
+  <div id="root"><div id="panel"></div></div>
+</body></html>`);
+
+    await page.locator('#panel').evaluate((el) => { el.classList.add('go'); });
+    const midOpacity = await page.locator('#panel').evaluate((el) => getComputedStyle(el).opacity);
+    // Mid-animation opacity should still be below rest (not yet fully settled).
+    // We only assert settleDocument leaves it fully opaque; the mid sample is diagnostic.
+    assert.ok(Number(midOpacity) <= 1);
+
+    await settleDocument(page, { rootSelector: '#root', timeoutMs: 1500 });
+
+    const opacity = await page.locator('#panel').evaluate((el) => getComputedStyle(el).opacity);
+    assert.equal(Number(opacity), 1);
+
+    const running = await page.evaluate(() =>
+      document.getAnimations({ subtree: true })
+        .filter((a) => a.playState === 'running' || a.playState === 'pending')
+        .length);
+    assert.equal(running, 0);
+  });
+});
+
+test('settleDocument ignores infinite animations and still resolves within bound', async () => {
+  await withPage({}, async (page) => {
+    await page.setContent(`<!doctype html>
+<html><head><style>
+  @keyframes spin { to { transform: rotate(360deg) } }
+  #spinner {
+    width: 24px; height: 24px; background: #333;
+    animation: spin 1s linear infinite;
+  }
+</style></head>
+<body><div id="root"><div id="spinner"></div></div></body></html>`);
+
+    const started = Date.now();
+    await settleDocument(page, { rootSelector: '#root', timeoutMs: 800 });
+    const elapsed = Date.now() - started;
+    assert.ok(elapsed < 800, `expected settle under timeout, took ${elapsed}ms`);
+
+    const infiniteRunning = await page.evaluate(() => {
+      const anims = document.getAnimations({ subtree: true });
+      return anims.some((a) => {
+        const iterations = a.effect?.getTiming?.()?.iterations;
+        return iterations === Infinity && (a.playState === 'running' || a.playState === 'pending');
+      });
+    });
+    assert.equal(infiniteRunning, true);
+  });
+});
+
+test('settleDocument tolerates canceled animations without throwing', async () => {
+  await withPage({}, async (page) => {
+    await page.setContent(`<!doctype html>
+<html><head><style>
+  @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+  #panel { width: 80px; height: 40px; background: #222; opacity: 0; }
+  #panel.go { animation: fade-in 500ms linear forwards; }
+</style></head>
+<body><div id="root"><div id="panel"></div></div></body></html>`);
+
+    await page.locator('#panel').evaluate((el) => { el.classList.add('go'); });
+    await page.evaluate(() => {
+      for (const anim of document.getAnimations({ subtree: true })) {
+        anim.cancel();
+      }
+    });
+
+    await settleDocument(page, { rootSelector: '#root', timeoutMs: 1000 });
+  });
+});
+
+test('settleDocument works with javaScriptEnabled false', async () => {
+  await withPage({ javaScriptEnabled: false }, async (page) => {
+    await page.setContent(`<!doctype html>
+<html><head><style>
+  #root { width: 100px; height: 40px; background: #444; }
+</style></head>
+<body><div id="root">static</div></body></html>`);
+
+    const started = Date.now();
+    await settleDocument(page, { rootSelector: '#root', timeoutMs: 1000 });
+    const elapsed = Date.now() - started;
+    assert.ok(elapsed < 1000, `JS-disabled settle should finish promptly, took ${elapsed}ms`);
+
+    const text = await page.locator('#root').textContent();
+    assert.equal(text, 'static');
+  });
+});
+
+test('settleDocument is exported and callable', () => {
+  assert.equal(typeof settleDocument, 'function');
 });

@@ -271,6 +271,173 @@ async function runAction(page, action) {
   throw new Error(`Unsupported render action: ${action.type}`);
 }
 
+/** Default bound for post-action animation settle (ms). */
+const DEFAULT_SETTLE_TIMEOUT_MS = 2000;
+
+/**
+ * Count finite, still-active document animations/transitions.
+ * Infinite iterations (spinners) are ignored so settle never hangs on them.
+ * Canceled / finished / idle animations are ignored.
+ * Runs via page.evaluate (browser automation; works with javaScriptEnabled:false).
+ * @returns {{ pending: number, infinite: number, unsupported: boolean }}
+ */
+function countPendingAnimationsInPage() {
+  if (typeof document.getAnimations !== 'function') {
+    return { pending: 0, infinite: 0, unsupported: true };
+  }
+  const animations = document.getAnimations({ subtree: true });
+  let pending = 0;
+  let infinite = 0;
+  for (const anim of animations) {
+    const state = anim.playState;
+    // finished / idle are already settled; canceled ends as idle with null time.
+    if (state === 'finished' || state === 'idle') continue;
+    let iterations = 1;
+    try {
+      iterations = anim.effect?.getTiming?.()?.iterations ?? 1;
+    } catch {
+      iterations = 1;
+    }
+    if (iterations === Infinity || (typeof iterations === 'number' && iterations > 1e6)) {
+      infinite += 1;
+      continue;
+    }
+    if (state === 'running' || state === 'pending') pending += 1;
+  }
+  return { pending, infinite, unsupported: false };
+}
+
+/**
+ * Read a root element's geometry for stability checks.
+ * @param {string} selector
+ * @returns {{ x: number, y: number, w: number, h: number } | null}
+ */
+function readRootBoxInPage(selector) {
+  const el = document.querySelector(selector);
+  if (!el) return null;
+  const r = el.getBoundingClientRect();
+  return { x: r.x, y: r.y, w: r.width, h: r.height };
+}
+
+/**
+ * @param {{ x: number, y: number, w: number, h: number } | null} a
+ * @param {{ x: number, y: number, w: number, h: number } | null} b
+ */
+function sameBox(a, b) {
+  if (!a || !b) return false;
+  return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h;
+}
+
+/**
+ * Yield to the event loop without an arbitrary long sleep.
+ * One frame budget (~16ms) is enough between animation polls.
+ * @param {number} [ms]
+ */
+function yieldBriefly(ms = 16) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+/**
+ * Wait for finite CSS animations/transitions to finish, then at least two
+ * animation frames or a stable root geometry. Infinite animations are ignored.
+ * Canceled animations do not throw. Bounded by timeoutMs.
+ *
+ * Uses page.evaluate only (allowed under javaScriptEnabled:false). When
+ * requestAnimationFrame is unavailable (JS disabled), falls back to two
+ * consecutive stable root measurements.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {{ timeoutMs?: number, rootSelector?: string }} [options]
+ * @returns {Promise<void>}
+ */
+export async function settleDocument(page, options = {}) {
+  if (!page || typeof page.evaluate !== 'function') {
+    throw new Error('settleDocument requires a Playwright page');
+  }
+
+  const timeoutMs = Number.isFinite(options.timeoutMs) && options.timeoutMs > 0
+    ? options.timeoutMs
+    : DEFAULT_SETTLE_TIMEOUT_MS;
+  const rootSelector = typeof options.rootSelector === 'string' && options.rootSelector.trim() !== ''
+    ? options.rootSelector
+    : 'html';
+  const deadline = Date.now() + timeoutMs;
+
+  // Give the browser one task to register enter animations after the action.
+  // Prefer rAF when available; otherwise a single brief yield.
+  try {
+    const remaining = Math.max(0, deadline - Date.now());
+    await Promise.race([
+      page.evaluate(() => new Promise((resolve) => {
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(() => resolve());
+        } else {
+          resolve();
+        }
+      })),
+      yieldBriefly(Math.min(50, remaining || 50)),
+    ]);
+  } catch {
+    await yieldBriefly(16);
+  }
+
+  // Phase 1: wait until no finite animations/transitions are running.
+  while (Date.now() < deadline) {
+    let status;
+    try {
+      status = await page.evaluate(countPendingAnimationsInPage);
+    } catch {
+      // evaluate can fail on closed pages; surface by breaking to frame settle.
+      break;
+    }
+    if (!status || status.pending === 0) break;
+    await yieldBriefly(16);
+  }
+
+  // Phase 2: two animation frames, or stable root when rAF is unavailable (JS off).
+  const frameBudget = Math.max(0, deadline - Date.now());
+  let framesDone = false;
+  if (frameBudget > 0) {
+    try {
+      await Promise.race([
+        page.evaluate(() => new Promise((resolve, reject) => {
+          if (typeof requestAnimationFrame !== 'function') {
+            reject(new Error('raf-unavailable'));
+            return;
+          }
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => resolve(true));
+          });
+        })),
+        yieldBriefly(Math.min(frameBudget, 500)).then(() => {
+          throw new Error('raf-timeout');
+        }),
+      ]);
+      framesDone = true;
+    } catch {
+      framesDone = false;
+    }
+  }
+
+  if (!framesDone) {
+    // Stable-root fallback: two consecutive identical geometries.
+    let previous = null;
+    while (Date.now() < deadline) {
+      let box;
+      try {
+        box = await page.evaluate(readRootBoxInPage, rootSelector);
+      } catch {
+        break;
+      }
+      if (sameBox(previous, box)) break;
+      previous = box;
+      await yieldBriefly(16);
+    }
+  }
+}
+
 /**
  * @param {import('@playwright/test').Page} page
  * @param {Record<string, number>} [expectedMarkers]
@@ -349,6 +516,9 @@ export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot
         await page.evaluate((theme) => document.documentElement.setAttribute('data-theme', theme), state.theme);
         for (const action of state.actions) await runAction(page, action);
         await page.locator(matrix.root).waitFor({ state: 'visible' });
+        // Deterministic post-action settle: finite animations/transitions, then
+        // two frames or stable root — before markers and screenshot.
+        await settleDocument(page, { rootSelector: matrix.root });
         const markerCounts = await collectMarkerCounts(page, state.expectedMarkers);
 
         const pngPath = resolveContainedPath(moduleRoot, `${state.id}.png`, `state id "${state.id}"`);
