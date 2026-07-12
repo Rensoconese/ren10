@@ -123,7 +123,10 @@ async function main() {
 
   if (command === 'status') {
     const result = await validatePacketDir(resolve(args._[0]));
-    if (!result.packet) throw new Error(result.errors.join('\n'));
+    if (!result.valid) {
+      // Never emit a trustworthy stage line for an invalid packet.
+      throw new Error(['INVALID', ...result.errors].join('\n'));
+    }
     console.log(`${result.packet.moduleId}: ${result.packet.stage}`);
     return;
   }

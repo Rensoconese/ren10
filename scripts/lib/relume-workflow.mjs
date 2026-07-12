@@ -271,7 +271,8 @@ export function validateStageEvidence(stage, evidence) {
 }
 
 /**
- * Ensure evidence exists, is not a symlink, and its real path stays under the real packet dir.
+ * Ensure evidence exists, is a regular file, has no symlink (or symlink parent) escape,
+ * and its real path stays under the real packet dir.
  * Returns a packet-relative POSIX path for storage.
  */
 async function resolveContainedEvidencePath(packetDir, evidencePath) {
@@ -283,6 +284,33 @@ async function resolveContainedEvidencePath(packetDir, evidencePath) {
     throw new Error('Evidence file must be inside the packet directory');
   }
 
+  const resolvedPacket = resolve(packetDir);
+  const resolvedEvidence = resolve(evidencePath);
+  const relativeToPacket = relative(resolvedPacket, resolvedEvidence);
+  if (
+    relativeToPacket === ''
+    || isAbsolute(relativeToPacket)
+    || relativeToPacket === '..'
+    || relativeToPacket.startsWith(`..${sep}`)
+  ) {
+    throw new Error('Evidence file must be inside the packet directory');
+  }
+
+  // Reject symlink file or any symlink parent segment (lexical walk before realpath).
+  let cursor = resolvedPacket;
+  for (const segment of relativeToPacket.split(sep).filter(Boolean)) {
+    cursor = join(cursor, segment);
+    let segmentLstat;
+    try {
+      segmentLstat = await lstat(cursor);
+    } catch {
+      throw new Error(`Evidence file not found: ${evidencePath}`);
+    }
+    if (segmentLstat.isSymbolicLink()) {
+      throw new Error('Evidence path must not be a symbolic link');
+    }
+  }
+
   let evidenceLstat;
   try {
     evidenceLstat = await lstat(evidencePath);
@@ -292,6 +320,10 @@ async function resolveContainedEvidencePath(packetDir, evidencePath) {
 
   if (evidenceLstat.isSymbolicLink()) {
     throw new Error('Evidence path must not be a symbolic link');
+  }
+
+  if (!evidenceLstat.isFile()) {
+    throw new Error('Evidence path must be a regular file');
   }
 
   const realPacket = await realpath(packetDir);
@@ -307,6 +339,60 @@ async function resolveContainedEvidencePath(packetDir, evidencePath) {
   }
 
   return relative(resolve(packetDir), resolve(evidencePath)).split('\\').join('/');
+}
+
+/**
+ * Stages whose evidence must already exist for a packet at `stage`
+ * (every completed transition before the current stage).
+ * Initial `reference` requires none.
+ */
+export function completedStagesBefore(stage) {
+  const index = STAGES.indexOf(stage);
+  if (index <= 0) return [];
+  return STAGES.slice(0, index);
+}
+
+/**
+ * Single evidence loader shared by advancePacket and validatePacketDir.
+ * Resolves a packet-local path (absolute or safe packet-relative), rejects
+ * traversal/symlink/non-file, parses JSON, and applies validateStageEvidence.
+ *
+ * @param {string} packetDir
+ * @param {string} evidencePath Absolute path or packet-relative pointer
+ * @param {string} stage Stage schema the evidence must satisfy
+ * @returns {Promise<{ relativePath: string, evidence: object }>}
+ */
+export async function loadContainedStageEvidence(packetDir, evidencePath, stage) {
+  if (typeof evidencePath !== 'string' || evidencePath.trim() === '') {
+    throw new Error('Evidence path must be a non-empty string');
+  }
+
+  let absolute;
+  if (isAbsolute(evidencePath) || /^[a-zA-Z]:[\\/]/.test(evidencePath)) {
+    absolute = resolve(evidencePath);
+  } else {
+    const safeRel = assertSafeRepoRelativePath(evidencePath, 'Evidence path');
+    absolute = resolve(packetDir, ...safeRel.split('/'));
+  }
+
+  const relativePath = await resolveContainedEvidencePath(packetDir, absolute);
+
+  let evidence;
+  try {
+    const raw = await readFile(absolute, 'utf8');
+    if (!raw.trim()) {
+      throw new Error('Evidence file is empty');
+    }
+    evidence = JSON.parse(raw);
+  } catch (error) {
+    if (error instanceof SyntaxError || /JSON|empty/i.test(error.message)) {
+      throw new Error(`Evidence file must be valid JSON: ${error.message}`);
+    }
+    throw error;
+  }
+
+  validateStageEvidence(stage, evidence);
+  return { relativePath, evidence };
 }
 
 export function nextStage(currentStage) {
@@ -370,6 +456,31 @@ export async function validatePacketDir(packetDir) {
     errors.push(matrixError);
   } else if (!Array.isArray(matrix.states)) {
     errors.push('render-matrix.json states must be an array');
+  }
+
+  // Trusted evidence lineage: every completed transition before packet.stage must
+  // have a packet-local pointer that loads and validates with the stage schema.
+  if (STAGES.includes(packet.stage)) {
+    const requiredStages = completedStagesBefore(packet.stage);
+    if (requiredStages.length > 0) {
+      const evidenceMap = packet.evidence;
+      if (evidenceMap === null || typeof evidenceMap !== 'object' || Array.isArray(evidenceMap)) {
+        errors.push('packet.json evidence must be an object');
+      } else {
+        for (const completedStage of requiredStages) {
+          const pointer = evidenceMap[completedStage];
+          if (typeof pointer !== 'string' || pointer.trim() === '') {
+            errors.push(`Missing evidence pointer for completed stage: ${completedStage}`);
+            continue;
+          }
+          try {
+            await loadContainedStageEvidence(packetDir, pointer, completedStage);
+          } catch (error) {
+            errors.push(`Evidence for completed stage ${completedStage}: ${error.message}`);
+          }
+        }
+      }
+    }
   }
 
   return { valid: errors.length === 0, errors: errors.sort(), packet };
@@ -860,26 +971,10 @@ export async function advancePacket(packetDir, evidencePath) {
   const target = nextStage(currentStage);
   if (!target) throw new Error('Workflow packet is already accepted');
 
-  const packetRelative = await resolveContainedEvidencePath(packetDir, evidencePath);
-
-  let evidence;
-  try {
-    const raw = await readFile(evidencePath, 'utf8');
-    if (!raw.trim()) {
-      throw new Error('Evidence file is empty');
-    }
-    evidence = JSON.parse(raw);
-  } catch (error) {
-    if (error instanceof SyntaxError || /JSON|empty/i.test(error.message)) {
-      throw new Error(`Evidence file must be valid JSON: ${error.message}`);
-    }
-    throw error;
-  }
-
-  validateStageEvidence(currentStage, evidence);
+  const { relativePath } = await loadContainedStageEvidence(packetDir, evidencePath, currentStage);
 
   packet.evidence ??= {};
-  packet.evidence[currentStage] = packetRelative;
+  packet.evidence[currentStage] = relativePath;
   packet.stage = target;
   await writeFile(packetPath, `${JSON.stringify(packet, null, 2)}\n`);
   return packet;

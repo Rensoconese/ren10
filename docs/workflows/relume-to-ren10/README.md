@@ -75,9 +75,14 @@ node scripts/relume-workflow.mjs init \
 
 node scripts/relume-workflow.mjs validate <packet-dir>
 node scripts/relume-workflow.mjs status <packet-dir>
-node scripts/relume-workflow.mjs advance <packet-dir> --evidence <packet-local-evidence.json>
+node scripts/relume-workflow.mjs advance <packet-dir> --evidence <packet-local-stage-evidence.json>
 node scripts/relume-workflow.mjs validate-all docs/workflows/relume-to-ren10/inventory.json
 ```
+
+`status` and `validate` both run full `validatePacketDir` (artifacts + evidence
+lineage). On any invalid packet, `status` exits nonzero and prints `INVALID`
+plus the validation errors to stderr — it never prints a trustworthy
+`moduleId: stage` line alone for a broken packet.
 
 Package scripts:
 
@@ -154,7 +159,16 @@ captures, and bulk Playwright suites are not published.
 ## Required evidence filenames
 
 Store evidence inside the packet directory (never symlinks or paths outside the
-packet). Suggested names:
+packet). `packet.evidence` must point at **one schema-valid JSON file per
+completed stage**. `validatePacketDir` loads each pointer through the same
+containment + `validateStageEvidence` path as `advancePacket`.
+
+A multi-stage audit ledger (for example `evidence.json` with nested
+`reference` / `green` / `reviewed` objects) is optional narrative history only.
+It **cannot** substitute for stage evidence: a single file cannot satisfy
+different stage schemas for every completed transition.
+
+Suggested per-stage names (use these as `packet.evidence` values):
 
 | Stage completed | Suggested evidence file | Notes |
 | --- | --- | --- |
@@ -163,6 +177,17 @@ packet). Suggested names:
 | `red` | `red-evidence.json` | Expected failing tests recorded |
 | `green` | `green-evidence.json` | Codex visual review proof (not generic pass) |
 | `reviewed` | `reviewed-evidence.json` | Explicit human acceptor identity |
+
+Lineage trust by stage (completed transitions before `packet.stage`):
+
+| `packet.stage` | Required evidence pointers |
+| --- | --- |
+| `reference` | none (initial stage) |
+| `mapped` | `reference` |
+| `red` | `reference`, `mapped` |
+| `green` | `reference`, `mapped`, `red` |
+| `reviewed` | `reference`, `mapped`, `red`, `green` |
+| `accepted` | `reference`, `mapped`, `red`, `green`, `reviewed` |
 
 Example green evidence shape:
 

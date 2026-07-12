@@ -81,3 +81,8 @@ Passing automated tests do not advance the packet past `green`. Codex must
 perform independent visual review of fresh desktop and mobile captures plus
 DOM/CSS cascade inspection before `green` → `reviewed`. A human acceptor (not
 automation, CI, Codex, or Grok) must accept before `reviewed` → `accepted`.
+
+Record each stage transition as its own packet-local evidence JSON file and
+store the path in `packet.evidence[<completed-stage>]`. A multi-stage audit
+ledger cannot substitute for those per-stage files; `validatePacketDir` reloads
+every completed pointer with the same schema as `advancePacket`.

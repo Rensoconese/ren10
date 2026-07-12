@@ -30,30 +30,69 @@ async function pathExists(file) {
   }
 }
 
+function stageEvidenceBody(stage) {
+  switch (stage) {
+    case 'reference':
+      return referenceEvidence();
+    case 'mapped':
+    case 'red':
+      return { stage, passed: true };
+    case 'green':
+      return greenEvidence();
+    case 'reviewed':
+      return reviewedEvidence();
+    default:
+      throw new Error(`No fixture evidence for stage: ${stage}`);
+  }
+}
+
+/** Write per-stage evidence files required for every completed transition before targetStage. */
+async function writeLineageEvidence(dir, targetStage) {
+  const index = STAGES.indexOf(targetStage);
+  if (index <= 0) return {};
+  const evidence = {};
+  for (const stage of STAGES.slice(0, index)) {
+    const name = `${stage}-evidence.json`;
+    await writeEvidence(dir, name, stageEvidenceBody(stage));
+    evidence[stage] = name;
+  }
+  return evidence;
+}
+
 async function makePacket(overrides = {}) {
   const root = await mkdtemp(join(tmpdir(), 'ren10-relume-'));
   roots.push(root);
   const dir = join(root, 'navbar5');
   await mkdir(dir);
+  await writeFile(join(dir, 'reference-brief.md'), '# Reference Brief\n\n## Retrieved facts\n\n- Complete source inspected.\n');
+  await writeFile(join(dir, 'translation-map.md'), '# Translation Map\n\n## Cascade risks\n\n- Native details inspected.\n');
+  await writeFile(join(dir, 'acceptance.json'), '{"version":1,"criteria":[{"id":"one-chevron","kind":"structure","description":"One visible chevron","automated":true}]}\n');
+  await writeFile(join(dir, 'render-matrix.json'), '{"version":1,"path":"/templates/blocks/nav-mega-menu.html","root":"[data-rbm-root]","states":[]}\n');
+
+  const stage = overrides.stage ?? 'reference';
+  const rest = { ...overrides };
+  delete rest.stage;
+  delete rest.evidence;
+
+  const evidence = Object.prototype.hasOwnProperty.call(overrides, 'evidence')
+    ? overrides.evidence
+    : await writeLineageEvidence(dir, stage);
+
   const packet = {
     version: 1,
     family: 'navbars',
     moduleId: 'navbar5',
     blockSlug: 'nav-mega-menu',
     blockPath: 'templates/blocks/nav-mega-menu.html',
-    stage: 'reference',
+    stage,
     allowedFiles: [
       'templates/blocks/nav-mega-menu.html',
       'tests/components/blocks-navigation.spec.cjs',
     ],
-    evidence: {},
-    ...overrides,
+    evidence,
+    ...rest,
   };
   await writeFile(join(dir, 'packet.json'), `${JSON.stringify(packet, null, 2)}\n`);
-  await writeFile(join(dir, 'reference-brief.md'), '# Reference Brief\n\n## Retrieved facts\n\n- Complete source inspected.\n');
-  await writeFile(join(dir, 'translation-map.md'), '# Translation Map\n\n## Cascade risks\n\n- Native details inspected.\n');
-  await writeFile(join(dir, 'acceptance.json'), '{"version":1,"criteria":[{"id":"one-chevron","kind":"structure","description":"One visible chevron","automated":true}]}\n');
-  await writeFile(join(dir, 'render-matrix.json'), '{"version":1,"path":"/templates/blocks/nav-mega-menu.html","root":"[data-rbm-root]","states":[]}\n');
   return dir;
 }
 
@@ -458,6 +497,23 @@ test('status CLI rejects unknown flags', async () => {
   assert.match(output, /Unknown|Usage:|unexpected|--verbose/i);
 });
 
+test('status CLI rejects malformed acceptance as INVALID (never trustworthy stage alone)', async () => {
+  const dir = await makePacket();
+  await writeFile(join(dir, 'acceptance.json'), '{\n');
+  const output = await expectCliFailure(['status', dir]);
+  assert.match(output, /INVALID/);
+  assert.match(output, /acceptance\.json/i);
+  assert.doesNotMatch(output, /^navbar5: reference$/m);
+});
+
+test('status CLI rejects missing evidence lineage as INVALID', async () => {
+  const dir = await makePacket({ stage: 'accepted', evidence: {} });
+  const output = await expectCliFailure(['status', dir]);
+  assert.match(output, /INVALID/);
+  assert.match(output, /evidence|reference|mapped|red|green|reviewed/i);
+  assert.doesNotMatch(output, /^navbar5: accepted$/m);
+});
+
 test('advance CLI requires exactly one packet dir', async () => {
   const output = await expectCliFailure(['advance', '--evidence', 'x.json']);
   assert.match(output, /Usage:|exactly one|packet/i);
@@ -690,6 +746,172 @@ test('advance accepts explicit human acceptance evidence from reviewed', async (
   assert.equal(updated.evidence.reviewed, 'reviewed-evidence.json');
 });
 
+// --- Final broad review: trusted evidence lineage in validatePacketDir ---
+
+test('validatePacketDir at reference requires no evidence pointers', async () => {
+  const dir = await makePacket({ stage: 'reference', evidence: {} });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, true, result.errors.join('\n'));
+  assert.deepEqual(result.errors, []);
+});
+
+test('validatePacketDir rejects forged accepted packet with empty evidence', async () => {
+  const dir = await makePacket({ stage: 'accepted', evidence: {} });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  for (const stage of ['reference', 'mapped', 'red', 'green', 'reviewed']) {
+    assert.ok(
+      result.errors.some((e) => e.includes(stage) && /evidence|pointer|missing/i.test(e)),
+      `expected missing lineage for ${stage}: ${result.errors.join('; ')}`,
+    );
+  }
+});
+
+test('validatePacketDir rejects missing pointer for intermediate completed stage', async () => {
+  const dir = await makePacket({
+    stage: 'green',
+    evidence: {
+      reference: 'reference-evidence.json',
+      // mapped intentionally omitted
+      red: 'red-evidence.json',
+    },
+  });
+  await writeEvidence(dir, 'reference-evidence.json', referenceEvidence());
+  await writeEvidence(dir, 'red-evidence.json', { stage: 'red', passed: true });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /mapped/i.test(e) && /evidence|pointer|missing/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir rejects missing evidence file for a pointer', async () => {
+  const dir = await makePacket({
+    stage: 'mapped',
+    evidence: { reference: 'reference-evidence.json' },
+  });
+  // file not written
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /reference/i.test(e) && /not found|missing|Evidence/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir rejects wrong-stage evidence content for a completed stage', async () => {
+  const dir = await makePacket({
+    stage: 'mapped',
+    evidence: { reference: 'reference-evidence.json' },
+  });
+  await writeEvidence(dir, 'reference-evidence.json', {
+    stage: 'mapped',
+    passed: true,
+  });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /reference/i.test(e) && /stage/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir rejects weak green evidence that cannot skip Codex review', async () => {
+  const dir = await makePacket({
+    stage: 'reviewed',
+    evidence: {
+      reference: 'reference-evidence.json',
+      mapped: 'mapped-evidence.json',
+      red: 'red-evidence.json',
+      green: 'green-evidence.json',
+    },
+  });
+  await writeEvidence(dir, 'reference-evidence.json', referenceEvidence());
+  await writeEvidence(dir, 'mapped-evidence.json', { stage: 'mapped', passed: true });
+  await writeEvidence(dir, 'red-evidence.json', { stage: 'red', passed: true });
+  await writeEvidence(dir, 'green-evidence.json', { stage: 'green', passed: true });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /green/i.test(e) && /Codex|captures|reviewedCommit|cascade|result/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir rejects malformed evidence JSON for completed stage', async () => {
+  const dir = await makePacket({
+    stage: 'mapped',
+    evidence: { reference: 'reference-evidence.json' },
+  });
+  await writeEvidence(dir, 'reference-evidence.json', '{\n');
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /reference/i.test(e) && /JSON|Invalid|malformed/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir rejects traversal evidence pointers', async () => {
+  const dir = await makePacket({
+    stage: 'mapped',
+    evidence: { reference: '../escape-evidence.json' },
+  });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /reference/i.test(e) && /traversal|repository-relative|inside|Evidence|absolute|segment/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir rejects symlink evidence pointers', async () => {
+  const dir = await makePacket({
+    stage: 'mapped',
+    evidence: { reference: 'link-evidence.json' },
+  });
+  const externalRoot = await mkdtemp(join(tmpdir(), 'ren10-relume-lineage-sym-'));
+  roots.push(externalRoot);
+  const external = join(externalRoot, 'external-evidence.json');
+  await writeFile(external, `${JSON.stringify(referenceEvidence())}\n`);
+  await symlink(external, join(dir, 'link-evidence.json'));
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /reference/i.test(e) && /symlink|symbolic link|inside/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('validatePacketDir accepts accepted packet with complete schema-valid lineage', async () => {
+  const dir = await makePacket({ stage: 'accepted' });
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, true, result.errors.join('\n'));
+  assert.deepEqual(result.errors, []);
+});
+
+test('advancePacket and validatePacketDir share evidence schema (weak green rejected by both)', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const weak = await writeEvidence(dir, 'green-weak.json', { stage: 'green', passed: true });
+  await assert.rejects(() => advancePacket(dir, weak), /Codex|captures|reviewedCommit|cascade|result/i);
+
+  // Point lineage green at the same weak file and re-validate as if already reviewed.
+  const packet = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
+  packet.stage = 'reviewed';
+  packet.evidence = {
+    ...packet.evidence,
+    green: 'green-weak.json',
+  };
+  await writeFile(join(dir, 'packet.json'), `${JSON.stringify(packet, null, 2)}\n`);
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /green/i.test(e) && /Codex|captures|reviewedCommit|cascade|result/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
 // --- Fix pass: moduleId / path traversal containment ---
 
 test('scaffoldPacket rejects unsafe moduleId segments (no mutation outside root)', async () => {
@@ -842,11 +1064,7 @@ test('inventory rejects duplicate module ids across families', async () => {
 test('accepted inventory entry requires an accepted packet', async () => {
   const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-'));
   roots.push(modulesRoot);
-  const packetDir = await makePacket({ stage: 'green' });
-  await mkdir(join(modulesRoot, 'navbar5'));
-  for (const file of ['packet.json', 'reference-brief.md', 'translation-map.md', 'acceptance.json', 'render-matrix.json']) {
-    await copyFile(join(packetDir, file), join(modulesRoot, 'navbar5', file));
-  }
+  await seedPacketUnder(modulesRoot, 'navbar5', { stage: 'green' });
   const inventory = {
     version: 1,
     families: [{ id: 'navbars', modules: [{ id: 'navbar5', status: 'accepted', packet: 'navbar5' }] }],
@@ -992,11 +1210,7 @@ test('inventory rejects packet path that is a symlink escape', async () => {
 test('inventory validates in_progress and accepted packets with validatePacketDir', async () => {
   const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-full-'));
   roots.push(modulesRoot);
-  const good = await makePacket({ stage: 'accepted' });
-  await mkdir(join(modulesRoot, 'navbar5'));
-  for (const file of ['packet.json', 'reference-brief.md', 'translation-map.md', 'acceptance.json', 'render-matrix.json']) {
-    await copyFile(join(good, file), join(modulesRoot, 'navbar5', file));
-  }
+  await seedPacketUnder(modulesRoot, 'navbar5', { stage: 'accepted' });
   // Incomplete in_progress packet: missing translation map
   await mkdir(join(modulesRoot, 'navbar6'));
   await writeFile(
@@ -1115,13 +1329,8 @@ async function seedPacketUnder(modulesRoot, moduleDirName, overrides = {}) {
   const source = await makePacket(overrides);
   const dest = join(modulesRoot, moduleDirName);
   await mkdir(dest, { recursive: true });
-  for (const file of [
-    'packet.json',
-    'reference-brief.md',
-    'translation-map.md',
-    'acceptance.json',
-    'render-matrix.json',
-  ]) {
+  // Copy all packet artifacts including per-stage evidence files for lineage trust.
+  for (const file of await readdir(source)) {
     await copyFile(join(source, file), join(dest, file));
   }
   return dest;
