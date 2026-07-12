@@ -115,7 +115,7 @@ npm run workflow:relume:capture -- \
 
 ## Residual risks for Codex
 
-1. Tablet mid-width column density (3 groups + featured at 834px).
+1. ~~Tablet mid-width column density (3 groups + featured at 834px).~~ **Addressed** — see tablet composition fix below.
 2. Desktop hover vs click co-existence (preventDefault while pointer-inside).
 3. Absolute mega panel stacking relative to page hero (fixed in block; re-verify after any ren-nav core change).
 4. Catalog index does not yet list the featured block (out of allowedFiles for this packet).
@@ -126,3 +126,51 @@ npm run workflow:relume:capture -- \
 2. Advance green→reviewed only with real Codex evidence.
 3. Human acceptance → accepted.
 4. Optional: catalog card in `templates/blocks/index.html` under a later allowedFiles expansion.
+
+---
+
+## Tablet composition fix (post-Codex visual gate FAIL)
+
+**Date:** 2026-07-12  
+**Trigger:** Codex visual gate FAILED on `tablet-light-open` at **834px** — three destination columns + right feature rail made titles/descriptions excessively narrow and vertically fragmented.  
+**Starting HEAD:** `81d8cb2`  
+**Constraint:** Stay at packet stage **`green`** (no green→reviewed advance). Preserve markers/content/one-tree/hover.
+
+### Intentional adaptation
+
+| Band | Shell | Mega content |
+| --- | --- | --- |
+| `<48rem` | Mobile toggle shell | Single-column groups; feature below; descs may hide |
+| **48rem–63.999rem** | **Desktop shell** (no hamburger) | **3 groups full width; featured stacked below as horizontal media\|copy card** |
+| **≥64rem** | Desktop shell | 3 groups + constrained right feature rail (source-intent side-by-side) |
+
+Shell breakpoint remains intentional Ren10 **`48rem`** (`ren-nav`). Mid-width change is content composition only.
+
+### Changes
+
+| Path | Change |
+| --- | --- |
+| `templates/blocks/nav-mega-menu-featured.html` | Split desktop mega CSS into tablet stack band + wide side-by-side band; horizontal featured card at mid width |
+| `tests/components/blocks-navigation.spec.cjs` | New structural test: readable dest width, stacked featured, horizontal media\|body, ≥64rem side-by-side restore |
+| `docs/.../translation-map.md` | Document mega content bands |
+| `docs/.../acceptance.json` | Criterion `tablet-mega-composition` |
+| `docs/.../render-matrix.json` | Notes on `tablet-light-open` intentional adaptation |
+
+### Verification
+
+| Suite | Result |
+| --- | --- |
+| navbar6 (Desktop Light + Dark) | **32 passed** (was 30; +2 for tablet test ×2 projects) |
+| Full `blocks-navigation.spec.cjs` | **62 passed** (was 60) |
+| Workflow + capture units | **114 passed** |
+| Matrix recapture | **12 PNG + 12 JSON** at implementation HEAD |
+
+### Gross visual inspection (Grok — not Gate 6)
+
+| State | Notes |
+| --- | --- |
+| `tablet-light-open` (834px) | Desktop shell; 3 readable columns; featured full-width horizontal card below groups |
+| `desktop-light-open` (1280) | Side-by-side groups + right rail restored |
+| `mobile-light-nested-open` | Toggle + stacked groups/feature unchanged |
+
+**Do not treat this as Codex approval.** Packet remains **`green`**.

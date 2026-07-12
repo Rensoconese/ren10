@@ -961,6 +961,109 @@ test.describe('Navbar Mega Menu Featured (navbar6)', () => {
     await expectNoOverflow(page, 'html');
   });
 
+  test('tablet mid-width: stacked mega composition with readable destinations', async ({ page }) => {
+    // 834px is ≥48rem (desktop shell) but <64rem (mid-width mega content band).
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoFeaturedBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rmf-root] .ren-nav-toggle');
+    await expect(toggle).toBeHidden();
+
+    await page.locator('.rmf-disclosure > summary').click();
+    await expect(page.locator('.rmf-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmf-panel')).toBeVisible();
+    await expect(page.locator('.rmf-group')).toHaveCount(3);
+    await expect(page.locator('.rmf-dest')).toHaveCount(12);
+    await expect(page.locator('.rmf-dest-desc')).toHaveCount(12);
+    await expect(page.locator('.rmf-feature')).toHaveCount(1);
+
+    const tablet = await page.evaluate(() => {
+      const groups = document.querySelector('.rmf-groups');
+      const featured = document.querySelector('.rmf-featured');
+      const panel = document.querySelector('.rmf-panel');
+      const dest = document.querySelector('.rmf-dest');
+      const destLabel = document.querySelector('.rmf-dest-label');
+      const destDesc = document.querySelector('.rmf-dest-desc');
+      const featureInner = document.querySelector('.rmf-feature-inner');
+      const featureMedia = document.querySelector('.rmf-feature-media');
+      const featureBody = document.querySelector('.rmf-feature-body');
+      if (!groups || !featured || !panel || !dest || !destLabel || !destDesc) return null;
+
+      const gr = groups.getBoundingClientRect();
+      const fr = featured.getBoundingClientRect();
+      const pr = panel.getBoundingClientRect();
+      const dr = dest.getBoundingClientRect();
+      const labelR = destLabel.getBoundingClientRect();
+      const descR = destDesc.getBoundingClientRect();
+      const mediaR = featureMedia?.getBoundingClientRect();
+      const bodyR = featureBody?.getBoundingClientRect();
+      const innerStyle = featureInner ? getComputedStyle(featureInner) : null;
+
+      // Readable width: destination text column should not be a narrow crumb.
+      // Prefer measured copy width; fall back to whole dest.
+      const readableWidth = Math.max(labelR.width, descR.width, dr.width - 48);
+
+      return {
+        groupsTop: gr.top,
+        groupsBottom: gr.bottom,
+        groupsWidth: Math.round(gr.width),
+        featuredTop: fr.top,
+        featuredWidth: Math.round(fr.width),
+        panelWidth: Math.round(pr.width),
+        destWidth: Math.round(dr.width),
+        readableWidth: Math.round(readableWidth),
+        labelHeight: Math.round(labelR.height),
+        descHeight: Math.round(descR.height),
+        stacked: fr.top >= gr.bottom - 2,
+        featuredFullBand: fr.width >= gr.width * 0.9,
+        mediaLeftOfBody: Boolean(
+          mediaR && bodyR && mediaR.left < bodyR.left - 8 && Math.abs(mediaR.top - bodyR.top) < 48
+        ),
+        featureDisplay: innerStyle?.display || '',
+        featureColumns: innerStyle?.gridTemplateColumns || '',
+      };
+    });
+
+    expect(tablet, 'tablet composition metrics').toBeTruthy();
+    expect(tablet.stacked, `featured must sit below groups (ft=${tablet.featuredTop} gb=${tablet.groupsBottom})`).toBe(
+      true
+    );
+    expect(
+      tablet.featuredFullBand,
+      `featured ${tablet.featuredWidth} should span groups band ${tablet.groupsWidth}`
+    ).toBe(true);
+    // Regression guard: 3-up columns across full tablet panel, not 3+side squeeze.
+    expect(tablet.readableWidth, `destination readable width ${tablet.readableWidth}`).toBeGreaterThanOrEqual(160);
+    expect(tablet.destWidth, `destination hit width ${tablet.destWidth}`).toBeGreaterThanOrEqual(180);
+    // Labels/descriptions should not stack into a tall multi-line crumb column.
+    expect(tablet.labelHeight, `label height ${tablet.labelHeight}`).toBeLessThanOrEqual(48);
+    expect(tablet.descHeight, `desc height ${tablet.descHeight}`).toBeLessThanOrEqual(72);
+    expect(tablet.mediaLeftOfBody, 'prefer horizontal featured media|copy relationship').toBe(true);
+    await expectNoOverflow(page, 'html');
+
+    // ≥64rem restores side-by-side groups + constrained right feature panel.
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('.rmf-panel')).toBeVisible();
+    const wide = await page.evaluate(() => {
+      const groups = document.querySelector('.rmf-groups');
+      const featured = document.querySelector('.rmf-featured');
+      if (!groups || !featured) return null;
+      const gr = groups.getBoundingClientRect();
+      const fr = featured.getBoundingClientRect();
+      return {
+        sideBySide: fr.left >= gr.right - 4 && Math.abs(fr.top - gr.top) < 48,
+        featuredCapped: fr.width < gr.width - 8 && fr.width <= 320,
+        featuredWidth: Math.round(fr.width),
+        groupsWidth: Math.round(gr.width),
+      };
+    });
+    expect(wide).toBeTruthy();
+    expect(wide.sideBySide, `wide should be side-by-side (fw=${wide.featuredWidth} gw=${wide.groupsWidth})`).toBe(
+      true
+    );
+    expect(wide.featuredCapped, `featured ${wide.featuredWidth} vs groups ${wide.groupsWidth}`).toBe(true);
+  });
+
   test('desktop chrome: single chevron, neutral details, aligned trigger, 16:9 feature', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoFeaturedBlock(page, staticServer.origin);

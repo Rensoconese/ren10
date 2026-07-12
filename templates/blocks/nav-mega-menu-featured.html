@@ -367,6 +367,10 @@
      * Unavoidable ren-nav integration (desktop mega panel).
      * ren-nav has no full-width disclosure panel API; position the panel under
      * the bar relative to .ren-nav so it spans the preview without a second tree.
+     *
+     * Shell breakpoint remains 48rem (ren-nav). Mega *content* has a second band:
+     * 48rem–63.999rem stacks groups full-width then featured below (readable
+     * mid-width composition); ≥64rem restores groups + constrained right panel.
      */
     @media (min-width: 48.01rem) {
       .rmf-disclosure {
@@ -386,11 +390,68 @@
         animation: rmf-panel-enter var(--duration-enter) var(--ease-enter);
       }
 
-      /*
-       * Desktop mega body: keep three destination groups + featured column
-       * on one horizontal row (ren-switcher wrap would stack featured below).
-       */
+      .rmf-panel-inner > .rmf-groups {
+        flex: 1 1 auto;
+        flex-basis: auto;
+        min-width: 0;
+        width: 100%;
+      }
+
+      /* Three destination columns whenever the desktop shell is active. */
+      .rmf-groups.ren-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /*
+     * Tablet / mid desktop (834px class): still desktop shell (no hamburger),
+     * but mega body is stacked — three groups span the full panel width, then
+     * the featured region sits below as a horizontal promo card.
+     */
+    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
       .rmf-panel-inner.ren-switcher {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+      }
+
+      .rmf-panel-inner > .rmf-featured {
+        flex: 1 1 auto;
+        max-width: none;
+        width: 100%;
+        border-inline-start: none;
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      /* Horizontal featured relationship: media | copy across the full band. */
+      .rmf-feature-inner {
+        display: grid;
+        grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+        align-items: center;
+        gap: 0;
+      }
+
+      .rmf-feature-media {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        min-height: 0;
+        border-end-end-radius: 0;
+        border-start-end-radius: 0;
+      }
+
+      .rmf-feature-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--space-4) var(--space-5);
+      }
+    }
+
+    /* Wide desktop: groups + constrained right feature column (source intent). */
+    @media (min-width: 64rem) {
+      .rmf-panel-inner.ren-switcher {
+        flex-direction: row;
         flex-wrap: nowrap;
         align-items: stretch;
       }
@@ -399,17 +460,15 @@
         flex: 1 1 auto;
         flex-basis: auto;
         min-width: 0;
+        width: auto;
       }
 
       .rmf-panel-inner > .rmf-featured {
         flex: 0 0 18rem;
         max-width: 18rem;
         width: 18rem;
-      }
-
-      /* Three destination columns on desktop. */
-      .rmf-groups.ren-grid-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-inline-start: 1px solid var(--color-border);
+        border-block-start: none;
       }
     }
 

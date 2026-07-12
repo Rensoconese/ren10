@@ -56,6 +56,12 @@
       "automated": true
     },
     {
+      "id": "tablet-mega-composition",
+      "kind": "visual-structure",
+      "description": "At 834px (desktop shell, no hamburger): three groups span full mega width with readable destination copy (≥160px text width); featured region stacks below groups as a horizontal media|copy card. At ≥64rem restore groups + constrained right feature panel side-by-side.",
+      "automated": true
+    },
+    {
       "id": "mobile-rows",
       "kind": "visual-structure",
       "description": "Mobile primary rows are full-width and start-aligned without nested-card details chrome",

@@ -206,6 +206,7 @@
       "actions": [
         { "type": "click", "selector": ".rmf-disclosure > summary" }
       ],
+      "notes": "Desktop shell at 834px (no .ren-nav-toggle). Intentional mid-width mega adaptation: three full-width destination groups with featured horizontal card stacked below (not 3+right-rail). Wide desktop side-by-side resumes at ≥64rem.",
       "expectedMarkers": {
         ".rmf-dest": 12,
         ".rmf-dest-desc": 12,

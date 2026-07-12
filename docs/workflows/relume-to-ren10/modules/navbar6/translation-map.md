@@ -80,15 +80,23 @@ validated under packet `navbar5`.
 
 ## Responsive adaptation
 
-- Ren10 breakpoint: **`48rem`** (matches `ren-nav` contract; ~768px).
+- Ren10 shell breakpoint: **`48rem`** (matches `ren-nav` contract; ~768px).
 - This is an **intentional Ren10 difference** versus the source tablet/mobile split
   near ~991px and Tailwind `md`/`lg` (exact values unavailable).
-- Desktop (≥48rem): panel `position: absolute` under the bar; three destination
-  columns + constrained featured column; 16:9 feature media; **no hamburger
-  toggle interaction** (toggle is shell chrome for the mobile path only).
-  Mid widths such as **834px** are still desktop shell under the intentional
-  `48rem` breakpoint — render-matrix `tablet-light-open` captures that honestly
-  (mega open via disclosure, not `.ren-nav-toggle`).
+- **Desktop shell (≥48rem):** panel `position: absolute` under the bar; **no
+  hamburger toggle interaction** (toggle is shell chrome for the mobile path
+  only). Mid widths such as **834px** stay on the desktop shell — render-matrix
+  `tablet-light-open` captures that honestly (mega open via disclosure, not
+  `.ren-nav-toggle`).
+- **Mega content bands (intentional mid-width adaptation):**
+  - **48rem–63.999rem (tablet / mid desktop):** three destination groups span
+    the **full panel width**; featured region **stacks below** as a **horizontal
+    promo card** (16:9 media beside copy). Avoids the unreadable 3-column +
+    right-rail squeeze that appears when the wide desktop composition is forced
+    at ~834px.
+  - **≥64rem (wide desktop):** three destination columns + **constrained right
+    feature panel** (source-intent side-by-side mega); 16:9 feature media in the
+    rail.
 - Mobile (<48rem): panel in-flow inside open nav shell; groups single column;
   descriptions may hide; feature stacks below groups; toggle opens shell.
 
