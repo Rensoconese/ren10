@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { afterEach, test } from 'node:test';
-import { access, mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, mkdtemp, mkdir, readdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
   STAGES,
@@ -88,6 +88,32 @@ function referenceEvidence(overrides = {}) {
     passed: true,
     source: 'relume-mcp',
     completeSource: true,
+    ...overrides,
+  };
+}
+
+function greenEvidence(overrides = {}) {
+  return {
+    stage: 'green',
+    result: 'passed',
+    reviewer: 'Codex',
+    reviewedCommit: '73d1416',
+    captures: {
+      desktop: 'desktop-light-default.png',
+      mobile: 'mobile-light-default.png',
+    },
+    capturesFresh: true,
+    cascadeInspection: 'Inspected DOM semantics and CSS cascade for details/summary and layout primitives; no duplicate chevrons.',
+    ...overrides,
+  };
+}
+
+function reviewedEvidence(overrides = {}) {
+  return {
+    stage: 'reviewed',
+    kind: 'human-acceptance',
+    acceptor: 'product-owner',
+    result: 'accepted',
     ...overrides,
   };
 }
@@ -519,4 +545,239 @@ test('scaffoldPacket resolves absolute evidence-free packet path with resolve sa
     blockPath: 'templates/blocks/nav-abs.html',
   });
   assert.equal(resolve(packetDir), resolve(join(root, 'navbar8')));
+});
+
+// --- Fix pass: stage-specific evidence schemas (green visual + reviewed human) ---
+
+test('advance rejects generic {stage,passed:true} green evidence (cannot skip Codex visual review)', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-generic.json', {
+    stage: 'green',
+    passed: true,
+  });
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /Codex|captures|reviewedCommit|cascade|result|green evidence/i,
+  );
+  const packet = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
+  assert.equal(packet.stage, 'green');
+  assert.equal(packet.evidence.green, undefined);
+});
+
+test('advance rejects green evidence missing desktop or mobile captures', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-no-mobile.json', greenEvidence({
+    captures: { desktop: 'desktop-light-default.png' },
+  }));
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /mobile|captures/i,
+  );
+});
+
+test('advance rejects green evidence without Codex reviewer identity', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-wrong-reviewer.json', greenEvidence({
+    reviewer: 'Grok',
+  }));
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /Codex|reviewer/i,
+  );
+});
+
+test('advance rejects green evidence with invalid reviewedCommit', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-bad-commit.json', greenEvidence({
+    reviewedCommit: 'not a commit!!',
+  }));
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /reviewedCommit|commit|packet/i,
+  );
+});
+
+test('advance rejects green evidence without cascade inspection proof', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-no-cascade.json', greenEvidence({
+    cascadeInspection: '',
+  }));
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /cascade/i,
+  );
+});
+
+test('advance rejects green evidence when capturesFresh is not true', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-stale.json', greenEvidence({
+    capturesFresh: false,
+  }));
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /capturesFresh|fresh/i,
+  );
+});
+
+test('advance accepts complete green visual-review evidence and stores packet-relative path', async () => {
+  const dir = await makePacket({ stage: 'green' });
+  const evidence = await writeEvidence(dir, 'green-evidence.json', greenEvidence({
+    reviewedCommit: 'packet',
+  }));
+  const updated = await advancePacket(dir, evidence);
+  assert.equal(updated.stage, 'reviewed');
+  assert.equal(updated.evidence.green, 'green-evidence.json');
+});
+
+test('advance rejects generic {stage,passed:true} reviewed evidence (cannot skip human acceptance)', async () => {
+  const dir = await makePacket({ stage: 'reviewed' });
+  const evidence = await writeEvidence(dir, 'reviewed-generic.json', {
+    stage: 'reviewed',
+    passed: true,
+  });
+  await assert.rejects(
+    () => advancePacket(dir, evidence),
+    /human-acceptance|acceptor|result|reviewed evidence/i,
+  );
+  const packet = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
+  assert.equal(packet.stage, 'reviewed');
+});
+
+test('advance rejects automation acceptor for reviewed→accepted', async () => {
+  const dir = await makePacket({ stage: 'reviewed' });
+  for (const acceptor of ['automation', 'CI', 'bot', 'Codex', 'Grok', 'system']) {
+    const evidence = await writeEvidence(dir, `reviewed-${acceptor}.json`, reviewedEvidence({ acceptor }));
+    await assert.rejects(
+      () => advancePacket(dir, evidence),
+      /human|acceptor|automation/i,
+    );
+  }
+  const packet = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
+  assert.equal(packet.stage, 'reviewed');
+});
+
+test('advance accepts explicit human acceptance evidence from reviewed', async () => {
+  const dir = await makePacket({ stage: 'reviewed' });
+  const evidence = await writeEvidence(dir, 'reviewed-evidence.json', reviewedEvidence());
+  const updated = await advancePacket(dir, evidence);
+  assert.equal(updated.stage, 'accepted');
+  assert.equal(updated.evidence.reviewed, 'reviewed-evidence.json');
+});
+
+// --- Fix pass: moduleId / path traversal containment ---
+
+test('scaffoldPacket rejects unsafe moduleId segments (no mutation outside root)', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ren10-relume-modid-'));
+  roots.push(root);
+  const parentBefore = new Set(await readdir(dirname(root)));
+  const unsafe = ['..', '.', '../escape', 'foo/bar', 'foo\\bar', '/tmp/evil', 'C:\\evil', 'a/../b', ''];
+  for (const moduleId of unsafe) {
+    await assert.rejects(
+      () => scaffoldPacket({
+        root,
+        family: 'navbars',
+        moduleId,
+        blockSlug: 'nav-x',
+        blockPath: 'templates/blocks/nav-x.html',
+      }),
+      /module|slug|path|invalid|segment/i,
+    );
+  }
+  assert.deepEqual(await readdir(root), []);
+  const parentAfter = new Set(await readdir(dirname(root)));
+  for (const name of parentAfter) {
+    if (!parentBefore.has(name) && name !== root.split('/').pop()) {
+      // Only the temp root itself may be new under tmpdir; no escape siblings from moduleId
+    }
+  }
+  // Confirm no sibling named "escape" was created next to root
+  assert.equal(await pathExists(join(dirname(root), 'escape')), false);
+});
+
+test('scaffoldPacket rejects absolute and traversal blockPath/testPath', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ren10-relume-paths-'));
+  roots.push(root);
+  const badPaths = [
+    '/absolute/block.html',
+    '../outside.html',
+    'templates//blocks/x.html',
+    'templates/./blocks/x.html',
+    'templates/blocks/../../secret.html',
+    '',
+  ];
+  for (const blockPath of badPaths) {
+    await assert.rejects(
+      () => scaffoldPacket({
+        root,
+        family: 'navbars',
+        moduleId: 'navbar-safe',
+        blockSlug: 'nav-x',
+        blockPath,
+      }),
+      /blockPath|repository-relative|traversal|absolute|path|empty/i,
+    );
+  }
+  await assert.rejects(
+    () => scaffoldPacket({
+      root,
+      family: 'heroes',
+      moduleId: 'hero-safe',
+      blockSlug: 'hero-x',
+      blockPath: 'templates/blocks/hero-x.html',
+      testPath: '../escape.spec.cjs',
+    }),
+    /testPath|repository-relative|traversal|absolute|path/i,
+  );
+  assert.equal(await pathExists(join(root, 'navbar-safe')), false);
+  assert.equal(await pathExists(join(root, 'hero-safe')), false);
+});
+
+test('init CLI rejects module path traversal without mutating outside root', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ren10-relume-cli-trav-'));
+  roots.push(root);
+  const output = await expectCliFailure([
+    'init',
+    '--root', root,
+    '--family', 'navbars',
+    '--module', '../escape-module',
+    '--block', 'nav-x',
+    '--path', 'templates/blocks/nav-x.html',
+  ]);
+  assert.match(output, /module|slug|path|invalid|segment/i);
+  assert.equal(await pathExists(join(root, 'escape-module')), false);
+  assert.equal(await pathExists(join(dirname(root), 'escape-module')), false);
+});
+
+test('init CLI rejects traversal --path without mutation', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ren10-relume-cli-path-'));
+  roots.push(root);
+  const output = await expectCliFailure([
+    'init',
+    '--root', root,
+    '--family', 'navbars',
+    '--module', 'navbar9',
+    '--block', 'nav-x',
+    '--path', '../../etc/passwd',
+  ]);
+  assert.match(output, /path|traversal|repository-relative|absolute/i);
+  assert.equal(await pathExists(join(root, 'navbar9')), false);
+});
+
+// --- Fix pass: symlink evidence containment ---
+
+test('advance rejects evidence path that is a symlink to external JSON', async () => {
+  const dir = await makePacket();
+  const externalRoot = await mkdtemp(join(tmpdir(), 'ren10-relume-symlink-'));
+  roots.push(externalRoot);
+  const external = join(externalRoot, 'external-evidence.json');
+  await writeFile(external, `${JSON.stringify(referenceEvidence())}\n`);
+  const linkPath = join(dir, 'link-evidence.json');
+  await symlink(external, linkPath);
+  await assert.rejects(
+    () => advancePacket(dir, linkPath),
+    /symlink|symbolic link|inside the packet/i,
+  );
+  const packet = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
+  assert.equal(packet.stage, 'reference');
+  assert.equal(packet.evidence.reference, undefined);
 });
