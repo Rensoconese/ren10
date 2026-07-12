@@ -205,14 +205,31 @@ See appended GREEN contract-alignment section at end of this report (filled afte
 | Workflow + capture units | **114 passed** |
 | `npm run lint` | CSS/tokens/contracts OK; JS 0 errors (29 pre-existing warnings) |
 | `git diff --check` | clean |
-| Matrix recapture | **12 PNG + 12 JSON** stamped `63424a947e2f8071316fc8dd91e1446d4b035a7a` |
+| Matrix recapture | **12 PNG + 12 JSON** stamped full `10cf71b1b07e400cfcf57d59588a269379b2b97b` (freshness refresh; every ignored JSON commit matches HEAD) |
 | Packet validate | `navbar6 (green)` — **not advanced** |
 
-### Cascade / visual (Codex + independent)
+### Capture freshness refresh (post–contract alignment)
 
+**Date:** 2026-07-12
+**HEAD:** `10cf71b1b07e400cfcf57d59588a269379b2b97b`
+**Scope:** evidence/report only — no product code, stage stays **`green`**.
+
+| Check | Result |
+| --- | --- |
+| `npm run workflow:relume:capture …` | **12 PNG + 12 JSON** under `.ren10-workflow/captures/navbar6` |
+| JSON `commit` stamps | **12/12** = `10cf71b1b07e400cfcf57d59588a269379b2b97b` |
+| `markerCounts` vs matrix | **12/12** states: 12 dest, 12 desc, 1 chevron, 1 feature, 1 view-all, 3 groups |
+| `green-evidence.reviewedCommit` | full `10cf71b1b07e400cfcf57d59588a269379b2b97b` |
+| `capturesFresh` | **true** only after verification above |
+| Suite counts (current) | **34** / **64** / **114** |
+
+### Cascade / visual (Codex + independent, re-checked at `10cf71b`)
+
+- **desktop-light-open / desktop-dark-open:** groups + right 16:9 rail; single chevron; opaque panel; ren-icon SVGs sized (no attr regressions).
 - **tablet-light-open:** fixed/readable — 3 full-width columns + horizontal featured card below.
-- **desktop-light-open / desktop-dark-open:** groups + right 16:9 rail; single chevron; opaque panel.
-- **mobile-light-nested-open / mobile-js-disabled-open:** one tree; feature below; toggle only when JS on.
-- Remaining matrix states (closed, hover-open, reduced-motion, mobile-nav-open, mobile-dark-nested) inspected; markerCounts 12/12/1/1/1/3.
+- **mobile-light-nested-open / mobile-dark-nested-open:** one tree; start-aligned rows; feature below; icons OK on light/dark.
+- **mobile-js-disabled-open:** no toggle; tree + mega usable progressive enhancement.
+- **desktop-reduced-motion-open:** panel open, motion zeroed, layout parity with open.
+- Remaining matrix states (closed, hover-open, mobile-nav-open) inspected; markerCounts 12/12/1/1/1/3.
 
 **Stage remains `green`. Do not advance green→reviewed.**
