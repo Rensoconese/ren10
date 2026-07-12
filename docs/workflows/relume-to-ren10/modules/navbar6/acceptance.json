@@ -16,7 +16,7 @@
     {
       "id": "top-level-count",
       "kind": "structure",
-      "description": "Four top-level primary entries: three ordinary ren-nav-link destinations plus one mega details/summary trigger",
+      "description": "Exactly four direct children of #rmf-primary-links (> li count === 4): three ordinary ren-nav-link destinations plus one mega details/summary trigger",
       "automated": true
     },
     {
@@ -68,6 +68,12 @@
       "automated": true
     },
     {
+      "id": "desktop-pointer-hover",
+      "kind": "behavior",
+      "description": "Desktop (≥48rem) pointer hover opens the mega disclosure; pointer remains open when moving from summary into the panel (stable close region); leaving the disclosure+panel hit region closes the disclosure. Hover is additive to click/Enter/Space, not a replacement.",
+      "automated": true
+    },
+    {
       "id": "js-disabled-fallback",
       "kind": "behavior",
       "description": "With JavaScript disabled on mobile, the single tree, twelve destinations, featured item, and see-all remain usable via native disclosure",
@@ -106,7 +112,7 @@
     {
       "id": "render-matrix-10",
       "kind": "structure",
-      "description": "render-matrix.json declares 10+ states with selector actions and expectedMarkers for templates/blocks/nav-mega-menu-featured.html",
+      "description": "render-matrix.json declares 10+ states with selector actions (including hover for desktop-light-hover-open) and expectedMarkers; tablet-light-open at 834px is a desktop-shell mega open without .ren-nav-toggle (48rem breakpoint honesty)",
       "automated": true
     },
     {

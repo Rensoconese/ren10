@@ -12,7 +12,7 @@ const { startStaticServer } = require('../tests/utils/static-server.cjs');
 const USAGE = `Usage:
   capture-block-matrix <matrix.json> --module <id> --output <dir> [--repo-root <dir>]`;
 
-const ALLOWED_ACTION_TYPES = new Set(['click', 'press', 'focus']);
+const ALLOWED_ACTION_TYPES = new Set(['click', 'press', 'focus', 'hover']);
 const ALLOWED_THEMES = new Set(['light', 'dark']);
 
 /**
@@ -218,7 +218,7 @@ export function validateRenderMatrix(matrix) {
           errors.push(`State ${stateId} action[${index}] has unsupported action type: ${action.type}`);
           continue;
         }
-        if (action.type === 'click' || action.type === 'focus') {
+        if (action.type === 'click' || action.type === 'focus' || action.type === 'hover') {
           if (action.selector === undefined || action.selector === null) {
             errors.push(`State ${stateId} action[${index}] (${action.type}) requires a selector`);
           } else if (isMalformedSelector(action.selector)) {
@@ -264,6 +264,7 @@ export function validateRenderMatrix(matrix) {
 async function runAction(page, action) {
   if (action.type === 'click') return page.locator(action.selector).click();
   if (action.type === 'focus') return page.locator(action.selector).focus();
+  if (action.type === 'hover') return page.locator(action.selector).hover();
   if (action.type === 'press') {
     if (action.selector) await page.locator(action.selector).focus();
     return page.keyboard.press(action.key);

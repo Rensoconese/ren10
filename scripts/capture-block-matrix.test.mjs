@@ -118,11 +118,30 @@ test('validateRenderMatrix rejects unsafe page paths', () => {
   }
 });
 
+test('validateRenderMatrix accepts hover actions with a selector', () => {
+  const candidate = cloneMatrix({
+    states: [{
+      ...matrix.states[0],
+      id: 'desktop-hover-open',
+      actions: [{ type: 'hover', selector: '.rbm-disclosure > summary' }],
+    }],
+  });
+  assert.deepEqual(validateRenderMatrix(candidate), []);
+});
+
 test('validateRenderMatrix rejects malformed actions, selectors, and keys', () => {
   const cases = [
     {
-      actions: [{ type: 'hover', selector: '.x' }],
+      actions: [{ type: 'dblclick', selector: '.x' }],
       needle: 'unsupported action type',
+    },
+    {
+      actions: [{ type: 'hover' }],
+      needle: 'requires a selector',
+    },
+    {
+      actions: [{ type: 'hover', selector: '  ' }],
+      needle: 'malformed selector',
     },
     {
       actions: [{ type: 'click' }],

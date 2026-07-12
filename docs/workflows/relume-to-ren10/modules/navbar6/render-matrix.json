@@ -38,6 +38,24 @@
       }
     },
     {
+      "id": "desktop-light-hover-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "hover", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
       "id": "desktop-dark-closed",
       "viewport": { "width": 1280, "height": 1024 },
       "theme": "dark",
@@ -180,13 +198,12 @@
       }
     },
     {
-      "id": "tablet-light-nested-open",
+      "id": "tablet-light-open",
       "viewport": { "width": 834, "height": 1112 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
       "actions": [
-        { "type": "click", "selector": ".ren-nav-toggle" },
         { "type": "click", "selector": ".rmf-disclosure > summary" }
       ],
       "expectedMarkers": {

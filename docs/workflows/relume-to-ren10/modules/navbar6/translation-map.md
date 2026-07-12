@@ -20,7 +20,7 @@
 | Site navbar shell | **`ren-nav`** (`<ren-nav>` + `<nav class="ren-nav">`) | Brand, primary links, actions, mobile toggle, landmark | Ren10 tokens/themes; original demo copy only |
 | Primary destinations | Single `<ul class="ren-nav-links" id="rmf-primary-links">` | One tree for all widths | Progressive enhancement for JS-off mobile |
 | Four top-level entries | Three `a.ren-nav-link` + one mega disclosure summary | Count and order intent | Native disclosure instead of non-native trigger |
-| Mega trigger | Native **`details`/`summary`** (`.rmf-disclosure`) | Open/close panel; single chevron owner | Click/Enter/Space only (no hover-only requirement); full keyboard + Escape |
+| Mega trigger | Native **`details`/`summary`** (`.rmf-disclosure`) | Open/close panel; single chevron owner | **Desktop pointer hover-open** (Relume parity) **plus** click/Enter/Space; Escape; **stable pointer close** when leaving the disclosure+panel hit region (not flicker when moving summary → panel) |
 | Dropdown indicator | Single authored SVG (`.rmf-chevron`) | One visible affordance | Classless `summary::after` neutralized |
 | 3×4 destinations | Layout primitives (`ren-grid`, `ren-stack-*`) + anchors (`.rmf-dest`) | Twelve destinations in three groups | Token-driven row anatomy; descriptions hide only via Ren10 CSS at narrow widths |
 | Featured blog promo | One feature anchor (`.rmf-feature`) with media/body | 16:9 media, title, description, read-more cue | **No nested button** — text/span cue only; real single anchor |
@@ -40,8 +40,17 @@ come from `components/patterns/ren-nav/pattern.md`.
 
 Chosen so the rich mega panel stays in the Light DOM document flow on mobile
 and remains usable without JavaScript. Native keyboard activation replaces the
-source’s non-native mega trigger. Block-local JS only adds Escape, outside-click,
-destination-close, mobile-close sync, and single-controller re-init.
+source’s non-native mega trigger. Block-local JS adds:
+
+- desktop **pointer hover-open** (preserve Relume desktop behavior) with
+  **stable pointer close** when the pointer leaves the combined
+  disclosure + panel hit region (moving from summary into the panel must not
+  close);
+- Escape, outside-click, destination-close, mobile-close sync, and
+  single-controller re-init.
+
+Hover is **in addition to** click/Enter/Space — never a hover-only contract.
+Below `48rem`, mega open remains click-driven (mobile shell path).
 
 ### Featured blog (16:9)
 
@@ -75,9 +84,13 @@ validated under packet `navbar5`.
 - This is an **intentional Ren10 difference** versus the source tablet/mobile split
   near ~991px and Tailwind `md`/`lg` (exact values unavailable).
 - Desktop (≥48rem): panel `position: absolute` under the bar; three destination
-  columns + constrained featured column; 16:9 feature media.
+  columns + constrained featured column; 16:9 feature media; **no hamburger
+  toggle interaction** (toggle is shell chrome for the mobile path only).
+  Mid widths such as **834px** are still desktop shell under the intentional
+  `48rem` breakpoint — render-matrix `tablet-light-open` captures that honestly
+  (mega open via disclosure, not `.ren-nav-toggle`).
 - Mobile (<48rem): panel in-flow inside open nav shell; groups single column;
-  descriptions may hide; feature stacks below groups.
+  descriptions may hide; feature stacks below groups; toggle opens shell.
 
 ## Progressive enhancement
 
@@ -97,7 +110,7 @@ validated under packet `navbar5`.
 | --- | --- |
 | **`ren-menu`** | Command menu with `role="menu"` / `menuitem` is wrong for persistent navigation destinations and a rich featured article. Contract routes app navigation to `ren-nav` / `ren-sidebar`. |
 | **Top-layer popovers** (`ren-popover`, `ren-nav-dropdown` `[popover]`) | Useful for small dropdowns; awkward for a full-width mega panel that must become **in-flow** content inside the mobile menu. Top layer fights stacked mobile layout. |
-| Hover-only open | Not keyboard-equivalent; source uses hover on desktop but Ren10 requires Enter/Space/click parity. |
+| Hover-**only** open (no keyboard/click) | Not keyboard-equivalent. **Desktop hover-open is preserved** alongside click/Enter/Space; rejecting hover-only is not rejecting Relume pointer open. |
 | Duplicated desktop/mobile trees | Violates one-tree progressive enhancement and a11y landmark clarity; source does this — Ren10 does not. |
 | Nested button inside feature anchor | Invalid HTML / dual interactive targets; source defect must be fixed, not ported. |
 | Motion without reduced-motion | Source omits it; Ren10 requires `prefers-reduced-motion` zeroing of block-local transitions. |

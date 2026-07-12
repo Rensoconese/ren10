@@ -120,3 +120,53 @@ CI= npx playwright test --config tests/components/playwright.config.cjs \
 1. Implement only `templates/blocks/nav-mega-menu-featured.html` (+ catalog index if allowed in a later packet expansion).
 2. Keep changes inside `packet.allowedFiles`.
 3. Re-run navbar6 suite to green; then matrix capture + Codex visual gate.
+
+---
+
+## Phase A review findings fix (interaction contract)
+
+**Commit:** `fix: correct navbar6 interaction contract`  
+**Date:** 2026-07-12  
+**Scope:** Packet + RED tests + capture-runner hover action only. **No product block.**
+
+### Findings addressed
+
+| # | Finding | Fix |
+| --- | --- | --- |
+| 1 | `tablet-light-nested-open` @ **834px** clicked `.ren-nav-toggle`, but Ren10 `ren-nav` shell is desktop above **`48rem` (~768px)** — toggle is not a valid interaction | Renamed to **`tablet-light-open`**: same 834×1112 viewport, mega opens via **`.rmf-disclosure > summary` click only** (honest mid-width desktop shell). Documented in translation map responsive adaptation. |
+| 2 | Relume desktop **pointer hover-open** was rejected as hover-only; matrix had no supported hover action | Contract now **preserves desktop hover-open + stable pointer close** (summary → panel stays open; leave disclosure+panel closes) **in addition to** click/Enter/Space/Escape. Capture runner gained generic **`hover`** action (`ALLOWED_ACTION_TYPES`, validate + `runAction` → Playwright `.hover()`), with unit tests. Matrix state **`desktop-light-hover-open`** uses `{ type: "hover", selector: ".rmf-disclosure > summary" }`. RED interaction test expanded for hover open / stable region / leave-close. |
+| 3 | Missing direct-child count for primary list | Anatomy RED test asserts **`#rmf-primary-links > li` count === 4** (plus existing 3 peer links + 1 mega summary). Acceptance `top-level-count` updated. |
+
+### Files touched
+
+- `docs/workflows/relume-to-ren10/modules/navbar6/{render-matrix,acceptance,translation-map,reference-brief,mapped-evidence}.*`
+- `scripts/capture-block-matrix.mjs` + `scripts/capture-block-matrix.test.mjs` (hover TDD)
+- `tests/components/blocks-navigation.spec.cjs` (still **15** navbar6 cases)
+
+### Re-validation
+
+```text
+$ node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar6
+Valid workflow packet: navbar6 (red)
+
+$ node scripts/relume-workflow.mjs status docs/workflows/relume-to-ren10/modules/navbar6
+navbar6: red
+
+$ npm run workflow:relume:check
+Module navbar6 ren10Block missing or not a regular file: templates/blocks/nav-mega-menu-featured.html
+(exit 1 — expected; only missing RED block)
+
+$ node --test scripts/capture-block-matrix.test.mjs
+# tests 25 / pass 25
+
+$ CI= npx playwright test ... --grep "navbar6" --project="Desktop Light"
+15 failed / 0 passed — all at gotoFeaturedBlock 404 (fast fail)
+```
+
+Render matrix: **12** states (was 11); `validateRenderMatrix` errors: none.
+
+### Still non-goals
+
+- No `templates/blocks/nav-mega-menu-featured.html`
+- No green/reviewed/accepted advance
+- No matrix screenshot capture (Gate 5 remains post-implementation)

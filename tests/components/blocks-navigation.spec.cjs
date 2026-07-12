@@ -772,6 +772,8 @@ test.describe('Navbar Mega Menu Featured (navbar6)', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoFeaturedBlock(page, staticServer.origin);
 
+    // Exact top-level list ownership: four direct children, three peer links + one mega.
+    await expect(page.locator('#rmf-primary-links > li')).toHaveCount(4);
     const topLevelLinks = page.locator('#rmf-primary-links > li > a.ren-nav-link');
     const megaSummaries = page.locator('#rmf-primary-links > li > .rmf-disclosure > summary');
     await expect(topLevelLinks).toHaveCount(3);
@@ -812,7 +814,7 @@ test.describe('Navbar Mega Menu Featured (navbar6)', () => {
     expect(tagName).toBe('A');
   });
 
-  test('summary opens by click and keyboard; Escape restores focus', async ({ page }) => {
+  test('summary opens by click, keyboard, and desktop pointer hover; Escape restores focus', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoFeaturedBlock(page, staticServer.origin);
 
@@ -839,6 +841,22 @@ test.describe('Navbar Mega Menu Featured (navbar6)', () => {
     await summary.focus();
     await page.keyboard.press(' ');
     await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    // Relume desktop pointer hover-open (additive to click/keyboard).
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    // Stable close region: moving summary → panel must not close.
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rmf-dest').first()).toBeVisible();
+
+    // Leave the disclosure+panel hit region → close.
+    await page.locator('[data-rmf-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
   test('outside click and destination activation close the disclosure', async ({ page }) => {

@@ -94,8 +94,9 @@ Exact proprietary labels are excluded from this packet.
 - Horizontal logo / four primary entries / two actions
 - Viewport-width absolute mega panel under the bar
 - Three-column destinations + constrained featured column (16:9 media intent)
-- Open via hover **or** click in source; Ren10 will require keyboard-equivalent open (click /
-  Enter / Space on a native disclosure) — see translation map intentional differences
+- Open via hover **or** click in source; Ren10 preserves desktop **pointer hover-open**
+  **and** requires keyboard-equivalent open (click / Enter / Space on a native
+  disclosure) plus Escape and stable pointer close — see translation map
 
 ### Tablet
 
