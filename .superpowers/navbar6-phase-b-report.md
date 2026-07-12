@@ -1,8 +1,8 @@
 # Navbar 6 Phase B Report
 
-**Date:** 2026-07-12  
-**Branch / worktree:** `codex/navbar6` @ `/Users/rensoconese/RenDS/worktrees/navbar6`  
-**Starting HEAD:** `c82ed8d`  
+**Date:** 2026-07-12
+**Branch / worktree:** `codex/navbar6` @ `/Users/rensoconese/RenDS/worktrees/navbar6`
+**Starting HEAD:** `c82ed8d`
 **Scope:** Implement `templates/blocks/nav-mega-menu-featured.html` to GREEN (automated + captures). **No** green→reviewed advance.
 
 ## Outcome
@@ -110,30 +110,30 @@ npm run workflow:relume:capture -- \
 | `docs/workflows/relume-to-ren10/modules/navbar6/packet.json` | stage green; red evidence pointer |
 | `.superpowers/navbar6-phase-b-report.md` | This report |
 
-**Tests not modified** (no packet/test contradiction).  
+**Tests not modified** (no packet/test contradiction).
 **Preserved:** `.superpowers/navbar6-phase-a-*`, user scratch files.
 
-## Residual risks for Codex
+## Residual risks (current)
 
-1. ~~Tablet mid-width column density (3 groups + featured at 834px).~~ **Addressed** — see tablet composition fix below.
-2. Desktop hover vs click co-existence (preventDefault while pointer-inside).
-3. Absolute mega panel stacking relative to page hero (fixed in block; re-verify after any ren-nav core change).
+1. ~~Tablet mid-width column density (3 groups + featured at 834px).~~ **Addressed** — stacked mega composition at 48rem–63.999rem; Codex + independent review confirm readable destinations.
+2. Desktop hover vs click co-existence (preventDefault while pointer-inside) — still intentional; covered by interaction tests.
+3. Absolute mega panel stacking relative to page hero — fixed in block; re-verify after any ren-nav core change.
 4. Catalog index does not yet list the featured block (out of allowedFiles for this packet).
 
-## Next (Gate 6+)
+## Gate 6 status
 
-1. Codex independent visual review of fresh captures + cascade.
-2. Advance green→reviewed only with real Codex evidence.
-3. Human acceptance → accepted.
-4. Optional: catalog card in `templates/blocks/index.html` under a later allowedFiles expansion.
+- **Stage remains `green`** — do **not** advance green→reviewed until packet evidence pointer + human acceptance flow require it.
+- Codex visual + cascade inspection is recorded in `green-evidence.json` after the tablet fix and RenDS contract alignment.
+- Human acceptance → `reviewed` / `accepted` remains open.
 
 ---
 
 ## Tablet composition fix (post-Codex visual gate FAIL)
 
-**Date:** 2026-07-12  
-**Trigger:** Codex visual gate FAILED on `tablet-light-open` at **834px** — three destination columns + right feature rail made titles/descriptions excessively narrow and vertically fragmented.  
-**Starting HEAD:** `81d8cb2`  
+**Date:** 2026-07-12
+**Trigger:** Codex visual gate FAILED on `tablet-light-open` at **834px** — three destination columns + right feature rail made titles/descriptions excessively narrow and vertically fragmented.
+**Starting HEAD:** `81d8cb2`
+**Resulting HEAD:** `63424a9`
 **Constraint:** Stay at packet stage **`green`** (no green→reviewed advance). Preserve markers/content/one-tree/hover.
 
 ### Intentional adaptation
@@ -156,21 +156,63 @@ Shell breakpoint remains intentional Ren10 **`48rem`** (`ren-nav`). Mid-width ch
 | `docs/.../acceptance.json` | Criterion `tablet-mega-composition` |
 | `docs/.../render-matrix.json` | Notes on `tablet-light-open` intentional adaptation |
 
-### Verification
+### Verification (at `63424a9`)
 
 | Suite | Result |
 | --- | --- |
 | navbar6 (Desktop Light + Dark) | **32 passed** (was 30; +2 for tablet test ×2 projects) |
 | Full `blocks-navigation.spec.cjs` | **62 passed** (was 60) |
 | Workflow + capture units | **114 passed** |
-| Matrix recapture | **12 PNG + 12 JSON** at implementation HEAD |
+| Matrix recapture | **12 PNG + 12 JSON** at `63424a9` |
 
-### Gross visual inspection (Grok — not Gate 6)
+### Visual states (tablet fix)
 
 | State | Notes |
 | --- | --- |
-| `tablet-light-open` (834px) | Desktop shell; 3 readable columns; featured full-width horizontal card below groups |
+| `tablet-light-open` (834px) | **Fixed/readable:** desktop shell; 3 readable columns; featured full-width horizontal card below groups |
 | `desktop-light-open` (1280) | Side-by-side groups + right rail restored |
 | `mobile-light-nested-open` | Toggle + stacked groups/feature unchanged |
 
-**Do not treat this as Codex approval.** Packet remains **`green`**.
+---
+
+## RenDS contract alignment (GREEN review findings)
+
+**Date:** 2026-07-12
+**Base HEAD:** `63424a9`
+**Constraint:** Stage stays **`green`** (no advance).
+
+### Findings addressed
+
+1. **`green-evidence.json`** made truthful/current after Codex + independent cascade/visual inspection (full commit hash, suite counts, all matrix states).
+2. **ren-icon contract:** removed explicit `width`/`height` from every inline SVG owned by `.ren-icon-*`; preserved `viewBox`, `focusable="false"`, `aria-hidden="true"`; computed sizes verified via regression test.
+3. **Token geometry audit:** replaced reusable literals (`32px`, `0.375rem`, `80rem`, `20rem`, soft `--ren-space-*` fallbacks) with size/radius/width/space tokens; documented justified residuals (`4.5rem` bar, `9rem` grid-min, `18rem` rail, `10–14rem` tablet media track, `360px` hero canvas, breakpoints) in `translation-map.md` and block comments.
+4. **Hygiene:** trailing-whitespace clean; obsolete Phase B “residual tablet for Codex / not approval” statements reconciled above.
+
+### Regression
+
+- New Playwright test: `ren-icon wrappers size SVGs without width/height attributes` (forbids attrs; asserts sm≈16px / lg≈24px fill).
+
+### Verification
+
+See appended GREEN contract-alignment section at end of this report (filled after suites/captures).
+
+### Verification (contract alignment — exact)
+
+| Suite | Result |
+| --- | --- |
+| navbar6 focused (Light+Dark) | **34 passed** (17×2; +1 ren-icon attr/size regression vs 32 at 63424a9) |
+| Full `blocks-navigation.spec.cjs` | **64 passed** (was 62 at 63424a9) |
+| Workflow + capture units | **114 passed** |
+| `npm run lint` | CSS/tokens/contracts OK; JS 0 errors (29 pre-existing warnings) |
+| `git diff --check` | clean |
+| Matrix recapture | **12 PNG + 12 JSON** stamped `63424a947e2f8071316fc8dd91e1446d4b035a7a` |
+| Packet validate | `navbar6 (green)` — **not advanced** |
+
+### Cascade / visual (Codex + independent)
+
+- **tablet-light-open:** fixed/readable — 3 full-width columns + horizontal featured card below.
+- **desktop-light-open / desktop-dark-open:** groups + right 16:9 rail; single chevron; opaque panel.
+- **mobile-light-nested-open / mobile-js-disabled-open:** one tree; feature below; toggle only when JS on.
+- Remaining matrix states (closed, hover-open, reduced-motion, mobile-nav-open, mobile-dark-nested) inspected; markerCounts 12/12/1/1/1/3.
+
+**Stage remains `green`. Do not advance green→reviewed.**

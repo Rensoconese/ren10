@@ -1064,6 +1064,87 @@ test.describe('Navbar Mega Menu Featured (navbar6)', () => {
     expect(wide.featuredCapped, `featured ${wide.featuredWidth} vs groups ${wide.groupsWidth}`).toBe(true);
   });
 
+  test('ren-icon wrappers size SVGs without width/height attributes', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFeaturedBlock(page, staticServer.origin);
+    await page.locator('.rmf-disclosure > summary').click();
+    await expect(page.locator('.rmf-panel')).toBeVisible();
+
+    const iconAudit = await page.evaluate(() => {
+      const root = document.querySelector('[data-rmf-root]');
+      if (!root) return { error: 'missing-root' };
+
+      const wrappers = Array.from(root.querySelectorAll('.ren-icon'));
+      const results = [];
+      for (const wrap of wrappers) {
+        const svg = wrap.querySelector('svg');
+        if (!svg) {
+          results.push({ error: 'missing-svg', className: wrap.className });
+          continue;
+        }
+        const wrapStyle = getComputedStyle(wrap);
+        const svgStyle = getComputedStyle(svg);
+        const wrapRect = wrap.getBoundingClientRect();
+        const svgRect = svg.getBoundingClientRect();
+        const isSm = wrap.classList.contains('ren-icon-sm');
+        const isLg = wrap.classList.contains('ren-icon-lg');
+        results.push({
+          className: wrap.className,
+          hasWidthAttr: svg.hasAttribute('width'),
+          hasHeightAttr: svg.hasAttribute('height'),
+          viewBox: svg.getAttribute('viewBox'),
+          focusable: svg.getAttribute('focusable'),
+          ariaHidden: svg.getAttribute('aria-hidden'),
+          isSm,
+          isLg,
+          // Prefer computed style (stable) over transformed bounding boxes.
+          wrapW: Math.round(parseFloat(wrapStyle.width)),
+          wrapH: Math.round(parseFloat(wrapStyle.height)),
+          svgW: Math.round(parseFloat(svgStyle.width)),
+          svgH: Math.round(parseFloat(svgStyle.height)),
+          rectW: Math.round(wrapRect.width),
+          rectH: Math.round(wrapRect.height),
+          svgRectW: Math.round(svgRect.width),
+          svgRectH: Math.round(svgRect.height),
+        });
+      }
+      return { count: results.length, results };
+    });
+
+    expect(iconAudit.error, JSON.stringify(iconAudit)).toBeUndefined();
+    // 12 destination icons (lg) + 1 chevron (sm) + 1 view-all chevron (sm)
+    expect(iconAudit.count, 'expected ren-icon wrappers in featured mega').toBe(14);
+
+    for (const item of iconAudit.results) {
+      expect(item.hasWidthAttr, `${item.className} must not set svg width`).toBe(false);
+      expect(item.hasHeightAttr, `${item.className} must not set svg height`).toBe(false);
+      expect(item.viewBox, item.className).toBeTruthy();
+      expect(item.focusable, item.className).toBe('false');
+      expect(item.ariaHidden, item.className).toBe('true');
+      // Computed size comes from .ren-icon-* (sm=16px / 1rem, lg=24px / 1.5rem).
+      if (item.isSm) {
+        expect(item.wrapW, `${item.className} wrapW=${item.wrapW}`).toBe(16);
+        expect(item.wrapH, `${item.className} wrapH=${item.wrapH}`).toBe(16);
+      }
+      if (item.isLg) {
+        expect(item.wrapW, `${item.className} wrapW=${item.wrapW}`).toBe(24);
+        expect(item.wrapH, `${item.className} wrapH=${item.wrapH}`).toBe(24);
+      }
+      expect(item.svgW, `${item.className} svg fills wrap width`).toBe(item.wrapW);
+      expect(item.svgH, `${item.className} svg fills wrap height`).toBe(item.wrapH);
+      // Bounding rect can expand slightly under rotate transforms; keep a loose visual floor.
+      expect(item.rectW, `${item.className} visual wrapW`).toBeGreaterThanOrEqual(item.wrapW - 1);
+      expect(item.rectH, `${item.className} visual wrapH`).toBeGreaterThanOrEqual(item.wrapH - 1);
+      expect(item.svgRectW, `${item.className} visual svgW`).toBeGreaterThanOrEqual(item.wrapW - 1);
+      expect(item.svgRectH, `${item.className} visual svgH`).toBeGreaterThanOrEqual(item.wrapH - 1);
+    }
+
+    const smCount = iconAudit.results.filter((r) => r.isSm).length;
+    const lgCount = iconAudit.results.filter((r) => r.isLg).length;
+    expect(smCount, 'sm icons (chevron + view-all)').toBe(2);
+    expect(lgCount, 'lg destination icons').toBe(12);
+  });
+
   test('desktop chrome: single chevron, neutral details, aligned trigger, 16:9 feature', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoFeaturedBlock(page, staticServer.origin);

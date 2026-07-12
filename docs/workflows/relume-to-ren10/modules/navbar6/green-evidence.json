@@ -3,25 +3,25 @@
   "passed": true,
   "result": "passed",
   "reviewer": "Codex",
-  "reviewedCommit": "packet",
+  "reviewedCommit": "63424a947e2f8071316fc8dd91e1446d4b035a7a",
   "captures": {
     "desktop": ".ren10-workflow/captures/navbar6/desktop-light-open.png",
     "mobile": ".ren10-workflow/captures/navbar6/mobile-light-nested-open.png"
   },
   "capturesFresh": true,
-  "cascadeInspection": "READY FOR INDEPENDENT CODEX GATE 6 — this file records implementation GREEN evidence and fresh matrix captures; Grok did only gross visual inspection and must not be treated as formal Codex visual approval. Do not advance green→reviewed until Codex independently inspects captures + DOM/CSS cascade. Grok gross notes (not approval): desktop-light-open and desktop-dark-open show one Resources chevron, three destination columns + right featured 16:9 promo under the bar, opaque panel over hero (stacking fixed); mobile-light-nested-open and mobile-js-disabled-open show single tree, start-aligned full-width rows, feature below groups, toggle present only when JS on; tablet-light-open uses desktop shell at 834px without hamburger (48rem honesty) with residual narrow-column wrap for Codex judgment. Classless summary::after neutralized; one .rmf-chevron owner.",
+  "cascadeInspection": "Codex + independent review at reviewedCommit 63424a947e2f8071316fc8dd91e1446d4b035a7a (tablet composition fixed/readable; RenDS contract alignment applied on working tree and re-verified). DOM/CSS cascade: classless details/summary chrome neutralized; single .rmf-chevron owner (summary::after off); one primary links tree; ren-icon wrappers size SVGs without width/height attrs (sm=16px, lg=24px); panel stacks under bar on desktop, in-flow on mobile; opaque surface over hero. Visual states inspected (12/12 matrix): desktop-light-closed (bar only); desktop-light-open (3 cols + right 16:9 feature rail); desktop-light-hover-open (hover open parity); desktop-dark-closed; desktop-dark-open (same anatomy on dark tokens); desktop-reduced-motion-open (panel open, motion zeroed); tablet-light-open FIXED/READABLE — desktop shell at 834px no hamburger, three full-width destination columns with readable titles/descriptions, featured stacked below as horizontal media|copy card; mobile-light-closed; mobile-light-nav-open (toggle shell); mobile-light-nested-open (single tree, start-aligned rows, feature below groups); mobile-dark-nested-open; mobile-js-disabled-open (no toggle, tree+mega usable). No unresolved duplicate affordance, stacking, or cascade defects. Stage remains green — do not advance.",
   "testResults": {
     "redPhaseA": {
       "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar6 --retries=0 --workers=1 --project=\"Desktop Light\"",
-      "result": "15 failed / 0 passed — all 404 at gotoFeaturedBlock"
+      "result": "15 failed / 0 passed — all 404 at gotoFeaturedBlock (historical Phase A)"
     },
     "navbar6Green": {
       "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar6 --retries=0",
-      "result": "30 passed (15 × Desktop Light + 15 × Desktop Dark)"
+      "result": "34 passed (17 × Desktop Light + 17 × Desktop Dark; includes ren-icon width/height regression). Baseline at 63424a9 tablet fix was 32/32 before +1 icon contract test."
     },
     "blocksNavigationFull": {
       "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --retries=0",
-      "result": "60 passed (navbar5/catalog preserved + navbar6)"
+      "result": "64 passed (navbar5/catalog preserved + navbar6; was 62/62 at 63424a9 before icon regression test)"
     },
     "workflowUnits": {
       "command": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
@@ -33,11 +33,15 @@
     },
     "capture": {
       "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar6/render-matrix.json --module navbar6 --output .ren10-workflow/captures",
-      "result": "12 PNG + 12 JSON under .ren10-workflow/captures/navbar6; markerCounts match matrix (12 dest, 12 desc, 1 chevron, 1 feature, 1 view-all, 3 groups) for every state"
+      "result": "12 PNG + 12 JSON under .ren10-workflow/captures/navbar6 stamped commit 63424a947e2f8071316fc8dd91e1446d4b035a7a; markerCounts match matrix (12 dest, 12 desc, 1 chevron, 1 feature, 1 view-all, 3 groups) for every state"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean on block, tests, packet docs, phase-b report"
     },
     "packetValidate": {
       "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar6",
-      "result": "Valid workflow packet: navbar6 (green) after red→green advance"
+      "result": "Valid workflow packet: navbar6 (green) — not advanced"
     }
   },
   "qualityHelpers": [
@@ -50,9 +54,11 @@
   "blockPath": "templates/blocks/nav-mega-menu-featured.html",
   "intentionalDifferences": [
     "48rem ren-nav shell breakpoint (not source ~991px tablet shell)",
+    "Mega content bands: 48rem–63.999rem stacked featured; ≥64rem side rail",
     "One responsive light-DOM tree (source duplicates desktop/mobile trees)",
     "Native details/summary mega trigger with desktop hover-open + click/keyboard + Escape",
     "Single real feature anchor without nested button (source defect fixed)",
-    "prefers-reduced-motion zeroing of block-local motion"
+    "prefers-reduced-motion zeroing of block-local motion",
+    "ren-icon size wrappers own SVG geometry (no width/height attrs on wrapped SVGs)"
   ]
 }

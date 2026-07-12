@@ -100,6 +100,30 @@ validated under packet `navbar5`.
 - Mobile (<48rem): panel in-flow inside open nav shell; groups single column;
   descriptions may hide; feature stacks below groups; toggle opens shell.
 
+## Token policy (geometry / radii / widths)
+
+Reusable literals in the block map to RenDS size tokens where a token exists:
+
+| Former / role | Token / decision |
+| --- | --- |
+| Brand mark `32px` | `var(--size-sm)` (2rem / 32px) |
+| Summary radius `0.375rem` | `var(--radius-md)` (no 0.375rem token; align with dest surfaces) |
+| Panel max width `80rem` | `var(--width-7xl)` |
+| Featured rail `20rem` (default / mobile stack base) | `var(--width-xs)` |
+| Summary padding soft `--ren-space-*` fallbacks | `var(--space-2)` / `var(--space-3)` |
+| Inline SVG `width`/`height` on `.ren-icon-*` children | **Removed** — size from `.ren-icon-sm` / `.ren-icon-lg` only |
+
+### Justified residuals (no matching token; documented)
+
+| Literal | Why retained |
+| --- | --- |
+| `--ren-nav-height: 4.5rem` | Intentional demo bar taller than component default `3.5rem` (navbar5 parity) |
+| `--grid-min: 9rem` | Custom 3-up destination track floor; no width token between control sizes and `--width-xs` |
+| Featured wide rail `18rem` | Source-intent constrained side panel; deliberately narrower than `--width-xs` (20rem) |
+| Tablet media track `minmax(10rem, 14rem)` | Custom media\|copy proportion for mid-width horizontal featured card |
+| Hero `min-height: 360px` | Preview-page canvas only (not mega chrome); no matching size token |
+| Shell / content breakpoints `48rem` / `48.01rem` / `63.999rem` / `64rem` | Intentional Ren10 shell honesty + mid-width mega composition bands (see Responsive adaptation) |
+
 ## Progressive enhancement
 
 **One-tree progressive enhancement:**
