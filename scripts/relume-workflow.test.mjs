@@ -136,6 +136,24 @@ async function expectCliFailure(args) {
   }
 }
 
+// --- Task 3: operator templates ---
+
+test('workflow templates contain every mandatory gate', async () => {
+  const templateRoot = join(process.cwd(), 'docs/workflows/relume-to-ren10/templates');
+  const reference = await readFile(join(templateRoot, 'reference-brief.md'), 'utf8');
+  const map = await readFile(join(templateRoot, 'translation-map.md'), 'utf8');
+  const packet = await readFile(join(templateRoot, 'implementation-packet.md'), 'utf8');
+  assert.match(reference, /## Retrieved facts/);
+  assert.match(reference, /## Responsive states/);
+  assert.match(reference, /## Unavailable evidence/);
+  assert.match(map, /## RenDS mapping/);
+  assert.match(map, /## Cascade risks/);
+  assert.match(map, /primitive-zero\.md/);
+  assert.match(packet, /## Required RED evidence/);
+  assert.match(packet, /## Allowed files/);
+  assert.match(packet, /## Required render matrix/);
+});
+
 // --- Task 1: packet validation ---
 
 test('validatePacketDir accepts a complete reference-stage packet', async () => {
