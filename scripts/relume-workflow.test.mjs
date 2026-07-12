@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
+import { execFile } from 'node:child_process';
 import { afterEach, test } from 'node:test';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { promisify } from 'node:util';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import {
@@ -9,6 +11,8 @@ import {
   nextStage,
   validatePacketDir,
 } from './lib/relume-workflow.mjs';
+
+const execFileAsync = promisify(execFile);
 
 const roots = [];
 afterEach(async () => Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true }))));
@@ -91,4 +95,54 @@ test('validatePacketDir reports malformed render-matrix.json', async () => {
   assert.equal(result.valid, false);
   assert.equal(result.errors.length, 1);
   assert.match(result.errors[0], /^Invalid render-matrix\.json: /);
+});
+
+test('init creates a packet with deterministic paths', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ren10-relume-cli-'));
+  roots.push(root);
+  const { stdout } = await execFileAsync(process.execPath, [
+    'scripts/relume-workflow.mjs',
+    'init',
+    '--root', root,
+    '--family', 'navbars',
+    '--module', 'navbar6',
+    '--block', 'nav-mega-menu-featured',
+    '--path', 'templates/blocks/nav-mega-menu-featured.html',
+  ], { cwd: process.cwd() });
+  assert.match(stdout, /Created workflow packet: .*navbar6/);
+  const packet = JSON.parse(await readFile(join(root, 'navbar6', 'packet.json'), 'utf8'));
+  assert.equal(packet.stage, 'reference');
+  assert.deepEqual(packet.allowedFiles, [
+    'templates/blocks/nav-mega-menu-featured.html',
+    'tests/components/blocks-navigation.spec.cjs',
+  ]);
+});
+
+test('init requires --test-path for non-navbar families', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'ren10-relume-cli-'));
+  roots.push(root);
+  try {
+    await execFileAsync(process.execPath, [
+      'scripts/relume-workflow.mjs',
+      'init',
+      '--root', root,
+      '--family', 'heroes',
+      '--module', 'hero3',
+      '--block', 'hero-split',
+      '--path', 'templates/blocks/hero-split.html',
+    ], { cwd: process.cwd() });
+    assert.fail('expected init to reject non-navbar family without --test-path');
+  } catch (error) {
+    assert.match(`${error.stderr ?? ''}${error.message}`, /--test-path/);
+  }
+});
+
+test('advance requires evidence and moves exactly one stage', async () => {
+  const dir = await makePacket();
+  const evidence = join(dir, 'reference-evidence.json');
+  await writeFile(evidence, '{"source":"relume-mcp","completeSource":true}\n');
+  const { advancePacket } = await import('./lib/relume-workflow.mjs');
+  const updated = await advancePacket(dir, evidence);
+  assert.equal(updated.stage, 'mapped');
+  assert.equal(updated.evidence.reference, 'reference-evidence.json');
 });

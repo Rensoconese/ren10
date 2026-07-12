@@ -1,5 +1,5 @@
-import { access, readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { access, copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { basename, join } from 'node:path';
 
 export const STAGES = Object.freeze(['reference', 'mapped', 'red', 'green', 'reviewed', 'accepted']);
 export const REQUIRED_PACKET_FILES = Object.freeze([
@@ -98,4 +98,53 @@ export async function validatePacketDir(packetDir) {
   }
 
   return { valid: errors.length === 0, errors: errors.sort(), packet };
+}
+
+export async function scaffoldPacket({ root, family, moduleId, blockSlug, blockPath, testPath, templateRoot }) {
+  if (family !== 'navbars' && !testPath) {
+    throw new Error('--test-path is required for non-navbar families');
+  }
+  const packetDir = join(root, moduleId);
+  await mkdir(packetDir, { recursive: false });
+  const packet = {
+    version: 1,
+    family,
+    moduleId,
+    blockSlug,
+    blockPath,
+    stage: 'reference',
+    allowedFiles: [
+      blockPath,
+      testPath ?? (family === 'navbars' ? 'tests/components/blocks-navigation.spec.cjs' : null),
+    ].filter(Boolean),
+    evidence: {},
+  };
+  await writeFile(join(packetDir, 'packet.json'), `${JSON.stringify(packet, null, 2)}\n`);
+  for (const [source, target] of [
+    ['reference-brief.md', 'reference-brief.md'],
+    ['translation-map.md', 'translation-map.md'],
+    ['acceptance.json', 'acceptance.json'],
+  ]) {
+    await copyFile(join(templateRoot, source), join(packetDir, target));
+  }
+  await writeFile(join(packetDir, 'render-matrix.json'), `${JSON.stringify({
+    version: 1,
+    path: `/${blockPath}`,
+    root: '[data-block-root]',
+    states: [],
+  }, null, 2)}\n`);
+  return packetDir;
+}
+
+export async function advancePacket(packetDir, evidencePath) {
+  const packetPath = join(packetDir, 'packet.json');
+  const packet = await readJson(packetPath);
+  const target = nextStage(packet.stage);
+  if (!target) throw new Error('Workflow packet is already accepted');
+  if (!(await exists(evidencePath))) throw new Error(`Evidence file not found: ${evidencePath}`);
+  packet.evidence ??= {};
+  packet.evidence[packet.stage] = basename(evidencePath);
+  packet.stage = target;
+  await writeFile(packetPath, `${JSON.stringify(packet, null, 2)}\n`);
+  return packet;
 }

@@ -117,6 +117,9 @@
     ,"test:form-fuzz": "node components/patterns/ren-form/ren-form.fuzz.test.js"
     ,"snapshots:update": "node scripts/generate-token-snapshot.mjs --update && node scripts/generate-contract-snapshot.mjs --update"
     ,"snapshots:check": "node scripts/generate-token-snapshot.mjs && node scripts/generate-contract-snapshot.mjs"
+    ,"workflow:relume": "node scripts/relume-workflow.mjs"
+    ,"workflow:relume:check": "node scripts/relume-workflow.mjs validate"
+    ,"test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs"
   },
   "keywords": [
     "design-system",
