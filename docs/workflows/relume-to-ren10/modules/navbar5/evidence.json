@@ -9,6 +9,23 @@
     "message": "fix: rebuild navbar mega menu layout",
     "role": "Historical rebuild that fixed mega-menu chrome defects and added visual regression guards. Not the Task 6 pilot commit; recorded only as rebuild provenance."
   },
+  "commitRoles": {
+    "pilotPacket": {
+      "short": "7283e03",
+      "fullHash": "7283e038559373081a00ea2363697da8e6c3e18f",
+      "message": "test: pilot Relume workflow on mega menu",
+      "role": "Task 6 packet + matrix + navigation helper adoption (original pilot deliverable)."
+    },
+    "implementationCaptureFix": {
+      "short": "cc091cb",
+      "fullHash": "cc091cbd6dc6c490a700329e8f9777343f647f51",
+      "message": "fix: capture settled workflow states",
+      "role": "Capture-runner settleDocument + Task4 ENOENT test independence. This is the implementation under visual review for settled open states."
+    },
+    "evidenceRecord": {
+      "note": "This evidence.json is committed separately as 'docs: refresh navbar5 pilot evidence'. That docs commit is NOT the capture/implementation commit. Capture sibling JSON records implementationCaptureFix (or a later ignored recapture HEAD after the docs commit). Avoid claiming evidence-record commit === capture commit in the same committed blob (self-referential impossibility)."
+    }
+  },
   "reference": {
     "stage": "reference",
     "passed": true,
@@ -44,21 +61,17 @@
     "passed": true,
     "navigationSuite": {
       "command": "npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --retries=0",
-      "result": "30 passed (7.0s)",
+      "result": "30 passed (6.8s)",
       "projects": ["Desktop Light", "Desktop Dark"],
       "testsPerProject": 15,
-      "recordedAgainstWorkingTree": true,
-      "baseHeadAtRun": "029d7b5dd3a115574f4c297f9d5f1ca5917f9e1e",
-      "note": "Suite ran with uncommitted Task 6 helper adoption in blocks-navigation.spec.cjs. Commit hash of the pilot feature commit is recorded after git commit."
+      "recordedAgainstWorkingTree": false,
+      "baseHeadAtRun": "cc091cbd6dc6c490a700329e8f9777343f647f51",
+      "note": "Re-run after settleDocument fix commit. 15 tests × Desktop Light + Desktop Dark."
     },
     "workflowUnitTests": {
       "command": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
-      "result": "66 passed, 1 failed (67 total)",
-      "failure": {
-        "test": "capture CLI requires matrix path, --module, and --output",
-        "file": "scripts/capture-block-matrix.test.mjs",
-        "reason": "Final assertion still expects ENOENT for docs/workflows/relume-to-ren10/modules/navbar5/render-matrix.json (Task 4 placeholder). Task 6 created that matrix, so a complete CLI invocation now exits 0. Fixing the unit test is outside Task 6 allowedFiles."
-      }
+      "result": "72 passed, 0 failed (72 total)",
+      "note": "Includes settleDocument unit coverage (finite animation wait, infinite ignore, canceled tolerance, JS-disabled settle) and Task4 ENOENT smoke using a temp nonexistent matrix path (independent of navbar5 pilot matrix)."
     },
     "qualityHelpersAdopted": [
       "expectSingleVisibleAffordance",
@@ -68,10 +81,10 @@
       "inspectNativeChrome"
     ],
     "lintAndAgent": {
-      "lint:js": "0 errors (29 pre-existing warnings, none from Task 6 files)",
-      "gitDiffCheck": "clean on Task 6 paths",
+      "lint:js": "0 errors (29 pre-existing warnings, none from Task 6 / capture-runner fix files)",
+      "gitDiffCheck": "clean on Task 6 and capture-runner fix paths",
       "packetValidate": "Valid workflow packet: navbar5 (accepted)",
-      "agent:check": "not re-run full agent:check (proportionate); no AGENTS.md or contract count changes in Task 6"
+      "agent:check": "not re-run full agent:check (proportionate); no AGENTS.md or contract count changes in this follow-up"
     }
   },
   "reviewed": {
@@ -88,10 +101,12 @@
     "stateCount": 10,
     "pngCount": 10,
     "jsonCount": 10,
-    "capturedAtHead": "029d7b5dd3a115574f4c297f9d5f1ca5917f9e1e",
-    "capturedAt": "2026-07-12T19:46:39Z (approx; per-state timestamps in sibling JSON)",
+    "implementationCommit": "cc091cbd6dc6c490a700329e8f9777343f647f51",
+    "capturedAtHead": "cc091cbd6dc6c490a700329e8f9777343f647f51",
+    "capturedAt": "2026-07-12T19:51:56.498Z (first open state; per-state timestamps in sibling JSON)",
     "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar5/render-matrix.json --module navbar5 --output .ren10-workflow/captures",
     "result": "Captured 10 render states for navbar5",
+    "settlePolicy": "After actions: settleDocument waits for finite document animations/transitions (bounded timeout; infinite/canceled ignored), then two animation frames or stable root geometry. No arbitrary long sleep.",
     "identifiers": [
       "desktop-light-closed",
       "desktop-light-open",
@@ -123,12 +138,13 @@
       ".rbm-feature": 2
     },
     "implementerVisualNotes": [
-      "desktop-reduced-motion-open: panel fully opaque; category split + horizontal features look correct; single chevron.",
-      "desktop-light-open: hero copy appears to bleed through panel — likely opacity enter animation race (reduced-motion open does not show this).",
-      "desktop-dark-open: low-contrast / panel legibility concern; Solutions affordance hard to read; needs Codex cascade review.",
-      "mobile-light-nested-open and mobile-js-disabled-open: tree + nested mega look correct; stacked features; single chevron; start-aligned rows.",
-      "mobile-light-closed: hamburger closed shell looks correct.",
-      "Screenshots are gitignored; not claimed as committed artifacts."
+      "desktop-light-open: mega panel fully opaque; category grid + featured articles visible; no hero bleed-through (prior mid-transition failure resolved by settleDocument).",
+      "desktop-dark-open: mega panel content fully visible (operations/insights/features); not an empty dark overlay (prior pre-content capture resolved).",
+      "mobile-light-nested-open: nav open + Solutions expanded; 8 destinations + 2 stacked features + CTAs; single chevron.",
+      "mobile-dark-nested-open: same nested structure in dark theme; content settled and legible.",
+      "mobile-js-disabled-open and desktop-reduced-motion-open: still in 10-state matrix; markers verified.",
+      "Screenshots are gitignored; not claimed as committed artifacts.",
+      "Post-evidence-commit recapture: after the docs evidence commit lands, a final ignored recapture may refresh sibling JSON commit fields to that HEAD without rewriting this committed ledger to claim self-equality."
     ]
   }
 }
