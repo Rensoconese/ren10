@@ -54,6 +54,12 @@ _*.js
 *.temp
 .turbo/
 
+# Relume workflow local captures and Playwright scratch
+.ren10-workflow/
+.playwright-cli/
+output/playwright/
+output/playwright-verify/
+
 # OS files
 .DS_Store
 .windows-build-tools

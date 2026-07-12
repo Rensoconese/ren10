@@ -119,6 +119,7 @@
     ,"snapshots:check": "node scripts/generate-token-snapshot.mjs && node scripts/generate-contract-snapshot.mjs"
     ,"workflow:relume": "node scripts/relume-workflow.mjs"
     ,"workflow:relume:check": "node scripts/relume-workflow.mjs validate"
+    ,"workflow:relume:capture": "node scripts/capture-block-matrix.mjs"
     ,"test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs"
   },
   "keywords": [
