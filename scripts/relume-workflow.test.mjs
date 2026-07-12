@@ -152,6 +152,13 @@ test('workflow templates contain every mandatory gate', async () => {
   assert.match(packet, /## Required RED evidence/);
   assert.match(packet, /## Allowed files/);
   assert.match(packet, /## Required render matrix/);
+  // Self-contained Grok packet: complete filled contents must be embedded
+  // inline. Links/paths may only supplement and can never replace embeds.
+  assert.match(packet, /self-contained/i);
+  assert.match(packet, /embed(?: the)? complete filled contents/i);
+  assert.match(packet, /inline/i);
+  assert.match(packet, /supplemental only|can never replace/i);
+  assert.doesNotMatch(packet, /Paste or link/i);
 });
 
 // --- Task 1: packet validation ---

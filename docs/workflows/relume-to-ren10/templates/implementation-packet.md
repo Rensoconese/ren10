@@ -7,15 +7,19 @@ this packet authorizes. Do not expand scope beyond the allowed files.
 
 ## Complete reference brief
 
-Paste or link the filled `reference-brief.md` for this module. Grok must treat
+This packet must be self-contained. Embed the complete filled contents of
+`reference-brief.md` inline below. Links or repository paths may be included as
+supplemental only and can never replace the embedded content. Grok must treat
 source-derived facts and labeled visual inferences separately. Never reconstruct
 Relume source from memory if extraction was incomplete.
 
 ## RenDS translation map
 
-Paste or link the filled `translation-map.md`. Implementation must follow the
-chosen RenDS parts, cascade mitigations, responsive adaptation, and progressive-
-enhancement plan. Rejected mappings must not reappear.
+Embed the complete filled contents of `translation-map.md` inline below. Links
+or repository paths may be included as supplemental only and can never replace
+the embedded content. Implementation must follow the chosen RenDS parts, cascade
+mitigations, responsive adaptation, and progressive-enhancement plan. Rejected
+mappings must not reappear.
 
 ## Acceptance criteria
 
