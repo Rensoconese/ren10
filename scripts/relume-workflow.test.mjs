@@ -74,3 +74,21 @@ test('allowed file audit rejects undeclared changes', () => {
     /Out-of-scope changed file: STATUS\.md/,
   );
 });
+
+test('validatePacketDir reports malformed acceptance.json', async () => {
+  const dir = await makePacket();
+  await writeFile(join(dir, 'acceptance.json'), '{\n');
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.equal(result.errors.length, 1);
+  assert.match(result.errors[0], /^Invalid acceptance\.json: /);
+});
+
+test('validatePacketDir reports malformed render-matrix.json', async () => {
+  const dir = await makePacket();
+  await writeFile(join(dir, 'render-matrix.json'), '{\n');
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.equal(result.errors.length, 1);
+  assert.match(result.errors[0], /^Invalid render-matrix\.json: /);
+});

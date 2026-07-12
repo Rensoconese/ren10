@@ -26,6 +26,14 @@ async function readJson(file) {
   return JSON.parse(await readFile(file, 'utf8'));
 }
 
+async function readJsonArtifact(file, label) {
+  try {
+    return { data: await readJson(file), error: null };
+  } catch (error) {
+    return { data: null, error: `Invalid ${label}: ${error.message}` };
+  }
+}
+
 export function nextStage(currentStage) {
   const index = STAGES.indexOf(currentStage);
   if (index < 0) throw new Error(`Unknown workflow stage: ${currentStage}`);
@@ -69,13 +77,25 @@ export async function validatePacketDir(packetDir) {
     if (!map.includes(heading)) errors.push(`translation-map.md missing heading: ${heading}`);
   }
 
-  const acceptance = await readJson(join(packetDir, 'acceptance.json'));
-  if (!Array.isArray(acceptance.criteria) || acceptance.criteria.length === 0) {
+  const { data: acceptance, error: acceptanceError } = await readJsonArtifact(
+    join(packetDir, 'acceptance.json'),
+    'acceptance.json',
+  );
+  if (acceptanceError) {
+    errors.push(acceptanceError);
+  } else if (!Array.isArray(acceptance.criteria) || acceptance.criteria.length === 0) {
     errors.push('acceptance.json criteria must be a non-empty array');
   }
 
-  const matrix = await readJson(join(packetDir, 'render-matrix.json'));
-  if (!Array.isArray(matrix.states)) errors.push('render-matrix.json states must be an array');
+  const { data: matrix, error: matrixError } = await readJsonArtifact(
+    join(packetDir, 'render-matrix.json'),
+    'render-matrix.json',
+  );
+  if (matrixError) {
+    errors.push(matrixError);
+  } else if (!Array.isArray(matrix.states)) {
+    errors.push('render-matrix.json states must be an array');
+  }
 
   return { valid: errors.length === 0, errors: errors.sort(), packet };
 }
