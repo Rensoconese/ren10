@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-mega-menu.html",
+  "root": "[data-rbm-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rbm-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "desktop-dark-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rbm-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rbm-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rbm-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rbm-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [
+        { "type": "click", "selector": ".rbm-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rbm-dest-desc": 8,
+        ".rbm-chevron": 1,
+        ".rbm-dest": 8,
+        ".rbm-feature": 2
+      }
+    }
+  ]
+}

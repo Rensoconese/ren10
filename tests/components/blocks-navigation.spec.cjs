@@ -7,6 +7,13 @@ const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
+const {
+  expectAligned,
+  expectNoOverflow,
+  expectSingleVisibleAffordance,
+  expectWidthRatio,
+  inspectNativeChrome,
+} = require('../utils/block-quality.cjs');
 
 const PKG_ROOT = path.resolve(__dirname, '../..');
 const BLOCKS_INDEX = '/templates/blocks/index.html';
@@ -226,7 +233,6 @@ test.describe('Navigation blocks', () => {
     const desktop = await page.evaluate(() => {
       const nav = document.querySelector('.rbm-preview .ren-nav');
       const panel = document.querySelector('.rbm-panel');
-      const doc = document.documentElement;
       if (!nav || !panel) return null;
       const navRect = nav.getBoundingClientRect();
       const panelRect = panel.getBoundingClientRect();
@@ -234,14 +240,12 @@ test.describe('Navigation blocks', () => {
         navBottom: navRect.bottom,
         panelTop: panelRect.top,
         panelPosition: getComputedStyle(panel).position,
-        scrollWidth: doc.scrollWidth,
-        clientWidth: doc.clientWidth,
       };
     });
     expect(desktop).toBeTruthy();
     expect(desktop.panelPosition).toBe('absolute');
     expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
-    expect(desktop.scrollWidth).toBeLessThanOrEqual(desktop.clientWidth + 1);
+    await expectNoOverflow(page, 'html');
 
     // Mobile: panel is in-flow and does not cover following nav destinations.
     await page.setViewportSize({ width: 390, height: 844 });
@@ -254,7 +258,6 @@ test.describe('Navigation blocks', () => {
       const panel = document.querySelector('.rbm-panel');
       const pricing = document.querySelector('a.ren-nav-link[href="#pricing"]');
       const docs = document.querySelector('a.ren-nav-link[href="#docs"]');
-      const doc = document.documentElement;
       if (!panel || !pricing || !docs) return null;
       const panelRect = panel.getBoundingClientRect();
       const pricingRect = pricing.getBoundingClientRect();
@@ -265,8 +268,6 @@ test.describe('Navigation blocks', () => {
         panelBottom: panelRect.bottom,
         pricingTop: pricingRect.top,
         docsTop: docsRect.top,
-        scrollWidth: doc.scrollWidth,
-        clientWidth: doc.clientWidth,
       };
     });
     expect(mobile).toBeTruthy();
@@ -274,7 +275,7 @@ test.describe('Navigation blocks', () => {
     // Following primary destinations must start at or below the panel (not covered).
     expect(mobile.pricingTop).toBeGreaterThanOrEqual(mobile.panelBottom - 1);
     expect(mobile.docsTop).toBeGreaterThanOrEqual(mobile.panelBottom - 1);
-    expect(mobile.scrollWidth).toBeLessThanOrEqual(mobile.clientWidth + 1);
+    await expectNoOverflow(page, 'html');
   });
 
   test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
@@ -425,64 +426,66 @@ test.describe('Navigation blocks', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(`${staticServer.origin}${MEGA_MENU}`);
 
-    const closed = await page.evaluate(() => {
+    // Shared helpers: one authored chevron affordance; primary peers share centerY.
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rbm-disclosure summary .rbm-chevron'],
+      'mega-menu chevron'
+    );
+    await expectAligned(
+      page,
+      [
+        'a.ren-nav-link[href="#product"]',
+        '.rbm-disclosure > summary',
+        'a.ren-nav-link[href="#pricing"]',
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rbm-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    // Block-specific: full box reset on details (helper samples top edges only).
+    const detailsBox = await page.evaluate(() => {
       const details = document.querySelector('.rbm-disclosure');
-      const summary = details?.querySelector(':scope > summary');
-      if (!details || !summary) return { missing: true };
-
+      if (!details) return null;
       const ds = getComputedStyle(details);
-      const after = getComputedStyle(summary, '::after');
-      const afterW = parseFloat(after.width) || 0;
-      const afterH = parseFloat(after.height) || 0;
-      const afterContent = String(after.content || 'none').replace(/['"]/g, '');
-      const afterVisible =
-        afterContent !== 'none' &&
-        afterContent !== '' &&
-        after.display !== 'none' &&
-        after.visibility !== 'hidden' &&
-        afterW > 1 &&
-        afterH > 1;
-      const svgChevrons = details.querySelectorAll('summary .rbm-chevron').length;
-      const product = document.querySelector('a.ren-nav-link[href="#product"]');
-      const pricing = document.querySelector('a.ren-nav-link[href="#pricing"]');
-      const pr = product?.getBoundingClientRect();
-      const sr = summary.getBoundingClientRect();
-      const prc = pricing?.getBoundingClientRect();
-
       return {
-        missing: false,
-        borderWidth: ds.borderTopWidth,
         borderStyle: ds.borderTopStyle,
-        marginTop: ds.marginTop,
         marginBottom: ds.marginBottom,
-        paddingTop: ds.paddingTop,
         paddingRight: ds.paddingRight,
         paddingBottom: ds.paddingBottom,
         paddingLeft: ds.paddingLeft,
-        afterVisible,
-        svgChevrons,
-        chevronSources: (afterVisible ? 1 : 0) + svgChevrons,
-        productMidY: pr ? (pr.top + pr.bottom) / 2 : null,
-        summaryMidY: (sr.top + sr.bottom) / 2,
-        pricingMidY: prc ? (prc.top + prc.bottom) / 2 : null,
-        productTop: pr?.top ?? null,
-        summaryTop: sr.top,
       };
     });
+    expect(detailsBox).toBeTruthy();
+    expect(detailsBox.borderStyle === 'none' || detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsBox.marginBottom).toBe('0px');
+    expect(detailsBox.paddingRight).toBe('0px');
+    expect(detailsBox.paddingBottom).toBe('0px');
+    expect(detailsBox.paddingLeft).toBe('0px');
 
-    expect(closed.missing).toBeFalsy();
-    expect(closed.borderStyle === 'none' || closed.borderWidth === '0px', 'details outer border').toBeTruthy();
-    expect(closed.marginTop).toBe('0px');
-    expect(closed.marginBottom).toBe('0px');
-    expect(closed.paddingTop).toBe('0px');
-    expect(closed.paddingRight).toBe('0px');
-    expect(closed.paddingBottom).toBe('0px');
-    expect(closed.paddingLeft).toBe('0px');
-    expect(closed.chevronSources, `chevron sources: after=${closed.afterVisible} svg=${closed.svgChevrons}`).toBe(1);
-    expect(closed.svgChevrons).toBe(1);
-    expect(closed.afterVisible, 'classless summary::after must be neutralized').toBe(false);
-    expect(Math.abs(closed.summaryMidY - closed.productMidY)).toBeLessThanOrEqual(2);
-    expect(Math.abs(closed.summaryMidY - closed.pricingMidY)).toBeLessThanOrEqual(2);
+    // Classless summary::after must not render a second chevron.
+    const summaryChrome = await inspectNativeChrome(page, '.rbm-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none' ||
+      afterContent === '' ||
+      summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+
+    // Marker must not add a third indicator.
+    const markerContent = String(summaryChrome.markerContent || 'none').replace(/['"]/g, '');
+    expect(
+      markerContent === 'none' || markerContent === '' || summaryChrome.markerDisplay === 'none',
+      'summary marker'
+    ).toBeTruthy();
+
+    const svgChevrons = await page.locator('.rbm-disclosure summary .rbm-chevron').count();
+    expect(svgChevrons).toBe(1);
 
     await page.locator('.rbm-disclosure > summary').click();
     await expect(page.locator('.rbm-disclosure')).toHaveAttribute('open', '');
@@ -624,6 +627,19 @@ test.describe('Navigation blocks', () => {
     await page.locator('.rbm-disclosure > summary').click();
     await expect(page.locator('.rbm-panel')).toBeVisible();
 
+    // Shared helpers: width ratio + single chevron + native chrome inspection.
+    await expectWidthRatio(page, 'a.ren-nav-link[href="#product"]', '#rbm-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rbm-disclosure > summary', '#rbm-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rbm-disclosure summary .rbm-chevron'],
+      'mobile mega-menu chevron'
+    );
+    await expectNoOverflow(page, 'html');
+
+    const detailsChrome = await inspectNativeChrome(page, '.rbm-disclosure');
+    const summaryChrome = await inspectNativeChrome(page, '.rbm-disclosure > summary');
+
     const mobile = await page.evaluate(() => {
       const links = document.querySelector('#rbm-primary-links');
       const product = document.querySelector('a.ren-nav-link[href="#product"]');
@@ -638,7 +654,6 @@ test.describe('Navigation blocks', () => {
       const summaryStyle = getComputedStyle(summary);
       const detailsStyle = getComputedStyle(details);
 
-      const widthRatio = (elRect) => (linksRect.width > 0 ? elRect.width / linksRect.width : 0);
       const textAlignStart = (style) => {
         const ta = style.textAlign;
         return ta === 'start' || ta === 'left' || ta === 'match-parent' || ta === '';
@@ -655,22 +670,8 @@ test.describe('Navigation blocks', () => {
       const padR = parseFloat(detailsStyle.paddingRight) || 0;
       const nestedCard = borderW > 0 && radius > 0 && padL + padR > 0;
 
-      const after = getComputedStyle(summary, '::after');
-      const afterW = parseFloat(after.width) || 0;
-      const afterH = parseFloat(after.height) || 0;
-      const afterContent = String(after.content || 'none').replace(/['"]/g, '');
-      const afterVisible =
-        afterContent !== 'none' &&
-        afterContent !== '' &&
-        after.display !== 'none' &&
-        afterW > 1 &&
-        afterH > 1;
-      const svgChevrons = details.querySelectorAll('summary .rbm-chevron').length;
-
       return {
         missing: false,
-        productWidthRatio: widthRatio(productRect),
-        summaryWidthRatio: widthRatio(summaryRect),
         productTextAlign: productStyle.textAlign,
         productJustify: productStyle.justifyContent,
         productAlignSelf: productStyle.alignSelf,
@@ -683,19 +684,11 @@ test.describe('Navigation blocks', () => {
         nestedCard,
         detailsBorder: detailsStyle.borderTopWidth,
         detailsPadding: `${detailsStyle.paddingTop} ${detailsStyle.paddingRight} ${detailsStyle.paddingBottom} ${detailsStyle.paddingLeft}`,
-        chevronSources: (afterVisible ? 1 : 0) + svgChevrons,
-        afterVisible,
-        svgChevrons,
+        detailsRadius: detailsStyle.borderTopLeftRadius,
       };
     });
 
     expect(mobile.missing).toBeFalsy();
-    expect(mobile.productWidthRatio, `product width ratio ${mobile.productWidthRatio}`).toBeGreaterThanOrEqual(
-      0.92
-    );
-    expect(mobile.summaryWidthRatio, `summary width ratio ${mobile.summaryWidthRatio}`).toBeGreaterThanOrEqual(
-      0.92
-    );
     expect(mobile.productStartAligned, JSON.stringify(mobile)).toBe(true);
     expect(mobile.summaryStartAligned, JSON.stringify(mobile)).toBe(true);
     expect(Math.abs(mobile.productLeftOffset)).toBeLessThanOrEqual(8);
@@ -703,6 +696,13 @@ test.describe('Navigation blocks', () => {
     expect(mobile.nestedCard, `nested card chrome: border=${mobile.detailsBorder} pad=${mobile.detailsPadding}`).toBe(
       false
     );
-    expect(mobile.chevronSources, `mobile chevrons after=${mobile.afterVisible} svg=${mobile.svgChevrons}`).toBe(1);
+
+    // Cross-check helper chrome samples against nested-card rule.
+    expect(detailsChrome.borderTopWidth === '0px' || detailsChrome.paddingTop === '0px').toBeTruthy();
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    expect(
+      afterContent === 'none' || afterContent === '' || summaryChrome.afterDisplay === 'none',
+      'mobile classless summary::after'
+    ).toBeTruthy();
   });
 });
