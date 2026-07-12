@@ -11,10 +11,10 @@
     "tests/components/blocks-navigation.spec.cjs"
   ],
   "evidence": {
-    "reference": "evidence.json",
-    "mapped": "evidence.json",
-    "red": "evidence.json",
-    "green": "evidence.json",
-    "reviewed": "evidence.json"
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
   }
 }

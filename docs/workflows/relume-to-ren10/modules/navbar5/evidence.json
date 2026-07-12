@@ -3,6 +3,7 @@
   "moduleId": "navbar5",
   "blockSlug": "nav-mega-menu",
   "packetStage": "accepted",
+  "lineageNote": "Audit ledger only. Trusted stage gates read packet.evidence pointers to per-stage files (reference-evidence.json, mapped-evidence.json, red-evidence.json, green-evidence.json, reviewed-evidence.json). This multi-stage ledger cannot substitute for those schema-valid stage evidence files.",
   "rebuildProvenance": {
     "commit": "73d1416",
     "fullHash": "73d14163f86e1e5d4e673f59d088550652fbc986",
@@ -95,10 +96,10 @@
   },
   "reviewed": {
     "stage": "reviewed",
-    "kind": "historical-pilot-acceptance",
-    "note": "Pilot packet stage is accepted because the mega-menu block already shipped through rebuild + suite green. Task 6 records the canonical packet and fresh ignored captures for workflow demonstration. Independent Codex visual re-review and human re-acceptance of this packet remain available via runbook gates; Grok is implementer, not final human acceptance.",
-    "acceptor": "product-owner",
-    "result": "accepted"
+    "kind": "human-acceptance",
+    "acceptor": "Renzo",
+    "result": "accepted",
+    "note": "Authoritative gate evidence is reviewed-evidence.json. User Renzo explicitly approved the rebuilt mega-menu screenshots and workflow pilot after the Codex visual gate passed. Earlier historical-pilot-acceptance wording is superseded by that explicit human acceptance."
   },
   "captures": {
     "committed": false,
