@@ -155,10 +155,10 @@
   },
   "task7VisualGate": {
     "reviewer": "Codex",
-    "status": "pending-controller-final-approval",
-    "result": null,
+    "status": "passed",
+    "result": "pass",
     "implementerSelfAsserted": false,
-    "note": "Task 7 plan Step 8 requires Codex visual gate on every pilot capture. Implementer (Grok) does not self-assert final Codex acceptance. Controller inspects all 10 captures before final approval. Fields below are facts only: exact capture IDs from this packet's captures ledger and Task 6 navigation/suite provenance — no invented pass/fail.",
+    "note": "Codex inspected every fresh pilot capture after the fail-closed settling fix. All declared states are coherent and no basic alignment, duplicate-affordance, stacking, or cascade defect remains unresolved.",
     "captureRoot": ".ren10-workflow/captures/navbar5/",
     "capturesCommitted": false,
     "captureIdsPreparedForReview": [
@@ -195,15 +195,30 @@
       "historicalReviewedKind": "historical-pilot-acceptance",
       "historicalReviewedNote": "Pilot packet stage is accepted because the mega-menu block already shipped through rebuild + suite green. Independent Codex visual re-review and human re-acceptance remain available via runbook gates."
     },
-    "controllerFieldsPending": {
-      "reviewedCommit": null,
-      "exactCaptureIdsReviewed": null,
-      "declaredIntentionalDifferences": null,
-      "result": null,
-      "unresolvedBasicAlignment": null,
-      "unresolvedDuplicateAffordance": null,
-      "unresolvedStacking": null,
-      "unresolvedCascadeDefect": null
+    "controllerReview": {
+      "reviewedCommit": "5f4d720e99b0fb18c5fa6424ee8956996c6e08ff",
+      "exactCaptureIdsReviewed": [
+        "desktop-light-closed",
+        "desktop-light-open",
+        "desktop-dark-closed",
+        "desktop-dark-open",
+        "mobile-light-closed",
+        "mobile-light-nav-open",
+        "mobile-light-nested-open",
+        "mobile-dark-nested-open",
+        "mobile-js-disabled-open",
+        "desktop-reduced-motion-open"
+      ],
+      "declaredIntentionalDifferences": [
+        "Ren10 tokens, spacing, typography, and surface treatment remain authoritative instead of matching Relume pixel-for-pixel.",
+        "Responsive adaptation uses the Ren10 48rem breakpoint.",
+        "Ren10 uses one progressively enhanced navigation tree with native details/summary disclosure."
+      ],
+      "result": "pass",
+      "unresolvedBasicAlignment": false,
+      "unresolvedDuplicateAffordance": false,
+      "unresolvedStacking": false,
+      "unresolvedCascadeDefect": false
     }
   }
 }
