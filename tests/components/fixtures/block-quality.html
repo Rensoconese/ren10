@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Block quality helper fixture</title>
+  <style>
+    .peer { display: inline-block; height: 44px; vertical-align: top; }
+    .misaligned { transform: translateY(8px); }
+    .container { width: 300px; }
+    .narrow { width: 60px; height: 1px; }
+    .full { width: 300px; height: 1px; }
+    .overflow { width: 400px; height: 1px; }
+    .hidden-affordance { display: none; }
+    details { border: 1px solid; padding: 12px; margin: 8px; }
+  </style>
+</head>
+<body>
+  <!-- Single visible affordance (good) -->
+  <div id="good-affordance" aria-hidden="true">⌄</div>
+
+  <!-- Duplicate visible affordances (bad) -->
+  <div id="duplicate-a" aria-hidden="true">⌄</div>
+  <div id="duplicate-b" aria-hidden="true">⌄</div>
+
+  <!-- Zero visible affordances -->
+  <div id="hidden-affordance" class="hidden-affordance" aria-hidden="true">⌄</div>
+
+  <!-- Misaligned peers (bad centerY) -->
+  <span class="peer" id="peer-a">A</span>
+  <span class="peer misaligned" id="peer-b">B</span>
+
+  <!-- Aligned peers (good centerY / top) -->
+  <span class="peer" id="peer-aligned-a">C</span>
+  <span class="peer" id="peer-aligned-b">D</span>
+
+  <!-- Width ratio: 60/300 = 0.2 -->
+  <div class="container" id="container"><div class="narrow" id="narrow"></div></div>
+
+  <!-- Width ratio good full width: 300/300 = 1.0 -->
+  <div class="container" id="full-container"><div class="full" id="full"></div></div>
+
+  <!-- Horizontal overflow root (bad) -->
+  <div class="container" id="overflow-root"><div class="overflow" id="overflow"></div></div>
+
+  <!-- Native chrome inspection target -->
+  <details id="native"><summary>Open</summary><p>Content</p></details>
+</body>
+</html>
