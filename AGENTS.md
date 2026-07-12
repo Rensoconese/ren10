@@ -126,6 +126,29 @@ packaged with `npm run agent:skill:pack`. It is a compact wrapper around this
 file, the CLI manifest, and the colocated contracts; it must not become a
 second source of truth.
 
+## Relume-to-Ren10 Blocks
+
+When converting Relume library modules into Ren10 blocks, follow this route
+**in addition to** the mandatory RenDS loading order and hard rules above.
+Do not skip or reorder those rules.
+
+1. Read the approved workflow runbook at
+   `docs/workflows/relume-to-ren10/README.md` (and the design at
+   `docs/superpowers/specs/2026-07-12-relume-to-ren10-workflow-design.md`).
+2. Run `npm run workflow:relume -- status <packet-dir>` and confirm the
+   packet stage before any implementation work.
+3. Refuse implementation without a valid reference brief, translation map,
+   and acceptance packet under `docs/workflows/relume-to-ren10/modules/`.
+4. Capture the standard render matrix via
+   `npm run workflow:relume:capture` (or the matrix CLI) before visual review.
+5. Keep explicit user review after the Codex visual gate; automation and
+   model identities cannot accept a packet.
+
+Family/module status lives in
+`docs/workflows/relume-to-ren10/inventory.json`. Only one module may be
+`in_progress` at a time. Run `npm run workflow:relume:check` to validate
+every inventory entry against its packet.
+
 <!-- RENDS:START -->
 RenDS v0.9.3 · vanilla HTML/CSS/JS · Light DOM · 53 components
 

@@ -76,15 +76,46 @@ node scripts/relume-workflow.mjs init \
 node scripts/relume-workflow.mjs validate <packet-dir>
 node scripts/relume-workflow.mjs status <packet-dir>
 node scripts/relume-workflow.mjs advance <packet-dir> --evidence <packet-local-evidence.json>
+node scripts/relume-workflow.mjs validate-all docs/workflows/relume-to-ren10/inventory.json
 ```
 
 Package scripts:
 
 ```bash
-npm run workflow:relume -- <init|validate|status|advance> ...
-npm run workflow:relume:check -- <packet-dir>
+npm run workflow:relume -- <init|validate|status|advance|validate-all> ...
+npm run workflow:relume:check
 npm run test:workflow
 ```
+
+`workflow:relume:check` runs `validate-all` against
+`docs/workflows/relume-to-ren10/inventory.json` and fully validates every
+`in_progress` / `accepted` packet under the sibling `modules/` directory.
+
+## Inventory ledger
+
+Family/module status is recorded in `inventory.json` next to this runbook:
+
+| Field | Meaning |
+| --- | --- |
+| `families[].id` | Stable family id (unique) |
+| `families[].baseline` | Representative module for the family |
+| `families[].modules[].id` | Stable module id (unique globally) |
+| `families[].modules[].status` | `queued` \| `in_progress` \| `accepted` \| `skipped` |
+| `families[].modules[].packet` | Single-segment packet directory under `modules/` |
+| `families[].modules[].reason` | Required non-empty reason when `skipped` |
+
+Rules enforced by `validateInventory` / `validate-all`:
+
+- Inventory version must be `1`.
+- At most one module may be `in_progress` globally.
+- Packet paths are single safe module-dir segments (no traversal, absolute,
+  multi-segment, or symlink escape outside `modules/`).
+- Every `in_progress` and `accepted` entry is validated with
+  `validatePacketDir`, not only a stage string check.
+- `accepted` inventory rows require an `accepted` packet stage.
+
+Populate additional module IDs only after a successful authenticated Relume
+category query — do not invent IDs from memory.
 
 ## Required evidence filenames
 

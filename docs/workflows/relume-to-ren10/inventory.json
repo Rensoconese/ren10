@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "families": [
+    {
+      "id": "navbars",
+      "sourceCategory": "navbars",
+      "status": "in_progress",
+      "baseline": "navbar5",
+      "modules": [
+        {
+          "id": "navbar5",
+          "status": "accepted",
+          "packet": "navbar5",
+          "ren10Block": "templates/blocks/nav-mega-menu.html"
+        }
+      ]
+    }
+  ]
+}

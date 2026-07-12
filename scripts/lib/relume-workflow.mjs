@@ -3,6 +3,7 @@ import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
 export const STAGES = Object.freeze(['reference', 'mapped', 'red', 'green', 'reviewed', 'accepted']);
+export const INVENTORY_MODULE_STATUSES = Object.freeze(['queued', 'in_progress', 'accepted', 'skipped']);
 export const REQUIRED_PACKET_FILES = Object.freeze([
   'acceptance.json',
   'packet.json',
@@ -372,6 +373,230 @@ export async function validatePacketDir(packetDir) {
   }
 
   return { valid: errors.length === 0, errors: errors.sort(), packet };
+}
+
+/**
+ * Resolve an inventory packet field to a real directory under modulesRoot.
+ * Packet values must be a single safe module-dir segment (not repo-relative multi-segment,
+ * not absolute, not traversal). Rejects symlink escapes outside modulesRoot.
+ */
+async function resolveInventoryPacketDir(modulesRoot, packetField, moduleId) {
+  if (typeof packetField !== 'string' || packetField.trim() === '') {
+    return {
+      dir: null,
+      error: `Module ${moduleId} requires a non-empty single-segment packet path`,
+    };
+  }
+
+  let safePacket;
+  try {
+    safePacket = assertSafeModuleId(packetField);
+  } catch (error) {
+    return {
+      dir: null,
+      error: `Invalid packet path for module ${moduleId}: ${error.message}`,
+    };
+  }
+
+  const packetDir = join(modulesRoot, safePacket);
+  if (!(await exists(packetDir))) {
+    return {
+      dir: null,
+      error: `Missing packet directory for module ${moduleId}: ${safePacket}`,
+    };
+  }
+
+  let packetLstat;
+  try {
+    packetLstat = await lstat(packetDir);
+  } catch {
+    return {
+      dir: null,
+      error: `Missing packet directory for module ${moduleId}: ${safePacket}`,
+    };
+  }
+
+  if (packetLstat.isSymbolicLink()) {
+    return {
+      dir: null,
+      error: `Packet path for module ${moduleId} must not be a symbolic link: ${safePacket}`,
+    };
+  }
+
+  if (!packetLstat.isDirectory()) {
+    return {
+      dir: null,
+      error: `Packet path for module ${moduleId} must be a directory: ${safePacket}`,
+    };
+  }
+
+  let realRoot;
+  let realPacket;
+  try {
+    realRoot = await realpath(modulesRoot);
+    realPacket = await realpath(packetDir);
+  } catch {
+    return {
+      dir: null,
+      error: `Missing packet directory for module ${moduleId}: ${safePacket}`,
+    };
+  }
+
+  if (realPacket === realRoot || !isPathInside(realRoot, realPacket)) {
+    return {
+      dir: null,
+      error: `Packet path for module ${moduleId} must resolve inside modules root (symlink escape rejected): ${safePacket}`,
+    };
+  }
+
+  return { dir: realPacket, error: null };
+}
+
+/**
+ * Validate family/module inventory ledger.
+ * Returns deterministic sorted errors. Validates every in_progress/accepted packet with
+ * validatePacketDir (not only the stage string).
+ */
+export async function validateInventory(inventory, modulesRoot) {
+  if (inventory === null || typeof inventory !== 'object' || Array.isArray(inventory)) {
+    return { valid: false, errors: ['Inventory must be a JSON object'] };
+  }
+
+  const errors = [];
+
+  if (inventory.version !== 1) {
+    errors.push('inventory version must equal 1');
+  }
+
+  if (!Array.isArray(inventory.families)) {
+    errors.push('inventory.families must be an array');
+    return { valid: false, errors: errors.sort() };
+  }
+
+  const familyIds = new Set();
+  const moduleIds = new Set();
+  /** @type {string[]} */
+  const inProgressIds = [];
+  /** @type {{ moduleId: string, status: string, packet: unknown, ren10Block?: unknown }[]} */
+  const packetEntries = [];
+
+  for (let familyIndex = 0; familyIndex < inventory.families.length; familyIndex += 1) {
+    const family = inventory.families[familyIndex];
+    if (family === null || typeof family !== 'object' || Array.isArray(family)) {
+      errors.push(`inventory.families[${familyIndex}] must be an object`);
+      continue;
+    }
+
+    if (typeof family.id !== 'string' || family.id.trim() === '') {
+      errors.push(`inventory.families[${familyIndex}].id must be a non-empty string`);
+    } else if (familyIds.has(family.id)) {
+      errors.push(`Duplicate inventory family id: ${family.id}`);
+    } else {
+      familyIds.add(family.id);
+    }
+
+    if (!Array.isArray(family.modules)) {
+      errors.push(`inventory.families[${familyIndex}].modules must be an array`);
+      continue;
+    }
+
+    for (let moduleIndex = 0; moduleIndex < family.modules.length; moduleIndex += 1) {
+      const mod = family.modules[moduleIndex];
+      if (mod === null || typeof mod !== 'object' || Array.isArray(mod)) {
+        errors.push(`inventory.families[${familyIndex}].modules[${moduleIndex}] must be an object`);
+        continue;
+      }
+
+      const moduleId = mod.id;
+      if (typeof moduleId !== 'string' || moduleId.trim() === '') {
+        errors.push(
+          `inventory.families[${familyIndex}].modules[${moduleIndex}].id must be a non-empty string`,
+        );
+        continue;
+      }
+
+      if (moduleIds.has(moduleId)) {
+        errors.push(`Duplicate inventory module id: ${moduleId}`);
+      } else {
+        moduleIds.add(moduleId);
+      }
+
+      const status = mod.status;
+      if (typeof status !== 'string' || !INVENTORY_MODULE_STATUSES.includes(status)) {
+        errors.push(
+          `Invalid inventory status for module ${moduleId}: ${JSON.stringify(status)}`,
+        );
+        continue;
+      }
+
+      if (status === 'in_progress') {
+        inProgressIds.push(moduleId);
+      }
+
+      if (status === 'skipped') {
+        if (typeof mod.reason !== 'string' || mod.reason.trim() === '') {
+          errors.push(`Skipped module ${moduleId} requires a non-empty reason`);
+        }
+      }
+
+      if (status === 'in_progress' || status === 'accepted') {
+        packetEntries.push({
+          moduleId,
+          status,
+          packet: mod.packet,
+          ren10Block: mod.ren10Block,
+        });
+      }
+
+      if (mod.ren10Block !== undefined && mod.ren10Block !== null) {
+        try {
+          assertSafeRepoRelativePath(mod.ren10Block, `Module ${moduleId} ren10Block`);
+        } catch (error) {
+          errors.push(error.message);
+        }
+      }
+    }
+  }
+
+  const multiInProgress = inProgressIds.length > 1;
+  if (multiInProgress) {
+    errors.push(
+      `Inventory may contain only one in_progress module; found ${[...inProgressIds].sort().join(', ')}`,
+    );
+  }
+
+  for (const entry of packetEntries) {
+    // When multiple in_progress modules exist, skip FS checks for those in_progress
+    // entries so the concurrency error remains the sole deterministic signal (plan contract).
+    if (entry.status === 'in_progress' && multiInProgress) {
+      continue;
+    }
+
+    const resolved = await resolveInventoryPacketDir(modulesRoot, entry.packet, entry.moduleId);
+    if (resolved.error) {
+      errors.push(resolved.error);
+      continue;
+    }
+
+    const packetResult = await validatePacketDir(resolved.dir);
+    if (!packetResult.valid) {
+      for (const packetError of packetResult.errors) {
+        errors.push(`Module ${entry.moduleId} packet: ${packetError}`);
+      }
+    }
+
+    if (entry.status === 'accepted') {
+      const stage = packetResult.packet?.stage;
+      if (stage !== 'accepted') {
+        errors.push(
+          `Accepted module ${entry.moduleId} has packet stage ${stage ?? 'unknown'}; expected accepted`,
+        );
+      }
+    }
+  }
+
+  const sorted = errors.sort();
+  return { valid: sorted.length === 0, errors: sorted };
 }
 
 async function writeScaffoldArtifacts(packetDir, {

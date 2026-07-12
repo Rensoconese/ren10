@@ -1,8 +1,10 @@
 #!/usr/bin/env node
-import { resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { dirname, join, resolve } from 'node:path';
 import {
   advancePacket,
   scaffoldPacket,
+  validateInventory,
   validatePacketDir,
 } from './lib/relume-workflow.mjs';
 
@@ -12,7 +14,8 @@ const USAGE = `Usage:
   relume-workflow init --family <family> --module <module> --block <slug> --path <html> [--root <dir>] [--test-path <file>] [--template-root <dir>]
   relume-workflow validate <packet-dir>
   relume-workflow status <packet-dir>
-  relume-workflow advance <packet-dir> --evidence <file>`;
+  relume-workflow advance <packet-dir> --evidence <file>
+  relume-workflow validate-all <inventory.json>`;
 
 const COMMAND_SCHEMAS = Object.freeze({
   init: Object.freeze({
@@ -33,6 +36,11 @@ const COMMAND_SCHEMAS = Object.freeze({
   advance: Object.freeze({
     positionals: 1,
     requiredFlags: Object.freeze(['evidence']),
+    optionalFlags: Object.freeze([]),
+  }),
+  'validate-all': Object.freeze({
+    positionals: 1,
+    requiredFlags: Object.freeze([]),
     optionalFlags: Object.freeze([]),
   }),
 });
@@ -73,8 +81,11 @@ function validateCommandArgs(commandName, args) {
 
   if (args._.length !== schema.positionals) {
     if (schema.positionals === 1) {
+      const subject = commandName === 'validate-all'
+        ? 'inventory path'
+        : 'packet directory';
       throw new Error(
-        `Command "${commandName}" requires exactly one packet directory positional argument\n${USAGE}`,
+        `Command "${commandName}" requires exactly one ${subject} positional argument\n${USAGE}`,
       );
     }
     throw new Error(
@@ -135,6 +146,39 @@ async function main() {
       templateRoot: args['template-root'] ? resolve(args['template-root']) : undefined,
     });
     console.log(`Created workflow packet: ${packetDir}`);
+    return;
+  }
+
+  if (command === 'validate-all') {
+    const inventoryPath = resolve(args._[0]);
+    let inventory;
+    try {
+      const raw = await readFile(inventoryPath, 'utf8');
+      if (!raw.trim()) {
+        throw new Error('Inventory file is empty');
+      }
+      inventory = JSON.parse(raw);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new Error(`Inventory file not found: ${inventoryPath}`);
+      }
+      throw new Error(`Invalid inventory JSON: ${error.message}`);
+    }
+
+    const modulesRoot = join(dirname(inventoryPath), 'modules');
+    const result = await validateInventory(inventory, modulesRoot);
+    if (!result.valid) {
+      throw new Error(result.errors.join('\n'));
+    }
+
+    const familyCount = Array.isArray(inventory.families) ? inventory.families.length : 0;
+    const moduleCount = Array.isArray(inventory.families)
+      ? inventory.families.reduce(
+        (count, family) => count + (Array.isArray(family?.modules) ? family.modules.length : 0),
+        0,
+      )
+      : 0;
+    console.log(`Valid inventory: ${familyCount} families, ${moduleCount} modules`);
     return;
   }
 

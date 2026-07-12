@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { afterEach, test } from 'node:test';
-import { access, mkdtemp, mkdir, readdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { access, copyFile, mkdtemp, mkdir, readdir, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { promisify } from 'node:util';
 import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -11,6 +11,7 @@ import {
   assertCleanAllowedFiles,
   nextStage,
   scaffoldPacket,
+  validateInventory,
   validatePacketDir,
 } from './lib/relume-workflow.mjs';
 
@@ -805,4 +806,305 @@ test('advance rejects evidence path that is a symlink to external JSON', async (
   const packet = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
   assert.equal(packet.stage, 'reference');
   assert.equal(packet.evidence.reference, undefined);
+});
+
+// --- Task 7: inventory validation and validate-all ---
+
+test('inventory permits at most one in-progress module', async () => {
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [
+        { id: 'navbar5', status: 'in_progress', packet: 'navbar5' },
+        { id: 'navbar6', status: 'in_progress', packet: 'navbar6' },
+      ],
+    }],
+  };
+  assert.deepEqual(
+    (await validateInventory(inventory, '/tmp/modules')).errors,
+    ['Inventory may contain only one in_progress module; found navbar5, navbar6'],
+  );
+});
+
+test('inventory rejects duplicate module ids across families', async () => {
+  const inventory = {
+    version: 1,
+    families: [
+      { id: 'navbars', modules: [{ id: 'navbar5', status: 'queued' }] },
+      { id: 'headers', modules: [{ id: 'navbar5', status: 'queued' }] },
+    ],
+  };
+  const result = await validateInventory(inventory, '/tmp/modules');
+  assert.deepEqual(result.errors, ['Duplicate inventory module id: navbar5']);
+});
+
+test('accepted inventory entry requires an accepted packet', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-'));
+  roots.push(modulesRoot);
+  const packetDir = await makePacket({ stage: 'green' });
+  await mkdir(join(modulesRoot, 'navbar5'));
+  for (const file of ['packet.json', 'reference-brief.md', 'translation-map.md', 'acceptance.json', 'render-matrix.json']) {
+    await copyFile(join(packetDir, file), join(modulesRoot, 'navbar5', file));
+  }
+  const inventory = {
+    version: 1,
+    families: [{ id: 'navbars', modules: [{ id: 'navbar5', status: 'accepted', packet: 'navbar5' }] }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.deepEqual(result.errors, ['Accepted module navbar5 has packet stage green; expected accepted']);
+});
+
+test('inventory rejects nonexistent packet paths for in_progress modules', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-missing-'));
+  roots.push(modulesRoot);
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{ id: 'navbar5', status: 'in_progress', packet: 'navbar5' }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.equal(result.valid, false);
+  assert.deepEqual(result.errors, ['Missing packet directory for module navbar5: navbar5']);
+});
+
+test('inventory rejects duplicate family ids', async () => {
+  const inventory = {
+    version: 1,
+    families: [
+      { id: 'navbars', modules: [{ id: 'navbar5', status: 'queued' }] },
+      { id: 'navbars', modules: [{ id: 'navbar6', status: 'queued' }] },
+    ],
+  };
+  const result = await validateInventory(inventory, '/tmp/modules');
+  assert.deepEqual(result.errors, ['Duplicate inventory family id: navbars']);
+});
+
+test('inventory rejects invalid version and module status', async () => {
+  const inventory = {
+    version: 2,
+    families: [{
+      id: 'navbars',
+      modules: [{ id: 'navbar5', status: 'shipping' }],
+    }],
+  };
+  const result = await validateInventory(inventory, '/tmp/modules');
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.includes('inventory version must equal 1'));
+  assert.ok(result.errors.some((e) => /Invalid inventory status for module navbar5/.test(e)));
+});
+
+test('inventory requires non-empty reason for skipped modules', async () => {
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [
+        { id: 'navbar5', status: 'skipped' },
+        { id: 'navbar6', status: 'skipped', reason: '   ' },
+      ],
+    }],
+  };
+  const result = await validateInventory(inventory, '/tmp/modules');
+  assert.equal(result.valid, false);
+  assert.ok(result.errors.includes('Skipped module navbar5 requires a non-empty reason'));
+  assert.ok(result.errors.includes('Skipped module navbar6 requires a non-empty reason'));
+});
+
+test('inventory rejects malformed non-arrays and non-objects cleanly', async () => {
+  assert.deepEqual(
+    (await validateInventory(null, '/tmp/modules')).errors,
+    ['Inventory must be a JSON object'],
+  );
+  assert.deepEqual(
+    (await validateInventory([], '/tmp/modules')).errors,
+    ['Inventory must be a JSON object'],
+  );
+  assert.deepEqual(
+    (await validateInventory({ version: 1, families: 'navbars' }, '/tmp/modules')).errors,
+    ['inventory.families must be an array'],
+  );
+  assert.deepEqual(
+    (await validateInventory({ version: 1, families: [null] }, '/tmp/modules')).errors,
+    ['inventory.families[0] must be an object'],
+  );
+  assert.deepEqual(
+    (await validateInventory({
+      version: 1,
+      families: [{ id: 'navbars', modules: 'navbar5' }],
+    }, '/tmp/modules')).errors,
+    ['inventory.families[0].modules must be an array'],
+  );
+  assert.deepEqual(
+    (await validateInventory({
+      version: 1,
+      families: [{ id: 'navbars', modules: [null] }],
+    }, '/tmp/modules')).errors,
+    ['inventory.families[0].modules[0] must be an object'],
+  );
+});
+
+test('inventory rejects traversal and multi-segment packet paths', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-trav-'));
+  roots.push(modulesRoot);
+  for (const packet of ['../escape', 'foo/bar', '/abs/path', '..', '.', 'navbar5/../x']) {
+    const inventory = {
+      version: 1,
+      families: [{
+        id: 'navbars',
+        modules: [{ id: 'navbar5', status: 'accepted', packet }],
+      }],
+    };
+    const result = await validateInventory(inventory, modulesRoot);
+    assert.equal(result.valid, false, `expected invalid packet path: ${packet}`);
+    assert.ok(
+      result.errors.some((e) => /Invalid packet path for module navbar5|traversal|slug|segment|absolute|separators/i.test(e)),
+      `packet ${packet}: ${result.errors.join('; ')}`,
+    );
+  }
+});
+
+test('inventory rejects packet path that is a symlink escape', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-sym-'));
+  roots.push(modulesRoot);
+  const outside = await mkdtemp(join(tmpdir(), 'ren10-inventory-outside-'));
+  roots.push(outside);
+  const realPacket = await makePacket({ stage: 'accepted' });
+  // Copy artifacts into outside so a naive open might succeed; containment must still fail.
+  await symlink(realPacket, join(modulesRoot, 'navbar5'));
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{ id: 'navbar5', status: 'accepted', packet: 'navbar5' }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /symlink|symbolic link|inside modules root|escape/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('inventory validates in_progress and accepted packets with validatePacketDir', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-full-'));
+  roots.push(modulesRoot);
+  const good = await makePacket({ stage: 'accepted' });
+  await mkdir(join(modulesRoot, 'navbar5'));
+  for (const file of ['packet.json', 'reference-brief.md', 'translation-map.md', 'acceptance.json', 'render-matrix.json']) {
+    await copyFile(join(good, file), join(modulesRoot, 'navbar5', file));
+  }
+  // Incomplete in_progress packet: missing translation map
+  await mkdir(join(modulesRoot, 'navbar6'));
+  await writeFile(
+    join(modulesRoot, 'navbar6', 'packet.json'),
+    `${JSON.stringify({
+      version: 1,
+      family: 'navbars',
+      moduleId: 'navbar6',
+      blockSlug: 'nav-x',
+      blockPath: 'templates/blocks/nav-x.html',
+      stage: 'red',
+      allowedFiles: ['templates/blocks/nav-x.html'],
+      evidence: {},
+    }, null, 2)}\n`,
+  );
+  await writeFile(join(modulesRoot, 'navbar6', 'reference-brief.md'), '# Reference Brief\n\n## Retrieved facts\n\n- x\n');
+  await writeFile(join(modulesRoot, 'navbar6', 'acceptance.json'), '{"version":1,"criteria":[{"id":"a","kind":"structure","description":"a","automated":true}]}\n');
+  await writeFile(join(modulesRoot, 'navbar6', 'render-matrix.json'), '{"version":1,"path":"/x","root":"[data-x]","states":[]}\n');
+  // deliberately no translation-map.md
+
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [
+        { id: 'navbar5', status: 'accepted', packet: 'navbar5' },
+        { id: 'navbar6', status: 'in_progress', packet: 'navbar6' },
+      ],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.equal(result.valid, false);
+  // Must surface validatePacketDir artifact errors, not only stage string checks
+  assert.ok(
+    result.errors.some((e) => /navbar6/.test(e) && /Missing required artifact: translation-map\.md/.test(e)),
+    result.errors.join('; '),
+  );
+  assert.ok(!result.errors.some((e) => /navbar5/.test(e)), result.errors.join('; '));
+});
+
+test('inventory accepts the navbar5 pilot ledger shape', async () => {
+  const modulesRoot = join(process.cwd(), 'docs/workflows/relume-to-ren10/modules');
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      sourceCategory: 'navbars',
+      status: 'in_progress',
+      baseline: 'navbar5',
+      modules: [{
+        id: 'navbar5',
+        status: 'accepted',
+        packet: 'navbar5',
+        ren10Block: 'templates/blocks/nav-mega-menu.html',
+      }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.valid, true);
+});
+
+test('validate-all CLI requires exactly one inventory path and is nonzero on failure', async () => {
+  const missing = await expectCliFailure(['validate-all']);
+  assert.match(missing, /Usage:|exactly one|inventory/i);
+
+  const extra = await expectCliFailure(['validate-all', 'a.json', 'b.json']);
+  assert.match(extra, /Usage:|extra|unexpected|positional|exactly one/i);
+
+  const unknown = await expectCliFailure(['validate-all', 'a.json', '--force']);
+  assert.match(unknown, /Unknown|Usage:|unexpected|--force/i);
+
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-cli-'));
+  roots.push(modulesRoot);
+  const inventoryPath = join(modulesRoot, 'inventory.json');
+  await writeFile(inventoryPath, `${JSON.stringify({
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [
+        { id: 'navbar5', status: 'in_progress', packet: 'navbar5' },
+        { id: 'navbar6', status: 'in_progress', packet: 'navbar6' },
+      ],
+    }],
+  }, null, 2)}\n`);
+  // modules/ sibling expected by CLI
+  await mkdir(join(modulesRoot, 'modules'));
+  // place inventory at parent of modules: rewrite layout
+  const root = await mkdtemp(join(tmpdir(), 'ren10-inventory-cli-root-'));
+  roots.push(root);
+  await mkdir(join(root, 'modules'));
+  const inv = join(root, 'inventory.json');
+  await writeFile(inv, `${JSON.stringify({
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [
+        { id: 'navbar5', status: 'in_progress', packet: 'navbar5' },
+        { id: 'navbar6', status: 'in_progress', packet: 'navbar6' },
+      ],
+    }],
+  }, null, 2)}\n`);
+  const failed = await expectCliFailure(['validate-all', inv]);
+  assert.match(failed, /only one in_progress module/i);
+});
+
+test('validate-all CLI accepts committed navbar5 inventory', async () => {
+  const inv = join(process.cwd(), 'docs/workflows/relume-to-ren10/inventory.json');
+  const { stdout } = await runCli(['validate-all', inv]);
+  assert.match(stdout, /Valid inventory/i);
 });

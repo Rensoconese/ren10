@@ -152,5 +152,58 @@
       "Screenshots are gitignored; not claimed as committed artifacts.",
       "Captured against fail-closed implementation 20896b9. Post-evidence-commit recapture may refresh sibling JSON commit fields to the docs HEAD without rewriting this committed ledger to claim self-equality."
     ]
+  },
+  "task7VisualGate": {
+    "reviewer": "Codex",
+    "status": "pending-controller-final-approval",
+    "result": null,
+    "implementerSelfAsserted": false,
+    "note": "Task 7 plan Step 8 requires Codex visual gate on every pilot capture. Implementer (Grok) does not self-assert final Codex acceptance. Controller inspects all 10 captures before final approval. Fields below are facts only: exact capture IDs from this packet's captures ledger and Task 6 navigation/suite provenance — no invented pass/fail.",
+    "captureRoot": ".ren10-workflow/captures/navbar5/",
+    "capturesCommitted": false,
+    "captureIdsPreparedForReview": [
+      "desktop-light-closed",
+      "desktop-light-open",
+      "desktop-dark-closed",
+      "desktop-dark-open",
+      "mobile-light-closed",
+      "mobile-light-nav-open",
+      "mobile-light-nested-open",
+      "mobile-dark-nested-open",
+      "mobile-js-disabled-open",
+      "desktop-reduced-motion-open"
+    ],
+    "supportedFactsFromTask6Evidence": {
+      "implementationCommit": "20896b921eef730dfe95901998e690eaed6dadb0",
+      "navigationSuite": {
+        "command": "npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --retries=0",
+        "result": "30 passed (6.6s)",
+        "baseHeadAtRun": "20896b921eef730dfe95901998e690eaed6dadb0"
+      },
+      "captureIdentifiersRecordedInTask6": [
+        "desktop-light-closed",
+        "desktop-light-open",
+        "desktop-dark-closed",
+        "desktop-dark-open",
+        "mobile-light-closed",
+        "mobile-light-nav-open",
+        "mobile-light-nested-open",
+        "mobile-dark-nested-open",
+        "mobile-js-disabled-open",
+        "desktop-reduced-motion-open"
+      ],
+      "historicalReviewedKind": "historical-pilot-acceptance",
+      "historicalReviewedNote": "Pilot packet stage is accepted because the mega-menu block already shipped through rebuild + suite green. Independent Codex visual re-review and human re-acceptance remain available via runbook gates."
+    },
+    "controllerFieldsPending": {
+      "reviewedCommit": null,
+      "exactCaptureIdsReviewed": null,
+      "declaredIntentionalDifferences": null,
+      "result": null,
+      "unresolvedBasicAlignment": null,
+      "unresolvedDuplicateAffordance": null,
+      "unresolvedStacking": null,
+      "unresolvedCascadeDefect": null
+    }
   }
 }
