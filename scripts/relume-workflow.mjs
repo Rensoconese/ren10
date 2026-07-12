@@ -41,6 +41,7 @@ async function main() {
     return;
   }
   if (command === 'advance') {
+    if (!args.evidence) throw new Error('Missing required argument: --evidence');
     const packet = await advancePacket(resolve(args._[0]), resolve(args.evidence));
     console.log(`${packet.moduleId}: advanced to ${packet.stage}`);
     return;
@@ -54,7 +55,7 @@ async function main() {
       blockSlug: args.block,
       blockPath: args.path,
       testPath: args['test-path'],
-      templateRoot: resolve('docs/workflows/relume-to-ren10/templates'),
+      templateRoot: resolve(args['template-root'] ?? 'docs/workflows/relume-to-ren10/templates'),
     });
     console.log(`Created workflow packet: ${packetDir}`);
     return;

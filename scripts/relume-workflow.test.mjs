@@ -43,6 +43,24 @@ async function makePacket(overrides = {}) {
   return dir;
 }
 
+async function makeTemplateRoot() {
+  const templateRoot = await mkdtemp(join(tmpdir(), 'ren10-relume-templates-'));
+  roots.push(templateRoot);
+  await writeFile(
+    join(templateRoot, 'reference-brief.md'),
+    '# Reference Brief\n\n## Retrieved facts\n\n- Complete source inspected.\n',
+  );
+  await writeFile(
+    join(templateRoot, 'translation-map.md'),
+    '# Translation Map\n\n## Cascade risks\n\n- Native details inspected.\n',
+  );
+  await writeFile(
+    join(templateRoot, 'acceptance.json'),
+    '{"version":1,"criteria":[{"id":"one-chevron","kind":"structure","description":"One visible chevron","automated":true}]}\n',
+  );
+  return templateRoot;
+}
+
 test('validatePacketDir accepts a complete reference-stage packet', async () => {
   const dir = await makePacket();
   const result = await validatePacketDir(dir);
@@ -100,10 +118,12 @@ test('validatePacketDir reports malformed render-matrix.json', async () => {
 test('init creates a packet with deterministic paths', async () => {
   const root = await mkdtemp(join(tmpdir(), 'ren10-relume-cli-'));
   roots.push(root);
+  const templateRoot = await makeTemplateRoot();
   const { stdout } = await execFileAsync(process.execPath, [
     'scripts/relume-workflow.mjs',
     'init',
     '--root', root,
+    '--template-root', templateRoot,
     '--family', 'navbars',
     '--module', 'navbar6',
     '--block', 'nav-mega-menu-featured',
@@ -145,4 +165,19 @@ test('advance requires evidence and moves exactly one stage', async () => {
   const updated = await advancePacket(dir, evidence);
   assert.equal(updated.stage, 'mapped');
   assert.equal(updated.evidence.reference, 'reference-evidence.json');
+});
+
+test('advance CLI requires --evidence', async () => {
+  const dir = await makePacket();
+  try {
+    await execFileAsync(process.execPath, [
+      'scripts/relume-workflow.mjs',
+      'advance',
+      dir,
+    ], { cwd: process.cwd(), env: { ...process.env, NODE_NO_WARNINGS: '1' } });
+    assert.fail('expected advance CLI to reject missing --evidence');
+  } catch (error) {
+    assert.equal(error.code, 1);
+    assert.equal((error.stderr ?? '').trim(), 'Missing required argument: --evidence');
+  }
 });
