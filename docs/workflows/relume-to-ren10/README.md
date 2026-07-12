@@ -160,8 +160,12 @@ captures, and bulk Playwright suites are not published.
 
 Store evidence inside the packet directory (never symlinks or paths outside the
 packet). `packet.evidence` must point at **one schema-valid JSON file per
-completed stage**. `validatePacketDir` loads each pointer through the same
-containment + `validateStageEvidence` path as `advancePacket`.
+completed stage**, using a **portable packet-relative path** (never an absolute
+machine path). `advance` may accept an absolute in-packet evidence file at the
+CLI boundary, then stores the normalized relative pointer. `validatePacketDir`
+loads each pointer through the same containment + `validateStageEvidence` path
+as `advancePacket`, and rejects absolute pointers even when they resolve inside
+the packet on the current machine.
 
 A multi-stage audit ledger (for example `evidence.json` with nested
 `reference` / `green` / `reviewed` objects) is optional narrative history only.

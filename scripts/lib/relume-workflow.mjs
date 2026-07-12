@@ -357,18 +357,36 @@ export function completedStagesBefore(stage) {
  * Resolves a packet-local path (absolute or safe packet-relative), rejects
  * traversal/symlink/non-file, parses JSON, and applies validateStageEvidence.
  *
+ * Boundary vs persistence:
+ * - advancePacket CLI may pass absolute evidence input at the boundary
+ *   (`requireRelativePointer: false`, default); the returned `relativePath`
+ *   is what gets persisted on `packet.evidence`.
+ * - validatePacketDir requires persisted pointers to be portable
+ *   packet-relative paths (`requireRelativePointer: true`), even when an
+ *   absolute path would resolve inside the packet on this machine.
+ *
  * @param {string} packetDir
  * @param {string} evidencePath Absolute path or packet-relative pointer
  * @param {string} stage Stage schema the evidence must satisfy
+ * @param {{ requireRelativePointer?: boolean }} [options]
  * @returns {Promise<{ relativePath: string, evidence: object }>}
  */
-export async function loadContainedStageEvidence(packetDir, evidencePath, stage) {
+export async function loadContainedStageEvidence(packetDir, evidencePath, stage, options = {}) {
   if (typeof evidencePath !== 'string' || evidencePath.trim() === '') {
     throw new Error('Evidence path must be a non-empty string');
   }
 
+  const requireRelativePointer = options?.requireRelativePointer === true;
+  const looksAbsolute = isAbsolute(evidencePath) || /^[a-zA-Z]:[\\/]/.test(evidencePath);
+
+  if (requireRelativePointer && looksAbsolute) {
+    throw new Error(
+      'Evidence pointer must be a portable packet-relative path (absolute pointers are not allowed)',
+    );
+  }
+
   let absolute;
-  if (isAbsolute(evidencePath) || /^[a-zA-Z]:[\\/]/.test(evidencePath)) {
+  if (looksAbsolute) {
     absolute = resolve(evidencePath);
   } else {
     const safeRel = assertSafeRepoRelativePath(evidencePath, 'Evidence path');
@@ -474,7 +492,9 @@ export async function validatePacketDir(packetDir) {
             continue;
           }
           try {
-            await loadContainedStageEvidence(packetDir, pointer, completedStage);
+            await loadContainedStageEvidence(packetDir, pointer, completedStage, {
+              requireRelativePointer: true,
+            });
           } catch (error) {
             errors.push(`Evidence for completed stage ${completedStage}: ${error.message}`);
           }
@@ -971,7 +991,10 @@ export async function advancePacket(packetDir, evidencePath) {
   const target = nextStage(currentStage);
   if (!target) throw new Error('Workflow packet is already accepted');
 
-  const { relativePath } = await loadContainedStageEvidence(packetDir, evidencePath, currentStage);
+  // Boundary accepts absolute in-packet input; always persist packet-relative.
+  const { relativePath } = await loadContainedStageEvidence(packetDir, evidencePath, currentStage, {
+    requireRelativePointer: false,
+  });
 
   packet.evidence ??= {};
   packet.evidence[currentStage] = relativePath;

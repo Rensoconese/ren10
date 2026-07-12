@@ -866,6 +866,52 @@ test('validatePacketDir rejects traversal evidence pointers', async () => {
   );
 });
 
+test('validatePacketDir rejects absolute in-packet evidence pointers (portable lineage only)', async () => {
+  const dir = await makePacket({ stage: 'accepted' });
+  const ok = await validatePacketDir(dir);
+  assert.equal(ok.valid, true, ok.errors.join('\n'));
+
+  // Manually forge a machine-local absolute pointer whose real target is still
+  // inside the packet — must reject so committed lineage stays portable.
+  const packetPath = join(dir, 'packet.json');
+  const packet = JSON.parse(await readFile(packetPath, 'utf8'));
+  const absPointer = resolve(dir, packet.evidence.reference);
+  assert.equal(absPointer.startsWith(dir) || absPointer.startsWith(resolve(dir)), true);
+  packet.evidence.reference = absPointer;
+  await writeFile(packetPath, `${JSON.stringify(packet, null, 2)}\n`);
+
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some(
+      (e) => /reference/i.test(e) && /relative|absolute|portable|packet-relative/i.test(e),
+    ),
+    result.errors.join('; '),
+  );
+});
+
+test('advance accepts absolute in-packet evidence input and stores portable relative pointer', async () => {
+  const dir = await makePacket({ stage: 'reference', evidence: {} });
+  const absoluteEvidence = await writeEvidence(dir, 'reference-evidence.json', referenceEvidence());
+  assert.equal(resolve(absoluteEvidence), absoluteEvidence);
+
+  const updated = await advancePacket(dir, absoluteEvidence);
+  assert.equal(updated.stage, 'mapped');
+  assert.equal(updated.evidence.reference, 'reference-evidence.json');
+  assert.ok(
+    !updated.evidence.reference.startsWith('/')
+      && !/^[a-zA-Z]:[\\/]/.test(updated.evidence.reference),
+    `persisted pointer must be packet-relative, got ${JSON.stringify(updated.evidence.reference)}`,
+  );
+
+  const result = await validatePacketDir(dir);
+  assert.equal(result.valid, true, result.errors.join('\n'));
+  assert.deepEqual(result.errors, []);
+
+  const reloaded = JSON.parse(await readFile(join(dir, 'packet.json'), 'utf8'));
+  assert.equal(reloaded.evidence.reference, 'reference-evidence.json');
+});
+
 test('validatePacketDir rejects symlink evidence pointers', async () => {
   const dir = await makePacket({
     stage: 'mapped',
