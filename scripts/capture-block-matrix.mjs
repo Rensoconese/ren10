@@ -277,17 +277,19 @@ const DEFAULT_SETTLE_TIMEOUT_MS = 2000;
 /**
  * Count finite, still-active document animations/transitions.
  * Infinite iterations (spinners) are ignored so settle never hangs on them.
- * Canceled / finished / idle animations are ignored.
+ * Canceled / finished / idle animations are ignored (canceled ends as idle).
  * Runs via page.evaluate (browser automation; works with javaScriptEnabled:false).
- * @returns {{ pending: number, infinite: number, unsupported: boolean }}
+ * @returns {{ pending: number, infinite: number, unsupported: boolean, names: string[] }}
  */
 function countPendingAnimationsInPage() {
   if (typeof document.getAnimations !== 'function') {
-    return { pending: 0, infinite: 0, unsupported: true };
+    return { pending: 0, infinite: 0, unsupported: true, names: [] };
   }
   const animations = document.getAnimations({ subtree: true });
   let pending = 0;
   let infinite = 0;
+  /** @type {string[]} */
+  const names = [];
   for (const anim of animations) {
     const state = anim.playState;
     // finished / idle are already settled; canceled ends as idle with null time.
@@ -302,9 +304,42 @@ function countPendingAnimationsInPage() {
       infinite += 1;
       continue;
     }
-    if (state === 'running' || state === 'pending') pending += 1;
+    if (state === 'running' || state === 'pending') {
+      pending += 1;
+      const label = anim.animationName
+        || anim.transitionProperty
+        || anim.id
+        || 'anonymous';
+      names.push(String(label));
+    }
   }
-  return { pending, infinite, unsupported: false };
+  return { pending, infinite, unsupported: false, names };
+}
+
+/**
+ * @param {string} phase
+ * @param {unknown} error
+ * @returns {Error}
+ */
+function wrapSettleEvaluateError(phase, error) {
+  const detail = error instanceof Error ? error.message : String(error);
+  const wrapped = new Error(`settleDocument: page.evaluate failed during ${phase}: ${detail}`);
+  if (error instanceof Error) wrapped.cause = error;
+  return wrapped;
+}
+
+/**
+ * @param {number} timeoutMs
+ * @param {{ pending?: number, names?: string[] } | null | undefined} status
+ * @returns {Error}
+ */
+function unsettledAnimationsError(timeoutMs, status) {
+  const pending = status?.pending ?? 0;
+  const names = Array.isArray(status?.names) ? status.names.filter(Boolean) : [];
+  const named = names.length > 0 ? `: ${names.join(', ')}` : '';
+  return new Error(
+    `settleDocument: ${pending} finite animation(s) still pending after ${timeoutMs}ms${named}`,
+  );
 }
 
 /**
@@ -342,18 +377,39 @@ function yieldBriefly(ms = 16) {
 /**
  * Wait for finite CSS animations/transitions to finish, then at least two
  * animation frames or a stable root geometry. Infinite animations are ignored.
- * Canceled animations do not throw. Bounded by timeoutMs.
+ * Canceled animations are tolerated only when no finite active animation remains.
+ * Bounded by timeoutMs — fails closed if finite work is still pending.
  *
- * Uses page.evaluate only (allowed under javaScriptEnabled:false). When
- * requestAnimationFrame is unavailable (JS disabled), falls back to two
- * consecutive stable root measurements.
+ * Fail-closed policy:
+ * - page.evaluate errors propagate with settleDocument context (never swallowed).
+ * - If finite animations remain after the deadline, throw a deterministic error
+ *   naming/counting them. Callers must not take markers/screenshots after this.
+ * - Infinite-iteration animations are deliberately ignored.
+ * - Two-frame settle failures surface unless the narrowly documented
+ *   JS-disabled / rAF-unavailable path applies, which uses stable root geometry.
  *
- * @param {import('@playwright/test').Page} page
- * @param {{ timeoutMs?: number, rootSelector?: string }} [options]
+ * Injectable deps (`evaluate`, `now`, `sleep`) support unit tests without a browser.
+ * Pass `javaScriptEnabled: false` to skip rAF and use the stable-root path directly
+ * (Playwright contexts with javaScriptEnabled:false often expose rAF that never fires).
+ *
+ * @param {import('@playwright/test').Page | { evaluate?: Function }} page
+ * @param {{
+ *   timeoutMs?: number,
+ *   rootSelector?: string,
+ *   javaScriptEnabled?: boolean,
+ *   evaluate?: (fn: Function, arg?: unknown) => Promise<unknown>,
+ *   now?: () => number,
+ *   sleep?: (ms: number) => Promise<void>,
+ * }} [options]
  * @returns {Promise<void>}
  */
 export async function settleDocument(page, options = {}) {
-  if (!page || typeof page.evaluate !== 'function') {
+  const runEvaluate = typeof options.evaluate === 'function'
+    ? options.evaluate
+    : (page && typeof page.evaluate === 'function'
+      ? (fn, arg) => page.evaluate(fn, arg)
+      : null);
+  if (!runEvaluate) {
     throw new Error('settleDocument requires a Playwright page');
   }
 
@@ -363,46 +419,77 @@ export async function settleDocument(page, options = {}) {
   const rootSelector = typeof options.rootSelector === 'string' && options.rootSelector.trim() !== ''
     ? options.rootSelector
     : 'html';
-  const deadline = Date.now() + timeoutMs;
+  const javaScriptEnabled = options.javaScriptEnabled !== false;
+  const now = typeof options.now === 'function' ? options.now : Date.now;
+  const sleep = typeof options.sleep === 'function' ? options.sleep : yieldBriefly;
+  const deadline = now() + timeoutMs;
 
   // Give the browser one task to register enter animations after the action.
   // Prefer rAF when available; otherwise a single brief yield.
-  try {
-    const remaining = Math.max(0, deadline - Date.now());
-    await Promise.race([
-      page.evaluate(() => new Promise((resolve) => {
-        if (typeof requestAnimationFrame === 'function') {
-          requestAnimationFrame(() => resolve());
-        } else {
-          resolve();
-        }
-      })),
-      yieldBriefly(Math.min(50, remaining || 50)),
-    ]);
-  } catch {
-    await yieldBriefly(16);
+  // With JS disabled, skip rAF (callbacks may never fire) and yield briefly.
+  if (javaScriptEnabled) {
+    try {
+      const remaining = Math.max(0, deadline - now());
+      await Promise.race([
+        runEvaluate(() => new Promise((resolve) => {
+          if (typeof requestAnimationFrame === 'function') {
+            requestAnimationFrame(() => resolve());
+          } else {
+            resolve();
+          }
+        })),
+        sleep(Math.min(50, remaining || 50)),
+      ]);
+    } catch (error) {
+      throw wrapSettleEvaluateError('initial frame', error);
+    }
+  } else {
+    await sleep(16);
   }
 
   // Phase 1: wait until no finite animations/transitions are running.
-  while (Date.now() < deadline) {
+  /** @type {{ pending?: number, names?: string[] } | null | undefined} */
+  let lastStatus;
+  while (now() < deadline) {
     let status;
     try {
-      status = await page.evaluate(countPendingAnimationsInPage);
-    } catch {
-      // evaluate can fail on closed pages; surface by breaking to frame settle.
+      status = await runEvaluate(countPendingAnimationsInPage);
+    } catch (error) {
+      throw wrapSettleEvaluateError('animation poll', error);
+    }
+    lastStatus = status;
+    if (!status || status.pending === 0) {
+      lastStatus = status;
       break;
     }
-    if (!status || status.pending === 0) break;
-    await yieldBriefly(16);
+    await sleep(16);
   }
 
-  // Phase 2: two animation frames, or stable root when rAF is unavailable (JS off).
-  const frameBudget = Math.max(0, deadline - Date.now());
+  // Re-check at deadline: fail closed if finite work remains.
+  if (now() >= deadline || (lastStatus && lastStatus.pending > 0)) {
+    let finalStatus = lastStatus;
+    try {
+      finalStatus = await runEvaluate(countPendingAnimationsInPage);
+    } catch (error) {
+      throw wrapSettleEvaluateError('animation poll', error);
+    }
+    if (finalStatus && finalStatus.pending > 0) {
+      throw unsettledAnimationsError(timeoutMs, finalStatus);
+    }
+  }
+
+  // Phase 2: two animation frames, or stable root when rAF is unavailable / JS off.
+  // Documented fallback: javaScriptEnabled:false, missing rAF, or rAF that never
+  // fires under JS-disabled contexts → two consecutive stable root measurements.
+  // Other evaluate failures still propagate.
+  const frameBudget = Math.max(0, deadline - now());
   let framesDone = false;
-  if (frameBudget > 0) {
+  let useStableRoot = !javaScriptEnabled;
+
+  if (!useStableRoot && frameBudget > 0) {
     try {
       await Promise.race([
-        page.evaluate(() => new Promise((resolve, reject) => {
+        runEvaluate(() => new Promise((resolve, reject) => {
           if (typeof requestAnimationFrame !== 'function') {
             reject(new Error('raf-unavailable'));
             return;
@@ -411,29 +498,50 @@ export async function settleDocument(page, options = {}) {
             requestAnimationFrame(() => resolve(true));
           });
         })),
-        yieldBriefly(Math.min(frameBudget, 500)).then(() => {
+        sleep(Math.min(frameBudget, 500)).then(() => {
           throw new Error('raf-timeout');
         }),
       ]);
       framesDone = true;
-    } catch {
-      framesDone = false;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (message.includes('raf-unavailable') || message.includes('raf-timeout')) {
+        // Narrow fallback: no rAF, or rAF present but non-firing (JS-disabled contexts).
+        useStableRoot = true;
+        framesDone = false;
+      } else {
+        throw wrapSettleEvaluateError('two-frame settle', error);
+      }
     }
   }
 
   if (!framesDone) {
+    if (!useStableRoot && frameBudget <= 0) {
+      throw new Error(
+        `settleDocument: insufficient time for frame settle after animations within ${timeoutMs}ms`,
+      );
+    }
     // Stable-root fallback: two consecutive identical geometries.
     let previous = null;
-    while (Date.now() < deadline) {
+    let stabilized = false;
+    while (now() < deadline) {
       let box;
       try {
-        box = await page.evaluate(readRootBoxInPage, rootSelector);
-      } catch {
+        box = await runEvaluate(readRootBoxInPage, rootSelector);
+      } catch (error) {
+        throw wrapSettleEvaluateError('stable-root geometry', error);
+      }
+      if (sameBox(previous, box)) {
+        stabilized = true;
         break;
       }
-      if (sameBox(previous, box)) break;
       previous = box;
-      await yieldBriefly(16);
+      await sleep(16);
+    }
+    if (!stabilized) {
+      throw new Error(
+        `settleDocument: root geometry did not stabilize within ${timeoutMs}ms (${rootSelector})`,
+      );
     }
   }
 }
@@ -460,10 +568,19 @@ async function collectMarkerCounts(page, expectedMarkers = {}) {
  *   moduleId: string,
  *   repoRoot: string,
  *   outputRoot: string,
+ *   settleDocument?: typeof settleDocument,
+ *   settleOptions?: { timeoutMs?: number, rootSelector?: string },
  * }} options
  * @returns {Promise<number>} number of captured states
  */
-export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot }) {
+export async function captureMatrix({
+  matrixPath,
+  moduleId,
+  repoRoot,
+  outputRoot,
+  settleDocument: settleFn = settleDocument,
+  settleOptions = {},
+}) {
   if (typeof moduleId !== 'string' || moduleId.trim() === '') {
     throw new Error('moduleId is required');
   }
@@ -518,7 +635,12 @@ export async function captureMatrix({ matrixPath, moduleId, repoRoot, outputRoot
         await page.locator(matrix.root).waitFor({ state: 'visible' });
         // Deterministic post-action settle: finite animations/transitions, then
         // two frames or stable root — before markers and screenshot.
-        await settleDocument(page, { rootSelector: matrix.root });
+        // settleDocument fails closed; never write PNG/JSON on settle failure.
+        await settleFn(page, {
+          rootSelector: matrix.root,
+          javaScriptEnabled: state.javaScript !== false,
+          ...settleOptions,
+        });
         const markerCounts = await collectMarkerCounts(page, state.expectedMarkers);
 
         const pngPath = resolveContainedPath(moduleRoot, `${state.id}.png`, `state id "${state.id}"`);

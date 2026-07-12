@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
 import { afterEach, test } from 'node:test';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { access, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -547,7 +547,13 @@ test('settleDocument works with javaScriptEnabled false', async () => {
 <body><div id="root">static</div></body></html>`);
 
     const started = Date.now();
-    await settleDocument(page, { rootSelector: '#root', timeoutMs: 1000 });
+    // Explicit javaScriptEnabled:false selects the documented stable-root path
+    // (rAF is often present but non-firing when page JS is disabled).
+    await settleDocument(page, {
+      rootSelector: '#root',
+      timeoutMs: 1000,
+      javaScriptEnabled: false,
+    });
     const elapsed = Date.now() - started;
     assert.ok(elapsed < 1000, `JS-disabled settle should finish promptly, took ${elapsed}ms`);
 
@@ -558,4 +564,145 @@ test('settleDocument works with javaScriptEnabled false', async () => {
 
 test('settleDocument is exported and callable', () => {
   assert.equal(typeof settleDocument, 'function');
+});
+
+test('settleDocument rejects when finite animation exceeds timeout (Playwright)', async () => {
+  await withPage({}, async (page) => {
+    await page.setContent(`<!doctype html>
+<html><head><style>
+  @keyframes slow-fade { from { opacity: 0 } to { opacity: 1 } }
+  #panel {
+    width: 120px; height: 80px; background: #111; opacity: 0;
+  }
+  #panel.go {
+    animation: slow-fade 8s linear forwards;
+  }
+</style></head>
+<body>
+  <div id="root"><div id="panel"></div></div>
+</body></html>`);
+
+    await page.locator('#panel').evaluate((el) => { el.classList.add('go'); });
+
+    await assert.rejects(
+      () => settleDocument(page, { rootSelector: '#root', timeoutMs: 250 }),
+      (error) => {
+        assert.match(String(error.message || error), /finite animation/i);
+        assert.match(String(error.message || error), /pending|still/i);
+        assert.match(String(error.message || error), /slow-fade/i);
+        return true;
+      },
+    );
+  });
+});
+
+test('settleDocument propagates page.evaluate failures with context (injected)', async () => {
+  let nowMs = 0;
+  await assert.rejects(
+    () => settleDocument(
+      { evaluate: async () => { throw new Error('should not use page.evaluate'); } },
+      {
+        timeoutMs: 200,
+        now: () => nowMs,
+        sleep: async (ms) => { nowMs += ms; },
+        evaluate: async () => {
+          throw new Error('Target closed');
+        },
+      },
+    ),
+    (error) => {
+      assert.match(String(error.message || error), /settleDocument/i);
+      assert.match(String(error.message || error), /evaluate|Target closed/i);
+      return true;
+    },
+  );
+});
+
+test('settleDocument rejects when finite animations remain after timeout (injected polling)', async () => {
+  let nowMs = 0;
+  await assert.rejects(
+    () => settleDocument(
+      { evaluate: async () => ({}) },
+      {
+        timeoutMs: 80,
+        now: () => nowMs,
+        sleep: async (ms) => { nowMs += Math.max(ms, 1); },
+        evaluate: async (fn) => {
+          if (fn && fn.name === 'countPendingAnimationsInPage') {
+            return {
+              pending: 2,
+              infinite: 1,
+              unsupported: false,
+              names: ['slow-a', 'slow-b'],
+            };
+          }
+          // Initial / frame helpers: no-op so polling is exercised.
+          return undefined;
+        },
+      },
+    ),
+    (error) => {
+      const message = String(error.message || error);
+      assert.match(message, /finite animation/i);
+      assert.match(message, /2/);
+      assert.match(message, /slow-a/);
+      assert.match(message, /slow-b/);
+      // Infinite work must not be reported as the failure reason.
+      assert.doesNotMatch(message, /infinite/i);
+      return true;
+    },
+  );
+});
+
+test('captureMatrix does not write PNG/JSON when settle fails', async () => {
+  const { captureMatrix } = await import('./capture-block-matrix.mjs');
+  const root = await mkdtemp(join(tmpdir(), 'ren10-capture-settle-fail-'));
+  roots.push(root);
+  const matrixPath = join(root, 'render-matrix.json');
+  const outputRoot = join(root, 'out');
+  await writeFile(matrixPath, `${JSON.stringify(cloneMatrix({
+    path: '/index.html',
+    root: 'body',
+    states: [{
+      id: 'state-a',
+      viewport: { width: 400, height: 300 },
+      theme: 'light',
+      javaScript: true,
+      reducedMotion: false,
+      actions: [],
+      expectedMarkers: {},
+    }],
+  }), null, 2)}\n`);
+
+  await assert.rejects(
+    () => captureMatrix({
+      matrixPath,
+      moduleId: 'mod-a',
+      repoRoot: process.cwd(),
+      outputRoot,
+      settleDocument: async () => {
+        throw new Error('settleDocument: 1 finite animation(s) still pending after 200ms: slow-fade');
+      },
+    }),
+    /finite animation/i,
+  );
+
+  const moduleDir = join(outputRoot, 'mod-a');
+  let entries = [];
+  try {
+    entries = await readdir(moduleDir);
+  } catch (error) {
+    if (error && error.code === 'ENOENT') {
+      entries = [];
+    } else {
+      throw error;
+    }
+  }
+  assert.equal(
+    entries.filter((name) => name.endsWith('.png') || name.endsWith('.json')).length,
+    0,
+    `expected no capture artifacts on settle failure, found: ${entries.join(', ')}`,
+  );
+  await assert.rejects(() => access(join(moduleDir, 'state-a.png')), /ENOENT/);
+  await assert.rejects(() => access(join(moduleDir, 'state-a.json')), /ENOENT/);
 });
