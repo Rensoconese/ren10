@@ -112,10 +112,39 @@ Rules enforced by `validateInventory` / `validate-all`:
   multi-segment, or symlink escape outside `modules/`).
 - Every `in_progress` and `accepted` entry is validated with
   `validatePacketDir`, not only a stage string check.
+- After packet validation, ledger identity must match the packet:
+  `packet.moduleId === module.id` and `packet.family === family.id`.
+- Optional `ren10Block` must be a safe repo-relative path equal to
+  `packet.blockPath`, resolve to a regular file inside the repository root
+  (symlink / realpath escape rejected). `validateInventory` accepts optional
+  `{ repoRoot }`; CLI passes the known package root, and the canonical
+  `docs/workflows/relume-to-ren10/modules` layout can derive it.
 - `accepted` inventory rows require an `accepted` packet stage.
+
+**Multi-`in_progress` short-circuit:** when more than one module is
+`in_progress`, validation emits only the concurrency error for those rows and
+skips their FS/packet checks so the plan contract remains a single deterministic
+message (`Inventory may contain only one in_progress module; found …`). Accepted
+rows still fully validate. Full multi-error aggregation is intentionally deferred.
 
 Populate additional module IDs only after a successful authenticated Relume
 category query — do not invent IDs from memory.
+
+## Packaged runtime
+
+The published `ren10` package includes the minimal workflow runtime so inventory
+validation is portable:
+
+| Path | Role |
+| --- | --- |
+| `scripts/relume-workflow.mjs` | CLI (`init` / `validate` / `status` / `advance` / `validate-all`) |
+| `scripts/lib/relume-workflow.mjs` | Trusted packet + inventory gates |
+| `scripts/capture-block-matrix.mjs` | Render-matrix capture helper |
+| `tests/utils/static-server.cjs` | Capture static server dependency |
+
+Capture still requires a Playwright-capable environment (`@playwright/test` is a
+devDependency of this repository). Workflow unit tests, `.ren10-workflow/`
+captures, and bulk Playwright suites are not published.
 
 ## Required evidence filenames
 

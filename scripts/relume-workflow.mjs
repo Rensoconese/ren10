@@ -166,7 +166,10 @@ async function main() {
     }
 
     const modulesRoot = join(dirname(inventoryPath), 'modules');
-    const result = await validateInventory(inventory, modulesRoot);
+    // Known layout: <repo>/docs/workflows/relume-to-ren10/{inventory.json,modules/}
+    // Pass explicit repoRoot so ren10Block file checks do not depend only on derivation.
+    const repoRoot = resolve(dirname(inventoryPath), '../../..');
+    const result = await validateInventory(inventory, modulesRoot, { repoRoot });
     if (!result.valid) {
       throw new Error(result.errors.join('\n'));
     }

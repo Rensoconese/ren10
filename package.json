@@ -40,7 +40,11 @@
     "cli/",
     "themes/appearance.css",
     "themes/theme-generator.js",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "scripts/relume-workflow.mjs",
+    "scripts/lib/relume-workflow.mjs",
+    "scripts/capture-block-matrix.mjs",
+    "tests/utils/static-server.cjs"
   ],
   "publishConfig": {
     "access": "public",

@@ -1108,3 +1108,302 @@ test('validate-all CLI accepts committed navbar5 inventory', async () => {
   const { stdout } = await runCli(['validate-all', inv]);
   assert.match(stdout, /Valid inventory/i);
 });
+
+// --- Task 7 review: ledger/packet identity + ren10Block coherence ---
+
+async function seedPacketUnder(modulesRoot, moduleDirName, overrides = {}) {
+  const source = await makePacket(overrides);
+  const dest = join(modulesRoot, moduleDirName);
+  await mkdir(dest, { recursive: true });
+  for (const file of [
+    'packet.json',
+    'reference-brief.md',
+    'translation-map.md',
+    'acceptance.json',
+    'render-matrix.json',
+  ]) {
+    await copyFile(join(source, file), join(dest, file));
+  }
+  return dest;
+}
+
+test('inventory rejects accepted packet whose moduleId does not match ledger id', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inv-swap-'));
+  roots.push(modulesRoot);
+  // Ledger says navbar5, but packet claims navbar6 (swapped identity).
+  await seedPacketUnder(modulesRoot, 'navbar5', {
+    stage: 'accepted',
+    moduleId: 'navbar6',
+    family: 'navbars',
+  });
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{ id: 'navbar5', status: 'accepted', packet: 'navbar5' }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /moduleId|mismatch/i.test(e) && /navbar5/.test(e) && /navbar6/.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('inventory rejects packet whose family does not match inventory family id', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inv-fam-'));
+  roots.push(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', {
+    stage: 'accepted',
+    moduleId: 'navbar5',
+    family: 'heroes',
+  });
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{ id: 'navbar5', status: 'accepted', packet: 'navbar5' }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /family|mismatch/i.test(e) && /navbar5/.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('inventory rejects ren10Block that does not equal packet.blockPath', async () => {
+  const repoRoot = await mkdtemp(join(tmpdir(), 'ren10-inv-block-mm-'));
+  roots.push(repoRoot);
+  const modulesRoot = join(repoRoot, 'modules');
+  await mkdir(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', {
+    stage: 'accepted',
+    moduleId: 'navbar5',
+    family: 'navbars',
+    blockPath: 'templates/blocks/nav-mega-menu.html',
+  });
+  await mkdir(join(repoRoot, 'templates', 'blocks'), { recursive: true });
+  await writeFile(join(repoRoot, 'templates', 'blocks', 'other.html'), '<html></html>\n');
+  await writeFile(join(repoRoot, 'templates', 'blocks', 'nav-mega-menu.html'), '<html></html>\n');
+
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{
+        id: 'navbar5',
+        status: 'accepted',
+        packet: 'navbar5',
+        ren10Block: 'templates/blocks/other.html',
+      }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot, { repoRoot });
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /ren10Block/.test(e) && /blockPath/.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('inventory rejects missing ren10Block file under repo root', async () => {
+  const repoRoot = await mkdtemp(join(tmpdir(), 'ren10-inv-block-miss-'));
+  roots.push(repoRoot);
+  const modulesRoot = join(repoRoot, 'modules');
+  await mkdir(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', {
+    stage: 'accepted',
+    moduleId: 'navbar5',
+    family: 'navbars',
+    blockPath: 'templates/blocks/missing-block.html',
+  });
+
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{
+        id: 'navbar5',
+        status: 'accepted',
+        packet: 'navbar5',
+        ren10Block: 'templates/blocks/missing-block.html',
+      }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot, { repoRoot });
+  assert.equal(result.valid, false);
+  assert.ok(
+    result.errors.some((e) => /ren10Block/.test(e) && /missing|not a regular file|does not exist/i.test(e)),
+    result.errors.join('; '),
+  );
+});
+
+test('inventory rejects ren10Block traversal and symlink escape', async () => {
+  const repoRoot = await mkdtemp(join(tmpdir(), 'ren10-inv-block-esc-'));
+  roots.push(repoRoot);
+  const modulesRoot = join(repoRoot, 'modules');
+  await mkdir(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', {
+    stage: 'accepted',
+    moduleId: 'navbar5',
+    family: 'navbars',
+    blockPath: 'templates/blocks/nav-x.html',
+  });
+  await mkdir(join(repoRoot, 'templates', 'blocks'), { recursive: true });
+  await writeFile(join(repoRoot, 'templates', 'blocks', 'nav-x.html'), '<html></html>\n');
+
+  // Traversal path rejected by safe path check (even before FS).
+  const traversalInventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{
+        id: 'navbar5',
+        status: 'accepted',
+        packet: 'navbar5',
+        ren10Block: '../escape.html',
+      }],
+    }],
+  };
+  const traversal = await validateInventory(traversalInventory, modulesRoot, { repoRoot });
+  assert.equal(traversal.valid, false);
+  assert.ok(
+    traversal.errors.some((e) => /ren10Block|traversal|repository-relative/i.test(e)),
+    traversal.errors.join('; '),
+  );
+
+  // Symlink that points outside repo root must be rejected.
+  const outside = await mkdtemp(join(tmpdir(), 'ren10-inv-outside-block-'));
+  roots.push(outside);
+  await writeFile(join(outside, 'secret.html'), '<html></html>\n');
+  await symlink(join(outside, 'secret.html'), join(repoRoot, 'templates', 'blocks', 'link.html'));
+
+  // Packet blockPath matches ren10Block name; file is a symlink escape.
+  const packetJson = JSON.parse(
+    await readFile(join(modulesRoot, 'navbar5', 'packet.json'), 'utf8'),
+  );
+  packetJson.blockPath = 'templates/blocks/link.html';
+  await writeFile(
+    join(modulesRoot, 'navbar5', 'packet.json'),
+    `${JSON.stringify(packetJson, null, 2)}\n`,
+  );
+
+  const symlinkInventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{
+        id: 'navbar5',
+        status: 'accepted',
+        packet: 'navbar5',
+        ren10Block: 'templates/blocks/link.html',
+      }],
+    }],
+  };
+  const escaped = await validateInventory(symlinkInventory, modulesRoot, { repoRoot });
+  assert.equal(escaped.valid, false);
+  assert.ok(
+    escaped.errors.some((e) => /ren10Block/.test(e) && /symlink|symbolic link|escape|inside repository root/i.test(e)),
+    escaped.errors.join('; '),
+  );
+});
+
+test('inventory accepts matching ren10Block when repoRoot option is provided', async () => {
+  const repoRoot = await mkdtemp(join(tmpdir(), 'ren10-inv-block-ok-'));
+  roots.push(repoRoot);
+  const modulesRoot = join(repoRoot, 'modules');
+  await mkdir(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', {
+    stage: 'accepted',
+    moduleId: 'navbar5',
+    family: 'navbars',
+    blockPath: 'templates/blocks/nav-mega-menu.html',
+  });
+  await mkdir(join(repoRoot, 'templates', 'blocks'), { recursive: true });
+  await writeFile(join(repoRoot, 'templates', 'blocks', 'nav-mega-menu.html'), '<html></html>\n');
+
+  const inventory = {
+    version: 1,
+    families: [{
+      id: 'navbars',
+      modules: [{
+        id: 'navbar5',
+        status: 'accepted',
+        packet: 'navbar5',
+        ren10Block: 'templates/blocks/nav-mega-menu.html',
+      }],
+    }],
+  };
+  const result = await validateInventory(inventory, modulesRoot, { repoRoot });
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.valid, true);
+});
+
+test('committed navbar5 inventory passes with derived repo root from modules layout', async () => {
+  const modulesRoot = join(process.cwd(), 'docs/workflows/relume-to-ren10/modules');
+  const inventory = JSON.parse(
+    await readFile(join(process.cwd(), 'docs/workflows/relume-to-ren10/inventory.json'), 'utf8'),
+  );
+  // No explicit repoRoot — canonical modulesRoot layout must derive repository root.
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.valid, true);
+});
+
+test('published package includes documented workflow runtime scripts and excludes tests/captures', async () => {
+  const pkg = JSON.parse(await readFile(join(process.cwd(), 'package.json'), 'utf8'));
+  const scriptEntries = Object.entries(pkg.scripts || {}).filter(([name]) =>
+    name === 'workflow:relume'
+    || name === 'workflow:relume:check'
+    || name === 'workflow:relume:capture'
+    || name === 'test:workflow'
+  );
+  assert.ok(scriptEntries.length >= 3, 'expected workflow package scripts');
+
+  /** @type {Set<string>} */
+  const requiredPacked = new Set();
+  for (const [, command] of scriptEntries) {
+    for (const match of String(command).matchAll(/\bnode\s+(scripts\/[^\s]+\.mjs)\b/g)) {
+      requiredPacked.add(match[1]);
+    }
+  }
+  // capture-block-matrix hard-depends on the shared static server helper.
+  if (requiredPacked.has('scripts/capture-block-matrix.mjs')) {
+    requiredPacked.add('tests/utils/static-server.cjs');
+    requiredPacked.add('scripts/lib/relume-workflow.mjs'); // not always in script string; CLI imports it
+  }
+  // CLI always loads the library module.
+  if (requiredPacked.has('scripts/relume-workflow.mjs')) {
+    requiredPacked.add('scripts/lib/relume-workflow.mjs');
+  }
+
+  assert.ok(requiredPacked.has('scripts/relume-workflow.mjs'));
+  assert.ok(requiredPacked.has('scripts/lib/relume-workflow.mjs'));
+  assert.ok(requiredPacked.has('scripts/capture-block-matrix.mjs'));
+  assert.ok(requiredPacked.has('tests/utils/static-server.cjs'));
+
+  const { stdout } = await execFileAsync('npm', ['pack', '--dry-run', '--json'], {
+    cwd: process.cwd(),
+    maxBuffer: 20 * 1024 * 1024,
+  });
+  const packJson = JSON.parse(stdout);
+  const packMeta = Array.isArray(packJson) ? packJson[0] : packJson;
+  const packed = new Set((packMeta.files || []).map((f) => f.path || f));
+
+  for (const required of requiredPacked) {
+    assert.ok(packed.has(required), `expected packed runtime file: ${required}`);
+  }
+
+  // Must not publish workflow unit tests, capture scratch, or bulk test suites.
+  const forbidden = [...packed].filter((p) =>
+    p.endsWith('.test.mjs')
+    || p.startsWith('.ren10-workflow/')
+    || p.startsWith('tests/components/')
+    || p.startsWith('tests/a11y/')
+    || p.startsWith('tests/visual/')
+  );
+  assert.deepEqual(forbidden, [], `unexpected packed paths: ${forbidden.join(', ')}`);
+});

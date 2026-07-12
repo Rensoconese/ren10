@@ -453,16 +453,111 @@ async function resolveInventoryPacketDir(modulesRoot, packetField, moduleId) {
 }
 
 /**
+ * Derive repository root from the canonical modules layout:
+ * `<repo>/docs/workflows/relume-to-ren10/modules`.
+ * Returns null when modulesRoot is not that layout (tests should pass `{ repoRoot }`).
+ * @param {string} modulesRoot
+ * @returns {string | null}
+ */
+export function deriveRepoRootFromModulesRoot(modulesRoot) {
+  if (typeof modulesRoot !== 'string' || modulesRoot.trim() === '') return null;
+  const resolved = resolve(modulesRoot);
+  const normalized = resolved.replace(/\\/g, '/');
+  const marker = '/docs/workflows/relume-to-ren10/modules';
+  if (!normalized.endsWith(marker)) return null;
+  const repoRoot = resolved.slice(0, resolved.length - marker.length);
+  return repoRoot === '' ? sep : repoRoot;
+}
+
+/**
+ * Resolve ren10Block under repoRoot: safe repo-relative path, regular file (not symlink),
+ * realpath contained inside repository root.
+ * @param {string} repoRoot
+ * @param {string} ren10Block
+ * @param {string} moduleId
+ * @returns {Promise<{ path: string | null, error: string | null }>}
+ */
+async function resolveInventoryBlockFile(repoRoot, ren10Block, moduleId) {
+  let safePath;
+  try {
+    safePath = assertSafeRepoRelativePath(ren10Block, `Module ${moduleId} ren10Block`);
+  } catch (error) {
+    return { path: null, error: error.message };
+  }
+
+  const absolute = resolve(repoRoot, ...safePath.split('/'));
+  let fileLstat;
+  try {
+    fileLstat = await lstat(absolute);
+  } catch {
+    return {
+      path: null,
+      error: `Module ${moduleId} ren10Block missing or not a regular file: ${safePath}`,
+    };
+  }
+
+  if (fileLstat.isSymbolicLink()) {
+    return {
+      path: null,
+      error: `Module ${moduleId} ren10Block must not be a symbolic link: ${safePath}`,
+    };
+  }
+
+  if (!fileLstat.isFile()) {
+    return {
+      path: null,
+      error: `Module ${moduleId} ren10Block missing or not a regular file: ${safePath}`,
+    };
+  }
+
+  let realRepo;
+  let realFile;
+  try {
+    realRepo = await realpath(repoRoot);
+    realFile = await realpath(absolute);
+  } catch {
+    return {
+      path: null,
+      error: `Module ${moduleId} ren10Block missing or not a regular file: ${safePath}`,
+    };
+  }
+
+  if (realFile === realRepo || !isPathInside(realRepo, realFile)) {
+    return {
+      path: null,
+      error: `Module ${moduleId} ren10Block must resolve inside repository root (symlink escape rejected): ${safePath}`,
+    };
+  }
+
+  return { path: realFile, error: null };
+}
+
+/**
  * Validate family/module inventory ledger.
  * Returns deterministic sorted errors. Validates every in_progress/accepted packet with
- * validatePacketDir (not only the stage string).
+ * validatePacketDir (not only the stage string), then ledger↔packet identity and optional
+ * ren10Block file coherence under the repository root.
+ *
+ * @param {unknown} inventory
+ * @param {string} modulesRoot
+ * @param {{ repoRoot?: string }} [options] Optional. Prefer `{ repoRoot }` in tests; CLI and
+ *   canonical `docs/workflows/relume-to-ren10/modules` derive it when omitted.
  */
-export async function validateInventory(inventory, modulesRoot) {
+export async function validateInventory(inventory, modulesRoot, options = {}) {
   if (inventory === null || typeof inventory !== 'object' || Array.isArray(inventory)) {
     return { valid: false, errors: ['Inventory must be a JSON object'] };
   }
 
   const errors = [];
+  const explicitRepoRoot = options && typeof options === 'object' && !Array.isArray(options)
+    ? options.repoRoot
+    : undefined;
+  let resolvedRepoRoot = null;
+  if (typeof explicitRepoRoot === 'string' && explicitRepoRoot.trim() !== '') {
+    resolvedRepoRoot = resolve(explicitRepoRoot);
+  } else {
+    resolvedRepoRoot = deriveRepoRootFromModulesRoot(modulesRoot);
+  }
 
   if (inventory.version !== 1) {
     errors.push('inventory version must equal 1');
@@ -477,7 +572,7 @@ export async function validateInventory(inventory, modulesRoot) {
   const moduleIds = new Set();
   /** @type {string[]} */
   const inProgressIds = [];
-  /** @type {{ moduleId: string, status: string, packet: unknown, ren10Block?: unknown }[]} */
+  /** @type {{ moduleId: string, familyId: string | null, status: string, packet: unknown, ren10Block?: unknown }[]} */
   const packetEntries = [];
 
   for (let familyIndex = 0; familyIndex < inventory.families.length; familyIndex += 1) {
@@ -487,12 +582,14 @@ export async function validateInventory(inventory, modulesRoot) {
       continue;
     }
 
+    let familyId = null;
     if (typeof family.id !== 'string' || family.id.trim() === '') {
       errors.push(`inventory.families[${familyIndex}].id must be a non-empty string`);
     } else if (familyIds.has(family.id)) {
       errors.push(`Duplicate inventory family id: ${family.id}`);
     } else {
       familyIds.add(family.id);
+      familyId = family.id;
     }
 
     if (!Array.isArray(family.modules)) {
@@ -542,6 +639,7 @@ export async function validateInventory(inventory, modulesRoot) {
       if (status === 'in_progress' || status === 'accepted') {
         packetEntries.push({
           moduleId,
+          familyId,
           status,
           packet: mod.packet,
           ren10Block: mod.ren10Block,
@@ -560,14 +658,18 @@ export async function validateInventory(inventory, modulesRoot) {
 
   const multiInProgress = inProgressIds.length > 1;
   if (multiInProgress) {
+    // Deliberate short-circuit companion: the plan contract test deep-equals this single
+    // concurrency error. When more than one module is in_progress, skip FS/packet checks for
+    // those in_progress rows so only this error is emitted for that failure class. Accepted
+    // rows still fully validate. Aggregate multi-error reporting is intentionally deferred.
     errors.push(
       `Inventory may contain only one in_progress module; found ${[...inProgressIds].sort().join(', ')}`,
     );
   }
 
   for (const entry of packetEntries) {
-    // When multiple in_progress modules exist, skip FS checks for those in_progress
-    // entries so the concurrency error remains the sole deterministic signal (plan contract).
+    // See multiInProgress note above: skip in_progress FS checks under concurrency failure
+    // so the planned single-error deepEqual remains stable.
     if (entry.status === 'in_progress' && multiInProgress) {
       continue;
     }
@@ -591,6 +693,73 @@ export async function validateInventory(inventory, modulesRoot) {
         errors.push(
           `Accepted module ${entry.moduleId} has packet stage ${stage ?? 'unknown'}; expected accepted`,
         );
+      }
+    }
+
+    // Ledger ↔ packet identity (after validatePacketDir so packet.json shape is known).
+    const pkt = packetResult.packet;
+    if (pkt) {
+      if (pkt.moduleId !== entry.moduleId) {
+        errors.push(
+          `Module ${entry.moduleId} packet.moduleId mismatch: expected ${JSON.stringify(entry.moduleId)}, got ${JSON.stringify(pkt.moduleId)}`,
+        );
+      }
+      if (entry.familyId !== null && pkt.family !== entry.familyId) {
+        errors.push(
+          `Module ${entry.moduleId} packet.family mismatch: expected ${JSON.stringify(entry.familyId)}, got ${JSON.stringify(pkt.family)}`,
+        );
+      }
+
+      if (entry.ren10Block !== undefined && entry.ren10Block !== null) {
+        let safeBlock;
+        try {
+          safeBlock = assertSafeRepoRelativePath(
+            entry.ren10Block,
+            `Module ${entry.moduleId} ren10Block`,
+          );
+        } catch (error) {
+          // Already reported in the first pass when ren10Block is present; skip FS checks.
+          safeBlock = null;
+          if (!errors.includes(error.message)) {
+            errors.push(error.message);
+          }
+        }
+
+        if (safeBlock !== null) {
+          const packetBlockPath = typeof pkt.blockPath === 'string'
+            ? (() => {
+              try {
+                return assertSafeRepoRelativePath(
+                  pkt.blockPath,
+                  `Module ${entry.moduleId} packet.blockPath`,
+                );
+              } catch {
+                return null;
+              }
+            })()
+            : null;
+
+          if (packetBlockPath === null || safeBlock !== packetBlockPath) {
+            errors.push(
+              `Module ${entry.moduleId} ren10Block must equal packet.blockPath: ${JSON.stringify(safeBlock)} !== ${JSON.stringify(pkt.blockPath)}`,
+            );
+          }
+
+          if (resolvedRepoRoot === null) {
+            errors.push(
+              `Module ${entry.moduleId} ren10Block requires repository root; pass options.repoRoot or use canonical modulesRoot layout`,
+            );
+          } else {
+            const blockResolved = await resolveInventoryBlockFile(
+              resolvedRepoRoot,
+              safeBlock,
+              entry.moduleId,
+            );
+            if (blockResolved.error) {
+              errors.push(blockResolved.error);
+            }
+          }
+        }
       }
     }
   }
