@@ -37,6 +37,7 @@ No changes to core RenDS CSS/JS, other blocks, workflow packet, or inventory. No
 ### 4. General audit
 
 - Single `.rmi-chevron`; classless `details`/`summary` chrome neutralized in block CSS.
+- Fresh matrix inspection found and corrected misuse of `ren-center` on all 16 destination icon wrappers. The wrapper already owns inline centering; removing the container primitive eliminates mobile/tablet auto-margin drift and restores a compact icon/label row. A mobile geometry assertion now locks the icon to the row edge and bounds the icon/label gap.
 - Semantic/component tokens only in block styles; no primitive palette, hex colors, or framework residue.
 - One `#rmi-primary-links` tree; anatomy 3+1 top-level, 16 destinations, footer trio, no featured media.
 

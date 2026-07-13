@@ -1835,8 +1835,11 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
 
     const mobileLayout = await page.evaluate(() => {
       const desc = document.querySelector('.rmi-dest-desc');
+      const firstDest = document.querySelector('.rmi-dest');
+      const firstIcon = firstDest?.querySelector('.rmi-dest-icon');
+      const firstLabel = firstDest?.querySelector('.rmi-dest-label');
       const actions = Array.from(document.querySelectorAll('.rmi-footer-action'));
-      if (!desc || actions.length < 2) return null;
+      if (!desc || !firstDest || !firstIcon || !firstLabel || actions.length < 2) return null;
       const descStyle = getComputedStyle(desc);
       const descRect = desc.getBoundingClientRect();
       const descHidden =
@@ -1847,11 +1850,18 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
       const a0 = actions[0].getBoundingClientRect();
       const a1 = actions[1].getBoundingClientRect();
       const stacked = a1.top >= a0.bottom - 2;
-      return { descHidden, stacked };
+      const destRect = firstDest.getBoundingClientRect();
+      const iconRect = firstIcon.getBoundingClientRect();
+      const labelRect = firstLabel.getBoundingClientRect();
+      const iconStartsAtRow = iconRect.left - destRect.left <= 16;
+      const compactIconLabelGap = labelRect.left - iconRect.right >= 0 && labelRect.left - iconRect.right <= 24;
+      return { descHidden, stacked, iconStartsAtRow, compactIconLabelGap };
     });
     expect(mobileLayout).toBeTruthy();
     expect(mobileLayout.descHidden, 'mobile descriptions visually hidden').toBe(true);
     expect(mobileLayout.stacked, 'mobile footer actions stacked').toBe(true);
+    expect(mobileLayout.iconStartsAtRow, 'mobile icon starts at the row edge').toBe(true);
+    expect(mobileLayout.compactIconLabelGap, 'mobile icon and label stay adjacent').toBe(true);
 
     const detailsChrome = await inspectNativeChrome(page, '.rmi-disclosure');
     const summaryChrome = await inspectNativeChrome(page, '.rmi-disclosure > summary');
