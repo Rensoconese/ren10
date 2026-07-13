@@ -1,0 +1,56 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "148d05aecc0f40c29a1c7d4ce1d1570710b8f222",
+  "captures": {
+    "desktop": ".ren10-workflow/captures/navbar8/desktop-light-open.png",
+    "mobile": ".ren10-workflow/captures/navbar8/mobile-light-nested-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected all 12 fresh matrix states at commit 148d05aecc0f40c29a1c7d4ce1d1570710b8f222. The first review found a real tablet/full-page state defect: the pointer-preview close handler cleared its transient flag before deciding whether to close, and the capture browser briefly reported a 1x1 viewport. The controller now closes only a genuinely transient hover preview, ignores non-meaningful 1x1 viewport transitions, and uses the public --ren-z-sticky token for overlay layering. Final desktop light/dark has one aligned trigger and one chevron, three columns x four aligned icon/title/description destinations, and a narrower five-link contrast rail. The 834px tablet state uses two readable columns, a third group below, visible descriptions, and a stacked full-width contrast rail; its 1600px capture height contains the complete panel without full-page resize artifacts. Mobile uses one in-flow tree, start-aligned icon/title rows, hidden descriptions, stacked rail and CTA actions, and no overflow. JS-disabled native disclosure remains usable. Classless details/summary chrome is neutralized, inline SVGs are sized by ren-icon, no numeric z-index or hardcoded color literals remain, and light/dark token surfaces are coherent. Hover-open and click-open desktop PNGs are pixel-identical (ImageMagick AE = 0). Every state reports 12 destinations, 12 descriptions, 12 icons, 3 groups, 1 chevron, 1 rail, 1 rail heading, and 5 rail links.",
+  "testResults": {
+    "navbar8Focused": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar8 --retries=0 --workers=4",
+      "result": "32 passed, 0 failed across Desktop Light and Desktop Dark after final state corrections"
+    },
+    "navbarFamilyRegression": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep 'navbar[5678]|Navigation blocks' --retries=0 --workers=4",
+      "result": "128 passed, 0 failed; navbar5, navbar6, navbar7, and navbar8"
+    },
+    "workflowUnits": {
+      "command": "npm run test:workflow",
+      "result": "114 passed, 0 failed"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; CSS, token and contract checks passed; ESLint 0 errors and 29 pre-existing warnings"
+    },
+    "capture": {
+      "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar8/render-matrix.json --module navbar8 --output .ren10-workflow/captures",
+      "result": "12 PNG plus 12 JSON; all commit fields equal 148d05aecc0f40c29a1c7d4ce1d1570710b8f222; captured 2026-07-13T14:09:04Z through 14:09:15Z"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "qualityHelpers": [
+    "expectSingleVisibleAffordance",
+    "expectAligned",
+    "expectWidthRatio",
+    "expectNoOverflow",
+    "inspectNativeChrome"
+  ],
+  "blockPath": "templates/blocks/nav-mega-menu-link-rail.html",
+  "intentionalDifferences": [
+    "Ren10 48rem shell breakpoint instead of the source approximate 991px boundary",
+    "One responsive light-DOM tree instead of duplicated desktop and mobile trees",
+    "Native details/summary with pointer preview, click pin/toggle, keyboard, Escape, outside close and focus return",
+    "Ren10 semantic tokens and layout primitives instead of React, Tailwind and Motion utilities",
+    "At 48rem–63.999rem the primary groups adapt to two columns and the rail stacks below; at 64rem the three-column plus narrow side-rail composition returns",
+    "Reduced-motion support and an accessible mobile toggle were added",
+    "No featured or raster media because Navbar 8 source contains only destination groups and a simple right link rail"
+  ]
+}
