@@ -1,0 +1,7 @@
+{
+  "stage": "reviewed",
+  "kind": "human-acceptance",
+  "acceptor": "Renzo",
+  "result": "accepted",
+  "note": "User Renzo explicitly confirmed Navbar 8 was perfect after manually verifying the corrected hover corridor in the integrated browser on 2026-07-13."
+}

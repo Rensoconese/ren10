@@ -27,8 +27,9 @@
         },
         {
           "id": "navbar8",
-          "status": "in_progress",
-          "packet": "navbar8"
+          "status": "accepted",
+          "packet": "navbar8",
+          "ren10Block": "templates/blocks/nav-mega-menu-link-rail.html"
         }
       ]
     }

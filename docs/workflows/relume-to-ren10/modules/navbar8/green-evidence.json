@@ -3,13 +3,13 @@
   "passed": true,
   "result": "passed",
   "reviewer": "Codex",
-  "reviewedCommit": "148d05aecc0f40c29a1c7d4ce1d1570710b8f222",
+  "reviewedCommit": "4a9e1afaf33bfdc683790c204a5822262b449a45",
   "captures": {
     "desktop": ".ren10-workflow/captures/navbar8/desktop-light-open.png",
     "mobile": ".ren10-workflow/captures/navbar8/mobile-light-nested-open.png"
   },
   "capturesFresh": true,
-  "cascadeInspection": "Codex independently inspected all 12 fresh matrix states at commit 148d05aecc0f40c29a1c7d4ce1d1570710b8f222. The first review found a real tablet/full-page state defect: the pointer-preview close handler cleared its transient flag before deciding whether to close, and the capture browser briefly reported a 1x1 viewport. The controller now closes only a genuinely transient hover preview, ignores non-meaningful 1x1 viewport transitions, and uses the public --ren-z-sticky token for overlay layering. Final desktop light/dark has one aligned trigger and one chevron, three columns x four aligned icon/title/description destinations, and a narrower five-link contrast rail. The 834px tablet state uses two readable columns, a third group below, visible descriptions, and a stacked full-width contrast rail; its 1600px capture height contains the complete panel without full-page resize artifacts. Mobile uses one in-flow tree, start-aligned icon/title rows, hidden descriptions, stacked rail and CTA actions, and no overflow. JS-disabled native disclosure remains usable. Classless details/summary chrome is neutralized, inline SVGs are sized by ren-icon, no numeric z-index or hardcoded color literals remain, and light/dark token surfaces are coherent. Hover-open and click-open desktop PNGs are pixel-identical (ImageMagick AE = 0). Every state reports 12 destinations, 12 descriptions, 12 icons, 3 groups, 1 chevron, 1 rail, 1 rail heading, and 5 rail links.",
+  "cascadeInspection": "Codex independently inspected all 12 fresh matrix states at commit 4a9e1afaf33bfdc683790c204a5822262b449a45, including desktop hover-open, tablet open, and mobile nested-open at original resolution. The final accessibility review reproduced and corrected a 13.5px dead pointer corridor between the summary and absolute panel. A transparent, token-sized panel bridge now keeps the disclosure hoverable while crossing into its content without adding arbitrary delay or changing the visual layout; the same shared defect was corrected in Navbar 6 and Navbar 7. Final desktop light/dark has one aligned trigger and one chevron, three columns x four aligned icon/title/description destinations, and a narrower five-link contrast rail. The 834px tablet state uses two readable columns, a third group below, visible descriptions, and a stacked full-width contrast rail. Mobile uses one in-flow tree, start-aligned icon/title rows, hidden descriptions, stacked rail and CTA actions, and no overflow. JS-disabled native disclosure remains usable. Classless details/summary chrome is neutralized, inline SVGs are sized by ren-icon, no numeric z-index or hardcoded color literals remain, and light/dark token surfaces are coherent. Every state reports 12 destinations, 12 descriptions, 12 icons, 3 groups, 1 chevron, 1 rail, 1 rail heading, and 5 rail links.",
   "testResults": {
     "navbar8Focused": {
       "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar8 --retries=0 --workers=4",
@@ -17,7 +17,7 @@
     },
     "navbarFamilyRegression": {
       "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep 'navbar[5678]|Navigation blocks' --retries=0 --workers=4",
-      "result": "128 passed, 0 failed; navbar5, navbar6, navbar7, and navbar8"
+      "result": "134 passed, 0 failed across Desktop Light and Desktop Dark, including pixel-by-pixel pointer-corridor coverage for Navbar 6, Navbar 7, and Navbar 8"
     },
     "workflowUnits": {
       "command": "npm run test:workflow",
@@ -29,7 +29,7 @@
     },
     "capture": {
       "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar8/render-matrix.json --module navbar8 --output .ren10-workflow/captures",
-      "result": "12 PNG plus 12 JSON; all commit fields equal 148d05aecc0f40c29a1c7d4ce1d1570710b8f222; captured 2026-07-13T14:09:04Z through 14:09:15Z"
+      "result": "12 PNG plus 12 JSON; all commit fields equal 4a9e1afaf33bfdc683790c204a5822262b449a45; captured 2026-07-13T23:34:36Z through 23:34:46Z"
     },
     "diffCheck": {
       "command": "git diff --check",
