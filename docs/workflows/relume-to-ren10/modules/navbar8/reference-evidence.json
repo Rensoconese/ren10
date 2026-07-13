@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "note": "Complete Relume MCP source retrieval for navbar8 / Navbar 8 on 2026-07-13 by Codex (facts handed to Phase A agent; proprietary source not stored in-repo). Sanitized anatomy: logo + four top-level items (fourth opens mega) + two CTAs; mega has three primary groups × four icon destinations each (12 total) plus a distinct contrast-surface link rail (heading + five simple links); no featured image/card. Responsive intent: source desktop/mobile split near 991px; mobile full-height scrollable panel with nested mega disclosure; descriptions hidden at smallest width, visible from mid breakpoint. Interaction: desktop hover + activation; mobile activation; motion recorded as mobile panel 0.4s vertical, dropdown opacity/height 0.2s, chevron 0.3s, hamburger staged 0.1/0.2/0.3s delays. Styling intent: full-width mega under header; three-column primary region; narrower right rail (source max-width 14rem) whose background continues to the viewport edge. Source defects recorded for exclusion: p[role=button] mega trigger without complete keyboard/ARIA; hamburger lacks accessible name/aria-expanded/aria-controls; no Escape/outside-click/focus policy; raw z-[999]; raw motion without reduced-motion; React/Tailwind/Motion; duplicated desktop/mobile trees; possible extra unlabeled nested nav. Unavailable: exact Tailwind sm/md/lg pixels, logo ratio, icon asset metadata, rendered screenshot, WCAG matrix, proprietary copy/URLs/class names."
+}

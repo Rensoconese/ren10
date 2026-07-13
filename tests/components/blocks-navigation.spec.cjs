@@ -1,7 +1,7 @@
 // @ts-check
 /**
  * Navigation blocks — catalog + Navbar Mega Menu (navbar5) + Featured Mega Menu (navbar6)
- * + Icons Mega Menu (navbar7 RED).
+ * + Icons Mega Menu (navbar7) + Link-Rail Mega Menu (navbar8 RED).
  */
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
@@ -21,6 +21,7 @@ const BLOCKS_INDEX = '/templates/blocks/index.html';
 const MEGA_MENU = '/templates/blocks/nav-mega-menu.html';
 const MEGA_MENU_FEATURED = '/templates/blocks/nav-mega-menu-featured.html';
 const MEGA_MENU_ICONS = '/templates/blocks/nav-mega-menu-icons.html';
+const MEGA_MENU_LINK_RAIL = '/templates/blocks/nav-mega-menu-link-rail.html';
 const DRAWER = '/templates/blocks/nav-drawer.html';
 
 async function startStaticServer() {
@@ -1971,6 +1972,644 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
         const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
         const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
         const nav = document.querySelector('[data-rmi-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 8 — Link-Rail Mega Menu (nav-mega-menu-link-rail).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoLinkRailBlock(page, origin) {
+  const response = await page.goto(`${origin}${MEGA_MENU_LINK_RAIL}`);
+  expect(response, 'HTTP response for link-rail mega block').toBeTruthy();
+  // Fail fast when the block file is absent (Phase A RED).
+  expect(response.status(), 'link-rail block must not 404 — implement templates/blocks/nav-mega-menu-link-rail.html').toBe(200);
+  await expect(page.locator('[data-rml-root]'), 'missing [data-rml-root] shell').toHaveCount(1, { timeout: 2000 });
+}
+
+test.describe('Navbar Mega Menu Link Rail (navbar8)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  // Keep RED failures fast: absent selectors should not burn the default 30s action timeout.
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 20000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and link-rail root', async ({ page }) => {
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    await expect(page.getByRole('heading', { name: /Navbar Mega Menu Link Rail|Link.?Rail Mega Menu/i, level: 1 })).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rml-primary-links')).toHaveCount(1);
+    await expect(page.locator('ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await expect(page.locator('#rml-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rml-root] ul.ren-nav-links')).toHaveCount(1);
+    // Single landmark: no nested unlabeled nav for rail/mega.
+    await expect(page.locator('[data-rml-root] nav')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rml-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rml-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rml-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rml-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: four top-level entries, 3×4 destinations, contrast rail, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    // Exact top-level list ownership: four direct children, three peer links + one mega.
+    await expect(page.locator('#rml-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rml-primary-links > li > a.ren-nav-link');
+    const megaSummaries = page.locator('#rml-primary-links > li > .rml-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(megaSummaries).toHaveCount(1);
+
+    await expect(page.locator('[data-rml-root] .ren-nav-actions a, [data-rml-root] .ren-nav-actions .ren-btn')).toHaveCount(2);
+    await expect(page.locator('[data-rml-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rml-panel')).toBeVisible();
+
+    await expect(page.locator('.rml-group')).toHaveCount(3);
+    await expect(page.locator('.rml-dest')).toHaveCount(12);
+    await expect(page.locator('.rml-dest-desc')).toHaveCount(12);
+    await expect(page.locator('.rml-dest-icon')).toHaveCount(12);
+    await expect(page.locator('.rml-rail')).toHaveCount(1);
+    await expect(page.locator('.rml-rail-heading')).toHaveCount(1);
+    await expect(page.locator('.rml-rail-link')).toHaveCount(5);
+    // No featured/raster media region (Navbar 5/6/7 anatomy must not leak in).
+    await expect(page.locator('.rml-feature, .rml-featured, .rmi-feature, .rmf-feature, .rbm-feature, .rmi-footer')).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rml-disclosure summary .rml-chevron'],
+      'link-rail mega-menu chevron'
+    );
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rml-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rml-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('.rml-dest').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    // Relume desktop pointer hover-preview (additive to click/keyboard); navbar7 pin policy.
+    // Escape suppresses hover re-open until the pointer exits the corridor.
+    await page.locator('[data-rml-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    // Stable close region: moving summary → panel must not close.
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rml-dest').first()).toBeVisible();
+
+    // First pointer click pins hover-open; pinned state survives leaving the hit region.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rml-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    // Second pointer click closes; fresh hover after leaving can re-open.
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rml-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rml-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and destination activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rml-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rml-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('.rml-dest').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('.rml-rail-link').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rml-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rml-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await expect(toggle).toHaveAttribute('aria-controls', 'rml-primary-links');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rml-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rml-dest').first()).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree and mega destinations usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    await expect(page.locator('[data-rml-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rml-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rml-root] .ren-nav-actions a, [data-rml-root] .ren-nav-actions .ren-btn').first()).toBeVisible();
+
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rml-dest')).toHaveCount(12);
+    await expect(page.locator('.rml-rail')).toHaveCount(1);
+    await expect(page.locator('.rml-rail-link')).toHaveCount(5);
+    await expect(page.locator('.rml-rail-heading')).toBeVisible();
+
+    await context.close();
+  });
+
+  test('viewport geometry: desktop panel under bar, mobile in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rml-root] .ren-nav');
+      const panel = document.querySelector('.rml-panel');
+      if (!nav || !panel) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await page.locator('[data-rml-root] .ren-nav-toggle').click();
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rml-panel');
+      if (!panel) return null;
+      return { position: getComputedStyle(panel).position };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet mid-width: readable groups, visible descriptions, distinct rail', async ({ page }) => {
+    // 834px is ≥48rem (desktop shell) but <64rem (mid-width mega content band).
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rml-root] .ren-nav-toggle');
+    await expect(toggle).toBeHidden();
+
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rml-panel')).toBeVisible();
+    await expect(page.locator('.rml-group')).toHaveCount(3);
+    await expect(page.locator('.rml-dest')).toHaveCount(12);
+    await expect(page.locator('.rml-dest-desc')).toHaveCount(12);
+    await expect(page.locator('.rml-rail')).toHaveCount(1);
+    await expect(page.locator('.rml-rail-link')).toHaveCount(5);
+
+    const tablet = await page.evaluate(() => {
+      const groups = document.querySelector('.rml-groups');
+      const groupEls = Array.from(document.querySelectorAll('.rml-group'));
+      const dest = document.querySelector('.rml-dest');
+      const destLabel = document.querySelector('.rml-dest-label');
+      const destDesc = document.querySelector('.rml-dest-desc');
+      const rail = document.querySelector('.rml-rail');
+      if (!groups || groupEls.length < 2 || !dest || !destLabel || !destDesc || !rail) return null;
+
+      const gr = groups.getBoundingClientRect();
+      const railR = rail.getBoundingClientRect();
+      const dr = dest.getBoundingClientRect();
+      const labelR = destLabel.getBoundingClientRect();
+      const descR = destDesc.getBoundingClientRect();
+      const descStyle = getComputedStyle(destDesc);
+      const descVisible =
+        descStyle.display !== 'none' &&
+        descStyle.visibility !== 'hidden' &&
+        parseFloat(descStyle.opacity || '1') > 0 &&
+        descR.height > 0;
+
+      const readableWidth = Math.max(labelR.width, descR.width, dr.width - 48);
+      const railDistinct = railR.width > 0 && railR.height > 0;
+
+      return {
+        groupsWidth: Math.round(gr.width),
+        destWidth: Math.round(dr.width),
+        readableWidth: Math.round(readableWidth),
+        labelHeight: Math.round(labelR.height),
+        descHeight: Math.round(descR.height),
+        descVisible,
+        railDistinct,
+        railWidth: Math.round(railR.width),
+      };
+    });
+
+    expect(tablet, 'tablet composition metrics').toBeTruthy();
+    expect(tablet.descVisible, 'descriptions visible at tablet mid-width').toBe(true);
+    expect(tablet.railDistinct, 'contrast rail remains present at tablet').toBe(true);
+    expect(tablet.readableWidth, `destination readable width ${tablet.readableWidth}`).toBeGreaterThanOrEqual(120);
+    expect(tablet.destWidth, `destination hit width ${tablet.destWidth}`).toBeGreaterThanOrEqual(140);
+    expect(tablet.labelHeight, `label height ${tablet.labelHeight}`).toBeLessThanOrEqual(48);
+    expect(tablet.descHeight, `desc height ${tablet.descHeight}`).toBeLessThanOrEqual(72);
+    await expectNoOverflow(page, 'html');
+
+    // ≥64rem restores three-column primary groups + narrower rail hierarchy.
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('.rml-panel')).toBeVisible();
+    const wide = await page.evaluate(() => {
+      const groupEls = Array.from(document.querySelectorAll('.rml-group'));
+      const rail = document.querySelector('.rml-rail');
+      const groups = document.querySelector('.rml-groups');
+      if (groupEls.length < 3 || !rail || !groups) return null;
+      const rects = groupEls.map((el) => el.getBoundingClientRect());
+      const topsAligned = rects.every((r) => Math.abs(r.top - rects[0].top) < 48);
+      const lefts = rects.map((r) => r.left).sort((a, b) => a - b);
+      const progressive = lefts.every((left, i) => i === 0 || left >= lefts[i - 1] + 8);
+      const groupsR = groups.getBoundingClientRect();
+      const railR = rail.getBoundingClientRect();
+      const railNarrower = railR.width < groupsR.width * 0.55;
+      return {
+        topsAligned,
+        progressive,
+        count: groupEls.length,
+        railNarrower,
+        groupsWidth: Math.round(groupsR.width),
+        railWidth: Math.round(railR.width),
+      };
+    });
+    expect(wide).toBeTruthy();
+    expect(wide.count).toBe(3);
+    expect(wide.topsAligned, 'wide desktop groups should share a row').toBe(true);
+    expect(wide.progressive, 'wide desktop groups should advance left→right').toBe(true);
+    expect(wide.railNarrower, `rail ${wide.railWidth} should be narrower than groups ${wide.groupsWidth}`).toBe(true);
+  });
+
+  test('ren-icon wrappers size SVGs without width/height attributes; dest icons square', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-panel')).toBeVisible();
+
+    const iconAudit = await page.evaluate(() => {
+      const root = document.querySelector('[data-rml-root]');
+      if (!root) return { error: 'missing-root' };
+
+      const destIcons = Array.from(root.querySelectorAll('.rml-dest-icon'));
+      const destSquares = destIcons.map((el) => {
+        const rect = el.getBoundingClientRect();
+        return {
+          w: Math.round(rect.width),
+          h: Math.round(rect.height),
+          square: Math.abs(rect.width - rect.height) <= 2,
+        };
+      });
+
+      const wrappers = Array.from(root.querySelectorAll('.ren-icon'));
+      const results = [];
+      for (const wrap of wrappers) {
+        const svg = wrap.querySelector('svg');
+        if (!svg) {
+          results.push({ error: 'missing-svg', className: wrap.className });
+          continue;
+        }
+        const wrapStyle = getComputedStyle(wrap);
+        results.push({
+          className: wrap.className,
+          hasWidthAttr: svg.hasAttribute('width'),
+          hasHeightAttr: svg.hasAttribute('height'),
+          viewBox: svg.getAttribute('viewBox'),
+          focusable: svg.getAttribute('focusable'),
+          ariaHidden: svg.getAttribute('aria-hidden'),
+          isSm: wrap.classList.contains('ren-icon-sm'),
+          isLg: wrap.classList.contains('ren-icon-lg'),
+          wrapW: Math.round(parseFloat(wrapStyle.width)),
+          wrapH: Math.round(parseFloat(wrapStyle.height)),
+        });
+      }
+      return { count: results.length, results, destSquares, destIconCount: destIcons.length };
+    });
+
+    expect(iconAudit.error, JSON.stringify(iconAudit)).toBeUndefined();
+    expect(iconAudit.destIconCount, '12 destination icon containers').toBe(12);
+    for (const box of iconAudit.destSquares) {
+      expect(box.square, `dest icon ${box.w}x${box.h}`).toBe(true);
+      expect(box.w, 'dest icon size floor').toBeGreaterThanOrEqual(16);
+    }
+
+    // At least 12 destination icons + 1 chevron.
+    expect(iconAudit.count, 'expected ren-icon wrappers in link-rail mega').toBeGreaterThanOrEqual(13);
+
+    for (const item of iconAudit.results) {
+      expect(item.hasWidthAttr, `${item.className} must not set svg width`).toBe(false);
+      expect(item.hasHeightAttr, `${item.className} must not set svg height`).toBe(false);
+      expect(item.viewBox, item.className).toBeTruthy();
+      expect(item.focusable, item.className).toBe('false');
+      expect(item.ariaHidden, item.className).toBe('true');
+    }
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned trigger', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rml-disclosure summary .rml-chevron'],
+      'link-rail mega-menu chevron'
+    );
+
+    const peerLinks = page.locator('#rml-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rml-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rml-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rml-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rml-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none' ||
+      afterContent === '' ||
+      summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+  });
+
+  test('mobile rows: full width, start-aligned, descriptions hidden, rail stacked', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await page.locator('[data-rml-root] .ren-nav-toggle').click();
+    await page.locator('.rml-disclosure > summary').click();
+    await expect(page.locator('.rml-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rml-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rml-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rml-disclosure > summary', '#rml-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rml-disclosure summary .rml-chevron'],
+      'mobile link-rail mega-menu chevron'
+    );
+    await expectNoOverflow(page, 'html');
+
+    const mobileLayout = await page.evaluate(() => {
+      const desc = document.querySelector('.rml-dest-desc');
+      const firstDest = document.querySelector('.rml-dest');
+      const firstIcon = firstDest?.querySelector('.rml-dest-icon');
+      const firstLabel = firstDest?.querySelector('.rml-dest-label');
+      const railLinks = Array.from(document.querySelectorAll('.rml-rail-link'));
+      if (!desc || !firstDest || !firstIcon || !firstLabel || railLinks.length < 2) return null;
+      const descStyle = getComputedStyle(desc);
+      const descRect = desc.getBoundingClientRect();
+      const descHidden =
+        descStyle.display === 'none' ||
+        descStyle.visibility === 'hidden' ||
+        parseFloat(descStyle.opacity || '1') === 0 ||
+        descRect.height === 0;
+      const a0 = railLinks[0].getBoundingClientRect();
+      const a1 = railLinks[1].getBoundingClientRect();
+      const stacked = a1.top >= a0.bottom - 2;
+      const destRect = firstDest.getBoundingClientRect();
+      const iconRect = firstIcon.getBoundingClientRect();
+      const labelRect = firstLabel.getBoundingClientRect();
+      const iconStartsAtRow = iconRect.left - destRect.left <= 16;
+      const compactIconLabelGap = labelRect.left - iconRect.right >= 0 && labelRect.left - iconRect.right <= 24;
+      return { descHidden, stacked, iconStartsAtRow, compactIconLabelGap };
+    });
+    expect(mobileLayout).toBeTruthy();
+    expect(mobileLayout.descHidden, 'mobile descriptions visually hidden').toBe(true);
+    expect(mobileLayout.stacked, 'mobile rail links stacked').toBe(true);
+    expect(mobileLayout.iconStartsAtRow, 'mobile icon starts at the row edge').toBe(true);
+    expect(mobileLayout.compactIconLabelGap, 'mobile icon and label stay adjacent').toBe(true);
+
+    const detailsChrome = await inspectNativeChrome(page, '.rml-disclosure');
+    const summaryChrome = await inspectNativeChrome(page, '.rml-disclosure > summary');
+    expect(detailsChrome.borderTopWidth === '0px' || detailsChrome.paddingTop === '0px').toBeTruthy();
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    expect(
+      afterContent === 'none' || afterContent === '' || summaryChrome.afterDisplay === 'none',
+      'mobile classless summary::after'
+    ).toBeTruthy();
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    await page.locator('[data-rml-root] .ren-nav-toggle').click();
+    await page.locator('.rml-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rml-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, .rml-dest, .rml-rail-link'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await page.locator('.rml-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rml-panel', '.rml-chevron', '.rml-dest', '.rml-rail'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = window.getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('link-rail mega menu preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoLinkRailBlock(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rml-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoLinkRailBlock(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rml-root] .ren-nav');
         return {
           surface,
           text,

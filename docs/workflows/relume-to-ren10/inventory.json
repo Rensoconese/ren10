@@ -24,6 +24,11 @@
           "status": "accepted",
           "packet": "navbar7",
           "ren10Block": "templates/blocks/nav-mega-menu-icons.html"
+        },
+        {
+          "id": "navbar8",
+          "status": "in_progress",
+          "packet": "navbar8"
         }
       ]
     }
