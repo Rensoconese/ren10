@@ -15,7 +15,7 @@
         },
         {
           "id": "navbar6",
-          "status": "in_progress",
+          "status": "accepted",
           "packet": "navbar6",
           "ren10Block": "templates/blocks/nav-mega-menu-featured.html"
         }
