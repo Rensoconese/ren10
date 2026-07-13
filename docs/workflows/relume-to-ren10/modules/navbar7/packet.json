@@ -4,7 +4,7 @@
   "moduleId": "navbar7",
   "blockSlug": "nav-mega-menu-icons",
   "blockPath": "templates/blocks/nav-mega-menu-icons.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-icons.html",
     "tests/components/blocks-navigation.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }

@@ -1,0 +1,55 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "9ed5ac731ea4942e06867549a18e02379dd2c733",
+  "captures": {
+    "desktop": ".ren10-workflow/captures/navbar7/desktop-light-open.png",
+    "mobile": ".ren10-workflow/captures/navbar7/mobile-light-nested-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected all 12 fresh matrix states at commit 9ed5ac731ea4942e06867549a18e02379dd2c733. Desktop light/dark closed and open, pointer-hover parity, reduced motion, 834px tablet, 390px mobile closed/nav-open/nested-open, mobile dark, and JS-disabled progressive enhancement are coherent. The first visual pass exposed misuse of the ren-center container primitive on 16 icon wrappers and a clipped 16x16 footer SVG; both were corrected before this final recapture. Final desktop has one aligned trigger and one chevron, four groups x four adjacent icon/title/description rows, an opaque viewport-width panel below the bar, and one horizontal footer. Tablet keeps the desktop shell with two readable columns. Mobile uses one in-flow tree, start-aligned compact icon/label rows, hidden descriptions, stacked footer actions, and no overflow. Classless details/summary chrome is neutralized, summary::after is disabled, SVG viewBoxes are coherent, and light/dark token surfaces remain legible. The hover-open PNG is byte-valid and pixel-identical to click-open (ImageMagick compare metric AE = 0); a transient black display was isolated to the image viewer and disappeared on lossless source inspection/JPEG review. Marker counts for every state: 16 destinations, 16 descriptions, 16 icons, 4 groups, 1 chevron, 1 footer, 1 prompt, 1 inline footer link, 2 footer actions.",
+  "testResults": {
+    "navbar7Focused": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar7 --retries=0 --workers=1 --project=\"Desktop Light\"",
+      "result": "16 passed, 0 failed after final icon-row correction"
+    },
+    "blocksNavigationFull": {
+      "command": "CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --retries=0 --workers=1 --project=\"Desktop Light\"",
+      "result": "48 passed, 0 failed; navbar5, navbar6, and navbar7"
+    },
+    "workflowUnits": {
+      "command": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
+      "result": "114 passed, 0 failed"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; CSS, token and contract checks passed; ESLint 0 errors and 29 pre-existing warnings"
+    },
+    "capture": {
+      "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar7/render-matrix.json --module navbar7 --output .ren10-workflow/captures",
+      "result": "12 PNG plus 12 JSON; all commit fields equal 9ed5ac731ea4942e06867549a18e02379dd2c733; captured 2026-07-13T13:34:40Z through 13:34:46Z"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "qualityHelpers": [
+    "expectSingleVisibleAffordance",
+    "expectAligned",
+    "expectWidthRatio",
+    "expectNoOverflow",
+    "inspectNativeChrome"
+  ],
+  "blockPath": "templates/blocks/nav-mega-menu-icons.html",
+  "intentionalDifferences": [
+    "Ren10 48rem shell breakpoint instead of the source approximate 991px hover boundary",
+    "One responsive light-DOM tree instead of duplicated desktop and mobile trees",
+    "Native details/summary with pointer hover, pointer pin/toggle, keyboard, Escape, outside close and focus return",
+    "Ren10 semantic tokens and layout primitives instead of source framework utilities",
+    "Reduced-motion support and accessible mobile toggle added",
+    "No featured or raster media because Navbar 7 source contains none"
+  ]
+}
