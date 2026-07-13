@@ -221,14 +221,14 @@
     },
     {
       "id": "tablet-light-open",
-      "viewport": { "width": 834, "height": 1112 },
+      "viewport": { "width": 834, "height": 1600 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
       "actions": [
         { "type": "click", "selector": ".rml-disclosure > summary" }
       ],
-      "notes": "Desktop shell at 834px (no .ren-nav-toggle). Intentional mid-width mega adaptation: readable groups with visible descriptions and distinct contrast rail (not cramped 3-up + edge-rail). Wide desktop three-column + edge-rail layout resumes at ≥64rem.",
+      "notes": "Desktop shell at 834px (no .ren-nav-toggle). The taller capture viewport contains the complete expanded panel without full-page resize artifacts. Intentional mid-width mega adaptation: readable groups with visible descriptions and distinct contrast rail (not cramped 3-up + edge-rail). Wide desktop three-column + edge-rail layout resumes at ≥64rem.",
       "expectedMarkers": {
         ".rml-dest": 12,
         ".rml-dest-desc": 12,
