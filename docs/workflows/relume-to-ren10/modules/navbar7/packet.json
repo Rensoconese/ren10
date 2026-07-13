@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar7",
+  "blockSlug": "nav-mega-menu-icons",
+  "blockPath": "templates/blocks/nav-mega-menu-icons.html",
+  "stage": "red",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-icons.html",
+    "tests/components/blocks-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json"
+  }
+}

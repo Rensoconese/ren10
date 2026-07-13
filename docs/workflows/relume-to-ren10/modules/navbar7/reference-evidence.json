@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "note": "Complete Relume MCP source retrieval for navbar7_component / Navbar 7 / slug navbar7 on 2026-07-13 by Codex, including Navbar7.tsx and owned support modules (use-media-query, button, unused card import, utils). Proprietary source is not stored in-repo; sanitized anatomy, counts, responsive intent, motion durations, and source defects are recorded in reference-brief.md. Source-recorded motion: mobile panel 0.4s vertical transition with exit unmount, chevron 180deg/0.3s, dropdown opacity/height 0.2s; hamburger has three visual bars and lacks accessible name/aria-expanded/aria-controls. Unavailable: Tailwind exact sm/md/lg pixels, logo ratio/dimensions, global styles, icon source metadata, outside-click/focus-trap/scroll-lock/auto-close facts, rendered screenshot, computed styles, WCAG/browser matrix, reduced-motion handling and RTL evidence (durations themselves are available)."
+}

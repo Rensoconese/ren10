@@ -18,6 +18,11 @@
           "status": "accepted",
           "packet": "navbar6",
           "ren10Block": "templates/blocks/nav-mega-menu-featured.html"
+        },
+        {
+          "id": "navbar7",
+          "status": "in_progress",
+          "packet": "navbar7"
         }
       ]
     }

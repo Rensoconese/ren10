@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary mega disclosure and mobile toggle reach closed, open, navigation-open, and nested-open states via selector-driven interactions on [data-rmi-root]",
+      "automated": true
+    },
+    {
+      "id": "one-tree",
+      "kind": "structure",
+      "description": "Exactly one primary links tree (#rmi-primary-links / ul.ren-nav-links) serves desktop and mobile — no duplicated responsive branches",
+      "automated": true
+    },
+    {
+      "id": "top-level-count",
+      "kind": "structure",
+      "description": "Exactly four direct children of #rmi-primary-links (> li count === 4): three ordinary ren-nav-link destinations plus one mega details/summary trigger",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one visible mega chevron (.rmi-chevron); classless summary::after must be neutralized",
+      "automated": true
+    },
+    {
+      "id": "destination-anatomy",
+      "kind": "structure",
+      "description": "Open panel exposes exactly 4 groups × 4 destinations = 16 .rmi-dest anchors with titles, 16 .rmi-dest-desc descriptions, and 16 square .rmi-dest-icon containers; no featured/raster media region",
+      "automated": true
+    },
+    {
+      "id": "footer-anatomy",
+      "kind": "structure",
+      "description": "Mega footer (.rmi-footer) contains exactly one .rmi-footer-prompt, one .rmi-footer-link, and two .rmi-footer-action controls",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Mega summary shares the centerY axis with peer primary links within 2px",
+      "automated": true
+    },
+    {
+      "id": "overflow-geometry",
+      "kind": "visual-structure",
+      "description": "Desktop panel sits under the bar (absolute); mobile panel stays in-flow; no horizontal overflow on html",
+      "automated": true
+    },
+    {
+      "id": "tablet-mega-composition",
+      "kind": "visual-structure",
+      "description": "At 834px (desktop shell, no hamburger): two-column groups with visible descriptions and readable destination copy; footer actions horizontal. At ≥64rem restore four-column destination groups with horizontal footer.",
+      "automated": true
+    },
+    {
+      "id": "mobile-rows",
+      "kind": "visual-structure",
+      "description": "Mobile primary rows are full-width and start-aligned without nested-card details chrome; mega groups single column; descriptions visually hidden; footer actions stacked",
+      "automated": true
+    },
+    {
+      "id": "keyboard-escape",
+      "kind": "behavior",
+      "description": "Summary opens by click/Enter/Space; Escape closes and restores focus to SUMMARY",
+      "automated": true
+    },
+    {
+      "id": "desktop-pointer-hover",
+      "kind": "behavior",
+      "description": "Desktop (≥48rem) pointer hover opens the mega disclosure; pointer remains open when moving from summary into the panel (stable close region); leaving the disclosure+panel hit region closes the disclosure. Hover is additive to click/Enter/Space, not a replacement.",
+      "automated": true
+    },
+    {
+      "id": "js-disabled-fallback",
+      "kind": "behavior",
+      "description": "With JavaScript disabled on mobile, the single tree, sixteen destinations, and footer remain usable via native disclosure",
+      "automated": true
+    },
+    {
+      "id": "touch-targets",
+      "kind": "behavior",
+      "description": "Visible interactive targets inside [data-rmi-root] meet 44×44 in a touch context",
+      "automated": true
+    },
+    {
+      "id": "reduced-motion",
+      "kind": "behavior",
+      "description": "prefers-reduced-motion disables block-local transitions and animations on panel/chevron/dest/footer",
+      "automated": true
+    },
+    {
+      "id": "axe-wcag",
+      "kind": "behavior",
+      "description": "Icons mega menu preview passes axe WCAG 2.1 A/AA",
+      "automated": true
+    },
+    {
+      "id": "theme-tokens",
+      "kind": "behavior",
+      "description": "Light and dark surfaces resolve through RenDS semantic tokens",
+      "automated": true
+    },
+    {
+      "id": "icon-sizing",
+      "kind": "structure",
+      "description": "Destination and footer icons use ren-icon wrappers without inline SVG width/height attributes; destination icon containers are square",
+      "automated": true
+    },
+    {
+      "id": "quality-helpers",
+      "kind": "structure",
+      "description": "Icons suite adopts expectSingleVisibleAffordance, expectAligned, expectWidthRatio, expectNoOverflow, and inspectNativeChrome without dropping block-specific assertions",
+      "automated": true
+    },
+    {
+      "id": "render-matrix-10",
+      "kind": "structure",
+      "description": "render-matrix.json declares 10+ states with selector actions (including hover for desktop-light-hover-open) and expectedMarkers for 16 dest / 16 desc / 16 icons / 4 groups / 1 chevron / 1 footer / 1 prompt link / 2 footer actions; tablet-light-open at 834px is a desktop-shell mega open without .ren-nav-toggle",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief and cascade map",
+      "automated": false
+    }
+  ]
+}
