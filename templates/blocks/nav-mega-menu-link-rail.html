@@ -337,6 +337,15 @@
         animation: rml-panel-enter var(--duration-enter) var(--ease-enter);
       }
 
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .rml-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+
       .rml-groups.ren-grid-3 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }

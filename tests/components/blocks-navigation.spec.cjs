@@ -76,6 +76,76 @@ async function collectPageErrors(page) {
   return errors;
 }
 
+const HOVER_CORRIDOR_CASES = [
+  {
+    id: 'navbar6',
+    path: MEGA_MENU_FEATURED,
+    disclosure: '.rmf-disclosure',
+    summary: '.rmf-disclosure > summary',
+    destination: '.rmf-dest',
+  },
+  {
+    id: 'navbar7',
+    path: MEGA_MENU_ICONS,
+    disclosure: '.rmi-disclosure',
+    summary: '.rmi-disclosure > summary',
+    destination: '.rmi-dest',
+  },
+  {
+    id: 'navbar8',
+    path: MEGA_MENU_LINK_RAIL,
+    disclosure: '.rml-disclosure',
+    summary: '.rml-disclosure > summary',
+    destination: '.rml-dest',
+  },
+];
+
+test.describe('Desktop mega-menu pointer corridor', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  for (const variant of HOVER_CORRIDOR_CASES) {
+    test(`${variant.id} keeps hover content open while the pointer crosses into the panel`, async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 900 });
+      await page.goto(`${staticServer.origin}${variant.path}`);
+
+      const disclosure = page.locator(variant.disclosure);
+      const summary = page.locator(variant.summary);
+      const destination = page.locator(variant.destination).first();
+
+      await summary.hover();
+      await expect(disclosure).toHaveAttribute('open', '');
+      await expect(destination).toBeVisible();
+
+      const summaryBox = await summary.boundingBox();
+      const destinationBox = await destination.boundingBox();
+      expect(summaryBox, 'summary geometry').toBeTruthy();
+      expect(destinationBox, 'destination geometry').toBeTruthy();
+
+      await page.mouse.move(
+        summaryBox.x + summaryBox.width / 2,
+        summaryBox.y + summaryBox.height / 2
+      );
+      await page.mouse.move(
+        destinationBox.x + destinationBox.width / 2,
+        destinationBox.y + Math.min(12, destinationBox.height / 2),
+        { steps: 24 }
+      );
+
+      await expect(disclosure).toHaveAttribute('open', '');
+      await expect(destination).toBeVisible();
+    });
+  }
+});
+
 test.describe('Navigation blocks', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;

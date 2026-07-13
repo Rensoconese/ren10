@@ -393,6 +393,15 @@
         animation: rmf-panel-enter var(--duration-enter) var(--ease-enter);
       }
 
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .rmf-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+
       .rmf-panel-inner > .rmf-groups {
         flex: 1 1 auto;
         flex-basis: auto;
