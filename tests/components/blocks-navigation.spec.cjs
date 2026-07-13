@@ -100,6 +100,87 @@ const HOVER_CORRIDOR_CASES = [
   },
 ];
 
+const MOBILE_NAV_CHROME_CASES = [
+  { id: 'navbar5', path: MEGA_MENU, root: '[data-rbm-root]' },
+  { id: 'navbar6', path: MEGA_MENU_FEATURED, root: '[data-rmf-root]' },
+  { id: 'navbar7', path: MEGA_MENU_ICONS, root: '[data-rmi-root]' },
+  { id: 'navbar8', path: MEGA_MENU_LINK_RAIL, root: '[data-rml-root]' },
+];
+
+test.describe('Mobile mega-menu chrome', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  for (const variant of MOBILE_NAV_CHROME_CASES) {
+    test(`${variant.id} centers its close icon and renders one action separator`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${staticServer.origin}${variant.path}`);
+
+      const toggle = page.locator(`${variant.root} .ren-nav-toggle`);
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+      const chrome = await page.evaluate((rootSelector) => {
+        const root = document.querySelector(rootSelector);
+        const button = root?.querySelector('.ren-nav-toggle');
+        const firstBar = button?.querySelector('span:nth-child(1)');
+        const thirdBar = button?.querySelector('span:nth-child(3)');
+        const links = root?.querySelector('.ren-nav-links');
+        const actions = root?.querySelector('.ren-nav-actions');
+        if (!button || !firstBar || !thirdBar || !links || !actions) return null;
+
+        const buttonRect = button.getBoundingClientRect();
+        const firstRect = firstBar.getBoundingClientRect();
+        const thirdRect = thirdBar.getBoundingClientRect();
+        const linksRect = links.getBoundingClientRect();
+        const actionsRect = actions.getBoundingClientRect();
+        const linksStyle = getComputedStyle(links);
+        const actionsStyle = getComputedStyle(actions);
+
+        const center = (rect) => ({
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        });
+        const buttonCenter = center(buttonRect);
+        const firstCenter = center(firstRect);
+        const thirdCenter = center(thirdRect);
+        const iconCenter = {
+          x: (firstCenter.x + thirdCenter.x) / 2,
+          y: (firstCenter.y + thirdCenter.y) / 2,
+        };
+
+        return {
+          barCenterDeltaX: Math.abs(firstCenter.x - thirdCenter.x),
+          barCenterDeltaY: Math.abs(firstCenter.y - thirdCenter.y),
+          iconButtonDeltaX: Math.abs(iconCenter.x - buttonCenter.x),
+          iconButtonDeltaY: Math.abs(iconCenter.y - buttonCenter.y),
+          linksActionsGap: Math.abs(actionsRect.top - linksRect.bottom),
+          separatorCount:
+            (parseFloat(linksStyle.borderBottomWidth) > 0 ? 1 : 0) +
+            (parseFloat(actionsStyle.borderTopWidth) > 0 ? 1 : 0),
+        };
+      }, variant.root);
+
+      expect(chrome, `${variant.id} mobile chrome`).toBeTruthy();
+      expect(chrome.barCenterDeltaX, `${variant.id} ${JSON.stringify(chrome)}`).toBeLessThanOrEqual(1);
+      expect(chrome.barCenterDeltaY, `${variant.id} ${JSON.stringify(chrome)}`).toBeLessThanOrEqual(1);
+      expect(chrome.iconButtonDeltaX, `${variant.id} X centered horizontally`).toBeLessThanOrEqual(1);
+      expect(chrome.iconButtonDeltaY, `${variant.id} X centered vertically`).toBeLessThanOrEqual(1);
+      expect(chrome.linksActionsGap, `${variant.id} links/actions are contiguous`).toBeLessThanOrEqual(1);
+      expect(chrome.separatorCount, `${variant.id} renders one separator`).toBe(1);
+    });
+  }
+});
+
 test.describe('Desktop mega-menu pointer corridor', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
