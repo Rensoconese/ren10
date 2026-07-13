@@ -1477,6 +1477,8 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
 
     // Relume desktop pointer hover-open (additive to click/keyboard).
+    // Escape suppresses hover re-open until the pointer exits the corridor.
+    await page.locator('[data-rmi-root] .ren-nav-brand').hover();
     await summary.hover();
     await expect(disclosure).toHaveAttribute('open', '');
     await expect(panel).toBeVisible();
@@ -1486,7 +1488,19 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
     await expect(disclosure).toHaveAttribute('open', '');
     await expect(page.locator('.rmi-dest').first()).toBeVisible();
 
-    // Leave the disclosure+panel hit region → close.
+    // First pointer click pins hover-open; pinned state survives leaving the hit region.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rmi-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    // Second pointer click closes; fresh hover after leaving can re-open.
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rmi-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
     await page.locator('[data-rmi-root] .ren-nav-brand').hover();
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
@@ -1961,4 +1975,3 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
     }
   });
 });
-
