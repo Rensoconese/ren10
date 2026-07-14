@@ -33,7 +33,7 @@
         },
         {
           "id": "navbar9",
-          "status": "in_progress",
+          "status": "accepted",
           "packet": "navbar9",
           "ren10Block": "templates/blocks/nav-mega-menu-footer.html"
         }
