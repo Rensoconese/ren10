@@ -1,7 +1,8 @@
 // @ts-check
 /**
  * Navigation blocks — catalog + Navbar Mega Menu (navbar5) + Featured Mega Menu (navbar6)
- * + Icons Mega Menu (navbar7) + Link-Rail Mega Menu (navbar8 RED).
+ * + Icons Mega Menu (navbar7) + Link-Rail Mega Menu (navbar8)
+ * + Footer Mega Menu (navbar9 RED).
  */
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
@@ -22,6 +23,7 @@ const MEGA_MENU = '/templates/blocks/nav-mega-menu.html';
 const MEGA_MENU_FEATURED = '/templates/blocks/nav-mega-menu-featured.html';
 const MEGA_MENU_ICONS = '/templates/blocks/nav-mega-menu-icons.html';
 const MEGA_MENU_LINK_RAIL = '/templates/blocks/nav-mega-menu-link-rail.html';
+const MEGA_MENU_FOOTER = '/templates/blocks/nav-mega-menu-footer.html';
 const DRAWER = '/templates/blocks/nav-drawer.html';
 
 async function startStaticServer() {
@@ -98,6 +100,13 @@ const HOVER_CORRIDOR_CASES = [
     summary: '.rml-disclosure > summary',
     destination: '.rml-dest',
   },
+  {
+    id: 'navbar9',
+    path: MEGA_MENU_FOOTER,
+    disclosure: '.rmnf-disclosure',
+    summary: '.rmnf-disclosure > summary',
+    destination: '.rmnf-dest',
+  },
 ];
 
 const MOBILE_NAV_CHROME_CASES = [
@@ -105,6 +114,7 @@ const MOBILE_NAV_CHROME_CASES = [
   { id: 'navbar6', path: MEGA_MENU_FEATURED, root: '[data-rmf-root]' },
   { id: 'navbar7', path: MEGA_MENU_ICONS, root: '[data-rmi-root]' },
   { id: 'navbar8', path: MEGA_MENU_LINK_RAIL, root: '[data-rml-root]' },
+  { id: 'navbar9', path: MEGA_MENU_FOOTER, root: '[data-rmnf-root]' },
 ];
 
 test.describe('Mobile mega-menu chrome', () => {
@@ -2761,6 +2771,643 @@ test.describe('Navbar Mega Menu Link Rail (navbar8)', () => {
         const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
         const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
         const nav = document.querySelector('[data-rml-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 9 — Footer Mega Menu (nav-mega-menu-footer).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoFooterMegaBlock(page, origin) {
+  const response = await page.goto(`${origin}${MEGA_MENU_FOOTER}`);
+  expect(response, 'HTTP response for footer mega block').toBeTruthy();
+  expect(response.status(), 'footer mega block must not 404 — implement templates/blocks/nav-mega-menu-footer.html').toBe(200);
+  await expect(page.locator('[data-rmnf-root]'), 'missing [data-rmnf-root] shell').toHaveCount(1, { timeout: 2000 });
+}
+
+test.describe('Navbar Mega Menu Footer (navbar9)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 20000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and footer mega root', async ({ page }) => {
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    await expect(page.getByRole('heading', { name: /Navbar Mega Menu Footer|Footer Mega Menu/i, level: 1 })).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rmnf-primary-links')).toHaveCount(1);
+    await expect(page.locator('ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await expect(page.locator('#rmnf-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rmnf-root] ul.ren-nav-links')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rmnf-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rmnf-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rmnf-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rmnf-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: four top-level entries, four destinations, footer band, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    await expect(page.locator('#rmnf-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rmnf-primary-links > li > a.ren-nav-link');
+    const megaSummaries = page.locator('#rmnf-primary-links > li > .rmnf-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(megaSummaries).toHaveCount(1);
+
+    await expect(page.locator('[data-rmnf-root] .ren-nav-actions a, [data-rmnf-root] .ren-nav-actions .ren-btn')).toHaveCount(2);
+    await expect(page.locator('[data-rmnf-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+
+    await expect(page.locator('.rmnf-group')).toHaveCount(4);
+    await expect(page.locator('.rmnf-dest')).toHaveCount(4);
+    await expect(page.locator('.rmnf-dest-desc')).toHaveCount(4);
+    await expect(page.locator('.rmnf-dest-icon')).toHaveCount(4);
+    await expect(page.locator('.rmnf-footer-band')).toHaveCount(1);
+    await expect(page.locator('.rmnf-footer-heading')).toHaveCount(1);
+    await expect(page.locator('.rmnf-footer-link')).toHaveCount(1);
+    await expect(page.locator('.rml-rail, .rmi-footer-action, .rmi-footer, .rmf-feature, .rbm-feature')).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmnf-disclosure summary .rmnf-chevron'],
+      'footer mega-menu chevron'
+    );
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmnf-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rmnf-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('.rmnf-dest').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rmnf-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rmnf-dest').first()).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rmnf-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rmnf-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rmnf-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and destination or footer link activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmnf-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rmnf-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('.rmnf-dest').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('.rmnf-footer-link').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rmnf-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rmnf-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await expect(toggle).toHaveAttribute('aria-controls', 'rmnf-primary-links');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rmnf-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rmnf-dest').first()).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree and mega destinations usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    await expect(page.locator('[data-rmnf-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rmnf-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rmnf-root] .ren-nav-actions a, [data-rmnf-root] .ren-nav-actions .ren-btn').first()).toBeVisible();
+
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmnf-dest')).toHaveCount(4);
+    await expect(page.locator('.rmnf-footer-band')).toHaveCount(1);
+    await expect(page.locator('.rmnf-footer-link')).toBeVisible();
+    await expect(page.locator('.rmnf-footer-heading')).toBeVisible();
+
+    await context.close();
+  });
+
+  test('viewport geometry: desktop panel under bar, mobile in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rmnf-root] .ren-nav');
+      const panel = document.querySelector('.rmnf-panel');
+      if (!nav || !panel) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await page.locator('[data-rmnf-root] .ren-nav-toggle').click();
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rmnf-panel');
+      if (!panel) return null;
+      return { position: getComputedStyle(panel).position };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet mid-width: two-column groups, visible descriptions, distinct footer band', async ({ page }) => {
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rmnf-root] .ren-nav-toggle');
+    await expect(toggle).toBeHidden();
+
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+    await expect(page.locator('.rmnf-group')).toHaveCount(4);
+    await expect(page.locator('.rmnf-dest')).toHaveCount(4);
+    await expect(page.locator('.rmnf-dest-desc')).toHaveCount(4);
+    await expect(page.locator('.rmnf-footer-band')).toHaveCount(1);
+    await expect(page.locator('.rmnf-footer-link')).toHaveCount(1);
+
+    const tablet = await page.evaluate(() => {
+      const groups = document.querySelector('.rmnf-groups');
+      const groupEls = Array.from(document.querySelectorAll('.rmnf-group'));
+      const dest = document.querySelector('.rmnf-dest');
+      const destLabel = document.querySelector('.rmnf-dest-label');
+      const destDesc = document.querySelector('.rmnf-dest-desc');
+      const footer = document.querySelector('.rmnf-footer-band');
+      if (!groups || groupEls.length < 2 || !dest || !destLabel || !destDesc || !footer) return null;
+
+      const gr = groups.getBoundingClientRect();
+      const g0 = groupEls[0].getBoundingClientRect();
+      const g1 = groupEls[1].getBoundingClientRect();
+      const dr = dest.getBoundingClientRect();
+      const labelR = destLabel.getBoundingClientRect();
+      const descR = destDesc.getBoundingClientRect();
+      const footerR = footer.getBoundingClientRect();
+      const descStyle = getComputedStyle(destDesc);
+      const descVisible =
+        descStyle.display !== 'none' &&
+        descStyle.visibility !== 'hidden' &&
+        parseFloat(descStyle.opacity || '1') > 0 &&
+        descR.height > 0;
+
+      const twoUp = Math.abs(g0.top - g1.top) < 48 && g1.left >= g0.right - 4;
+      const footerBelowGrid = footerR.top >= gr.bottom - 8;
+      const footerDistinct = footerR.width > 0 && footerR.height > 0 && footerBelowGrid;
+      const readableWidth = Math.max(labelR.width, descR.width, dr.width - 48);
+
+      return {
+        groupsWidth: Math.round(gr.width),
+        destWidth: Math.round(dr.width),
+        readableWidth: Math.round(readableWidth),
+        labelHeight: Math.round(labelR.height),
+        descHeight: Math.round(descR.height),
+        descVisible,
+        twoUp,
+        footerDistinct,
+        footerWidth: Math.round(footerR.width),
+      };
+    });
+
+    expect(tablet, 'tablet composition metrics').toBeTruthy();
+    expect(tablet.twoUp, 'tablet groups should form a 2-column band').toBe(true);
+    expect(tablet.descVisible, 'descriptions visible at tablet mid-width').toBe(true);
+    expect(tablet.footerDistinct, 'footer band sits beneath destination grid').toBe(true);
+    expect(tablet.readableWidth, `destination readable width ${tablet.readableWidth}`).toBeGreaterThanOrEqual(120);
+    expect(tablet.destWidth, `destination hit width ${tablet.destWidth}`).toBeGreaterThanOrEqual(140);
+    expect(tablet.labelHeight, `label height ${tablet.labelHeight}`).toBeLessThanOrEqual(48);
+    expect(tablet.descHeight, `desc height ${tablet.descHeight}`).toBeLessThanOrEqual(72);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+    const wide = await page.evaluate(() => {
+      const groupEls = Array.from(document.querySelectorAll('.rmnf-group'));
+      const groups = document.querySelector('.rmnf-groups');
+      const footer = document.querySelector('.rmnf-footer-band');
+      const panel = document.querySelector('.rmnf-panel');
+      if (groupEls.length < 4 || !groups || !footer || !panel) return null;
+      const rects = groupEls.map((el) => el.getBoundingClientRect());
+      const topsAligned = rects.every((r) => Math.abs(r.top - rects[0].top) < 48);
+      const lefts = rects.map((r) => r.left).sort((a, b) => a - b);
+      const progressive = lefts.every((left, i) => i === 0 || left >= lefts[i - 1] + 8);
+      const groupsR = groups.getBoundingClientRect();
+      const footerR = footer.getBoundingClientRect();
+      const panelR = panel.getBoundingClientRect();
+      const footerFullWidth = footerR.width >= panelR.width * 0.9;
+      const footerBelow = footerR.top >= groupsR.bottom - 8;
+      return {
+        topsAligned,
+        progressive,
+        count: groupEls.length,
+        footerFullWidth,
+        footerBelow,
+        groupsWidth: Math.round(groupsR.width),
+        footerWidth: Math.round(footerR.width),
+        panelWidth: Math.round(panelR.width),
+      };
+    });
+    expect(wide).toBeTruthy();
+    expect(wide.count).toBe(4);
+    expect(wide.topsAligned, 'wide desktop groups should share a row').toBe(true);
+    expect(wide.progressive, 'wide desktop groups should advance left→right').toBe(true);
+    expect(wide.footerBelow, 'footer band should sit below the four-column grid').toBe(true);
+    expect(wide.footerFullWidth, `footer ${wide.footerWidth} should span panel ${wide.panelWidth}`).toBe(true);
+  });
+
+  test('ren-icon wrappers size SVGs without width/height attributes; dest icons square', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+
+    const iconAudit = await page.evaluate(() => {
+      const root = document.querySelector('[data-rmnf-root]');
+      if (!root) return { error: 'missing-root' };
+
+      const destIcons = Array.from(root.querySelectorAll('.rmnf-dest-icon'));
+      const destSquares = destIcons.map((el) => {
+        const rect = el.getBoundingClientRect();
+        return {
+          w: Math.round(rect.width),
+          h: Math.round(rect.height),
+          square: Math.abs(rect.width - rect.height) <= 2,
+        };
+      });
+
+      const wrappers = Array.from(root.querySelectorAll('.ren-icon'));
+      const results = [];
+      for (const wrap of wrappers) {
+        const svg = wrap.querySelector('svg');
+        if (!svg) {
+          results.push({ error: 'missing-svg', className: wrap.className });
+          continue;
+        }
+        const wrapStyle = getComputedStyle(wrap);
+        results.push({
+          className: wrap.className,
+          hasWidthAttr: svg.hasAttribute('width'),
+          hasHeightAttr: svg.hasAttribute('height'),
+          viewBox: svg.getAttribute('viewBox'),
+          focusable: svg.getAttribute('focusable'),
+          ariaHidden: svg.getAttribute('aria-hidden'),
+          isSm: wrap.classList.contains('ren-icon-sm'),
+          isLg: wrap.classList.contains('ren-icon-lg'),
+          wrapW: Math.round(parseFloat(wrapStyle.width)),
+          wrapH: Math.round(parseFloat(wrapStyle.height)),
+        });
+      }
+      return { count: results.length, results, destSquares, destIconCount: destIcons.length };
+    });
+
+    expect(iconAudit.error, JSON.stringify(iconAudit)).toBeUndefined();
+    expect(iconAudit.destIconCount, '4 destination icon containers').toBe(4);
+    for (const box of iconAudit.destSquares) {
+      expect(box.square, `dest icon ${box.w}x${box.h}`).toBe(true);
+      expect(box.w, 'dest icon size floor').toBeGreaterThanOrEqual(16);
+    }
+
+    expect(iconAudit.count, 'expected ren-icon wrappers in footer mega').toBeGreaterThanOrEqual(5);
+
+    for (const item of iconAudit.results) {
+      expect(item.hasWidthAttr, `${item.className} must not set svg width`).toBe(false);
+      expect(item.hasHeightAttr, `${item.className} must not set svg height`).toBe(false);
+      expect(item.viewBox, item.className).toBeTruthy();
+      expect(item.focusable, item.className).toBe('false');
+      expect(item.ariaHidden, item.className).toBe('true');
+    }
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned trigger', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmnf-disclosure summary .rmnf-chevron'],
+      'footer mega-menu chevron'
+    );
+
+    const peerLinks = page.locator('#rmnf-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rmnf-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rmnf-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rmnf-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rmnf-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none' ||
+      afterContent === '' ||
+      summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+  });
+
+  test('mobile rows: full width, start-aligned, descriptions hidden, footer band stacked', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await page.locator('[data-rmnf-root] .ren-nav-toggle').click();
+    await page.locator('.rmnf-disclosure > summary').click();
+    await expect(page.locator('.rmnf-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rmnf-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rmnf-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rmnf-disclosure > summary', '#rmnf-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmnf-disclosure summary .rmnf-chevron'],
+      'mobile footer mega-menu chevron'
+    );
+    await expectNoOverflow(page, 'html');
+
+    const mobileLayout = await page.evaluate(() => {
+      const desc = document.querySelector('.rmnf-dest-desc');
+      const firstDest = document.querySelector('.rmnf-dest');
+      const firstIcon = firstDest?.querySelector('.rmnf-dest-icon');
+      const firstLabel = firstDest?.querySelector('.rmnf-dest-label');
+      const footer = document.querySelector('.rmnf-footer-band');
+      const groups = document.querySelector('.rmnf-groups');
+      if (!desc || !firstDest || !firstIcon || !firstLabel || !footer || !groups) return null;
+      const descStyle = getComputedStyle(desc);
+      const descRect = desc.getBoundingClientRect();
+      const descHidden =
+        descStyle.display === 'none' ||
+        descStyle.visibility === 'hidden' ||
+        parseFloat(descStyle.opacity || '1') === 0 ||
+        descRect.height === 0;
+      const destRect = firstDest.getBoundingClientRect();
+      const iconRect = firstIcon.getBoundingClientRect();
+      const labelRect = firstLabel.getBoundingClientRect();
+      const footerRect = footer.getBoundingClientRect();
+      const groupsRect = groups.getBoundingClientRect();
+      const iconStartsAtRow = iconRect.left - destRect.left <= 16;
+      const compactIconLabelGap = labelRect.left - iconRect.right >= 0 && labelRect.left - iconRect.right <= 24;
+      const footerBelowGrid = footerRect.top >= groupsRect.bottom - 8;
+      return { descHidden, iconStartsAtRow, compactIconLabelGap, footerBelowGrid };
+    });
+    expect(mobileLayout).toBeTruthy();
+    expect(mobileLayout.descHidden, 'mobile descriptions visually hidden').toBe(true);
+    expect(mobileLayout.iconStartsAtRow, 'mobile icon starts at the row edge').toBe(true);
+    expect(mobileLayout.compactIconLabelGap, 'mobile icon and label stay adjacent').toBe(true);
+    expect(mobileLayout.footerBelowGrid, 'mobile footer band follows destination groups').toBe(true);
+
+    const detailsChrome = await inspectNativeChrome(page, '.rmnf-disclosure');
+    const summaryChrome = await inspectNativeChrome(page, '.rmnf-disclosure > summary');
+    expect(detailsChrome.borderTopWidth === '0px' || detailsChrome.paddingTop === '0px').toBeTruthy();
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    expect(
+      afterContent === 'none' || afterContent === '' || summaryChrome.afterDisplay === 'none',
+      'mobile classless summary::after'
+    ).toBeTruthy();
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    await page.locator('[data-rmnf-root] .ren-nav-toggle').click();
+    await page.locator('.rmnf-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rmnf-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, .rmnf-dest, .rmnf-footer-link'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await page.locator('.rmnf-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rmnf-panel', '.rmnf-chevron', '.rmnf-dest', '.rmnf-footer-band'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = window.getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('footer mega menu preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoFooterMegaBlock(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rmnf-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoFooterMegaBlock(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rmnf-root] .ren-nav');
         return {
           surface,
           text,
