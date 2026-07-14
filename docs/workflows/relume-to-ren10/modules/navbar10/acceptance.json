@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, four top-level entries, one five-link column, six whole-card anchors, two actions, one toggle, and one chevron are authored",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Native activation, stable desktop hover transfer, click pin, Escape, outside close, card/link close, and mobile nested disclosure reach every documented state",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Every control and indicator has exactly one owner and no duplicate rendering",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Top-level peers align; five-link column remains narrower than six-card region; 3:2 media and responsive card tracks remain coherent",
+      "automated": true
+    },
+    {
+      "id": "interactive-card-semantics",
+      "kind": "accessibility",
+      "description": "Each editorial card is exactly one anchor with no nested interactive descendant and has visible focus",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled mobile exposes the one tree and usable native disclosure",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}
