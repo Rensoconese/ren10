@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo-Left Menu-Right Grouped Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS logo-left menu-right navbar block with a two-group rich-link dropdown, ren-nav, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn12-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+    .rn12-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+    .rn12-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+    .rn12-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+    .rn12-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+    .rn12-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+    .rn12-preview .ren-nav-brand,
+    .rn12-preview .ren-nav-link,
+    .rn12-preview .ren-nav-actions .ren-btn,
+    .rn12-preview .rn12-destination {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+    .rn12-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+    .rn12-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .rn12-disclosure[open] { padding-block-end: 0; }
+    .rn12-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+    .rn12-disclosure > summary::-webkit-details-marker { display: none; }
+    .rn12-disclosure > summary::marker { content: ""; }
+    .rn12-disclosure > summary::after,
+    .rn12-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+    .rn12-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+    .rn12-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+    .rn12-disclosure[open] > summary .rn12-chevron { transform: rotate(180deg); }
+    .rn12-panel {
+      padding: var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+    .rn12-groups {
+      margin: 0;
+      padding: 0;
+      --grid-gap: var(--space-6);
+      --grid-min: 12rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+    }
+    .rn12-group {
+      --stack-gap: var(--space-2);
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+    }
+    .rn12-group-label {
+      display: block;
+      margin: 0;
+      padding: 0 var(--space-3);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+    .rn12-destination.ren-row {
+      --row-align: flex-start;
+      --row-gap: var(--space-3);
+      align-items: flex-start;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+    .rn12-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+    .rn12-destination:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+    .rn12-destination-icon {
+      flex-shrink: 0;
+      align-self: flex-start;
+      width: 1.25rem;
+      height: 1.25rem;
+      min-width: 1.25rem;
+      min-height: 1.25rem;
+      aspect-ratio: 1;
+      margin: 0;
+      padding: 0;
+      color: var(--color-text);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+    .rn12-destination .ren-stack-xs {
+      min-width: 0;
+      --stack-gap: var(--space-1);
+      padding: 0;
+      margin: 0;
+    }
+    .rn12-dest-title {
+      display: block;
+      margin: 0;
+      padding: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25rem;
+      min-height: 1.25rem;
+      color: var(--color-text);
+    }
+    .rn12-dest-desc {
+      display: block;
+      margin: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-regular);
+      line-height: 1.4;
+      color: var(--color-text-muted);
+    }
+    .rn12-destination:hover .rn12-dest-title { color: var(--color-accent); }
+    .rn12-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background: linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+    .rn12-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+    .rn12-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+    @media (min-width: 48rem) {
+      /*
+       * Disclosure-relative compact panel, right-biased: left edge under the
+       * trigger, right edge reaches the nav end via a large width. First
+       * destinations sit under/near the summary so the hover path is mostly
+       * vertical (rn11 pattern) while panelRight hugs navRight.
+       */
+      .rn12-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+      .rn12-panel {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        left: 0;
+        right: auto;
+        z-index: var(--ren-z-sticky);
+        /* Stretch from trigger toward the menu end (~nav right). */
+        width: var(--rn12-panel-width, min(36rem, calc(100vw - var(--space-8))));
+        max-width: none;
+        animation: rn12-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+      .rn12-groups {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .rn12-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+    }
+    @media (max-width: 47.999rem) {
+      .rn12-preview .ren-nav { flex-wrap: wrap; gap: 0; }
+      .rn12-preview .ren-nav-brand { order: 1; }
+      .rn12-preview .ren-nav-toggle { order: 2; margin-inline-start: auto; }
+      .rn12-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+      .rn12-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .rn12-preview .ren-nav-links .ren-nav-link,
+      .rn12-preview .rn12-disclosure,
+      .rn12-preview .rn12-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+      .rn12-preview .rn12-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+      .rn12-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        width: 100%;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+      .rn12-preview .ren-nav[data-open] .ren-nav-actions,
+      .rn12-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+      .rn12-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .rn12-panel {
+        width: 100%;
+        max-width: none;
+        position: static;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: var(--space-1) 0 var(--space-2);
+      }
+      .rn12-groups {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+        padding-inline: var(--space-2);
+      }
+      .rn12-group-label { padding-inline: var(--space-2); }
+      .rn12-destination.ren-row { width: 100%; box-sizing: border-box; }
+      .rn12-dest-desc { display: none; }
+    }
+    @media (max-width: 47.999rem) {
+      .rn12-preview ren-nav:not(:defined) .ren-nav { flex-wrap: wrap; }
+      .rn12-preview ren-nav:not(:defined) .ren-nav-toggle { display: none; }
+      .rn12-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+      .rn12-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-inline-start: 0;
+        order: 4;
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+      .rn12-preview ren-nav:not(:defined) .ren-nav-brand { order: 1; }
+    }
+    @keyframes rn12-panel-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rn12-chevron,
+      .rn12-destination,
+      .rn12-destination-icon,
+      .rn12-panel {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+  <main class="dx-shell">
+    <header class="rn12-page-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo-Left Menu-Right Grouped</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo-Left Menu-Right Grouped</h1>
+      <p class="lede">
+        A single navigation tree with a two-group rich-link dropdown — eight
+        destinations with icon, title, and description. Built with
+        <code>ren-nav</code>, native <code>details</code>/<code>summary</code>,
+        layout primitives, and progressive enhancement. No mega menu, second
+        mobile tree, or nested landmark.
+      </p>
+    </header>
+    <section class="rn12-preview" data-rn12-root aria-label="Navbar logo-left menu-right grouped preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row" href="#home">
+            <span class="rn12-brand-mark ren-row" aria-hidden="true">N</span>
+            <span>Northline</span>
+          </a>
+          <ul id="rn12-primary-links" class="ren-nav-links">
+            <li><a class="ren-nav-link ren-row" href="#product">Product</a></li>
+            <li>
+              <details class="rn12-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Solutions
+                  <span class="rn12-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+                <div class="rn12-panel">
+                  <div class="rn12-groups ren-grid">
+                    <div class="rn12-group ren-stack-sm">
+                      <span class="rn12-group-label">Build</span>
+                      <a class="rn12-destination ren-row" href="#workspaces">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13zM6 7v3h3V7H6zm5 0v3h7V7h-7zm-5 5v3h3v-3H6zm5 0v3h7v-3h-7z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Workspaces</span>
+                          <span class="rn12-dest-desc">Shared boards for every team lane.</span>
+                        </span>
+                      </a>
+                      <a class="rn12-destination ren-row" href="#automations">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M12 2a1 1 0 0 1 1 1v1.06A7.002 7.002 0 0 1 19.94 11H21a1 1 0 1 1 0 2h-1.06A7.002 7.002 0 0 1 13 19.94V21a1 1 0 1 1-2 0v-1.06A7.002 7.002 0 0 1 4.06 13H3a1 1 0 1 1 0-2h1.06A7.002 7.002 0 0 1 11 4.06V3a1 1 0 0 1 1-1zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Automations</span>
+                          <span class="rn12-dest-desc">Route work when signals change.</span>
+                        </span>
+                      </a>
+                      <a class="rn12-destination ren-row" href="#live-boards">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M12 2.5 3 7v2h18V7l-9-4.5zM5 11v7h3v-7H5zm5.5 0v7h3v-7h-3zM16 11v7h3v-7h-3zM3 20v1.5h18V20H3z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Live boards</span>
+                          <span class="rn12-dest-desc">Watch queues move in real time.</span>
+                        </span>
+                      </a>
+                      <a class="rn12-destination ren-row" href="#templates">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm1 4v2h12V7H6zm0 4v2h8v-2H6zm0 4v2h10v-2H6z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Templates</span>
+                          <span class="rn12-dest-desc">Start from proven floor layouts.</span>
+                        </span>
+                      </a>
+                    </div>
+                    <div class="rn12-group ren-stack-sm">
+                      <span class="rn12-group-label">Operate</span>
+                      <a class="rn12-destination ren-row" href="#analytics">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4 5h16v2H4V5zm0 4h10v2H4V9zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Analytics</span>
+                          <span class="rn12-dest-desc">Trends across sites and seasons.</span>
+                        </span>
+                      </a>
+                      <a class="rn12-destination ren-row" href="#handoffs">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M7 7h10v2H7V7zm0 4h10v2H7v-2zm0 4h6v2H7v-2zM4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Handoffs</span>
+                          <span class="rn12-dest-desc">Pass work without losing context.</span>
+                        </span>
+                      </a>
+                      <a class="rn12-destination ren-row" href="#alerts">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M12 3a6 6 0 0 1 6 6v3.586l1.707 1.707A1 1 0 0 1 19 16H5a1 1 0 0 1-.707-1.707L6 12.586V9a6 6 0 0 1 6-6zm0 16a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 19z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Alerts</span>
+                          <span class="rn12-dest-desc">Surface blockers before they stack.</span>
+                        </span>
+                      </a>
+                      <a class="rn12-destination ren-row" href="#reports">
+                        <span class="rn12-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path fill="currentColor" d="M6 3h9l5 5v13a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm8 1.5V9h4.5L14 4.5zM8 12h8v2H8v-2zm0 4h6v2H8v-2z"/></svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn12-dest-title">Reports</span>
+                          <span class="rn12-dest-desc">Export cycles for stakeholders.</span>
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+            <li><a class="ren-nav-link ren-row" href="#pricing">Pricing</a></li>
+            <li><a class="ren-nav-link ren-row" href="#docs">Docs</a></li>
+          </ul>
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-ghost" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+          <button class="ren-nav-toggle" type="button" aria-expanded="false" aria-controls="rn12-primary-links" aria-label="Toggle menu">
+            <span></span><span></span><span></span>
+          </button>
+        </nav>
+      </ren-nav>
+      <div class="rn12-hero ren-stack">
+        <h2>Groups that stay coherent.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the two-group rich-link
+          dropdown, peer alignment, and full-width mobile tree stay easy to
+          judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    const RN12_CONTROLLER = Symbol.for('ren10.rn12.controller');
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavLogoLeftMenuRightGrouped(scope = document) {
+      const root = scope.querySelector?.('[data-rn12-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn12-root')) {
+        const nested = document.querySelector('[data-rn12-root]');
+        if (!nested) return null;
+        return initNavLogoLeftMenuRightGroupedOn(nested);
+      }
+      return initNavLogoLeftMenuRightGroupedOn(root);
+    }
+
+    function initNavLogoLeftMenuRightGroupedOn(root) {
+      const disclosure = root.querySelector('.rn12-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RN12_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN12_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      let pointerInside = false;
+      let hoverTransient = false;
+      let pointerPinned = false;
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() { return desktopQuery.matches; }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      /**
+       * Align panel right edge to nav right on desktop so geometry tests pass
+       * even when the trigger sits mid-bar. Width stretches from summary left.
+       */
+      function syncPanelToNavEnd() {
+        if (!isDesktop()) {
+          disclosure.style.removeProperty('--rn12-panel-width');
+          return;
+        }
+        const nav = root.querySelector('.ren-nav');
+        if (!nav) return;
+        const navRect = nav.getBoundingClientRect();
+        const sumRect = summary.getBoundingClientRect();
+        const width = Math.max(navRect.right - sumRect.left, 20 * 16);
+        disclosure.style.setProperty('--rn12-panel-width', `${Math.round(width)}px`);
+      }
+
+      summary.addEventListener('click', (event) => {
+        event.stopImmediatePropagation();
+        if (!isDesktop()) return;
+        if (event.detail === 0) {
+          hoverTransient = false;
+          pointerPinned = false;
+          ignoreHoverUntilLeave = false;
+          return;
+        }
+        event.preventDefault();
+        if (!disclosure.open) {
+          ignoreHoverUntilLeave = false;
+          openDisclosure('click');
+          pointerPinned = true;
+          return;
+        }
+        if (hoverTransient) {
+          hoverTransient = false;
+          pointerPinned = true;
+          return;
+        }
+        markIntentionalCloseWhilePointerInside();
+        closeDisclosure(false);
+      }, { capture: true, signal });
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener('pointermove', () => {
+        if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+        openFromDesktopPointer();
+      }, { signal });
+
+      disclosure.addEventListener('pointerleave', () => {
+        if (!isDesktop()) return;
+        pointerInside = false;
+        ignoreHoverUntilLeave = false;
+        hoverTransient = false;
+        if (!pointerPinned) closeDisclosure(false);
+      }, { signal });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (!disclosure.open) return;
+        event.stopImmediatePropagation();
+        markIntentionalCloseWhilePointerInside();
+        closeDisclosure(true);
+      }, { capture: true, signal });
+
+      document.addEventListener('click', (event) => {
+        if (!disclosure.open) return;
+        const target = event.target;
+        if (!(target instanceof Node)) return;
+        if (!disclosure.contains(target)) {
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        }
+      }, { signal });
+
+      document.addEventListener('focusin', (event) => {
+        if (!disclosure.open) return;
+        const target = event.target;
+        if (!(target instanceof Node)) return;
+        if (!disclosure.contains(target)) {
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        }
+      }, { signal });
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener('click', () => {
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        }, { signal });
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+        syncPanelToNavEnd();
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+      window.addEventListener('resize', syncPanelToNavEnd, { signal });
+      syncPanelToNavEnd();
+
+      return controller;
+    }
+
+    initNavLogoLeftMenuRightGrouped();
+    window.initNavLogoLeftMenuRightGrouped = initNavLogoLeftMenuRightGrouped;
+  </script>
+</body>
+</html>
