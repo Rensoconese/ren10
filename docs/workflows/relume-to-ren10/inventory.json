@@ -39,7 +39,7 @@
         },
         {
           "id": "navbar10",
-          "status": "in_progress",
+          "status": "accepted",
           "packet": "navbar10",
           "ren10Block": "templates/blocks/nav-mega-menu-card-grid.html"
         }
