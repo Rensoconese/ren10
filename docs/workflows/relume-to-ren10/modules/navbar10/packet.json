@@ -4,13 +4,15 @@
   "moduleId": "navbar10",
   "blockSlug": "nav-mega-menu-card-grid",
   "blockPath": "templates/blocks/nav-mega-menu-card-grid.html",
-  "stage": "red",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-card-grid.html",
     "tests/components/blocks-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
