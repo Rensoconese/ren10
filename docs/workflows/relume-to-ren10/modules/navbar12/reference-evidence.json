@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP returned navbar12 metadata, complete section source, and four primitive files. Catalog order navbar11 -> navbar12 -> navbar13, exact anatomy, responsive policy, source interactions, dependencies, and source defects were recorded without copying protected source output."
+}

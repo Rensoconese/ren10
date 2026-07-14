@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar12 is mapped to one RenDS nav/tree, native details/summary, two RenDS grid groups, eight whole-anchor destination rows, two actions, one named toggle, one chevron, and the established 48rem interaction boundary."
+}

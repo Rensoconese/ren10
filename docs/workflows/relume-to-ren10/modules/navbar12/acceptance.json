@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "criteria": [
+    { "id": "exact-anatomy", "kind": "structure", "description": "One brand, four top entries, two groups, two group labels, eight rich anchors, eight icons, two actions, one toggle, and one chevron", "automated": true },
+    { "id": "single-tree", "kind": "semantics", "description": "One primary landmark and one responsive navigation tree with no nested interactive content", "automated": true },
+    { "id": "interaction-complete", "kind": "behavior", "description": "Hover corridor, click pin, keyboard, Escape focus return, outside/destination/mobile/breakpoint close all work", "automated": true },
+    { "id": "responsive-groups", "kind": "visual-structure", "description": "Desktop and tablet use two coherent groups; mobile uses one in-flow column without overflow", "automated": true },
+    { "id": "single-chevron", "kind": "visual-structure", "description": "Native details chrome is neutralized and exactly one chevron is visible", "automated": true },
+    { "id": "a11y", "kind": "accessibility", "description": "Visible focus, 44px targets, reduced motion, light/dark, no-JS fallback, and axe WCAG 2.1 AA pass", "automated": true },
+    { "id": "visual-review", "kind": "human-review", "description": "Codex reviews fresh desktop, tablet, mobile, dark, hover, and no-JavaScript captures", "automated": false }
+  ]
+}
