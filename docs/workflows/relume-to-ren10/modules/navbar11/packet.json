@@ -4,7 +4,7 @@
   "moduleId": "navbar11",
   "blockSlug": "navbar-logo-left-menu-right-dropdown",
   "blockPath": "templates/blocks/nav-logo-left-menu-right-dropdown.html",
-  "stage": "reviewed",
+  "stage": "accepted",
   "allowedFiles": [
     "templates/blocks/nav-logo-left-menu-right-dropdown.html",
     "tests/components/blocks-navigation.spec.cjs"
@@ -13,6 +13,7 @@
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
     "red": "red-evidence.json",
-    "green": "green-evidence.json"
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
   }
 }
