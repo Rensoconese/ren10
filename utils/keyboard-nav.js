@@ -66,7 +66,7 @@ export function createKeyboardNav(container, options = {}) {
 
   function getItems() {
     return Array.from(container.querySelectorAll(selector)).filter(
-      (el) => !el.hasAttribute('disabled') && !el.hasAttribute('aria-disabled')
+      (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-disabled') !== 'true'
     );
   }
 

@@ -94,7 +94,11 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-tabs">...</div>
+<ren-tabs aria-label="Account settings">
+  <div class="ren-tab-list" role="tablist"><button class="ren-tab" role="tab">Profile</button><button class="ren-tab" role="tab">Security</button></div>
+  <div class="ren-tab-panel" role="tabpanel">Profile settings</div><div class="ren-tab-panel" role="tabpanel" hidden>Security settings</div>
+</ren-tabs>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

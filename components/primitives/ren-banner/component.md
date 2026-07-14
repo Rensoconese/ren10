@@ -91,7 +91,12 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-banner">...</div>
+<div class="ren-banner ren-banner-info" role="status">
+  <span class="ren-banner-icon" aria-hidden="true">i</span>
+  <div class="ren-banner-content"><strong class="ren-banner-title">Maintenance</strong><p class="ren-banner-message">Service resumes at 11 PM.</p></div>
+  <button class="ren-banner-dismiss" type="button" aria-label="Dismiss">×</button>
+</div>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

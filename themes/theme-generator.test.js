@@ -44,6 +44,12 @@ for (const hex of ['#F59E0B', '#D946EF', '#737373', '#8B5CF6', '#22D3EE', '#E11D
 console.log('\n\n== Curated themes: AA audit ==');
 
 const THEMES = {
+  ocean: { light: { accent: '#0066CC', 'accent-strong': '#0052A3', 'on-accent': '#FFFFFF', surface: '#F8FAFC' }, dark: { accent: '#4DA3FF', 'accent-strong': '#6BB3FF', 'on-accent': '#000000', surface: '#0A0F1A' } },
+  forest: { light: { accent: '#16A34A', 'accent-strong': '#15803D', 'on-accent': '#000000', surface: '#FAFDF7' }, dark: { accent: '#4ADE80', 'accent-strong': '#86EFAC', 'on-accent': '#000000', surface: '#0A120A' } },
+  sunset: { light: { accent: '#EA580C', 'accent-strong': '#C2410C', 'on-accent': '#000000', surface: '#FFFBF5' }, dark: { accent: '#FB923C', 'accent-strong': '#FDBA74', 'on-accent': '#000000', surface: '#120E0A' } },
+  rose: { light: { accent: '#E11D48', 'accent-strong': '#BE123C', 'on-accent': '#FFFFFF', surface: '#FFFBFC' }, dark: { accent: '#FB7185', 'accent-strong': '#FDA4AF', 'on-accent': '#000000', surface: '#120A0C' } },
+  slate: { light: { accent: '#334155', 'accent-strong': '#1E293B', 'on-accent': '#FFFFFF', surface: '#FFFFFF' }, dark: { accent: '#CBD5E1', 'accent-strong': '#E2E8F0', 'on-accent': '#0F172A', surface: '#0F172A' } },
+  purple: { light: { accent: '#7C3AED', 'accent-strong': '#6D28D9', 'on-accent': '#FFFFFF', surface: '#FAFAFF' }, dark: { accent: '#A78BFA', 'accent-strong': '#C4B5FD', 'on-accent': '#000000', surface: '#0C0A14' } },
   'amber-editorial': {
     light: {
       accent:        '#85590F',
@@ -96,6 +102,15 @@ for (const [name, t] of Object.entries(THEMES)) {
   check('dark  link (strong) vs surface', contrast(t.dark['accent-strong'],  t.dark.surface),  4.5);
   check('light focus vs surface (3:1)',   contrast(t.light.accent, t.light.surface), 3);
   check('dark  focus vs surface (3:1)',   contrast(t.dark.accent,  t.dark.surface),  3);
+}
+
+console.log('\n\n== AAA scoped pairs ==');
+for (const scheme of ['light', 'dark']) {
+  const aaa = scheme === 'light'
+    ? { text: '#111111', surface: '#FFFFFF', accent: '#111111', onAccent: '#FFFFFF' }
+    : { text: '#FFFFFF', surface: '#000000', accent: '#FFFFFF', onAccent: '#000000' };
+  check(`${scheme} AAA text vs surface`, contrast(aaa.text, aaa.surface), 7);
+  check(`${scheme} AAA on-accent vs accent`, contrast(aaa.onAccent, aaa.accent), 7);
 }
 
 console.log(`\n─────────────────────────────────────────────`);

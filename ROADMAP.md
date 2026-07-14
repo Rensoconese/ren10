@@ -1,5 +1,12 @@
 # RenDS — Roadmap
 
+## 1.0 direction
+
+RenDS 1.0 will stabilize the 53-component vanilla contract, accessibility
+guarantees, public exports, and the GitHub Pages catalog. New APIs require
+contract tests, cross-browser evidence, migration notes, and budget checks.
+The roadmap explicitly excludes optional plugin integrations for now.
+
 **Repo:** [github.com/Rensoconese/ren10](https://github.com/Rensoconese/ren10)
 **Versión actual en disco:** `0.9.0`
 **Última fase cerrada:** 0.9.0 + hardening post-auditoría (packaging, CLI smoke, JS lifecycle)

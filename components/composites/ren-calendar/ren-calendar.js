@@ -1,3 +1,5 @@
+import { formatLocalDate, parseLocalDate } from '../../../utils/local-date.js';
+
 /* ═══ REN CALENDAR WEB COMPONENT ═══
    A fully accessible, keyboard-navigable calendar for date selection.
 
@@ -49,7 +51,7 @@ export class RenCalendar extends HTMLElement {
     /* ═══ PARSE DATE ATTRIBUTES ═══ */
     const valueAttr = this.getAttribute('value');
     if (valueAttr) {
-      const parsed = new Date(valueAttr);
+      const parsed = this.parseDate(valueAttr);
       if (!isNaN(parsed)) {
         this.selectedDate = parsed;
         this.currentDate = new Date(parsed);
@@ -57,10 +59,10 @@ export class RenCalendar extends HTMLElement {
     }
 
     const minAttr = this.getAttribute('min');
-    if (minAttr) this.minDate = new Date(minAttr);
+    if (minAttr) this.minDate = this.parseDate(minAttr);
 
     const maxAttr = this.getAttribute('max');
-    if (maxAttr) this.maxDate = new Date(maxAttr);
+    if (maxAttr) this.maxDate = this.parseDate(maxAttr);
 
     /* ═══ RENDER CALENDAR ═══ */
     this.render();
@@ -398,7 +400,7 @@ export class RenCalendar extends HTMLElement {
   focusDateAtIndex(index) {
     const buttons = this.querySelectorAll('.ren-calendar-day');
     if (buttons[index] && !buttons[index].disabled) {
-      this.focusedDate = new Date(buttons[index].dataset.date);
+      this.focusedDate = parseLocalDate(buttons[index].dataset.date);
       this.updateTabIndex();
       buttons[index].focus();
     }
@@ -429,8 +431,8 @@ export class RenCalendar extends HTMLElement {
       return;
     }
 
-    this.rangeStart = new Date(start);
-    this.rangeEnd = new Date(end);
+    this.rangeStart = this.parseDate(start);
+    this.rangeEnd = this.parseDate(end);
     this.render();
   }
 
@@ -441,7 +443,7 @@ export class RenCalendar extends HTMLElement {
     if (this.mode === 'range') {
       eventData = { range: { start: this.rangeStart, end: this.rangeEnd } };
     } else if (this.mode === 'multiple') {
-      eventData = { dates: Array.from(this.selectedDates).map((d) => new Date(d)) };
+      eventData = { dates: Array.from(this.selectedDates).map((d) => parseLocalDate(d)) };
     }
 
     this.dispatchEvent(
@@ -479,7 +481,11 @@ export class RenCalendar extends HTMLElement {
 
   /* ═══ CONVERT DATE TO ISO STRING ═══ */
   dateToString(date) {
-    return date.toISOString().split('T')[0];
+    return formatLocalDate(date);
+  }
+
+  parseDate(value) {
+    return parseLocalDate(value);
   }
 
   /* ═══ PUBLIC METHODS ═══ */
@@ -500,11 +506,11 @@ export class RenCalendar extends HTMLElement {
   /* ═══ SET VALUE ═══ */
   setValue(value) {
     if (this.mode === 'single' && typeof value === 'string') {
-      this.selectedDate = new Date(value);
+    this.selectedDate = this.parseDate(value);
       this.render();
     } else if (this.mode === 'range' && value && typeof value === 'object') {
-      this.rangeStart = new Date(value.start);
-      this.rangeEnd = new Date(value.end);
+      this.rangeStart = this.parseDate(value.start);
+      this.rangeEnd = this.parseDate(value.end);
       this.render();
     } else if (this.mode === 'multiple' && Array.isArray(value)) {
       this.selectedDates = new Set(value);

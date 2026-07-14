@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar8",
+  "blockSlug": "nav-mega-menu-link-rail",
+  "blockPath": "templates/blocks/nav-mega-menu-link-rail.html",
+  "stage": "accepted",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-link-rail.html",
+    "tests/components/blocks-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
+  }
+}

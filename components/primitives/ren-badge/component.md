@@ -90,7 +90,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-badge">...</div>
+<span class="ren-badge ren-badge-success">Published</span>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

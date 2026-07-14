@@ -67,6 +67,19 @@ item is binary: pass / fail. Failures must be fixed, not noted-and-shipped.
 - [ ] I avoided every entry in `aiHints.forbiddenPatterns`.
 - [ ] My imports match `aiHints.canonicalImports` (CSS first, JS only
       when needed).
+- [ ] I searched the CLI/knowledge graph before claiming that a requested
+      component exists; unsupported parts are reported or composed from
+      verified contracts, never invented.
+
+## Installed skill and migration
+
+- [ ] I treated `rends/`, the installed package, and its CLI output as the
+      API source of truth; historical root notes, `_archive/`, and legacy
+      skill copies did not influence generated APIs.
+- [ ] For upgrades, I checked the installed package version, `CHANGELOG.md`,
+      `MIGRATION.md`, and `npx ren10 upgrade --dry-run` before applying changes.
+- [ ] For full applications, I validated the runnable result in a browser in
+      addition to running the regex evals.
 
 ## Lint exemptions (hardening debt)
 

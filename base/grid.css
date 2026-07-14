@@ -58,7 +58,7 @@
   --grid-margin: clamp(1rem, 5vw, 3rem);
 
   /* Maximum content width (map to --width-xl if available) */
-  --grid-max-width: var(--width-xl, 1280px);
+  --grid-max-width: var(--width-7xl, 1280px);
 
   /* Minimum item size for responsive auto-fit grids (RAM pattern) */
   --grid-min-item: 15rem;
@@ -178,6 +178,10 @@
    ============================================================================ */
 
 .ren-prose-grid {
+  /* Keep the internal tracks self-contained so this grid can be nested or
+     mounted without inheriting page-grid implementation variables. */
+  --_gap: var(--grid-margin);
+  --_full: minmax(var(--_gap), 1fr);
   --grid-max-width: var(--width-prose, 65ch);
   display: grid;
   grid-template-columns:

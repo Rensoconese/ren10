@@ -19,10 +19,16 @@ for (const [name, meta] of Object.entries(REGISTRY)) {
     }
   }
 
-  for (const dep of meta.deps || []) {
+  for (const dep of meta.utils || []) {
     const sourceDep = path.join(root, 'utils', dep);
     if (!fs.existsSync(sourceDep)) {
       throw new Error(`registry entry "${name}" declares missing dependency ${path.relative(root, sourceDep)}`);
+    }
+  }
+
+  for (const dependency of meta.components || []) {
+    if (!REGISTRY[dependency]) {
+      throw new Error(`registry entry "${name}" declares unknown component dependency ${dependency}`);
     }
   }
 }

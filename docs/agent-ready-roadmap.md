@@ -96,11 +96,33 @@ Status: implemented for the first release path.
   `.windsurfrules`, and `skills/rends/SKILL.md` synchronized with the CLI
   loading order.
 
+## Phase 6: Verified Design-System Adapters
+
+Status: implemented for the v0 release path.
+
+- Ship a schema-versioned `skills/rends/v0.json` that points at a pinned,
+  read-only canonical source and selects a framework-free starter bundled with
+  the skill.
+- Record source precedence, allowed roots, exclusions, and package-version
+  provenance in `skills/rends/sources.json`.
+- Keep a runnable reference consumer application that demonstrates global
+  setup, layouts, themes, forms, data, dialogs, and feedback as one coherent
+  product surface.
+- Treat screenshots and Figma material as visual evidence only. Component
+  selectors, attributes, events, tokens, and imports remain grounded in
+  contracts and typed CLI output.
+- Validate adapter structure, starter wiring, version parity, accessibility,
+  approval evidence, pack inclusion, and installed-tarball behavior before
+  release.
+- Re-run the starter and its approval checks whenever the package, skill,
+  component contracts, or migration guidance changes.
+
 ## Current Definition of Done
 
 - New agent-facing commands return parseable JSON.
 - `doctor` reports no failures.
 - `npm run lint`, `npm run agent:check`, and `npm run knowledge:check` pass.
+- `npm run agent:v0:check` and `npm run test:agent-starter` pass.
 - Stale uppercase contract references are absent.
 - Component contract counts remain 19 primitives, 26 composites, and 8
   patterns.

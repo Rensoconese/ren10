@@ -24,7 +24,7 @@
 .ren-stack {
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap, var(--space-4));
+  gap: var(--stack-gap, var(--space-density-row, var(--space-4)));
 }
 
 /* Stack variants */
@@ -307,7 +307,7 @@
 
 .ren-container-name {
   container-type: inline-size;
-  container-name: var(--container-name);
+  container-name: var(--container-name, none);
 }
 
 /* Common responsive patterns using container queries */

@@ -36,15 +36,15 @@
 .ren-banner {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius-md);
+  gap: var(--ren-banner-gap);
+  padding: var(--ren-banner-padding);
+  border-radius: var(--ren-banner-radius);
   font-size: var(--body-size);
   line-height: var(--leading-normal);
   /* Default: info */
-  background-color: var(--color-info-subtle);
-  border: var(--stroke-1) solid color-mix(in oklch, var(--color-info), transparent 70%);
-  color: var(--color-text);
+  background-color: var(--ren-banner-bg);
+  border: var(--ren-banner-border-width) solid var(--ren-banner-border-color);
+  color: var(--ren-banner-color);
 }
 
 /* ─── Icon ─── */
@@ -53,8 +53,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--ren-banner-icon-size);
+  height: var(--ren-banner-icon-size);
   font-size: var(--text-base);
   margin-top: 1px;
 }

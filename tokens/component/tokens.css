@@ -21,7 +21,7 @@
 /* ═══════════════════════════════════════════════
    BUTTON
    ═══════════════════════════════════════════════ */
-.ren-btn {
+:where(:root, [data-theme]) {
   --ren-btn-height:       var(--size-lg);
   --ren-btn-padding-x:    var(--space-4);
   --ren-btn-padding-y:    var(--space-2);
@@ -36,75 +36,73 @@
   --ren-btn-bg-hover:     var(--color-accent-hover);
   --ren-btn-bg-active:    var(--color-accent-active);
   --ren-btn-color:        var(--color-on-accent);
-  --ren-btn-border-color: transparent;
+  --ren-btn-border-color: var(--color-accent);
 
   /* Focus ring */
-  --ren-btn-ring-color:   var(--color-accent);
-  --ren-btn-ring-offset:  2px;
-  --ren-btn-ring-width:   2px;
+  --ren-btn-ring-color:   var(--color-focus-ring);
+  --ren-btn-ring-offset:  var(--ring-offset-width);
+  --ren-btn-ring-width:   var(--ring-width);
 
   /* Motion */
-  --ren-btn-duration:     var(--duration-fast);
-  --ren-btn-easing:       var(--ease-out);
+  --ren-btn-duration:     var(--duration-state);
+  --ren-btn-easing:       var(--ease-enter);
 }
 
 /* ═══════════════════════════════════════════════
    CARD
    ═══════════════════════════════════════════════ */
-.ren-card {
+:where(:root, [data-theme]) {
   --ren-card-bg:            var(--color-surface-raised);
   --ren-card-border-color:  var(--color-border);
   --ren-card-border-width:  var(--stroke-1);
   --ren-card-radius:        var(--radius-lg);
-  --ren-card-padding:       var(--space-5);
+  --ren-card-padding:       var(--space-4);
   --ren-card-shadow:        none;
   --ren-card-header-gap:    var(--space-1);
-  --ren-card-gap:           0;
+  --ren-card-gap:           0px;
 }
 
 /* ═══════════════════════════════════════════════
    INPUT / FIELD
    ═══════════════════════════════════════════════ */
-.ren-field input,
-.ren-field textarea,
-.ren-field select {
+:where(:root, [data-theme]) {
   --ren-field-height:        var(--size-lg);
   --ren-field-padding-x:     var(--space-3);
   --ren-field-padding-y:     var(--space-2);
   --ren-field-font-size:     var(--body-size);
   --ren-field-radius:        var(--radius-md);
-  --ren-field-border-color:  var(--color-border);
+  --ren-field-border-color:  var(--color-border-interactive);
   --ren-field-border-width:  var(--stroke-1);
-  --ren-field-bg:            var(--color-surface);
+  --ren-field-bg:            var(--color-input-bg);
   --ren-field-color:         var(--color-text);
-  --ren-field-placeholder:   var(--color-text-muted);
-  --ren-field-focus-color:   var(--color-accent);
-  --ren-field-error-color:   var(--color-danger);
+  --ren-field-placeholder:   var(--color-input-placeholder);
+  --ren-field-focus-color:   var(--color-input-border-focus);
+  --ren-field-error-color:   var(--color-input-error-border);
   --ren-field-success-color: var(--color-success);
 }
 
 /* ═══════════════════════════════════════════════
    BADGE
    ═══════════════════════════════════════════════ */
-.ren-badge {
-  --ren-badge-height:      var(--size-xs);
-  --ren-badge-padding-x:   var(--space-2);
-  --ren-badge-font-size:   var(--caption-sm-size);
+:where(:root, [data-theme]) {
+  --ren-badge-height:      auto;
+  --ren-badge-padding-x:   0.55em;
+  --ren-badge-font-size:   var(--text-xs);
   --ren-badge-font-weight: var(--weight-semibold);
   --ren-badge-radius:      var(--radius-full);
   --ren-badge-bg:          var(--color-fill);
-  --ren-badge-color:       var(--color-text);
+  --ren-badge-color:       var(--color-text-secondary);
 }
 
 /* ═══════════════════════════════════════════════
    TAG
    ═══════════════════════════════════════════════ */
-.ren-tag {
-  --ren-tag-height:       var(--size-sm);
-  --ren-tag-padding-x:    var(--space-3);
-  --ren-tag-font-size:    var(--label-sm-size);
-  --ren-tag-font-weight:  var(--label-weight);
-  --ren-tag-radius:       var(--radius-md);
+:where(:root, [data-theme]) {
+  --ren-tag-height:       auto;
+  --ren-tag-padding-x:    0.65em;
+  --ren-tag-font-size:    var(--caption-size);
+  --ren-tag-font-weight:  var(--weight-medium);
+  --ren-tag-radius:       var(--radius-full);
   --ren-tag-bg:           var(--color-fill);
   --ren-tag-color:        var(--color-text);
   --ren-tag-border-color: var(--color-border);
@@ -114,22 +112,21 @@
 /* ═══════════════════════════════════════════════
    BANNER / ALERT
    ═══════════════════════════════════════════════ */
-.ren-banner {
-  --ren-banner-padding:      var(--space-4);
-  --ren-banner-radius:       var(--radius-lg);
+:where(:root, [data-theme]) {
+  --ren-banner-padding:      var(--space-3) var(--space-4);
+  --ren-banner-radius:       var(--radius-md);
   --ren-banner-border-width: var(--stroke-1);
   --ren-banner-gap:          var(--space-3);
   --ren-banner-icon-size:    var(--icon-lg);
   --ren-banner-bg:           var(--color-info-subtle);
-  --ren-banner-border-color: var(--color-info);
+  --ren-banner-border-color: color-mix(in oklch, var(--color-info), transparent 70%);
   --ren-banner-color:        var(--color-text);
 }
 
 /* ═══════════════════════════════════════════════
    DIALOG
    ═══════════════════════════════════════════════ */
-.ren-dialog,
-.ren-alert-dialog {
+:where(:root, [data-theme]) {
   --ren-dialog-width:        min(90vw, 500px);
   --ren-dialog-padding:      var(--space-6);
   --ren-dialog-radius:       var(--radius-xl);
@@ -147,7 +144,7 @@
 /* ═══════════════════════════════════════════════
    SHEET
    ═══════════════════════════════════════════════ */
-.ren-sheet {
+:where(:root, [data-theme]) {
   --ren-sheet-width:      320px;
   --ren-sheet-bg:         var(--color-surface-overlay);
   --ren-sheet-border:     var(--color-border);
@@ -164,7 +161,7 @@
 /* ═══════════════════════════════════════════════
    TOOLTIP
    ═══════════════════════════════════════════════ */
-.ren-tooltip {
+:where(:root, [data-theme]) {
   --ren-tooltip-bg:        var(--color-text);
   --ren-tooltip-color:     var(--color-text-inverted);
   --ren-tooltip-font-size: var(--caption-sm-size);
@@ -182,7 +179,7 @@
 /* ═══════════════════════════════════════════════
    POPOVER
    ═══════════════════════════════════════════════ */
-.ren-popover {
+:where(:root, [data-theme]) {
   --ren-popover-width:        280px;
   --ren-popover-bg:           var(--color-surface-overlay);
   --ren-popover-border-color: var(--color-border);
@@ -198,7 +195,7 @@
 /* ═══════════════════════════════════════════════
    TABS
    ═══════════════════════════════════════════════ */
-.ren-tabs {
+:where(:root, [data-theme]) {
   --ren-tabs-height:         var(--size-lg);
   --ren-tabs-font-size:      var(--label-size);
   --ren-tabs-font-weight:    var(--label-weight);
@@ -216,36 +213,36 @@
 /* ═══════════════════════════════════════════════
    CHECKBOX & SWITCH
    ═══════════════════════════════════════════════ */
-.ren-checkbox {
+:where(:root, [data-theme]) {
   --ren-checkbox-size:        1.25rem;
   --ren-checkbox-radius:      var(--radius-sm);
-  --ren-checkbox-border:      var(--color-border-strong);
+  --ren-checkbox-border:      var(--color-border-interactive);
   --ren-checkbox-checked-bg:  var(--color-accent);
   --ren-checkbox-checked-color: var(--color-on-accent);
   --ren-checkbox-gap:         var(--space-2);
 
   /* Motion */
-  --ren-checkbox-duration:    var(--duration-normal);
-  --ren-checkbox-easing:      var(--ease-spring);
+  --ren-checkbox-duration:    var(--duration-state);
+  --ren-checkbox-easing:      var(--ease-playful);
 }
 
-.ren-switch {
+:where(:root, [data-theme]) {
   --ren-switch-width:       3.1875rem;  /* 51px Apple HIG */
   --ren-switch-height:      1.9375rem;  /* 31px Apple HIG */
   --ren-switch-thumb-size:  1.6875rem;  /* 27px */
-  --ren-switch-bg:          var(--color-fill);
+  --ren-switch-bg:          var(--color-fill-active);
   --ren-switch-checked-bg:  var(--color-success);
   --ren-switch-thumb-color: var(--white);
 
   /* Motion */
-  --ren-switch-duration:    var(--duration-normal);
-  --ren-switch-easing:      var(--ease-snappy);
+  --ren-switch-duration:    var(--duration-state);
+  --ren-switch-easing:      var(--ease-state-change);
 }
 
 /* ═══════════════════════════════════════════════
    SLIDER
    ═══════════════════════════════════════════════ */
-.ren-slider {
+:where(:root, [data-theme]) {
   --ren-slider-track-height:  6px;
   --ren-slider-track-radius:  var(--radius-full);
   --ren-slider-track-bg:      var(--color-fill);
@@ -263,7 +260,7 @@
 /* ═══════════════════════════════════════════════
    TOGGLE GROUP
    ═══════════════════════════════════════════════ */
-.ren-toggle-group {
+:where(:root, [data-theme]) {
   --ren-toggle-height:       var(--size-lg);
   --ren-toggle-padding-x:    var(--space-4);
   --ren-toggle-font-size:    var(--label-size);
@@ -278,30 +275,30 @@
 /* ═══════════════════════════════════════════════
    AVATAR
    ═══════════════════════════════════════════════ */
-.ren-avatar {
+:where(:root, [data-theme]) {
   --ren-avatar-size:     var(--avatar-md);
   --ren-avatar-radius:   var(--radius-full);
   --ren-avatar-bg:       var(--color-fill);
-  --ren-avatar-color:    var(--color-text-muted);
-  --ren-avatar-font-size:var(--label-size);
+  --ren-avatar-color:    var(--color-text-secondary);
+  --ren-avatar-font-size:var(--text-sm);
   --ren-avatar-border:   2px solid var(--color-surface);
 }
 
 /* ═══════════════════════════════════════════════
    BREADCRUMB
    ═══════════════════════════════════════════════ */
-.ren-breadcrumb {
-  --ren-breadcrumb-font-size:  var(--label-size);
+:where(:root, [data-theme]) {
+  --ren-breadcrumb-font-size:  var(--caption-size);
   --ren-breadcrumb-color:      var(--color-text-muted);
   --ren-breadcrumb-active-color: var(--color-text);
-  --ren-breadcrumb-separator:  '›';
-  --ren-breadcrumb-gap:        var(--space-2);
+  --ren-breadcrumb-separator:  var(--breadcrumb-separator, '\203A');
+  --ren-breadcrumb-gap:        var(--space-1);
 }
 
 /* ═══════════════════════════════════════════════
    PAGINATION
    ═══════════════════════════════════════════════ */
-.ren-pagination {
+:where(:root, [data-theme]) {
   --ren-pagination-size:        var(--size-lg);
   --ren-pagination-font-size:   var(--label-size);
   --ren-pagination-radius:      var(--radius-md);
@@ -315,42 +312,42 @@
 /* ═══════════════════════════════════════════════
    PROGRESS
    ═══════════════════════════════════════════════ */
-.ren-progress {
+:where(:root, [data-theme]) {
   --ren-progress-height:     8px;
   --ren-progress-radius:     var(--radius-full);
   --ren-progress-bg:         var(--color-fill);
   --ren-progress-fill:       var(--color-accent);
 
   /* Motion */
-  --ren-progress-duration:   var(--duration-normal);
-  --ren-progress-easing:     var(--ease-out);
+  --ren-progress-duration:   var(--duration-state);
+  --ren-progress-easing:     var(--ease-enter);
 }
 
 /* ═══════════════════════════════════════════════
    SPINNER
    ═══════════════════════════════════════════════ */
-.ren-spinner {
-  --ren-spinner-size:   1.25rem;
-  --ren-spinner-width:  2px;
+:where(:root, [data-theme]) {
+  --ren-spinner-size:   var(--icon-lg);
+  --ren-spinner-width:  2.5px;
   --ren-spinner-color:  var(--color-accent);
-  --ren-spinner-speed:  0.75s;
+  --ren-spinner-speed:  1s;
 }
 
 /* ═══════════════════════════════════════════════
    SKELETON
    ═══════════════════════════════════════════════ */
-.ren-skeleton {
+:where(:root, [data-theme]) {
   --ren-skeleton-bg:      var(--color-fill);
-  --ren-skeleton-shine:   var(--color-surface);
-  --ren-skeleton-radius:  var(--radius-md);
-  --ren-skeleton-speed:   1.5s;
+  --ren-skeleton-shine:   var(--color-fill-hover);
+  --ren-skeleton-radius:  var(--radius-sm);
+  --ren-skeleton-speed:   var(--duration-loop-slow);
 }
 
 /* ═══════════════════════════════════════════════
    SEPARATOR
    ═══════════════════════════════════════════════ */
-.ren-separator {
-  --ren-separator-color:  var(--color-border);
+:where(:root, [data-theme]) {
+  --ren-separator-color:  var(--color-separator);
   --ren-separator-width:  var(--stroke-1);
   --ren-separator-margin: var(--space-4);
 }
@@ -358,7 +355,7 @@
 /* ═══════════════════════════════════════════════
    LINK
    ═══════════════════════════════════════════════ */
-.ren-link {
+:where(:root, [data-theme]) {
   --ren-link-color:       var(--color-text-link);
   --ren-link-hover-color: var(--color-text-link-hover);
   --ren-link-underline:   1px;
@@ -368,7 +365,7 @@
 /* ═══════════════════════════════════════════════
    NAV
    ═══════════════════════════════════════════════ */
-.ren-nav {
+:where(:root, [data-theme]) {
   --ren-nav-height:       3.5rem;
   --ren-nav-bg:           var(--color-surface);
   --ren-nav-border:       var(--color-border);
@@ -381,7 +378,7 @@
 /* ═══════════════════════════════════════════════
    SIDEBAR
    ═══════════════════════════════════════════════ */
-.ren-sidebar {
+:where(:root, [data-theme]) {
   --ren-sidebar-width:         260px;
   --ren-sidebar-collapsed-width: 60px;
   --ren-sidebar-bg:            var(--color-surface-sunken);
@@ -400,7 +397,7 @@
 /* ═══════════════════════════════════════════════
    COMMAND
    ═══════════════════════════════════════════════ */
-.ren-command {
+:where(:root, [data-theme]) {
   --ren-command-width:      min(95vw, 560px);
   --ren-command-max-height: 340px;
   --ren-command-radius:     var(--radius-xl);
@@ -414,8 +411,7 @@
 /* ═══════════════════════════════════════════════
    TABLE
    ═══════════════════════════════════════════════ */
-.ren-table,
-ren-table {
+:where(:root, [data-theme]) {
   --ren-table-header-bg:    var(--color-surface-sunken);
   --ren-table-header-color: var(--color-text-muted);
   --ren-table-header-weight:var(--weight-semibold);
@@ -431,7 +427,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    MENU
    ═══════════════════════════════════════════════ */
-.ren-menu {
+:where(:root, [data-theme]) {
   --ren-menu-width:        200px;
   --ren-menu-padding:      var(--space-1);
   --ren-menu-radius:       var(--radius-lg);
@@ -452,7 +448,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    CALENDAR
    ═══════════════════════════════════════════════ */
-.ren-calendar {
+:where(:root, [data-theme]) {
   --ren-calendar-width:       280px;
   --ren-calendar-day-size:    var(--size-md);
   --ren-calendar-radius:      var(--radius-lg);
@@ -467,7 +463,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    TOAST
    ═══════════════════════════════════════════════ */
-.ren-toast {
+:where(:root, [data-theme]) {
   --ren-toast-width:       360px;
   --ren-toast-padding:     var(--space-4);
   --ren-toast-radius:      var(--radius-lg);
@@ -485,7 +481,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    DROPZONE
    ═══════════════════════════════════════════════ */
-.ren-dropzone {
+:where(:root, [data-theme]) {
   --ren-dropzone-padding:      var(--space-8);
   --ren-dropzone-radius:       var(--radius-lg);
   --ren-dropzone-border-color: var(--color-border-strong);
@@ -499,7 +495,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    EMPTY STATE
    ═══════════════════════════════════════════════ */
-.ren-empty-state {
+:where(:root, [data-theme]) {
   --ren-empty-padding:     var(--space-10);
   --ren-empty-icon-size:   3rem;
   --ren-empty-gap:         var(--space-3);
@@ -511,8 +507,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    COLLAPSIBLE / ACCORDION
    ═══════════════════════════════════════════════ */
-.ren-collapsible,
-.ren-accordion {
+:where(:root, [data-theme]) {
   --ren-collapse-radius:       var(--radius-lg);
   --ren-collapse-border:       var(--color-border);
   --ren-collapse-bg:           var(--color-surface);
@@ -528,7 +523,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    TOOLBAR
    ═══════════════════════════════════════════════ */
-.ren-toolbar {
+:where(:root, [data-theme]) {
   --ren-toolbar-height:      var(--size-lg);
   --ren-toolbar-padding:     var(--space-1);
   --ren-toolbar-radius:      var(--radius-lg);
@@ -543,7 +538,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    COLOR PICKER
    ═══════════════════════════════════════════════ */
-.ren-color-picker {
+:where(:root, [data-theme]) {
   --ren-cp-width:       280px;
   --ren-cp-radius:      var(--radius-lg);
   --ren-cp-bg:          var(--color-surface-overlay);
@@ -556,7 +551,7 @@ ren-table {
 /* ═══════════════════════════════════════════════
    CAROUSEL
    ═══════════════════════════════════════════════ */
-.ren-carousel {
+:where(:root, [data-theme]) {
   --ren-carousel-gap:        var(--space-4);
   --ren-carousel-radius:     var(--radius-lg);
   --ren-carousel-arrow-size: var(--size-lg);
@@ -572,22 +567,22 @@ ren-table {
 /* ═══════════════════════════════════════════════
    KBD
    ═══════════════════════════════════════════════ */
-.ren-kbd {
+:where(:root, [data-theme]) {
   --ren-kbd-bg:          var(--color-surface-sunken);
   --ren-kbd-border:      var(--color-border-strong);
   --ren-kbd-color:       var(--color-text);
-  --ren-kbd-font-size:   var(--caption-sm-size);
+  --ren-kbd-font-size:   var(--caption-size);
   --ren-kbd-font-family: var(--font-mono);
-  --ren-kbd-padding:     var(--space-0-5) var(--space-2);
+  --ren-kbd-padding:     0.1em 0.4em;
   --ren-kbd-radius:      var(--radius-sm);
 }
 
 /* ═══════════════════════════════════════════════
    ICON
    ═══════════════════════════════════════════════ */
-.ren-icon {
-  --ren-icon-size:       var(--size-md);
-  --ren-icon-color:      var(--color-text);
+:where(:root, [data-theme]) {
+  --ren-icon-size:       var(--icon-md);
+  --ren-icon-color:      currentColor;
   --ren-icon-fill:       currentColor;
 }
 

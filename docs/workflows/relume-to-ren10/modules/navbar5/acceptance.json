@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary mega disclosure and mobile toggle reach closed, open, navigation-open, and nested-open states via selector-driven interactions",
+      "automated": true
+    },
+    {
+      "id": "one-tree",
+      "kind": "structure",
+      "description": "Exactly one primary links tree (#rbm-primary-links / ul.ren-nav-links) serves desktop and mobile",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one visible mega chevron (.rbm-chevron); classless summary::after must be neutralized",
+      "automated": true
+    },
+    {
+      "id": "destination-anatomy",
+      "kind": "structure",
+      "description": "Open panel exposes eight destinations with icons, titles, and visible descriptions plus two featured articles",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Solutions summary shares the centerY axis with peer primary links (Product, Pricing) within 2px",
+      "automated": true
+    },
+    {
+      "id": "mobile-rows",
+      "kind": "visual-structure",
+      "description": "Mobile primary rows are full-width and start-aligned without nested-card details chrome",
+      "automated": true
+    },
+    {
+      "id": "overflow-geometry",
+      "kind": "visual-structure",
+      "description": "Desktop panel sits under the bar; mobile panel stays in-flow; no horizontal overflow",
+      "automated": true
+    },
+    {
+      "id": "keyboard-escape",
+      "kind": "behavior",
+      "description": "Summary opens by click/Enter/Space; Escape closes and restores focus to SUMMARY",
+      "automated": true
+    },
+    {
+      "id": "js-disabled-fallback",
+      "kind": "behavior",
+      "description": "With JavaScript disabled on mobile, the single tree and native disclosure destinations remain usable",
+      "automated": true
+    },
+    {
+      "id": "touch-targets",
+      "kind": "behavior",
+      "description": "Visible interactive targets inside [data-rbm-root] meet 44×44 in a touch context",
+      "automated": true
+    },
+    {
+      "id": "reduced-motion",
+      "kind": "behavior",
+      "description": "prefers-reduced-motion disables block-local transitions and animations on panel/chevron/dest/feature",
+      "automated": true
+    },
+    {
+      "id": "axe-wcag",
+      "kind": "behavior",
+      "description": "Mega menu preview passes axe WCAG 2.1 A/AA",
+      "automated": true
+    },
+    {
+      "id": "theme-tokens",
+      "kind": "behavior",
+      "description": "Light and dark surfaces resolve through RenDS semantic tokens",
+      "automated": true
+    },
+    {
+      "id": "quality-helpers",
+      "kind": "structure",
+      "description": "Navigation suite adopts expectSingleVisibleAffordance, expectAligned, expectWidthRatio, expectNoOverflow, and inspectNativeChrome without dropping block-specific assertions",
+      "automated": true
+    },
+    {
+      "id": "render-matrix-10",
+      "kind": "structure",
+      "description": "render-matrix.json declares exactly 10 states with selector actions and expectedMarkers; capture runner writes 10 PNG + 10 JSON under ignored .ren10-workflow/captures/navbar5/",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief and cascade map",
+      "automated": false
+    }
+  ]
+}

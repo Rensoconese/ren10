@@ -1,0 +1,45 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "7edef07a231e9f629257d40f4002c9ed7a117e9e",
+  "captures": {
+    "desktop": "output/playwright/navbar10-final/navbar10/desktop-light-open.png",
+    "tablet": "output/playwright/navbar10-final/navbar10/tablet-light-open.png",
+    "mobile": "output/playwright/navbar10-final/navbar10/mobile-light-nested-open.png",
+    "dark": "output/playwright/navbar10-final/navbar10/desktop-dark-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected the DOM, block CSS cascade, controller, and 11 fresh cache-busted render states after Grok implementation. Desktop shows one aligned trigger and chevron, a narrow five-link column, and a wider two-column region of six horizontal whole-card anchors. Tablet preserves two readable card columns with stacked media. Mobile uses one in-flow navigation tree, one centered close icon, one separator before actions, one-column cards, and no horizontal overflow. Dark mode preserves surface separation. Codex corrected the provisional render-matrix selectors and removed encoded hardcoded colors from the empty demo SVG media before recapturing. Native details chrome is neutralized; cards contain no nested interactive descendants; JavaScript-disabled disclosure remains usable; reduced motion, 44px touch targets, WCAG 2.1 AA, Escape/focus return, outside/link/card close, click pinning, and stable pointer transfer all pass.",
+  "testResults": {
+    "navbar10Focused": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs -g 'navbar10|Navbar Mega Menu Card Grid'",
+      "result": "19 passed, 0 failed"
+    },
+    "navbarFamilyRegression": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs",
+      "result": "108 passed, 0 failed; axe WCAG 2.1 AA checks clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "capture": {
+      "command": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/navbar10/render-matrix.json --module navbar10 --output output/playwright/navbar10-final --repo-root .",
+      "result": "11 PNG and 11 JSON states captured after final corrections"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-mega-menu-card-grid.html",
+  "intentionalDifferences": [
+    "Ren10 keeps one responsive Light DOM navigation tree instead of duplicate desktop/mobile trees",
+    "Ren10 uses the established 48rem navigation shell breakpoint and 64rem horizontal-card band instead of source framework breakpoints",
+    "Native details/summary plus Escape, focus return, outside/destination close, click pinning, and a stable pointer corridor replace the source fake-button trigger",
+    "Each editorial card is one anchor with a non-interactive CTA label instead of an anchor containing a button",
+    "Semantic tokens, RenDS layout primitives, and reduced-motion behavior replace framework utilities and raw timing, color, and elevation values"
+  ]
+}

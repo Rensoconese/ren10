@@ -1,0 +1,22 @@
+{
+  "expected": [
+    {
+      "component": "ren-form",
+      "event": "ren-submit",
+      "bubbles": true,
+      "composed": true,
+      "cancelable": true,
+      "detail": ["values", "form", "waitUntil"]
+    }
+  ],
+  "documented": [
+    {
+      "component": "ren-form",
+      "event": "ren-submit",
+      "bubbles": false,
+      "composed": false,
+      "cancelable": false,
+      "detail": ["formData"]
+    }
+  ]
+}

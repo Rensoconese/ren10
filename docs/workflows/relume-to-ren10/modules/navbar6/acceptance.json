@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary mega disclosure and mobile toggle reach closed, open, navigation-open, and nested-open states via selector-driven interactions on [data-rmf-root]",
+      "automated": true
+    },
+    {
+      "id": "one-tree",
+      "kind": "structure",
+      "description": "Exactly one primary links tree (#rmf-primary-links / ul.ren-nav-links) serves desktop and mobile — no duplicated responsive branches",
+      "automated": true
+    },
+    {
+      "id": "top-level-count",
+      "kind": "structure",
+      "description": "Exactly four direct children of #rmf-primary-links (> li count === 4): three ordinary ren-nav-link destinations plus one mega details/summary trigger",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one visible mega chevron (.rmf-chevron); classless summary::after must be neutralized",
+      "automated": true
+    },
+    {
+      "id": "destination-anatomy",
+      "kind": "structure",
+      "description": "Open panel exposes exactly 3 groups × 4 destinations = 12 .rmf-dest anchors with titles; one .rmf-feature promotional item; one .rmf-view-all see-all control",
+      "automated": true
+    },
+    {
+      "id": "featured-ratio",
+      "kind": "visual-structure",
+      "description": "Featured media (.rmf-feature-media) maintains approximately 16:9 aspect ratio (±0.2) on desktop open state",
+      "automated": true
+    },
+    {
+      "id": "featured-no-nested-control",
+      "kind": "structure",
+      "description": "Featured promo is a single real anchor without nested button or role=button descendants",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Mega summary shares the centerY axis with peer primary links within 2px",
+      "automated": true
+    },
+    {
+      "id": "overflow-geometry",
+      "kind": "visual-structure",
+      "description": "Desktop panel sits under the bar (absolute); mobile panel stays in-flow; no horizontal overflow on html",
+      "automated": true
+    },
+    {
+      "id": "tablet-mega-composition",
+      "kind": "visual-structure",
+      "description": "At 834px (desktop shell, no hamburger): three groups span full mega width with readable destination copy (≥160px text width); featured region stacks below groups as a horizontal media|copy card. At ≥64rem restore groups + constrained right feature panel side-by-side.",
+      "automated": true
+    },
+    {
+      "id": "mobile-rows",
+      "kind": "visual-structure",
+      "description": "Mobile primary rows are full-width and start-aligned without nested-card details chrome",
+      "automated": true
+    },
+    {
+      "id": "keyboard-escape",
+      "kind": "behavior",
+      "description": "Summary opens by click/Enter/Space; Escape closes and restores focus to SUMMARY",
+      "automated": true
+    },
+    {
+      "id": "desktop-pointer-hover",
+      "kind": "behavior",
+      "description": "Desktop (≥48rem) pointer hover opens the mega disclosure; pointer remains open when moving from summary into the panel (stable close region); leaving the disclosure+panel hit region closes the disclosure. Hover is additive to click/Enter/Space, not a replacement.",
+      "automated": true
+    },
+    {
+      "id": "js-disabled-fallback",
+      "kind": "behavior",
+      "description": "With JavaScript disabled on mobile, the single tree, twelve destinations, featured item, and see-all remain usable via native disclosure",
+      "automated": true
+    },
+    {
+      "id": "touch-targets",
+      "kind": "behavior",
+      "description": "Visible interactive targets inside [data-rmf-root] meet 44×44 in a touch context",
+      "automated": true
+    },
+    {
+      "id": "reduced-motion",
+      "kind": "behavior",
+      "description": "prefers-reduced-motion disables block-local transitions and animations on panel/chevron/dest/feature",
+      "automated": true
+    },
+    {
+      "id": "axe-wcag",
+      "kind": "behavior",
+      "description": "Featured mega menu preview passes axe WCAG 2.1 A/AA",
+      "automated": true
+    },
+    {
+      "id": "theme-tokens",
+      "kind": "behavior",
+      "description": "Light and dark surfaces resolve through RenDS semantic tokens",
+      "automated": true
+    },
+    {
+      "id": "quality-helpers",
+      "kind": "structure",
+      "description": "Featured suite adopts expectSingleVisibleAffordance, expectAligned, expectWidthRatio, expectNoOverflow, and inspectNativeChrome without dropping block-specific assertions",
+      "automated": true
+    },
+    {
+      "id": "render-matrix-10",
+      "kind": "structure",
+      "description": "render-matrix.json declares 10+ states with selector actions (including hover for desktop-light-hover-open) and expectedMarkers; tablet-light-open at 834px is a desktop-shell mega open without .ren-nav-toggle (48rem breakpoint honesty)",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief and cascade map",
+      "automated": false
+    }
+  ]
+}

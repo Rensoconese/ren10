@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "referenceWorkspace": {
+    "sources": [
+      {
+        "id": "github-repo:Rensoconese/ren10:v0.10.0",
+        "type": "github-repo",
+        "repo": {
+          "org": "Rensoconese",
+          "name": "ren10"
+        },
+        "ref": "v0.10.0",
+        "mountPath": "/vercel/share/v0-reference-workspace-sources/Rensoconese/ren10/v0.10.0"
+      }
+    ]
+  },
+  "starter": {
+    "source": "skill-directory",
+    "path": "assets/starter"
+  }
+}

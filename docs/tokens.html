@@ -55,6 +55,15 @@
     /* Live preview panel */
     .dx-preview { padding: var(--space-6); border: 1px dashed var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); margin: var(--space-4) 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
 
+    /* Accessible component-token example using a contrast-tuned semantic pair. */
+    .brand-ai {
+      --ren-btn-bg: var(--color-ai);
+      --ren-btn-bg-hover: var(--color-ai-hover);
+      --ren-btn-bg-active: color-mix(in oklch, var(--color-ai), var(--color-ai-hover) 50%);
+      --ren-btn-color: var(--color-on-ai);
+      --ren-btn-border-color: var(--color-ai);
+    }
+
     /* Callout (used for the text-faint policy note) */
     .dx-callout { border-left: 3px solid var(--color-warning); background: color-mix(in srgb, var(--color-warning) 8%, var(--color-surface)); padding: var(--space-4) var(--space-5); border-radius: 0 var(--radius-md) var(--radius-md) 0; margin: var(--space-4) 0; max-width: 72ch; }
     .dx-callout-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-warning-active); margin: 0 0 var(--space-2); }
@@ -75,7 +84,7 @@
       <a href="index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="index.html" aria-current="page">Docs</a>
@@ -217,7 +226,7 @@
           <div class="dx-tier-num">Tier 3 · Component</div>
           <div class="dx-tier-name">Component</div>
           <p class="dx-tier-desc">Per-component override hooks. Default to semantic tokens. This is how you theme without fighting specificity.</p>
-          <code>--ren-btn-bg<br>--ren-card-radius<br>--ren-field-border</code>
+          <code>--ren-btn-bg<br>--ren-card-radius<br>--ren-field-border-color</code>
         </div>
       </div>
 
@@ -538,27 +547,32 @@
       <p>Each component exposes <code>--ren-&lt;component&gt;-*</code> custom properties. These are the theming hooks. You never need to fight specificity or use <code>!important</code> — just override the hook on any ancestor.</p>
 
       <h3>Example: Button</h3>
-      <div class="dx-pre" tabindex="0"><code>/* Defaults (in ren-button.css) */
-.ren-btn {
-  --ren-btn-bg: var(--color-fill);
-  --ren-btn-color: var(--color-text);
-  --ren-btn-border: var(--color-border);
+      <div class="dx-pre" tabindex="0"><code>/* Defaults (in tokens/component/tokens.css) */
+:where(:root, [data-theme]) {
+  --ren-btn-bg: var(--color-accent);
+  --ren-btn-bg-hover: var(--color-accent-hover);
+  --ren-btn-bg-active: var(--color-accent-active);
+  --ren-btn-color: var(--color-on-accent);
+  --ren-btn-border-color: var(--color-accent);
   --ren-btn-radius: var(--radius-md);
   --ren-btn-padding-x: var(--space-4);
   --ren-btn-padding-y: var(--space-2);
 }
 
 .ren-btn-primary {
-  --ren-btn-bg: var(--color-accent);
-  --ren-btn-color: var(--color-on-accent);
-  --ren-btn-border: var(--color-accent);
+  background-color: var(--ren-btn-bg);
+  color: var(--ren-btn-color);
+  border-color: var(--ren-btn-border-color);
 }</code></div>
 
       <h3>Overriding</h3>
       <p>Scoped to a theme class:</p>
-      <div class="dx-pre" tabindex="0"><code>.brand-orange .ren-btn-primary {
-  --ren-btn-bg: hotpink;
-  --ren-btn-border: hotpink;
+      <div class="dx-pre" tabindex="0"><code>.brand-ai {
+  --ren-btn-bg: var(--color-ai);
+  --ren-btn-bg-hover: var(--color-ai-hover);
+  --ren-btn-bg-active: color-mix(in oklch, var(--color-ai), var(--color-ai-hover) 50%);
+  --ren-btn-color: var(--color-on-ai);
+  --ren-btn-border-color: var(--color-ai);
 }</code></div>
 
       <p>Or globally on <code>:root</code>:</p>
@@ -569,7 +583,7 @@
       <h3>Live preview</h3>
       <div class="dx-preview">
         <button type="button" class="ren-btn ren-btn-primary">Default</button>
-        <button type="button" class="ren-btn ren-btn-primary" style="--ren-btn-bg: hotpink; --ren-btn-border: hotpink;">Hotpink bg</button>
+        <span class="brand-ai"><button type="button" class="ren-btn ren-btn-primary">AI semantic pair</button></span>
         <button type="button" class="ren-btn ren-btn-primary" style="--ren-btn-radius: var(--radius-full);">Pill radius</button>
       </div>
       <p>Every preview above is a real <code>&lt;button class="ren-btn ren-btn-primary"&gt;</code> — the only differences are inline token overrides on the element.</p>

@@ -50,7 +50,7 @@ canonicalImports:
     - "The component does not define --ren-combobox-* tokens; theme through semantic tokens or scope semantic token overrides."
 
 requiredMarkup:
-  - "Root <div class=\"ren-combobox\"> wraps an <input class=\"ren-combobox-input\"> and a sibling <div class=\"ren-combobox-list\" role=\"listbox\">."
+  - "Root <ren-combobox> wraps consumer-authored .ren-combobox-item options; its JS generates the input, listbox, hidden input, and live region."
   - "Each option is <div class=\"ren-combobox-item\" role=\"option\"> with aria-selected toggled by the component and data-highlighted reflecting keyboard focus."
   - "Use .ren-combobox-item-label and .ren-combobox-item-description inside items for two-line content; do not nest extra layout divs."
   - "Empty state lives in <div class=\"ren-combobox-empty\" hidden> and the loading state in <div class=\"ren-combobox-loading\" hidden>."
@@ -96,7 +96,11 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-combobox">...</div>
+<ren-combobox name="country" placeholder="Search a country">
+  <div class="ren-combobox-item" data-value="ar">Argentina</div>
+  <div class="ren-combobox-item" data-value="uy">Uruguay</div>
+</ren-combobox>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

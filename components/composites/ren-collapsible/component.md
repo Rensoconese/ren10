@@ -92,7 +92,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-collapsible">...</div>
+<details class="ren-collapsible"><summary>Advanced settings</summary><div class="ren-collapsible-content">Additional controls</div></details>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

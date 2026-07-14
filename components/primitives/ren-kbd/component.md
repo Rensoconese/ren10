@@ -86,7 +86,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-kbd">...</div>
+<kbd class="ren-kbd">⌘</kbd>+<kbd class="ren-kbd">K</kbd>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

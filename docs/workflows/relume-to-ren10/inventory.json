@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "families": [
+    {
+      "id": "navbars",
+      "sourceCategory": "navbars",
+      "status": "in_progress",
+      "baseline": "navbar5",
+      "modules": [
+        {
+          "id": "navbar5",
+          "status": "accepted",
+          "packet": "navbar5",
+          "ren10Block": "templates/blocks/nav-mega-menu.html"
+        },
+        {
+          "id": "navbar6",
+          "status": "accepted",
+          "packet": "navbar6",
+          "ren10Block": "templates/blocks/nav-mega-menu-featured.html"
+        },
+        {
+          "id": "navbar7",
+          "status": "accepted",
+          "packet": "navbar7",
+          "ren10Block": "templates/blocks/nav-mega-menu-icons.html"
+        },
+        {
+          "id": "navbar8",
+          "status": "accepted",
+          "packet": "navbar8",
+          "ren10Block": "templates/blocks/nav-mega-menu-link-rail.html"
+        },
+        {
+          "id": "navbar9",
+          "status": "accepted",
+          "packet": "navbar9",
+          "ren10Block": "templates/blocks/nav-mega-menu-footer.html"
+        },
+        {
+          "id": "navbar10",
+          "status": "accepted",
+          "packet": "navbar10",
+          "ren10Block": "templates/blocks/nav-mega-menu-card-grid.html"
+        }
+      ]
+    }
+  ]
+}

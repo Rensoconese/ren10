@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Pre-rebuild chrome defects that rebuild commit 73d1416 and subsequent visual tests guard against (double chevron, classless details chrome, misaligned Solutions trigger, sparse category rows, stacked featured articles, mobile nested-card appearance). Exact pre-rebuild Playwright transcript is not retained as a committed artifact."
+}

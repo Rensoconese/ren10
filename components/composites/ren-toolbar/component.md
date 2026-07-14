@@ -94,7 +94,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-toolbar">...</div>
+<div class="ren-toolbar" role="toolbar" aria-label="Formatting"><button class="ren-toolbar-item" type="button" tabindex="0">Bold</button><div class="ren-toolbar-separator" role="separator"></div><button class="ren-toolbar-item" type="button" tabindex="-1">Italic</button></div>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

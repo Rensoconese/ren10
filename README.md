@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.9.3**
+Current version: **0.10.0**
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
@@ -148,6 +148,13 @@ import { generateTheme } from 'ren10/themes/theme-generator.js';
 const { css, report } = generateTheme('#5b6cff', { level: 'AA' });
 document.head.insertAdjacentHTML('beforeend', `<style>${css}</style>`);
 ```
+
+For higher-legibility interfaces, opt into the shipped AAA scope with
+`data-contrast="aaa"` on the root (or a subtree). It sets normal text and
+solid accent pairs to at least 7:1 in both color schemes. Custom elements are
+progressive enhancements and remain visible without JavaScript; use the
+explicit `[data-ren-pending]` attribute only when an application deliberately
+needs to hide content while an upgrade is pending.
 
 There's also an interactive UI at `themes/preview.html` you can open locally to dial in the palette before committing the generated CSS.
 

@@ -9,6 +9,7 @@
  * Each entry in evals/prompts.json declares:
  *   - expectedComponents:    substrings that must appear (e.g. "ren-card").
  *   - expectedAttributes:    substrings that must appear (e.g. "aria-current=\"page\"").
+ *   - expectedText:          general evidence required in HTML or prose responses.
  *   - forbiddenPatterns:     regex strings that must NOT match.
  *
  * The grader prints pass/fail and exits non-zero on any failure.
@@ -41,7 +42,7 @@ async function loadPrompts() {
   return JSON.parse(raw);
 }
 
-async function gradeOne(entry, candidatePath, label) {
+async function gradeOne(entry, candidatePath, label, { expectFailure = false } = {}) {
   const candidateAbs = resolve(candidatePath);
   let content;
   try {
@@ -57,16 +58,26 @@ async function gradeOne(entry, candidatePath, label) {
   for (const attr of entry.expectedAttributes ?? []) {
     if (!check(content, attr)) failures.push(`missing attribute: ${attr}`);
   }
+  for (const expected of entry.expectedText ?? []) {
+    if (!check(content, expected)) failures.push(`missing required evidence: ${expected}`);
+  }
   for (const forbidden of entry.forbiddenPatterns ?? []) {
     const re = new RegExp(forbidden, 'i');
     const m = content.match(re);
     if (m) failures.push(`forbidden pattern hit: ${forbidden} → ${m[0]}`);
   }
 
-  const status = failures.length === 0 ? 'PASS' : 'FAIL';
+  const accepted = failures.length === 0;
+  const passed = expectFailure ? !accepted : accepted;
+  const status = passed ? 'PASS' : 'FAIL';
   console.log(`[${status}] ${entry.id}  (${label})`);
-  for (const f of failures) console.log(`  - ${f}`);
-  return failures.length === 0;
+  if (!expectFailure || accepted) {
+    for (const f of failures) console.log(`  - ${f}`);
+  }
+  if (expectFailure && !accepted) {
+    console.log(`  - rejected negative fixture with ${failures.length} rule violation(s)`);
+  }
+  return passed;
 }
 
 function runRegressionChecks() {
@@ -94,6 +105,16 @@ async function main() {
       const refAbs = resolve(__dirname, '..', ref);
       const passed = await gradeOne(entry, refAbs, ref);
       if (!passed) allPassed = false;
+      if (entry.inputFixture) {
+        const inputAbs = resolve(__dirname, '..', entry.inputFixture);
+        const rejected = await gradeOne(
+          entry,
+          inputAbs,
+          `${entry.inputFixture} — negative fixture`,
+          { expectFailure: true },
+        );
+        if (!rejected) allPassed = false;
+      }
     }
     // Source-level regression checks (JS wiring that HTML evals cannot reach).
     const regressionPassed = await runRegressionChecks();

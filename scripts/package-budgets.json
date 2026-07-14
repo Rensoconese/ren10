@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "capturedFor": "ren10@0.10.0",
+  "capturedAt": "2026-07-14",
+  "capturedFrom": "validated ren10@0.10.0 release candidate with v0 adapter and reference app",
+  "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
+  "metrics": {
+    "unpackedBytes": { "baseline": 19938685, "allowedDelta": 0, "target": 19938685 },
+    "tarballBytes": { "baseline": 3902688, "allowedDelta": 0, "target": 3902688 },
+    "fullCssBytes": { "baseline": 511642, "allowedDelta": 0, "target": 511642 },
+    "minCssBytes": { "baseline": 291032, "allowedDelta": 0, "target": 291032 },
+    "knowledgeJsonBytes": { "baseline": 4186057, "allowedDelta": 0, "target": 4186057 },
+    "knowledgeSqliteBytes": { "baseline": 9330688, "allowedDelta": 0, "target": 9330688 },
+    "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
+    "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
+    "cliRssBytes": { "baseline": 45334528, "allowedDelta": 8388608, "target": 53723136 }
+  },
+  "rationale": {
+    "package": "0.10.0 release-candidate npm pack measurements; zero growth allowed.",
+    "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
+    "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
+    "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."
+  }
+}

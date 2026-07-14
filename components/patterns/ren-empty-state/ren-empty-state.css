@@ -108,3 +108,8 @@
   border-radius: var(--radius-lg);
   margin: var(--space-4);
 }
+/* Appearance API bridge */
+.ren-empty-state { max-inline-size: var(--ren-empty-max-width, 24rem); padding: var(--ren-empty-padding, var(--space-10)); gap: var(--ren-empty-gap, var(--space-3)); }
+.ren-empty-state .ren-empty-state-icon { inline-size: var(--ren-empty-icon-size, 3rem); block-size: var(--ren-empty-icon-size, 3rem); }
+.ren-empty-state h1, .ren-empty-state h2, .ren-empty-state h3 { font-size: var(--ren-empty-title-size, var(--title-sm-size)); }
+.ren-empty-state p { color: var(--ren-empty-desc-color, var(--color-text-muted)); }

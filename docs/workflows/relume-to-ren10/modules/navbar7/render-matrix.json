@@ -1,0 +1,256 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-mega-menu-icons.html",
+  "root": "[data-rmi-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "hover", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "desktop-dark-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    },
+    {
+      "id": "tablet-light-open",
+      "viewport": { "width": 834, "height": 1112 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmi-disclosure > summary" }
+      ],
+      "notes": "Desktop shell at 834px (no .ren-nav-toggle). Intentional mid-width mega adaptation: two-column destination groups with visible descriptions and horizontal footer (not cramped 4-up). Wide desktop four-column layout resumes at ≥64rem.",
+      "expectedMarkers": {
+        ".rmi-dest": 16,
+        ".rmi-dest-desc": 16,
+        ".rmi-dest-icon": 16,
+        ".rmi-chevron": 1,
+        ".rmi-group": 4,
+        ".rmi-footer": 1,
+        ".rmi-footer-prompt": 1,
+        ".rmi-footer-link": 1,
+        ".rmi-footer-action": 2
+      }
+    }
+  ]
+}

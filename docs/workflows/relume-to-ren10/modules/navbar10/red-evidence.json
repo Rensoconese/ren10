@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Phase A RED was recorded before production edits. Composer added the Navbar 10 suite to tests/components/blocks-navigation.spec.cjs and Codex ran it while templates/blocks/nav-mega-menu-card-grid.html was absent. The run produced 19 expected failures: shared toggle/corridor cases could not find the block controls and all dedicated cases reported HTTP 404/missing block anatomy. Production implementation began only after this result."
+}

@@ -46,6 +46,12 @@ While CI runs, expect:
 - **Package smoke**: includes `npm run agent:check`, which validates the
   agent CLI JSON surface, `ren10 doctor`, evals, knowledge graph/package
   files, and the versioned skill.
+- **Local portability**: `npm test` delegates to `npm run test:portable` and
+  excludes platform-specific screenshots. CI/release run the authoritative
+  `npm run test:visual:linux` gate separately.
+- **Release/package gates**: installed-tarball smoke, versioned budgets,
+  runtime/full moderate audits, release metadata, and supply-chain checks are
+  blocking in CI and release verification.
 
 ---
 

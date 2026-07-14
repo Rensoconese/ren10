@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar5",
+  "blockSlug": "nav-mega-menu",
+  "blockPath": "templates/blocks/nav-mega-menu.html",
+  "stage": "accepted",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu.html",
+    "templates/blocks/index.html",
+    "tests/components/blocks-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
+  }
+}

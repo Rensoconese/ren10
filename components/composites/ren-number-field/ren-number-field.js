@@ -86,6 +86,10 @@ export class RenNumberField extends HTMLElement {
       this.appendChild(this.incrementBtn);
     }
 
+    // Steppers are controls for the number input, never form submitters.
+    this.decrementBtn.type = 'button';
+    this.incrementBtn.type = 'button';
+
     /* ═══ SET INITIAL VALUES ═══ */
     this.input.value = this.value.toString();
     this.input.min = this.min.toString();

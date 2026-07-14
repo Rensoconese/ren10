@@ -60,7 +60,7 @@
   width: 1.25rem;   /* 20px */
   height: 1.25rem;
   flex-shrink: 0;
-  border: 2px solid var(--color-border-strong);
+  border: 2px solid var(--color-border-interactive);
   border-radius: var(--radius-full);
   background-color: transparent;
   transition:

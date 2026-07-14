@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-mega-menu-link-rail.html",
+  "root": "[data-rml-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "hover", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "desktop-dark-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    },
+    {
+      "id": "tablet-light-open",
+      "viewport": { "width": 834, "height": 1600 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rml-disclosure > summary" }
+      ],
+      "notes": "Desktop shell at 834px (no .ren-nav-toggle). The taller capture viewport contains the complete expanded panel without full-page resize artifacts. Intentional mid-width mega adaptation: readable groups with visible descriptions and distinct contrast rail (not cramped 3-up + edge-rail). Wide desktop three-column + edge-rail layout resumes at ≥64rem.",
+      "expectedMarkers": {
+        ".rml-dest": 12,
+        ".rml-dest-desc": 12,
+        ".rml-dest-icon": 12,
+        ".rml-chevron": 1,
+        ".rml-group": 3,
+        ".rml-rail": 1,
+        ".rml-rail-heading": 1,
+        ".rml-rail-link": 5
+      }
+    }
+  ]
+}

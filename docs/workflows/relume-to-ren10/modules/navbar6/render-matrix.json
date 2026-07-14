@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-mega-menu-featured.html",
+  "root": "[data-rmf-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "hover", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "desktop-dark-closed",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    },
+    {
+      "id": "tablet-light-open",
+      "viewport": { "width": 834, "height": 1112 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".rmf-disclosure > summary" }
+      ],
+      "notes": "Desktop shell at 834px (no .ren-nav-toggle). Intentional mid-width mega adaptation: three full-width destination groups with featured horizontal card stacked below (not 3+right-rail). Wide desktop side-by-side resumes at ≥64rem.",
+      "expectedMarkers": {
+        ".rmf-dest": 12,
+        ".rmf-dest-desc": 12,
+        ".rmf-chevron": 1,
+        ".rmf-feature": 1,
+        ".rmf-view-all": 1,
+        ".rmf-group": 3
+      }
+    }
+  ]
+}

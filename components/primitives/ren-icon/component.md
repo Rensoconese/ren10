@@ -89,7 +89,10 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-icon">...</div>
+<span class="ren-icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" focusable="false"><path d="M5 12h14"></path></svg>
+</span>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

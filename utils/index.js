@@ -25,6 +25,7 @@ export {
 
 // Keyboard navigation (roving tabindex)
 export { createKeyboardNav } from './keyboard-nav.js';
+export { configureRenDebug, renDebug, isRenDebugEnabled } from './debug.js';
 
 // Dismissable layers (click outside + Escape)
 export {
@@ -65,3 +66,6 @@ export {
   motionUnmount,
   applyStagger,
 } from './motion.js';
+
+// Civil-date parsing and formatting (timezone-safe YYYY-MM-DD values)
+export { parseLocalDate, formatLocalDate, clampLocalDate } from './local-date.js';

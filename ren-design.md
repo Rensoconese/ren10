@@ -2,7 +2,7 @@
 # ────────────────────────────────────────────────────────────
 # RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.9.2 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.10.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
@@ -17,7 +17,7 @@
 
 system:
   name: RenDS
-  version: 0.9.2
+  version: 0.10.0
   package: ren10
   license: MIT
   repo: https://github.com/Rensoconese/ren10
@@ -963,6 +963,16 @@ every strong-variant and text-muted pair to WCAG AAA (≥7:1 for small text,
 tokens — no component changes. Use AAA when targeting audiences with low
 vision or when a client spec demands it; the system has been regression
 tested under AAA with the `smoke-create-generator` script.
+
+The shipped `[data-contrast="aaa"]` scope also sets normal foreground,
+surface, and on-accent pairs to a computed contrast of at least 7:1 in light
+and dark color schemes. It is intentionally ordered after named theme rules,
+so the opt-in wins when both attributes are present.
+
+Custom elements are progressive enhancements: server-rendered light-DOM
+content is visible before registration and remains usable without JavaScript.
+Applications may opt into a temporary hidden state with `[data-ren-pending]`;
+RenDS does not hide every `:not(:defined)` custom element globally.
 
 ---
 

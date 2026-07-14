@@ -50,7 +50,7 @@ canonicalImports:
 requiredMarkup:
   - "Use <ren-number-field min=\"…\" max=\"…\" step=\"…\" value=\"…\"> as the host so attributes wire min/max/step on the inner input."
   - "Inner input is <input type=\"number\" class=\"ren-number-field-input\"> — keep type=\"number\" so mobile keyboards switch to digits."
-  - "Decrement / increment must be real <button class=\"ren-number-field-decrement\"> / <button class=\"ren-number-field-increment\"> with aria-label=\"Decrease\" / \"Increase\" (the component fills these if missing)."
+  - "Decrement / increment must be real type=\"button\" steppers with class=\"ren-number-field-decrement\" / class=\"ren-number-field-increment\" and aria-label=\"Decrease\" / \"Increase\" (the component fills these if missing)."
   - "Validation state goes on the wrapper as [data-invalid] or [data-valid]; the inner focus ring color reads from --color-danger / --color-success."
   - "Size variants are .ren-number-field-sm and .ren-number-field-lg on the wrapper; do not size buttons or input independently."
 
@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-number-field">...</div>
+<ren-number-field min="0" max="10" step="1" value="2"><button class="ren-number-field-decrement" type="button" aria-label="Decrease">−</button><input class="ren-number-field-input" type="number" aria-label="Quantity"><button class="ren-number-field-increment" type="button" aria-label="Increase">+</button></ren-number-field>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

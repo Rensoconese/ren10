@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Mega Menu Card Grid Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS card-grid mega-menu navbar block built with ren-nav, native details disclosure, ren-with-sidebar, ren-grid-2, ren-frame, and ren-card.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rmcg-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rmcg-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmcg-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rmcg-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rmcg-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    .rmcg-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rmcg-preview .ren-nav-brand,
+    .rmcg-preview .ren-nav-link,
+    .rmcg-preview .ren-nav-actions .ren-btn,
+    .rmcg-preview .rmcg-mega-link,
+    .rmcg-preview a.rmcg-card {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rmcg-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Native details: neutralize classless card chrome, marker, divider, pseudo-chevron. */
+    .rmcg-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rmcg-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rmcg-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+
+    .rmcg-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rmcg-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rmcg-disclosure > summary::after,
+    .rmcg-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rmcg-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rmcg-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcg-disclosure[open] > summary .rmcg-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rmcg-panel {
+      padding: 0;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rmcg-panel-inner {
+      --center-padding: 0;
+      max-width: var(--width-7xl);
+      margin-inline: auto;
+      padding: var(--space-5) var(--space-6);
+    }
+
+    /* Narrow five-link column + wide card region. */
+    .rmcg-layout.ren-with-sidebar {
+      --sidebar-width: 15rem;
+      --sidebar-content-min: 58%;
+      --sidebar-gap: var(--space-6);
+      align-items: start;
+    }
+
+    .rmcg-link-col {
+      min-width: 0;
+      max-width: 15rem;
+    }
+
+    .rmcg-group-heading {
+      margin: 0 0 var(--space-3);
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .rmcg-link-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rmcg-mega-link {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcg-mega-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rmcg-mega-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmcg-card-grid.ren-grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, var(--space-4));
+      min-width: 0;
+      width: 100%;
+    }
+
+    a.rmcg-card.ren-card {
+      --grid-gap: 0;
+      grid-template-columns: minmax(0, 1fr);
+      min-width: 0;
+      min-height: var(--touch-min);
+      color: inherit;
+      text-decoration: none;
+      transition:
+        box-shadow var(--duration-state) var(--ease-state-change),
+        border-color var(--duration-state) var(--ease-state-change),
+        transform var(--duration-state) var(--ease-state-change);
+    }
+
+    a.rmcg-card.ren-card:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-md);
+    }
+
+    a.rmcg-card.ren-card:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /* ~3:2 cover media via ren-frame. */
+    .rmcg-card-media.ren-frame {
+      --frame-ratio: 3 / 2;
+      aspect-ratio: 3 / 2;
+      width: 100%;
+      background:
+        linear-gradient(
+          135deg,
+          var(--color-surface-sunken),
+          color-mix(in srgb, var(--color-accent) 22%, var(--color-surface))
+        );
+      transition: opacity var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcg-card-media.ren-frame > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .rmcg-card:nth-child(2) .rmcg-card-media {
+      background:
+        linear-gradient(
+          145deg,
+          color-mix(in srgb, var(--color-info) 18%, var(--color-surface)),
+          var(--color-surface-sunken)
+        );
+    }
+
+    .rmcg-card:nth-child(3) .rmcg-card-media {
+      background:
+        linear-gradient(
+          160deg,
+          color-mix(in srgb, var(--color-success) 16%, var(--color-surface)),
+          var(--color-surface-sunken)
+        );
+    }
+
+    .rmcg-card:nth-child(4) .rmcg-card-media {
+      background:
+        linear-gradient(
+          125deg,
+          color-mix(in srgb, var(--color-warning) 18%, var(--color-surface)),
+          var(--color-surface-sunken)
+        );
+    }
+
+    .rmcg-card:nth-child(5) .rmcg-card-media {
+      background:
+        linear-gradient(
+          150deg,
+          color-mix(in srgb, var(--color-accent) 14%, var(--color-surface-raised)),
+          var(--color-surface-sunken)
+        );
+    }
+
+    .rmcg-card:nth-child(6) .rmcg-card-media {
+      background:
+        linear-gradient(
+          170deg,
+          var(--color-fill),
+          color-mix(in srgb, var(--color-accent) 20%, var(--color-surface))
+        );
+    }
+
+    .rmcg-card-body {
+      --stack-gap: var(--space-2);
+      padding: var(--space-3) var(--space-4) var(--space-4);
+      min-width: 0;
+    }
+
+    .rmcg-card-title {
+      margin: 0;
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      line-height: 1.25;
+      color: var(--color-text);
+    }
+
+    .rmcg-card-desc {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+    }
+
+    .rmcg-card-cta {
+      display: inline-block;
+      margin-block-start: var(--space-1);
+      color: var(--color-accent);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    a.rmcg-card:hover .rmcg-card-title {
+      color: var(--color-accent);
+    }
+
+    .rmcg-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rmcg-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmcg-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Seam-free shell boundary: mobile ends below 48rem; desktop mega chrome
+     * and JS DESKTOP_MQ start at 48rem.
+     */
+    @media (min-width: 48rem) {
+      .rmcg-disclosure {
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rmcg-panel {
+        position: absolute;
+        inset-inline: 0;
+        top: 100%;
+        z-index: var(--ren-z-sticky);
+        box-shadow: var(--shadow-lg);
+        animation: rmcg-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+
+      /* Seam bridge between bar and panel (lateral corridor is JS-assisted). */
+      .rmcg-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+
+      .rmcg-link-col {
+        flex-grow: 0;
+      }
+    }
+
+    /* Wide desktop: horizontal media/copy tracks (~0.5fr / 1fr). */
+    @media (min-width: 64rem) {
+      a.rmcg-card.ren-card {
+        grid-template-columns: minmax(0, 0.5fr) minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .rmcg-card-media.ren-frame {
+        height: auto;
+        max-width: none;
+        align-self: start;
+      }
+
+      .rmcg-card-body {
+        align-self: stretch;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rmcg-preview .ren-nav {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .rmcg-preview .ren-nav-brand {
+        order: 1;
+      }
+
+      .rmcg-preview .ren-nav-toggle {
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .rmcg-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .rmcg-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rmcg-preview .ren-nav-links .ren-nav-link,
+      .rmcg-preview .rmcg-disclosure,
+      .rmcg-preview .rmcg-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rmcg-preview .rmcg-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+
+      .rmcg-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        width: 100%;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmcg-preview .ren-nav[data-open] .ren-nav-actions,
+      .rmcg-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .rmcg-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .rmcg-panel {
+        width: 100%;
+        position: static;
+        border-block-end: none;
+        background: transparent;
+      }
+
+      .rmcg-panel-inner {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .rmcg-layout.ren-with-sidebar {
+        --sidebar-width: 100%;
+        --sidebar-content-min: 100%;
+        --sidebar-gap: var(--space-4);
+      }
+
+      .rmcg-link-col {
+        max-width: none;
+        width: 100%;
+        flex-basis: 100%;
+      }
+
+      .rmcg-card-grid.ren-grid-2 {
+        grid-template-columns: 1fr;
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+
+    /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
+    @media (max-width: 47.999rem) {
+      .rmcg-preview ren-nav:not(:defined) .ren-nav {
+        flex-wrap: wrap;
+      }
+
+      .rmcg-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rmcg-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+
+      .rmcg-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-inline-start: 0;
+        order: 4;
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmcg-preview ren-nav:not(:defined) .ren-nav-brand {
+        order: 1;
+      }
+    }
+
+    @keyframes rmcg-panel-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rmcg-chevron,
+      .rmcg-mega-link,
+      .rmcg-panel,
+      a.rmcg-card,
+      .rmcg-card-media {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell">
+    <header class="rmcg-page-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Mega Menu Card Grid</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Mega Menu Card Grid</h1>
+      <p class="lede">
+        A single navigation tree with a native mega-menu disclosure: a narrow
+        five-link column beside a two-column grid of six whole-card anchors.
+        Built with <code>ren-nav</code>, <code>ren-with-sidebar</code>,
+        <code>ren-grid-2</code>, <code>ren-frame</code>, and progressive
+        enhancement — no nested buttons, second mobile tree, or framework code.
+      </p>
+    </header>
+
+    <section class="rmcg-preview" data-rmcg-root aria-label="Navbar mega menu card grid preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row" href="#home">
+            <span class="rmcg-brand-mark ren-row" aria-hidden="true">N</span>
+            <span>Northline</span>
+          </a>
+
+          <ul id="rmcg-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <details class="rmcg-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Explore
+                  <span class="rmcg-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rmcg-panel">
+                  <div class="rmcg-panel-inner">
+                    <div class="rmcg-layout ren-with-sidebar">
+                      <div class="rmcg-link-col">
+                        <h3 class="rmcg-group-heading" id="rmcg-group-topics">Topics</h3>
+                        <ul class="rmcg-link-list ren-stack-sm" aria-labelledby="rmcg-group-topics">
+                          <li>
+                            <a class="rmcg-mega-link ren-row" href="#topic-guides">Guides</a>
+                          </li>
+                          <li>
+                            <a class="rmcg-mega-link ren-row" href="#topic-templates">Templates</a>
+                          </li>
+                          <li>
+                            <a class="rmcg-mega-link ren-row" href="#topic-playbooks">Playbooks</a>
+                          </li>
+                          <li>
+                            <a class="rmcg-mega-link ren-row" href="#topic-releases">Releases</a>
+                          </li>
+                          <li>
+                            <a class="rmcg-mega-link ren-row" href="#topic-community">Community</a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="rmcg-card-grid ren-grid ren-grid-2">
+                        <a class="rmcg-card ren-card ren-card-interactive ren-grid" href="#card-workspace">
+                          <div class="rmcg-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcg-card-body ren-stack-xs">
+                            <h3 class="rmcg-card-title">Workspace kits</h3>
+                            <p class="rmcg-card-desc">Compose shared boards for every team lane.</p>
+                            <span class="rmcg-card-cta">Open kit</span>
+                          </div>
+                        </a>
+
+                        <a class="rmcg-card ren-card ren-card-interactive ren-grid" href="#card-signals">
+                          <div class="rmcg-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcg-card-body ren-stack-xs">
+                            <h3 class="rmcg-card-title">Signal maps</h3>
+                            <p class="rmcg-card-desc">Route work when product signals change.</p>
+                            <span class="rmcg-card-cta">View map</span>
+                          </div>
+                        </a>
+
+                        <a class="rmcg-card ren-card ren-card-interactive ren-grid" href="#card-handoffs">
+                          <div class="rmcg-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcg-card-body ren-stack-xs">
+                            <h3 class="rmcg-card-title">Handoff trails</h3>
+                            <p class="rmcg-card-desc">Keep design and eng reviews in one place.</p>
+                            <span class="rmcg-card-cta">See trails</span>
+                          </div>
+                        </a>
+
+                        <a class="rmcg-card ren-card ren-card-interactive ren-grid" href="#card-launch">
+                          <div class="rmcg-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcg-card-body ren-stack-xs">
+                            <h3 class="rmcg-card-title">Launch checklists</h3>
+                            <p class="rmcg-card-desc">Ship with staged gates and clear owners.</p>
+                            <span class="rmcg-card-cta">Start checklist</span>
+                          </div>
+                        </a>
+
+                        <a class="rmcg-card ren-card ren-card-interactive ren-grid" href="#card-insights">
+                          <div class="rmcg-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcg-card-body ren-stack-xs">
+                            <h3 class="rmcg-card-title">Insight digests</h3>
+                            <p class="rmcg-card-desc">Weekly themes across sites and seasons.</p>
+                            <span class="rmcg-card-cta">Read digest</span>
+                          </div>
+                        </a>
+
+                        <a class="rmcg-card ren-card ren-card-interactive ren-grid" href="#card-academy">
+                          <div class="rmcg-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcg-card-body ren-stack-xs">
+                            <h3 class="rmcg-card-title">Academy paths</h3>
+                            <p class="rmcg-card-desc">Role-based learning for new teammates.</p>
+                            <span class="rmcg-card-cta">Browse paths</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#docs">Docs</a>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-ghost" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rmcg-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rmcg-hero ren-stack">
+        <h2>Stories that fit the grid.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the five-link column,
+          six editorial cards, and full-width mega panel stay easy to judge while
+          you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local card-grid mega-menu controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic, no timers):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     */
+    const RMCG_CONTROLLER = Symbol.for('ren10.rmcg.controller');
+    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavMegaMenuCardGrid(scope = document) {
+      const root = scope.querySelector?.('[data-rmcg-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rmcg-root')) {
+        const nested = document.querySelector('[data-rmcg-root]');
+        if (!nested) return null;
+        return initNavMegaMenuCardGridOn(nested);
+      }
+      return initNavMegaMenuCardGridOn(root);
+    }
+
+    function initNavMegaMenuCardGridOn(root) {
+      const disclosure = root.querySelector('.rmcg-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RMCG_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RMCG_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const panel = root.querySelector('.rmcg-panel');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      /**
+       * Compound hover zone for card-grid mega menus.
+       * Cards live in the wide right region, so pointer paths travel farther
+       * horizontally than link-list destinations in navbar8/9. Keep open while
+       * the pointer is over the disclosure, the summary→panel seam, or the
+       * lateral strip from the trigger toward the panel (excluding brand).
+       */
+      function isPointerInHoverZone(clientX, clientY) {
+        if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return false;
+
+        const hit = document.elementFromPoint(clientX, clientY);
+        if (hit instanceof Node && disclosure.contains(hit)) return true;
+        if (!disclosure.open || !panel) return false;
+
+        const panelRect = panel.getBoundingClientRect();
+        const summaryRect = summary.getBoundingClientRect();
+        if (panelRect.width === 0 || summaryRect.width === 0) return false;
+
+        const inPanelX = clientX >= panelRect.left && clientX <= panelRect.right;
+
+        // Vertical seam between trigger and panel (full panel width).
+        const seamTop = Math.min(summaryRect.bottom, panelRect.top);
+        const seamBottom = Math.max(summaryRect.bottom, panelRect.top);
+        if (inPanelX && clientY >= seamTop - 1 && clientY <= seamBottom + 1) {
+          return true;
+        }
+
+        // Lateral corridor at trigger height: summary → cards (right), not brand (left).
+        if (
+          inPanelX &&
+          clientY >= summaryRect.top &&
+          clientY <= summaryRect.bottom &&
+          clientX >= summaryRect.left
+        ) {
+          return true;
+        }
+
+        return false;
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          // Keyboard-generated activation: detail === 0 — leave native toggle.
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            // First real pointer click after hover-open: pin open.
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          // Pinned or click-opened: genuine close.
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (!isDesktop()) return;
+          const { clientX, clientY } = event;
+          // Defer so elementFromPoint / geometry see the post-leave position.
+          requestAnimationFrame(() => {
+            if (!isDesktop()) return;
+            if (isPointerInHoverZone(clientX, clientY)) {
+              pointerInside = true;
+              return;
+            }
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            if (!pointerPinned) closeDisclosure(false);
+          });
+        },
+        { signal }
+      );
+
+      // While open, follow the pointer across the nav seam into cards.
+      document.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!isDesktop() || !disclosure.open || pointerPinned) return;
+          if (isPointerInHoverZone(event.clientX, event.clientY)) {
+            pointerInside = true;
+            return;
+          }
+          if (pointerInside) {
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavMegaMenuCardGrid();
+    window.initNavMegaMenuCardGrid = initNavMegaMenuCardGrid;
+
+  </script>
+</body>
+</html>

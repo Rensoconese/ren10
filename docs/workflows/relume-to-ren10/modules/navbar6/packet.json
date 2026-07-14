@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar6",
+  "blockSlug": "nav-mega-menu-featured",
+  "blockPath": "templates/blocks/nav-mega-menu-featured.html",
+  "stage": "accepted",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-featured.html",
+    "tests/components/blocks-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
+  }
+}

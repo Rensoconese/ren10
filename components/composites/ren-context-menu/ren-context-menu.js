@@ -14,20 +14,33 @@
    ============================================ */
 
 /**
- * @param {string} menuId - The popover element ID
+ * @param {string|HTMLElement} menuOrId - The popover element or its ID
  */
-export function initContextMenu(menuId) {
-  const menu = document.getElementById(menuId);
+export function initContextMenu(menuOrId) {
+  const menu = typeof menuOrId === 'string'
+    ? document.getElementById(menuOrId)
+    : menuOrId;
   if (!menu) return;
 
   if (menu.dataset.renContextMenuInitialized === 'true') return;
   menu.dataset.renContextMenuInitialized = 'true';
+  const controller = new AbortController();
+  menu.__renContextController = controller;
+  let returnTrigger = null;
 
   menu.setAttribute('popover', 'manual');
+  menu.setAttribute('role', 'menu');
+  menu.classList.add('ren-context-menu');
 
   // Find all triggers for this menu
-  const triggers = [...document.querySelectorAll(`[data-context="${menuId}"]`)];
-  const itemSelector = '.ren-menu-item:not(:disabled):not([aria-disabled="true"])';
+  const triggers = [...document.querySelectorAll(`[data-context="${menu.id}"]`)];
+  const triggerId = menu.getAttribute('trigger-id');
+  const explicitTrigger = triggerId ? document.getElementById(triggerId) : null;
+  if (explicitTrigger && !triggers.includes(explicitTrigger)) triggers.push(explicitTrigger);
+  const itemSelector = [
+    '.ren-menu-item:not(:disabled):not([aria-disabled="true"])',
+    '[role="menuitem"]:not(:disabled):not([aria-disabled="true"])',
+  ].join(', ');
 
   const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
 
@@ -45,9 +58,10 @@ export function initContextMenu(menuId) {
     }
 
     menu.setAttribute('data-state', 'closed');
+    if (returnTrigger && document.contains(returnTrigger)) returnTrigger.focus();
   };
 
-  const show = (x, y) => {
+  const show = (x, y, target) => {
     if (isOpen()) {
       close();
     }
@@ -80,21 +94,29 @@ export function initContextMenu(menuId) {
     // Focus first item
     const firstItem = menu.querySelector(itemSelector);
     firstItem?.focus();
+
+    menu.dispatchEvent(new CustomEvent('ren-context-menu-open', {
+      bubbles: true,
+      composed: true,
+      detail: { x, y, target },
+    }));
   };
 
   triggers.forEach((trigger) => {
     trigger.addEventListener('contextmenu', (e) => {
       e.preventDefault();
-      show(e.clientX, e.clientY);
-    });
+      returnTrigger = trigger;
+      show(e.clientX, e.clientY, e.target);
+    }, { signal: controller.signal });
 
     trigger.addEventListener('keydown', (e) => {
       if (e.key !== 'ContextMenu' && !(e.key === 'F10' && e.shiftKey)) return;
 
       e.preventDefault();
       const rect = trigger.getBoundingClientRect();
-      show(rect.left + 8, rect.bottom + 8);
-    });
+      returnTrigger = trigger;
+      show(rect.left + 8, rect.bottom + 8, e.target);
+    }, { signal: controller.signal });
   });
 
   // Keyboard navigation inside menu
@@ -110,6 +132,12 @@ export function initContextMenu(menuId) {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       items[(current - 1 + items.length) % items.length]?.focus();
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      items[0]?.focus();
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      items.at(-1)?.focus();
     } else if (e.key === 'Escape') {
       close();
     } else if (e.key === 'Enter' || e.key === ' ') {
@@ -117,14 +145,14 @@ export function initContextMenu(menuId) {
       document.activeElement?.click();
       close();
     }
-  });
+  }, { signal: controller.signal });
 
   // Close on item click
   menu.addEventListener('click', (e) => {
     if (e.target.closest('.ren-menu-item')) {
       close();
     }
-  });
+  }, { signal: controller.signal });
 
   const isMenuOrTrigger = (target) =>
     target instanceof Node &&
@@ -137,7 +165,7 @@ export function initContextMenu(menuId) {
         close();
       }
     },
-    true
+    { capture: true, signal: controller.signal }
   );
 
   document.addEventListener(
@@ -147,8 +175,18 @@ export function initContextMenu(menuId) {
         close();
       }
     },
-    true
+    { capture: true, signal: controller.signal }
   );
+}
+
+export function destroyContextMenu(menuOrId) {
+  const menu = typeof menuOrId === 'string'
+    ? document.getElementById(menuOrId)
+    : menuOrId;
+  if (!menu) return;
+  menu.__renContextController?.abort();
+  delete menu.__renContextController;
+  delete menu.dataset.renContextMenuInitialized;
 }
 
 /**
@@ -160,4 +198,24 @@ export function initAllContextMenus() {
     menuIds.add(el.dataset.context);
   });
   menuIds.forEach(initContextMenu);
+}
+
+/**
+ * Registry-friendly custom element facade over the same controller used by
+ * initContextMenu(). There is one behavior owner and one reconnect-safe
+ * AbortController regardless of which public entry point consumers use.
+ */
+export class RenContextMenu extends HTMLElement {
+  connectedCallback() {
+    if (!this.id) this.id = `ren-context-menu-${Math.random().toString(36).slice(2, 11)}`;
+    initContextMenu(this);
+  }
+
+  disconnectedCallback() {
+    destroyContextMenu(this);
+  }
+}
+
+if (!customElements.get('ren-context-menu')) {
+  customElements.define('ren-context-menu', RenContextMenu);
 }

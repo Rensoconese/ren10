@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Phase A RED: templates/blocks/nav-mega-menu-link-rail.html absent. Focused Playwright navbar8 suite failed 16/16 on Desktop Light with HTTP 404 at gotoLinkRailBlock (expected 200). Command: CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/blocks-navigation.spec.cjs --grep navbar8 --retries=0 --workers=1 --project=\"Desktop Light\". All 16 cases failed with: link-rail block must not 404 — implement templates/blocks/nav-mega-menu-link-rail.html. Recorded 2026-07-13 against HEAD 2a96d70 prior to Phase B implementation."
+}

@@ -27,6 +27,9 @@ import { autoId, wireAria } from '../../../utils/id-generator.js';
 
 export class RenField extends HTMLElement {
   connectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
     // Add base class
     this.classList.add('ren-field');
 
@@ -87,12 +90,17 @@ export class RenField extends HTMLElement {
     this._error = error;
 
     // Listen for custom validation
-    input.addEventListener('invalid', () => this._setInvalid(true));
+    input.addEventListener('invalid', () => this._setInvalid(true), { signal });
     input.addEventListener('input', () => {
       if (this.hasAttribute('data-invalid') && input.validity.valid) {
         this._setInvalid(false);
       }
-    });
+    }, { signal });
+  }
+
+  disconnectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   _setInvalid(invalid) {

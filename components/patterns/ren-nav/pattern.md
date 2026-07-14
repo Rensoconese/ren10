@@ -66,7 +66,7 @@ forbiddenPatterns:
 tokenPolicy:
   allowed:
     - "Public component tokens listed in Public Token API: --ren-nav-bg, --ren-nav-border, --ren-nav-gap, --ren-nav-height, --ren-nav-link-active, --ren-nav-link-color, --ren-nav-padding-x."
-    - "Semantic tokens consumed by selectors: --ren-surface, --ren-border, --ren-text, --ren-text-muted, --ren-accent, --ren-accent-subtle, --ren-fill, --color-surface (for sticky color-mix)."
+    - "Semantic tokens consumed by selectors: --color-surface, --color-border, --color-text, --color-text-muted, --color-accent, --color-accent-subtle, --color-fill (for sticky color-mix)."
     - "Spacing / radius tokens: --ren-space-1, --ren-space-2, --ren-space-3, --ren-space-4, --ren-title-sm-size, --ren-label-size."
     - "Motion tokens: --duration-overlay, --duration-state, --duration-route, --duration-enter, --ease-state-change, --ease-enter."
     - "Z-index token: --ren-z-sticky."
@@ -82,7 +82,7 @@ accessibility:
     - ".ren-nav-toggle has aria-expanded reflecting menu state, aria-controls pointing to the links list, and an aria-label (icon-only is not a name)."
     - "Mobile menu closes on Escape and on link activation (the component owns both behaviors)."
     - "Dropdown triggers expose aria-expanded; popover panels are real [popover] elements so the platform manages focus return."
-    - "Focus-visible outlines use --ren-accent at 2px offset — do not remove without a visible alternative."
+    - "Focus-visible outlines use --color-accent at 2px offset — do not remove without a visible alternative."
 ```
 
 ## Required Imports
@@ -97,7 +97,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-nav">...</div>
+<ren-nav><nav class="ren-nav" aria-label="Primary"><a class="ren-nav-brand" href="/">RenDS</a><ul id="primary-links" class="ren-nav-links"><li><a class="ren-nav-link" href="/docs" aria-current="page">Docs</a></li></ul><button class="ren-nav-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Toggle menu"><span></span><span></span><span></span></button></nav></ren-nav>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

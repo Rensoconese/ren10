@@ -25,15 +25,16 @@
 .ren-tag {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-1);
-  padding: 0.25em 0.65em;
-  font-size: var(--caption-size, var(--text-sm));
-  font-weight: var(--weight-medium);
+  gap: var(--ren-tag-gap);
+  min-height: var(--ren-tag-height);
+  padding: 0.25em var(--ren-tag-padding-x);
+  font-size: var(--ren-tag-font-size);
+  font-weight: var(--ren-tag-font-weight);
   line-height: 1.5;
-  color: var(--color-text);
-  background-color: var(--color-fill);
-  border: var(--stroke-1) solid var(--color-border);
-  border-radius: var(--radius-full);
+  color: var(--ren-tag-color);
+  background-color: var(--ren-tag-bg);
+  border: var(--stroke-1) solid var(--ren-tag-border-color);
+  border-radius: var(--ren-tag-radius);
   white-space: nowrap;
   user-select: none;
   max-width: 100%;

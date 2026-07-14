@@ -296,3 +296,15 @@
     opacity: 0;
   }
 }
+/* Appearance API bridge */
+.ren-sheet {
+  width: var(--ren-sheet-width, 320px);
+  padding: var(--ren-sheet-padding, var(--space-6));
+  border-radius: var(--ren-sheet-radius, 0);
+  background: var(--ren-sheet-bg, var(--color-surface-overlay));
+  border-color: var(--ren-sheet-border, var(--color-border));
+  box-shadow: var(--ren-sheet-shadow, var(--shadow-xl));
+  transition-duration: var(--ren-sheet-duration, var(--duration-normal));
+  transition-timing-function: var(--ren-sheet-easing, var(--ease-out));
+}
+.ren-sheet::backdrop { background: var(--ren-sheet-backdrop, var(--color-overlay)); }

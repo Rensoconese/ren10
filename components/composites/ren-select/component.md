@@ -54,6 +54,7 @@ requiredMarkup:
   - "Each option is a <div data-select-item data-value=\"...\"> inside .ren-select-content; rely on data-select-item, not arbitrary children."
   - "The trigger displays .ren-select-value when something is chosen and .ren-select-placeholder when empty — do not collapse them into one node."
   - "Set name on <ren-select> when the value must submit with a form; the component injects the hidden input automatically."
+  - "With multiple, value is an ordered array and the component injects one same-name hidden input per selected value so FormData preserves repeated entries. Removable chips render as a sibling of the button trigger so interactive controls are never nested."
   - "Use .ren-select-group + .ren-select-label for grouped options and .ren-select-separator between groups; do not invent dividers."
   - "Use placement=\"bottom\" by default; the host and .ren-select-content mirror the resolved side to data-side and data-align."
 
@@ -96,7 +97,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-select">...</div>
+<ren-select name="country"><button type="button" data-select-trigger><span class="ren-select-value"></span><span class="ren-select-placeholder">Choose a country</span></button><div class="ren-select-content" data-select-content role="listbox"><div data-select-item data-value="ar">Argentina</div><div data-select-item data-value="uy">Uruguay</div></div></ren-select>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.
@@ -137,6 +139,16 @@ Use the docs page and source files listed below for full examples before adding 
 - `:disabled`
 - `:focus-visible`
 - `:hover`
+
+## JavaScript API
+
+- `value` / `setValue(value)` use a string (or `null`) in single-select mode.
+- `value` / `setValue(values)` use an ordered array in `multiple` mode.
+- Multiple selection accumulates and removes values without closing the
+  listbox, renders `.ren-select-chip` entries, and submits repeated same-name
+  hidden inputs.
+- `aria-disabled="false"` remains operable; only native `disabled` or
+  `aria-disabled="true"` disables an option.
 
 ## Public Token API
 

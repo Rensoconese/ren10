@@ -75,6 +75,9 @@ export class RenCarousel extends HTMLElement {
     this._isAutoplayActive = false;
     this._scrollTimeout = null;
     this._intersectionObserver = null;
+    this._contentObserver = null;
+    this._refreshQueued = false;
+    this._nextSlideId = 0;
 
     this._autoplayMs = 0;
     this._shouldLoop = false;
@@ -89,6 +92,7 @@ export class RenCarousel extends HTMLElement {
   connectedCallback() {
     this._parseAttributes();
     this._initialize();
+    this._observeContent();
     this._attachReducedMotionListener();
     this._attachEventListeners();
     if (this._autoplayMs > 0) {
@@ -101,8 +105,33 @@ export class RenCarousel extends HTMLElement {
     if (this._intersectionObserver) {
       this._intersectionObserver.disconnect();
     }
+    this._contentObserver?.disconnect();
+    this._contentObserver = null;
     this._detachReducedMotionListener();
     this._detachEventListeners();
+  }
+
+  _observeContent() {
+    if (typeof MutationObserver === 'undefined' || this._contentObserver) return;
+    this._contentObserver = new MutationObserver((mutations) => {
+      // Ignore mutations caused by our generated controls; refresh only when
+      // slide/viewport content actually changes.
+      if (!mutations.some((m) => [...m.addedNodes, ...m.removedNodes].some(
+        (node) => node.nodeType === Node.ELEMENT_NODE &&
+          (node.classList?.contains('ren-carousel-slide') ||
+            node.classList?.contains('ren-carousel-viewport'))
+      ))) return;
+      if (this._refreshQueued) return;
+      this._refreshQueued = true;
+      queueMicrotask(() => {
+        this._refreshQueued = false;
+        if (!this.isConnected) return;
+        this._contentObserver?.disconnect();
+        this._initialize();
+        this._contentObserver?.observe(this, { childList: true, subtree: true });
+      });
+    });
+    this._contentObserver.observe(this, { childList: true, subtree: true });
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -128,6 +157,7 @@ export class RenCarousel extends HTMLElement {
       case 'fade':
         this._isFade = this.hasAttribute('fade');
         this._updateFadeVariant();
+        this._setupIntersectionObserver();
         break;
     }
   }
@@ -146,6 +176,13 @@ export class RenCarousel extends HTMLElement {
   }
 
   _initialize() {
+    // Rebuilds must tear down observers and generated navigation first. This
+    // keeps removal-to-empty and mode changes from retaining stale state.
+    this._intersectionObserver?.disconnect();
+    this._intersectionObserver = null;
+    this.querySelector('.ren-carousel-dots')?.remove();
+    this.querySelectorAll('.ren-carousel-prev, .ren-carousel-next').forEach((el) => el.remove());
+    this.querySelector('.ren-carousel-counter')?.remove();
     // Set up ARIA attributes
     this.setAttribute('role', 'group');
     this.setAttribute('aria-roledescription', 'carousel');
@@ -171,19 +208,39 @@ export class RenCarousel extends HTMLElement {
     );
 
     if (this._slides.length === 0) {
+      this._totalSlides = 0;
+      this._currentIndex = 0;
+      this._dots = [];
+      this._dotsContainer = null;
+      this._prevButton = null;
+      this._nextButton = null;
+      this._counterElement = null;
       console.warn('RenCarousel: No slides found');
       return;
     }
 
     this._totalSlides = this._slides.length;
+    this._currentIndex = Math.max(0, Math.min(this._currentIndex, this._totalSlides - 1));
 
     // Set up slides with ARIA attributes
     this._slides.forEach((slide, index) => {
+      if (!slide.id) {
+        let generatedId;
+        do {
+          generatedId = `${this.id}-slide-${++this._nextSlideId}`;
+        } while (
+          this._slides.some((candidate) => candidate !== slide && candidate.id === generatedId) ||
+          this.ownerDocument?.getElementById(generatedId)
+        );
+        slide.id = generatedId;
+      }
       slide.setAttribute('role', 'group');
       slide.setAttribute('aria-roledescription', 'slide');
       slide.setAttribute('aria-label', `Slide ${index + 1} of ${this._totalSlides}`);
-      if (index === 0) {
+      if (index === this._currentIndex) {
         slide.setAttribute('aria-current', 'true');
+      } else {
+        slide.removeAttribute('aria-current');
       }
       slide.tabIndex = 0;
     });
@@ -195,9 +252,7 @@ export class RenCarousel extends HTMLElement {
 
     // Apply variant classes
     this._applySlidePerViewClass();
-    if (this._isFade) {
-      this._updateFadeVariant();
-    }
+    this._updateFadeVariant();
 
     // Set up Intersection Observer to track active slide
     this._setupIntersectionObserver();
@@ -216,7 +271,6 @@ export class RenCarousel extends HTMLElement {
     // Create dots container
     this._dotsContainer = document.createElement('ul');
     this._dotsContainer.className = 'ren-carousel-dots';
-    this._dotsContainer.setAttribute('role', 'tablist');
     this._dotsContainer.setAttribute('aria-label', 'Carousel pagination');
 
     // Create individual dots
@@ -224,9 +278,8 @@ export class RenCarousel extends HTMLElement {
       const dot = document.createElement('button');
       dot.className = 'ren-carousel-dot';
       dot.setAttribute('type', 'button');
-      dot.setAttribute('role', 'tab');
       dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
-      dot.setAttribute('aria-controls', this.id);
+      dot.setAttribute('aria-controls', this._slides[index].id);
       if (index === 0) {
         dot.setAttribute('aria-current', 'true');
       }
@@ -273,8 +326,8 @@ export class RenCarousel extends HTMLElement {
 
     this._counterElement = document.createElement('div');
     this._counterElement.className = 'ren-carousel-counter';
-    this._counterElement.setAttribute('aria-live', 'polite');
     this._counterElement.setAttribute('aria-atomic', 'true');
+    this._syncLiveRegion();
 
     this.appendChild(this._counterElement);
   }
@@ -298,13 +351,13 @@ export class RenCarousel extends HTMLElement {
   }
 
   _setupIntersectionObserver() {
+    if (this._intersectionObserver) {
+      this._intersectionObserver.disconnect();
+      this._intersectionObserver = null;
+    }
     if (this._isFade) {
       // For fade mode, we'll handle active state differently
       return;
-    }
-
-    if (this._intersectionObserver) {
-      this._intersectionObserver.disconnect();
     }
 
     const options = {
@@ -436,6 +489,10 @@ export class RenCarousel extends HTMLElement {
     }
   }
 
+  _syncLiveRegion() {
+    this._counterElement?.setAttribute('aria-live', this._isAutoplayActive ? 'off' : 'polite');
+  }
+
   /* ═══ AUTOPLAY ═══ */
 
   _prefersReducedMotion() {
@@ -475,6 +532,7 @@ export class RenCarousel extends HTMLElement {
     this._isAutoplayActive = true;
     this.setAttribute('data-autoplay', '');
     this.setAttribute('data-autoplay-duration', `${this._autoplayMs}ms`);
+    this._syncLiveRegion();
 
     // Start autoplay
     this._autoplayInterval = setInterval(() => {
@@ -490,6 +548,7 @@ export class RenCarousel extends HTMLElement {
     this._isAutoplayActive = false;
     this.removeAttribute('data-autoplay');
     this.removeAttribute('data-autoplay-duration');
+    this._syncLiveRegion();
   }
 
   pause() {

@@ -157,9 +157,11 @@ export class RenTooltip extends HTMLElement {
 
     if (this.#trigger) {
       // Wire aria-describedby relationship
-      if (!this.#trigger.hasAttribute('aria-describedby')) {
-        this.#trigger.setAttribute('aria-describedby', this.id);
-      }
+      const describedBy = new Set(
+        (this.#trigger.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)
+      );
+      describedBy.add(this.id);
+      this.#trigger.setAttribute('aria-describedby', [...describedBy].join(' '));
 
       // Set up anchor relationship if CSS anchors are supported
       if (RenTooltip.supportsAnchor) {
@@ -229,7 +231,22 @@ export class RenTooltip extends HTMLElement {
   scheduleShow() {
     this.clearTimeouts();
 
-    const delay = parseInt(this.getAttribute('show-delay')) || 500;
+    // Reduced-motion users should not wait through an animation-oriented
+    // reveal delay; the tooltip remains available on focus/hover.
+    if (typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.show();
+      return;
+    }
+
+    const tokenDelay = getComputedStyle(this).getPropertyValue('--ren-tooltip-delay').trim();
+    const attrDelay = this.getAttribute('show-delay');
+    const parsedAttrDelay = attrDelay == null ? Number.NaN : parseInt(attrDelay, 10);
+    const parsedTokenDelay = parseInt(tokenDelay, 10);
+    const delay = Number.isFinite(parsedAttrDelay)
+      ? parsedAttrDelay
+      : Number.isFinite(parsedTokenDelay)
+        ? parsedTokenDelay
+        : 500;
     this.#showTimeout = setTimeout(() => {
       this.show();
     }, delay);
@@ -353,6 +370,16 @@ export class RenTooltip extends HTMLElement {
     this.clearTimeouts();
     this.#listenerController?.abort();
     this.#listenerController = null;
+    if (this.#trigger) {
+      const describedBy = (this.#trigger.getAttribute('aria-describedby') || '')
+        .split(/\s+/)
+        .filter((token) => token && token !== this.id);
+      if (describedBy.length > 0) {
+        this.#trigger.setAttribute('aria-describedby', describedBy.join(' '));
+      } else {
+        this.#trigger.removeAttribute('aria-describedby');
+      }
+    }
   }
 
   /**

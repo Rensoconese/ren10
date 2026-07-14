@@ -1,7 +1,7 @@
 {
   "name": "rends-agent-evals",
-  "version": "0.9.0",
-  "description": "Deterministic prompt set for RenDS-aware agents. Each entry pairs a user-facing task with the rules an agent must satisfy. The 'expectedComponents' / 'forbiddenPatterns' arrays are the machine-checkable parts: a grader scans the produced HTML/CSS for matches.",
+  "version": "0.10.0",
+  "description": "Deterministic prompt set for RenDS-aware agents. Entries cover UI composition, repair, refusal to invent APIs, and grounded migration. The grader scans HTML or prose artifacts for required evidence and forbidden patterns.",
   "evals": [
     {
       "id": "auth-form",
@@ -225,6 +225,87 @@
         "shadcn"
       ],
       "referenceFile": "examples/ai-panel.html"
+    },
+    {
+      "id": "reference-application",
+      "prompt": "Build a complete Ren10 application with a sidebar shell, settings form, user table, feedback state, dialog workflow, and light/dark theme control. Use only verified Ren10 components and vanilla HTML/CSS/JavaScript.",
+      "expectedComponents": [
+        "ren-sidebar-layout",
+        "ren-sidebar",
+        "ren-sidebar-main",
+        "ren-form",
+        "ren-field",
+        "ren-table",
+        "ren-dialog",
+        "ren-btn"
+      ],
+      "expectedAttributes": [
+        "aria-label",
+        "scope=\"col\"",
+        "data-dialog-trigger"
+      ],
+      "forbiddenPatterns": [
+        "var\\(--blue-",
+        "var\\(--gray-",
+        "#[0-9a-fA-F]{6}",
+        "tailwind",
+        "shadcn",
+        "import React",
+        "attachShadow"
+      ],
+      "referenceFile": "examples/reference-app/index.html"
+    },
+    {
+      "id": "repair-framework-leakage",
+      "prompt": "Repair this React/Tailwind/shadcn dashboard so it follows Ren10's vanilla contract. Remove framework abstractions and preserve accessible behavior.",
+      "expectedComponents": [
+        "ren-sidebar-layout",
+        "ren-table",
+        "ren-btn"
+      ],
+      "expectedAttributes": [
+        "aria-label"
+      ],
+      "forbiddenPatterns": [
+        "tailwind",
+        "shadcn",
+        "import React",
+        "className=",
+        "attachShadow"
+      ],
+      "inputFixture": "evals/fixtures/framework-leakage-input.html",
+      "referenceFile": "examples/reference-app/index.html"
+    },
+    {
+      "id": "refuse-invented-component",
+      "prompt": "Add a <ren-kanban> component to the product page. If Ren10 does not provide it, do not invent an API; explain the verified composition path.",
+      "expectedText": [
+        "ren10 search",
+        "does not exist",
+        "verified components"
+      ],
+      "forbiddenPatterns": [
+        "<ren-kanban",
+        "customElements\\.define\\(['\"]ren-kanban"
+      ],
+      "inputFixture": "evals/fixtures/invented-component-input.md",
+      "referenceFile": "evals/reference/refuse-invented-component.md"
+    },
+    {
+      "id": "grounded-version-migration",
+      "prompt": "Update an existing app to the latest compatible Ren10 release. Ground the migration in package metadata, migration guidance, and a dry run before changing code.",
+      "expectedText": [
+        "package.json",
+        "MIGRATION.md",
+        "npx ren10 upgrade --dry-run",
+        "npx ren10 doctor"
+      ],
+      "forbiddenPatterns": [
+        "always backward compatible",
+        "latest@latest"
+      ],
+      "inputFixture": "evals/fixtures/ungrounded-migration-input.md",
+      "referenceFile": "evals/reference/grounded-version-migration.md"
     }
   ]
 }

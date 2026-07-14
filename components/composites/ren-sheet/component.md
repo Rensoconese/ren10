@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-sheet">...</div>
+<button type="button" data-sheet-trigger="filters">Open filters</button><ren-sheet id="filters" side="right"><header class="ren-sheet-header"><h2 class="ren-sheet-title">Filters</h2><button type="button" data-sheet-close aria-label="Close">×</button></header><div class="ren-sheet-body">Filter controls</div><footer class="ren-sheet-footer"><button type="button" data-sheet-close="apply">Apply</button></footer></ren-sheet>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.
@@ -116,6 +117,10 @@ Use the docs page and source files listed below for full examples before adding 
 - `[data-side]`
 - `:active`
 - `:hover`
+
+`close(returnValue)` and native `<form method="dialog">` closure emit exactly
+one `ren-close` with `detail.returnValue`, while clearing host `open` and
+restoring focus to the opener.
 
 ## Public Token API
 

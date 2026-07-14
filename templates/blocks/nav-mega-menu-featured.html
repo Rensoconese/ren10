@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Mega Menu Featured Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS featured mega-menu navbar block built with ren-nav, native details disclosure, and vanilla HTML/CSS/JS.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rmf-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rmf-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmf-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rmf-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rmf-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    .rmf-preview .ren-nav {
+      /* Intentional demo bar: taller than component default --ren-nav-height (3.5rem). */
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: 2;
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rmf-preview .ren-nav-brand,
+    .rmf-preview .ren-nav-link,
+    .rmf-preview .ren-nav-actions .ren-btn {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rmf-brand-mark {
+      width: var(--size-sm);
+      height: var(--size-sm);
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /*
+     * Neutralize base/classless.css details/summary chrome inside the navbar.
+     * Classless adds border, radius, padding, margin, summary::after chevron,
+     * and open-summary divider — all wrong for a ren-nav trigger.
+     */
+    .rmf-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rmf-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rmf-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+
+    .rmf-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rmf-disclosure > summary::marker {
+      content: "";
+    }
+
+    /* Kill classless chevron — only .rmf-chevron SVG may render. */
+    .rmf-disclosure > summary::after,
+    .rmf-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rmf-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rmf-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmf-disclosure[open] > summary .rmf-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rmf-panel {
+      padding: 0;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rmf-panel-inner {
+      --switcher-threshold: 48rem;
+      --switcher-gap: 0;
+      max-width: var(--width-7xl);
+      margin-inline: auto;
+      align-items: stretch;
+    }
+
+    .rmf-groups {
+      --grid-gap: var(--space-6);
+      /* Custom 3-up track floor (no width token between --size-* and --width-xs). */
+      --grid-min: 9rem;
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: var(--space-5) var(--space-6);
+      background: var(--color-surface);
+    }
+
+    .rmf-group-title {
+      margin: 0 0 var(--space-3);
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .rmf-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rmf-dest {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmf-dest:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rmf-dest:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmf-dest-copy {
+      min-width: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rmf-dest-label {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+      color: var(--color-text);
+    }
+
+    .rmf-dest-desc {
+      display: block;
+      margin: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-normal);
+      line-height: 1.4;
+      color: var(--color-text-muted);
+    }
+
+    .rmf-dest:hover .rmf-dest-label {
+      color: var(--color-accent);
+    }
+
+    /* Featured column: distinct surface, capped width, narrower than groups. */
+    .rmf-featured {
+      flex: 0 1 var(--width-xs);
+      max-width: var(--width-xs);
+      width: 100%;
+      padding: var(--space-5) var(--space-6);
+      background: var(--color-surface-sunken);
+      border-inline-start: 1px solid var(--color-border);
+    }
+
+    .rmf-feature {
+      display: block;
+      min-height: var(--touch-min);
+      color: inherit;
+      text-decoration: none;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition:
+        border-color var(--duration-state) var(--ease-state-change),
+        box-shadow var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmf-feature:hover {
+      border-color: var(--color-border-accent);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rmf-feature:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmf-feature-inner {
+      min-height: var(--touch-min);
+    }
+
+    /* 16:9 promotional media (packet contract). */
+    .rmf-feature-media {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 0;
+      background:
+        linear-gradient(
+          135deg,
+          var(--color-surface-sunken),
+          color-mix(in srgb, var(--color-accent) 18%, var(--color-surface))
+        );
+    }
+
+    .rmf-feature-body {
+      padding: var(--space-3) var(--space-4) var(--space-4);
+      min-width: 0;
+    }
+
+    .rmf-feature-cat {
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .rmf-feature-title {
+      margin: 0;
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      line-height: 1.25;
+      color: var(--color-text);
+    }
+
+    .rmf-feature-desc {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+    }
+
+    .rmf-feature-cue {
+      color: var(--color-accent);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+      margin-block-start: var(--space-1);
+    }
+
+    .rmf-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      margin-block-start: var(--space-3);
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rmf-view-all-chevron {
+      flex-shrink: 0;
+    }
+
+    .rmf-hero {
+      position: relative;
+      z-index: 0;
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      /* Preview-page hero canvas only (not mega chrome); no matching size token. */
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rmf-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmf-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Unavoidable ren-nav integration (desktop mega panel).
+     * ren-nav has no full-width disclosure panel API; position the panel under
+     * the bar relative to .ren-nav so it spans the preview without a second tree.
+     *
+     * Shell breakpoint remains 48rem (ren-nav). Mega *content* has a second band:
+     * 48rem–63.999rem stacks groups full-width then featured below (readable
+     * mid-width composition); ≥64rem restores groups + constrained right panel.
+     */
+    @media (min-width: 48.01rem) {
+      .rmf-disclosure {
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rmf-panel {
+        position: absolute;
+        inset-inline: 0;
+        top: 100%;
+        z-index: 3;
+        background: var(--color-surface);
+        box-shadow: var(--shadow-lg);
+        border-block-end: 1px solid var(--color-border);
+        animation: rmf-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .rmf-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+
+      .rmf-panel-inner > .rmf-groups {
+        flex: 1 1 auto;
+        flex-basis: auto;
+        min-width: 0;
+        width: 100%;
+      }
+
+      /* Three destination columns whenever the desktop shell is active. */
+      .rmf-groups.ren-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /*
+     * Tablet / mid desktop (834px class): still desktop shell (no hamburger),
+     * but mega body is stacked — three groups span the full panel width, then
+     * the featured region sits below as a horizontal promo card.
+     */
+    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
+      .rmf-panel-inner.ren-switcher {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+      }
+
+      .rmf-panel-inner > .rmf-featured {
+        flex: 1 1 auto;
+        max-width: none;
+        width: 100%;
+        border-inline-start: none;
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      /* Horizontal featured relationship: media | copy across the full band. */
+      .rmf-feature-inner {
+        display: grid;
+        /* Custom media|copy proportion for mid-width featured card (no --width-* fit). */
+        grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+        align-items: center;
+        gap: 0;
+      }
+
+      .rmf-feature-media {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+        min-height: 0;
+        border-end-end-radius: 0;
+        border-start-end-radius: 0;
+      }
+
+      .rmf-feature-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--space-4) var(--space-5);
+      }
+    }
+
+    /* Wide desktop: groups + constrained right feature column (source intent). */
+    @media (min-width: 64rem) {
+      .rmf-panel-inner.ren-switcher {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+      }
+
+      .rmf-panel-inner > .rmf-groups {
+        flex: 1 1 auto;
+        flex-basis: auto;
+        min-width: 0;
+        width: auto;
+      }
+
+      .rmf-panel-inner > .rmf-featured {
+        /* Constrained rail narrower than --width-xs (20rem) for source-intent side panel. */
+        flex: 0 0 18rem;
+        max-width: 18rem;
+        width: 18rem;
+        border-inline-start: 1px solid var(--color-border);
+        border-block-start: none;
+      }
+    }
+
+    /*
+     * Unavoidable ren-nav integration (mobile open shell).
+     * Core ren-nav uses absolute .ren-nav-links + a JS toggle. This block keeps
+     * one tree by making links/actions in-flow when open, and reordering the
+     * flex children of .ren-nav so CTAs sit in the expanded region.
+     */
+    @media (max-width: 48rem) {
+      .rmf-preview .ren-nav {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .rmf-preview .ren-nav-brand {
+        order: 1;
+      }
+
+      .rmf-preview .ren-nav-toggle {
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .rmf-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .rmf-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rmf-preview .ren-nav-links .ren-nav-link,
+      .rmf-preview .rmf-disclosure,
+      .rmf-preview .rmf-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rmf-preview .rmf-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--ren-space-4, 1rem);
+      }
+
+      .rmf-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        width: 100%;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmf-preview .ren-nav[data-open] .ren-nav-actions,
+      .rmf-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .rmf-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .rmf-panel {
+        width: 100%;
+        padding: 0;
+        border-block-end: none;
+        background: transparent;
+        position: static;
+      }
+
+      .rmf-groups {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .rmf-groups.ren-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .rmf-dest-desc {
+        display: none;
+      }
+
+      .rmf-featured {
+        max-width: none;
+        flex: 1 1 auto;
+        width: 100%;
+        border-inline-start: none;
+        border-block-start: 1px solid var(--color-border);
+        background: var(--color-surface-sunken);
+      }
+    }
+
+    /*
+     * Progressive fallback when <ren-nav> has not upgraded (JS off / CE not defined).
+     * Core ren-nav CSS hides .ren-nav-links below 48rem and relies on the toggle;
+     * without JS the toggle is inert, so force the single tree + actions visible.
+     */
+    @media (max-width: 48rem) {
+      .rmf-preview ren-nav:not(:defined) .ren-nav {
+        flex-wrap: wrap;
+      }
+
+      .rmf-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rmf-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+
+      .rmf-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-inline-start: 0;
+        order: 4;
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmf-preview ren-nav:not(:defined) .ren-nav-brand {
+        order: 1;
+      }
+    }
+
+    @keyframes rmf-panel-enter {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rmf-chevron,
+      .rmf-dest,
+      .rmf-feature,
+      .rmf-panel {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell">
+    <header class="rmf-page-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Mega Menu Featured</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Mega Menu Featured</h1>
+      <p class="lede">
+        A single navigation tree with a native mega-menu disclosure, three destination
+        groups, and one featured article promo. Built with <code>ren-nav</code>, layout
+        primitives, and progressive enhancement — no second mobile tree.
+      </p>
+    </header>
+
+    <section class="rmf-preview" data-rmf-root aria-label="Navbar mega menu featured preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row" href="#home">
+            <span class="rmf-brand-mark ren-center" aria-hidden="true">N</span>
+            <span>Northline</span>
+          </a>
+
+          <ul id="rmf-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <details class="rmf-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Resources
+                  <span class="rmf-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+                      <path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/>
+                    </svg>
+                  </span>
+                </summary>
+
+                <div class="rmf-panel">
+                  <div class="rmf-panel-inner ren-switcher">
+                    <div class="rmf-groups ren-grid ren-grid-3">
+                      <div class="rmf-group ren-stack-sm">
+                        <h3 class="rmf-group-title" id="rmf-group-guides">Guides</h3>
+                        <ul class="rmf-dest-list ren-stack-sm" aria-labelledby="rmf-group-guides">
+                          <li>
+                            <a class="rmf-dest ren-row" href="#getting-started">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 2.5 3 7v2h18V7l-9-4.5zM5 11v7h3v-7H5zm5.5 0v7h3v-7h-3zM16 11v7h3v-7h-3zM3 20v1.5h18V20H3z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Getting started</span>
+                                <span class="rmf-dest-desc">Stand up a calm workspace in one afternoon.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#playbooks">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M6 3h9.5L20 7.5V21H6V3zm8.5 1.5V8H18l-3.5-3.5zM8 11h8v1.5H8V11zm0 3.5h8V16H8v-1.5z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Playbooks</span>
+                                <span class="rmf-dest-desc">Field-tested routines for peak hours.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#checklists">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M9.5 16.5 5 12l1.4-1.4 3.1 3.1 7.1-7.1L18 8.1 9.5 16.5z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Checklists</span>
+                                <span class="rmf-dest-desc">Keep handoffs complete without noise.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#templates">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M4 4h16v4H4V4zm0 6h7v10H4V10zm9 0h7v10h-7V10z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Templates</span>
+                                <span class="rmf-dest-desc">Start from a board that already works.</span>
+                              </span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="rmf-group ren-stack-sm">
+                        <h3 class="rmf-group-title" id="rmf-group-library">Library</h3>
+                        <ul class="rmf-dest-list ren-stack-sm" aria-labelledby="rmf-group-library">
+                          <li>
+                            <a class="rmf-dest ren-row" href="#case-studies">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M4 5h16v2H4V5zm0 4h10v2H4V9zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Case studies</span>
+                                <span class="rmf-dest-desc">How teams cut missed follow-ups.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#webinars">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M3 6.5A2.5 2.5 0 0 1 5.5 4h9A2.5 2.5 0 0 1 17 6.5V14H5.5A2.5 2.5 0 0 1 3 11.5v-5zM18 9l3-2v10l-3-2v-6z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Webinars</span>
+                                <span class="rmf-dest-desc">Live walkthroughs with operators.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#changelog">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm-.75 5v5.2l3.6 2.16.75-1.25-3-1.8V7H11.25z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Changelog</span>
+                                <span class="rmf-dest-desc">What shipped this month, in plain language.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#glossary">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M6 3h9l3 3v15H6V3zm8.5 1.5V7H17l-2.5-2.5zM8 10h8v1.5H8V10zm0 3h8v1.5H8V13zm0 3h5V17.5H8V16z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Glossary</span>
+                                <span class="rmf-dest-desc">Shared terms for cross-shift crews.</span>
+                              </span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="rmf-group ren-stack-sm">
+                        <h3 class="rmf-group-title" id="rmf-group-support">Support</h3>
+                        <ul class="rmf-dest-list ren-stack-sm" aria-labelledby="rmf-group-support">
+                          <li>
+                            <a class="rmf-dest ren-row" href="#help-center">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 14.2a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2zm0-9.7c-2 0-3.4 1.2-3.4 3.1h1.7c0-.9.6-1.4 1.7-1.4 1 0 1.6.5 1.6 1.3 0 .7-.3 1.1-1.2 1.7-.1 1-.1 1.5-1.4 1.6v1.4c1.9-.1 2.9-1 2.9-2.7 0-1.7-1.2-2.9-3-2.9z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Help center</span>
+                                <span class="rmf-dest-desc">Answers for setup, billing, and access.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#community">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M8.5 8a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm7 0a3 3 0 1 1 0 6 3 3 0 0 1 0-6zM3 19.2C3 16.6 5.7 15 8.5 15s5.5 1.6 5.5 4.2V21H3v-1.8zm10.5 0c0-1.3.5-2.4 1.3-3.2.9-.7 2.1-1 3.2-1 2.8 0 5.5 1.6 5.5 4.2V21h-10v-1.8z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Community</span>
+                                <span class="rmf-dest-desc">Ask peers who run the same shifts.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#status">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm-1 5h2v5h-2V8zm0 7h2v2h-2v-2z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">System status</span>
+                                <span class="rmf-dest-desc">Live uptime for every region.</span>
+                              </span>
+                            </a>
+                          </li>
+                          <li>
+                            <a class="rmf-dest ren-row" href="#contact">
+                              <span class="ren-icon ren-icon-lg" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                  <path fill="currentColor" d="M4 5h16v14H4V5zm2 2v2.2l6 3.6 6-3.6V7H6zm0 4.4V17h12v-5.6l-6 3.6-6-3.6z"/>
+                                </svg>
+                              </span>
+                              <span class="rmf-dest-copy ren-stack-xs">
+                                <span class="rmf-dest-label">Contact</span>
+                                <span class="rmf-dest-desc">Talk to a human who knows the product.</span>
+                              </span>
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div class="rmf-featured ren-stack-sm">
+                      <h3 class="rmf-group-title" id="rmf-featured-title">From the journal</h3>
+                      <a class="rmf-feature" href="#article-night-ops" aria-labelledby="rmf-feature-heading">
+                        <article class="rmf-feature-inner ren-stack-sm">
+                          <span class="rmf-feature-media ren-frame" aria-hidden="true"></span>
+                          <div class="rmf-feature-body ren-stack-xs">
+                            <span class="rmf-feature-cat">Playbook</span>
+                            <h4 class="rmf-feature-title" id="rmf-feature-heading">Night ops without the noise</h4>
+                            <p class="rmf-feature-desc">
+                              How dispatch teams keep a single source of truth across late shifts.
+                            </p>
+                            <span class="rmf-feature-cue">Read more</span>
+                          </div>
+                        </article>
+                      </a>
+                      <a class="rmf-view-all ren-link-nav" href="#resources">
+                        View all resources
+                        <span class="rmf-view-all-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                          <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+                            <path fill="currentColor" d="M6.2 3.2a.75.75 0 0 1 1.06 0l4 4a.75.75 0 0 1 0 1.06l-4 4a.75.75 0 1 1-1.06-1.06L9.44 8 6.2 4.26a.75.75 0 0 1 0-1.06z"/>
+                          </svg>
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#docs">Docs</a>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-ghost" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rmf-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rmf-hero ren-stack">
+        <h2>Resources that stay out of the way.</h2>
+        <p>
+          A quiet marketing surface under the navbar so overlay depth, stacking, and
+          the full-width mega panel with featured article stay easy to judge while you
+          copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local featured mega-menu controller.
+     * Native details owns open/close via click, Enter, and Space.
+     * This script adds desktop pointer hover-open with a stable leave region,
+     * Escape, outside dismiss, destination close, mobile-nav coordination,
+     * and reconnect-safe listeners.
+     */
+    const RMF_CONTROLLER = Symbol.for('ren10.rmf.controller');
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
+
+    /**
+     * @param {ParentNode} [scope=document]
+     */
+    export function initNavMegaMenuFeatured(scope = document) {
+      const root = scope.querySelector?.('[data-rmf-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rmf-root')) {
+        const nested = document.querySelector('[data-rmf-root]');
+        if (!nested) return null;
+        return initNavMegaMenuFeaturedOn(nested);
+      }
+      return initNavMegaMenuFeaturedOn(root);
+    }
+
+    /**
+     * @param {Element} root
+     */
+    function initNavMegaMenuFeaturedOn(root) {
+      const disclosure = root.querySelector('.rmf-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RMF_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RMF_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+      /** True while the pointer is inside the disclosure+panel hit region on desktop. */
+      let pointerInside = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure() {
+        if (!disclosure.open) disclosure.open = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      // Keep ren-nav from closing the mobile tree when the summary is activated.
+      // On desktop, hover already opens before click (Playwright and real pointers);
+      // prevent the native toggle from immediately closing a hover-open disclosure.
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (isDesktop() && pointerInside && disclosure.open) {
+            event.preventDefault();
+          }
+        },
+        { capture: true, signal }
+      );
+
+      // Desktop pointer hover-open; panel is inside details so leave covers summary+panel.
+      // pointermove also opens when the pointer is already over the hit region
+      // (e.g. after Escape restored focus without leaving the summary).
+      function openFromDesktopPointer() {
+        if (!isDesktop()) return;
+        pointerInside = true;
+        openDisclosure();
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        // Close when crossing the shell breakpoint either direction.
+        if (wasDesktop !== nowDesktop) {
+          pointerInside = false;
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavMegaMenuFeatured();
+    window.initNavMegaMenuFeatured = initNavMegaMenuFeatured;
+  </script>
+</body>
+</html>

@@ -42,14 +42,14 @@
 .ren-input {
   display: block;
   width: 100%;
-  min-height: var(--touch-min);
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--body-size);
+  min-height: var(--ren-field-height);
+  padding: var(--ren-field-padding-y) var(--ren-field-padding-x);
+  font-size: var(--ren-field-font-size);
   font-family: inherit;
-  color: var(--color-text);
-  background-color: var(--color-input-bg);
-  border: var(--stroke-1) solid var(--color-input-border);
-  border-radius: var(--radius-md);
+  color: var(--ren-field-color);
+  background-color: var(--ren-field-bg);
+  border: var(--ren-field-border-width) solid var(--ren-field-border-color);
+  border-radius: var(--ren-field-radius);
   transition:
     border-color var(--duration-state) var(--ease-enter),
     background-color var(--duration-state) var(--ease-enter),
@@ -62,7 +62,7 @@
 
 .ren-input:focus {
   outline: none;
-  border-color: var(--color-input-border-focus);
+  border-color: var(--ren-field-focus-color);
   box-shadow: 0 0 0 3px var(--color-input-focus-ring);
   background-color: var(--color-input-bg-hover);
 }
@@ -75,7 +75,7 @@
 }
 
 .ren-input::placeholder {
-  color: var(--color-input-placeholder);
+  color: var(--ren-field-placeholder);
   opacity: 1;
 }
 
@@ -269,7 +269,7 @@ select.ren-input {
 /* ─── Error Message ─── */
 .ren-field-error {
   font-size: var(--caption-size);
-  color: var(--color-danger);
+  color: var(--ren-field-error-color);
   line-height: var(--leading-normal);
   margin: 0;
   display: flex;
@@ -281,25 +281,25 @@ select.ren-input {
 .ren-field[data-invalid] .ren-input,
 .ren-input[aria-invalid="true"],
 .ren-input-error {
-  border-color: var(--color-input-error-border);
+  border-color: var(--ren-field-error-color);
 }
 
 .ren-field[data-invalid] .ren-input:focus,
 .ren-input[aria-invalid="true"]:focus,
 .ren-input-error:focus {
   box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
-  border-color: var(--color-input-error-border);
+  border-color: var(--ren-field-error-color);
 }
 
 /* Error state on label */
 .ren-field[data-invalid] .ren-field-label {
-  color: var(--color-danger);
+  color: var(--ren-field-error-color);
 }
 
 /* ─── Success state ─── */
 .ren-field[data-valid] .ren-input,
 .ren-input-success {
-  border-color: var(--color-success);
+  border-color: var(--ren-field-success-color);
 }
 
 .ren-field[data-valid] .ren-input:focus,
@@ -310,16 +310,16 @@ select.ren-input {
 /* ─── Modern Validation (no JS needed) ─── */
 /* Only show validation state AFTER user interaction */
 .ren-input:user-invalid {
-  border-color: var(--color-input-error-border);
+  border-color: var(--ren-field-error-color);
 }
 
 .ren-input:user-invalid:focus {
   box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
-  border-color: var(--color-input-error-border);
+  border-color: var(--ren-field-error-color);
 }
 
 .ren-input:user-valid {
-  border-color: var(--color-success);
+  border-color: var(--ren-field-success-color);
 }
 
 .ren-input:user-valid:focus {
@@ -328,7 +328,7 @@ select.ren-input {
 
 /* Show/hide error and success messages based on validation */
 .ren-field:has(.ren-input:user-invalid) .ren-field-label {
-  color: var(--color-danger);
+  color: var(--ren-field-error-color);
 }
 
 .ren-field:has(.ren-input:user-invalid) .ren-field-error {

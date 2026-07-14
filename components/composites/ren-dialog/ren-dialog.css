@@ -274,3 +274,18 @@ ren-dialog {
   flex-direction: column;
   height: 100%;
 }
+/* Appearance API bridge: public component tokens remain overridable at any scope. */
+.ren-dialog,
+.ren-alert-dialog {
+  width: var(--ren-dialog-width, min(90vw, 500px));
+  padding: var(--ren-dialog-padding, var(--space-6));
+  border-radius: var(--ren-dialog-radius, var(--radius-xl));
+  background: var(--ren-dialog-bg, var(--color-surface-overlay));
+  border-color: var(--ren-dialog-border-color, var(--color-border));
+  box-shadow: var(--ren-dialog-shadow, var(--shadow-xl));
+  gap: var(--ren-dialog-gap, var(--space-4));
+  transition-duration: var(--ren-dialog-duration, var(--duration-normal));
+  transition-timing-function: var(--ren-dialog-easing, var(--ease-out));
+}
+.ren-dialog::backdrop,
+.ren-alert-dialog::backdrop { background: var(--ren-dialog-backdrop, var(--color-overlay)); }

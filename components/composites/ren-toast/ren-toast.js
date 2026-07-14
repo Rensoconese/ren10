@@ -60,6 +60,10 @@ const VALID_POSITIONS = new Set([
 
 export class RenToastViewport extends HTMLElement {
   connectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+
     this.classList.add('ren-toast-viewport');
     if (!this.hasAttribute('data-position')) {
       this.setAttribute('data-position', 'bottom-right');
@@ -73,12 +77,18 @@ export class RenToastViewport extends HTMLElement {
     if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
 
     // Pause timers on hover or keyboard focus
-    this.addEventListener('mouseenter', () => pauseTimersFor(this));
-    this.addEventListener('mouseleave', () => resumeTimersFor(this));
-    this.addEventListener('focusin', () => pauseTimersFor(this));
+    this.addEventListener('mouseenter', () => pauseTimersFor(this), { signal });
+    this.addEventListener('mouseleave', () => resumeTimersFor(this), { signal });
+    this.addEventListener('focusin', () => pauseTimersFor(this), { signal });
     this.addEventListener('focusout', (e) => {
       if (!this.contains(e.relatedTarget)) resumeTimersFor(this);
-    });
+    }, { signal });
+  }
+
+  disconnectedCallback() {
+    this._listenerController?.abort();
+    this._listenerController = null;
+    resumeTimersFor(this);
   }
 }
 
@@ -180,8 +190,10 @@ function generateId() {
 
 function normalize(input, statusOverride) {
   const opts = typeof input === 'string' ? { title: input } : { ...input };
+  opts.statusExplicit = statusOverride != null || opts.status != null;
   if (statusOverride) opts.status = statusOverride;
   if (!opts.status) opts.status = 'info';
+  opts.durationExplicit = opts.duration != null;
   if (opts.duration == null) opts.duration = DEFAULT_DURATIONS[opts.status] ?? 4000;
   if (opts.dismissible == null) opts.dismissible = true;
   return opts;
@@ -299,6 +311,29 @@ function showOnViewport(viewport, opts) {
 
   const toast = buildToast(id, opts);
   viewport.appendChild(toast);
+
+  // Resolve the closest effective token scope, including overrides on the
+  // generated toast itself. Explicit duration/status options remain
+  // authoritative.
+  if (!opts.durationExplicit && !opts.statusExplicit) {
+    const tokenDuration = getComputedStyle(toast)
+      .getPropertyValue('--ren-toast-duration')
+      .trim();
+    const parsedDuration = parseFloat(tokenDuration);
+    if (Number.isFinite(parsedDuration) && parsedDuration >= 0) {
+      opts.duration = parsedDuration;
+      const progress = toast.querySelector('.ren-toast-progress');
+      if (opts.duration > 0) {
+        toast.setAttribute('data-duration', String(opts.duration));
+        if (progress) progress.style.transition = `width ${opts.duration}ms linear`;
+      } else if (progress) {
+        progress.remove();
+        toast.removeAttribute('data-duration');
+      }
+    }
+  }
+
+  if (!opts.durationExplicit && opts.duration > 0) toast.setAttribute('data-duration', String(opts.duration));
 
   // Schedule auto-dismiss
   if (opts.duration > 0) {

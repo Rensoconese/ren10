@@ -18,12 +18,12 @@
 
 .ren-spinner {
   display: inline-block;
-  width: 1.5rem;
-  height: 1.5rem;
-  border: 2.5px solid var(--color-fill-active);
-  border-top-color: var(--color-accent);
+  width: var(--ren-spinner-size);
+  height: var(--ren-spinner-size);
+  border: var(--ren-spinner-width) solid var(--color-fill-active);
+  border-top-color: var(--ren-spinner-color);
   border-radius: var(--radius-full);
-  animation: ren-spin var(--duration-loop) var(--ease-loop-smooth) infinite;
+  animation: ren-spin var(--ren-spinner-speed) var(--ease-loop-smooth) infinite;
 }
 
 /* ─── Sizes ─── */

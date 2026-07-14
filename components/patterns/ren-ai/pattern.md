@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-ai-action">...</div>
+<div class="ren-ai-message"><div class="ren-ai-message-header"><span class="ren-ai-slug">AI</span></div><div class="ren-ai-message-content">Here is the summary.</div></div><form class="ren-ai-prompt"><textarea class="ren-ai-prompt-input" aria-label="Message"></textarea><button class="ren-ai-prompt-send" type="submit" aria-label="Send message">Send</button></form>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

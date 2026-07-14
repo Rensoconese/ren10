@@ -63,6 +63,7 @@
   --color-accent-hover:  light-dark(#15803D, #86EFAC);
   --color-accent-active: light-dark(#166534, #BBF7D0);
   --color-accent-subtle: light-dark(#F0FDF4, #052E16);
+  --color-on-accent:     light-dark(#000000, #000000);
 
   --color-surface:        light-dark(#FAFDF7, #0A120A);
   --color-surface-raised: light-dark(#FFFFFF, #111F11);
@@ -81,6 +82,7 @@
   --color-accent-hover:  light-dark(#C2410C, #FDBA74);
   --color-accent-active: light-dark(#9A3412, #FED7AA);
   --color-accent-subtle: light-dark(#FFF7ED, #431407);
+  --color-on-accent:     light-dark(#000000, #000000);
 
   --color-surface:        light-dark(#FFFBF5, #120E0A);
   --color-surface-raised: light-dark(#FFFFFF, #1C1610);
@@ -170,7 +172,7 @@
 
   /* Subtle component tuning */
   --ren-card-radius:   var(--radius-xl);
-  --ren-btn-weight:    var(--weight-semibold);
+  --ren-btn-font-weight: var(--weight-semibold);
 }
 
 /* ═══════════════════════════════════════════════
@@ -263,7 +265,7 @@
   --font-heading: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono:    "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
 
-  --ren-btn-weight: var(--weight-medium);
+  --ren-btn-font-weight: var(--weight-medium);
 }
 
 /* ═══════════════════════════════════════════════
@@ -278,6 +280,45 @@
 [data-theme="light"] {
   color-scheme: light;
 }
+
+/* AAA contrast scope: normal text and solid accent pairs are >= 7:1 in
+   either color scheme. Place after named themes so this opt-in wins. */
+[data-contrast="aaa"] {
+  /* Explicit light fallback keeps AAA deterministic in engines without
+     complete light-dark() custom-property support. */
+  --color-text:            #111111;
+  --color-text-primary:    var(--color-text);
+  --color-text-secondary:  #111111;
+  --color-text-muted:      #111111;
+  --color-surface:         #FFFFFF;
+  --color-surface-raised:  #FFFFFF;
+  --color-surface-sunken:  #FFFFFF;
+  --color-accent:          #111111;
+  --color-accent-hover:    #000000;
+  --color-accent-active:   #000000;
+  --color-accent-strong:   #111111;
+  --color-on-accent:       #FFFFFF;
+  --color-text-link:       var(--color-accent-strong);
+  --color-focus-ring:      var(--color-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-contrast="aaa"] {
+    --color-text: #FFFFFF;
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #FFFFFF;
+    --color-text-muted: #FFFFFF;
+    --color-surface: #000000;
+    --color-surface-raised: #000000;
+    --color-surface-sunken: #000000;
+    --color-accent: #FFFFFF;
+    --color-accent-hover: #FFFFFF;
+    --color-accent-active: #FFFFFF;
+    --color-accent-strong: #FFFFFF;
+    --color-on-accent: #000000;
+  }
+}
+
 
 /* ═══════════════════════════════════════════════
    SHAPE PRESETS (combine with any color theme)
@@ -310,25 +351,19 @@
    DENSITY PRESETS (combine with any theme)
    ═══════════════════════════════════════════════ */
 [data-density="compact"] {
-  --size-sm:  1.5rem;
-  --size-md:  2rem;
-  --size-lg:  2.5rem;
-  --size-xl:  3rem;
-  --space-unit: 0.375rem;
+  --space-density-card: var(--space-4);
+  --space-density-form: var(--space-3);
+  --space-density-row: var(--space-2);
 }
 
 [data-density="comfortable"] {
-  --size-sm:  2.25rem;
-  --size-md:  2.75rem;
-  --size-lg:  3.25rem;
-  --size-xl:  3.75rem;
-  --space-unit: 0.625rem;
+  --space-density-card: var(--space-card-padding);
+  --space-density-form: var(--space-form-gap);
+  --space-density-row: var(--space-3);
 }
 
 [data-density="spacious"] {
-  --size-sm:  2.5rem;
-  --size-md:  3rem;
-  --size-lg:  3.5rem;
-  --size-xl:  4rem;
-  --space-unit: 0.875rem;
+  --space-density-card: var(--space-8);
+  --space-density-form: var(--space-6);
+  --space-density-row: var(--space-4);
 }

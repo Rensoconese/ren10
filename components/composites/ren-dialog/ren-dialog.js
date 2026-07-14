@@ -43,8 +43,10 @@ import { createFocusTrap } from '../../../utils/focus-trap.js';
 export class RenDialog extends HTMLElement {
   #dialogElement = null;
   #focusTrap = null;
-  #abortController = new AbortController();
+  #abortController = null;
+  #returnFocus = null;
   #inertElements = new WeakMap();
+  #closeReconciled = true;
 
   static observedAttributes = ['open', 'alert', 'size'];
 
@@ -54,12 +56,16 @@ export class RenDialog extends HTMLElement {
   }
 
   connectedCallback() {
+    if (!this.#abortController || this.#abortController.signal.aborted) {
+      this.#abortController = new AbortController();
+    }
     this.#initializeDialogElement();
     this.#wireupTriggers();
   }
 
   disconnectedCallback() {
-    this.#abortController.abort();
+    this.#abortController?.abort();
+    if (this.#dialogElement?.open) this.#setInert(false);
     this.#teardownFocusTrap();
   }
 
@@ -84,6 +90,8 @@ export class RenDialog extends HTMLElement {
    */
   show() {
     if (!this.#dialogElement?.open) {
+      this.#returnFocus = document.activeElement;
+      this.#closeReconciled = false;
       this.#dialogElement.showModal();
       this.#setInert(true);
       this.setAttribute('open', '');
@@ -111,18 +119,7 @@ export class RenDialog extends HTMLElement {
    */
   close(returnValue = '') {
     if (this.#dialogElement?.open) {
-      this.#setInert(false);
       this.#dialogElement.close(returnValue);
-      this.removeAttribute('open');
-      this.setAttribute('data-state', 'closed');
-      this.#teardownFocusTrap();
-      this.dispatchEvent(
-        new CustomEvent('ren-close', {
-          bubbles: true,
-          composed: true,
-          detail: { returnValue },
-        })
-      );
     }
   }
 
@@ -183,16 +180,23 @@ export class RenDialog extends HTMLElement {
       }
     }
 
-    // Handle Escape key (native dialog behavior)
+    // Block native Escape dismissal only for non-dismissable variants.
     this.#dialogElement.addEventListener(
       'cancel',
       (e) => {
-        const noEscape = this.hasAttribute('no-escape');
-        if (!noEscape) {
+        if (this.hasAttribute('no-escape') || this.hasAttribute('alert')) {
           e.preventDefault();
-          this.close();
         }
       },
+      { signal: this.#abortController.signal }
+    );
+
+    // Native Escape and <form method="dialog"> both land here. All close
+    // paths reconcile through this single listener so lifecycle state and the
+    // public event cannot diverge or fire twice.
+    this.#dialogElement.addEventListener(
+      'close',
+      () => this.#reconcileNativeClose(),
       { signal: this.#abortController.signal }
     );
 
@@ -303,7 +307,7 @@ export class RenDialog extends HTMLElement {
     if (this.#focusTrap) return;
     this.#focusTrap = createFocusTrap(this.#dialogElement, {
       initialFocus: this.#dialogElement.querySelector('[autofocus]'),
-      returnFocusOnDeactivate: true,
+      returnFocus: this.#returnFocus,
     });
     this.#focusTrap.activate();
   }
@@ -317,6 +321,28 @@ export class RenDialog extends HTMLElement {
       this.#focusTrap.deactivate();
       this.#focusTrap = null;
     }
+  }
+
+  #reconcileNativeClose() {
+    if (this.#closeReconciled) return;
+    this.#closeReconciled = true;
+    const returnValue = this.#dialogElement?.returnValue || '';
+
+    this.#setInert(false);
+    this.removeAttribute('open');
+    this.setAttribute('data-state', 'closed');
+    this.#teardownFocusTrap();
+    if (this.#returnFocus && document.contains(this.#returnFocus)) {
+      this.#returnFocus.focus({ preventScroll: true });
+    }
+    this.#returnFocus = null;
+    this.dispatchEvent(
+      new CustomEvent('ren-close', {
+        bubbles: true,
+        composed: true,
+        detail: { returnValue },
+      })
+    );
   }
 
   /* ═══ PRIVATE: UTILITIES ═══ */

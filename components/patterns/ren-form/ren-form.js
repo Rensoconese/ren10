@@ -1,3 +1,5 @@
+import { serializeFormEntries } from './serialize.js';
+
 /**
  * RenDS — <ren-form> Form Validation System
  * ==========================================
@@ -40,6 +42,8 @@
 
 const DEFAULT_VALIDATION_MODE = 'onSubmit';
 const DEBOUNCE_DELAY = 300;
+const DEFAULT_MESSAGES = { required: 'This field is required', email: 'Please enter a valid email address', pattern: 'Invalid format', invalid: 'Please correct this field', min: (n) => `Must be at least ${n} characters`, max: (n) => `Must be no more than ${n} characters` };
+
 
 /** Built-in validators */
 const builtInValidators = {
@@ -90,6 +94,7 @@ const builtInValidators = {
 
 export class RenForm extends HTMLElement {
   static #customValidators = new Map();
+  static #messages = new Map();
 
   constructor() {
     super();
@@ -105,19 +110,27 @@ export class RenForm extends HTMLElement {
     this._errorSummary = null;
     this._successMessage = null;
     this._listenerController = null;
+    this._persistKey = null;
+    this._submitButtonStates = new Map();
   }
 
   static registerValidator(name, fn) {
     RenForm.#customValidators.set(name, fn);
   }
+  static registerMessages(locale, messages) { RenForm.#messages.set(locale, { ...messages }); }
 
   connectedCallback() {
     this._form = this.querySelector('form.ren-form');
     if (!this._form) return;
+    if (!this.hasAttribute('dir')) {
+      const locale = this.getAttribute('lang') || document.documentElement.lang || '';
+      if (/^(ar|fa|he|ur)(-|$)/i.test(locale)) this.setAttribute('dir', 'rtl');
+    }
 
     this._initElements();
     this._attachEventListeners();
     this._initMultiStep();
+    this._restorePersisted();
   }
 
   disconnectedCallback() {
@@ -127,7 +140,8 @@ export class RenForm extends HTMLElement {
 
   _initElements() {
     this._validationMode = this.getAttribute('data-validate') ?? DEFAULT_VALIDATION_MODE;
-    this._fields = Array.from(this._form.querySelectorAll('.ren-field'));
+    this._fields = Array.from(this._form.querySelectorAll('ren-field, .ren-field'))
+      .filter((field, index, fields) => fields.indexOf(field) === index);
     this._errorSummary = this._form.querySelector('.ren-form-error-summary');
     this._successMessage = this._form.querySelector('.ren-form-success');
 
@@ -160,6 +174,7 @@ export class RenForm extends HTMLElement {
     this._fields.forEach((field) => {
       const input = field.querySelector('input, select, textarea');
       if (!input) return;
+      input.addEventListener('input', () => this._persist(), { signal });
 
       switch (this._validationMode) {
         case 'onBlur':
@@ -219,10 +234,26 @@ export class RenForm extends HTMLElement {
 
   async _handleSubmit(e) {
     e.preventDefault();
+    if (this._isSubmitting) return;
 
-    const result = this.validate();
+    this._isSubmitting = true;
+
+    let result;
+    try {
+      result = await this.validateAsync();
+    } catch (error) {
+      this._isSubmitting = false;
+      this._setSubmittingState(false);
+      this.dispatchEvent(new CustomEvent('ren-submit-error', {
+        detail: { error },
+        bubbles: true,
+        composed: true,
+      }));
+      return;
+    }
 
     if (!result.valid) {
+      this._isSubmitting = false;
       this.dispatchEvent(
         new CustomEvent('ren-invalid', {
           detail: { errors: result.errors },
@@ -237,28 +268,55 @@ export class RenForm extends HTMLElement {
 
     // Success
     this._hideErrorSummary();
-    this._isSubmitting = true;
-    this.setAttribute('data-submitting', '');
+    this._setSubmittingState(true);
 
     const values = this.getValues();
+    const completions = [];
     const event = new CustomEvent('ren-submit', {
-      detail: { values, form: this._form },
+      detail: { values, form: this._form, waitUntil: (promise) => {
+        if (promise && typeof promise.then === 'function') completions.push(promise);
+      } },
       bubbles: true,
       composed: true,
+      cancelable: true,
     });
 
     this.dispatchEvent(event);
 
-    // Reset submitting state after a brief delay to allow for async handling
-    setTimeout(() => {
+    try { await Promise.all(completions); }
+    catch (error) {
+      this.dispatchEvent(new CustomEvent('ren-submit-error', { detail: { error }, bubbles: true, composed: true }));
+    } finally {
+      this._setSubmittingState(false);
       this._isSubmitting = false;
-      this.removeAttribute('data-submitting');
-    }, 100);
+    }
+  }
+
+  _setSubmittingState(isSubmitting) {
+    this.toggleAttribute('data-submitting', isSubmitting);
+    this._form?.toggleAttribute('data-submitting', isSubmitting);
+
+    if (isSubmitting) {
+      this._submitButtonStates.clear();
+      const submitButtons = this._form?.querySelectorAll(
+        'button:not([type]), button[type="submit"], input[type="submit"], input[type="image"]'
+      ) || [];
+      submitButtons.forEach((button) => {
+        this._submitButtonStates.set(button, button.disabled);
+        button.disabled = true;
+      });
+      return;
+    }
+
+    this._submitButtonStates.forEach((wasDisabled, button) => {
+      if (button.isConnected) button.disabled = wasDisabled;
+    });
+    this._submitButtonStates.clear();
   }
 
   _validateField(field, input) {
-    const rules = field.getAttribute('data-rules') ?? '';
-    const error = this._runValidators(rules, input.value, input.name);
+    const rules = field.getAttribute('data-rules') ?? input.getAttribute('data-rules') ?? '';
+    const error = this._nativeValidationError(input) || this._runValidators(rules, input.value, input.name);
 
     if (error) {
       this._setFieldError(field, input, error);
@@ -317,10 +375,30 @@ export class RenForm extends HTMLElement {
         error = validatorFn(value);
       }
 
-      if (error) return error;
+      if (error) return this._message(error, validator, param);
     }
 
     return null;
+  }
+
+  async _runValidatorsAsync(rulesString, value) {
+    if (!rulesString) return null;
+    for (const rule of rulesString.split('|').map((r) => r.trim())) {
+      const [name, param] = rule.split(':');
+      const fn = builtInValidators[name] || RenForm.#customValidators.get(name);
+      if (!fn) continue;
+      let result = param ? fn(param)(value, this._form) : fn(value, this._form);
+      if (result && typeof result.then === 'function') result = await result;
+      if (result) return this._message(result, name, param);
+    }
+    return null;
+  }
+
+  _message(message, rule, param) {
+    const locale = this.getAttribute('lang') || document.documentElement.lang || 'en';
+    const custom = RenForm.#messages.get(locale) || RenForm.#messages.get(locale.split('-')[0]);
+    const value = custom?.[rule] ?? DEFAULT_MESSAGES[rule];
+    return typeof value === 'function' ? value(param) : (value || message);
   }
 
   _setFieldError(field, input, message) {
@@ -392,11 +470,7 @@ export class RenForm extends HTMLElement {
   _scrollToFirstError() {
     const firstInvalid = this._form.querySelector('[data-invalid]');
     if (firstInvalid) {
-      setTimeout(() => {
-        firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        const input = firstInvalid.querySelector('input, select, textarea');
-        if (input) input.focus();
-      }, 100);
+      firstInvalid.scrollIntoView?.({ behavior: 'smooth', block: 'center' });
     }
   }
 
@@ -420,6 +494,11 @@ export class RenForm extends HTMLElement {
         step.setAttribute('data-disabled', '');
       }
     });
+    this.querySelectorAll('.ren-form-section[data-step], [data-ren-step-panel]').forEach((panel) => {
+      const step = Number(panel.getAttribute('data-step') || panel.getAttribute('data-ren-step-panel'));
+      panel.hidden = step !== this._currentStep;
+      panel.toggleAttribute('data-active', step === this._currentStep);
+    });
   }
 
   // ─── Public API ───
@@ -431,8 +510,8 @@ export class RenForm extends HTMLElement {
       const input = field.querySelector('input, select, textarea');
       if (!input) return;
 
-      const rules = field.getAttribute('data-rules') ?? '';
-      const error = this._runValidators(rules, input.value, input.name);
+      const rules = field.getAttribute('data-rules') ?? input.getAttribute('data-rules') ?? '';
+      const error = this._nativeValidationError(input) || this._runValidators(rules, input.value, input.name);
 
       if (error) {
         this._setFieldError(field, input, error);
@@ -448,8 +527,23 @@ export class RenForm extends HTMLElement {
     };
   }
 
+  async validateAsync() {
+    const errors = [];
+    for (const field of this._fields) {
+      const input = field.querySelector('input, select, textarea');
+      if (!input) continue;
+      const rules = field.getAttribute('data-rules') ?? input.getAttribute('data-rules') ?? '';
+      const error = this._nativeValidationError(input) || await this._runValidatorsAsync(rules, input.value);
+      if (error) { this._setFieldError(field, input, error); this._errors.set(input.name, error); errors.push({ name: input.name, message: error }); }
+      else this._clearFieldError(field, input);
+    }
+    return { valid: errors.length === 0, errors };
+  }
+
   reset() {
     this._form.reset();
+    this._setSubmittingState(false);
+    this._isSubmitting = false;
     this._errors.clear();
     this._touched.clear();
     this._debounceTimers.forEach((timer) => clearTimeout(timer));
@@ -463,15 +557,33 @@ export class RenForm extends HTMLElement {
     });
 
     this._hideErrorSummary();
+    this._updateProgressIndicators();
+    this._clearPersisted();
   }
 
+  _restorePersisted() {
+    this._persistKey = this.getAttribute('data-persist');
+    if (!this._persistKey) return;
+    try {
+      const values = JSON.parse(localStorage.getItem(this._persistKey) || '{}');
+      this._form.querySelectorAll('[name]').forEach((input) => {
+        const value = values[input.name]; if (value == null) return;
+        if (input.type === 'checkbox' || input.type === 'radio') input.checked = Array.isArray(value) ? value.includes(input.value) : Boolean(value);
+        else input.value = Array.isArray(value) ? value[0] : value;
+      });
+    } catch { /* storage is optional */ }
+  }
+
+  _persist() {
+    if (!this._persistKey) return;
+    try { localStorage.setItem(this._persistKey, JSON.stringify(this.getValues())); } catch { /* private mode/quota */ }
+  }
+
+  _clearPersisted() { if (this._persistKey) { try { localStorage.removeItem(this._persistKey); } catch { /* optional */ } } }
+
   getValues() {
-    const values = {};
     const formData = new FormData(this._form);
-    formData.forEach((value, name) => {
-      values[name] = value;
-    });
-    return values;
+    return serializeFormEntries(formData.entries());
   }
 
   setErrors(errors) {
@@ -529,8 +641,8 @@ export class RenForm extends HTMLElement {
       const input = field.querySelector('input, select, textarea');
       if (!input) return;
 
-      const rules = field.getAttribute('data-rules') ?? '';
-      const error = this._runValidators(rules, input.value, input.name);
+      const rules = field.getAttribute('data-rules') ?? input.getAttribute('data-rules') ?? '';
+      const error = this._nativeValidationError(input) || this._runValidators(rules, input.value, input.name);
 
       if (error) {
         this._setFieldError(field, input, error);
@@ -604,9 +716,24 @@ export class RenForm extends HTMLElement {
   }
 
   _getStepFields(stepNum) {
-    // Assumes fields are organized by step (configurable via data-step)
-    // For simplicity, returns all fields. Override in subclass if needed.
-    return this._fields;
+    const panel = this.querySelector(`.ren-form-section[data-step="${stepNum}"], [data-ren-step-panel="${stepNum}"]`);
+    if (panel) return this._fields.filter((field) => panel.contains(field));
+    return this._fields.filter((field) => {
+      const owner = field.closest('[data-step]');
+      return !owner || owner.getAttribute('data-step') === String(stepNum);
+    });
+  }
+
+  _nativeValidationError(input) {
+    if (input.validity?.valid) return null;
+    if (input.validity?.valueMissing) return this._message('', 'required');
+    if (input.validity?.typeMismatch) return this._message('', 'email');
+    if (input.validity?.patternMismatch) return this._message('', 'pattern');
+    if (input.validity?.tooShort) return this._message('', 'min', input.minLength);
+    if (input.validity?.tooLong) return this._message('', 'max', input.maxLength);
+    if (input.validity?.rangeUnderflow) return this._message(`Value must be at least ${input.min}`, 'invalid');
+    if (input.validity?.rangeOverflow) return this._message(`Value must be no more than ${input.max}`, 'invalid');
+    return this._message('', 'invalid');
   }
 }
 

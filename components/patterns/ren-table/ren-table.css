@@ -542,3 +542,12 @@ ren-table[data-loading] {
     /* No additional overrides needed if tokens are properly defined */
   }
 }
+/* Appearance API bridge */
+.ren-table { font-size: var(--ren-table-header-size, var(--body-size)); }
+.ren-table thead { background: var(--ren-table-header-bg, var(--color-surface-sunken)); color: var(--ren-table-header-color, var(--color-text-muted)); font-weight: var(--ren-table-header-weight, var(--weight-semibold)); }
+.ren-table tr { min-block-size: var(--ren-table-row-height, var(--size-lg)); block-size: var(--ren-table-row-height, var(--size-lg)); }
+.ren-table th, .ren-table td { padding: var(--ren-table-cell-padding, var(--space-3)); }
+.ren-table { border-color: var(--ren-table-border-color, var(--color-border-muted)); }
+.ren-table tbody tr:nth-child(even) { background: var(--ren-table-stripe-bg, var(--color-surface-sunken)); }
+.ren-table tbody tr:hover { background: var(--ren-table-hover-bg, var(--color-fill)); }
+.ren-table tbody tr[aria-selected="true"], .ren-table tbody tr[data-selected] { background: var(--ren-table-selected-bg, var(--color-accent-subtle)); }

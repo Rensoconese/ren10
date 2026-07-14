@@ -65,7 +65,7 @@ forbiddenPatterns:
 tokenPolicy:
   allowed:
     - "Public component tokens listed in Public Token API: --ren-command-bg, --ren-command-border, --ren-command-item-height, --ren-command-item-radius, --ren-command-max-height, --ren-command-radius, --ren-command-shadow, --ren-command-width."
-    - "Semantic surface / text tokens consumed by selectors: --ren-surface, --ren-border, --ren-text, --ren-text-muted, --ren-text-faint, --ren-fill, --ren-fill-hover, --ren-separator."
+    - "Semantic surface / text tokens consumed by selectors: --color-surface, --color-border, --color-text, --color-text-muted, --color-text-faint, --color-fill, --color-fill-hover, --color-separator."
     - "Spacing / motion tokens: --ren-space-*, --ren-radius-*, --duration-enter, --duration-overlay, --duration-state, --ease-enter, --ease-state-change."
     - "Z-index token: --ren-z-modal."
   forbidden:
@@ -95,7 +95,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-command">...</div>
+<ren-command><dialog class="ren-command"><div class="ren-command-input-wrapper"><input class="ren-command-input" type="text" aria-label="Search commands"></div><ul class="ren-command-list"><li><button class="ren-command-item" type="button" data-value="save">Save</button></li></ul><div class="ren-command-empty" hidden>No commands found</div></dialog></ren-command>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

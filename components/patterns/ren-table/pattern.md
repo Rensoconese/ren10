@@ -52,7 +52,7 @@ canonicalImports:
 requiredMarkup:
   - "Root is <ren-table data-page-size=\"…\"> wrapping a <div class=\"ren-table-wrapper\"> > <table class=\"ren-table\">."
   - "Header row uses <thead class=\"ren-table-header\"><tr><th class=\"ren-th\">…</th></tr></thead>; sortable headers add .ren-th-sortable + data-column=\"<key>\"."
-  - "Body rows are <tr class=\"ren-tr\" data-row-id=\"…\"> with <td class=\"ren-td\"> cells; selection column uses class .ren-table-select on both th/td and a real <input type=\"checkbox\" aria-label=\"Select row\">."
+  - "Body uses <tbody class=\"ren-table-body\">; its rows are <tr class=\"ren-tr\" data-row-id=\"…\"> with <td class=\"ren-td\"> cells. Selection uses class .ren-table-select on both th/td and a real <input type=\"checkbox\" aria-label=\"Select row\">."
   - "Pagination chrome goes in <div class=\"ren-table-pagination\"> with .ren-table-pagination-info + .ren-table-pagination-controls containing buttons carrying [data-page-prev] / [data-page-next] / [data-page-size-select]."
   - "Toolbar lives in <div class=\"ren-table-toolbar\"> and the search box must include the [data-table-search] attribute so the JS wires filtering."
   - "Empty state is <div class=\"ren-table-empty\"> with .ren-table-empty-icon / .ren-table-empty-title / .ren-table-empty-description (or reuse the ren-empty-state pattern)."
@@ -98,7 +98,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-table">...</div>
+<ren-table data-page-size="10"><div class="ren-table-wrapper"><table class="ren-table"><thead class="ren-table-header"><tr><th class="ren-th ren-th-sortable" data-column="name">Name</th></tr></thead><tbody class="ren-table-body"><tr class="ren-tr" data-row-id="1"><td class="ren-td">Jane Doe</td></tr></tbody></table></div></ren-table>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.
@@ -169,6 +170,14 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+
+## Events
+
+- `ren-sort` — `{ column, direction }` after the sort direction changes.
+- `ren-select` — `{ selected }` after row selection changes or is cleared.
+- `ren-filter` — `{ value }` after the toolbar search filter changes.
+
+All three events bubble and are composed; they are not cancelable.
 
 ## Related Files
 

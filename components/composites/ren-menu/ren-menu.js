@@ -63,6 +63,10 @@ export class RenMenu extends HTMLElement {
   #dismissable = null;
   #animationFrame = null;
   #boundItemClick = null;
+  #boundTriggerClick = null;
+  #boundTriggerKeydown = null;
+  #returnFocus = true;
+  #closeTimer = null;
 
   constructor() {
     super();
@@ -179,9 +183,10 @@ export class RenMenu extends HTMLElement {
    */
   attachTriggerListeners() {
     if (!this.#trigger) return;
-
-    this.#trigger.addEventListener('click', (e) => this.handleTriggerClick(e));
-    this.#trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e));
+    this.#boundTriggerClick = (e) => this.handleTriggerClick(e);
+    this.#boundTriggerKeydown = (e) => this.handleTriggerKeydown(e);
+    this.#trigger.addEventListener('click', this.#boundTriggerClick);
+    this.#trigger.addEventListener('keydown', this.#boundTriggerKeydown);
   }
 
   /**
@@ -466,6 +471,7 @@ export class RenMenu extends HTMLElement {
     if (this.#isOpen) return;
 
     this.#isOpen = true;
+    this.#returnFocus = true;
     this.setAttribute('data-state', 'open');
     this.setupKeyboardNav();
     this.setupDismissable();
@@ -515,7 +521,8 @@ export class RenMenu extends HTMLElement {
     const animationDuration = getComputedStyle(this).animationDuration;
     const duration = parseFloat(animationDuration) * 1000;
 
-    setTimeout(() => {
+    if (this.#closeTimer) clearTimeout(this.#closeTimer);
+    this.#closeTimer = setTimeout(() => {
       this.removeAttribute('data-closing');
 
       if ('popover' in HTMLElement.prototype) {
@@ -529,6 +536,10 @@ export class RenMenu extends HTMLElement {
       }
 
       this.#trigger?.setAttribute('aria-expanded', 'false');
+      if (this.#returnFocus && this.#trigger && document.contains(this.#trigger)) {
+        this.#trigger.focus();
+      }
+      this.#closeTimer = null;
     }, Math.min(duration, 150)); // Cap at 150ms
 
     this.dispatchEvent(new CustomEvent('ren-menu-close', { bubbles: true }));
@@ -556,6 +567,7 @@ export class RenMenu extends HTMLElement {
    */
   cleanup() {
     this.close();
+    if (this.#closeTimer) clearTimeout(this.#closeTimer);
     this.teardownKeyboardNav();
     this.teardownDismissable();
 
@@ -568,110 +580,9 @@ export class RenMenu extends HTMLElement {
     }
 
     if (this.#trigger) {
-      this.#trigger.removeEventListener('click', (e) => this.handleTriggerClick(e));
-      this.#trigger.removeEventListener('keydown', (e) => this.handleTriggerKeydown(e));
+      this.#trigger.removeEventListener('click', this.#boundTriggerClick);
+      this.#trigger.removeEventListener('keydown', this.#boundTriggerKeydown);
     }
-  }
-}
-
-/**
- * RenDS — <ren-context-menu> Web Component
- * ===========================================
- * Context menu component that extends ren-menu.
- * Opens on right-click (contextmenu event) at pointer coordinates.
- *
- * Attributes:
- *   Same as ren-menu
- *
- * Markup:
- *   <div data-context-menu-trigger id="target">Right-click me</div>
- *   <ren-context-menu trigger-id="target">
- *     <button class="ren-menu-item" role="menuitem">Copy</button>
- *     <button class="ren-menu-item" role="menuitem">Cut</button>
- *     <button class="ren-menu-item" role="menuitem">Paste</button>
- *   </ren-context-menu>
- *
- * Events:
- *   Same as ren-menu (ren-menu-select, ren-menu-open, ren-menu-close)
- *   Plus: ren-context-menu-open with { x, y, target }
- */
-export class RenContextMenu extends RenMenu {
-  #contextMenuX = 0;
-  #contextMenuY = 0;
-
-  /**
-   * Lifecycle: Element inserted into DOM
-   */
-  connectedCallback() {
-    super.connectedCallback();
-    this.attachContextMenuListener();
-  }
-
-  /**
-   * Attach contextmenu event listener to trigger
-   * @private
-   */
-  attachContextMenuListener() {
-    const trigger = this.getTrigger();
-    if (!trigger) return;
-
-    trigger.addEventListener('contextmenu', (e) => this.handleContextMenu(e));
-  }
-
-  /**
-   * Handle right-click to open context menu at pointer position
-   * @private
-   */
-  handleContextMenu(e) {
-    e.preventDefault();
-
-    this.#contextMenuX = e.clientX;
-    this.#contextMenuY = e.clientY;
-
-    // Close any existing menu first
-    if (this.isOpen()) {
-      this.close();
-    }
-
-    // Open at pointer position
-    this.open();
-
-    // Apply pointer positioning instead of trigger-based positioning
-    requestAnimationFrame(() => {
-      const menuRect = this.getBoundingClientRect();
-      const viewport = {
-        width: window.innerWidth,
-        height: window.innerHeight,
-      };
-
-      let left = this.#contextMenuX;
-      let top = this.#contextMenuY;
-
-      // Clamp to viewport
-      if (left + menuRect.width > viewport.width) {
-        left = viewport.width - menuRect.width - 8;
-      }
-      if (top + menuRect.height > viewport.height) {
-        top = viewport.height - menuRect.height - 8;
-      }
-
-      left = Math.max(8, left);
-      top = Math.max(8, top);
-
-      this.style.left = `${left}px`;
-      this.style.top = `${top}px`;
-    });
-
-    this.dispatchEvent(
-      new CustomEvent('ren-context-menu-open', {
-        bubbles: true,
-        detail: {
-          x: this.#contextMenuX,
-          y: this.#contextMenuY,
-          target: e.target,
-        },
-      })
-    );
   }
 }
 
@@ -679,6 +590,7 @@ if (!customElements.get('ren-menu')) {
   customElements.define('ren-menu', RenMenu);
 }
 
-if (!customElements.get('ren-context-menu')) {
-  customElements.define('ren-context-menu', RenContextMenu);
-}
+// Compatibility export: context-menu behavior and registration are owned by
+// the colocated context-menu module so importing either historical path cannot
+// install a second implementation.
+export { RenContextMenu } from '../ren-context-menu/ren-context-menu.js';

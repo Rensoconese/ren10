@@ -160,7 +160,7 @@ export class RenSelect extends HTMLElement {
   #selectedItem = null;
   #keyboardNav = null;
   #dismissable = null;
-  #hiddenInput = null;
+  #hiddenInputs = [];
   #animationFrame = null;
   #listenerController = null;
   #scrollController = null;
@@ -175,6 +175,9 @@ export class RenSelect extends HTMLElement {
      ───────────────────────────────────────────────────────────── */
 
   connectedCallback() {
+    if (this.hasAttribute('multiple') && !Array.isArray(this.#selectedValue)) {
+      this.#selectedValue = [];
+    }
     this.loadStyles();
     this.setupComponent();
     this.bindElements();
@@ -295,6 +298,9 @@ export class RenSelect extends HTMLElement {
     // Content setup
     this.#content.setAttribute('role', 'listbox');
     this.#content.id = contentId;
+    if (this.hasAttribute('multiple')) {
+      this.#content.setAttribute('aria-multiselectable', 'true');
+    }
 
     // Set aria-label on content based on trigger text or placeholder
     const placeholder = this.getAttribute('placeholder') || 'Select an option';
@@ -312,7 +318,7 @@ export class RenSelect extends HTMLElement {
    */
   updateItemsARIA() {
     this.#items.forEach((item, index) => {
-      if (item.hasAttribute('disabled') || item.hasAttribute('aria-disabled')) {
+      if (item.hasAttribute('disabled') || item.getAttribute('aria-disabled') === 'true') {
         item.setAttribute('aria-disabled', 'true');
       }
 
@@ -326,7 +332,10 @@ export class RenSelect extends HTMLElement {
       }
 
       // Set aria-selected based on current selection
-      const isSelected = item.getAttribute('data-value') === this.#selectedValue;
+      const value = item.getAttribute('data-value');
+      const isSelected = this.hasAttribute('multiple')
+        ? this.#selectedValue.includes(value)
+        : value === this.#selectedValue;
       item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     });
   }
@@ -339,18 +348,7 @@ export class RenSelect extends HTMLElement {
     const name = this.getAttribute('name');
     if (!name) return;
 
-    // Remove existing hidden input
-    const existing = this.querySelector('input[type="hidden"]');
-    if (existing) {
-      existing.remove();
-    }
-
-    // Create hidden input
-    this.#hiddenInput = document.createElement('input');
-    this.#hiddenInput.type = 'hidden';
-    this.#hiddenInput.name = name;
-    this.#hiddenInput.value = this.#selectedValue || '';
-    this.appendChild(this.#hiddenInput);
+    this.syncHiddenInputs();
   }
 
   /**
@@ -524,7 +522,7 @@ export class RenSelect extends HTMLElement {
    */
   handleItemClick(e) {
     const item = e.target.closest('[role="option"]');
-    if (item && !item.hasAttribute('aria-disabled')) {
+    if (item && !item.hasAttribute('disabled') && item.getAttribute('aria-disabled') !== 'true') {
       e.preventDefault();
       e.stopPropagation();
       this.selectItem(item);
@@ -561,9 +559,12 @@ export class RenSelect extends HTMLElement {
     if (this.#keyboardNav) {
       this.#keyboardNav.attach();
       // Activate selected or first item
-      const selectedIndex = this.#items.findIndex(
-        (item) => item.getAttribute('data-value') === this.#selectedValue
-      );
+      const selectedIndex = this.#items.findIndex((item) => {
+        const value = item.getAttribute('data-value');
+        return this.hasAttribute('multiple')
+          ? this.#selectedValue.includes(value)
+          : value === this.#selectedValue;
+      });
       if (selectedIndex !== -1) {
         this.#keyboardNav.setActiveIndex(selectedIndex);
       } else if (this.#items.length > 0) {
@@ -687,12 +688,20 @@ export class RenSelect extends HTMLElement {
     const value = item.getAttribute('data-value');
     const label = item.textContent?.trim() || '';
 
-    this.selectValue(value, true);
+    if (this.hasAttribute('multiple')) {
+      const values = [...this.#selectedValue];
+      const selectedIndex = values.indexOf(value);
+      if (selectedIndex === -1) values.push(value);
+      else values.splice(selectedIndex, 1);
+      this.selectValue(values, true);
+    } else {
+      this.selectValue(value, true);
+    }
 
     this.dispatchEvent(
       new CustomEvent('ren-select-change', {
         bubbles: true,
-        detail: { value, label, item },
+        detail: { value: this.value, label, item },
       })
     );
 
@@ -710,12 +719,20 @@ export class RenSelect extends HTMLElement {
    * @private
    */
   selectValue(value, updateTrigger = true) {
-    this.#selectedValue = value;
+    if (this.hasAttribute('multiple')) {
+      const values = Array.isArray(value) ? value : (value == null ? [] : [value]);
+      this.#selectedValue = [...new Set(values.map(String))];
+    } else {
+      this.#selectedValue = value == null ? null : String(value);
+    }
 
     // Find and update the corresponding item
-    const item = this.#items.find((el) => el.getAttribute('data-value') === value);
+    const selectedValues = this.hasAttribute('multiple') ? this.#selectedValue : [this.#selectedValue];
+    const item = this.#items.find((el) => selectedValues.includes(el.getAttribute('data-value')));
     if (item) {
       this.#selectedItem = item;
+    } else {
+      this.#selectedItem = null;
     }
 
     // Update ARIA
@@ -726,10 +743,27 @@ export class RenSelect extends HTMLElement {
       this.updateTriggerDisplay();
     }
 
-    // Update hidden input
-    if (this.#hiddenInput) {
-      this.#hiddenInput.value = value || '';
-    }
+    this.syncHiddenInputs();
+  }
+
+  syncHiddenInputs() {
+    const name = this.getAttribute('name');
+    this.querySelectorAll('input[type="hidden"][data-ren-select-input]').forEach((input) => input.remove());
+    this.#hiddenInputs = [];
+    if (!name) return;
+
+    const values = this.hasAttribute('multiple')
+      ? this.#selectedValue
+      : [this.#selectedValue || ''];
+    values.forEach((value) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      input.setAttribute('data-ren-select-input', '');
+      this.appendChild(input);
+      this.#hiddenInputs.push(input);
+    });
   }
 
   /**
@@ -739,10 +773,51 @@ export class RenSelect extends HTMLElement {
   updateTriggerDisplay() {
     const placeholder = this.getAttribute('placeholder') || 'Select an option';
 
+    this.querySelector(':scope > .ren-select-chips[data-ren-select-chips]')?.remove();
+
     // Clear trigger content
     this.#trigger.innerHTML = '';
 
-    if (!this.#selectedValue || !this.#selectedItem) {
+    if (this.hasAttribute('multiple') && this.#selectedValue.length > 0) {
+      const chips = document.createElement('span');
+      chips.className = 'ren-select-chips';
+      chips.setAttribute('data-ren-select-chips', '');
+      const selectedLabels = [];
+      this.#selectedValue.forEach((value) => {
+        const item = this.#items.find((option) => option.getAttribute('data-value') === value);
+        if (!item) return;
+
+        const chip = document.createElement('span');
+        chip.className = 'ren-select-chip';
+        const label = document.createElement('span');
+        label.textContent = item.textContent?.trim() || value;
+        selectedLabels.push(label.textContent);
+        const remove = document.createElement('button');
+        remove.type = 'button';
+        remove.className = 'ren-select-chip-remove';
+        remove.dataset.value = value;
+        remove.setAttribute('aria-label', `Remove ${label.textContent}`);
+        remove.textContent = '×';
+        remove.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          this.selectValue(this.#selectedValue.filter((selected) => selected !== value), true);
+          this.dispatchEvent(new CustomEvent('ren-select-change', {
+            bubbles: true,
+            detail: { value: this.value, label: label.textContent, item },
+          }));
+          this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
+        });
+        chip.append(label, remove);
+        chips.appendChild(chip);
+      });
+      this.insertBefore(chips, this.#trigger);
+
+      const valueSpan = document.createElement('span');
+      valueSpan.className = 'ren-select-value';
+      valueSpan.textContent = selectedLabels.join(', ');
+      this.#trigger.appendChild(valueSpan);
+    } else if (!this.#selectedValue || !this.#selectedItem) {
       // Show placeholder
       const placeholderSpan = document.createElement('span');
       placeholderSpan.className = 'ren-select-placeholder';
@@ -796,15 +871,15 @@ export class RenSelect extends HTMLElement {
 
   /**
    * Get current selected value
-   * @returns {string|null} Selected value or null
+   * @returns {string|string[]|null} Selected value, ordered values, or null
    */
   get value() {
-    return this.#selectedValue;
+    return Array.isArray(this.#selectedValue) ? [...this.#selectedValue] : this.#selectedValue;
   }
 
   /**
    * Set value programmatically
-   * @param {string} value - Value to select
+   * @param {string|string[]} value - Value or ordered values to select
    */
   set value(value) {
     this.selectValue(value, true);

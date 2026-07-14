@@ -22,15 +22,16 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: 0.15em 0.55em;
-  font-size: var(--text-xs);
-  font-weight: var(--weight-semibold);
+  min-height: var(--ren-badge-height);
+  padding: 0.15em var(--ren-badge-padding-x);
+  font-size: var(--ren-badge-font-size);
+  font-weight: var(--ren-badge-font-weight);
   line-height: 1.5;
   white-space: nowrap;
-  border-radius: var(--radius-full);
+  border-radius: var(--ren-badge-radius);
   /* Default: neutral */
-  background-color: var(--color-fill);
-  color: var(--color-text-secondary);
+  background-color: var(--ren-badge-bg);
+  color: var(--ren-badge-color);
 }
 
 /* ─── Variants ─── */

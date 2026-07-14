@@ -49,7 +49,7 @@ canonicalImports:
     - "The dropdown uses the native Popover API plus CSS anchor positioning via position-area; older browsers fall back to local absolute positioning."
 
 requiredMarkup:
-  - "Root <div class=\"ren-color-picker\"> contains a trigger button and a .ren-color-picker-dropdown popover; do not flatten the structure."
+  - "Root <ren-color-picker> is the consumer-authored host; its JS generates the trigger button and .ren-color-picker-dropdown popover."
   - "Trigger is a real <button class=\"ren-color-picker-trigger\"> with aria-expanded reflecting popover state."
   - "Saturation/brightness area renders a <canvas class=\"ren-color-picker-saturation-canvas\"> inside .ren-color-picker-saturation; do not replace with a gradient div."
   - "Hue handle and alpha handle are decorative thumbs (no tab stops) — keyboard input lives on the hex / channel inputs."
@@ -95,7 +95,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-color-picker">...</div>
+<ren-color-picker value="#007aff" placement="bottom"></ren-color-picker>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

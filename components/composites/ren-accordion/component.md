@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-accordion">...</div>
+<ren-accordion type="single"><details><summary class="ren-accordion-trigger">Billing</summary><div class="ren-accordion-content">Billing details</div></details></ren-accordion>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

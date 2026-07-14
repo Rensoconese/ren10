@@ -92,7 +92,13 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-pagination">...</div>
+<nav class="ren-pagination" aria-label="Pagination">
+  <a class="ren-pagination-prev" href="?page=1" aria-label="Previous page">‹</a>
+  <a class="ren-pagination-item" href="?page=1">1</a>
+  <a class="ren-pagination-item" href="?page=2" aria-current="page">2</a>
+  <a class="ren-pagination-next" href="?page=3" aria-label="Next page">›</a>
+</nav>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

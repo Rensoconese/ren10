@@ -94,7 +94,12 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-popover">...</div>
+<button id="account-trigger" type="button" data-popover-trigger>Account</button>
+<ren-popover trigger-id="account-trigger" placement="bottom">
+  <div class="ren-popover-header"><strong>Account</strong></div>
+  <div class="ren-popover-body">Signed in as Jane</div>
+</ren-popover>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

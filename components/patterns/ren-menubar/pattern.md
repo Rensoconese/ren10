@@ -96,7 +96,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-menubar">...</div>
+<ren-menubar><div class="ren-menubar" role="menubar"><button class="ren-menubar-trigger" type="button" aria-haspopup="menu" aria-expanded="false">File</button><div class="ren-menubar-menu" role="menu" hidden><button class="ren-menubar-item" type="button" role="menuitem">New</button></div></div></ren-menubar>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

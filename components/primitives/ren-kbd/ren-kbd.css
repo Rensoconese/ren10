@@ -17,15 +17,15 @@
   align-items: center;
   justify-content: center;
   min-width: 1.5em;
-  padding: 0.1em 0.4em;
-  font-family: var(--font-mono);
-  font-size: var(--caption-size);
+  padding: var(--ren-kbd-padding);
+  font-family: var(--ren-kbd-font-family);
+  font-size: var(--ren-kbd-font-size);
   font-weight: var(--weight-medium);
   line-height: 1.4;
-  color: var(--color-text);
-  background-color: var(--color-surface-sunken);
-  border: var(--stroke-1) solid var(--color-border-strong);
+  color: var(--ren-kbd-color);
+  background-color: var(--ren-kbd-bg);
+  border: var(--stroke-1) solid var(--ren-kbd-border);
   border-bottom-width: 2px;
-  border-radius: var(--radius-sm);
+  border-radius: var(--ren-kbd-radius);
   white-space: nowrap;
 }

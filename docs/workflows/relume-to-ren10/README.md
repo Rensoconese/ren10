@@ -1,0 +1,334 @@
+# Relume to Ren10 Block Workflow — Operator Runbook
+
+Repeatable conversion of Relume library modules into production Ren10 blocks.
+Relume supplies reference anatomy, behavior, relationships, proportions, states,
+and responsive intent. Ren10 supplies implementation, contracts, tokens,
+accessibility, and final visual language.
+
+This runbook implements the approved design at
+`docs/superpowers/specs/2026-07-12-relume-to-ren10-workflow-design.md`.
+
+## Hard rules
+
+- Do not copy Relume source, classes, text, URLs, assets, or runtime dependencies.
+- Do not require pixel-perfect reproduction or change RenDS solely to imitate Relume.
+- Vanilla HTML, CSS, and JavaScript only (Light DOM).
+- Relume OAuth failure is a hard preflight stop; never substitute memory.
+- Restrict every feature commit to the packet `allowedFiles`.
+
+Automation can prove declared structure and behavior. It cannot decide whether a
+composition looks coherent. A packet cannot advance from `green` to `reviewed`
+until Codex has inspected fresh screenshots and the actual DOM/CSS cascade.
+
+## Stages
+
+```
+reference → mapped → red → green → reviewed → accepted
+```
+
+Stage transitions require packet-local evidence JSON and are enforced by
+`scripts/lib/relume-workflow.mjs` (trusted gates from Task 2):
+
+| Transition | Evidence requirements |
+| --- | --- |
+| `reference` → `mapped` | `stage`, `passed: true`, `source: "relume-mcp"`, `completeSource: true` |
+| `mapped` → `red` | `stage`, `passed: true` |
+| `red` → `green` | `stage`, `passed: true` |
+| `green` → `reviewed` | Codex visual review: `result: "passed"`, `reviewer: "Codex"`, `reviewedCommit` (git hash or `"packet"`), `captures.desktop` + `captures.mobile`, `capturesFresh: true`, non-empty `cascadeInspection` |
+| `reviewed` → `accepted` | Explicit human acceptance: `kind: "human-acceptance"`, human `acceptor` (not automation/CI/bot/system/Codex/Grok), `result: "accepted"` or `"passed"` |
+
+Generic `{ "stage", "passed": true }` evidence cannot skip Codex visual review or
+human acceptance.
+
+## Templates
+
+| File | Role |
+| --- | --- |
+| `templates/reference-brief.md` | Complete source-derived extraction (facts, responsive/interaction states, exclusions) |
+| `templates/translation-map.md` | RenDS mapping, cascade risks, progressive enhancement |
+| `templates/implementation-packet.md` | Self-contained Grok handoff |
+| `templates/acceptance.json` | Machine-readable acceptance criteria (includes non-automated Codex visual review) |
+
+## CLI commands
+
+Default module root: `docs/workflows/relume-to-ren10/modules`.
+
+```bash
+# Scaffold a new packet (built-in defaults, or --template-root for these templates)
+node scripts/relume-workflow.mjs init \
+  --family <family> \
+  --module <moduleId> \
+  --block <block-slug> \
+  --path <repo-relative-html> \
+  [--test-path <repo-relative-spec>] \
+  [--root docs/workflows/relume-to-ren10/modules] \
+  [--template-root docs/workflows/relume-to-ren10/templates]
+
+# For non-navbar families, --test-path is required.
+node scripts/relume-workflow.mjs init \
+  --family heroes \
+  --module hero3 \
+  --block hero-split \
+  --path templates/blocks/hero-split.html \
+  --test-path tests/components/blocks-heroes.spec.cjs \
+  --template-root docs/workflows/relume-to-ren10/templates
+
+node scripts/relume-workflow.mjs validate <packet-dir>
+node scripts/relume-workflow.mjs status <packet-dir>
+node scripts/relume-workflow.mjs advance <packet-dir> --evidence <packet-local-stage-evidence.json>
+node scripts/relume-workflow.mjs validate-all docs/workflows/relume-to-ren10/inventory.json
+```
+
+`status` and `validate` both run full `validatePacketDir` (artifacts + evidence
+lineage). On any invalid packet, `status` exits nonzero and prints `INVALID`
+plus the validation errors to stderr — it never prints a trustworthy
+`moduleId: stage` line alone for a broken packet.
+
+Package scripts:
+
+```bash
+npm run workflow:relume -- <init|validate|status|advance|validate-all> ...
+npm run workflow:relume:check
+npm run test:workflow
+```
+
+`npm run test:workflow` is a development-checkout command: the published npm
+tarball intentionally includes the workflow runtime, but not its repository
+test files. The other two package scripts above are available in the packed
+runtime when their referenced workflow documents are present.
+
+`workflow:relume:check` runs `validate-all` against
+`docs/workflows/relume-to-ren10/inventory.json` and fully validates every
+`in_progress` / `accepted` packet under the sibling `modules/` directory.
+
+## Inventory ledger
+
+Family/module status is recorded in `inventory.json` next to this runbook:
+
+| Field | Meaning |
+| --- | --- |
+| `families[].id` | Stable family id (unique) |
+| `families[].baseline` | Representative module for the family |
+| `families[].modules[].id` | Stable module id (unique globally) |
+| `families[].modules[].status` | `queued` \| `in_progress` \| `accepted` \| `skipped` |
+| `families[].modules[].packet` | Single-segment packet directory under `modules/` |
+| `families[].modules[].reason` | Required non-empty reason when `skipped` |
+
+Rules enforced by `validateInventory` / `validate-all`:
+
+- Inventory version must be `1`.
+- At most one module may be `in_progress` globally.
+- Packet paths are single safe module-dir segments (no traversal, absolute,
+  multi-segment, or symlink escape outside `modules/`).
+- Every `in_progress` and `accepted` entry is validated with
+  `validatePacketDir`, not only a stage string check.
+- After packet validation, ledger identity must match the packet:
+  `packet.moduleId === module.id` and `packet.family === family.id`.
+- Optional `ren10Block` must be a safe repo-relative path equal to
+  `packet.blockPath`, resolve to a regular file inside the repository root
+  (symlink / realpath escape rejected). `validateInventory` accepts optional
+  `{ repoRoot }`; CLI passes the known package root, and the canonical
+  `docs/workflows/relume-to-ren10/modules` layout can derive it.
+- `accepted` inventory rows require an `accepted` packet stage.
+
+**Multi-`in_progress` short-circuit:** when more than one module is
+`in_progress`, validation emits only the concurrency error for those rows and
+skips their FS/packet checks so the plan contract remains a single deterministic
+message (`Inventory may contain only one in_progress module; found …`). Accepted
+rows still fully validate. Full multi-error aggregation is intentionally deferred.
+
+Populate additional module IDs only after a successful authenticated Relume
+category query — do not invent IDs from memory.
+
+## Packaged runtime
+
+The published `ren10` package includes the minimal workflow runtime so inventory
+validation is portable:
+
+| Path | Role |
+| --- | --- |
+| `scripts/relume-workflow.mjs` | CLI (`init` / `validate` / `status` / `advance` / `validate-all`) |
+| `scripts/lib/relume-workflow.mjs` | Trusted packet + inventory gates |
+| `scripts/capture-block-matrix.mjs` | Render-matrix capture helper |
+| `tests/utils/static-server.cjs` | Capture static server dependency |
+
+Capture still requires a Playwright-capable environment (`@playwright/test` is a
+devDependency of this repository). Workflow unit tests, `.ren10-workflow/`
+captures, and bulk Playwright suites are not published.
+
+## Required evidence filenames
+
+Store evidence inside the packet directory (never symlinks or paths outside the
+packet). `packet.evidence` must point at **one schema-valid JSON file per
+completed stage**, using a **portable packet-relative path** (never an absolute
+machine path). `advance` may accept an absolute in-packet evidence file at the
+CLI boundary, then stores the normalized relative pointer. `validatePacketDir`
+loads each pointer through the same containment + `validateStageEvidence` path
+as `advancePacket`, and rejects absolute pointers even when they resolve inside
+the packet on the current machine.
+
+A multi-stage audit ledger (for example `evidence.json` with nested
+`reference` / `green` / `reviewed` objects) is optional narrative history only.
+It **cannot** substitute for stage evidence: a single file cannot satisfy
+different stage schemas for every completed transition.
+
+Suggested per-stage names (use these as `packet.evidence` values):
+
+| Stage completed | Suggested evidence file | Notes |
+| --- | --- | --- |
+| `reference` | `reference-evidence.json` | Relume MCP complete source only |
+| `mapped` | `mapped-evidence.json` | Translation map complete |
+| `red` | `red-evidence.json` | Expected failing tests recorded |
+| `green` | `green-evidence.json` | Codex visual review proof (not generic pass) |
+| `reviewed` | `reviewed-evidence.json` | Explicit human acceptor identity |
+
+Lineage trust by stage (completed transitions before `packet.stage`):
+
+| `packet.stage` | Required evidence pointers |
+| --- | --- |
+| `reference` | none (initial stage) |
+| `mapped` | `reference` |
+| `red` | `reference`, `mapped` |
+| `green` | `reference`, `mapped`, `red` |
+| `reviewed` | `reference`, `mapped`, `red`, `green` |
+| `accepted` | `reference`, `mapped`, `red`, `green`, `reviewed` |
+
+Example green evidence shape:
+
+```json
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "packet",
+  "captures": {
+    "desktop": "captures/desktop-light-default.png",
+    "mobile": "captures/mobile-light-default.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Inspected DOM semantics and CSS cascade; no duplicate affordances."
+}
+```
+
+Example reviewed evidence shape:
+
+```json
+{
+  "stage": "reviewed",
+  "kind": "human-acceptance",
+  "acceptor": "product-owner",
+  "result": "accepted"
+}
+```
+
+## Cache-busting rule
+
+Every capture URL must include a unique workflow cache key so browser and proxy
+caches cannot serve stale HTML/CSS/JS. The capture runner appends
+`?ren10_capture=<module>-<state>-<commit>`. Screenshots whose DOM does not
+contain the expected new anatomy, or that were not recaptured after the latest
+edit, are invalid for Gate 6 / `green` → `reviewed`.
+
+## Gates 0–8
+
+### Gate 0 — Tool and workspace preflight
+
+1. Confirm Relume MCP is authenticated and callable.
+2. Confirm Grok authentication and selected model.
+3. Confirm local browser, test runner, and static server can run.
+4. Record branch, worktree state, and user-owned dirty files.
+5. Define exact files Grok may change (`allowedFiles`).
+
+OAuth recovery (do not store or document tokens):
+
+```bash
+codex mcp login relume
+```
+
+If OAuth fails, stop. Do not reconstruct reference from memory or an old summary.
+
+### Gate 1 — Complete Relume extraction
+
+Retrieve the complete module via Relume MCP. Fill `reference-brief.md` with only
+source-visible facts. Label unavailable evidence. Keep proprietary source private;
+public Ren10 output must not contain Relume names, classes, URLs, content, or
+framework dependencies.
+
+Advance only with `source: "relume-mcp"` and `completeSource: true`.
+
+### Gate 2 — RenDS translation map
+
+Load contracts in AGENTS.md order. Fill `translation-map.md`, including
+`primitive-zero.md` cascade inspection for native elements. Record rejected
+mappings.
+
+### Gate 3 — Acceptance contract and RED tests
+
+Finalize `acceptance.json` criteria. Grok writes failing regression tests and
+records expected RED before production edits.
+
+### Gate 4 — Grok implementation packet
+
+Send a filled `implementation-packet.md` (reference brief, translation map,
+acceptance criteria, allowed/forbidden files, RED rule, validation commands).
+Grok implements only inside allowed scope.
+
+### Gate 5 — Standard render matrix
+
+Render from a local HTTP server with cache-busting URLs. Minimum matrix:
+
+| View | Required states |
+| --- | --- |
+| Desktop light | Default and every major open state |
+| Desktop dark | Default and every major open state |
+| Mobile light | Default, primary navigation open, nested state open |
+| Mobile dark | Primary/nested state open |
+| JavaScript disabled | Usable mobile fallback |
+| Reduced motion | Every animated interactive state |
+
+Capture only after the latest edit.
+
+### Gate 6 — Independent Codex review
+
+Codex does not rely on Grok's report. Independently check git diff/scope, DOM
+semantics, cascade/pseudo-elements, visual coherence, render-matrix screenshots,
+intentional differences, and validation output. Advance `green` → `reviewed`
+only with complete Codex visual-review evidence (fresh desktop + mobile captures
+and cascade inspection).
+
+### Gate 7 — Final validation
+
+- Focused Playwright behavior and structural-visual assertions
+- axe WCAG 2.1 AA, keyboard/focus, touch targets
+- Desktop/mobile overflow and overlap
+- Light/dark themes, JS-disabled fallback, reduced motion
+- `npm run lint`, `npm run agent:check` when applicable
+- AGENTS.md contract checks
+- `git diff --check` and `allowedFiles` audit
+
+### Gate 8 — User presentation
+
+Present only a candidate that passed Gates 0–7. Include desktop and mobile
+screenshots, block path, intentional differences, validation results, and commit
+id. Advance `reviewed` → `accepted` only after explicit human acceptance
+evidence (not automation or model identities).
+
+## Failure handling
+
+- Expired Relume OAuth: `codex mcp login relume`; do not reconstruct from memory.
+- Missing preview: factual brief from complete source; label inferences.
+- Grok changes forbidden files: stop, preserve user work, restrict the diff.
+- Tests pass but screenshots look wrong: fail Gate 6; do not advance to reviewed.
+- Screenshot and DOM disagree: invalidate cache, reload with a new query value, recapture.
+- Three unsuccessful correction cycles: stop and reconsider the translation architecture.
+
+## Family-by-family operation
+
+1. Inventory modules.
+2. Group by shared anatomy.
+3. Choose the smallest representative baseline.
+4. Complete the entire workflow for that baseline.
+5. Reuse validated structure for later variants without assuming cosmetic-only differences.
+
+One module in implementation at a time unless modules are independent with
+separate files/worktrees.

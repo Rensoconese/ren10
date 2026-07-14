@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "note": "Complete Relume MCP source retrieval for navbar6_component / Navbar 6 / slug navbar6, including shell, button, media-query, and utility modules. Proprietary source is not stored in-repo; sanitized anatomy, counts, responsive intent, motion durations, and source defects are recorded in reference-brief.md. Unavailable: Tailwind config exact md/lg pixels, rendered screenshot, computed styles, SVG path contents, WCAG/browser matrix, reduced-motion and RTL evidence."
+}

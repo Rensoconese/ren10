@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ren10 workspace starter</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ren10@0.10.0/index.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <a class="ren-link-skip" href="#main-content">Skip to main content</a>
+  <div class="ren-sidebar-layout">
+    <ren-sidebar
+      class="ren-sidebar"
+      id="workspace-sidebar"
+      role="complementary"
+      aria-label="Workspace navigation"
+      style="--ren-sidebar-active-color: var(--color-accent-strong)"
+    >
+      <div class="ren-sidebar-header">
+        <a class="ren-sidebar-item" href="#dashboard" aria-label="Northstar home">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">N</span>
+          <span class="ren-sidebar-item-text">Northstar</span>
+        </a>
+      </div>
+
+      <nav class="ren-sidebar-nav" aria-label="Main">
+        <a class="ren-sidebar-item active" href="#dashboard" aria-current="page">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⌂</span>
+          <span class="ren-sidebar-item-text">Dashboard</span>
+        </a>
+        <a class="ren-sidebar-item" href="#settings">
+          <span class="ren-sidebar-item-icon" aria-hidden="true">⚙</span>
+          <span class="ren-sidebar-item-text">Settings</span>
+        </a>
+      </nav>
+
+      <div class="ren-sidebar-footer ren-stack-sm">
+        <button
+          class="ren-btn ren-btn-secondary"
+          id="theme-toggle"
+          type="button"
+          aria-pressed="false"
+        >Use dark theme</button>
+      </div>
+      <button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"></button>
+    </ren-sidebar>
+    <div class="ren-sidebar-overlay" aria-hidden="true"></div>
+
+    <main class="ren-sidebar-main" id="main-content">
+      <div class="ren-center-wide ren-stack-lg" style="padding: var(--space-card-padding)">
+        <header class="ren-row-spread" id="dashboard">
+          <div class="ren-stack-sm">
+            <h1>Workspace overview</h1>
+            <p style="color: var(--color-text-muted)">A verified Ren10 dashboard and settings foundation.</p>
+          </div>
+          <div class="ren-cluster">
+            <button
+              class="ren-btn ren-btn-secondary"
+              id="mobile-nav-toggle"
+              type="button"
+              aria-controls="workspace-sidebar"
+              aria-expanded="false"
+            >Open navigation</button>
+            <span class="ren-badge ren-badge-success">All systems operational</span>
+          </div>
+        </header>
+
+        <section class="ren-grid-3" aria-labelledby="metrics-title">
+          <h2 class="ren-sr-only" id="metrics-title">Key metrics</h2>
+          <article class="ren-card">
+            <div class="ren-card-header">
+              <h3 class="ren-card-title">Active projects</h3>
+              <p class="ren-card-description">Across the workspace</p>
+            </div>
+            <div class="ren-card-body"><strong>24</strong></div>
+          </article>
+          <article class="ren-card">
+            <div class="ren-card-header">
+              <h3 class="ren-card-title">Team members</h3>
+              <p class="ren-card-description">With current access</p>
+            </div>
+            <div class="ren-card-body"><strong>38</strong></div>
+          </article>
+          <article class="ren-card" data-status="success">
+            <div class="ren-card-header">
+              <h3 class="ren-card-title">Release health</h3>
+              <p class="ren-card-description">Success: checks are passing</p>
+            </div>
+            <div class="ren-card-body"><strong>100%</strong></div>
+          </article>
+        </section>
+
+        <section class="ren-card" id="settings" aria-labelledby="settings-title">
+          <header class="ren-card-header">
+            <h2 class="ren-card-title" id="settings-title">Workspace settings</h2>
+            <p class="ren-card-description">Update the visible workspace profile.</p>
+          </header>
+          <div class="ren-card-body">
+            <ren-form data-validate="onTouched">
+              <form class="ren-form ren-stack" novalidate>
+                <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden>
+                  <strong>Please fix the highlighted fields.</strong>
+                  <ul></ul>
+                </div>
+                <ren-field data-rules="required">
+                  <label>Workspace name</label>
+                  <input class="ren-input" name="workspace" type="text" value="Northstar" required>
+                  <span data-error></span>
+                </ren-field>
+                <ren-field data-rules="required|email">
+                  <label>Contact email</label>
+                  <input class="ren-input" name="email" type="email" autocomplete="email" value="team@example.com" required>
+                  <span data-description>Release notices are sent to this address.</span>
+                  <span data-error></span>
+                </ren-field>
+                <div class="ren-form-actions">
+                  <button class="ren-btn ren-btn-primary" type="submit">Save settings</button>
+                </div>
+                <p id="save-status" role="status" aria-live="polite"></p>
+              </form>
+            </ren-form>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

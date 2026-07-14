@@ -1,0 +1,47 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "711e27441d5e01aa34f074da0f55e8716f6d0dfa",
+  "captures": {
+    "desktop": ".ren10-workflow/navbar9-final3/navbar9/desktop-light-open.png",
+    "mobile": ".ren10-workflow/navbar9-final3/navbar9/mobile-light-nested-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected the complete DOM, block CSS cascade, and controller after Grok implementation, then generated and visually reviewed 11 fresh cache-busted states. Desktop light/dark shows one aligned trigger and one chevron, four equal icon-title-description groups, and a full-width footer band beneath the grid. Tablet reflows to two readable columns. Mobile uses one start-aligned in-flow tree, a centered close icon, hidden descriptions, stacked footer content, one action separator, and no horizontal overflow. The first dark captures exposed insufficient surface contrast; Codex changed destination icon containers and the footer band to semantic --color-fill, removed numeric z-index fallbacks, and mapped the footer layout to ren-cluster before recapturing. Native details card chrome, marker, divider, and generated chevron are neutralized; icons use ren-icon sizing without inline dimensions; JavaScript-disabled disclosure remains usable; reduced motion, light/dark themes, 44px touch targets, Escape/focus return, outside/link close, click pin, and stable pointer transfer all pass.",
+  "testResults": {
+    "navbar9Focused": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs -g 'navbar9|Navbar Mega Menu Footer'",
+      "result": "18 passed, 0 failed"
+    },
+    "navbarFamilyRegression": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs",
+      "result": "89 passed, 0 failed; axe WCAG 2.1 AA checks clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "agentCheck": {
+      "command": "npm run agent:check",
+      "result": "all smoke, skill, doctor, eval, and knowledge checks passed"
+    },
+    "capture": {
+      "command": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/navbar9/render-matrix.json --module navbar9 --output .ren10-workflow/navbar9-final3 --repo-root .",
+      "result": "11 PNG and 11 JSON states captured after final visual corrections"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-mega-menu-footer.html",
+  "intentionalDifferences": [
+    "Ren10 keeps one responsive Light DOM navigation tree instead of duplicate desktop/mobile trees",
+    "Ren10 uses the established 48rem shell breakpoint instead of the source approximate 991px interaction boundary",
+    "Native details/summary plus accessible Escape, focus return, outside/link close, click pin, and stable desktop hover replace the source fake-button trigger",
+    "Semantic tokens, layout primitives, and reduced-motion behavior replace source framework utilities and raw timing/elevation values",
+    "Tablet uses two columns before the four-column wide layout to preserve readable destination widths"
+  ]
+}

@@ -26,18 +26,18 @@
 .ren-progress {
   display: flex;
   width: 100%;
-  height: 0.5rem;   /* default / md */
-  background-color: var(--color-fill);
-  border-radius: var(--radius-full);
+  height: var(--ren-progress-height);   /* default / md */
+  background-color: var(--ren-progress-bg);
+  border-radius: var(--ren-progress-radius);
   overflow: hidden;
 }
 
 .ren-progress-bar {
   height: 100%;
   width: 0%;
-  background-color: var(--color-accent);
-  border-radius: var(--radius-full);
-  transition: width var(--duration-state) var(--ease-enter);
+  background-color: var(--ren-progress-fill);
+  border-radius: var(--ren-progress-radius);
+  transition: width var(--ren-progress-duration) var(--ren-progress-easing);
 }
 
 /* ─── Sizes ─── */

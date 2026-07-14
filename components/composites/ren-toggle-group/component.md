@@ -93,7 +93,8 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<div class="ren-toggle-group">...</div>
+<ren-toggle-group type="single" value="left"><button class="ren-toggle-group-item" type="button" data-value="left">Left</button><button class="ren-toggle-group-item" type="button" data-value="center">Center</button><button class="ren-toggle-group-item" type="button" data-value="right">Right</button></ren-toggle-group>
+
 ```
 
 Use the docs page and source files listed below for full examples before adding production markup.

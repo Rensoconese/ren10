@@ -43,13 +43,13 @@
 /* Track */
 .ren-switch-track {
   position: relative;
-  width: 3.2rem;    /* 51px — Apple HIG */
-  height: 1.9rem;   /* 31px */
+  width: var(--ren-switch-width);    /* 51px — Apple HIG */
+  height: var(--ren-switch-height);   /* 31px */
   flex-shrink: 0;
-  background-color: var(--color-fill-active);
+  background-color: var(--ren-switch-bg);
   border-radius: var(--radius-full);
   transition:
-    background-color var(--duration-state) var(--ease-enter);
+    background-color var(--ren-switch-duration) var(--ren-switch-easing);
 }
 
 /* Thumb */
@@ -58,25 +58,25 @@
   position: absolute;
   top: 2px;
   left: 2px;
-  width: calc(1.9rem - 4px);   /* 27px */
-  height: calc(1.9rem - 4px);
-  background-color: var(--white);
+  width: var(--ren-switch-thumb-size);   /* 27px */
+  height: var(--ren-switch-thumb-size);
+  background-color: var(--ren-switch-thumb-color);
   border-radius: var(--radius-full);
   box-shadow: var(--shadow-sm);
   transition:
-    transform var(--duration-state) var(--ease-state-change),
-    box-shadow var(--duration-state) var(--ease-enter);
+    transform var(--ren-switch-duration) var(--ren-switch-easing),
+    box-shadow var(--ren-switch-duration) var(--ren-switch-easing);
 }
 
 /* ─── States ─── */
 
 /* Checked (on) */
 .ren-switch > input:checked + .ren-switch-track {
-  background-color: var(--color-success);
+  background-color: var(--ren-switch-checked-bg);
 }
 
 .ren-switch > input:checked + .ren-switch-track::after {
-  transform: translateX(calc(3.2rem - 1.9rem));
+  transform: translateX(calc(var(--ren-switch-width) - var(--ren-switch-height)));
 }
 
 /* Hover */
@@ -96,11 +96,11 @@
 
 /* Active */
 .ren-switch:active > .ren-switch-track::after {
-  width: calc(1.9rem + 2px);
+  width: calc(var(--ren-switch-thumb-size) + 6px);
 }
 
 .ren-switch:active > input:checked + .ren-switch-track::after {
-  transform: translateX(calc(3.2rem - 1.9rem - 6px));
+  transform: translateX(calc(var(--ren-switch-width) - var(--ren-switch-height) - 6px));
 }
 
 /* Disabled */
