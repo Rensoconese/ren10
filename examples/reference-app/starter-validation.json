@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "packageVersion": "0.10.0",
+  "artifactPath": "examples/reference-app",
+  "contentHash": "sha256:48183b3a4752f5747732b98d3f5b56497ec3f2a7b8a760ba6cd4c753c1f98a65",
+  "scenarios": [
+    "shell-sidebar",
+    "settings-form",
+    "data-table",
+    "dialog-keyboard-focus",
+    "status-empty-feedback"
+  ],
+  "accessibility": {
+    "standard": "WCAG 2.1 AA",
+    "axeRequired": true
+  },
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "visualManifest": "examples/reference-app/visual-references.json",
+  "review": {
+    "process": "independent-review",
+    "reviewer": "Codex independent-review agent",
+    "reviewedAt": "2026-07-14",
+    "command": "node scripts/capture-starter-visuals.mjs && npx playwright test --config tests/agent-starter/playwright.config.cjs",
+    "result": "approved"
+  },
+  "suiteEvidence": {
+    "suitePath": "tests/agent-starter/reference-app.spec.js",
+    "command": "npx playwright test --config tests/agent-starter/playwright.config.cjs",
+    "result": {
+      "status": "passed",
+      "tests": 11,
+      "failures": 0,
+      "axeViolations": 0
+    }
+  },
+  "status": "approved"
+}

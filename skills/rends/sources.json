@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "package": {
+    "name": "ren10",
+    "version": "0.10.0"
+  },
+  "github": {
+    "org": "Rensoconese",
+    "repo": "ren10",
+    "ref": "v0.10.0"
+  },
+  "allowedRoots": [
+    "ren-design.md",
+    "tokens",
+    "base",
+    "components",
+    "examples",
+    "skills/rends"
+  ],
+  "excludedRoots": [
+    "_archive",
+    "rends-skill",
+    "ROADMAP.md",
+    "STATUS.md",
+    "ENHANCEMENT-PLAN.md"
+  ]
+}

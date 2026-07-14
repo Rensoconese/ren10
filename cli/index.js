@@ -12,6 +12,8 @@ import { fileURLToPath } from 'url';
 import { API_VERSION, jsonEnvelope, jsonErrorEnvelope } from './json-envelope.js';
 import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from './registry.js';
 import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
+import { validateV0Adapter } from '../scripts/check-v0-adapter.mjs';
+import { validateStarterApproval } from '../scripts/check-starter-approval.mjs';
 import {
   formatKnowledgeRows,
   loadJsonGraph,
@@ -1382,6 +1384,35 @@ async function cmdDoctor() {
     missingKnowledge.length ? `Missing: ${missingKnowledge.join(', ')}` : 'Knowledge graph files are present.',
     missingKnowledge.length ? 'Run npm run knowledge:build and commit generated files.' : undefined,
   );
+
+  const lifecycleChecks = [
+    {
+      id: 'v0-adapter',
+      label: 'v0 adapter',
+      validate: validateV0Adapter,
+      success: 'The packaged v0 adapter, provenance, and vanilla starter are valid.',
+      fix: 'Run node scripts/check-v0-adapter.mjs and resolve every reported adapter error.',
+    },
+    {
+      id: 'starter-approval',
+      label: 'Starter approval',
+      validate: validateStarterApproval,
+      success: 'The reference starter approval is current and valid.',
+      fix: 'Run node scripts/check-starter-approval.mjs and refresh approval evidence after review.',
+    },
+  ];
+  for (const lifecycle of lifecycleChecks) {
+    const result = await lifecycle.validate(RENDS_ROOT);
+    const errors = Array.isArray(result?.errors) ? result.errors : [];
+    const ok = result?.ok === true && errors.length === 0;
+    add(
+      lifecycle.id,
+      lifecycle.label,
+      ok ? 'pass' : 'fail',
+      ok ? lifecycle.success : errors.length ? errors.join(' ') : `${lifecycle.label} validation failed without diagnostics.`,
+      ok ? undefined : lifecycle.fix,
+    );
+  }
 
   const pkg = readPackageJson();
   const requiredScripts = ['lint', 'test:evals', 'knowledge:check', 'smoke:cli-copy'];

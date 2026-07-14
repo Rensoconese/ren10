@@ -1,6 +1,6 @@
 {
   "name": "ren10",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
@@ -41,10 +41,13 @@
     "themes/appearance.css",
     "themes/theme-generator.js",
     "CHANGELOG.md",
+    "scripts/check-v0-adapter.mjs",
+    "scripts/check-starter-approval.mjs",
     "scripts/relume-workflow.mjs",
     "scripts/lib/relume-workflow.mjs",
     "scripts/capture-block-matrix.mjs",
-    "tests/utils/static-server.cjs"
+    "tests/utils/static-server.cjs",
+    "tests/agent-starter/"
   ],
   "publishConfig": {
     "access": "public",
@@ -87,12 +90,13 @@
     "lint": "npm run lint:css && npm run lint:tokens && npm run lint:contracts && npm run lint:js",
     "check:release": "node scripts/check-release.mjs",
     "test": "npm run test:portable",
-    "test:portable": "npm run test:a11y && npm run test:components && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
+    "test:portable": "npm run test:a11y && npm run test:components && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
     "test:all": "npm run test:portable && npm run test:visual:linux",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
     "test:visual:linux": "node scripts/run-linux-visual.mjs",
     "test:components": "playwright test --config tests/components/playwright.config.cjs",
+    "test:agent-starter": "playwright test --config tests/agent-starter/playwright.config.cjs",
     "test:theme": "node themes/theme-generator.test.js",
     "test:evals": "node evals/run-eval.mjs --all",
     "test:exports": "node scripts/verify-package-exports.mjs",
@@ -102,9 +106,10 @@
     "agent:smoke": "node scripts/smoke-agent-cli.mjs",
     "agent:skill:check": "node scripts/check-agent-skill.mjs",
     "agent:skill:pack": "node scripts/pack-agent-skill.mjs",
+    "agent:v0:check": "node scripts/check-v0-adapter.mjs && node scripts/check-starter-approval.mjs",
     "agent:manifest": "node cli/index.js manifest --json",
     "agent:doctor": "node cli/index.js doctor",
-    "agent:check": "npm run agent:smoke && npm run agent:skill:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
+    "agent:check": "npm run agent:smoke && npm run agent:skill:check && npm run agent:v0:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
     "knowledge:build": "node scripts/build-knowledge-graph.mjs",
     "knowledge:check": "node scripts/check-knowledge-graph.mjs",
     "knowledge:query": "node scripts/query-knowledge-graph.mjs",
@@ -112,19 +117,19 @@
     "check:budgets": "npm run build:bundles && node scripts/check-package-budgets.mjs",
     "test:budgets": "node scripts/check-package-budgets.test.mjs",
     "check:performance": "node scripts/check-performance-contract.mjs",
-    "check:supply-chain": "node scripts/check-supply-chain.mjs"
-    ,"audit:runtime": "npm audit --omit=dev --audit-level=moderate"
-    ,"audit:full": "npm audit --audit-level=moderate"
-    ,"audit": "npm run audit:runtime && npm run audit:full"
-    ,"test:release-policy": "node scripts/check-release-p2.test.mjs"
-    ,"test:debug": "node tests/debug-utils.test.mjs"
-    ,"test:form-fuzz": "node components/patterns/ren-form/ren-form.fuzz.test.js"
-    ,"snapshots:update": "node scripts/generate-token-snapshot.mjs --update && node scripts/generate-contract-snapshot.mjs --update"
-    ,"snapshots:check": "node scripts/generate-token-snapshot.mjs && node scripts/generate-contract-snapshot.mjs"
-    ,"workflow:relume": "node scripts/relume-workflow.mjs"
-    ,"workflow:relume:check": "node scripts/relume-workflow.mjs validate-all docs/workflows/relume-to-ren10/inventory.json"
-    ,"workflow:relume:capture": "node scripts/capture-block-matrix.mjs"
-    ,"test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs"
+    "check:supply-chain": "node scripts/check-supply-chain.mjs",
+    "audit:runtime": "npm audit --omit=dev --audit-level=moderate",
+    "audit:full": "npm audit --audit-level=moderate",
+    "audit": "npm run audit:runtime && npm run audit:full",
+    "test:release-policy": "node scripts/check-release-p2.test.mjs",
+    "test:debug": "node tests/debug-utils.test.mjs",
+    "test:form-fuzz": "node components/patterns/ren-form/ren-form.fuzz.test.js",
+    "snapshots:update": "node scripts/generate-token-snapshot.mjs --update && node scripts/generate-contract-snapshot.mjs --update",
+    "snapshots:check": "node scripts/generate-token-snapshot.mjs && node scripts/generate-contract-snapshot.mjs",
+    "workflow:relume": "node scripts/relume-workflow.mjs",
+    "workflow:relume:check": "node scripts/relume-workflow.mjs validate-all docs/workflows/relume-to-ren10/inventory.json",
+    "workflow:relume:capture": "node scripts/capture-block-matrix.mjs",
+    "test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs"
   },
   "keywords": [
     "design-system",

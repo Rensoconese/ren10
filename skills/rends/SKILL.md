@@ -28,6 +28,19 @@ npx ren10 doctor
 Use `npx ren10 search "<query>" --json` when the right component, example,
 selector, or token is unclear.
 
+## Source Precedence
+
+Treat the installed `ren10` package, its CLI output, and the canonical GitHub
+source declared in `sources.json` as authoritative. Do not learn public APIs
+from `_archive/`, the legacy `rends-skill/` workspace copy, root phase/status
+notes, screenshots, or Figma frames. Visual references can guide composition
+and density, but selectors, attributes, events, tokens, and imports must be
+verified against package contracts or CLI output.
+
+If a requested component cannot be verified, run
+`npx ren10 search "<intent>" --json`. Compose it from returned contracts or
+report the capability gap; never invent a `ren-*` selector or custom element.
+
 ## Mandatory Loading Order
 
 For any task that builds, edits, or reviews UI with RenDS:
@@ -88,6 +101,16 @@ npm run agent:check
 
 For UI changes with runtime behavior, also run the relevant Playwright suites
 or the full `npm test` when the blast radius warrants it.
+
+The packaged v0 adapter is declared in `v0.json`. Its vanilla starter under
+`assets/starter/` is a reviewed baseline, not a second API source. Preserve its
+framework-free stack and re-run `npx ren10 doctor` after updating the skill or
+adopting a new package version.
+
+For migrations, inspect the installed `package.json`, `CHANGELOG.md`, and
+`MIGRATION.md`, preview copied-component changes with
+`npx ren10 upgrade --dry-run`, and validate the result before applying it to an
+existing application.
 
 ## Source Of Truth
 

@@ -9,12 +9,49 @@ import {
   isStableSemverAtLeast,
   validateWorkflowPolicy,
 } from './release-policy.mjs';
+import { collectLifecycleErrors } from './check-release.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const pkg = JSON.parse(read('package.json'));
 const errors = [];
 const requirePolicy = (condition, message) => { if (!condition) errors.push(message); };
+
+for (const [script, expected] of [
+  ['check-agent-skill.mjs', ['v0 adapter', 'starter approval']],
+  ['check-release.mjs', ['v0 adapter', 'starter approval']],
+]) {
+  const result = spawnSync(process.execPath, [path.join(root, 'scripts', script)], {
+    cwd: root,
+    encoding: 'utf8',
+  });
+  requirePolicy(result.status === 0, `${script} must pass:\n${result.stdout}${result.stderr}`);
+  for (const artifact of expected) {
+    requirePolicy(
+      result.stdout.toLowerCase().includes(artifact),
+      `${script} must report successful ${artifact} validation`,
+    );
+  }
+}
+
+const driftRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ren10-lifecycle-drift-'));
+try {
+  fs.cpSync(path.join(root, 'skills', 'rends'), path.join(driftRoot, 'skills', 'rends'), { recursive: true });
+  fs.cpSync(path.join(root, 'examples', 'reference-app'), path.join(driftRoot, 'examples', 'reference-app'), { recursive: true });
+  const driftPackage = { ...pkg, version: '99.99.99' };
+  fs.writeFileSync(path.join(driftRoot, 'package.json'), JSON.stringify(driftPackage));
+  const lifecycleErrors = await collectLifecycleErrors(driftRoot);
+  requirePolicy(
+    lifecycleErrors.some((error) => error.startsWith('v0 adapter:') && /version/i.test(error)),
+    'release lifecycle gate must reject v0 adapter version drift',
+  );
+  requirePolicy(
+    lifecycleErrors.some((error) => error.startsWith('starter approval:') && /version/i.test(error)),
+    'release lifecycle gate must reject starter approval version drift',
+  );
+} finally {
+  fs.rmSync(driftRoot, { recursive: true, force: true });
+}
 
 const lockPath = path.join(root, 'package-lock.json');
 requirePolicy(fs.existsSync(lockPath), 'package-lock.json is required');

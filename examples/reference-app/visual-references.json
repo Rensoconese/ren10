@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "packageVersion": "0.10.0",
+  "apiAuthority": {
+    "source": "package-contracts-and-cli",
+    "contracts": [
+      "ren-design.md",
+      "tokens/tokens.md",
+      "base/layouts.md",
+      "base/primitive-zero.md",
+      "components/components.md"
+    ],
+    "cli": [
+      "npx ren10 build",
+      "npx ren10 component",
+      "npx ren10 docs"
+    ]
+  },
+  "figma": {
+    "role": "optional-visual-only",
+    "apiAuthority": false
+  },
+  "capture": {
+    "command": "node scripts/capture-starter-visuals.mjs",
+    "viewport": {
+      "width": 1280,
+      "height": 900
+    }
+  },
+  "scenarios": [
+    {
+      "id": "light",
+      "file": "screenshots/light.png",
+      "theme": "light",
+      "dialogOpen": false
+    },
+    {
+      "id": "dark",
+      "file": "screenshots/dark.png",
+      "theme": "dark",
+      "dialogOpen": false
+    },
+    {
+      "id": "dialog-open",
+      "file": "screenshots/dialog-open.png",
+      "theme": "light",
+      "dialogOpen": true
+    }
+  ]
+}

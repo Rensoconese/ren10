@@ -2,6 +2,8 @@
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { validateV0Adapter } from './check-v0-adapter.mjs';
+import { validateStarterApproval } from './check-starter-approval.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
@@ -11,6 +13,21 @@ const readmePath = path.join(skillDir, 'README.md');
 
 const errors = [];
 const fail = (message) => errors.push(message);
+
+for (const [label, validate, command] of [
+  ['v0 adapter', validateV0Adapter, 'node scripts/check-v0-adapter.mjs'],
+  ['starter approval', validateStarterApproval, 'node scripts/check-starter-approval.mjs'],
+]) {
+  const result = await validate(root);
+  const diagnostics = Array.isArray(result?.errors) ? result.errors : [];
+  if (result?.ok !== true || diagnostics.length > 0) {
+    if (diagnostics.length === 0) {
+      fail(`${label}: validation failed without diagnostics. Run ${command}.`);
+    } else {
+      for (const diagnostic of diagnostics) fail(`${label}: ${diagnostic}`);
+    }
+  }
+}
 
 if (!existsSync(skillPath)) fail('Missing skills/rends/SKILL.md.');
 if (!existsSync(readmePath)) fail('Missing skills/rends/README.md.');
@@ -74,4 +91,4 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
-console.log(`RenDS agent skill check: OK (${pkg.name}@${pkg.version}).`);
+console.log(`RenDS agent skill check: OK (${pkg.name}@${pkg.version}; v0 adapter and starter approval valid).`);

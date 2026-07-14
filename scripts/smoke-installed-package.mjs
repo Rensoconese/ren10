@@ -102,6 +102,32 @@ try {
 
   const packageRoot = path.join(packageHost, 'node_modules', 'ren10');
   const cli = path.join(packageRoot, 'cli', 'index.js');
+  const requiredSkillFiles = [
+    'v0.json',
+    'sources.json',
+    'assets/starter/package.json',
+    'assets/starter/index.html',
+    'assets/starter/app.js',
+    'assets/starter/README.md',
+  ];
+  for (const file of requiredSkillFiles) {
+    if (!fs.existsSync(path.join(packageRoot, 'skills', 'rends', file))) {
+      throw new Error(`installed package is missing skills/rends/${file}`);
+    }
+  }
+  const [{ validateV0Adapter }, { validateStarterApproval }] = await Promise.all([
+    import(pathToFileURL(path.join(packageRoot, 'scripts', 'check-v0-adapter.mjs'))),
+    import(pathToFileURL(path.join(packageRoot, 'scripts', 'check-starter-approval.mjs'))),
+  ]);
+  for (const [label, validate] of [
+    ['v0 adapter', validateV0Adapter],
+    ['starter approval', validateStarterApproval],
+  ]) {
+    const validation = await validate(packageRoot);
+    if (!validation.ok) {
+      throw new Error(`installed package ${label} validation failed:\n- ${validation.errors.join('\n- ')}`);
+    }
+  }
   const packagedDocs = path.join(packageRoot, 'AGENTS.md');
   const packagedDocsBefore = fs.existsSync(packagedDocs) ? fs.readFileSync(packagedDocs) : null;
   const { REGISTRY } = await import(pathToFileURL(path.join(packageRoot, 'cli', 'registry.js')));

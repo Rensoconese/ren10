@@ -107,5 +107,17 @@ const doctor = json(['doctor', '--json'], 'doctor');
 if ((doctor.summary?.fail ?? 0) !== 0) {
   throw new Error('doctor JSON reported failures');
 }
+for (const id of ['v0-adapter', 'starter-approval']) {
+  const check = doctor.checks?.find((candidate) => candidate.id === id);
+  if (!check) throw new Error(`doctor JSON is missing the ${id} lifecycle check`);
+  if (check.status !== 'pass') {
+    throw new Error(`doctor JSON reported ${id} status=${check.status}: ${check.message}`);
+  }
+}
+
+const doctorText = run(['doctor']);
+for (const label of ['v0 adapter', 'Starter approval']) {
+  if (!doctorText.includes(label)) throw new Error(`doctor text is missing the ${label} lifecycle check`);
+}
 
 console.log('RenDS agent CLI smoke: OK');

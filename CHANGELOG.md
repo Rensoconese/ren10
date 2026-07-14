@@ -13,6 +13,30 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+### Accessibility milestones
+
+## [0.10.0] — 2026-07-14
+
+### Added
+
+- Added a first-party v0 adapter with pinned, provenance-aware sources and a
+  production-shaped vanilla starter that v0 can consume without inventing
+  Ren10 APIs.
+- Added an approved reference application, reproducible light/dark/dialog
+  visual references, and browser coverage for both the reference app and the
+  distributed starter.
+- Added lifecycle gates for the v0 adapter and starter approval to `doctor`,
+  agent checks, release checks, and installed-package smoke tests.
+- Added adversarial agent evals for framework leakage, invented components,
+  version migration grounding, and complete application generation.
 - Added deterministic token/contract snapshots, reusable browser test utilities,
   localized async form validation, RTL inference, form persistence, and fuzz
   coverage.
@@ -1193,7 +1217,9 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.9.2...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.10.0...HEAD
+[0.10.0]: https://github.com/Rensoconese/ren10/compare/v0.9.3...v0.10.0
+[0.9.3]: https://github.com/Rensoconese/ren10/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/Rensoconese/ren10/compare/v0.9.1...v0.9.2
 [0.9.1]: https://github.com/Rensoconese/ren10/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/Rensoconese/ren10/compare/v0.8.6...v0.9.0
