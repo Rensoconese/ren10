@@ -30,6 +30,11 @@
           "status": "accepted",
           "packet": "navbar8",
           "ren10Block": "templates/blocks/nav-mega-menu-link-rail.html"
+        },
+        {
+          "id": "navbar9",
+          "status": "in_progress",
+          "packet": "navbar9"
         }
       ]
     }

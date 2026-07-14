@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, four top-level entries, four mega groups with four destinations total, one footer link, two actions, one mobile toggle, and one chevron are authored",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Native activation, stable desktop hover transfer, click pin, Escape, outside close, link close, and mobile nested disclosure reach every documented state",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Every control and indicator has exactly one owner and no duplicate rendering",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Top-level peers align; four-column wide layout reflows readably; the footer is a distinct full-width band beneath the destination grid",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled mobile exposes the one navigation tree and keeps the native mega disclosure usable",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Exactly one nav landmark, named toggle with synchronized ARIA, visible focus, 44px touch targets, decorative icons hidden, and reduced-motion behavior",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}
