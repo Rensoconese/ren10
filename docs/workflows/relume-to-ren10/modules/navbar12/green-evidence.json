@@ -1,0 +1,50 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "48bf3f5048387524dceda9d3e529d5b71076b1b0",
+  "captures": {
+    "desktop": "output/playwright/navbar12-final/navbar12/desktop-light-open.png",
+    "tablet": "output/playwright/navbar12-final/navbar12/tablet-light-open.png",
+    "mobile": "output/playwright/navbar12-final/navbar12/mobile-light-dropdown-open.png",
+    "dark": "output/playwright/navbar12-final/navbar12/desktop-dark-open.png",
+    "noJavaScript": "output/playwright/navbar12-final/navbar12/mobile-js-disabled-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected the DOM, CSS cascade, controller, and 11 cache-busted render states. Desktop uses a right-aligned two-group surface beneath the nav with two coherent columns, eight icon/title/description anchors, aligned peers, and one chevron. Tablet retains two readable groups. Mobile uses one in-flow tree, centered close icon, one-column groups, condensed descriptions, one action separator, and no overflow. Dark mode and the no-JavaScript fallback remain legible and usable. Codex corrected the panel containing block and hover corridor after the first Grok pass, then replaced the panel's bespoke flex declaration with the RenDS cluster primitive. Escape/focus return, outside/destination close, click pinning, breakpoint reset, 44px targets, reduced motion, and axe WCAG 2.1 AA pass.",
+  "testResults": {
+    "navbar12Focused": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs -g 'Navbar 12|navbar12'",
+      "result": "20 passed, 0 failed"
+    },
+    "navbarFamilyRegression": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs",
+      "result": "148 passed, 0 failed; axe checks clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "agentCheck": {
+      "command": "npm run agent:check",
+      "result": "exit 0; smoke, skill, v0 adapter, starter approval, doctor, evals, and knowledge checks passed"
+    },
+    "capture": {
+      "command": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/navbar12/render-matrix.json --module navbar12 --output output/playwright/navbar12-final --repo-root .",
+      "result": "11 PNG and 11 JSON states captured and reviewed"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-logo-left-menu-right-grouped.html",
+  "intentionalDifferences": [
+    "Ren10 keeps one responsive Light DOM navigation tree instead of duplicate desktop and mobile structures",
+    "Ren10 uses one 48rem shell and interaction boundary instead of the source 991px plus utility-breakpoint split",
+    "Native details/summary and complete keyboard, focus, outside, destination, mobile, and breakpoint dismissal replace the source fake trigger",
+    "Group labels are non-heading semantic labels so the dropdown does not pollute the host document outline",
+    "Ren10 tokens and layout primitives determine dimensions and rhythm rather than pixel-matching Relume"
+  ]
+}

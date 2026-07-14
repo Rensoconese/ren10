@@ -4,13 +4,15 @@
   "moduleId": "navbar12",
   "blockSlug": "nav-logo-left-menu-right-grouped",
   "blockPath": "templates/blocks/nav-logo-left-menu-right-grouped.html",
-  "stage": "red",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-logo-left-menu-right-grouped.html",
     "tests/components/blocks-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
