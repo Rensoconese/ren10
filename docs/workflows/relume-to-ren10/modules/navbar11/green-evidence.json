@@ -1,0 +1,50 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "62f6c2eddfa6870276b70f9fcd5a84db63577adb",
+  "captures": {
+    "desktop": "output/playwright/navbar11-final/navbar11/desktop-light-open.png",
+    "tablet": "output/playwright/navbar11-final/navbar11/tablet-light-open.png",
+    "mobile": "output/playwright/navbar11-final/navbar11/mobile-light-dropdown-open.png",
+    "dark": "output/playwright/navbar11-final/navbar11/desktop-dark-open.png",
+    "noJavaScript": "output/playwright/navbar11-final/navbar11/mobile-js-disabled-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected the DOM, block CSS cascade, controller, and all 11 fresh cache-busted render states after Grok implementation. The compact desktop panel sits below its peer-aligned trigger and contains exactly four icon/title/description destination anchors. Tablet preserves descriptions. Mobile uses one in-flow tree, a centered close icon, one separator before actions, condensed destination rows, and no horizontal overflow. Dark mode preserves surface separation. The no-JavaScript fallback exposes the same tree, actions, and native disclosure. Native details chrome is neutralized and exactly one authored chevron remains. Reduced motion, 44px touch targets, WCAG 2.1 AA, Escape/focus return, outside/destination close, click pinning, breakpoint reset, and stable pointer transfer all pass.",
+  "testResults": {
+    "navbar11Focused": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs -g 'Navbar 11|navbar11'",
+      "result": "19 passed, 0 failed"
+    },
+    "navbarFamilyRegression": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs",
+      "result": "128 passed, 0 failed; axe WCAG 2.1 AA checks clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "agentCheck": {
+      "command": "npm run agent:check",
+      "result": "exit 0; smoke, skill, doctor, evals, and knowledge checks passed"
+    },
+    "capture": {
+      "command": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/navbar11/render-matrix.json --module navbar11 --output output/playwright/navbar11-final --repo-root .",
+      "result": "11 PNG and 11 JSON states captured and reviewed"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-logo-left-menu-right-dropdown.html",
+  "intentionalDifferences": [
+    "Ren10 keeps one responsive Light DOM navigation tree instead of duplicate desktop and mobile trees",
+    "Ren10 uses the established 48rem navigation and interaction boundary instead of the source breakpoint split",
+    "Native details/summary plus Escape, focus return, outside/destination close, click pinning, and a stable pointer corridor replace the source fake-button trigger",
+    "The panel follows Ren10 spacing, typography, color, elevation, and touch-target tokens rather than pixel-matching the source",
+    "Small mobile condenses descriptions while retaining all four named destinations and their icons"
+  ]
+}

@@ -42,6 +42,12 @@
           "status": "accepted",
           "packet": "navbar10",
           "ren10Block": "templates/blocks/nav-mega-menu-card-grid.html"
+        },
+        {
+          "id": "navbar11",
+          "status": "accepted",
+          "packet": "navbar11",
+          "ren10Block": "templates/blocks/nav-logo-left-menu-right-dropdown.html"
         }
       ]
     }

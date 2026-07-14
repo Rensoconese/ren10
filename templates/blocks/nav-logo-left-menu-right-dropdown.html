@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo-Left Menu-Right Dropdown Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS logo-left menu-right navbar block with one compact rich-link dropdown, ren-nav, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn11-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn11-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn11-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn11-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rn11-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    .rn11-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rn11-preview .ren-nav-brand,
+    .rn11-preview .ren-nav-link,
+    .rn11-preview .ren-nav-actions .ren-btn,
+    .rn11-preview .rn11-dropdown-link {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn11-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn11-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn11-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn11-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+
+    .rn11-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn11-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn11-disclosure > summary::after,
+    .rn11-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn11-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn11-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn11-disclosure[open] > summary .rn11-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn11-panel {
+      padding: 0;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn11-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: var(--space-2);
+      --stack-gap: var(--space-1);
+    }
+
+    .rn11-dropdown-link.ren-row {
+      --row-align: flex-start;
+      --row-gap: var(--space-3);
+      align-items: flex-start;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn11-dropdown-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn11-dropdown-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn11-destination-icon {
+      flex-shrink: 0;
+      align-self: flex-start;
+      /* Match title line-box height so flex-start keeps icon/title centerY aligned. */
+      width: 1.25rem;
+      height: 1.25rem;
+      min-width: 1.25rem;
+      min-height: 1.25rem;
+      aspect-ratio: 1;
+      margin: 0;
+      padding: 0;
+      color: var(--color-text);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn11-dropdown-link .ren-stack-xs {
+      min-width: 0;
+      --stack-gap: var(--space-1);
+      padding: 0;
+      margin: 0;
+    }
+
+    .rn11-dest-title {
+      display: block;
+      margin: 0;
+      padding: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25rem;
+      min-height: 1.25rem;
+      color: var(--color-text);
+    }
+
+    .rn11-dest-desc {
+      display: block;
+      margin: 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-regular);
+      line-height: 1.4;
+      color: var(--color-text-muted);
+    }
+
+    .rn11-dropdown-link:hover .rn11-dest-title {
+      color: var(--color-accent);
+    }
+
+    .rn11-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn11-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn11-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Seam-free shell boundary: mobile ends below 48rem; desktop compact panel
+     * and JS DESKTOP_MQ start at 48rem.
+     */
+    @media (min-width: 48rem) {
+      /*
+       * Compact panel under the trigger. Disclosure is relative (summary-sized);
+       * top offset clears the vertically-centered nav bar so panelTop >= navBottom.
+       */
+      .rn11-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn11-panel {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        inset-inline-start: 0;
+        z-index: var(--ren-z-sticky);
+        width: 20rem;
+        max-width: min(20rem, calc(100vw - var(--space-8)));
+        animation: rn11-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .rn11-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn11-preview .ren-nav {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .rn11-preview .ren-nav-brand {
+        order: 1;
+      }
+
+      .rn11-preview .ren-nav-toggle {
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .rn11-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .rn11-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rn11-preview .ren-nav-links .ren-nav-link,
+      .rn11-preview .rn11-disclosure,
+      .rn11-preview .rn11-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rn11-preview .rn11-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+
+      .rn11-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        width: 100%;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rn11-preview .ren-nav[data-open] .ren-nav-actions,
+      .rn11-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .rn11-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .rn11-panel {
+        width: 100%;
+        max-width: none;
+        position: static;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+      }
+
+      .rn11-dest-list {
+        padding: var(--space-1) var(--space-4) var(--space-2);
+      }
+
+      .rn11-dropdown-link.ren-row {
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      /* Small mobile: keep destination names; condense descriptions. */
+      .rn11-dest-desc {
+        display: none;
+      }
+    }
+
+    /* JS-disabled mobile: hide inert toggle; expose the one tree + actions. */
+    @media (max-width: 47.999rem) {
+      .rn11-preview ren-nav:not(:defined) .ren-nav {
+        flex-wrap: wrap;
+      }
+
+      .rn11-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rn11-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+
+      .rn11-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-inline-start: 0;
+        order: 4;
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rn11-preview ren-nav:not(:defined) .ren-nav-brand {
+        order: 1;
+      }
+    }
+
+    @keyframes rn11-panel-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn11-chevron,
+      .rn11-dropdown-link,
+      .rn11-destination-icon,
+      .rn11-panel {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.3</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell">
+    <header class="rn11-page-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo-Left Menu-Right Dropdown</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo-Left Menu-Right Dropdown</h1>
+      <p class="lede">
+        A single navigation tree with a compact rich-link dropdown — four
+        destinations with icon, title, and description. Built with
+        <code>ren-nav</code>, native <code>details</code>/<code>summary</code>,
+        layout primitives, and progressive enhancement. No mega menu, second
+        mobile tree, or nested landmark.
+      </p>
+    </header>
+
+    <section class="rn11-preview" data-rn11-root aria-label="Navbar logo-left menu-right dropdown preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row" href="#home">
+            <span class="rn11-brand-mark ren-row" aria-hidden="true">N</span>
+            <span>Northline</span>
+          </a>
+
+          <ul id="rn11-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <details class="rn11-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Solutions
+                  <span class="rn11-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rn11-panel">
+                  <ul class="rn11-dest-list ren-stack-sm" aria-label="Solutions">
+                    <li>
+                      <a class="rn11-dropdown-link ren-row" href="#workspaces">
+                        <span class="rn11-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                            <path fill="currentColor" d="M3 5.5A2.5 2.5 0 0 1 5.5 3h13A2.5 2.5 0 0 1 21 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 18.5v-13zM6 7v3h3V7H6zm5 0v3h7V7h-7zm-5 5v3h3v-3H6zm5 0v3h7v-3h-7z"/>
+                          </svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn11-dest-title">Workspaces</span>
+                          <span class="rn11-dest-desc">Shared boards for every team lane.</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="rn11-dropdown-link ren-row" href="#automations">
+                        <span class="rn11-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                            <path fill="currentColor" d="M12 2a1 1 0 0 1 1 1v1.06A7.002 7.002 0 0 1 19.94 11H21a1 1 0 1 1 0 2h-1.06A7.002 7.002 0 0 1 13 19.94V21a1 1 0 1 1-2 0v-1.06A7.002 7.002 0 0 1 4.06 13H3a1 1 0 1 1 0-2h1.06A7.002 7.002 0 0 1 11 4.06V3a1 1 0 0 1 1-1zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+                          </svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn11-dest-title">Automations</span>
+                          <span class="rn11-dest-desc">Route work when signals change.</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="rn11-dropdown-link ren-row" href="#live-boards">
+                        <span class="rn11-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                            <path fill="currentColor" d="M12 2.5 3 7v2h18V7l-9-4.5zM5 11v7h3v-7H5zm5.5 0v7h3v-7h-3zM16 11v7h3v-7h-3zM3 20v1.5h18V20H3z"/>
+                          </svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn11-dest-title">Live boards</span>
+                          <span class="rn11-dest-desc">Watch queues move in real time.</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="rn11-dropdown-link ren-row" href="#analytics">
+                        <span class="rn11-destination-icon ren-icon ren-icon-md" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                            <path fill="currentColor" d="M4 5h16v2H4V5zm0 4h10v2H4V9zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
+                          </svg>
+                        </span>
+                        <span class="ren-stack-xs">
+                          <span class="rn11-dest-title">Analytics</span>
+                          <span class="rn11-dest-desc">Trends across sites and seasons.</span>
+                        </span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#docs">Docs</a>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-ghost" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn11-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rn11-hero ren-stack">
+        <h2>Guides that fit your floor.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the compact rich-link
+          dropdown, peer alignment, and full-width mobile tree stay easy to
+          judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local compact dropdown controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic, no timers):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     */
+    const RN11_CONTROLLER = Symbol.for('ren10.rn11.controller');
+    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavLogoLeftMenuRightDropdown(scope = document) {
+      const root = scope.querySelector?.('[data-rn11-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn11-root')) {
+        const nested = document.querySelector('[data-rn11-root]');
+        if (!nested) return null;
+        return initNavLogoLeftMenuRightDropdownOn(nested);
+      }
+      return initNavLogoLeftMenuRightDropdownOn(root);
+    }
+
+    function initNavLogoLeftMenuRightDropdownOn(root) {
+      const disclosure = root.querySelector('.rn11-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RN11_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN11_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          // Keyboard-generated activation: detail === 0 — leave native toggle.
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            // First real pointer click after hover-open: pin open.
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          // Pinned or click-opened: genuine close.
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          hoverTransient = false;
+          if (!pointerPinned) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavLogoLeftMenuRightDropdown();
+    window.initNavLogoLeftMenuRightDropdown = initNavLogoLeftMenuRightDropdown;
+  </script>
+</body>
+</html>
