@@ -2,7 +2,7 @@
 /**
  * Navigation blocks — catalog + Navbar Mega Menu (navbar5) + Featured Mega Menu (navbar6)
  * + Icons Mega Menu (navbar7) + Link-Rail Mega Menu (navbar8)
- * + Footer Mega Menu (navbar9 RED).
+ * + Footer Mega Menu (navbar9) + Card-Grid Mega Menu (navbar10 RED).
  */
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
@@ -24,6 +24,7 @@ const MEGA_MENU_FEATURED = '/templates/blocks/nav-mega-menu-featured.html';
 const MEGA_MENU_ICONS = '/templates/blocks/nav-mega-menu-icons.html';
 const MEGA_MENU_LINK_RAIL = '/templates/blocks/nav-mega-menu-link-rail.html';
 const MEGA_MENU_FOOTER = '/templates/blocks/nav-mega-menu-footer.html';
+const MEGA_MENU_CARD_GRID = '/templates/blocks/nav-mega-menu-card-grid.html';
 const DRAWER = '/templates/blocks/nav-drawer.html';
 
 async function startStaticServer() {
@@ -107,6 +108,13 @@ const HOVER_CORRIDOR_CASES = [
     summary: '.rmnf-disclosure > summary',
     destination: '.rmnf-dest',
   },
+  {
+    id: 'navbar10',
+    path: MEGA_MENU_CARD_GRID,
+    disclosure: '.rmcg-disclosure',
+    summary: '.rmcg-disclosure > summary',
+    destination: '.rmcg-card',
+  },
 ];
 
 const MOBILE_NAV_CHROME_CASES = [
@@ -115,6 +123,7 @@ const MOBILE_NAV_CHROME_CASES = [
   { id: 'navbar7', path: MEGA_MENU_ICONS, root: '[data-rmi-root]' },
   { id: 'navbar8', path: MEGA_MENU_LINK_RAIL, root: '[data-rml-root]' },
   { id: 'navbar9', path: MEGA_MENU_FOOTER, root: '[data-rmnf-root]' },
+  { id: 'navbar10', path: MEGA_MENU_CARD_GRID, root: '[data-rmcg-root]' },
 ];
 
 test.describe('Mobile mega-menu chrome', () => {
@@ -3408,6 +3417,619 @@ test.describe('Navbar Mega Menu Footer (navbar9)', () => {
         const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
         const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
         const nav = document.querySelector('[data-rmnf-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 10 — Card-Grid Mega Menu (nav-mega-menu-card-grid).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoCardGridBlock(page, origin) {
+  const response = await page.goto(`${origin}${MEGA_MENU_CARD_GRID}`);
+  expect(response, 'HTTP response for card-grid mega block').toBeTruthy();
+  expect(
+    response.status(),
+    'card-grid block must not 404 — implement templates/blocks/nav-mega-menu-card-grid.html'
+  ).toBe(200);
+  await expect(page.locator('[data-rmcg-root]'), 'missing [data-rmcg-root] shell').toHaveCount(1, {
+    timeout: 2000,
+  });
+}
+
+test.describe('Navbar Mega Menu Card Grid (navbar10)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 20000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and card-grid root', async ({ page }) => {
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    await expect(
+      page.getByRole('heading', { name: /Navbar Mega Menu Card Grid|Card.?Grid Mega Menu/i, level: 1 })
+    ).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rmcg-primary-links')).toHaveCount(1);
+    await expect(page.locator('ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoCardGridBlock(page, staticServer.origin);
+    await expect(page.locator('#rmcg-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rmcg-root] ul.ren-nav-links')).toHaveCount(1);
+    await expect(page.locator('[data-rmcg-root] nav')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rmcg-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rmcg-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rmcg-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rmcg-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: four top-level entries, five mega links, six whole cards, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    await expect(page.locator('#rmcg-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rmcg-primary-links > li > a.ren-nav-link');
+    const megaSummaries = page.locator('#rmcg-primary-links > li > .rmcg-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(megaSummaries).toHaveCount(1);
+
+    await expect(page.locator('[data-rmcg-root] .ren-nav-actions a, [data-rmcg-root] .ren-nav-actions .ren-btn')).toHaveCount(2);
+    await expect(page.locator('[data-rmcg-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+
+    await expect(page.locator('.rmcg-layout.ren-with-sidebar')).toHaveCount(1);
+    await expect(page.locator('.rmcg-link-col')).toHaveCount(1);
+    await expect(page.locator('.rmcg-group-heading')).toHaveCount(1);
+    await expect(page.locator('.rmcg-mega-link')).toHaveCount(5);
+    await expect(page.locator('.rmcg-card-grid.ren-grid-2')).toHaveCount(1);
+    await expect(page.locator('a.rmcg-card.ren-card.ren-card-interactive')).toHaveCount(6);
+    await expect(page.locator('.rmcg-card-media')).toHaveCount(6);
+    await expect(page.locator('.rmcg-card-title')).toHaveCount(6);
+    await expect(page.locator('.rmcg-card-desc')).toHaveCount(6);
+    await expect(page.locator('.rmcg-card-cta')).toHaveCount(6);
+    await expect(page.locator('.rmnf-footer-band, .rml-rail, .rmi-footer, .rmf-feature, .rbm-feature')).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmcg-disclosure summary .rmcg-chevron'],
+      'card-grid mega-menu chevron'
+    );
+  });
+
+  test('six editorial cards are single anchors without nested interactive descendants', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+    await page.locator('.rmcg-disclosure > summary').click();
+
+    const cards = page.locator('a.rmcg-card.ren-card.ren-card-interactive');
+    await expect(cards).toHaveCount(6);
+
+    for (let i = 0; i < 6; i += 1) {
+      const card = cards.nth(i);
+      const tagName = await card.evaluate((el) => el.tagName);
+      expect(tagName, `card ${i} tag`).toBe('A');
+      await expect(card).toHaveAttribute('href', /.+/);
+      await expect(card.locator('a[href], button, [role="button"]')).toHaveCount(0);
+    }
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcg-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rmcg-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('.rmcg-card').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rmcg-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcg-card').first()).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rmcg-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rmcg-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rmcg-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and mega link or card activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcg-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rmcg-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('.rmcg-mega-link').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rmcg-card').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rmcg-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rmcg-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await expect(toggle).toHaveAttribute('aria-controls', 'rmcg-primary-links');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rmcg-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcg-card').first()).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree and mega content usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    await expect(page.locator('[data-rmcg-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rmcg-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rmcg-root] .ren-nav-actions a, [data-rmcg-root] .ren-nav-actions .ren-btn').first()).toBeVisible();
+
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcg-mega-link')).toHaveCount(5);
+    await expect(page.locator('a.rmcg-card')).toHaveCount(6);
+    await expect(page.locator('.rmcg-group-heading')).toBeVisible();
+
+    await context.close();
+  });
+
+  test('viewport geometry: desktop panel under bar, mobile in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rmcg-root] .ren-nav');
+      const panel = document.querySelector('.rmcg-panel');
+      if (!nav || !panel) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoCardGridBlock(page, staticServer.origin);
+    await page.locator('[data-rmcg-root] .ren-nav-toggle').click();
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rmcg-panel');
+      if (!panel) return null;
+      return { position: getComputedStyle(panel).position };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet mid-width and wide desktop: narrow link column and responsive card grid', async ({ page }) => {
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rmcg-root] .ren-nav-toggle');
+    await expect(toggle).toBeHidden();
+
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+    await expect(page.locator('.rmcg-mega-link')).toHaveCount(5);
+    await expect(page.locator('a.rmcg-card')).toHaveCount(6);
+
+    const tablet = await page.evaluate(() => {
+      const linkCol = document.querySelector('.rmcg-link-col');
+      const cardGrid = document.querySelector('.rmcg-card-grid');
+      const cards = Array.from(document.querySelectorAll('a.rmcg-card'));
+      const firstCard = cards[0];
+      const media = firstCard?.querySelector('.rmcg-card-media');
+      const body = firstCard?.querySelector('.rmcg-card-body');
+      if (!linkCol || !cardGrid || cards.length < 2 || !firstCard || !media || !body) return null;
+
+      const linkR = linkCol.getBoundingClientRect();
+      const gridR = cardGrid.getBoundingClientRect();
+      const c0 = cards[0].getBoundingClientRect();
+      const c1 = cards[1].getBoundingClientRect();
+      const twoUpCards = Math.abs(c0.top - c1.top) < 48 && c1.left >= c0.right - 4;
+
+      return {
+        linkColWidth: Math.round(linkR.width),
+        cardGridWidth: Math.round(gridR.width),
+        narrowLeft: linkR.width < gridR.width * 0.72,
+        twoUpCards,
+        cardReadable: Math.round(Math.max(body.getBoundingClientRect().width, c0.width - 48)),
+      };
+    });
+
+    expect(tablet, 'tablet composition metrics').toBeTruthy();
+    expect(tablet.narrowLeft, 'link column narrower than card region at tablet').toBe(true);
+    expect(tablet.twoUpCards, 'tablet card grid should form two columns when space allows').toBe(true);
+    expect(tablet.cardReadable, `card readable width ${tablet.cardReadable}`).toBeGreaterThanOrEqual(120);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+    const wide = await page.evaluate(() => {
+      const linkCol = document.querySelector('.rmcg-link-col');
+      const cardGrid = document.querySelector('.rmcg-card-grid');
+      const cards = Array.from(document.querySelectorAll('a.rmcg-card'));
+      if (!linkCol || !cardGrid || cards.length < 6) return null;
+
+      const linkR = linkCol.getBoundingClientRect();
+      const gridR = cardGrid.getBoundingClientRect();
+      const linkNarrow = linkR.width <= 16 * 16 && linkR.width < gridR.width * 0.45;
+
+      const cardLayouts = cards.map((card) => {
+        const media = card.querySelector('.rmcg-card-media');
+        const body = card.querySelector('.rmcg-card-body');
+        if (!media || !body) return { horizontal: false, mediaShare: 0 };
+        const mr = media.getBoundingClientRect();
+        const br = body.getBoundingClientRect();
+        const cardR = card.getBoundingClientRect();
+        const horizontal =
+          mr.left < br.left - 8 && Math.abs(mr.top - br.top) < Math.max(mr.height, br.height) * 0.55;
+        const mediaShare = cardR.width > 0 ? mr.width / cardR.width : 0;
+        return { horizontal, mediaShare: Number(mediaShare.toFixed(2)) };
+      });
+
+      const gridRects = cards.map((el) => el.getBoundingClientRect());
+      const twoColumnBand =
+        Math.abs(gridRects[0].top - gridRects[1].top) < 48 && gridRects[1].left >= gridRects[0].right - 4;
+
+      return {
+        linkNarrow,
+        linkColWidth: Math.round(linkR.width),
+        cardGridWidth: Math.round(gridR.width),
+        twoColumnBand,
+        cardLayouts,
+      };
+    });
+
+    expect(wide).toBeTruthy();
+    expect(wide.linkNarrow, `link ${wide.linkColWidth} vs cards ${wide.cardGridWidth}`).toBe(true);
+    expect(wide.twoColumnBand, 'wide desktop keeps a two-column card grid').toBe(true);
+    for (const [i, layout] of wide.cardLayouts.entries()) {
+      expect(layout.horizontal, `card ${i} horizontal media/copy at wide desktop`).toBe(true);
+      expect(layout.mediaShare, `card ${i} media share ${layout.mediaShare}`).toBeLessThanOrEqual(0.62);
+    }
+  });
+
+  test('card media uses approximately 3:2 frames with cover crop', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+
+    const mediaAudit = await page.evaluate(() => {
+      const frames = Array.from(document.querySelectorAll('.rmcg-card-media'));
+      return frames.map((frame, index) => {
+        const rect = frame.getBoundingClientRect();
+        const style = getComputedStyle(frame);
+        const ratio = rect.height > 0 ? rect.width / rect.height : 0;
+        const img = frame.querySelector('img');
+        const imgStyle = img ? getComputedStyle(img) : null;
+        return {
+          index,
+          ratio: Number(ratio.toFixed(2)),
+          aspectRatio: style.aspectRatio,
+          objectFit: imgStyle?.objectFit || '',
+          hasRenFrame: frame.classList.contains('ren-frame'),
+        };
+      });
+    });
+
+    expect(mediaAudit.length, 'six card media frames').toBe(6);
+    for (const item of mediaAudit) {
+      expect(item.hasRenFrame, `frame ${item.index} ren-frame`).toBe(true);
+      expect(item.ratio, `frame ${item.index} box ratio ${item.ratio}`).toBeGreaterThanOrEqual(1.3);
+      expect(item.ratio, `frame ${item.index} box ratio ${item.ratio}`).toBeLessThanOrEqual(1.7);
+      const aspect = String(item.aspectRatio || '');
+      expect(
+        aspect.includes('3') && aspect.includes('2'),
+        `frame ${item.index} aspect-ratio ${aspect}`
+      ).toBe(true);
+      expect(item.objectFit, `frame ${item.index} object-fit`).toBe('cover');
+    }
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned trigger', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmcg-disclosure summary .rmcg-chevron'],
+      'card-grid mega-menu chevron'
+    );
+
+    const peerLinks = page.locator('#rmcg-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rmcg-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rmcg-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rmcg-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rmcg-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none' ||
+      afterContent === '' ||
+      summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+  });
+
+  test('mobile rows: full width peers, one-column cards by default, no overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoCardGridBlock(page, staticServer.origin);
+    await page.locator('[data-rmcg-root] .ren-nav-toggle').click();
+    await page.locator('.rmcg-disclosure > summary').click();
+    await expect(page.locator('.rmcg-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rmcg-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rmcg-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rmcg-disclosure > summary', '#rmcg-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmcg-disclosure summary .rmcg-chevron'],
+      'mobile card-grid mega-menu chevron'
+    );
+    await expectNoOverflow(page, 'html');
+
+    const mobileLayout = await page.evaluate(() => {
+      const cards = Array.from(document.querySelectorAll('a.rmcg-card'));
+      const linkCol = document.querySelector('.rmcg-link-col');
+      const cardGrid = document.querySelector('.rmcg-card-grid');
+      if (cards.length < 2 || !linkCol || !cardGrid) return null;
+      const c0 = cards[0].getBoundingClientRect();
+      const c1 = cards[1].getBoundingClientRect();
+      const linkR = linkCol.getBoundingClientRect();
+      const gridR = cardGrid.getBoundingClientRect();
+      const stackedCards = c1.top >= c0.bottom - 8;
+      const linkAboveCards = gridR.top >= linkR.bottom - 16;
+      return { stackedCards, linkAboveCards, cardCount: cards.length };
+    });
+    expect(mobileLayout).toBeTruthy();
+    expect(mobileLayout.stackedCards, 'mobile cards stack in one column by default').toBe(true);
+    expect(mobileLayout.linkAboveCards, 'five-link column precedes card grid in flow').toBe(true);
+    expect(mobileLayout.cardCount).toBe(6);
+
+    const detailsChrome = await inspectNativeChrome(page, '.rmcg-disclosure');
+    const summaryChrome = await inspectNativeChrome(page, '.rmcg-disclosure > summary');
+    expect(detailsChrome.borderTopWidth === '0px' || detailsChrome.paddingTop === '0px').toBeTruthy();
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    expect(
+      afterContent === 'none' || afterContent === '' || summaryChrome.afterDisplay === 'none',
+      'mobile classless summary::after'
+    ).toBeTruthy();
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    await page.locator('[data-rmcg-root] .ren-nav-toggle').click();
+    await page.locator('.rmcg-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rmcg-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, .rmcg-mega-link, a.rmcg-card'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCardGridBlock(page, staticServer.origin);
+    await page.locator('.rmcg-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rmcg-panel', '.rmcg-chevron', 'a.rmcg-card', '.rmcg-card-media'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = window.getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('card-grid mega menu preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoCardGridBlock(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rmcg-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoCardGridBlock(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rmcg-root] .ren-nav');
         return {
           surface,
           text,
