@@ -42,6 +42,11 @@
           "status": "accepted",
           "packet": "navbar10",
           "ren10Block": "templates/blocks/nav-mega-menu-card-grid.html"
+        },
+        {
+          "id": "navbar11",
+          "status": "in_progress",
+          "packet": "navbar11"
         }
       ]
     }

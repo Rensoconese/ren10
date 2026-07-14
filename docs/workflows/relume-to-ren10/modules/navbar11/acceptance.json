@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, four top-level entries, four rich dropdown anchors, four icons, two actions, one toggle, and one chevron are authored",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Native activation, stable desktop hover transfer, click pin, Escape, outside/destination close, and mobile shell coordination reach every state",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "The dropdown trigger, toggle, icons, and indicators have one owner with no duplicate rendering",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Top-level peers align and each icon/title/description destination forms a coherent rich-link row",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled mobile exposes the one tree, two actions, and usable native dropdown",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Visible focus, 44px targets, semantic links, reduced motion, light/dark, and WCAG 2.1 AA pass",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, dark, and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}
