@@ -4,13 +4,15 @@
   "moduleId": "navbar9",
   "blockSlug": "nav-mega-menu-footer",
   "blockPath": "templates/blocks/nav-mega-menu-footer.html",
-  "stage": "red",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-footer.html",
     "tests/components/blocks-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
