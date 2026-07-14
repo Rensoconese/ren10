@@ -46,7 +46,8 @@
         {
           "id": "navbar11",
           "status": "in_progress",
-          "packet": "navbar11"
+          "packet": "navbar11",
+          "ren10Block": "templates/blocks/nav-logo-left-menu-right-dropdown.html"
         }
       ]
     }
