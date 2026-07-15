@@ -814,6 +814,91 @@
       }
 
       /**
+       * Close the mobile shell through the public toggle control so ren-nav's
+       * internal open state stays in sync (no private _isOpen / _closeMenu).
+       */
+      function closeMobileShell() {
+        if (isDesktop() || !toggle) return false;
+        if (toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.click();
+          return true;
+        }
+        // Public DOM fallback if host attribute drifted without expanded toggle.
+        if (renNavHost?.hasAttribute('data-open')) {
+          renNavHost.removeAttribute('data-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          return true;
+        }
+        return false;
+      }
+
+      /**
+       * After shell collapse, destinations/actions may become display:none.
+       * Keep a visible, stable focus target (toggle) when the prior active
+       * element is no longer a visible tab stop.
+       */
+      function ensureVisibleFocusAfterMobileClose(forceToggle = false) {
+        if (isDesktop() || !toggle) return;
+        if (forceToggle) {
+          toggle.focus({ preventScroll: true });
+          return;
+        }
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement) || active === document.body) {
+          toggle.focus({ preventScroll: true });
+          return;
+        }
+        const style = getComputedStyle(active);
+        const rect = active.getBoundingClientRect();
+        const hidden =
+          style.display === 'none'
+          || style.visibility === 'hidden'
+          || Number(style.opacity || '1') === 0
+          || rect.width === 0
+          || rect.height === 0
+          || !root.contains(active);
+        if (hidden) {
+          toggle.focus({ preventScroll: true });
+        }
+      }
+
+      /**
+       * Destination activation policy (public ARIA/DOM only):
+       * - Desktop mega-link / collection: close details and restore summary focus.
+       * - Desktop peer / actions / brand: close details; focus stays on the
+       *   still-visible control.
+       * - Mobile mega-link / collection / actions / peer: close details + shell,
+       *   then focus the toggle (stable, visible).
+       * - Mobile brand: close details + shell; brand may keep focus when visible.
+       *
+       * Peer top links may already be closed by ren-nav's public link handler
+       * before this runs — still stabilize focus off the now-hidden anchor.
+       * @param {'mega-link'|'collection'|'action'|'peer'|'brand'} kind
+       */
+      function closeFromDestinationActivation(kind) {
+        markIntentionalCloseWhilePointerInside();
+        const onMobile = !isDesktop();
+
+        if (!onMobile) {
+          if (kind === 'mega-link' || kind === 'collection') {
+            closeDisclosure(true);
+          } else {
+            closeDisclosure(false);
+          }
+          return;
+        }
+
+        closeDisclosure(false);
+        // Shell may already be closed by ren-nav for peer links; close if still open.
+        if (isMobileNavOpen()) {
+          closeMobileShell();
+        }
+        queueMicrotask(() => {
+          ensureVisibleFocusAfterMobileClose(kind !== 'brand');
+        });
+      }
+
+      /**
        * Compound hover zone for full-bleed category-collections mega menus.
        * Keep open while the pointer is over the disclosure, the summary→panel
        * seam, or the lateral strip from the trigger across the full panel width.
@@ -985,20 +1070,37 @@
         { signal }
       );
 
-      // Destination close: mega links, collection cards, peer top links, CTAs.
-      const closeOnActivate = (event) => {
-        const target = event.target;
-        if (!(target instanceof Element)) return;
-        const actionable = target.closest('a[href], button');
-        if (!actionable || !root.contains(actionable)) return;
-        if (actionable === summary || summary.contains(actionable)) return;
-        if (actionable.classList.contains('ren-nav-toggle')) return;
-        if (!disclosure.open) return;
-        markIntentionalCloseWhilePointerInside();
-        closeDisclosure(false);
-      };
+      // Destination classes that close details (+ mobile shell / focus policy).
+      /** @type {Array<{ selector: string, kind: 'mega-link'|'collection'|'action'|'peer'|'brand' }>} */
+      const destinationClosers = [
+        { selector: 'a.rmcc-mega-link', kind: 'mega-link' },
+        { selector: 'a.rmcc-collection', kind: 'collection' },
+        { selector: '.ren-nav-actions a[href], .ren-nav-actions .ren-btn', kind: 'action' },
+        { selector: '#rmcc-primary-links > li > a.ren-nav-link', kind: 'peer' },
+        { selector: 'a.ren-nav-brand', kind: 'brand' },
+      ];
 
-      root.addEventListener('click', closeOnActivate, { signal });
+      for (const { selector, kind } of destinationClosers) {
+        root.querySelectorAll(selector).forEach((el) => {
+          el.addEventListener(
+            'click',
+            () => {
+              // Desktop: only act when the mega is open (peers/actions still visible).
+              if (isDesktop() && !disclosure.open && (kind === 'mega-link' || kind === 'collection')) {
+                return;
+              }
+              if (isDesktop() && !disclosure.open) {
+                // Peer/action/brand with mega already closed — nothing to coordinate.
+                return;
+              }
+              // Mobile: always coordinate shell + focus for destination classes,
+              // even when ren-nav already collapsed the shell on a peer click.
+              closeFromDestinationActivation(kind);
+            },
+            { signal }
+          );
+        });
+      }
 
       if (toggle) {
         const observer = new MutationObserver(() => {
@@ -1030,7 +1132,6 @@
     }
 
     initNavMegaMenuCategoryCollections();
-    window.initNavMegaMenuCategoryCollections = initNavMegaMenuCategoryCollections;
   </script>
 </body>
 </html>

@@ -256,6 +256,167 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
+  test('desktop mega-link and collection close details and restore summary focus per class', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcc-disclosure');
+    const summary = disclosure.locator('summary');
+
+    /** @type {Array<{ id: string, selector: string }>} */
+    const cases = [
+      { id: 'rmcc-mega-link', selector: 'a.rmcc-mega-link' },
+      { id: 'rmcc-collection', selector: 'a.rmcc-collection' },
+    ];
+
+    for (const item of cases) {
+      await summary.click();
+      await expect(disclosure, `${item.id}: open`).toHaveAttribute('open', '');
+
+      const dest = page.locator(item.selector).first();
+      await expect(dest, `${item.id}: present`).toBeVisible();
+      await dest.click();
+
+      await expect(disclosure, `${item.id}: details closed`).not.toHaveAttribute('open', '');
+      await expect.poll(
+        () => page.evaluate(() => document.activeElement?.tagName),
+        { message: `${item.id}: focus restores to SUMMARY` }
+      ).toBe('SUMMARY');
+      await expect.poll(() =>
+        page.evaluate(() => document.activeElement?.closest?.('.rmcc-disclosure') != null)
+      ).toBe(true);
+
+      const activeIsDestination = await page.evaluate((sel) => {
+        const active = document.activeElement;
+        return Boolean(active && active.matches?.(sel));
+      }, item.selector);
+      expect(activeIsDestination, `${item.id}: active must not remain the destination`).toBe(false);
+    }
+
+    // Peer remains a visible tab stop; details close without trapping focus on summary.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    const peer = page.locator('#rmcc-primary-links > li > a.ren-nav-link').first();
+    await peer.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() =>
+      page.evaluate(() => {
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement)) return false;
+        const style = getComputedStyle(active);
+        const rect = active.getBoundingClientRect();
+        return (
+          style.display !== 'none'
+          && style.visibility !== 'hidden'
+          && rect.width > 0
+          && rect.height > 0
+        );
+      })
+    ).toBe(true);
+  });
+
+  test('mobile matrix: mega-link, collection, both actions, and peer close details + shell with stable focus', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 1100 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcc-disclosure');
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const renNav = page.locator(`${ROOT} ren-nav`);
+    const summary = disclosure.locator('summary');
+
+    /** @type {Array<{ id: string, selector: string, openMega: boolean, expectFocus: 'toggle' | 'brand' }>} */
+    const cases = [
+      { id: 'rmcc-mega-link', selector: 'a.rmcc-mega-link', openMega: true, expectFocus: 'toggle' },
+      { id: 'rmcc-collection', selector: 'a.rmcc-collection', openMega: true, expectFocus: 'toggle' },
+      {
+        id: 'ren-nav-actions-secondary',
+        selector: `${ROOT} .ren-nav-actions a.ren-btn-secondary`,
+        openMega: false,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-actions-primary',
+        selector: `${ROOT} .ren-nav-actions a.ren-btn-primary`,
+        openMega: false,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-peer',
+        selector: '#rmcc-primary-links > li > a.ren-nav-link',
+        openMega: true,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-brand',
+        selector: `${ROOT} a.ren-nav-brand`,
+        openMega: true,
+        expectFocus: 'brand',
+      },
+    ];
+
+    for (const item of cases) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+      if (item.openMega) {
+        await summary.click();
+        await expect(disclosure, `${item.id}: mega open`).toHaveAttribute('open', '');
+      }
+
+      const target = page.locator(item.selector).first();
+      await expect(target, `${item.id}: target visible`).toBeVisible();
+      await target.click();
+
+      await expect(disclosure, `${item.id}: details closed`).not.toHaveAttribute('open', '');
+      await expect(toggle, `${item.id}: shell aria-expanded false`).toHaveAttribute(
+        'aria-expanded',
+        'false'
+      );
+      await expect(renNav, `${item.id}: ren-nav data-open removed`).not.toHaveAttribute(
+        'data-open',
+        ''
+      );
+
+      const focusState = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!(el instanceof HTMLElement)) return { missing: true };
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          missing: false,
+          isToggle: el.classList.contains('ren-nav-toggle'),
+          isBrand: el.classList.contains('ren-nav-brand'),
+          visible:
+            style.display !== 'none'
+            && style.visibility !== 'hidden'
+            && Number(style.opacity || '1') > 0
+            && rect.width > 0
+            && rect.height > 0,
+        };
+      });
+
+      expect(focusState.missing, `${item.id}: activeElement present`).toBe(false);
+      expect(focusState.visible, `${item.id}: post-close focus must be visible`).toBe(true);
+
+      if (item.expectFocus === 'toggle') {
+        expect(focusState.isToggle, `${item.id}: focus returns to toggle`).toBe(true);
+      } else {
+        expect(focusState.isBrand, `${item.id}: brand may keep focus (still visible)`).toBe(true);
+      }
+    }
+
+    const hasGlobal = await page.evaluate(
+      () => typeof window.initNavMegaMenuCategoryCollections === 'function'
+    );
+    expect(hasGlobal, 'window.initNavMegaMenuCategoryCollections must not be published').toBe(
+      false
+    );
+  });
+
   test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await gotoCategoryCollectionsBlock(page, staticServer.origin);
