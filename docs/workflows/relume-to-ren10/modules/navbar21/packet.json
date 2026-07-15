@@ -4,13 +4,14 @@
   "moduleId": "navbar21",
   "blockSlug": "nav-logo-center-links-fullscreen-featured",
   "blockPath": "templates/blocks/nav-logo-center-links-fullscreen-featured.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-logo-center-links-fullscreen-featured.html",
     "tests/components/navbar21-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
   }
 }
