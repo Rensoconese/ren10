@@ -5,7 +5,7 @@
   "states": [
     {
       "id": "desktop-light-closed",
-      "viewport": { "width": 1280, "height": 900 },
+      "viewport": { "width": 1280, "height": 1200 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
@@ -14,7 +14,7 @@
     },
     {
       "id": "desktop-light-dropdown-open",
-      "viewport": { "width": 1280, "height": 900 },
+      "viewport": { "width": 1280, "height": 1200 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
@@ -23,7 +23,7 @@
     },
     {
       "id": "desktop-light-hover-open",
-      "viewport": { "width": 1280, "height": 900 },
+      "viewport": { "width": 1280, "height": 1200 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
@@ -32,7 +32,7 @@
     },
     {
       "id": "desktop-light-overlay-open",
-      "viewport": { "width": 1280, "height": 900 },
+      "viewport": { "width": 1280, "height": 1200 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
@@ -41,7 +41,7 @@
     },
     {
       "id": "desktop-dark-overlay-open",
-      "viewport": { "width": 1280, "height": 900 },
+      "viewport": { "width": 1280, "height": 1200 },
       "theme": "dark",
       "javaScript": true,
       "reducedMotion": false,
@@ -95,7 +95,7 @@
     },
     {
       "id": "desktop-reduced-motion-overlay-open",
-      "viewport": { "width": 1280, "height": 900 },
+      "viewport": { "width": 1280, "height": 1200 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": true,
