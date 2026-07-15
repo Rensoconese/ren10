@@ -27,8 +27,11 @@
 
 ## Interaction policy
 
-- Use the established 48rem Ren10 boundary for shell and dropdown interaction;
-  do not preserve the source's 991px split or framework `lg` mismatch.
+- Align shell and dropdown interaction with ren-nav base: mobile through
+  `max-width: 48rem` (includes 768px), desktop from `min-width: 48.01rem`.
+  Do not use `min-width: 48rem` as desktop — that fights ren-nav at the 768px
+  seam (toggle flex + links hidden while local logic claims desktop).
+  Do not preserve the source's 991px split or framework `lg` mismatch.
 - Desktop pointer hover previews across a stable trigger-to-panel corridor
   (panel above the bar; corridor fills the gap downward toward the summary).
 - Pointer click pins the preview; a second click closes it.
@@ -54,11 +57,12 @@
 
 ## Responsive adaptation
 
-- At and above 48rem: compact floating horizontal shell docked near the
+- At and above 48.01rem: compact floating horizontal shell docked near the
   **bottom** of the preview (or viewport chrome), brand/up-control at start,
   four-entry menu and one action in one row, narrow absolute dropdown above.
-- Below 48rem: one top row with brand + action + toggle; one in-flow navigation
-  tree when open; full-width stacked links; in-flow dropdown.
+- Through 48rem (including 768px): one top row with brand + action + toggle;
+  one in-flow navigation tree when open; full-width stacked links; in-flow
+  dropdown. Local mobile CSS must share ren-nav's `max-width: 48rem` band.
 - No duplicate desktop/mobile tree and no viewport-height arithmetic.
 
 ## Progressive enhancement

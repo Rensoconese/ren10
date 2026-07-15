@@ -280,10 +280,14 @@
     }
 
     /*
-     * Seam-free shell boundary: mobile ends below 48rem; desktop compact panel
-     * and JS DESKTOP_MQ start at 48rem.
+     * Seam-free shell boundary aligned with ren-nav base:
+     * - ren-nav CSS mobile: max-width: 48rem (includes 768px)
+     * - this block mobile: max-width: 48rem
+     * - this block + JS desktop: min-width: 48.01rem (769px class and up)
+     * Using min-width: 48rem here would fight ren-nav at exactly 768px
+     * (toggle flex + links hidden while local logic thought "desktop").
      */
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       /* Bottom-dock the floating shell inside the preview surface. */
       .rn15-preview {
         display: flex;
@@ -353,11 +357,12 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       /*
        * One top row: brand | permanent action + toggle. Navigation tree lives
        * inside the opened panel — action stays permanent chrome (unlike
-       * Navbar 14 panel-owned dual actions).
+       * Navbar 14 panel-owned dual actions). Matches ren-nav base mobile
+       * boundary (max-width: 48rem), including the 768px seam.
        */
       .rn15-preview .ren-nav {
         display: grid;
@@ -445,7 +450,7 @@
     }
 
     /* JS-disabled mobile: hide inert toggle; expose the one tree + permanent action. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn15-preview ren-nav:not(:defined) .ren-nav {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -630,8 +635,13 @@
      * Keyboard Enter/Space: native details toggle (event.detail === 0).
      */
     const RN15_CONTROLLER = Symbol.for('ren10.rn15.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /**
+     * Desktop shell starts just above ren-nav's max-width: 48rem mobile band.
+     * Complements block CSS min-width: 48.01rem / max-width: 48rem so 768px is
+     * mobile for both ren-nav base and this controller (no hover-desktop on a
+     * hidden tree / visible toggle).
+     */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavFloatingBottomLogoLeftMenuActions(scope = document) {
       const root = scope.querySelector?.('[data-rn15-root]') ?? scope;

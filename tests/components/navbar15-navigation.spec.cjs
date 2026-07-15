@@ -286,6 +286,114 @@ test.describe('Navbar Floating Bottom Logo Left Menu Actions (navbar15)', () => 
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
+  test('48rem seam: 767/768 mobile shell and 769 desktop shell agree with ren-nav', async ({ page }) => {
+    /**
+     * ren-nav base CSS uses max-width: 48rem for mobile (toggle flex, links
+     * hidden until open). Block CSS/JS must not claim desktop at 768px via
+     * min-width: 48rem — that leaves a visible toggle and a hidden tree while
+     * the local controller enables desktop hover. Desktop starts at 48.01rem.
+     */
+    await gotoNavbar15Block(page, staticServer.origin);
+
+    /**
+     * @param {import('@playwright/test').Page} page
+     * @param {number} width
+     */
+    async function shellAt(page, width) {
+      await page.setViewportSize({ width, height: 900 });
+      // Force layout + matchMedia to settle after resize.
+      await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+      return page.evaluate(() => {
+        const toggle = document.querySelector('[data-rn15-root] .ren-nav-toggle');
+        const links = document.querySelector('#rn15-primary-links');
+        const nav = document.querySelector('[data-rn15-root] .ren-nav');
+        if (!toggle || !links || !nav) return null;
+        const toggleStyle = getComputedStyle(toggle);
+        const linksStyle = getComputedStyle(links);
+        const toggleRect = toggle.getBoundingClientRect();
+        const linksRect = links.getBoundingClientRect();
+        const toggleVisible =
+          toggleStyle.display !== 'none'
+          && toggleStyle.visibility !== 'hidden'
+          && toggleRect.width > 0
+          && toggleRect.height > 0;
+        const linksVisible =
+          linksStyle.display !== 'none'
+          && linksStyle.visibility !== 'hidden'
+          && linksRect.width > 0
+          && linksRect.height > 0;
+        return {
+          width: window.innerWidth,
+          toggleDisplay: toggleStyle.display,
+          linksDisplay: linksStyle.display,
+          toggleVisible,
+          linksVisible,
+          desktopMq: window.matchMedia('(min-width: 48.01rem)').matches,
+          renNavMobileMq: window.matchMedia('(max-width: 48rem)').matches,
+        };
+      });
+    }
+
+    // 767px: mobile shell — toggle operable, tree hidden until open.
+    const at767 = await shellAt(page, 767);
+    expect(at767).toBeTruthy();
+    expect(at767.width).toBe(767);
+    expect(at767.renNavMobileMq, '767 is ren-nav mobile band').toBe(true);
+    expect(at767.desktopMq, '767 is not block desktop').toBe(false);
+    expect(at767.toggleVisible, '767 toggle visible').toBe(true);
+    expect(at767.linksVisible, '767 links hidden until toggle').toBe(false);
+
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn15-primary-links')).toBeVisible();
+    await expect(page.locator('#rn15-primary-links > li > a.ren-nav-link').first()).toBeVisible();
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'false');
+
+    // 768px seam: must stay mobile with ren-nav (not half-desktop local CSS/JS).
+    const at768 = await shellAt(page, 768);
+    expect(at768).toBeTruthy();
+    expect(at768.width).toBe(768);
+    expect(at768.renNavMobileMq, '768 is ren-nav mobile (max-width: 48rem)').toBe(true);
+    expect(at768.desktopMq, '768 must not match block desktop MQ').toBe(false);
+    expect(at768.toggleVisible, '768 toggle remains flex/visible').toBe(true);
+    expect(at768.linksVisible, '768 links remain hidden until open').toBe(false);
+    expect(at768.toggleDisplay).toBe('flex');
+    expect(at768.linksDisplay).toBe('none');
+
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn15-primary-links')).toBeVisible();
+    await expect(page.locator('#rn15-primary-links > li > a.ren-nav-link').first()).toBeVisible();
+    // Desktop hover must not govern at the seam (activation-only mobile).
+    const disclosure = page.locator('.rn15-disclosure');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('.rn15-disclosure > summary').hover({ force: true });
+    await page.waitForTimeout(100);
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('.rn15-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn15-destination').first()).toBeVisible();
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    // 769px: desktop shell — toggle hidden, tree visible, hover operable.
+    const at769 = await shellAt(page, 769);
+    expect(at769).toBeTruthy();
+    expect(at769.width).toBe(769);
+    expect(at769.renNavMobileMq, '769 leaves ren-nav mobile band').toBe(false);
+    expect(at769.desktopMq, '769 is block desktop').toBe(true);
+    expect(at769.toggleVisible, '769 toggle hidden').toBe(false);
+    expect(at769.linksVisible, '769 links visible in horizontal shell').toBe(true);
+
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeHidden();
+    await expect(page.locator('#rn15-primary-links')).toBeVisible();
+    await page.locator('.rn15-disclosure > summary').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn15-destination').first()).toBeVisible();
+  });
+
   test('JS-disabled mobile keeps the nav tree, permanent action, and native disclosure usable', async ({ browser }) => {
     const context = await browser.newContext({
       javaScriptEnabled: false,

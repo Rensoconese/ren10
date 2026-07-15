@@ -40,8 +40,9 @@ isolated suite at `tests/components/navbar15-navigation.spec.cjs`.
   floating or panel-owned dual actions.
 - No `ren-card`, `ren-menu`, `ren-popover`, `ren-collapsible`, nested nav, fake
   role button, or duplicate mobile tree.
-- Use one 48rem boundary. Desktop uses a narrow absolute upward dropdown;
-  mobile uses one in-flow tree and dropdown.
+- Use one ren-nav-aligned boundary: mobile `max-width: 48rem` (incl. 768px),
+  desktop `min-width: 48.01rem` for CSS and the block controller. Desktop uses
+  a narrow absolute upward dropdown; mobile uses one in-flow tree and dropdown.
 - Desktop hover preview, click pin/second-click close, native Enter/Space,
   Escape with focus return, outside close, destination close, mobile shell
   close, and breakpoint reset are required.
