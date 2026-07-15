@@ -40,6 +40,15 @@
       "expectedMarkers": { "#rh3-video[open]": 1, "#rh3-video iframe": 1, "#rh3-video [data-dialog-close]": 1 }
     },
     {
+      "id": "tablet-light-closed",
+      "viewport": { "width": 768, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh3-actions .ren-btn": 2, ".rh3-media-trigger": 1, "#rh3-video[open]": 0 }
+    },
+    {
       "id": "mobile-light-closed",
       "viewport": { "width": 390, "height": 844 },
       "theme": "light",
