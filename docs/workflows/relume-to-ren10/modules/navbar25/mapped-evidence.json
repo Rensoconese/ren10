@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar25 mapped to one ren-nav tree, native details/summary, two category groups with ten title-only destination anchors, promo region with real CTA and square ren-frame media, single action cluster (desktop end chrome; mobile panel-owned), one named toggle, one chevron, full-width logo-left/links/end-actions desktop geometry, ren-nav mobile through 48rem with block desktop at 48.01rem. Rejected ren-card mega chrome, ren-menu, ren-popover, ren-collapsible, nested nav, unused sublinks, social/footer inventions, and copied source."
+}

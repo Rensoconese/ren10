@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar25 primitives=include) returned complete Navbar25 section source plus three vendored primitives (utils, use-media-query, button). Exact anatomy recorded: one logo, four top entries (3 plain + 1 mega), two category groups with five title-only destinations each (ten total), promo region with title/description/secondary CTA/square media, two header actions (desktop end cluster; mobile panel-owned), one toggle, one chevron. Unused default sublink array is not rendered. Full-width bar (not floating). No protected source was copied into public Ren10 output."
+}
