@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "moduleId": "header1",
+  "sourceStage": "green",
+  "cacheKey": "header1-*-green2",
+  "capturesFresh": true,
+  "captures": {
+    "desktopLight": "captures/desktop-light.png",
+    "desktopDark": "captures/desktop-dark.png",
+    "mobileLight": "captures/mobile-light.png",
+    "mobileDark": "captures/mobile-dark.png"
+  },
+  "inspection": "Fresh captures were inspected after the final container correction. Copy and media are centered inside the Ren10 wide container, desktop peers are equal and vertically aligned, mobile order is copy then image, actions wrap without overlap, the image has one rounded clipped surface, and light/dark states resolve coherently without duplicate affordances."
+}

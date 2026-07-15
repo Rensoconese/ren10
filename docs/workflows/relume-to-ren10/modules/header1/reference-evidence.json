@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated get_component for header1 returned the complete section and primitive names button/utils. Source facts were sanitized into reference-brief.md."
+}

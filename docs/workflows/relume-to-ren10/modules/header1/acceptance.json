@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy",
+      "kind": "structure",
+      "description": "Exactly one h1, one description, two CTAs (primary and secondary), and one rounded cover image",
+      "automated": true
+    },
+    {
+      "id": "responsive-layout",
+      "kind": "visual-structure",
+      "description": "Copy precedes media in a mobile stack and both peers form an equal vertically aligned split at large widths",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Semantic links, meaningful image alternative, visible focus, 44px touch targets, WCAG 2.1 AA, and no overflow",
+      "automated": true
+    },
+    {
+      "id": "themes-and-fallback",
+      "kind": "behavior",
+      "description": "Light/dark tokens, reduced motion, and JavaScript-disabled completeness",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex independently reviews fresh desktop and mobile captures plus the DOM/CSS cascade",
+      "automated": false
+    }
+  ]
+}

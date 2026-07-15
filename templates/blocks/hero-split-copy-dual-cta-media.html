@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hero Split Copy Dual CTA Media — Ren10</title>
+  <meta name="description" content="A responsive Ren10 split hero with two calls to action and one cover image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .rh1-hero {
+      padding-block: var(--space-section, var(--space-16));
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh1-layout {
+      --switcher-gap: var(--space-12);
+      --switcher-threshold: var(--width-4xl);
+      align-items: center;
+    }
+
+    .rh1-copy {
+      --stack-gap: var(--space-6);
+    }
+
+    .rh1-copy h1 {
+      margin: 0;
+      max-width: 18ch;
+      font-size: clamp(var(--text-4xl), 5vw, var(--text-7xl));
+      line-height: var(--leading-tight);
+      text-wrap: balance;
+    }
+
+    .rh1-description {
+      max-width: 54ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+    }
+
+    .rh1-actions {
+      --cluster-gap: var(--space-4);
+    }
+
+    .rh1-media {
+      --frame-ratio: 4 / 3;
+      min-width: 0;
+      background:
+        linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill));
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .rh1-media img {
+      background:
+        radial-gradient(circle at 72% 28%, var(--color-accent) 0 8%, transparent 9%),
+        linear-gradient(145deg, transparent 0 44%, var(--color-surface-raised) 45% 67%, transparent 68%),
+        linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill));
+    }
+
+    @media (max-width: 39.9375rem) {
+      .rh1-hero {
+        padding-block: var(--space-12);
+      }
+
+      .rh1-layout {
+        --switcher-gap: var(--space-8);
+      }
+
+      .rh1-actions > .ren-btn {
+        flex: 1 1 9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh1-hero *,
+      .rh1-hero *::before,
+      .rh1-hero *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="rh1-hero" data-rh1-root aria-labelledby="rh1-title">
+      <div class="rh1-layout ren-center ren-center-wide ren-switcher">
+        <div class="rh1-copy ren-stack-lg">
+          <h1 id="rh1-title">Hero Split Copy Dual CTA Media</h1>
+          <p class="rh1-description">
+            Turn scattered product decisions into a shared system your team can understand,
+            adapt, and ship with confidence.
+          </p>
+          <div class="rh1-actions ren-cluster" aria-label="Hero actions">
+            <a class="ren-btn" href="#start">Start building</a>
+            <a class="ren-btn ren-btn-secondary" href="#explore">Explore the system</a>
+          </div>
+        </div>
+
+        <figure class="rh1-media ren-frame ren-frame-photo">
+          <img
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+            alt="Abstract Ren10 product workspace"
+            width="800"
+            height="600"
+            decoding="async"
+          >
+        </figure>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
