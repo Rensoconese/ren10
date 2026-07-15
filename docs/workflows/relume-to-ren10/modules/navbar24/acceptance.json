@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary interaction reaches every documented state (hover pin, keyboard, Escape, outside, destination classes, mobile shell, breakpoint seams)",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exact anatomy counts: 1 brand, 4 top entries, 8 sublinks, 1 product, 1 intro CTA, 2 actions, 1 toggle, 1 chevron; no duplicate trees or chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop full-width mega under bar; intro+sublinks and product rail maintain intended two-track relationship; mobile stacks without overflow",
+      "automated": true
+    },
+    {
+      "id": "accessibility-baseline",
+      "kind": "a11y",
+      "description": "One landmark, 44px targets, visible focus, reduced motion, JS-disabled usability, axe WCAG 2.1 AA",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

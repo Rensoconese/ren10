@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated relume_oauth get_component slug=navbar24 primitives=include returned complete Navbar24 section source plus four vendored primitives (utils/cn, use-media-query, badge, button). Anatomy recorded: one logo, four top entries (3 plain + 1 mega), eight bold sublinks, one product showcase (image/name/variant/price/badge), one intro title+description+CTA, two actions, one toggle, one chevron; full-width desktop mega with two-track interior; mobile logo/toggle top row with one tree and stacked actions. No protected source was copied into public Ren10 output."
+}
