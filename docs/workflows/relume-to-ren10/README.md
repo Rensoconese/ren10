@@ -99,7 +99,7 @@ runtime when their referenced workflow documents are present.
 
 `workflow:relume:check` runs `validate-all` against
 `docs/workflows/relume-to-ren10/inventory.json` and fully validates every
-`in_progress` / `accepted` packet under the sibling `modules/` directory.
+`in_progress` / `reviewed` / `accepted` packet under the sibling `modules/` directory.
 
 ## Inventory ledger
 
@@ -110,7 +110,7 @@ Family/module status is recorded in `inventory.json` next to this runbook:
 | `families[].id` | Stable family id (unique) |
 | `families[].baseline` | Representative module for the family |
 | `families[].modules[].id` | Stable module id (unique globally) |
-| `families[].modules[].status` | `queued` \| `in_progress` \| `accepted` \| `skipped` |
+| `families[].modules[].status` | `queued` \| `in_progress` \| `reviewed` \| `accepted` \| `skipped` |
 | `families[].modules[].packet` | Single-segment packet directory under `modules/` |
 | `families[].modules[].reason` | Required non-empty reason when `skipped` |
 
@@ -120,7 +120,7 @@ Rules enforced by `validateInventory` / `validate-all`:
 - At most one module may be `in_progress` globally.
 - Packet paths are single safe module-dir segments (no traversal, absolute,
   multi-segment, or symlink escape outside `modules/`).
-- Every `in_progress` and `accepted` entry is validated with
+- Every `in_progress`, `reviewed`, and `accepted` entry is validated with
   `validatePacketDir`, not only a stage string check.
 - After packet validation, ledger identity must match the packet:
   `packet.moduleId === module.id` and `packet.family === family.id`.
@@ -129,7 +129,8 @@ Rules enforced by `validateInventory` / `validate-all`:
   (symlink / realpath escape rejected). `validateInventory` accepts optional
   `{ repoRoot }`; CLI passes the known package root, and the canonical
   `docs/workflows/relume-to-ren10/modules` layout can derive it.
-- `accepted` inventory rows require an `accepted` packet stage.
+- `reviewed` inventory rows require a `reviewed` packet stage; `accepted`
+  rows require an `accepted` packet stage.
 
 **Multi-`in_progress` short-circuit:** when more than one module is
 `in_progress`, validation emits only the concurrency error for those rows and
