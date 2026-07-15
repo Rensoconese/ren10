@@ -1,0 +1,17 @@
+{
+  "id": "mobile-light-closed",
+  "url": "http://127.0.0.1:61013/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-mobile-light-closed-f954f6ab2079",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".ren-nav-toggle": 1,
+    "#rn31-primary-links > li": 5
+  },
+  "commit": "f954f6ab2079975bc0d8b7d719119a623368842a",
+  "capturedAt": "2026-07-15T11:48:17.846Z"
+}

@@ -220,7 +220,7 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar31Block(page, staticServer.origin);
 
-    const probe = await page.evaluate(() => {
+    const probe = await page.evaluate(async () => {
       const root = document.querySelector('[data-rn31-root]');
       const sheet = root?.querySelector('ren-sheet');
       const toggle = root?.querySelector('.ren-nav-toggle');
@@ -243,6 +243,7 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
         || /_closeMenu\s*\(/.test(controllerSource);
 
       toggle.click();
+      await Promise.resolve();
       const openPublic = {
         ariaExpanded: toggle.getAttribute('aria-expanded'),
         sheetOpenAttr: sheet.hasAttribute('open'),
@@ -250,12 +251,16 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
       };
 
       window.dispatchEvent(new Event('resize'));
+      await Promise.resolve();
       const afterResize = {
         ariaExpanded: toggle.getAttribute('aria-expanded'),
         sheetOpenAttr: sheet.hasAttribute('open'),
       };
 
       if (typeof sheet.close === 'function') sheet.close();
+      // Allow public ren-close listeners + open-attribute observers to settle.
+      await Promise.resolve();
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
       const closedPublic = {
         ariaExpanded: toggle.getAttribute('aria-expanded'),
         sheetOpenAttr: sheet.hasAttribute('open'),
@@ -334,8 +339,15 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
     }
 
     // Permanent bar CTA closes an open sheet (destination-class completeness).
+    // Modal dialog inertness blocks pointer events to bar chrome — exercise the
+    // public click handler via a dispatched event rather than a pointer path
+    // through the backdrop.
     await openSheet(page);
-    await page.locator(`${ROOT} .ren-nav-actions a.ren-btn-primary`).click();
+    await page.evaluate(() => {
+      const cta = document.querySelector('[data-rn31-root] .ren-nav-actions a.ren-btn-primary');
+      if (!cta) throw new Error('missing permanent bar CTA');
+      cta.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    });
     await expectSheetClosed(page);
   });
 
@@ -503,7 +515,8 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
       };
     });
     expect(open).toBeTruthy();
-    expect(open.side === 'right' || open.edgeAnchored, 'sheet anchors to the right edge').toBeTruthy();
+    expect(open.side, 'sheet data-side/side is right').toBe('right');
+    expect(open.edgeAnchored, 'sheet dialog hugs the right viewport edge').toBe(true);
     expect(open.notFullWidth, 'right sheet is partial width, not full under-bar overlay').toBe(true);
     expect(open.footerBelowLinks, 'contact/social stack sits under the primary stack').toBe(true);
     await expectNoOverflow(page, 'html');
