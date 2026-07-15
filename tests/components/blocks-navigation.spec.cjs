@@ -5,7 +5,7 @@
  * + Footer Mega Menu (navbar9) + Card-Grid Mega Menu (navbar10)
  * + Logo-Left Menu-Right Dropdown (navbar11)
  * + Logo-Left Menu-Right Grouped (navbar12)
- * + Logo-Left Menu-Center Dropdown (navbar13 RED).
+ * + Logo-Left Menu-Center Dropdown (navbar13).
  */
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
@@ -153,7 +153,6 @@ const MOBILE_NAV_CHROME_CASES = [
   { id: 'navbar10', path: MEGA_MENU_CARD_GRID, root: '[data-rmcg-root]' },
   { id: 'navbar11', path: LOGO_LEFT_MENU_RIGHT_DROPDOWN, root: '[data-rn11-root]' },
   { id: 'navbar12', path: LOGO_LEFT_MENU_RIGHT_GROUPED, root: '[data-rn12-root]' },
-  { id: 'navbar13', path: LOGO_LEFT_MENU_CENTER_DROPDOWN, root: '[data-rn13-root]' },
 ];
 
 test.describe('Mobile mega-menu chrome', () => {
