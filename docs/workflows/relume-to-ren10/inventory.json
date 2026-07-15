@@ -64,7 +64,8 @@
         {
           "id": "navbar14",
           "status": "in_progress",
-          "packet": "navbar14"
+          "packet": "navbar14",
+          "ren10Block": "templates/blocks/nav-floating-logo-left-menu-right-actions.html"
         }
       ]
     }
