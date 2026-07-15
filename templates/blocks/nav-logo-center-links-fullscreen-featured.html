@@ -826,10 +826,15 @@
             <span></span>
           </button>
 
+          <!--
+            Non-modal expandable overlay (not role=dialog / aria-modal):
+            the always-visible close control lives in the sticky bar outside
+            this panel, so a modal dialog tree would be incoherent. Open state
+            is exposed via the toggle’s aria-expanded + aria-controls. Focus
+            containment uses inert exterior + Tab cycling (toggle + panel).
+          -->
           <div
             id="rn21-fullscreen-panel"
-            role="dialog"
-            aria-modal="true"
             aria-label="Site menu"
             hidden
           >
@@ -942,7 +947,8 @@
     /**
      * Block-local controllers for:
      * 1) compact bar disclosure (hover preview + click pin)
-     * 2) always-visible fullscreen panel with inert exterior + focus trap
+     * 2) non-modal fullscreen overlay (aria-expanded panel) with inert exterior
+     *    + focus trap — close control stays in the bar, so this is not a dialog
      *
      * Shell seam: (min-width: 768px) — shared with block CSS, matches ren-nav 768.
      */
@@ -1013,7 +1019,7 @@
       }
 
       /**
-       * Collect focusables in the dialog shell: close toggle + panel contents.
+       * Collect focusables in the overlay shell: bar close toggle + panel contents.
        * @returns {HTMLElement[]}
        */
       function getShellFocusables() {
@@ -1032,6 +1038,59 @@
         return list;
       }
 
+      /**
+       * True when activating the anchor stays on the same document (hash / same path).
+       * @param {HTMLAnchorElement} anchor
+       */
+      function isSameDocumentNavigation(anchor) {
+        try {
+          const next = new URL(anchor.href, window.location.href);
+          return (
+            next.origin === window.location.origin
+            && next.pathname === window.location.pathname
+            && next.search === window.location.search
+          );
+        } catch {
+          return true;
+        }
+      }
+
+      /**
+       * Whether focus is stuck on a non-visible or panel-owned node after close.
+       * @param {Element | null} active
+       * @param {Element | null} [sourceAnchor]
+       */
+      function isFocusLostOrHidden(active, sourceAnchor = null) {
+        if (!(active instanceof HTMLElement)) return true;
+        if (active === document.body || active === document.documentElement) return true;
+        if (sourceAnchor && active === sourceAnchor) return true;
+        if (panel.contains(active)) return true;
+        if (active.closest('[hidden]')) return true;
+        if (active.hasAttribute('hidden')) return true;
+        const style = getComputedStyle(active);
+        if (style.display === 'none' || style.visibility === 'hidden') return true;
+        if (active.getClientRects().length === 0) return true;
+        return false;
+      }
+
+      /**
+       * After same-document destination activation, never leave focus on a
+       * now-hidden panel anchor — restore the always-visible toggle.
+       * @param {HTMLAnchorElement | null} [sourceAnchor]
+       */
+      function restoreFocusAfterDestination(sourceAnchor = null) {
+        const apply = () => {
+          if (!document.contains(toggle)) return;
+          const active = document.activeElement;
+          if (isFocusLostOrHidden(active instanceof Element ? active : null, sourceAnchor)) {
+            toggle.focus();
+          }
+        };
+        // Click focus + hash navigation can settle after the close handler.
+        queueMicrotask(apply);
+        requestAnimationFrame(apply);
+      }
+
       function restoreExteriorInert() {
         for (const { el, hadInert } of inertSnapshots) {
           if (hadInert) el.setAttribute('inert', '');
@@ -1043,7 +1102,7 @@
       /**
        * Inert everything outside the panel + toggle shell so Tab cannot reach
        * hidden hero / docs chrome / bar links while the fullscreen menu is open.
-       * Uses the public `inert` attribute only.
+       * Uses the public `inert` attribute only. Non-modal: close lives in the bar.
        */
       function setExteriorInert(active) {
         restoreExteriorInert();
@@ -1069,7 +1128,6 @@
       function setPanelOpen(open, { returnFocus = false, moveFocus = true } = {}) {
         if (open) {
           panel.hidden = false;
-          panel.setAttribute('aria-modal', 'true');
           toggle.setAttribute('aria-expanded', 'true');
           toggle.setAttribute('aria-label', 'Close site menu');
           renNavHost?.setAttribute('data-open', '');
@@ -1090,7 +1148,6 @@
           }
         } else {
           panel.hidden = true;
-          panel.setAttribute('aria-modal', 'true');
           toggle.setAttribute('aria-expanded', 'false');
           toggle.setAttribute('aria-label', 'Open site menu');
           renNavHost?.removeAttribute('data-open');
@@ -1204,13 +1261,20 @@
         { signal }
       );
 
-      // Close fullscreen when activating destinations inside the panel.
-      panel.querySelectorAll('a[href]').forEach((anchor) => {
-        anchor.addEventListener(
+      // Close fullscreen when activating destinations; never leave focus on a
+      // now-hidden anchor for same-document (hash) navigations.
+      panel.querySelectorAll('a[href]').forEach((node) => {
+        if (!(node instanceof HTMLAnchorElement)) return;
+        node.addEventListener(
           'click',
           () => {
-            setPanelOpen(false, { returnFocus: false, moveFocus: false });
+            const sameDoc = isSameDocumentNavigation(node);
             closeDisclosure(false);
+            setPanelOpen(false, {
+              returnFocus: sameDoc,
+              moveFocus: false,
+            });
+            if (sameDoc) restoreFocusAfterDestination(node);
           },
           { signal }
         );

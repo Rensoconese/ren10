@@ -245,6 +245,9 @@ test.describe('Navbar Logo Center Links Fullscreen Featured (navbar21)', () => {
     await expect(toggle).toBeVisible();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(panel).toBeHidden();
+    // Non-modal overlay: close control lives in the bar, not a dialog tree.
+    await expect(panel).not.toHaveAttribute('role', 'dialog');
+    await expect(panel).not.toHaveAttribute('aria-modal', 'true');
 
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
@@ -261,6 +264,55 @@ test.describe('Navbar Logo Center Links Fullscreen Featured (navbar21)', () => {
     await page.locator('a.rn21-menu-link').first().click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(panel).toBeHidden();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('same-document destination close restores focus off hidden anchors for each panel class', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar21Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const panel = page.locator('#rn21-fullscreen-panel');
+
+    /** @type {Array<{ name: string, selector: string }>} */
+    const cases = [
+      { name: 'menu-link', selector: 'a.rn21-menu-link' },
+      { name: 'article', selector: 'a.rn21-article' },
+      { name: 'view-all', selector: 'a.rn21-view-all' },
+      { name: 'social', selector: 'a.rn21-social' },
+      { name: 'contact', selector: 'a.rn21-contact' },
+    ];
+
+    for (const { name, selector } of cases) {
+      await toggle.click();
+      await expect(panel, `${name}: panel open`).toBeVisible();
+
+      const dest = page.locator(selector).first();
+      await expect(dest, `${name}: destination present`).toHaveCount(1);
+      await dest.click();
+
+      await expect(panel, `${name}: panel closed`).toBeHidden();
+      await expect(toggle, `${name}: aria-expanded false`).toHaveAttribute('aria-expanded', 'false');
+
+      await expect.poll(
+        () => page.evaluate(() => {
+          const active = document.activeElement;
+          if (!(active instanceof HTMLElement)) return false;
+          if (!active.classList.contains('ren-nav-toggle')) return false;
+          if (active.closest('#rn21-fullscreen-panel')) return false;
+          if (active.getClientRects().length === 0) return false;
+          return true;
+        }),
+        { message: `${name}: focus must restore to toggle, not a hidden anchor` }
+      ).toBe(true);
+
+      // Active element is not the activated destination (now hidden with the panel).
+      const activeIsDestination = await page.evaluate((sel) => {
+        const active = document.activeElement;
+        return Boolean(active && active.matches?.(sel));
+      }, selector);
+      expect(activeIsDestination, `${name}: active element must not remain the destination`).toBe(false);
+    }
   });
 
   test('toggle remains visible on desktop and mobile; mobile hides bar links until panel opens', async ({ page }) => {
@@ -361,8 +413,11 @@ test.describe('Navbar Logo Center Links Fullscreen Featured (navbar21)', () => {
 
     await toggle.click();
     await expect(panel).toBeVisible();
-    await expect(panel).toHaveAttribute('role', 'dialog');
-    await expect(panel).toHaveAttribute('aria-modal', 'true');
+    // Non-modal expandable overlay (close control is the bar toggle).
+    await expect(panel).not.toHaveAttribute('role', 'dialog');
+    await expect(panel).not.toHaveAttribute('aria-modal', 'true');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(toggle).toHaveAttribute('aria-controls', 'rn21-fullscreen-panel');
 
     // Exterior nodes must be inert while open.
     await expect(page.locator('header.dx-nav')).toHaveAttribute('inert', '');
