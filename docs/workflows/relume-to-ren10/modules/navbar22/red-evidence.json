@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated suite tests/components/navbar22-navigation.spec.cjs was added before production HTML. Focused Playwright run (Desktop Light, --max-failures=1) discovered the suite and failed on the first test with genuine missing-block evidence: HTTP 404 for templates/blocks/nav-sticky-logo-center-dropdown-fullscreen-contact.html (expected 200). Assertion message: navbar22 block must not 404. Remaining suite tests were left unrun by max-failures."
+}
