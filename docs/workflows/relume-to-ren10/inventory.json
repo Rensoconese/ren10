@@ -176,6 +176,44 @@
           "ren10Block": "templates/blocks/nav-logo-cta-left-drawer.html"
         }
       ]
+    },
+    {
+      "id": "headers",
+      "sourceCategory": "headers",
+      "status": "reviewed",
+      "baseline": "header1",
+      "modules": [
+        {
+          "id": "header1",
+          "status": "reviewed",
+          "packet": "header1",
+          "ren10Block": "templates/blocks/hero-split-copy-dual-cta-media.html"
+        },
+        {
+          "id": "header2",
+          "status": "reviewed",
+          "packet": "header2",
+          "ren10Block": "templates/blocks/hero-split-email-form-media-right.html"
+        },
+        {
+          "id": "header3",
+          "status": "reviewed",
+          "packet": "header3",
+          "ren10Block": "templates/blocks/hero-text-left-video-lightbox.html"
+        },
+        {
+          "id": "header4",
+          "status": "reviewed",
+          "packet": "header4",
+          "ren10Block": "templates/blocks/hero-split-email-video-lightbox.html"
+        },
+        {
+          "id": "header5",
+          "status": "reviewed",
+          "packet": "header5",
+          "ren10Block": "templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html"
+        }
+      ]
     }
   ]
 }
