@@ -342,41 +342,53 @@ test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
         .toBe(true);
     }
 
-    // Peer link: closes shell; focus may land on peer or toggle once tree hides.
+    // Peer link: ren-nav may close the shell before the block controller.
+    // Focus must land on the visible toggle (or another real visible destination),
+    // never BODY/html, even when shell was already collapsed.
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     const peer = page.locator('#rmcc-primary-links > li > a.ren-nav-link').first();
+    await peer.focus();
     await peer.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(disclosure).not.toHaveAttribute('open', '');
     await expect
-      .poll(() =>
-        page.evaluate(() => {
-          const active = document.activeElement;
-          const btn = document.querySelector('[data-rmcc-root] .ren-nav-toggle');
-          if (!(active instanceof HTMLElement)) return false;
-          if (active === btn) {
-            const style = getComputedStyle(btn);
-            const rect = btn.getBoundingClientRect();
-            return (
+      .poll(
+        () =>
+          page.evaluate(() => {
+            const active = document.activeElement;
+            const btn = document.querySelector('[data-rmcc-root] .ren-nav-toggle');
+            const root = document.querySelector('[data-rmcc-root]');
+            if (!(active instanceof HTMLElement) || !btn || !root) {
+              return { ok: false, reason: 'missing' };
+            }
+            if (active === document.body || active === document.documentElement) {
+              return { ok: false, reason: 'body', tag: active.tagName };
+            }
+            const style = getComputedStyle(active);
+            const rect = active.getBoundingClientRect();
+            const visible =
               style.display !== 'none'
               && style.visibility !== 'hidden'
               && rect.width > 0
               && rect.height > 0
-            );
-          }
-          // Peer may keep focus only while still a visible tab stop.
-          const style = getComputedStyle(active);
-          const rect = active.getBoundingClientRect();
-          return (
-            style.display !== 'none'
-            && style.visibility !== 'hidden'
-            && rect.width > 0
-            && rect.height > 0
-          );
-        })
+              && root.contains(active);
+            const links = document.querySelector('#rmcc-primary-links');
+            const linksHidden =
+              links
+              && (getComputedStyle(links).display === 'none'
+                || getComputedStyle(links).visibility === 'hidden');
+            const inHiddenTree = Boolean(linksHidden && links.contains(active));
+            return {
+              ok: visible && !inHiddenTree,
+              tag: active.tagName,
+              activeIsToggle: active === btn,
+              inHiddenTree,
+            };
+          }),
+        { message: 'peer focus is toggle/real destination, not BODY or hidden tree' }
       )
-      .toBe(true);
+      .toMatchObject({ ok: true });
   });
 
   test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
@@ -528,103 +540,138 @@ test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
     expect(wide.threeUp, 'wide desktop keeps a three-column collection grid').toBe(true);
   });
 
-  test('breakpoint seams 767/768/769 and same-breakpoint resize stay stable', async ({ page }) => {
+  test('breakpoint seams 767/768/769: real display/rect/MQ and state, no hidden-open', async ({
+    page,
+  }) => {
     await gotoBlock(page, staticServer.origin);
 
-    /**
-     * @param {import('@playwright/test').Page} page
-     * @param {string} rootSelector
-     */
-    async function toggleGeometry(page, rootSelector) {
-      return page.evaluate((rootSel) => {
-        const toggle = document.querySelector(`${rootSel} .ren-nav-toggle`);
-        if (!toggle) return null;
-        const style = getComputedStyle(toggle);
-        const rect = toggle.getBoundingClientRect();
+    for (const width of [767, 768, 769]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.evaluate(() => {
+        window.dispatchEvent(new Event('resize'));
+        document.body.offsetHeight;
+      });
+
+      const shell = await page.evaluate((w) => {
+        const toggle = document.querySelector('[data-rmcc-root] .ren-nav-toggle');
+        const links = document.querySelector('#rmcc-primary-links');
+        const firstLink = document.querySelector('#rmcc-primary-links > li > a.ren-nav-link');
+        if (!toggle || !links || !firstLink) return null;
+
+        const toggleStyle = getComputedStyle(toggle);
+        const linksStyle = getComputedStyle(links);
+        const toggleRect = toggle.getBoundingClientRect();
+        const linksRect = links.getBoundingClientRect();
+        const firstLinkRect = firstLink.getBoundingClientRect();
+
+        const toggleDisplay = toggleStyle.display;
+        const linksDisplay = linksStyle.display;
+        const toggleVisible =
+          toggleDisplay !== 'none'
+          && toggleStyle.visibility !== 'hidden'
+          && toggleRect.width > 0
+          && toggleRect.height > 0;
+        const linksVisible =
+          linksDisplay !== 'none'
+          && linksStyle.visibility !== 'hidden'
+          && linksRect.width > 0
+          && linksRect.height > 0
+          && firstLinkRect.width > 0
+          && firstLinkRect.height > 0;
+
+        // Inclusive desktop at 48rem: 767 mobile, 768/769 desktop (matches ren-nav JS).
+        const desktop = w >= 768;
+        const mqDesktop = window.matchMedia('(min-width: 48rem)').matches;
         return {
-          display: style.display,
-          visibility: style.visibility,
-          width: rect.width,
-          height: rect.height,
-          visible:
-            style.display !== 'none'
-            && style.visibility !== 'hidden'
-            && rect.width > 0
-            && rect.height > 0,
-          hiddenByDisplay: style.display === 'none',
+          width: w,
+          desktop,
+          mqDesktop,
+          toggleDisplay,
+          linksDisplay,
+          toggleVisible,
+          linksVisible,
+          toggleExpanded: toggle.getAttribute('aria-expanded'),
+          dataOpen: document.querySelector('[data-rmcc-root] ren-nav')?.hasAttribute('data-open') || false,
+          toggleW: Math.round(toggleRect.width),
+          toggleH: Math.round(toggleRect.height),
+          firstLinkW: Math.round(firstLinkRect.width),
+          firstLinkH: Math.round(firstLinkRect.height),
         };
-      }, rootSelector);
+      }, width);
+
+      expect(shell, `shell metrics at ${width}`).toBeTruthy();
+      expect(shell.mqDesktop, `DESKTOP_MQ at ${width}`).toBe(shell.desktop);
+      expect(shell.toggleExpanded, `no hidden-open toggle at ${width}`).toBe('false');
+      expect(shell.dataOpen, `no hidden-open data-open at ${width}`).toBe(false);
+
+      if (shell.desktop) {
+        expect(shell.toggleVisible, `toggle hidden at ${width} (display=${shell.toggleDisplay})`).toBe(
+          false
+        );
+        expect(shell.toggleDisplay, `toggle display none at ${width}`).toBe('none');
+        expect(shell.linksVisible, `links visible at ${width} (display=${shell.linksDisplay})`).toBe(
+          true
+        );
+        expect(shell.linksDisplay, `links not display:none at ${width}`).not.toBe('none');
+        expect(shell.firstLinkW, `peer link hit width at ${width}`).toBeGreaterThanOrEqual(24);
+        expect(shell.firstLinkH, `peer link hit height at ${width}`).toBeGreaterThanOrEqual(24);
+      } else {
+        expect(shell.toggleVisible, `toggle shown at ${width}`).toBe(true);
+        expect(shell.toggleDisplay, `toggle display at ${width}`).not.toBe('none');
+        expect(shell.toggleW, `toggle width at ${width}`).toBeGreaterThanOrEqual(44);
+        expect(shell.toggleH, `toggle height at ${width}`).toBeGreaterThanOrEqual(44);
+        // Closed mobile: links may be display:none until the shell opens.
+        expect(
+          shell.linksDisplay === 'none' || !shell.linksVisible,
+          `closed mobile links at ${width}`
+        ).toBe(true);
+      }
+      await expectNoOverflow(page, 'html');
     }
 
-    // Just below 48rem → mobile shell.
+    // 767→768 is a real crossing: open mobile mega, cross, shell+details close.
     await page.setViewportSize({ width: 767, height: 900 });
     await page.evaluate(() => window.dispatchEvent(new Event('resize')));
-    let geom = await toggleGeometry(page, ROOT);
-    expect(geom, '767 geometry').toBeTruthy();
-    expect(geom.visible, '767 keeps mobile toggle visible').toBe(true);
-    expect(geom.hiddenByDisplay, '767 toggle not display:none').toBe(false);
-    await page.locator(`${ROOT} .ren-nav-toggle`).click();
-    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await page.locator('.rmcc-disclosure > summary').click();
     await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
-    await expect(page.locator('a.rmcc-collection')).toHaveCount(3);
-    await page.locator(`${ROOT} .ren-nav-toggle`).click();
-    await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
-    await expectNoOverflow(page, 'html');
 
-    // 768px = 48rem ren-nav / block mobile band — still mobile path.
     await page.setViewportSize({ width: 768, height: 900 });
-    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
-    await page.waitForTimeout(50);
-    geom = await toggleGeometry(page, ROOT);
-    expect(geom, '768 geometry').toBeTruthy();
-    expect(geom.visible, '768 stays on mobile shell (max-width: 48rem)').toBe(true);
-    expect(geom.hiddenByDisplay).toBe(false);
-    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeVisible();
-    await page.locator(`${ROOT} .ren-nav-toggle`).click();
-    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
-    await page.locator(`${ROOT} .ren-nav-toggle`).click();
-    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'false');
-    await expectNoOverflow(page, 'html');
-
-    // 769 must flip to desktop: toggle display:none / hidden, links visible.
-    await page.setViewportSize({ width: 769, height: 900 });
-    await page.evaluate(() => window.dispatchEvent(new Event('resize')));
-    await page.waitForTimeout(50);
-    geom = await toggleGeometry(page, ROOT);
-    expect(geom, '769 geometry').toBeTruthy();
-    expect(geom.visible, '769 desktop hides mobile toggle').toBe(false);
-    expect(geom.hiddenByDisplay || geom.width === 0, '769 toggle display:none or zero box').toBe(
-      true
-    );
-    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeHidden();
-    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
-    await page.locator('.rmcc-disclosure > summary').click();
-    await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
-    await expect(page.locator('.rmcc-panel')).toBeVisible();
-    const panelPosition = await page.evaluate(
-      () => getComputedStyle(document.querySelector('.rmcc-panel')).position
-    );
-    expect(panelPosition).toBe('absolute');
-    await page.keyboard.press('Escape');
+    await page.evaluate(() => {
+      window.dispatchEvent(new Event('resize'));
+      document.body.offsetHeight;
+    });
+    await expect(toggle).toBeHidden();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
-    await expectNoOverflow(page, 'html');
+    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
 
-    // Same-breakpoint resize stability at each seam width.
+    // Desktop mega at 768 and 769.
+    for (const width of [768, 769]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+      await page.locator('.rmcc-disclosure > summary').click();
+      await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
+      await expect(page.locator('.rmcc-panel')).toBeVisible();
+      const panelPosition = await page.evaluate(
+        () => getComputedStyle(document.querySelector('.rmcc-panel')).position
+      );
+      expect(panelPosition, `absolute mega at ${width}`).toBe('absolute');
+      await page.keyboard.press('Escape');
+      await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
+    }
+
+    // Same-breakpoint resize stability (no spurious open).
     for (const width of [767, 768, 769]) {
       await page.setViewportSize({ width, height: 901 });
       await page.evaluate(() => window.dispatchEvent(new Event('resize')));
       await expect(page.locator(`${ROOT} ren-nav`)).toHaveCount(1);
       await expect(page.locator('#rmcc-primary-links')).toHaveCount(1);
+      await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
       await expectNoOverflow(page, 'html');
-      const again = await toggleGeometry(page, ROOT);
-      if (width <= 768) {
-        expect(again.visible, `${width} same-bp still mobile`).toBe(true);
-      } else {
-        expect(again.visible, `${width} same-bp still desktop`).toBe(false);
-      }
     }
   });
 

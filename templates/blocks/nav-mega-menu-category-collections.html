@@ -379,17 +379,33 @@
     }
 
     /*
-     * Seam-free shell boundary aligned with ren-nav max-width: 48rem:
-     * mobile shell at 767/768 (≤48rem); desktop chrome/JS from 48.01rem (769px).
+     * Seam-free shell boundary: mobile ends below 48rem; desktop mega chrome
+     * and JS DESKTOP_MQ start at 48rem (inclusive). At exact 768px ren-nav's
+     * max-width:48rem still applies mobile link/toggle rules — override so
+     * links stay visible and the toggle is hidden, matching matchMedia and
+     * ren-nav JS (innerWidth < 768 ⇒ mobile). 767→768 is a real crossing.
      */
-    @media (min-width: 48.01rem) {
+    @media (min-width: 48rem) {
       .rmcc-preview .ren-nav-toggle {
-        display: none !important;
+        display: none;
       }
 
-      .rmcc-preview .ren-nav-links {
+      /* Beat ren-nav max-width:48rem { display:none } at the inclusive seam. */
+      .rmcc-preview .ren-nav-links,
+      .rmcc-preview .ren-nav[data-open] .ren-nav-links,
+      .rmcc-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
         display: flex;
         position: static;
+        inset: auto;
+        top: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        max-width: none;
+        border-block-end: none;
+        padding-block: 0;
+        animation: none;
+        z-index: auto;
       }
 
       .rmcc-disclosure {
@@ -422,7 +438,7 @@
       }
     }
 
-    @media (max-width: 48rem) {
+    @media (max-width: 47.999rem) {
       .rmcc-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -523,20 +539,20 @@
     }
 
     /* Intermediate tablet band: keep collections readable before three-up. */
-    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
+    @media (min-width: 48rem) and (max-width: 63.999rem) {
       .rmcc-collection-grid.ren-grid-3 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
-    @media (max-width: 48rem) {
+    @media (max-width: 47.999rem) {
       .rmcc-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
 
       .rmcc-preview ren-nav:not(:defined) .ren-nav-toggle {
-        display: none !important;
+        display: none;
       }
 
       .rmcc-preview ren-nav:not(:defined) .ren-nav-links {
@@ -761,11 +777,10 @@
      */
     const RMCC_CONTROLLER = Symbol.for('ren10.rmcc.controller');
     /**
-     * Desktop shell starts just above ren-nav's max-width: 48rem mobile band.
-     * Complements block CSS min-width: 48.01rem / max-width: 48rem
-     * (767/768 mobile, 769 desktop).
+     * Inclusive desktop shell for this block; complements max-width: 47.999rem CSS.
+     * Matches ren-nav JS (innerWidth < 768 ⇒ mobile) and matchMedia(min-width: 48rem).
      */
-    const DESKTOP_MQ = '(min-width: 48.01rem)';
+    const DESKTOP_MQ = '(min-width: 48rem)';
 
     function initNavMegaMenuCategoryCollections(scope = document) {
       const root = scope.querySelector?.('[data-rmcc-root]') ?? scope;
@@ -792,6 +807,9 @@
       const renNavHost = root.querySelector('ren-nav');
       const panel = root.querySelector('.rmcc-panel');
       const toggle = root.querySelector('.ren-nav-toggle');
+      const linksList = root.querySelector('#rmcc-primary-links');
+      const actionsCluster = root.querySelector('.ren-nav-actions');
+      const brandLink = root.querySelector('a.ren-nav-brand');
       const desktopQuery = window.matchMedia(DESKTOP_MQ);
 
       /** Pointer is inside disclosure + panel hit region on desktop. */
@@ -858,31 +876,73 @@
       }
 
       /**
-       * After shell collapse, destinations/actions may become display:none.
-       * Keep a visible, stable focus target (toggle) when the prior active
-       * element is no longer a visible tab stop.
+       * True when el is a real, visible tab stop inside the block root.
+       * BODY / html / zero-box / display:none never count.
+       * @param {Element | null} el
        */
-      function ensureVisibleFocusAfterMobileClose(forceToggle = false) {
+      function isVisibleTabStop(el) {
+        if (!(el instanceof HTMLElement)) return false;
+        if (el === document.body || el === document.documentElement) return false;
+        if (!root.contains(el)) return false;
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return (
+          style.display !== 'none'
+          && style.visibility !== 'hidden'
+          && Number(style.opacity || '1') > 0
+          && rect.width > 0
+          && rect.height > 0
+        );
+      }
+
+      /**
+       * After shell collapse, destinations/actions may become display:none.
+       * ren-nav may have already closed on peer activation before this controller
+       * runs — still normalize focus off BODY and off hidden tree controls.
+       * Prefer a still-visible real destination (e.g. brand); otherwise toggle.
+       * @param {{ forceToggle?: boolean, allowBrand?: boolean }} [opts]
+       */
+      function ensureVisibleFocusAfterMobileClose(opts = {}) {
         if (isDesktop() || !toggle) return;
+        const { forceToggle = false, allowBrand = false } = opts;
+
         if (forceToggle) {
           toggle.focus({ preventScroll: true });
           return;
         }
+
         const active = document.activeElement;
-        if (!(active instanceof HTMLElement) || active === document.body) {
-          toggle.focus({ preventScroll: true });
+        if (allowBrand && brandLink && isVisibleTabStop(brandLink) && active === brandLink) {
           return;
         }
-        const style = getComputedStyle(active);
-        const rect = active.getBoundingClientRect();
-        const hidden =
-          style.display === 'none'
-          || style.visibility === 'hidden'
-          || Number(style.opacity || '1') === 0
-          || rect.width === 0
-          || rect.height === 0
-          || !root.contains(active);
-        if (hidden) {
+
+        const linksHidden =
+          linksList instanceof Element
+          && (getComputedStyle(linksList).display === 'none'
+            || getComputedStyle(linksList).visibility === 'hidden');
+        const actionsHidden =
+          actionsCluster instanceof Element
+          && (getComputedStyle(actionsCluster).display === 'none'
+            || getComputedStyle(actionsCluster).visibility === 'hidden');
+
+        const inHiddenRegion =
+          active instanceof Node
+          && (
+            (linksList instanceof Element && linksList.contains(active) && linksHidden)
+            || (actionsCluster instanceof Element && actionsCluster.contains(active) && actionsHidden)
+            || (disclosure.contains(active) && linksHidden)
+          );
+
+        if (
+          !isVisibleTabStop(active)
+          || active === document.body
+          || active === document.documentElement
+          || inHiddenRegion
+        ) {
+          if (allowBrand && brandLink && isVisibleTabStop(brandLink)) {
+            brandLink.focus({ preventScroll: true });
+            return;
+          }
           toggle.focus({ preventScroll: true });
         }
       }
@@ -893,15 +953,17 @@
        * - Desktop peer / actions / brand: close details; focus stays on the
        *   still-visible control (peer focus stable).
        * - Mobile mega-link / collection / actions / peer: close details + shell,
-       *   then focus the toggle (stable, visible).
+       *   then focus the toggle (stable, visible). Peers still restore focus when
+       *   ren-nav already closed the shell before this handler runs.
        * - Mobile brand: close details + shell; brand may keep focus when visible.
        * @param {'mega-link'|'collection'|'action'|'peer'|'brand'} kind
        */
       function closeFromDestinationActivation(kind) {
         markIntentionalCloseWhilePointerInside();
-        const mobileShellOpen = !isDesktop() && isMobileNavOpen();
+        const wasMobile = !isDesktop();
+        const mobileShellOpen = wasMobile && isMobileNavOpen();
 
-        if (isDesktop()) {
+        if (!wasMobile) {
           if (kind === 'mega-link' || kind === 'collection') {
             closeDisclosure(true);
           } else {
@@ -913,10 +975,18 @@
         closeDisclosure(false);
         if (mobileShellOpen) {
           closeMobileShell();
-          queueMicrotask(() => {
-            ensureVisibleFocusAfterMobileClose(kind !== 'brand');
-          });
         }
+
+        // Always normalize focus after mobile destination activation — ren-nav's
+        // public peer handler may have collapsed the shell first, leaving BODY.
+        const restoreFocus = () => {
+          ensureVisibleFocusAfterMobileClose({
+            forceToggle: kind === 'mega-link' || kind === 'collection' || kind === 'action' || kind === 'peer',
+            allowBrand: kind === 'brand',
+          });
+        };
+        queueMicrotask(restoreFocus);
+        requestAnimationFrame(restoreFocus);
       }
 
       /**
