@@ -4,13 +4,14 @@
   "moduleId": "navbar25",
   "blockSlug": "nav-mega-menu-categories-promo",
   "blockPath": "templates/blocks/nav-mega-menu-categories-promo.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-categories-promo.html",
     "tests/components/navbar25-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
   }
 }
