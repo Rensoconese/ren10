@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "The Navbar21 isolated suite was added before production. Focused run with --max-failures=1 discovered the suite and stopped at the first expected failure: templates/blocks/nav-logo-center-links-fullscreen-featured.html returned HTTP 404 (absent block). Remaining tests were left unrun by the failure cap."
+}
