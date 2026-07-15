@@ -1,0 +1,18 @@
+{
+  "id": "tablet-light",
+  "url": "http://127.0.0.1:53659/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-tablet-light-9d2febfe1b68",
+  "viewport": {
+    "width": 768,
+    "height": 1024
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh6-copy": 1,
+    ".rh6-form-row input[type=email]": 1,
+    ".rh6-form-row button[type=submit]": 1
+  },
+  "commit": "9d2febfe1b686b680142f55fdd0e09d9ebd0bd44",
+  "capturedAt": "2026-07-15T17:06:24.183Z"
+}

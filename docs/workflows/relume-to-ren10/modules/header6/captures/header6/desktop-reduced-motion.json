@@ -1,0 +1,17 @@
+{
+  "id": "desktop-reduced-motion",
+  "url": "http://127.0.0.1:53659/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-desktop-reduced-motion-9d2febfe1b68",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh6-form-row input[type=email]": 1,
+    ".rh6-form-row button[type=submit]": 1
+  },
+  "commit": "9d2febfe1b686b680142f55fdd0e09d9ebd0bd44",
+  "capturedAt": "2026-07-15T17:06:26.849Z"
+}
