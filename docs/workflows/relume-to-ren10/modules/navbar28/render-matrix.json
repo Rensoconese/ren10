@@ -2,6 +2,7 @@
   "version": 1,
   "path": "/templates/blocks/nav-mega-menu-category-collections.html",
   "root": "[data-rmcc-root]",
+  "notes": "Final shell policy: 767 mobile (max-width 47.999rem); 768/769 inclusive desktop (min-width 48rem / DESKTOP_MQ), matching ren-nav JS (innerWidth < 768 ⇒ mobile).",
   "states": [
     {
       "id": "desktop-light-closed",
@@ -177,6 +178,63 @@
         ".rmcc-collection": 3,
         ".rmcc-chevron": 1
       }
+    },
+    {
+      "id": "seam-767-mobile-nav-open",
+      "viewport": { "width": 767, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        ".rmcc-mega-link": 5,
+        ".rmcc-collection": 3,
+        ".rmcc-chevron": 1,
+        ".ren-nav-toggle": 1
+      },
+      "shellPolicy": "mobile"
+    },
+    {
+      "id": "seam-768-desktop-closed",
+      "viewport": { "width": 768, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rmcc-mega-link": 5,
+        ".rmcc-collection": 3,
+        ".rmcc-chevron": 1
+      },
+      "shellPolicy": "desktop"
+    },
+    {
+      "id": "seam-768-desktop-open",
+      "viewport": { "width": 768, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmcc-disclosure > summary" }],
+      "expectedMarkers": {
+        ".rmcc-mega-link": 5,
+        ".rmcc-collection": 3,
+        ".rmcc-chevron": 1
+      },
+      "shellPolicy": "desktop"
+    },
+    {
+      "id": "seam-769-desktop-open",
+      "viewport": { "width": 769, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmcc-disclosure > summary" }],
+      "expectedMarkers": {
+        ".rmcc-mega-link": 5,
+        ".rmcc-collection": 3,
+        ".rmcc-chevron": 1
+      },
+      "shellPolicy": "desktop"
     }
   ]
 }
