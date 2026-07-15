@@ -54,6 +54,11 @@
           "status": "accepted",
           "packet": "navbar12",
           "ren10Block": "templates/blocks/nav-logo-left-menu-right-grouped.html"
+        },
+        {
+          "id": "navbar13",
+          "status": "in_progress",
+          "packet": "navbar13"
         }
       ]
     }

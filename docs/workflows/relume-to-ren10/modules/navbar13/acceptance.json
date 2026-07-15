@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary interaction reaches every documented state",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Every control and indicator has exactly one owner and no duplicate rendering",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Primary peer elements share the intended alignment axis",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}
