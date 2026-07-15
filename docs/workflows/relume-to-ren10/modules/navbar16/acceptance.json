@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Toggle-driven overlay reaches every documented state at all widths: open/close, Escape, outside click, destination close, JS-disabled usable tree, reduced motion",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, six primary links, one permanent top action, one contact, five socials, one named toggle, zero chevrons/dropdowns/duplicate close chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Full-width logo-left / action+toggle-right bar; open overlay under bar with large centered primary stack and footer contact+socials band; closed bar hides the tree",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}
