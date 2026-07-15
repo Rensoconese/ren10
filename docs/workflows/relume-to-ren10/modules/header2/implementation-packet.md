@@ -22,10 +22,11 @@ coverage in `tests/components/header2-header.spec.cjs`.
 
 - Preview root: `[data-rh2-root]` / `.rh2-hero`.
 - Layout: `.rh2-layout.ren-switcher` with `.rh2-copy` and `.rh2-media`.
-- Heading: `.rh2-heading` (page chrome keeps the docs `h1`; hero heading is
-  `h2` for document outline).
+- Heading: one `h1.rh2-heading`; the compact page chrome has no competing
+  heading, so the hero owns the standalone page outline.
 - Form: one email `ren-field` + one primary `ren-btn` submit inside `ren-form`.
-- Terms: one `.rh2-terms` paragraph with one `.ren-link`.
+- Terms: one `.rh2-terms` paragraph with one `.ren-link` that resolves to the
+  repository's MIT license document.
 - Media: `ren-frame` photo ratio + tokenized placeholder (no CDN).
 - Demo brand only in page shell: R-in-square + Ren10.
 - Tokens only; Light DOM; vanilla HTML/CSS/JS.

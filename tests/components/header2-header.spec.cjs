@@ -60,6 +60,18 @@ test.describe('Relume Header 2 translated to Ren10', () => {
     await expect(input).toHaveValue('');
   });
 
+  test('resolves the terms link to a real document', async ({ page }) => {
+    await gotoBlock(page);
+    const termsLink = page.locator('[data-rh2-root] .rh2-terms-link');
+    const href = await termsLink.getAttribute('href');
+
+    expect(href).toBe('../../LICENSE');
+    const destination = new URL(href, page.url());
+    const response = await page.request.get(destination.href);
+    expect(response.ok(), `${destination.href} must resolve successfully`).toBe(true);
+    await expect(response.text()).resolves.toContain('MIT License');
+  });
+
   for (const width of [320, 390, 767, 768, 1280]) {
     test(`keeps deliberate geometry and no overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: width >= 768 ? 1024 : 900 });
@@ -172,7 +184,9 @@ test.describe('Relume Header 2 translated to Ren10', () => {
 
     await expect(page.locator('[data-rh2-root] input[type="email"]')).toBeVisible();
     await expect(page.locator('[data-rh2-root] button[type="submit"]')).toBeVisible();
-    await expect(page.locator('[data-rh2-root] .rh2-terms-link')).toBeVisible();
+    const termsLink = page.locator('[data-rh2-root] .rh2-terms-link');
+    await expect(termsLink).toBeVisible();
+    await expect(termsLink).toHaveAttribute('href', '../../LICENSE');
     await expect(page.locator('[data-rh2-root] .rh2-media img')).toBeVisible();
     await context.close();
   });
