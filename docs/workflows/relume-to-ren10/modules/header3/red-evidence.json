@@ -1,0 +1,8 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "npx playwright test tests/components/header3-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1",
+  "result": "18 failed, 0 passed",
+  "failure": "The production block did not exist, so every Desktop Light and Desktop Dark project case failed the required successful-load assertion.",
+  "recordedAt": "2026-07-15"
+}

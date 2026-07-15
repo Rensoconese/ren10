@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated relume_oauth get_component for slug header3 (primitives names-only) plus targeted search_components query 'header3' confirmed section_header3 in hero-header-sections. Complete React section source returned: split text-left + media-right, h1 + description + two CTAs, video thumbnail play trigger opening dialog with iframe + loading spinner. Anatomy sanitized into reference-brief.md without persisting protected source, copy, URLs, or assets."
+}
