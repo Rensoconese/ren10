@@ -207,9 +207,29 @@
       margin-block-start: var(--space-6);
     }
 
-    a.rn23-intro-cta.ren-btn {
+    /*
+     * .ren-nav a forces --color-text-muted on every anchor inside the bar.
+     * Re-apply an approved Ren10 outline button surface so the intro CTA
+     * meets WCAG contrast in both light and dark themes.
+     */
+    .rn23-preview .ren-nav a.rn23-intro-cta.ren-btn.ren-btn-outline {
       min-height: var(--touch-min);
       min-width: var(--touch-min);
+      color: var(--color-accent);
+      background-color: transparent;
+      border-color: var(--color-accent);
+    }
+
+    .rn23-preview .ren-nav a.rn23-intro-cta.ren-btn.ren-btn-outline:hover:not(:disabled):not([aria-disabled="true"]) {
+      color: var(--color-accent);
+      background-color: var(--color-accent-subtle);
+      border-color: var(--color-accent);
+    }
+
+    .rn23-preview .ren-nav a.rn23-intro-cta.ren-btn.ren-btn-outline:active:not(:disabled):not([aria-disabled="true"]) {
+      color: var(--color-on-accent);
+      background-color: var(--color-accent);
+      border-color: var(--color-accent);
     }
 
     .rn23-product-grid.ren-grid-3 {
@@ -670,7 +690,7 @@
                           can scan the lineup without leaving the bar.
                         </p>
                         <div class="rn23-intro-actions">
-                          <a class="rn23-intro-cta ren-btn ren-btn-secondary" href="#shop-all">View all</a>
+                          <a class="rn23-intro-cta ren-btn ren-btn-outline" href="#shop-all">View all</a>
                         </div>
                       </div>
 
@@ -1080,7 +1100,6 @@
     }
 
     initNavMegaMenuProductIntro();
-    window.initNavMegaMenuProductIntro = initNavMegaMenuProductIntro;
   </script>
 </body>
 </html>
