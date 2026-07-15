@@ -573,6 +573,59 @@
         animation: none !important;
       }
     }
+
+    /*
+     * Local demo chrome: neutralize horizontal overflow of the docs header at
+     * 320–340px without editing shared shell.css.
+     */
+    @media (max-width: 21.25rem) {
+      .dx-nav {
+        overflow-x: clip;
+        max-width: 100%;
+      }
+
+      .dx-nav-inner {
+        gap: var(--space-2);
+        padding-inline: var(--space-3);
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+      }
+
+      .dx-nav-menu {
+        display: none;
+      }
+
+      .dx-nav-actions .ren-btn-sm {
+        padding-inline: var(--space-2);
+      }
+
+      .dx-shell {
+        padding-inline: var(--space-3);
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      .rn20-page-header,
+      .rn20-preview {
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 20rem) {
+      .dx-nav-inner {
+        padding-inline: var(--space-2);
+      }
+
+      .dx-brand span:not(.dx-brand-mark):not(.ren-badge) {
+        max-width: 4.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
   </style>
 </head>
 <body>
@@ -679,7 +732,6 @@
         class="rn20-overlay"
         role="region"
         aria-label="Site menu panel"
-        aria-hidden="true"
       >
         <div class="rn20-overlay-inner">
           <ul class="rn20-menu-links" aria-label="Browse">
@@ -757,10 +809,10 @@
   <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
   <script type="module">
     /**
-     * Block-local controllers for Navbar 20:
-     * - Primary dropdown: desktop hover preview + click pin (native details base)
-     * - Overlay panel: keep aria-hidden in sync; close disclosure when overlay opens
-     * - Escape focus return is owned by ren-nav for the shell; disclosure Escape here
+     * Block-local controllers for Navbar 20.
+     * Overlay open state is owned here (public attributes only) so ren-nav's
+     * desktop-resize close does not fight always-visible toggle + full panel.
+     * Close only on real 48rem band crossing, not same-band width/height changes.
      */
     const RN20_CONTROLLER = Symbol.for('ren10.rn20.controller');
     const DESKTOP_MQ = '(min-width: 48rem)';
@@ -797,22 +849,33 @@
       let hoverTransient = false;
       let pointerPinned = false;
       let ignoreHoverUntilLeave = false;
+      let overlayOpen = false;
 
       function isDesktop() {
         return desktopQuery.matches;
       }
 
       function isOverlayOpen() {
-        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+        return overlayOpen;
       }
 
-      function syncOverlayAria() {
-        const open = isOverlayOpen();
-        overlay.setAttribute('aria-hidden', open ? 'false' : 'true');
-        toggle.setAttribute('aria-label', open ? 'Close site menu' : 'Open site menu');
-        if (open) {
-          closeDisclosure(false);
+      function setOverlayOpen(open, { returnFocus = false } = {}) {
+        overlayOpen = Boolean(open);
+        toggle.setAttribute('aria-expanded', overlayOpen ? 'true' : 'false');
+        toggle.setAttribute('aria-label', overlayOpen ? 'Close site menu' : 'Open site menu');
+
+        if (renNavHost) {
+          if (overlayOpen) renNavHost.setAttribute('data-open', '');
+          else renNavHost.removeAttribute('data-open');
         }
+
+        // After enhancement, closed panels are inert to AT. Open panels must
+        // not stay aria-hidden. Progressive (no JS) markup never sets this.
+        if (overlayOpen) overlay.removeAttribute('aria-hidden');
+        else overlay.setAttribute('aria-hidden', 'true');
+
+        if (overlayOpen) closeDisclosure(false);
+        if (!overlayOpen && returnFocus) toggle.focus();
       }
 
       function closeDisclosure(returnFocus) {
@@ -840,6 +903,18 @@
         ignoreHoverUntilLeave = false;
         pointerInside = false;
       }
+
+      // Own the toggle entirely so ren-nav does not open/close on resize while
+      // desktop (always-visible toggle + full panel at all widths).
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          setOverlayOpen(!isOverlayOpen());
+        },
+        { capture: true, signal }
+      );
 
       // Disclosure click pin / keyboard native path
       summary.addEventListener(
@@ -906,10 +981,20 @@
       document.addEventListener(
         'pointerdown',
         (event) => {
-          if (!disclosure.open) return;
           const target = event.target;
-          if (target instanceof Node && disclosure.contains(target)) return;
-          closeDisclosure(false);
+          if (!(target instanceof Node)) return;
+
+          if (disclosure.open && !disclosure.contains(target)) {
+            closeDisclosure(false);
+          }
+
+          if (
+            isOverlayOpen()
+            && !overlay.contains(target)
+            && !toggle.contains(target)
+          ) {
+            setOverlayOpen(false);
+          }
         },
         { signal }
       );
@@ -918,16 +1003,16 @@
         'keydown',
         (event) => {
           if (event.key !== 'Escape') return;
+
           if (disclosure.open) {
             event.preventDefault();
             closeDisclosure(true);
             return;
           }
+
           if (isOverlayOpen()) {
-            // ren-nav also closes; ensure focus returns to toggle.
-            requestAnimationFrame(() => {
-              if (!isOverlayOpen()) toggle.focus();
-            });
+            event.preventDefault();
+            setOverlayOpen(false, { returnFocus: true });
           }
         },
         { signal }
@@ -943,35 +1028,26 @@
         );
       });
 
-      // Keep overlay aria state aligned with ren-nav shell.
-      const observer = new MutationObserver(() => {
-        syncOverlayAria();
-      });
-      observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
-      if (renNavHost) {
-        observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
-      }
-      signal.addEventListener('abort', () => observer.disconnect());
-
-      toggle.addEventListener(
-        'click',
-        () => {
-          // After ren-nav toggles, sync on next frame.
-          requestAnimationFrame(syncOverlayAria);
-        },
-        { signal }
+      // Overlay destinations close the shell (menu, privacy, contact, social).
+      const closeOnActivate = overlay.querySelectorAll(
+        'a.rn20-menu-link, .rn20-terms a[href], .rn20-contact a[href], a.rn20-social'
       );
+      closeOnActivate.forEach((link) => {
+        link.addEventListener(
+          'click',
+          () => {
+            setOverlayOpen(false);
+          },
+          { signal }
+        );
+      });
 
-      // Overlay is a sibling of ren-nav (reliable paint). Stop bubbling so
-      // ren-nav's document outside-click handler does not close the shell when
-      // interacting with overlay destinations or the newsletter form.
-      overlay.addEventListener('click', (event) => event.stopPropagation(), { signal });
-      overlay.addEventListener('pointerdown', (event) => event.stopPropagation(), { signal });
-
+      // Real band crossing only (matchMedia change). Same-band width/height
+      // resizes and 769→768 (both ≥48rem) must keep the overlay open.
       function onBreakpointChange() {
         resetHoverFlags();
         closeDisclosure(false);
-        syncOverlayAria();
+        if (isOverlayOpen()) setOverlayOpen(false);
       }
 
       if (typeof desktopQuery.addEventListener === 'function') {
@@ -991,7 +1067,8 @@
         );
       }
 
-      syncOverlayAria();
+      // Enhanced closed baseline (markup has no static aria-hidden).
+      setOverlayOpen(false);
       return controller;
     }
 

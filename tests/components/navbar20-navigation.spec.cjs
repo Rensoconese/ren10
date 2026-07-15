@@ -263,18 +263,115 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(overlay).toBeVisible();
+    await expect(page.locator('a.rn20-menu-link').first()).toBeVisible();
     await expect(primary).toBeHidden();
     await expect(page.locator('a.rn20-menu-link')).toHaveCount(10);
+    // Closed-by-default after enhancement uses aria-hidden only when closed.
+    await expect(overlay).not.toHaveAttribute('aria-hidden', 'true');
 
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(overlay).toBeHidden();
+    await expect(overlay).toHaveAttribute('aria-hidden', 'true');
     await expect(primary).toBeVisible();
     await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
 
     await toggle.click();
     await expect(overlay).toBeVisible();
     await toggle.click();
+    await expect(overlay).toBeHidden();
+  });
+
+  test('Escape from a real overlay link restores focus to the toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar20Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    await toggle.click();
+    await expect(page.locator('#rn20-overlay')).toBeVisible();
+
+    const menuLink = page.locator('a.rn20-menu-link').first();
+    await menuLink.focus();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('rn20-menu-link'))).toBe(true);
+
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator('#rn20-overlay')).toBeHidden();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('menu links, privacy, phone/email, and social close the overlay', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 1100 });
+    await gotoNavbar20Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const overlay = page.locator('#rn20-overlay');
+
+    async function reopen() {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect(overlay).toBeVisible();
+      await expect(page.locator('a.rn20-menu-link').first()).toBeVisible();
+    }
+
+    await reopen();
+    await page.locator('a.rn20-menu-link').first().click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(overlay).toBeHidden();
+
+    await reopen();
+    await page.locator(`${ROOT} .rn20-terms a[href]`).click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(overlay).toBeHidden();
+
+    await reopen();
+    await page.locator(`${ROOT} .rn20-contact a[href]`).first().click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(overlay).toBeHidden();
+
+    await reopen();
+    await page.locator(`${ROOT} .rn20-contact a[href]`).nth(1).click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(overlay).toBeHidden();
+
+    await reopen();
+    await page.locator('a.rn20-social').first().click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(overlay).toBeHidden();
+  });
+
+  test('same-band desktop resizes and 769→768 preserve open; only real band crossing closes', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar20Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const overlay = page.locator('#rn20-overlay');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(overlay).toBeVisible();
+
+    // Same-band width change (still ≥48rem / 768px desktop).
+    await page.setViewportSize({ width: 1024, height: 900 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(overlay).toBeVisible();
+    await expect(page.locator('a.rn20-menu-link').first()).toBeVisible();
+
+    // Same-band height-only change.
+    await page.setViewportSize({ width: 1024, height: 700 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(overlay).toBeVisible();
+
+    // 769→768: both desktop at 48rem; must stay open.
+    await page.setViewportSize({ width: 769, height: 800 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await page.setViewportSize({ width: 768, height: 800 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(overlay).toBeVisible();
+
+    // Real crossing into mobile band closes.
+    await page.setViewportSize({ width: 767, height: 800 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(overlay).toBeHidden();
   });
 
@@ -327,6 +424,8 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
 
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn20-overlay')).toBeVisible();
+    await expect(page.locator('a.rn20-menu-link').first()).toBeVisible();
 
     await page.setViewportSize({ width: 1280, height: 900 });
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -339,7 +438,7 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
-  test('JS-disabled exposes overlay destinations, newsletter, contact; hides inert toggle', async ({ browser }) => {
+  test('JS-disabled exposes overlay destinations without static aria-hidden; accessible snapshot', async ({ browser }) => {
     const context = await browser.newContext({
       javaScriptEnabled: false,
       viewport: { width: 390, height: 1100 },
@@ -354,7 +453,45 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
     await expect(page.locator(`${ROOT} .rn20-contact`)).toBeVisible();
     await expect(page.locator('a.rn20-social')).toHaveCount(5);
 
+    // P0: no static aria-hidden=true on the progressive overlay.
+    await expect(page.locator('#rn20-overlay')).not.toHaveAttribute('aria-hidden', 'true');
+    const hidden = await page.locator('#rn20-overlay').getAttribute('aria-hidden');
+    expect(hidden === null || hidden === 'false').toBeTruthy();
+
+    const snapshot = await page.locator(ROOT).ariaSnapshot();
+    expect(snapshot, 'JS-off overlay links must appear in accessible snapshot').toMatch(/Home|Product|Solutions/i);
+    expect(snapshot, 'JS-off newsletter heading must appear in accessible snapshot').toMatch(/Stay informed|Subscribe|Email/i);
+    expect(snapshot, 'JS-off contact must appear in accessible snapshot').toMatch(/Get in touch|hello@|555/i);
+
     await context.close();
+  });
+
+  test('demo chrome has no horizontal document overflow at 320 and 340', async ({ page }) => {
+    for (const width of [340, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      await gotoNavbar20Block(page, staticServer.origin);
+
+      const overflow = await page.evaluate((viewportWidth) => {
+        const doc = document.documentElement;
+        const body = document.body;
+        return {
+          width: viewportWidth,
+          docScrollWidth: doc.scrollWidth,
+          docClientWidth: doc.clientWidth,
+          bodyScrollWidth: body.scrollWidth,
+          bodyClientWidth: body.clientWidth,
+        };
+      }, width);
+
+      expect(
+        overflow.docScrollWidth,
+        `html scrollWidth at ${width}px`
+      ).toBeLessThanOrEqual(overflow.docClientWidth + 1);
+      expect(
+        overflow.bodyScrollWidth,
+        `body scrollWidth at ${width}px`
+      ).toBeLessThanOrEqual(overflow.bodyClientWidth + 1);
+    }
   });
 
   test('JS-disabled desktop keeps native disclosure usable', async ({ browser }) => {
@@ -661,7 +798,9 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
         if (action.type === 'click') {
           await page.locator(action.selector).click();
         } else if (action.type === 'hover') {
-          await page.locator(action.selector).hover();
+          // Enter from a neutral target so pointerenter on the disclosure fires.
+          await page.locator(`${ROOT} .ren-nav-brand`).hover({ force: true });
+          await page.locator(action.selector).hover({ force: true });
         }
       }
 
@@ -670,6 +809,31 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
           page.locator(selector),
           `${state.id} expects ${count}× ${selector}`
         ).toHaveCount(count);
+      }
+
+      // Open overlay states must expose visible menu content (not only DOM counts).
+      if (String(state.id).includes('overlay-open')) {
+        await expect(
+          page.locator('#rn20-overlay'),
+          `${state.id} overlay visible`
+        ).toBeVisible();
+        await expect(
+          page.locator('a.rn20-menu-link').first(),
+          `${state.id} first menu link visible`
+        ).toBeVisible();
+        await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute('aria-expanded', 'true');
+      }
+
+      if (String(state.id).includes('dropdown-open')) {
+        await expect(page.locator('.rn20-disclosure')).toHaveAttribute('open', '');
+        await expect(page.locator('a.rn20-destination').first()).toBeVisible();
+      }
+
+      if (String(state.id).includes('hover-open')) {
+        await expect
+          .poll(async () => page.locator('.rn20-disclosure').evaluate((el) => el instanceof HTMLDetailsElement && el.open))
+          .toBe(true);
+        await expect(page.locator('a.rn20-destination').first()).toBeVisible();
       }
     }
   });
