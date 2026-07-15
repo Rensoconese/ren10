@@ -172,7 +172,7 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     }
   });
 
-  test('toggle opens and closes; Escape restores focus to toggle from Overview link', async ({ page }) => {
+  test('toggle opens and closes; Escape restores focus from Overview and from outside focus', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar17Block(page, staticServer.origin);
 
@@ -186,15 +186,31 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(page.locator(MENU)).toBeVisible();
+    await expect(page.locator(ROOT)).toHaveAttribute('data-rn17-open', '');
     await expect(overview).toBeVisible();
 
-    // Real Escape path: focus a menu destination first (not the toggle).
     await overview.focus();
     await expect(overview).toBeFocused();
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(page.locator(MENU)).toBeHidden();
-    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+    await expect(toggle).toBeFocused();
+
+    // Escape still restores toggle when focus has left the shell.
+    await openMenu(page);
+    await page.evaluate(() => {
+      const header = document.querySelector('.rn17-page-header');
+      const h1 = document.querySelector('.rn17-page-header h1');
+      if (!header || !h1) return;
+      // Parent inert makes children unfocusable — lift shell backdrop inert.
+      header.removeAttribute('inert');
+      h1.removeAttribute('inert');
+      h1.setAttribute('tabindex', '-1');
+      h1.focus();
+    });
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('H1');
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(toggle).toBeFocused();
 
     await toggle.click();
@@ -203,15 +219,43 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
-  test('outside click and destination activation close the overlay', async ({ page }) => {
+  test('focus trap: Tab from last social cycles; Escape from last social restores toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar17Block(page, staticServer.origin);
+    await openMenu(page);
+
+    const lastSocial = page.locator(`${ROOT} .rn17-social a`).last();
+    await lastSocial.focus();
+    await expect(lastSocial).toBeFocused();
+
+    await page.keyboard.press('Tab');
+    const afterTab = await page.evaluate(() => {
+      const active = document.activeElement;
+      return {
+        tag: active?.tagName,
+        className: active?.className || '',
+        inShell: Boolean(active?.closest('ren-nav, [data-rn17-root] .ren-nav')),
+      };
+    });
+    expect(afterTab.inShell).toBe(true);
+    expect(afterTab.className).toMatch(/ren-nav-brand|ren-btn|ren-nav-toggle/);
+
+    await lastSocial.focus();
+    await page.keyboard.press('Escape');
+    await expect(page.locator(TOGGLE)).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(TOGGLE)).toBeFocused();
+  });
+
+  test('outside activation destinations footer and bar CTA close the overlay', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar17Block(page, staticServer.origin);
 
     const toggle = page.locator(TOGGLE);
     await openMenu(page);
 
-    // Overlay covers the preview hero; dismiss by clicking outside the ren-nav host.
-    await page.locator('.rn17-page-header h1').click();
+    // Backdrop is inert while open; force-click still delivers outside-host close.
+    await expect(page.locator(`${ROOT} .rn17-hero`)).toHaveAttribute('inert', '');
+    await page.locator(`${ROOT} .rn17-hero`).click({ force: true, position: { x: 12, y: 12 } });
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(page.locator(MENU)).toBeHidden();
 
@@ -225,6 +269,58 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
 
     await openMenu(page);
     await page.locator(`${ROOT} .rn17-social a`).first().click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+    await openMenu(page);
+    await page.locator(`${ROOT} .ren-nav-actions a.ren-btn`).click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(MENU)).toBeHidden();
+  });
+
+  test('same-band resize keeps open; breakpoint crossing closes', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar17Block(page, staticServer.origin);
+    const toggle = page.locator(TOGGLE);
+
+    await openMenu(page);
+    await expect(page.locator(`${LINKS} > li > a.ren-nav-link`).first()).toBeVisible();
+    await expect(page.locator(ROOT)).toHaveAttribute('data-rn17-open', '');
+
+    // Same desktop band: width change (poll — ren-nav closes then block restores).
+    await page.setViewportSize({ width: 1024, height: 900 });
+    await expect.poll(async () => toggle.getAttribute('aria-expanded')).toBe('true');
+    await expect(page.locator(MENU)).toBeVisible();
+    await expect(page.locator(ROOT)).toHaveAttribute('data-rn17-open', '');
+
+    // Same desktop band: height-only change.
+    await page.setViewportSize({ width: 1024, height: 700 });
+    await expect.poll(async () => toggle.getAttribute('aria-expanded')).toBe('true');
+    await expect(page.locator(MENU)).toBeVisible();
+
+    // Cross desktop → mobile (48rem / 768 boundary).
+    await page.setViewportSize({ width: 500, height: 700 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(MENU)).toBeHidden();
+
+    await openMenu(page);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    // Same mobile band: width + height.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect.poll(async () => toggle.getAttribute('aria-expanded')).toBe('true');
+    await page.setViewportSize({ width: 390, height: 640 });
+    await expect.poll(async () => toggle.getAttribute('aria-expanded')).toBe('true');
+
+    // Cross mobile → desktop.
+    await page.setViewportSize({ width: 900, height: 700 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(MENU)).toBeHidden();
+
+    // Explicit seam pair 767 open → 768 closed.
+    await page.setViewportSize({ width: 767, height: 900 });
+    await openMenu(page);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await page.setViewportSize({ width: 768, height: 900 });
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
@@ -588,6 +684,64 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
       'seam-769-light-open',
     ]) {
       expect(ids, required).toContain(required);
+    }
+
+    for (const state of RN17_RENDER_MATRIX.states) {
+      if (!/-open$/.test(state.id) || state.javaScript === false) continue;
+      expect(
+        state.expectedMarkers?.['[data-rn17-root][data-rn17-open]'],
+        `${state.id} must assert open marker`
+      ).toBe(1);
+      expect(
+        state.expectedMarkers?.['.rn17-menu[data-rn17-open]'],
+        `${state.id} must assert open menu marker`
+      ).toBe(1);
+    }
+  });
+
+  test('desktop and seam-768 open paths settle with visible overlay content', async ({ page }) => {
+    for (const viewport of [
+      { width: 1280, height: 900, label: 'desktop' },
+      { width: 768, height: 900, label: 'seam-768' },
+    ]) {
+      await page.setViewportSize(viewport);
+      await gotoNavbar17Block(page, staticServer.origin);
+      await openMenu(page);
+
+      // Stable open: open markers + real visibility (not count-only).
+      await expect(page.locator(ROOT)).toHaveAttribute('data-rn17-open', '');
+      await expect(page.locator(MENU)).toHaveAttribute('data-rn17-open', '');
+      await expect(page.locator(MENU)).toBeVisible();
+      await expect(page.locator(`${LINKS} > li > a.ren-nav-link`).first()).toBeVisible();
+      await expect(page.locator(`${ROOT} .rn17-contact`)).toBeVisible();
+      await expect(page.locator(`${ROOT} .rn17-social a`).first()).toBeVisible();
+
+      const geometry = await page.evaluate(() => {
+        const menu = document.querySelector('[data-rn17-root] .rn17-menu');
+        const first = document.querySelector('#rn17-primary-links > li > a.ren-nav-link');
+        if (!menu || !first) return null;
+        const m = menu.getBoundingClientRect();
+        const f = first.getBoundingClientRect();
+        const style = getComputedStyle(menu);
+        return {
+          menuDisplay: style.display,
+          menuH: m.height,
+          menuW: m.width,
+          firstVisible: f.width > 0 && f.height > 0,
+        };
+      });
+      expect(geometry, viewport.label).toBeTruthy();
+      expect(geometry.menuDisplay).toBe('flex');
+      expect(geometry.menuH).toBeGreaterThan(200);
+      expect(geometry.menuW).toBeGreaterThan(200);
+      expect(geometry.firstVisible).toBe(true);
+
+      // Two frames of stability (capture settle analogue).
+      await page.evaluate(() => new Promise((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve(undefined)));
+      }));
+      await expect(page.locator(MENU)).toBeVisible();
+      await expect(page.locator(`${LINKS} > li > a.ren-nav-link`).first()).toBeVisible();
     }
   });
 });

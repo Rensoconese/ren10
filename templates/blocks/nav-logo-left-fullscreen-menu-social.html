@@ -631,16 +631,35 @@
   <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
   <script type="module">
     /**
-     * Block-local enhancements on top of ren-nav:
-     * - Escape restores focus to the toggle even when a menu link held focus
-     *   (capture-phase snapshot; ren-nav may close before bubble listeners)
-     * - Footer contact + social activation closes the shell
-     * - Keep host data-open mirrored for cascade selectors
+     * Block-local shell controller (on top of ren-nav public toggle API):
+     * - Focus trap inside the bar + overlay while open
+     * - Inert backdrop (hero / page chrome) so background is not interactive
+     * - Escape always closes and restores focus to the toggle (even if focus
+     *   escaped the shell)
+     * - Bar primary CTA, destinations, and footer links close the shell
+     * - Same-band resize keeps open; only breakpoint-band crossing closes
+     *   (overrides ren-nav's desktop-always-close-on-resize for this block)
      */
     const RN17_CONTROLLER = Symbol.for('ren10.rn17.controller');
+    /** Align with ren-nav MOBILE_BREAKPOINT / Ren10 48rem shell boundary. */
+    const RN17_BAND_MQ = '(min-width: 48rem)';
 
     function isOpen(toggle) {
       return toggle?.getAttribute('aria-expanded') === 'true';
+    }
+
+    function bandName() {
+      return window.matchMedia(RN17_BAND_MQ).matches ? 'desktop' : 'mobile';
+    }
+
+    function isFocusable(el) {
+      if (!(el instanceof HTMLElement)) return false;
+      if (el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true') return false;
+      if (el.tabIndex < 0 && el.tagName !== 'A' && el.tagName !== 'BUTTON') return false;
+      const style = getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden') return false;
+      const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
     }
 
     function install() {
@@ -653,64 +672,178 @@
 
       root[RN17_CONTROLLER] = true;
 
-      const syncHost = () => {
-        if (isOpen(toggle)) {
-          navHost.setAttribute('data-open', '');
-        } else {
-          navHost.removeAttribute('data-open');
+      /** Intentional open intent (survives ren-nav same-band resize closes). */
+      let wantOpen = false;
+      let lastBand = bandName();
+
+      const backdropSelectors = ['.dx-nav', '.rn17-page-header', '.rn17-hero'];
+
+      const setBackdropInert = (active) => {
+        for (const selector of backdropSelectors) {
+          document.querySelectorAll(selector).forEach((el) => {
+            if (active) el.setAttribute('inert', '');
+            else el.removeAttribute('inert');
+          });
         }
       };
 
-      toggle.addEventListener('click', () => {
-        queueMicrotask(syncHost);
-      });
+      const shellFocusables = () => {
+        const nodes = [
+          root.querySelector('.ren-nav-brand'),
+          ...root.querySelectorAll('.ren-nav-actions a, .ren-nav-actions button, .ren-nav-actions .ren-btn'),
+          toggle,
+          ...menu.querySelectorAll('a[href], button:not([disabled])'),
+        ];
+        return nodes.filter((el, index, list) => el && list.indexOf(el) === index && isFocusable(el));
+      };
 
-      /*
-       * Own Escape in capture phase. ren-nav also listens on bubble and can
-       * hide the focused menu link before a late restore runs, leaving focus
-       * on body. Closing via the toggle click path keeps ren-nav state in
-       * sync, then restore focus to the toggle.
-       */
-      document.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape') return;
-        const wasOpen = isOpen(toggle) || navHost.hasAttribute('data-open');
-        if (!wasOpen) return;
+      const syncOpenChrome = () => {
+        const open = isOpen(toggle);
+        if (open) {
+          navHost.setAttribute('data-open', '');
+          root.setAttribute('data-rn17-open', '');
+          menu.setAttribute('data-rn17-open', '');
+          setBackdropInert(true);
+        } else {
+          navHost.removeAttribute('data-open');
+          root.removeAttribute('data-rn17-open');
+          menu.removeAttribute('data-rn17-open');
+          setBackdropInert(false);
+        }
+      };
 
-        const active = document.activeElement;
-        const focusInShell = Boolean(
-          active
-          && (active === toggle || navHost.contains(active) || menu.contains(active))
-        );
-
-        event.preventDefault();
-        event.stopImmediatePropagation();
-
+      const closeShell = ({ restoreFocus = false } = {}) => {
+        wantOpen = false;
         if (isOpen(toggle)) {
           toggle.click();
         } else {
-          navHost.removeAttribute('data-open');
           toggle.setAttribute('aria-expanded', 'false');
+          navHost.removeAttribute('data-open');
         }
-
         queueMicrotask(() => {
-          syncHost();
-          if (focusInShell) {
+          syncOpenChrome();
+          if (restoreFocus) {
             toggle.focus({ preventScroll: true });
           }
         });
-      }, true);
+      };
 
-      menu.querySelectorAll('.rn17-contact, .rn17-social a').forEach((anchor) => {
-        anchor.addEventListener('click', () => {
-          if (!isOpen(toggle)) return;
+      const openShell = () => {
+        wantOpen = true;
+        if (!isOpen(toggle)) {
           toggle.click();
-          queueMicrotask(syncHost);
+        }
+        queueMicrotask(syncOpenChrome);
+      };
+
+      toggle.addEventListener('click', () => {
+        // ren-nav flips expanded; mirror intent after its handler.
+        queueMicrotask(() => {
+          wantOpen = isOpen(toggle);
+          syncOpenChrome();
         });
       });
 
-      const observer = new MutationObserver(syncHost);
+      // Permanent bar CTA closes the overlay (does not navigate away of focus restore).
+      root.querySelectorAll('.ren-nav-actions a, .ren-nav-actions button, .ren-nav-actions .ren-btn').forEach((el) => {
+        el.addEventListener('click', () => {
+          if (!isOpen(toggle) && !wantOpen) return;
+          closeShell({ restoreFocus: false });
+        });
+      });
+
+      menu.querySelectorAll('a[href], button').forEach((anchor) => {
+        anchor.addEventListener('click', () => {
+          if (!isOpen(toggle) && !wantOpen) return;
+          closeShell({ restoreFocus: false });
+        });
+      });
+
+      /*
+       * Escape: always close + always restore toggle focus, even when focus
+       * has left the shell (body / inert-removed / programmatic).
+       */
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        const wasOpen = isOpen(toggle) || wantOpen || navHost.hasAttribute('data-open');
+        if (!wasOpen) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        closeShell({ restoreFocus: true });
+      }, true);
+
+      /* Tab trap while open: cycle within bar chrome + overlay only. */
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Tab') return;
+        if (!isOpen(toggle) && !wantOpen) return;
+
+        const nodes = shellFocusables();
+        if (nodes.length === 0) return;
+
+        const active = document.activeElement;
+        const inShell = nodes.includes(active) || navHost.contains(active);
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+
+        if (!inShell) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus({ preventScroll: true });
+          return;
+        }
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus({ preventScroll: true });
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus({ preventScroll: true });
+        }
+      }, true);
+
+      /*
+       * Resize policy: keep open across width/height changes inside the same
+       * desktop/mobile band. Close only when the 48rem band boundary is crossed.
+       * ren-nav closes on every desktop resize — re-open when wantOpen and same band
+       * after ren-nav's handler (rAF) so intent is not lost.
+       */
+      window.addEventListener('resize', () => {
+        const nextBand = bandName();
+        if (nextBand !== lastBand) {
+          lastBand = nextBand;
+          if (isOpen(toggle) || wantOpen) {
+            closeShell({ restoreFocus: false });
+          } else {
+            syncOpenChrome();
+          }
+          return;
+        }
+        // Same band: restore after ren-nav's resize close has applied.
+        requestAnimationFrame(() => {
+          if (wantOpen && !isOpen(toggle)) {
+            openShell();
+          } else {
+            syncOpenChrome();
+          }
+        });
+      });
+
+      // ren-nav outside-click close: clear intent without fighting same-band restore.
+      document.addEventListener('click', (event) => {
+        if (!wantOpen) return;
+        if (navHost.contains(event.target)) return;
+        queueMicrotask(() => {
+          if (!isOpen(toggle)) {
+            wantOpen = false;
+            syncOpenChrome();
+          }
+        });
+      });
+
+      const observer = new MutationObserver(() => {
+        syncOpenChrome();
+      });
       observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
-      syncHost();
+      syncOpenChrome();
     }
 
     if (customElements.get('ren-nav')) {
