@@ -4,7 +4,7 @@
   "moduleId": "navbar15",
   "blockSlug": "nav-floating-bottom-logo-left-menu-actions",
   "blockPath": "templates/blocks/nav-floating-bottom-logo-left-menu-actions.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-floating-bottom-logo-left-menu-actions.html",
     "tests/components/navbar15-navigation.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
