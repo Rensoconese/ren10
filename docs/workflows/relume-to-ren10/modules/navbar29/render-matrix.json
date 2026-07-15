@@ -142,12 +142,15 @@
       "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
     },
     {
-      "id": "seam-768-open",
+      "id": "seam-768-nav-open",
       "viewport": { "width": 768, "height": 1000 },
       "theme": "light",
       "javaScript": true,
       "reducedMotion": false,
-      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmoc-disclosure > summary" }
+      ],
       "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
     },
     {

@@ -516,6 +516,8 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
   });
 
   test('breakpoint seams 767/768/769 switch mobile chrome vs desktop shell cleanly', async ({ page }) => {
+    // ren-nav uses max-width: 48rem for mobile chrome, so 767 and 768 keep the
+    // toggle; desktop shell (toggle hidden) starts at 769px with a 16px root.
     await page.setViewportSize({ width: 767, height: 1000 });
     await gotoNavbar29Block(page, staticServer.origin);
     await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeVisible();
@@ -525,16 +527,20 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
 
     await page.setViewportSize({ width: 768, height: 1000 });
     await gotoNavbar29Block(page, staticServer.origin);
-    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeHidden();
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeVisible();
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
     await expect(page.locator(LINKS_ID)).toBeVisible();
     await page.locator(SUMMARY).click();
     await expect(page.locator(PANEL)).toBeVisible();
     await expectNoOverflow(page, 'html');
 
     await page.setViewportSize({ width: 769, height: 1000 });
+    await gotoNavbar29Block(page, staticServer.origin);
     await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeHidden();
     await expect(page.locator(LINKS_ID)).toBeVisible();
+    await page.locator(SUMMARY).click();
     await expect(page.locator(DISCLOSURE)).toHaveAttribute('open', '');
+    await expect(page.locator(PANEL)).toBeVisible();
     await expectNoOverflow(page, 'html');
   });
 
