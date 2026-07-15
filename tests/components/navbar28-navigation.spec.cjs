@@ -421,7 +421,8 @@ test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
       await page.evaluate(() => window.dispatchEvent(new Event('resize')));
       await expectNoOverflow(page, 'html');
 
-      if (width < 768) {
+      // ren-nav shell: max-width 48rem (768px) is still mobile; desktop starts at 769.
+      if (width <= 768) {
         const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
         await expect(toggle).toBeVisible();
         await toggle.click();
