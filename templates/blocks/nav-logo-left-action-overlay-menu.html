@@ -533,7 +533,7 @@
             <span></span>
           </button>
 
-          <div id="rn16-panel" class="rn16-panel" aria-hidden="true">
+          <div id="rn16-panel" class="rn16-panel">
             <ul id="rn16-primary-links" class="ren-nav-links">
               <li>
                 <a class="ren-nav-link rn16-primary-link" href="#product">Product</a>
@@ -662,6 +662,8 @@
       /**
        * Apply open/closed overlay state through documented public attributes.
        * Never touch private ren-nav fields or methods.
+       * aria-hidden is JS-only: never authored statically so progressive
+       * enhancement keeps the visible panel in the accessibility tree.
        */
       const setShellOpen = (open, { returnFocus = false } = {}) => {
         if (open) {

@@ -578,6 +578,26 @@ test.describe('Navbar Logo Left Action Overlay Menu (navbar16)', () => {
     await context.close();
   });
 
+  test('JS-disabled panel is visible and must not carry static aria-hidden=true', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar16Block(page, staticServer.origin);
+
+    const panel = page.locator(`${ROOT} #rn16-panel`);
+    await expect(panel).toBeVisible();
+    await expect(panel).not.toHaveAttribute('aria-hidden', 'true');
+    // Visible PE destinations stay in the accessibility tree (no authored hide).
+    const ariaHidden = await panel.getAttribute('aria-hidden');
+    expect(ariaHidden === null || ariaHidden === 'false', 'panel must not be aria-hidden when JS is off').toBe(true);
+    await expect(page.locator('#rn16-primary-links > li > a.ren-nav-link').first()).toBeVisible();
+    await expect(page.locator(`${ROOT} .rn16-contact`)).toBeVisible();
+
+    await context.close();
+  });
+
   test('desktop chrome: single toggle, aligned permanent action and toggle, no chevron', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar16Block(page, staticServer.origin);
