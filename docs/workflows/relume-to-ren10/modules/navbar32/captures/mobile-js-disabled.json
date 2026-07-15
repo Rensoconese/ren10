@@ -1,0 +1,18 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:55100/templates/blocks/nav-logo-cta-left-drawer.html?ren10_capture=navbar32-mobile-js-disabled-6c566063f79e",
+  "viewport": {
+    "width": 390,
+    "height": 1100
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rn32-link": 5,
+    ".rn32-social-link": 5,
+    ".rn32-cta": 1
+  },
+  "commit": "6c566063f79e3ffc0e48fae32c15e10d7d25dba2",
+  "capturedAt": "2026-07-15T12:04:34.153Z"
+}

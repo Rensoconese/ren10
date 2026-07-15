@@ -1,0 +1,263 @@
+{
+  "kind": "final-capture-evidence",
+  "moduleId": "navbar32",
+  "sourceCommit": "6c566063f79e3ffc0e48fae32c15e10d7d25dba2",
+  "sourceCommitShort": "6c566063f79e",
+  "capturesFresh": true,
+  "captureCommand": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar32/render-matrix.json --module navbar32 --output output/playwright/navbar32-final",
+  "outputRoot": "output/playwright/navbar32-final/navbar32",
+  "stateCount": 13,
+  "states": [
+    {
+      "id": "desktop-dark-open",
+      "json": "captures/desktop-dark-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/desktop-dark-open.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-social-link": 5
+      },
+      "urlSuffix": "navbar32-desktop-dark-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:25.390Z"
+    },
+    {
+      "id": "desktop-light-closed",
+      "json": "captures/desktop-light-closed.json",
+      "png": "output/playwright/navbar32-final/navbar32/desktop-light-closed.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-social-link": 5,
+        ".rn32-cta": 1,
+        ".rn32-toggle": 1,
+        ".rn32-chevron": 0
+      },
+      "urlSuffix": "navbar32-desktop-light-closed-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:23.305Z"
+    },
+    {
+      "id": "desktop-light-open",
+      "json": "captures/desktop-light-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/desktop-light-open.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-social-link": 5,
+        ".rn32-destination": 13
+      },
+      "urlSuffix": "navbar32-desktop-light-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:24.358Z"
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "json": "captures/desktop-reduced-motion-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/desktop-reduced-motion-open.png",
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "markerCounts": {
+        ".rn32-link": 5
+      },
+      "urlSuffix": "navbar32-desktop-reduced-motion-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:34.995Z"
+    },
+    {
+      "id": "mobile-js-disabled",
+      "json": "captures/mobile-js-disabled.json",
+      "png": "output/playwright/navbar32-final/navbar32/mobile-js-disabled.png",
+      "viewport": {
+        "width": 390,
+        "height": 1100
+      },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-social-link": 5,
+        ".rn32-cta": 1
+      },
+      "urlSuffix": "navbar32-mobile-js-disabled-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:34.153Z"
+    },
+    {
+      "id": "mobile-light-closed",
+      "json": "captures/mobile-light-closed.json",
+      "png": "output/playwright/navbar32-final/navbar32/mobile-light-closed.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-toggle": 1,
+        ".rn32-cta": 1
+      },
+      "urlSuffix": "navbar32-mobile-light-closed-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:27.180Z"
+    },
+    {
+      "id": "mobile-light-open",
+      "json": "captures/mobile-light-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/mobile-light-open.png",
+      "viewport": {
+        "width": 390,
+        "height": 1100
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-social-link": 5,
+        ".rn32-contact-link": 2
+      },
+      "urlSuffix": "navbar32-mobile-light-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:28.261Z"
+    },
+    {
+      "id": "narrow-320-open",
+      "json": "captures/narrow-320-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/narrow-320-open.png",
+      "viewport": {
+        "width": 320,
+        "height": 720
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5
+      },
+      "urlSuffix": "navbar32-narrow-320-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:29.336Z"
+    },
+    {
+      "id": "narrow-340-open",
+      "json": "captures/narrow-340-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/narrow-340-open.png",
+      "viewport": {
+        "width": 340,
+        "height": 720
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5
+      },
+      "urlSuffix": "navbar32-narrow-340-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:30.404Z"
+    },
+    {
+      "id": "seam-767-open",
+      "json": "captures/seam-767-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/seam-767-open.png",
+      "viewport": {
+        "width": 767,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-toggle": 1
+      },
+      "urlSuffix": "navbar32-seam-767-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:31.420Z"
+    },
+    {
+      "id": "seam-768-open",
+      "json": "captures/seam-768-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/seam-768-open.png",
+      "viewport": {
+        "width": 768,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-toggle": 1
+      },
+      "urlSuffix": "navbar32-seam-768-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:32.430Z"
+    },
+    {
+      "id": "seam-769-open",
+      "json": "captures/seam-769-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/seam-769-open.png",
+      "viewport": {
+        "width": 769,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-toggle": 1
+      },
+      "urlSuffix": "navbar32-seam-769-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:33.456Z"
+    },
+    {
+      "id": "tablet-light-open",
+      "json": "captures/tablet-light-open.json",
+      "png": "output/playwright/navbar32-final/navbar32/tablet-light-open.png",
+      "viewport": {
+        "width": 834,
+        "height": 1112
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rn32-link": 5,
+        ".rn32-toggle": 1
+      },
+      "urlSuffix": "navbar32-tablet-light-open-6c566063f79e",
+      "capturedAt": "2026-07-15T12:04:26.442Z"
+    }
+  ],
+  "supersedes": [
+    "output/playwright/navbar32 (pre-P1 HEAD 147624f stamps \u2014 discarded locally)",
+    "output/playwright/navbar32-p1 (captured before fix commit landed on HEAD \u2014 discarded locally)"
+  ],
+  "redEvidenceClarification": "red-evidence.json remains Phase A historical RED (HTML absent). It is not a visual baseline. Final visual/DOM evidence is this capture set at sourceCommit 6c56606.",
+  "inspection": {
+    "desktop-light-closed": "Bar: brand start, CTA + three-bar hamburger end; sheet closed; no second close glyph.",
+    "desktop-light-open": "Left sheet open with semantic header Menu + single ren-sheet-close X; five primary links; contact + five socials; backdrop dims page; external toggle not an X.",
+    "mobile-light-closed": "Same bar ownership at 390; hamburger not X; CTA visible.",
+    "mobile-light-open": "Left drawer open with Menu title and single close X; full tree + contact + socials.",
+    "narrow-320-open": "320px open drawer: title+close header, five links, contact, wrapping socials; no layout collapse.",
+    "mobile-js-disabled": "Toggle hidden; progressive in-flow Menu header + tree + contact + socials under bar with permanent CTA."
+  },
+  "notes": "PNG binaries live under gitignored output/playwright/; versioned JSON sidecars under captures/ all stamp sourceCommit. Stage remains green; this file does not advance green\u2192reviewed (Codex owns that)."
+}
