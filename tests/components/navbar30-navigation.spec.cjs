@@ -254,7 +254,7 @@ test.describe('Navbar Mega Menu Categories Products (navbar30)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
-  test('outside click and every destination class close the disclosure', async ({ page }) => {
+  test('outside click closes the disclosure', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar30Block(page, staticServer.origin);
 
@@ -265,21 +265,104 @@ test.describe('Navbar Mega Menu Categories Products (navbar30)', () => {
     await expect(disclosure).toHaveAttribute('open', '');
     await page.locator(`${ROOT} .ren-nav-brand`).click();
     await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('desktop destination classes: mega-link and card close details and restore summary focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar30Block(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    const summary = page.locator(SUMMARY);
 
     await summary.click();
     await expect(disclosure).toHaveAttribute('open', '');
     await page.locator(MEGA_LINK).first().click();
     await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
 
     await summary.click();
     await expect(disclosure).toHaveAttribute('open', '');
     await page.locator(PRODUCT_CARD).first().click();
     await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+  });
 
-    await summary.click();
-    await expect(disclosure).toHaveAttribute('open', '');
+  test('desktop action CTA closes the open mega disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar30Block(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    await openDesktopMega(page);
     await page.locator(`${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn`).first().click();
     await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile destination class mega-link closes nested mega and shell; focuses visible toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 1200 });
+    await gotoNavbar30Block(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    const toggle = page.locator(TOGGLE);
+
+    await openMobileNested(page);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await page.locator(MEGA_LINK).first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator(`${ROOT} ren-nav`)).not.toHaveAttribute('data-open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('mobile destination class product card closes nested mega and shell; focuses visible toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 1200 });
+    await gotoNavbar30Block(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    const toggle = page.locator(TOGGLE);
+
+    await openMobileNested(page);
+    await page.locator(PRODUCT_CARD).first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('mobile destination class ren-nav-actions closes nested mega and shell; focuses visible toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 1200 });
+    await gotoNavbar30Block(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    const toggle = page.locator(TOGGLE);
+
+    await openMobileNested(page);
+    await expect(page.locator(ACTIONS).first()).toBeVisible();
+    await page.locator(ACTIONS).first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('mobile destination class top peer closes nested mega and shell; focuses visible toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 1200 });
+    await gotoNavbar30Block(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    const toggle = page.locator(TOGGLE);
+
+    await openMobileNested(page);
+    const peer = page.locator(`${LINKS} > li > a.ren-nav-link`).first();
+    await expect(peer).toBeVisible();
+    await peer.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('block does not export a window global init helper', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar30Block(page, staticServer.origin);
+    const hasGlobal = await page.evaluate(() => typeof window.initNavMegaMenuCategoriesProducts);
+    expect(hasGlobal).toBe('undefined');
   });
 
   test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {

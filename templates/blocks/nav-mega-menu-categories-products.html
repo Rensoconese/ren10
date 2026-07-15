@@ -820,7 +820,10 @@
       }
 
       function closeDisclosure(returnFocus) {
-        if (!disclosure.open) return;
+        if (!disclosure.open) {
+          if (returnFocus) summary.focus();
+          return;
+        }
         disclosure.open = false;
         hoverTransient = false;
         pointerPinned = false;
@@ -841,6 +844,63 @@
       function isMobileNavOpen() {
         if (!toggle) return false;
         return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      /** Focus an element only when it is painted and visible (public geometry). */
+      function focusIfVisible(el) {
+        if (!(el instanceof HTMLElement)) return;
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return;
+        if (Number(style.opacity || '1') === 0) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+        el.focus();
+      }
+
+      /**
+       * Close the mobile shell via ren-nav's public toggle contract only
+       * (click the visible .ren-nav-toggle while aria-expanded="true").
+       * Never touch private fields such as _isOpen / _closeMenu.
+       */
+      function closeMobileShellPublic() {
+        if (isDesktop() || !toggle) return false;
+        if (toggle.getAttribute('aria-expanded') !== 'true') return false;
+        toggle.click();
+        return true;
+      }
+
+      /**
+       * Destination activation policy by class:
+       * - Desktop mega-link / product card → close details, restore summary focus
+       * - Mobile mega-link / card / actions / top peer → close nested + shell
+       *   (shell via public toggle or ren-nav peer-link contract) and focus toggle
+       * @param {'mega-link'|'card'|'action'|'peer'} kind
+       */
+      function onDestinationActivate(kind) {
+        markIntentionalCloseWhilePointerInside();
+
+        if (isDesktop()) {
+          if (kind === 'mega-link' || kind === 'card') {
+            closeDisclosure(true);
+          } else {
+            closeDisclosure(false);
+          }
+          return;
+        }
+
+        // Mobile: collapse nested mega first.
+        closeDisclosure(false);
+
+        // Top peers are .ren-nav-link — ren-nav already closes the shell on click.
+        // Mega links, cards, and actions must drive the public toggle themselves.
+        if (kind !== 'peer') {
+          closeMobileShellPublic();
+        }
+
+        // Restore focus to the mobile toggle when it remains visible.
+        requestAnimationFrame(() => {
+          focusIfVisible(toggle);
+        });
       }
 
       /**
@@ -1010,24 +1070,43 @@
         { signal }
       );
 
-      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+      disclosure.querySelectorAll('a.rmcp-mega-link[href]').forEach((anchor) => {
         anchor.addEventListener(
           'click',
           () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+            onDestinationActivate('mega-link');
           },
           { signal }
         );
       });
 
-      // CTA / action destinations outside the disclosure also close the mega.
+      disclosure.querySelectorAll('a.rmcp-card[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            onDestinationActivate('card');
+          },
+          { signal }
+        );
+      });
+
+      // CTA / action destinations outside the disclosure.
       root.querySelectorAll('.ren-nav-actions a[href]').forEach((anchor) => {
         anchor.addEventListener(
           'click',
           () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+            onDestinationActivate('action');
+          },
+          { signal }
+        );
+      });
+
+      // Top-level peer destinations (plain ren-nav-link anchors, not the summary).
+      root.querySelectorAll('#rmcp-primary-links > li > a.ren-nav-link[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            onDestinationActivate('peer');
           },
           { signal }
         );
@@ -1062,8 +1141,8 @@
       return controller;
     }
 
+    // Module-local init only — no window global export.
     initNavMegaMenuCategoriesProducts();
-    window.initNavMegaMenuCategoriesProducts = initNavMegaMenuCategoriesProducts;
   </script>
 </body>
 </html>
