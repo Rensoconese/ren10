@@ -297,26 +297,28 @@ test.describe('Navigation blocks', () => {
     await staticServer?.close();
   });
 
-  test('catalog lists both navigation blocks and pages load cleanly', async ({ page }) => {
+  test('catalog lists every navigation block and every page loads cleanly', async ({ page }) => {
     const errors = await collectPageErrors(page);
 
     await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
     await expect(page.getByRole('heading', { name: 'Navigation blocks' })).toBeVisible();
 
-    const drawerCard = page.locator('a.bb-card[href="nav-drawer.html"]');
-    const megaCard = page.locator('a.bb-card[href="nav-mega-menu.html"]');
-    await expect(drawerCard).toBeVisible();
-    await expect(megaCard).toBeVisible();
-    await expect(drawerCard.getByRole('heading', { name: 'Navbar Drawer' })).toBeVisible();
-    await expect(megaCard.getByRole('heading', { name: 'Navbar Mega Menu' })).toBeVisible();
+    const catalog = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) => cards.map((card) => ({
+      href: card.getAttribute('href'),
+      title: card.querySelector('.bb-card-title')?.textContent?.trim(),
+    })));
 
-    await page.goto(`${staticServer.origin}${DRAWER}`);
-    await expect(page.getByRole('heading', { name: 'Navbar Drawer', level: 1 })).toBeVisible();
+    expect(catalog).toHaveLength(29);
+    expect(new Set(catalog.map(({ href }) => href)).size).toBe(catalog.length);
 
-    await page.goto(`${staticServer.origin}${MEGA_MENU}`);
-    await expect(page.getByRole('heading', { name: 'Navbar Mega Menu', level: 1 })).toBeVisible();
-    await expect(page.locator('ren-nav')).toHaveCount(1);
-    await expect(page.locator('nav[aria-label="Example site"]')).toHaveCount(1);
+    for (const entry of catalog) {
+      expect(entry.href).toMatch(/^nav-[a-z0-9-]+\.html$/);
+      expect(entry.title).toBeTruthy();
+
+      const response = await page.goto(`${staticServer.origin}/templates/blocks/${entry.href}`);
+      expect(response?.ok(), `${entry.href} must load successfully`).toBe(true);
+      await expect(page.getByRole('heading', { name: entry.title, level: 1 })).toBeVisible();
+    }
 
     expect(errors, `console/page errors:\n${errors.join('\n')}`).toEqual([]);
   });
