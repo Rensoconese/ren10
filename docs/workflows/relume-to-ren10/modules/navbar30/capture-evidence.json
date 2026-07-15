@@ -1,0 +1,336 @@
+{
+  "kind": "render-matrix-capture-lineage",
+  "moduleId": "navbar30",
+  "blockSlug": "nav-mega-menu-categories-products",
+  "sourceCommit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+  "sourceCommitShort": "894786469a2a",
+  "fixCommitNote": "Recaptured from destination-close fix 8947864 (no functional code changes in this evidence commit).",
+  "outputDir": "output/playwright/navbar30-final/navbar30",
+  "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar30/render-matrix.json --module navbar30 --output output/playwright/navbar30-final",
+  "stateCount": 13,
+  "allJsonCommitMatch": true,
+  "allUrlTraceSourceCommit": true,
+  "allPngPresent": true,
+  "capturesFresh": true,
+  "states": [
+    {
+      "id": "desktop-dark-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-desktop-dark-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/desktop-dark-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/desktop-dark-open.json",
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:23.272Z",
+      "ren10CaptureKey": "navbar30-desktop-dark-open-894786469a2a"
+    },
+    {
+      "id": "desktop-light-closed",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-desktop-light-closed-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/desktop-light-closed.png",
+      "json": "output/playwright/navbar30-final/navbar30/desktop-light-closed.json",
+      "viewport": {
+        "width": 1280,
+        "height": 1024
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:19.515Z",
+      "ren10CaptureKey": "navbar30-desktop-light-closed-894786469a2a"
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-desktop-light-hover-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/desktop-light-hover-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/desktop-light-hover-open.json",
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:22.086Z",
+      "ren10CaptureKey": "navbar30-desktop-light-hover-open-894786469a2a"
+    },
+    {
+      "id": "desktop-light-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-desktop-light-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/desktop-light-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/desktop-light-open.json",
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:20.826Z",
+      "ren10CaptureKey": "navbar30-desktop-light-open-894786469a2a"
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-desktop-reduced-motion-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/desktop-reduced-motion-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/desktop-reduced-motion-open.json",
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:30.045Z",
+      "ren10CaptureKey": "navbar30-desktop-reduced-motion-open-894786469a2a"
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-mobile-dark-nested-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/mobile-dark-nested-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/mobile-dark-nested-open.json",
+      "viewport": {
+        "width": 390,
+        "height": 1400
+      },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:28.388Z",
+      "ren10CaptureKey": "navbar30-mobile-dark-nested-open-894786469a2a"
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-mobile-js-disabled-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/mobile-js-disabled-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/mobile-js-disabled-open.json",
+      "viewport": {
+        "width": 390,
+        "height": 1400
+      },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:29.300Z",
+      "ren10CaptureKey": "navbar30-mobile-js-disabled-open-894786469a2a"
+    },
+    {
+      "id": "mobile-light-closed",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-mobile-light-closed-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/mobile-light-closed.png",
+      "json": "output/playwright/navbar30-final/navbar30/mobile-light-closed.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:25.021Z",
+      "ren10CaptureKey": "navbar30-mobile-light-closed-894786469a2a"
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-mobile-light-nav-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/mobile-light-nav-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/mobile-light-nav-open.json",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:26.159Z",
+      "ren10CaptureKey": "navbar30-mobile-light-nav-open-894786469a2a"
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-mobile-light-nested-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/mobile-light-nested-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/mobile-light-nested-open.json",
+      "viewport": {
+        "width": 390,
+        "height": 1400
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:27.327Z",
+      "ren10CaptureKey": "navbar30-mobile-light-nested-open-894786469a2a"
+    },
+    {
+      "id": "narrow-320-nested-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-narrow-320-nested-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/narrow-320-nested-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/narrow-320-nested-open.json",
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:31.111Z",
+      "ren10CaptureKey": "navbar30-narrow-320-nested-open-894786469a2a"
+    },
+    {
+      "id": "narrow-340-nested-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-narrow-340-nested-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/narrow-340-nested-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/narrow-340-nested-open.json",
+      "viewport": {
+        "width": 340,
+        "height": 900
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:32.211Z",
+      "ren10CaptureKey": "navbar30-narrow-340-nested-open-894786469a2a"
+    },
+    {
+      "id": "tablet-light-open",
+      "commit": "894786469a2a2bffd7916a9418e174fcd8bf1a4b",
+      "url": "http://127.0.0.1:53483/templates/blocks/nav-mega-menu-categories-products.html?ren10_capture=navbar30-tablet-light-open-894786469a2a",
+      "png": "output/playwright/navbar30-final/navbar30/tablet-light-open.png",
+      "json": "output/playwright/navbar30-final/navbar30/tablet-light-open.json",
+      "viewport": {
+        "width": 834,
+        "height": 1600
+      },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "markerCounts": {
+        ".rmcp-mega-link": 15,
+        "a.rmcp-card": 2,
+        ".rmcp-card-media": 2,
+        ".rmcp-group-heading": 3,
+        ".rmcp-chevron": 1
+      },
+      "capturedAt": "2026-07-15T12:00:24.278Z",
+      "ren10CaptureKey": "navbar30-tablet-light-open-894786469a2a"
+    }
+  ],
+  "inspection": {
+    "inspector": "implementation-worker",
+    "inspectedAt": "2026-07-15T12:01:06.162Z",
+    "openStates": {
+      "desktop-light-open": "Full-width mega under bar; 3 category columns + 2 product media cards; one chevron; secondary+primary actions end-aligned; no overflow/clip.",
+      "desktop-dark-open": "Dark tokens resolve; same anatomy; product cards and surfaces coherent on dark theme.",
+      "desktop-light-hover-open": "Hover-open path present in matrix (lineage verified; anatomy matches click-open).",
+      "tablet-light-open": "Desktop shell at 834px with open mega (lineage verified).",
+      "mobile-light-nested-open": "In-flow nested mega; stacked categories and product cards; stacked CTAs; single close X.",
+      "mobile-dark-nested-open": "Dark nested mobile coherent; single close icon; stacked product cards and CTAs; readable labels."
+    },
+    "narrowStates": {
+      "narrow-320-nested-open": "320px nested open: brand+close top row; full tree; 15 category destinations; 2 stacked product cards; stacked Sign in/Start free; no horizontal overflow.",
+      "narrow-340-nested-open": "340px nested open: same anatomy as 320; single close X; no overflow."
+    },
+    "jsDisabled": {
+      "mobile-js-disabled-open": "JS-off progressive enhancement: tree and native disclosure open; categories+products visible; actions exposed; usable without enhancement."
+    },
+    "result": "passed"
+  }
+}
