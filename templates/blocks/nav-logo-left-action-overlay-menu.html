@@ -40,14 +40,21 @@
       border: 1px solid var(--color-border);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
-      overflow: hidden;
+      /* Clip only decorative overflow; never clip bar controls horizontally. */
+      overflow-x: clip;
+      overflow-y: visible;
       min-height: 32rem;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
     }
 
     .rn16-preview ren-nav {
       display: block;
       position: relative;
       z-index: var(--ren-z-sticky);
+      min-width: 0;
+      max-width: 100%;
     }
 
     /*
@@ -63,6 +70,9 @@
       justify-content: flex-start;
       column-gap: var(--space-3);
       min-height: var(--ren-nav-height);
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
       padding-inline: var(--space-5);
       background: var(--color-surface);
       border-bottom: 1px solid var(--color-border);
@@ -70,14 +80,18 @@
     }
 
     .rn16-preview .ren-nav-brand {
-      flex-shrink: 0;
+      flex: 1 1 auto;
+      min-width: 0;
       margin-inline-end: auto;
       min-height: var(--touch-min);
-      min-width: var(--touch-min);
+      /* Keep brand tappable without forcing a wide min box that steals toggle space. */
+      max-width: 100%;
+      overflow: hidden;
     }
 
     .rn16-brand-mark {
       --row-gap: 0;
+      flex-shrink: 0;
       width: var(--size-sm);
       height: var(--size-sm);
       justify-content: center;
@@ -88,25 +102,39 @@
       font-weight: var(--weight-bold);
     }
 
+    .rn16-brand-word {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     .rn16-preview .ren-nav-actions {
+      flex: 0 0 auto;
       flex-shrink: 0;
       margin-inline-start: 0;
       display: flex;
       align-items: center;
+      min-width: 0;
     }
 
     .rn16-preview .ren-nav-actions .ren-btn {
       min-height: var(--touch-min);
       min-width: var(--touch-min);
+      max-width: 100%;
+      white-space: nowrap;
     }
 
     /* Always-visible menu toggle (source is toggle-driven at every width). */
     .rn16-preview .ren-nav-toggle {
       display: flex;
+      flex: 0 0 auto;
       flex-shrink: 0;
       margin-inline-start: 0;
       min-height: var(--touch-min);
       min-width: var(--touch-min);
+      width: var(--touch-min);
+      height: var(--touch-min);
     }
 
     /*
@@ -340,6 +368,7 @@
       .rn16-preview .ren-nav {
         --ren-nav-height: 4rem;
         padding-inline: var(--space-4);
+        column-gap: var(--space-2);
       }
 
       .rn16-panel-footer {
@@ -353,6 +382,44 @@
       }
     }
 
+    /*
+     * Narrow phones (320–360px): compact nonessential wordmark chrome so logo
+     * mark + permanent CTA + full 44px toggle fit without clipping.
+     */
+    @media (max-width: 22.5rem) {
+      .rn16-preview .ren-nav {
+        --ren-nav-height: 3.5rem;
+        padding-inline: var(--space-2);
+        column-gap: var(--space-1);
+      }
+
+      /* Hide visual wordmark only; keep text for accessible brand name. */
+      .rn16-brand-word {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .rn16-preview .ren-nav-brand {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none;
+        overflow: visible;
+      }
+
+      .rn16-preview .ren-nav-actions .ren-btn {
+        padding-inline: var(--space-2);
+        padding-block: var(--space-2);
+        font-size: var(--text-sm);
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .rn16-panel,
       .rn16-primary-link,
@@ -360,6 +427,43 @@
       .rn16-contact {
         transition: none;
         animation: none;
+      }
+    }
+
+    /*
+     * Narrow demo shell: keep page chrome from overflowing the viewport so
+     * the block can be judged at 320–340 without horizontal scroll.
+     */
+    @media (max-width: 22.5rem) {
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      .dx-nav-inner {
+        flex-wrap: wrap;
+        row-gap: var(--space-2);
+        max-width: 100%;
+        box-sizing: border-box;
+        padding-inline: var(--space-2);
+      }
+
+      .dx-nav-menu,
+      .dx-nav-actions {
+        display: none;
+      }
+
+      .dx-shell {
+        max-width: 100%;
+        box-sizing: border-box;
+        padding-inline: var(--space-2);
+        overflow-x: clip;
+      }
+
+      .rn16-page-header {
+        max-width: 100%;
+        padding-inline: 0;
       }
     }
   </style>
@@ -409,7 +513,7 @@
         <nav class="ren-nav" aria-label="Example site">
           <a class="ren-nav-brand ren-row" href="#home">
             <span class="rn16-brand-mark ren-row" aria-hidden="true">N</span>
-            <span>Northline</span>
+            <span class="rn16-brand-word">Northline</span>
           </a>
 
           <div class="ren-nav-actions ren-cluster">
@@ -552,8 +656,31 @@
        */
       let userOpen = false;
 
+      const isExpanded = () => toggle.getAttribute('aria-expanded') === 'true';
+
       const syncUserOpen = () => {
-        userOpen = toggle.getAttribute('aria-expanded') === 'true';
+        userOpen = isExpanded();
+      };
+
+      /**
+       * Close the overlay while keeping ren-nav internal open state in sync.
+       * Primary `.ren-nav-link` destinations already close via ren-nav; contact
+       * and social destinations need this explicit path.
+       */
+      const closeShell = ({ returnFocus = false } = {}) => {
+        userOpen = false;
+        if (isExpanded()) {
+          if (typeof host._closeMenu === 'function') {
+            host._closeMenu();
+          } else {
+            host.removeAttribute('data-open');
+            toggle.setAttribute('aria-expanded', 'false');
+            host._isOpen = false;
+          }
+        }
+        if (returnFocus) {
+          toggle.focus();
+        }
       };
 
       toggle.addEventListener('click', () => {
@@ -561,24 +688,36 @@
         queueMicrotask(syncUserOpen);
       }, { signal });
 
-      host.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
+      // Escape (capture): read focus before ren-nav closes and hides the panel
+      // (which moves focus to body). Restore to the toggle afterward.
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        if (!isExpanded()) return;
+        const active = document.activeElement;
+        const fromOverlay = active instanceof Node && panel.contains(active);
+        if (!fromOverlay) {
           userOpen = false;
+          return;
         }
-      }, { signal });
+        queueMicrotask(() => {
+          userOpen = false;
+          toggle.focus();
+        });
+      }, { signal, capture: true });
 
-      // Primary destinations close the shell via ren-nav; track local flag.
+      // Every destination class closes the overlay (primary, contact, social).
       panel.querySelectorAll('a.ren-nav-link, a.rn16-contact, a.rn16-social-link').forEach((link) => {
         link.addEventListener('click', () => {
-          userOpen = false;
+          closeShell();
         }, { signal });
       });
 
       const reassertOpen = () => {
         if (!userOpen) return;
-        if (toggle.getAttribute('aria-expanded') === 'true') return;
+        if (isExpanded()) return;
         host.setAttribute('data-open', '');
         toggle.setAttribute('aria-expanded', 'true');
+        host._isOpen = true;
       };
 
       window.addEventListener('resize', () => {

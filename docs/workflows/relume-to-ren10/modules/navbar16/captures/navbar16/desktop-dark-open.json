@@ -1,6 +1,6 @@
 {
   "id": "desktop-dark-open",
-  "url": "http://127.0.0.1:62095/templates/blocks/nav-logo-left-action-overlay-menu.html?ren10_capture=navbar16-desktop-dark-open-839d30804128",
+  "url": "http://127.0.0.1:63486/templates/blocks/nav-logo-left-action-overlay-menu.html?ren10_capture=navbar16-desktop-dark-open-fa4174328dd3",
   "viewport": {
     "width": 1280,
     "height": 900
@@ -12,6 +12,6 @@
     "#rn16-primary-links > li": 6,
     ".rn16-social-link": 5
   },
-  "commit": "839d30804128526c3aca7af3fe69347e4df25bd3",
-  "capturedAt": "2026-07-15T10:54:22.403Z"
+  "commit": "fa4174328dd3d5b703000701ab82907d6a5662db",
+  "capturedAt": "2026-07-15T11:09:35.039Z"
 }

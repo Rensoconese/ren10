@@ -191,6 +191,124 @@ test.describe('Navbar Logo Left Action Overlay Menu (navbar16)', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
+  test('Escape from a focused overlay destination restores focus to the toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar16Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const panel = page.locator(`${ROOT} .rn16-panel`);
+    const destination = page.locator('#rn16-primary-links > li > a.ren-nav-link').first();
+
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await destination.focus();
+    await expect(destination).toBeFocused();
+
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(panel).toBeHidden();
+    await expect(toggle).toBeFocused();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.className || document.activeElement?.tagName))
+      .toMatch(/ren-nav-toggle/i);
+  });
+
+  test('contact and each social destination class close the overlay', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar16Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const panel = page.locator(`${ROOT} .rn16-panel`);
+
+    // Contact destination closes.
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await page.locator(`${ROOT} .rn16-contact`).click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(panel).toBeHidden();
+
+    // Each of the five social destinations closes.
+    const socialCount = await page.locator(`${ROOT} a.rn16-social-link`).count();
+    expect(socialCount).toBe(5);
+    for (let i = 0; i < socialCount; i += 1) {
+      await toggle.click();
+      await expect(panel).toBeVisible();
+      await page.locator(`${ROOT} a.rn16-social-link`).nth(i).click();
+      await expect(
+        toggle,
+        `social destination ${i} must close the overlay`
+      ).toHaveAttribute('aria-expanded', 'false');
+      await expect(panel, `social destination ${i} leaves panel hidden`).toBeHidden();
+    }
+
+    // Primary class already closes via ren-nav; reassert for class completeness.
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await page.locator('#rn16-primary-links > li > a.ren-nav-link').nth(1).click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(panel).toBeHidden();
+  });
+
+  test('narrow 320 and 340 viewports keep a full 44px toggle with no root/html overflow', async ({ page }) => {
+    for (const width of [320, 340]) {
+      await page.setViewportSize({ width, height: 640 });
+      await gotoNavbar16Block(page, staticServer.origin);
+
+      const metrics = await page.evaluate(() => {
+        const root = document.querySelector('[data-rn16-root]');
+        const toggle = document.querySelector('[data-rn16-root] .ren-nav-toggle');
+        const brand = document.querySelector('[data-rn16-root] .ren-nav-brand');
+        const action = document.querySelector('[data-rn16-root] .ren-nav-actions a.ren-btn-primary');
+        const nav = document.querySelector('[data-rn16-root] .ren-nav');
+        if (!root || !toggle || !brand || !action || !nav) return null;
+
+        const toggleRect = toggle.getBoundingClientRect();
+        const rootRect = root.getBoundingClientRect();
+        const navRect = nav.getBoundingClientRect();
+        const brandRect = brand.getBoundingClientRect();
+        const actionRect = action.getBoundingClientRect();
+        const style = getComputedStyle(toggle);
+        const html = document.documentElement;
+        const body = document.body;
+
+        return {
+          toggleWidth: toggleRect.width,
+          toggleHeight: toggleRect.height,
+          toggleVisible:
+            style.display !== 'none'
+            && style.visibility !== 'hidden'
+            && toggleRect.width > 0
+            && toggleRect.height > 0,
+          toggleFullyInRoot:
+            toggleRect.left >= rootRect.left - 0.5
+            && toggleRect.right <= rootRect.right + 0.5
+            && toggleRect.top >= rootRect.top - 0.5
+            && toggleRect.bottom <= Math.max(rootRect.bottom, navRect.bottom) + 0.5,
+          toggleFullyInNav:
+            toggleRect.left >= navRect.left - 0.5
+            && toggleRect.right <= navRect.right + 0.5,
+          brandVisible: brandRect.width > 0 && brandRect.height > 0,
+          actionVisible: actionRect.width > 0 && actionRect.height > 0,
+          htmlOverflowX: html.scrollWidth - html.clientWidth,
+          bodyOverflowX: body.scrollWidth - body.clientWidth,
+          rootOverflowX: root.scrollWidth - root.clientWidth,
+        };
+      });
+
+      expect(metrics, `metrics at ${width}px`).toBeTruthy();
+      expect(metrics.toggleVisible, `${width}px toggle visible`).toBe(true);
+      expect(metrics.toggleWidth, `${width}px toggle width ≥ 44`).toBeGreaterThanOrEqual(44);
+      expect(metrics.toggleHeight, `${width}px toggle height ≥ 44`).toBeGreaterThanOrEqual(44);
+      expect(metrics.toggleFullyInNav, `${width}px toggle fully inside nav bar`).toBe(true);
+      expect(metrics.toggleFullyInRoot, `${width}px toggle fully inside preview root`).toBe(true);
+      expect(metrics.brandVisible, `${width}px brand remains present`).toBe(true);
+      expect(metrics.actionVisible, `${width}px permanent action remains present`).toBe(true);
+      expect(metrics.htmlOverflowX, `${width}px html overflow-x`).toBeLessThanOrEqual(1);
+      expect(metrics.bodyOverflowX, `${width}px body overflow-x`).toBeLessThanOrEqual(1);
+      expect(metrics.rootOverflowX, `${width}px root overflow-x`).toBeLessThanOrEqual(1);
+      await expectNoOverflow(page, 'html');
+    }
+  });
+
   test('permanent top action stays visible while overlay opens; socials and contact live in the panel footer', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar16Block(page, staticServer.origin);
