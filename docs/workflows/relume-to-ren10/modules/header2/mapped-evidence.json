@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header2 mapped to a split hero: ren-switcher copy+media layout, ren-form + ren-field email + single ren-btn CTA, ren-link terms, ren-frame tokenized media. Rejected navbar/sheet/menu mappings and a second CTA. Intentional: docs page h1 outside preview; hero heading is h2 for outline; original demo copy; no Relume CDN assets."
+}

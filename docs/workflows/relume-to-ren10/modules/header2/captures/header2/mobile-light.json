@@ -1,0 +1,18 @@
+{
+  "id": "mobile-light",
+  "url": "http://127.0.0.1:55921/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-mobile-light-d45ae3a34adc",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh2-heading": 1,
+    ".rh2-cta": 1,
+    "input[type=email]": 1
+  },
+  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
+  "capturedAt": "2026-07-15T16:10:21.532Z"
+}

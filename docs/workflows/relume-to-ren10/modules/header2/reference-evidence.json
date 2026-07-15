@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated relume_oauth search_components(query=Header2, limit=5) then get_component(slug=header2, primitives=include) returned one complete Header2 section plus three vendored primitives (utils/cn, button, input). Catalog tags: 2 Columns, Image/Video Right, Text Align Left, Form, Image, Hero Header Section. Anatomy sanitized into reference-brief.md without persisting protected source."
+}

@@ -1,0 +1,18 @@
+{
+  "id": "desktop-dark",
+  "url": "http://127.0.0.1:55921/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-desktop-dark-d45ae3a34adc",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh2-heading": 1,
+    ".rh2-cta": 1,
+    ".rh2-media": 1
+  },
+  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
+  "capturedAt": "2026-07-15T16:10:20.106Z"
+}
