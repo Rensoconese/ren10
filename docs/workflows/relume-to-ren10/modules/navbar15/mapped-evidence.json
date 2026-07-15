@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar15 mapped to one ren-nav tree, native details/summary, exactly three flat destination anchors, one permanent primary action outside the collapsible shell (with toggle), one named toggle, one chevron, desktop bottom-docked floating geometry with upward absolute dropdown, mobile top-row brand+action+toggle, and the established 48rem interaction boundary. Rejected ren-card, ren-menu, ren-popover, ren-collapsible, nested nav, dual panel-owned actions, top-only floating desktop chrome, and copied source."
+}
