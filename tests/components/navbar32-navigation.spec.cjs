@@ -33,32 +33,26 @@ async function gotoBlock(page, origin, opts = {}) {
 }
 
 /**
- * Activate the menu toggle. When the modal sheet is open, the host toggle is
- * inert under the top-layer dialog — use a trusted scripted click so the same
- * public handler runs (mirrors users dismissing via the toggle's hit area /
- * Escape / backdrop, which also close the sheet).
- * @param {import('@playwright/test').Page} page
- */
-async function clickToggle(page) {
-  const toggle = page.locator(`${ROOT} .rn32-toggle`);
-  const expanded = await toggle.getAttribute('aria-expanded');
-  if (expanded === 'true') {
-    await toggle.evaluate((el) => {
-      if (el instanceof HTMLElement) el.click();
-    });
-  } else {
-    await toggle.click();
-  }
-}
-
-/**
+ * Open via the external hamburger (real pointer click).
  * @param {import('@playwright/test').Page} page
  */
 async function openDrawer(page) {
   const toggle = page.locator(`${ROOT} .rn32-toggle`);
-  await clickToggle(page);
+  await toggle.click();
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('ren-sheet#rn32-drawer')).toHaveAttribute('open', '');
+  await expect(page.locator('#rn32-drawer .ren-sheet-close')).toBeVisible();
+}
+
+/**
+ * Close via the real in-sheet close control (no scripted el.click bypass).
+ * @param {import('@playwright/test').Page} page
+ */
+async function closeDrawer(page) {
+  const closeBtn = page.locator('#rn32-drawer .ren-sheet-close');
+  await expect(closeBtn).toBeVisible();
+  await closeBtn.click();
+  await expectSheetClosed(page);
 }
 
 /**
@@ -67,15 +61,6 @@ async function openDrawer(page) {
 async function expectSheetClosed(page) {
   await expect(page.locator(`${ROOT} .rn32-toggle`)).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('ren-sheet#rn32-drawer')).not.toHaveAttribute('open', '');
-}
-
-/**
- * @param {import('@playwright/test').Locator} locator
- */
-async function activateDestination(locator) {
-  await locator.evaluate((el) => {
-    if (el instanceof HTMLElement) el.click();
-  });
 }
 
 /**
@@ -165,23 +150,30 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
 
     // Destination classes: 5 primary + 5 social + 2 contact + 1 CTA = 13
     await expect(page.locator(`${ROOT} a.rn32-destination`)).toHaveCount(13);
+    await expect(page.locator('#rn32-drawer .ren-sheet-header')).toHaveCount(1);
+    await expect(page.locator('#rn32-drawer .ren-sheet-title')).toHaveCount(1);
+    await expect(page.locator('#rn32-drawer .ren-sheet-close')).toHaveCount(1);
   });
 
-  test('toggle opens and closes left sheet; public open contract only', async ({ page }) => {
+  test('toggle opens and in-sheet close button closes; public open contract only', async ({ page }) => {
     await gotoBlock(page, staticServer.origin, { width: 1280, height: 900 });
 
     const toggle = page.locator(`${ROOT} .rn32-toggle`);
     const sheet = page.locator('ren-sheet#rn32-drawer');
+    const closeBtn = page.locator('#rn32-drawer .ren-sheet-close');
 
-    await expect(toggle).toHaveAttribute('aria-label', /.+/);
+    await expect(toggle).toHaveAttribute('aria-label', /Open menu/i);
     await expect(toggle).toHaveAttribute('aria-controls', 'rn32-drawer');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(sheet).toHaveAttribute('side', 'left');
 
-    await clickToggle(page);
+    await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(sheet).toHaveAttribute('open', '');
     await expect(page.locator(`${ROOT} a.rn32-link`).first()).toBeVisible();
+    await expect(closeBtn).toBeVisible();
+    await expect(closeBtn).toHaveAttribute('aria-label', 'Close menu');
+    await expect(closeBtn).toHaveAttribute('data-sheet-close', '');
 
     // Public contract only — never private custom-element fields.
     const publicOpen = await page.evaluate(() => {
@@ -190,7 +182,8 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     });
     expect(publicOpen).toBe(true);
 
-    await clickToggle(page);
+    // Real pointer click on the in-sheet close control (no el.click() bypass).
+    await closeBtn.click();
     await expectSheetClosed(page);
   });
 
@@ -207,6 +200,15 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('rn32-toggle'))).toBe(true);
   });
 
+  test('in-sheet close button restores focus to the toggle', async ({ page }) => {
+    await gotoBlock(page, staticServer.origin, { width: 1280, height: 900 });
+    await openDrawer(page);
+
+    await page.locator('#rn32-drawer .ren-sheet-close').click();
+    await expectSheetClosed(page);
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('rn32-toggle'))).toBe(true);
+  });
+
   test('outside/backdrop activation closes the open drawer', async ({ page }) => {
     await gotoBlock(page, staticServer.origin, { width: 1280, height: 900 });
     await openDrawer(page);
@@ -216,23 +218,28 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     await expectSheetClosed(page);
   });
 
-  test('destination activation closes the drawer for every destination class', async ({ page }) => {
+  test('destination activation closes the drawer for every in-sheet destination class', async ({ page }) => {
     await gotoBlock(page, staticServer.origin, { width: 1280, height: 900 });
 
     const cases = [
       { name: 'primary', selector: `${ROOT} a.rn32-link` },
       { name: 'social', selector: `${ROOT} a.rn32-social-link` },
       { name: 'contact', selector: `${ROOT} a.rn32-contact-link` },
-      { name: 'cta', selector: `${ROOT} a.rn32-cta` },
     ];
 
     for (const item of cases) {
       await openDrawer(page);
-      // Modal top-layer makes the bar CTA inert to pointer hit-testing; scripted
-      // activation still exercises the destination-close handler for every class.
-      await activateDestination(page.locator(item.selector).first());
+      // Real pointer click on destinations inside the modal sheet.
+      await page.locator(item.selector).first().click();
       await expectSheetClosed(page);
     }
+
+    // Bar CTA remains a destination class; while open the modal top-layer keeps
+    // bar chrome inert, so close via the real in-sheet control then activate CTA.
+    await openDrawer(page);
+    await closeDrawer(page);
+    await page.locator(`${ROOT} a.rn32-cta`).click();
+    await expect(page.locator(`${ROOT} a.rn32-cta`)).toHaveAttribute('href', /.+/);
   });
 
   test('same-breakpoint resize keeps open state; seam widths keep one tree and always-on toggle', async ({ page }) => {
@@ -420,16 +427,26 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     }
   });
 
-  test('fully visible 44px targets for toggle, CTA, primary, social, and contact destinations', async ({ page }) => {
+  test('fully visible 44px targets for toggle, close, CTA, primary, social, and contact', async ({ page }) => {
     await gotoBlock(page, staticServer.origin, { width: 320, height: 720 });
     await expectFullyVisibleTouchTarget(page, `${ROOT} .rn32-toggle`, 'toggle');
     await expectFullyVisibleTouchTarget(page, `${ROOT} a.rn32-cta`, 'cta');
 
     await openDrawer(page);
+    await expectFullyVisibleTouchTarget(page, '#rn32-drawer .ren-sheet-close', 'sheet close');
     await expectFullyVisibleTouchTarget(page, `${ROOT} a.rn32-link`, 'primary');
     await expectFullyVisibleTouchTarget(page, `${ROOT} a.rn32-social-link`, 'social');
     await expectFullyVisibleTouchTarget(page, `${ROOT} a.rn32-contact-link`, 'contact');
 
+    // Header title + close share one row when open.
+    await expectAligned(
+      page,
+      ['#rn32-drawer .ren-sheet-title', '#rn32-drawer .ren-sheet-close'],
+      'centerY',
+      12
+    );
+
+    await closeDrawer(page);
     await expectAligned(
       page,
       [`${ROOT} .rn32-brand`, `${ROOT} a.rn32-cta`, `${ROOT} .rn32-toggle`],
@@ -438,28 +455,50 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     );
   });
 
-  test('single close morph on toggle; no duplicate chevron affordances', async ({ page }) => {
-    await gotoBlock(page, staticServer.origin, { width: 390, height: 844 });
-    await openDrawer(page);
+  test('single close affordance is ren-sheet-close; toggle keeps hamburger (no second X)', async ({ page }) => {
+    for (const width of [1280, 834, 390, 320]) {
+      await gotoBlock(page, staticServer.origin, { width, height: 900 });
+      await openDrawer(page);
 
-    await expect(page.locator(`${ROOT} .rn32-chevron`)).toHaveCount(0);
-    await expectSingleVisibleAffordance(
-      page,
-      [`${ROOT} .rn32-toggle`],
-      'navbar32 menu toggle'
-    );
-    await expect(page.locator(`${ROOT} .rn32-toggle span`)).toHaveCount(3);
+      await expect(page.locator(`${ROOT} .rn32-chevron`)).toHaveCount(0);
+      await expect(page.locator('#rn32-drawer .ren-sheet-close')).toHaveCount(1);
+      await expectSingleVisibleAffordance(
+        page,
+        ['#rn32-drawer .ren-sheet-close'],
+        `navbar32 sheet close @${width}`
+      );
 
-    const morph = await page.evaluate(() => {
-      const toggle = document.querySelector('[data-rn32-root] .rn32-toggle');
-      if (!toggle) return null;
-      return {
-        openAttr: toggle.getAttribute('aria-expanded'),
-        dataOpen: toggle.hasAttribute('data-open') || toggle.getAttribute('data-state') === 'open',
-      };
-    });
-    expect(morph).toBeTruthy();
-    expect(morph.openAttr).toBe('true');
+      // External toggle stays three-bar hamburger — not an X morph.
+      await expect(page.locator(`${ROOT} .rn32-toggle span`)).toHaveCount(3);
+      const noXMorph = await page.evaluate(() => {
+        const spans = Array.from(document.querySelectorAll('[data-rn32-root] .rn32-toggle > span'));
+        if (spans.length !== 3) return { ok: false, reason: 'span count' };
+        const rotated = spans.some((span) => {
+          const style = getComputedStyle(span);
+          const rotate = (style.rotate || '').trim();
+          if (rotate && rotate !== 'none' && rotate !== '0deg') return true;
+          const transform = style.transform || '';
+          // 45° X arms show non-axis-aligned matrix components (b/c nonzero).
+          if (transform.startsWith('matrix(')) {
+            const parts = transform.slice(7, -1).split(',').map((v) => Number.parseFloat(v.trim()));
+            if (parts.length >= 4) {
+              const [, b, c] = parts;
+              return Math.abs(b) > 0.01 || Math.abs(c) > 0.01;
+            }
+          }
+          return false;
+        });
+        const allVisible = spans.every((span) => Number.parseFloat(getComputedStyle(span).opacity || '1') > 0.5);
+        return {
+          ok: !rotated && allVisible,
+          open: document.querySelector('[data-rn32-root] .rn32-toggle')?.getAttribute('aria-expanded'),
+        };
+      });
+      expect(noXMorph.ok, `hamburger not X @${width}`).toBe(true);
+      expect(noXMorph.open).toBe('true');
+
+      await closeDrawer(page);
+    }
   });
 
   test('preview passes WCAG 2.1 AA axe scan (closed and open)', async ({ page }) => {

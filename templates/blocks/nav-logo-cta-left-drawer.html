@@ -133,21 +133,12 @@
       top: calc(50% + 4px);
     }
 
-    /* Single close morph: three bars become one X (two visible arms) */
-    .rn32-toggle[aria-expanded="true"] > span:nth-child(1) {
-      top: 50%;
-      translate: 0 -50%;
-      rotate: 45deg;
-    }
-
-    .rn32-toggle[aria-expanded="true"] > span:nth-child(2) {
-      opacity: 0;
-    }
-
-    .rn32-toggle[aria-expanded="true"] > span:nth-child(3) {
-      top: 50%;
-      translate: 0 -50%;
-      rotate: -45deg;
+    /*
+     * Open state keeps the three-bar hamburger (no X morph).
+     * The only close glyph is .ren-sheet-close inside the sheet header.
+     */
+    .rn32-toggle[aria-expanded="true"] {
+      opacity: 0.55;
     }
 
     .rn32-hero {
@@ -287,23 +278,62 @@
       background: var(--color-fill-hover);
     }
 
-    .rn32-sheet-title {
-      position: absolute;
-      width: 1px;
-      height: 1px;
+    /* Sheet header: visible title + single 44px close control */
+    #rn32-drawer .ren-sheet-header,
+    ren-sheet#rn32-drawer:not(:defined) .ren-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      min-height: calc(var(--touch-min) + var(--space-4));
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      box-sizing: border-box;
+    }
+
+    #rn32-drawer .ren-sheet-title {
+      margin: 0;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+      line-height: 1.2;
+    }
+
+    #rn32-drawer .ren-sheet-close {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      width: var(--touch-min);
+      height: var(--touch-min);
       padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--color-text);
+      font-size: var(--text-2xl);
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    #rn32-drawer .ren-sheet-close:hover {
+      background: var(--color-fill-hover);
+      color: var(--color-text);
+    }
+
+    #rn32-drawer .ren-sheet-close:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset, 2px);
     }
 
     @media (prefers-reduced-motion: reduce) {
       .rn32-toggle > span,
       .rn32-bar,
       .rn32-link,
-      .rn32-destination {
+      .rn32-destination,
+      #rn32-drawer .ren-sheet-close {
         transition: none !important;
         animation: none !important;
       }
@@ -431,7 +461,15 @@
       </div>
 
       <ren-sheet id="rn32-drawer" side="left" size="md">
-        <h2 class="ren-sheet-title rn32-sheet-title">Primary navigation</h2>
+        <header class="ren-sheet-header">
+          <h2 class="ren-sheet-title">Menu</h2>
+          <button
+            type="button"
+            class="ren-sheet-close"
+            data-sheet-close
+            aria-label="Close menu"
+          >×</button>
+        </header>
         <div class="ren-sheet-body">
           <nav class="rn32-nav" aria-label="Primary">
             <ul id="rn32-primary-links" class="rn32-links">
@@ -476,31 +514,19 @@
       const syncToggle = () => {
         const isOpen = Boolean(sheet.open);
         toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+        // Open affordance only — close is the in-sheet .ren-sheet-close control.
+        toggle.setAttribute('aria-label', 'Open menu');
         toggle.toggleAttribute('data-open', isOpen);
       };
 
       toggle.addEventListener('click', () => {
-        if (sheet.open) {
-          sheet.close();
-        } else {
-          sheet.show();
-        }
-        // show()/close() update host attributes asynchronously via events
+        if (sheet.open) return;
+        sheet.show();
         queueMicrotask(syncToggle);
       });
 
       sheet.addEventListener('ren-open', syncToggle);
       sheet.addEventListener('ren-close', syncToggle);
-
-      // Bar CTA (and any destination outside the sheet) closes an open drawer.
-      root.addEventListener('click', (event) => {
-        const destination = event.target.closest('a.rn32-destination');
-        if (!destination || !sheet.open) return;
-        if (!sheet.contains(destination)) {
-          sheet.close();
-        }
-      });
 
       syncToggle();
     }
