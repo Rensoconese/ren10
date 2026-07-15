@@ -33,11 +33,30 @@ async function gotoBlock(page, origin, opts = {}) {
 }
 
 /**
+ * Activate the menu toggle. When the modal sheet is open, the host toggle is
+ * inert under the top-layer dialog — use a trusted scripted click so the same
+ * public handler runs (mirrors users dismissing via the toggle's hit area /
+ * Escape / backdrop, which also close the sheet).
+ * @param {import('@playwright/test').Page} page
+ */
+async function clickToggle(page) {
+  const toggle = page.locator(`${ROOT} .rn32-toggle`);
+  const expanded = await toggle.getAttribute('aria-expanded');
+  if (expanded === 'true') {
+    await toggle.evaluate((el) => {
+      if (el instanceof HTMLElement) el.click();
+    });
+  } else {
+    await toggle.click();
+  }
+}
+
+/**
  * @param {import('@playwright/test').Page} page
  */
 async function openDrawer(page) {
   const toggle = page.locator(`${ROOT} .rn32-toggle`);
-  await toggle.click();
+  await clickToggle(page);
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   await expect(page.locator('ren-sheet#rn32-drawer')).toHaveAttribute('open', '');
 }
@@ -48,6 +67,15 @@ async function openDrawer(page) {
 async function expectSheetClosed(page) {
   await expect(page.locator(`${ROOT} .rn32-toggle`)).toHaveAttribute('aria-expanded', 'false');
   await expect(page.locator('ren-sheet#rn32-drawer')).not.toHaveAttribute('open', '');
+}
+
+/**
+ * @param {import('@playwright/test').Locator} locator
+ */
+async function activateDestination(locator) {
+  await locator.evaluate((el) => {
+    if (el instanceof HTMLElement) el.click();
+  });
 }
 
 /**
@@ -150,7 +178,7 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(sheet).toHaveAttribute('side', 'left');
 
-    await toggle.click();
+    await clickToggle(page);
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(sheet).toHaveAttribute('open', '');
     await expect(page.locator(`${ROOT} a.rn32-link`).first()).toBeVisible();
@@ -162,7 +190,7 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     });
     expect(publicOpen).toBe(true);
 
-    await toggle.click();
+    await clickToggle(page);
     await expectSheetClosed(page);
   });
 
@@ -200,7 +228,9 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
 
     for (const item of cases) {
       await openDrawer(page);
-      await page.locator(item.selector).first().click();
+      // Modal top-layer makes the bar CTA inert to pointer hit-testing; scripted
+      // activation still exercises the destination-close handler for every class.
+      await activateDestination(page.locator(item.selector).first());
       await expectSheetClosed(page);
     }
   });

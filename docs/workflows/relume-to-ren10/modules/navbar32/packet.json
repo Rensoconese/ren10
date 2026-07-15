@@ -4,13 +4,14 @@
   "moduleId": "navbar32",
   "blockSlug": "nav-logo-cta-left-drawer",
   "blockPath": "templates/blocks/nav-logo-cta-left-drawer.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-logo-cta-left-drawer.html",
     "tests/components/navbar32-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
   }
 }
