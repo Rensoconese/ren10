@@ -611,19 +611,28 @@
         { signal },
       );
 
+      /*
+       * Escape: ren-nav closes on the document bubble path. Capture wasOpen in
+       * capture phase (before core) so we still restore focus after core has
+       * already cleared aria-expanded — otherwise focus lands on body when Escape
+       * originates from a focused overlay link/contact/social.
+       */
       document.addEventListener(
         'keydown',
         (event) => {
-          if (event.key !== 'Escape' || !isOpen()) return;
+          if (event.key !== 'Escape') return;
+          const wasOpen = isOpen();
+          if (!wasOpen) return;
           queueMicrotask(() => {
-            if (isOpen()) {
-              closeMenu();
-            }
             preferOpen = false;
+            // Public close only if still open (core may already have closed).
+            if (isOpen()) {
+              toggle.click();
+            }
             toggle.focus();
           });
         },
-        { signal },
+        { capture: true, signal },
       );
 
       menu.querySelectorAll('a.rn18-link, .rn18-contact, .rn18-social-link').forEach((link) => {

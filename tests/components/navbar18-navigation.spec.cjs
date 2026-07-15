@@ -206,11 +206,37 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
     expect(linksVisible).toBe(false);
   });
 
-  test('desktop Escape closes overlay and returns focus to toggle', async ({ page }) => {
+  test('Escape from overlay destination link closes and focuses toggle', async ({ page }) => {
     await openBlock(page, { width: 1280, height: 900 });
     const toggle = root(page).locator('.ren-nav-toggle');
-    await toggle.click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await openMenu(page);
+    const link = root(page).locator('a.rn18-link').first();
+    await link.focus();
+    await expect(link).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toBeFocused();
+  });
+
+  test('Escape from contact action closes and focuses toggle', async ({ page }) => {
+    await openBlock(page, { width: 1280, height: 900 });
+    const toggle = root(page).locator('.ren-nav-toggle');
+    await openMenu(page);
+    const contact = root(page).locator('.rn18-contact');
+    await contact.focus();
+    await expect(contact).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toBeFocused();
+  });
+
+  test('Escape from social destination closes and focuses toggle', async ({ page }) => {
+    await openBlock(page, { width: 1280, height: 900 });
+    const toggle = root(page).locator('.ren-nav-toggle');
+    await openMenu(page);
+    const social = root(page).locator('a.rn18-social-link').first();
+    await social.focus();
+    await expect(social).toBeFocused();
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(toggle).toBeFocused();
