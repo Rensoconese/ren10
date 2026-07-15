@@ -28,7 +28,8 @@
       "expectedMarkers": {
         "#rn17-primary-links > li": 8,
         ".rn17-social a": 5,
-        ".rn17-menu-footer": 1
+        ".rn17-menu-footer": 1,
+        ".rn17-social a .ren-icon svg": 5
       }
     },
     {
@@ -114,6 +115,72 @@
       "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
       "expectedMarkers": {
         "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "narrow-320-light-open",
+      "viewport": { "width": 320, "height": 720 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-contact": 1,
+        ".rn17-brand-mark": 1
+      }
+    },
+    {
+      "id": "narrow-360-light-open",
+      "viewport": { "width": 360, "height": 800 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-contact": 1
+      }
+    },
+    {
+      "id": "seam-767-light-open",
+      "viewport": { "width": 767, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn17-primary-links > li": 8,
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "seam-768-light-open",
+      "viewport": { "width": 768, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn17-primary-links > li": 8,
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "seam-769-light-open",
+      "viewport": { "width": 769, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn17-primary-links > li": 8,
+        "[data-rn17-root] .ren-nav-toggle": 1,
         ".rn17-social a": 5
       }
     }

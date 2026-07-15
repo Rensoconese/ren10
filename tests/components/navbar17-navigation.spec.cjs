@@ -142,6 +142,8 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     await openMenu(page);
     await expect(page.locator(`${ROOT} .rn17-contact`)).toHaveCount(1);
     await expect(page.locator(`${ROOT} .rn17-social a`)).toHaveCount(5);
+    await expect(page.locator(`${ROOT} .rn17-social a .ren-icon svg`)).toHaveCount(5);
+    await expect(page.locator(`${ROOT} .rn17-social-glyph`)).toHaveCount(0);
     await expect(page.locator(`${ROOT} .rn17-chevron, ${ROOT} .rn17-disclosure .rn17-chevron`)).toHaveCount(0);
     await expect(
       page.locator(`${ROOT} .rmcg-card, ${ROOT} .rmf-feature, ${ROOT} .ren-card, ${ROOT} .ren-menu, ${ROOT} .ren-popover, ${ROOT} ren-collapsible, ${ROOT} ren-sheet`)
@@ -170,11 +172,12 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     }
   });
 
-  test('toggle opens and closes; Escape restores focus to toggle', async ({ page }) => {
+  test('toggle opens and closes; Escape restores focus to toggle from Overview link', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar17Block(page, staticServer.origin);
 
     const toggle = page.locator(TOGGLE);
+    const overview = page.locator(`${LINKS} > li > a.ren-nav-link`, { hasText: 'Overview' });
     await expect(toggle).toHaveAttribute('aria-label', /.+/);
     await expect(toggle).toHaveAttribute('aria-controls', 'rn17-primary-links');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -183,12 +186,16 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(page.locator(MENU)).toBeVisible();
-    await expect(page.locator(`${LINKS} > li > a.ren-nav-link`).first()).toBeVisible();
+    await expect(overview).toBeVisible();
 
+    // Real Escape path: focus a menu destination first (not the toggle).
+    await overview.focus();
+    await expect(overview).toBeFocused();
     await page.keyboard.press('Escape');
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(page.locator(MENU)).toBeHidden();
     await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+    await expect(toggle).toBeFocused();
 
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
@@ -319,7 +326,14 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
       expect(footerOrder).toBeTruthy();
       expect(footerOrder.contactTop).toBeGreaterThan(footerOrder.linkBottom - 1);
       expect(footerOrder.socialTop).toBeGreaterThan(footerOrder.linkBottom - 1);
-      expect(footerOrder.contactLeft).toBeLessThan(footerOrder.socialLeft);
+      // Horizontal footer: contact starts left of social. Stacked footer (narrow
+      // adaptation) may share the same start edge with social below contact.
+      const stacked = footerOrder.socialTop > footerOrder.contactTop + 20;
+      if (stacked) {
+        expect(footerOrder.socialTop).toBeGreaterThan(footerOrder.contactTop);
+      } else {
+        expect(footerOrder.contactLeft).toBeLessThan(footerOrder.socialLeft);
+      }
     }
   });
 
@@ -420,6 +434,101 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     await expectSingleVisibleAffordance(page, [TOGGLE], 'navbar17 single close/toggle');
   });
 
+  test('narrow 320 and 360 viewports keep bar and footer fully in root without clip', async ({ page }) => {
+    for (const size of [
+      { width: 320, height: 720 },
+      { width: 360, height: 800 },
+    ]) {
+      await page.setViewportSize(size);
+      await gotoNavbar17Block(page, staticServer.origin);
+
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+
+      const closedChrome = await page.evaluate(() => {
+        const root = document.querySelector('[data-rn17-root]');
+        const brand = document.querySelector('[data-rn17-root] .ren-nav-brand');
+        const mark = document.querySelector('[data-rn17-root] .rn17-brand-mark');
+        const action = document.querySelector('[data-rn17-root] .ren-nav-actions a.ren-btn');
+        const toggle = document.querySelector('[data-rn17-root] .ren-nav-toggle');
+        if (!root || !brand || !mark || !action || !toggle) return null;
+        const r = root.getBoundingClientRect();
+        const within = (el) => {
+          const b = el.getBoundingClientRect();
+          return b.left >= r.left - 1
+            && b.right <= r.right + 1
+            && b.width > 0
+            && b.height > 0;
+        };
+        return {
+          brand: within(brand),
+          mark: within(mark),
+          action: within(action),
+          toggle: within(toggle),
+        };
+      });
+      expect(closedChrome, `${size.width} closed chrome`).toEqual({
+        brand: true,
+        mark: true,
+        action: true,
+        toggle: true,
+      });
+
+      await openMenu(page);
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+
+      const openChrome = await page.evaluate(() => {
+        const root = document.querySelector('[data-rn17-root]');
+        const contact = document.querySelector('[data-rn17-root] .rn17-contact');
+        const socials = [...document.querySelectorAll('[data-rn17-root] .rn17-social a')];
+        const mark = document.querySelector('[data-rn17-root] .rn17-brand-mark');
+        if (!root || !contact || socials.length !== 5 || !mark) return null;
+        const r = root.getBoundingClientRect();
+        const within = (el) => {
+          const b = el.getBoundingClientRect();
+          return b.left >= r.left - 1
+            && b.right <= r.right + 1
+            && b.top >= r.top - 1
+            && b.bottom <= r.bottom + 1
+            && b.width > 0
+            && b.height > 0;
+        };
+        return {
+          contact: within(contact),
+          mark: within(mark),
+          socials: socials.every(within),
+          contactText: (contact.textContent || '').trim(),
+        };
+      });
+      expect(openChrome, `${size.width} open chrome`).toBeTruthy();
+      expect(openChrome.contact, `${size.width} contact in root`).toBe(true);
+      expect(openChrome.mark, `${size.width} brand mark in root`).toBe(true);
+      expect(openChrome.socials, `${size.width} socials in root`).toBe(true);
+      expect(openChrome.contactText).toMatch(/contact/i);
+    }
+  });
+
+  test('seam breakpoints 767 768 769 keep one tree and toggle chrome', async ({ page }) => {
+    for (const width of [767, 768, 769]) {
+      await page.setViewportSize({ width, height: 900 });
+      await gotoNavbar17Block(page, staticServer.origin);
+      await expect(page.locator(LINKS)).toHaveCount(1);
+      await expect(page.locator(TOGGLE)).toBeVisible();
+      await expect(page.locator(`${ROOT} .ren-nav-actions a.ren-btn`)).toBeVisible();
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+
+      await openMenu(page);
+      await expect(page.locator(`${LINKS} > li > a.ren-nav-link`)).toHaveCount(8);
+      await expect(page.locator(`${ROOT} .rn17-social a .ren-icon svg`)).toHaveCount(5);
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+      await page.locator(TOGGLE).click();
+      await expect(page.locator(TOGGLE)).toHaveAttribute('aria-expanded', 'false');
+    }
+  });
+
   test('peer alignment of bar cluster and end-aligned open links', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar17Block(page, staticServer.origin);
@@ -464,7 +573,7 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     expect(RN17_RENDER_MATRIX.version).toBe(1);
     expect(RN17_RENDER_MATRIX.path).toBe(BLOCK_PATH);
     expect(RN17_RENDER_MATRIX.root).toBe(ROOT);
-    expect(RN17_RENDER_MATRIX.states.length).toBeGreaterThanOrEqual(8);
+    expect(RN17_RENDER_MATRIX.states.length).toBeGreaterThanOrEqual(12);
     const ids = RN17_RENDER_MATRIX.states.map((state) => state.id);
     for (const required of [
       'desktop-light-closed',
@@ -472,6 +581,11 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
       'mobile-light-open',
       'mobile-js-disabled-open',
       'desktop-reduced-motion-open',
+      'narrow-320-light-open',
+      'narrow-360-light-open',
+      'seam-767-light-open',
+      'seam-768-light-open',
+      'seam-769-light-open',
     ]) {
       expect(ids, required).toContain(required);
     }
