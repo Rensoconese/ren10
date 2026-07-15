@@ -178,6 +178,10 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
         ctaLeftOfToggle: ctaRect.left < toggleRect.left,
         menuWidth: menuRect.width,
         navWidth: navRect.width,
+        menuLeft: menuRect.left,
+        navLeft: navRect.left,
+        widthDelta: Math.abs(menuRect.width - navRect.width),
+        leftDelta: Math.abs(menuRect.left - navRect.left),
       };
     }, ROOT);
 
@@ -185,7 +189,10 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
     expect(geometry.menuBelowBar).toBe(true);
     expect(geometry.brandLeftOfCta).toBe(true);
     expect(geometry.ctaLeftOfToggle).toBe(true);
-    expect(geometry.menuWidth).toBeGreaterThan(geometry.navWidth * 0.85);
+    // Full-width alignment: menu matches nav box (not the old ~85% / 40px-strip case).
+    expect(geometry.widthDelta, 'menu width must match nav width').toBeLessThanOrEqual(2);
+    expect(geometry.leftDelta, 'menu must align with nav start edge').toBeLessThanOrEqual(2);
+    expect(geometry.menuWidth).toBeGreaterThan(geometry.navWidth * 0.98);
   });
 
   test('desktop toggle closes the overlay', async ({ page }) => {
@@ -222,6 +229,15 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
     await openMenu(page);
     await root(page).locator('a.rn18-link').first().click();
     await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test('desktop bar CTA while open closes the overlay', async ({ page }) => {
+    await openBlock(page, { width: 1280, height: 900 });
+    await openMenu(page);
+    await root(page).locator('.ren-nav-actions a.ren-btn, .ren-nav-actions .ren-btn').first().click();
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'false');
+    const linksVisible = await isVisiblyDisplayed(page, 'a.rn18-link');
+    expect(linksVisible).toBe(false);
   });
 
   test('desktop does not open overlay on hover alone', async ({ page }) => {
@@ -410,6 +426,172 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
     await expectNoOverflow(page, ROOT);
     await expectNoOverflow(page, `${ROOT} .rn18-menu`);
     await expectNoOverflow(page, `${ROOT} .ren-nav`);
+  });
+
+  test('narrow 320 and 340 bars keep non-overlapping 44px chrome', async ({ page }) => {
+    for (const width of [320, 340]) {
+      await openBlock(page, { width, height: 720 });
+      const report = await page.evaluate((rootSel) => {
+        const rootEl = document.querySelector(rootSel);
+        const brand = rootEl?.querySelector('.ren-nav-brand');
+        const cta = rootEl?.querySelector('.ren-nav-actions .ren-btn');
+        const toggle = rootEl?.querySelector('.ren-nav-toggle');
+        if (!brand || !cta || !toggle) return null;
+
+        /** @param {DOMRect} a @param {DOMRect} b */
+        function overlapX(a, b) {
+          return Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left));
+        }
+
+        const brandRect = brand.getBoundingClientRect();
+        const ctaRect = cta.getBoundingClientRect();
+        const toggleRect = toggle.getBoundingClientRect();
+        return {
+          brand: { w: brandRect.width, h: brandRect.height, l: brandRect.left, r: brandRect.right },
+          cta: { w: ctaRect.width, h: ctaRect.height, l: ctaRect.left, r: ctaRect.right },
+          toggle: { w: toggleRect.width, h: toggleRect.height, l: toggleRect.left, r: toggleRect.right },
+          brandCtaOverlap: overlapX(brandRect, ctaRect),
+          ctaToggleOverlap: overlapX(ctaRect, toggleRect),
+          brandToggleOverlap: overlapX(brandRect, toggleRect),
+        };
+      }, ROOT);
+
+      expect(report, `geometry at ${width}px`).not.toBeNull();
+      expect(report.brandCtaOverlap, `${width}px brand/CTA overlap`).toBe(0);
+      expect(report.ctaToggleOverlap, `${width}px CTA/toggle overlap`).toBe(0);
+      expect(report.brandToggleOverlap, `${width}px brand/toggle overlap`).toBe(0);
+      for (const key of ['brand', 'cta', 'toggle']) {
+        expect(report[key].w, `${width}px ${key} width`).toBeGreaterThanOrEqual(44);
+        expect(report[key].h, `${width}px ${key} height`).toBeGreaterThanOrEqual(44);
+      }
+      expect(report.brand.r, `${width}px brand before CTA`).toBeLessThanOrEqual(report.cta.l + 0.5);
+      expect(report.cta.r, `${width}px CTA before toggle`).toBeLessThanOrEqual(report.toggle.l + 0.5);
+    }
+  });
+
+  test('open state has no root or document horizontal overflow at mobile and desktop', async ({ page }) => {
+    for (const viewport of [
+      { width: 320, height: 720 },
+      { width: 390, height: 844 },
+      { width: 1280, height: 900 },
+    ]) {
+      await openBlock(page, viewport);
+      await openMenu(page);
+      await expectNoOverflow(page, ROOT);
+      await expectNoOverflow(page, `${ROOT} .ren-nav`);
+      await expectNoOverflow(page, `${ROOT} .rn18-menu`);
+
+      const docOverflow = await page.evaluate(() => ({
+        html: {
+          scrollWidth: document.documentElement.scrollWidth,
+          clientWidth: document.documentElement.clientWidth,
+        },
+        body: {
+          scrollWidth: document.body.scrollWidth,
+          clientWidth: document.body.clientWidth,
+        },
+      }));
+      expect(
+        docOverflow.html.scrollWidth,
+        `html overflow at ${viewport.width}`,
+      ).toBeLessThanOrEqual(docOverflow.html.clientWidth + 1);
+      expect(
+        docOverflow.body.scrollWidth,
+        `body overflow at ${viewport.width}`,
+      ).toBeLessThanOrEqual(docOverflow.body.clientWidth + 1);
+    }
+  });
+
+  test('menu panel matches nav full width at mobile and desktop', async ({ page }) => {
+    for (const viewport of [
+      { width: 390, height: 844 },
+      { width: 1280, height: 900 },
+    ]) {
+      await openBlock(page, viewport);
+      await openMenu(page);
+      const measure = await page.evaluate((rootSel) => {
+        const rootEl = document.querySelector(rootSel);
+        const nav = rootEl?.querySelector('.ren-nav');
+        const menu = rootEl?.querySelector('.rn18-menu');
+        if (!nav || !menu) return null;
+        const navRect = nav.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        return {
+          navW: navRect.width,
+          menuW: menuRect.width,
+          navL: navRect.left,
+          menuL: menuRect.left,
+          navR: navRect.right,
+          menuR: menuRect.right,
+        };
+      }, ROOT);
+      expect(measure, `measure at ${viewport.width}`).not.toBeNull();
+      expect(Math.abs(measure.menuW - measure.navW), `${viewport.width} width delta`).toBeLessThanOrEqual(2);
+      expect(Math.abs(measure.menuL - measure.navL), `${viewport.width} left delta`).toBeLessThanOrEqual(2);
+      expect(Math.abs(measure.menuR - measure.navR), `${viewport.width} right delta`).toBeLessThanOrEqual(2);
+    }
+  });
+
+  test('same-band desktop resize preserves open via public ARIA only', async ({ page }) => {
+    await openBlock(page, { width: 1280, height: 900 });
+    await openMenu(page);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+
+    // Width-only same band (still ≥768).
+    await page.setViewportSize({ width: 1200, height: 900 });
+    await page.waitForTimeout(50);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+    await expect(root(page).locator('a.rn18-link').first()).toBeVisible();
+
+    // Height-only same band.
+    await page.setViewportSize({ width: 1200, height: 850 });
+    await page.waitForTimeout(50);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+    await expect(root(page).locator('a.rn18-link').first()).toBeVisible();
+
+    // Public ownership only — no private ren-nav method checks.
+    const publicState = await page.evaluate((rootSel) => {
+      const rootEl = document.querySelector(rootSel);
+      const host = rootEl?.querySelector('ren-nav');
+      const toggle = rootEl?.querySelector('.ren-nav-toggle');
+      return {
+        ariaExpanded: toggle?.getAttribute('aria-expanded'),
+        dataOpen: host?.hasAttribute('data-open') ?? false,
+        ariaControls: toggle?.getAttribute('aria-controls'),
+        ariaLabel: toggle?.getAttribute('aria-label'),
+      };
+    }, ROOT);
+    expect(publicState.ariaExpanded).toBe('true');
+    expect(publicState.dataOpen).toBe(true);
+    expect(publicState.ariaControls).toBeTruthy();
+    expect(publicState.ariaLabel).toBeTruthy();
+  });
+
+  test('breakpoint crossing at 767/768/769 closes open shell via public ARIA', async ({ page }) => {
+    // Open on wide, cross down through 768 into narrow.
+    await openBlock(page, { width: 900, height: 800 });
+    await openMenu(page);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+
+    await page.setViewportSize({ width: 769, height: 800 });
+    await page.waitForTimeout(50);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+
+    await page.setViewportSize({ width: 768, height: 800 });
+    await page.waitForTimeout(50);
+    // 768 is the wide-band edge (width < 768 is narrow); stay open at exactly 768.
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+
+    await page.setViewportSize({ width: 767, height: 800 });
+    await page.waitForTimeout(50);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'false');
+
+    // Open on narrow, cross up into wide — must close on band change.
+    await openMenu(page);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'true');
+    await page.setViewportSize({ width: 768, height: 800 });
+    await page.waitForTimeout(50);
+    await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'false');
   });
 
   test('navbar18 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
