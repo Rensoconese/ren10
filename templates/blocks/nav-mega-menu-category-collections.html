@@ -11,8 +11,9 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    /* Keep template chrome from forcing horizontal overflow on 320–340 viewports. */
-    @media (max-width: 47.999rem) {
+    /* Keep template chrome from forcing horizontal overflow on 320–340 viewports.
+     * Mobile policy is inclusive through 768px (matches ren-nav max-width: 48rem). */
+    @media (max-width: 768px) {
       .dx-nav-inner {
         flex-wrap: wrap;
         row-gap: var(--space-2);
@@ -372,10 +373,13 @@
     }
 
     /*
-     * Seam-free shell boundary: mobile ends below 48rem; desktop mega chrome
-     * and JS DESKTOP_MQ start at 48rem.
+     * Seam policy (aligned with ren-nav CSS):
+     * - Mobile inclusive: width ≤ 768px (max-width: 48rem / 768px)
+     * - Desktop: width ≥ 769px
+     * JS DESKTOP_MQ uses the same (min-width: 769px) so 768 never mixes
+     * ren-nav mobile chrome with an absolute mega panel.
      */
-    @media (min-width: 48rem) {
+    @media (min-width: 769px) {
       .rmcc-disclosure {
         height: auto;
         align-self: center;
@@ -406,7 +410,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 768px) {
       .rmcc-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -515,7 +519,7 @@
     }
 
     /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 768px) {
       .rmcc-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
@@ -739,8 +743,11 @@
      * Keyboard Enter/Space: native details toggle (event.detail === 0).
      */
     const RMCC_CONTROLLER = Symbol.for('ren10.rmcc.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /**
+     * Desktop shell starts at 769px — ren-nav is mobile-inclusive at 768
+     * (max-width: 48rem CSS). Complements max-width: 768px mobile CSS.
+     */
+    const DESKTOP_MQ = '(min-width: 769px)';
 
     export function initNavMegaMenuCategoryCollections(scope = document) {
       const root = scope.querySelector?.('[data-rmcc-root]') ?? scope;

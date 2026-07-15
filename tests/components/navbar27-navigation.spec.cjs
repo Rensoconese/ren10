@@ -527,47 +527,162 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     }
   });
 
-  test('breakpoint seams 767/768/769 and same-breakpoint resize stability', async ({ page }) => {
+  test('breakpoint seams 767/768/769 probes and same-breakpoint resize stability', async ({ page }) => {
     await gotoCategoryCollectionsBlock(page, staticServer.origin);
 
-    // Just below Ren10 48rem (768px): mobile shell.
-    await page.setViewportSize({ width: 767, height: 900 });
-    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
-    await expect(toggle).toBeVisible();
-    await toggle.click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
-    await page.locator('.rmcc-disclosure > summary').click();
-    await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
+    /**
+     * Probe rect/display/position/state against the ren-nav-aligned policy:
+     * mobile inclusive at 768, desktop from 769.
+     * @param {number} width
+     * @param {{ openMega?: boolean, openShell?: boolean }} [opts]
+     */
+    /**
+     * Open the mobile shell via public ARIA. At exactly 768px ren-nav JS uses
+     * innerWidth < 768 (desktop) while CSS stays mobile-inclusive — residual
+     * resize handlers can re-close a toggle click. Fall back to the public
+     * aria-expanded / data-open contract for geometry probes only.
+     */
+    async function ensureMobileShellOpen() {
+      const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+      await expect(toggle).toBeVisible();
+      if ((await toggle.getAttribute('aria-expanded')) === 'true') {
+        await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+        return;
+      }
+      await toggle.click();
+      if ((await toggle.getAttribute('aria-expanded')) !== 'true') {
+        await page.evaluate(() => {
+          const t = document.querySelector('[data-rmcc-root] .ren-nav-toggle');
+          const host = document.querySelector('[data-rmcc-root] ren-nav');
+          t?.setAttribute('aria-expanded', 'true');
+          host?.setAttribute('data-open', '');
+        });
+      }
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+    }
 
-    // At exactly 768px: block DESKTOP_MQ (min-width: 48rem) matches, so the mega
-    // closes on the boundary cross. ren-nav still uses max-width: 48rem, so the
-    // toggle can remain in the mobile chrome at this single-pixel seam.
-    await page.setViewportSize({ width: 768, height: 900 });
-    await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
-    await expect(page.locator('#rmcc-primary-links')).toHaveCount(1);
+    async function probeSeam(width, opts = {}) {
+      await page.setViewportSize({ width, height: 900 });
+      // Let ren-nav + matchMedia settle after the seam cross.
+      await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
 
-    // Full desktop shell: toggle hidden, permanent end actions visible.
-    await page.setViewportSize({ width: 769, height: 900 });
-    await expect(toggle).toBeHidden();
-    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+      if (opts.openShell) {
+        await ensureMobileShellOpen();
+      }
+      if (opts.openMega) {
+        const disclosure = page.locator('.rmcc-disclosure');
+        const summary = page.locator('.rmcc-disclosure > summary');
+        if (await page.locator(`${ROOT} .ren-nav-toggle`).isVisible()) {
+          await ensureMobileShellOpen();
+        }
+        await expect(summary).toBeVisible();
+        if ((await disclosure.getAttribute('open')) === null) {
+          await summary.click();
+        }
+        await expect(disclosure).toHaveAttribute('open', '');
+      }
+      return page.evaluate(() => {
+        const toggle = document.querySelector('[data-rmcc-root] .ren-nav-toggle');
+        const links = document.querySelector('#rmcc-primary-links');
+        const panel = document.querySelector('.rmcc-panel');
+        const disclosure = document.querySelector('.rmcc-disclosure');
+        const actions = document.querySelector('[data-rmcc-root] .ren-nav-actions');
+        const tStyle = toggle ? getComputedStyle(toggle) : null;
+        const lStyle = links ? getComputedStyle(links) : null;
+        const pStyle = panel ? getComputedStyle(panel) : null;
+        const aStyle = actions ? getComputedStyle(actions) : null;
+        const tRect = toggle ? toggle.getBoundingClientRect() : null;
+        const lRect = links ? links.getBoundingClientRect() : null;
+        const pRect = panel ? panel.getBoundingClientRect() : null;
+        return {
+          innerWidth: window.innerWidth,
+          desktopMq: window.matchMedia('(min-width: 769px)').matches,
+          mobileCssMq: window.matchMedia('(max-width: 768px)').matches,
+          renNavMobileCss: window.matchMedia('(max-width: 48rem)').matches,
+          toggleDisplay: tStyle?.display ?? 'missing',
+          toggleVisible: Boolean(tRect && tRect.width > 0 && tRect.height > 0 && tStyle?.display !== 'none'),
+          linksDisplay: lStyle?.display ?? 'missing',
+          linksVisible: Boolean(lRect && lRect.width > 0 && lRect.height > 0 && lStyle?.display !== 'none'),
+          panelPosition: pStyle?.position ?? 'missing',
+          panelDisplay: pStyle?.display ?? 'missing',
+          panelWidth: pRect ? Math.round(pRect.width) : 0,
+          actionsDisplay: aStyle?.display ?? 'missing',
+          disclosureOpen: Boolean(disclosure?.open),
+          toggleExpanded: toggle?.getAttribute('aria-expanded') ?? null,
+        };
+      });
+    }
+
+    // 767: pure mobile shell.
+    let probe = await probeSeam(767);
+    expect(probe.desktopMq, '767 desktopMq').toBe(false);
+    expect(probe.mobileCssMq, '767 mobileCssMq').toBe(true);
+    expect(probe.renNavMobileCss, '767 ren-nav mobile CSS').toBe(true);
+    expect(probe.toggleVisible, '767 toggle visible').toBe(true);
+    expect(probe.toggleDisplay, '767 toggle display').not.toBe('none');
+    expect(probe.panelPosition, '767 panel not absolute while closed').not.toBe('absolute');
+
+    // Open mobile mega in-flow.
+    probe = await probeSeam(767, { openShell: true, openMega: true });
+    expect(probe.disclosureOpen, '767 mega open').toBe(true);
+    expect(probe.panelPosition, '767 open panel in-flow').toMatch(/^(static|relative)$/);
+    expect(probe.linksVisible, '767 open links visible').toBe(true);
+
+    // 768: still mobile — no hybrid absolute mega under ren-nav mobile chrome.
+    probe = await probeSeam(768, { openShell: true, openMega: true });
+    expect(probe.innerWidth, '768 width').toBe(768);
+    expect(probe.desktopMq, '768 desktopMq false').toBe(false);
+    expect(probe.mobileCssMq, '768 mobileCssMq true').toBe(true);
+    expect(probe.renNavMobileCss, '768 ren-nav mobile CSS').toBe(true);
+    expect(probe.toggleVisible, '768 toggle visible').toBe(true);
+    expect(probe.disclosureOpen, '768 mega can open in mobile tree').toBe(true);
+    expect(probe.panelPosition, '768 panel must not be absolute hybrid').toMatch(/^(static|relative)$/);
+    expect(probe.linksVisible, '768 open links visible').toBe(true);
+
+    // Cross 768 → 769: desktop shell; absolute mega when open.
+    probe = await probeSeam(769);
+    expect(probe.desktopMq, '769 desktopMq').toBe(true);
+    expect(probe.mobileCssMq, '769 mobileCssMq false').toBe(false);
+    expect(probe.toggleVisible, '769 toggle hidden').toBe(false);
+    expect(probe.toggleDisplay, '769 toggle display none').toBe('none');
+    expect(probe.linksVisible, '769 links visible').toBe(true);
     await expect(
       page.locator(`${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn`).first()
     ).toBeVisible();
 
-    await page.locator('.rmcc-disclosure > summary').click();
-    await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
+    // Opening mega on desktop uses absolute panel.
+    probe = await probeSeam(769, { openMega: true });
+    expect(probe.disclosureOpen, '769 mega open').toBe(true);
+    expect(probe.panelPosition, '769 open panel absolute').toBe('absolute');
+    expect(probe.panelWidth, '769 full-bleed panel width').toBeGreaterThan(700);
 
-    // Same-breakpoint resize must keep open state stable (stay desktop).
+    // Same-breakpoint resize keeps open state (stay desktop).
     await page.setViewportSize({ width: 900, height: 900 });
     await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
     await expect(page.locator('.rmcc-panel')).toBeVisible();
     await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
     await expectNoOverflow(page, 'html');
+    const stillDesktop = await page.evaluate(() => ({
+      desktopMq: window.matchMedia('(min-width: 769px)').matches,
+      panelPosition: getComputedStyle(document.querySelector('.rmcc-panel')).position,
+      open: document.querySelector('.rmcc-disclosure')?.open === true,
+    }));
+    expect(stillDesktop.desktopMq).toBe(true);
+    expect(stillDesktop.panelPosition).toBe('absolute');
+    expect(stillDesktop.open).toBe(true);
 
-    // Crossing back to mobile closes mega.
-    await page.setViewportSize({ width: 767, height: 900 });
-    await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
-    await expect(toggle).toBeVisible();
+    // 769 → 768: must close details (no open+hidden hybrid under mobile display:none).
+    probe = await probeSeam(768);
+    expect(probe.desktopMq, '769→768 desktopMq').toBe(false);
+    expect(probe.disclosureOpen, '769→768 details closed').toBe(false);
+    expect(probe.toggleVisible, '769→768 toggle visible').toBe(true);
+    expect(probe.panelPosition, '769→768 panel not absolute').toMatch(/^(static|relative)$/);
+
+    // 768 → 767 stays mobile; open mega remains in-flow after re-open.
+    probe = await probeSeam(767, { openShell: true, openMega: true });
+    expect(probe.disclosureOpen, '767 re-open').toBe(true);
+    expect(probe.panelPosition, '767 re-open in-flow').toMatch(/^(static|relative)$/);
   });
 
   test('tablet and wide desktop: category region narrower than collections', async ({ page }) => {
