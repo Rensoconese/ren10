@@ -781,14 +781,34 @@
         { signal }
       );
 
+      /**
+       * Hierarchical Escape (capture, before ren-nav's bubble handler):
+       * 1) open disclosure → close it and return focus to summary
+       * 2) else mobile shell open → close shell via toggle (keeps ren-nav
+       *    _isOpen in sync) and restore focus to the toggle so focus does not
+       *    remain on a now-hidden tree link
+       */
       document.addEventListener(
         'keydown',
         (event) => {
           if (event.key !== 'Escape') return;
-          if (!disclosure.open) return;
-          event.stopImmediatePropagation();
-          markIntentionalCloseWhilePointerInside();
-          closeDisclosure(true);
+
+          if (disclosure.open) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(true);
+            return;
+          }
+
+          if (!isDesktop() && isMobileNavOpen() && toggle) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            // Activate the real toggle so ren-nav's internal open state stays
+            // consistent; then restore focus to the permanent chrome control.
+            toggle.click();
+            toggle.focus();
+          }
         },
         { capture: true, signal }
       );

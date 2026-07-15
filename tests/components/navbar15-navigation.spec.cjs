@@ -261,6 +261,67 @@ test.describe('Navbar Floating Bottom Logo Left Menu Actions (navbar15)', () => 
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
+  test('mobile hierarchical Escape: disclosure first, then shell with focus restored to toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar15Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const disclosure = page.locator('.rn15-disclosure');
+    const summary = disclosure.locator('summary');
+    const product = page.locator('#rn15-primary-links > li > a.ren-nav-link').first();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn15-primary-links')).toBeVisible();
+
+    // Layer 1: open disclosure, Escape closes only the disclosure and returns
+    // focus to summary while the mobile shell stays open.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rn15-destination').first().focus();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.className || '')).toMatch(/rn15-destination/);
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+    await expect(page.locator('#rn15-primary-links')).toBeVisible();
+
+    // Layer 2: focus a top-level link (Product); Escape closes the shell and
+    // restores focus to the toggle — not a now-hidden anchor.
+    await product.focus();
+    await expect.poll(() => page.evaluate(() => {
+      const el = document.activeElement;
+      return el ? { tag: el.tagName, href: el.getAttribute('href'), text: (el.textContent || '').trim() } : null;
+    })).toMatchObject({ tag: 'A', href: '#product' });
+
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await expect.poll(() => page.evaluate(() => {
+      const el = document.activeElement;
+      if (!el) return null;
+      return {
+        isToggle: el.classList.contains('ren-nav-toggle'),
+        ariaExpanded: el.getAttribute('aria-expanded'),
+        tag: el.tagName,
+      };
+    })).toEqual({ isToggle: true, ariaExpanded: 'false', tag: 'BUTTON' });
+
+    // Hidden tree must not retain document focus after shell close.
+    const focusAfter = await page.evaluate(() => {
+      const active = document.activeElement;
+      const links = document.querySelector('#rn15-primary-links');
+      const style = links ? getComputedStyle(links) : null;
+      return {
+        activeInTree: !!(active && links && links.contains(active)),
+        linksDisplay: style?.display || null,
+      };
+    });
+    expect(focusAfter.activeInTree, 'focus must not remain inside the closed/hidden tree').toBe(false);
+    expect(focusAfter.linksDisplay).toBe('none');
+  });
+
   test('breakpoint crossing closes an open dropdown and resets interaction policy', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar15Block(page, staticServer.origin);
