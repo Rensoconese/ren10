@@ -75,6 +75,28 @@ test.describe('Header4 — email form and video lightbox', () => {
     });
   }
 
+  test('opens the mobile dialog as a full-width bottom sheet', async ({ page }) => {
+    const viewport = { width: 390, height: 1100 };
+    await page.setViewportSize(viewport);
+    await gotoHeader4(page, staticServer.origin);
+    await page.locator(`${ROOT} .rh4-media-trigger`).click();
+
+    const rect = await page.locator('#rh4-video dialog').evaluate((dialog) => {
+      const bounds = dialog.getBoundingClientRect();
+      return {
+        left: bounds.left,
+        right: bounds.right,
+        bottom: bounds.bottom,
+        width: bounds.width,
+      };
+    });
+
+    expect(Math.abs(rect.left)).toBeLessThanOrEqual(1);
+    expect(Math.abs(viewport.width - rect.right)).toBeLessThanOrEqual(1);
+    expect(Math.abs(viewport.height - rect.bottom)).toBeLessThanOrEqual(1);
+    expect(Math.abs(viewport.width - rect.width)).toBeLessThanOrEqual(1);
+  });
+
   test('submits the one-field demo form without navigation', async ({ page }) => {
     await gotoHeader4(page, staticServer.origin);
     const input = page.locator(`${ROOT} input[type="email"]`);
