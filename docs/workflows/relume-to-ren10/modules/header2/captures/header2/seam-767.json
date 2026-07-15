@@ -1,6 +1,6 @@
 {
   "id": "seam-767",
-  "url": "http://127.0.0.1:60846/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-seam-767-8ba0f8ffb397",
+  "url": "http://127.0.0.1:63870/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-seam-767-e16c9f5c1d73",
   "viewport": {
     "width": 767,
     "height": 900
@@ -12,6 +12,6 @@
     ".rh2-layout": 1,
     ".rh2-media": 1
   },
-  "commit": "8ba0f8ffb397ddcea707c189d742aac7baf93aa0",
-  "capturedAt": "2026-07-15T16:27:02.800Z"
+  "commit": "e16c9f5c1d7362593c843dbb12a9af873fdeadcd",
+  "capturedAt": "2026-07-15T16:37:40.597Z"
 }

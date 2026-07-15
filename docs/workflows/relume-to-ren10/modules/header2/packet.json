@@ -4,7 +4,7 @@
   "moduleId": "header2",
   "blockSlug": "hero-split-email-form-media-right",
   "blockPath": "templates/blocks/hero-split-email-form-media-right.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/hero-split-email-form-media-right.html",
     "tests/components/header2-header.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }

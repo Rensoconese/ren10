@@ -1,0 +1,69 @@
+{
+  "kind": "final-capture-evidence",
+  "moduleId": "header2",
+  "blockSlug": "hero-split-email-form-media-right",
+  "sourceCommit": "e16c9f5c1d7362593c843dbb12a9af873fdeadcd",
+  "capturesFresh": true,
+  "captureCommand": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/header2/render-matrix.json --module header2 --output docs/workflows/relume-to-ren10/modules/header2/captures --repo-root .",
+  "outputRoot": "docs/workflows/relume-to-ren10/modules/header2/captures/header2",
+  "stateCount": 8,
+  "states": [
+    {
+      "id": "desktop-light",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false
+    },
+    {
+      "id": "desktop-dark",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false
+    },
+    {
+      "id": "tablet-light",
+      "viewport": { "width": 768, "height": 1024 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false
+    },
+    {
+      "id": "mobile-light",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false
+    },
+    {
+      "id": "narrow-320",
+      "viewport": { "width": 320, "height": 720 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false
+    },
+    {
+      "id": "seam-767",
+      "viewport": { "width": 767, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false
+    },
+    {
+      "id": "desktop-reduced-motion",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true
+    },
+    {
+      "id": "mobile-js-disabled",
+      "viewport": { "width": 390, "height": 900 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false
+    }
+  ],
+  "inspection": "Codex inspected all eight fresh PNGs. Copy, form, terms and media remain aligned and unclipped; the centered wide container is balanced; the narrow layout stacks in source order; light, dark, reduced-motion and no-JavaScript states are coherent; no extra controls, duplicate affordances or overflow are visible."
+}
