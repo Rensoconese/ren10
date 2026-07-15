@@ -80,7 +80,8 @@ test.describe('Navbar Logo Left Center Links Site Panel (navbar19)', () => {
   test('exactly one landmark serves bar and site panel content', async ({ page }) => {
     await gotoNavbar19Block(page, staticServer.origin);
     await expect(page.locator(`${ROOT} nav.ren-nav`)).toHaveCount(1);
-    await expect(page.locator(`${ROOT} [role="navigation"]`)).toHaveCount(1);
+    await expect(page.locator(`${ROOT} nav`)).toHaveCount(1);
+    await expect(page.getByRole('navigation', { name: 'Example site' })).toHaveCount(1);
     await expect(page.locator('nav nav')).toHaveCount(0);
 
     await page.setViewportSize({ width: 1280, height: 900 });
@@ -492,11 +493,10 @@ test.describe('Navbar Logo Left Center Links Site Panel (navbar19)', () => {
     await expect(firstPrimary).toBeVisible();
     await expectWidthRatio(page, 'a.rn19-primary-link', '#rn19-site-panel', 0.35, 1.05);
 
-    await expectSingleVisibleAffordance(
-      page,
-      ['.rn19-disclosure summary .rn19-chevron'],
-      'mobile navbar19 chevron owner'
-    );
+    // Bar disclosure (and its chevron) stays desktop-only chrome; mobile catalog
+    // uses the site panel. Still exactly one authored chevron in the tree.
+    await expect(page.locator('.rn19-chevron')).toHaveCount(1);
+    await expect(page.locator('.rn19-disclosure summary .rn19-chevron')).toHaveCount(1);
     await expectNoOverflow(page, 'html');
   });
 
