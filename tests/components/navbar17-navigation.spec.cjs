@@ -203,7 +203,8 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
     const toggle = page.locator(TOGGLE);
     await openMenu(page);
 
-    await page.locator(`${ROOT} .rn17-hero`).click({ position: { x: 20, y: 20 } });
+    // Overlay covers the preview hero; dismiss by clicking outside the ren-nav host.
+    await page.locator('.rn17-page-header h1').click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(page.locator(MENU)).toBeHidden();
 
@@ -361,10 +362,15 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
       expect(box.width, `${selector} width`).toBeGreaterThanOrEqual(44);
     }
 
-    await page.locator(TOGGLE).focus();
+    // Keyboard focus must produce a visible focus ring (:focus-visible).
+    await page.locator(`${ROOT} .ren-nav-actions a.ren-btn`).focus();
+    await page.keyboard.press('Tab');
+    await expect(page.locator(TOGGLE)).toBeFocused();
     const focusVisible = await page.locator(TOGGLE).evaluate((el) => {
+      if (!el.matches(':focus-visible')) return false;
       const style = getComputedStyle(el);
-      return style.outlineStyle !== 'none' && style.outlineWidth !== '0px';
+      return (style.outlineStyle !== 'none' && style.outlineWidth !== '0px')
+        || style.boxShadow !== 'none';
     });
     expect(focusVisible).toBe(true);
 

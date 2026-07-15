@@ -4,13 +4,14 @@
   "moduleId": "navbar17",
   "blockSlug": "nav-logo-left-fullscreen-menu-social",
   "blockPath": "templates/blocks/nav-logo-left-fullscreen-menu-social.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-logo-left-fullscreen-menu-social.html",
     "tests/components/navbar17-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
   }
 }
