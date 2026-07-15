@@ -2,14 +2,14 @@
   "version": 1,
   "moduleId": "navbar29",
   "blockSlug": "nav-mega-menu-overlay-collections",
-  "reviewedCommit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+  "reviewedCommit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
   "captureCount": 15,
   "captureRunner": "navbar29/capture-local.mjs",
   "settlePolicy": "stabilizeAfterAction + waitForPaintedOpen (opacity≈1, display/visibility, rects, no running panel animations) + disableCaptureMotion for open snapshots + shared settleDocument; expectedState enforces computed opacity/display/visibility/rects; CDP captureBeyondViewport with open freeze for mobile seams",
   "states": [
     {
       "id": "desktop-light-closed",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -44,13 +44,13 @@
           "height": 941
         }
       },
-      "capturedAt": "2026-07-15T12:30:23.214Z",
+      "capturedAt": "2026-07-15T12:31:51.525Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-closed.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-closed.json"
     },
     {
       "id": "desktop-light-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -195,13 +195,13 @@
           "height": 1200
         }
       },
-      "capturedAt": "2026-07-15T12:30:24.330Z",
+      "capturedAt": "2026-07-15T12:31:52.629Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.json"
     },
     {
       "id": "desktop-light-hover-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -312,13 +312,13 @@
           "height": 1200
         }
       },
-      "capturedAt": "2026-07-15T12:30:25.449Z",
+      "capturedAt": "2026-07-15T12:31:53.714Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-hover-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-hover-open.json"
     },
     {
       "id": "desktop-dark-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "dark",
       "reducedMotion": false,
       "viewport": {
@@ -429,13 +429,13 @@
           "height": 1200
         }
       },
-      "capturedAt": "2026-07-15T12:30:26.518Z",
+      "capturedAt": "2026-07-15T12:31:54.823Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.json"
     },
     {
       "id": "tablet-light-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -546,13 +546,13 @@
           "height": 1400
         }
       },
-      "capturedAt": "2026-07-15T12:30:27.586Z",
+      "capturedAt": "2026-07-15T12:31:55.884Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.json"
     },
     {
       "id": "mobile-light-nav-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -683,13 +683,13 @@
           "height": 1423
         }
       },
-      "capturedAt": "2026-07-15T12:30:28.688Z",
+      "capturedAt": "2026-07-15T12:31:56.994Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nav-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nav-open.json"
     },
     {
       "id": "mobile-light-nested-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -888,13 +888,13 @@
           "height": 2534
         }
       },
-      "capturedAt": "2026-07-15T12:30:29.824Z",
+      "capturedAt": "2026-07-15T12:31:58.165Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.json"
     },
     {
       "id": "mobile-dark-nested-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "dark",
       "reducedMotion": false,
       "viewport": {
@@ -1059,13 +1059,13 @@
           "height": 2534
         }
       },
-      "capturedAt": "2026-07-15T12:30:30.932Z",
+      "capturedAt": "2026-07-15T12:31:59.269Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-dark-nested-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-dark-nested-open.json"
     },
     {
       "id": "mobile-js-disabled-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -1176,13 +1176,13 @@
           "height": 1600
         }
       },
-      "capturedAt": "2026-07-15T12:30:31.878Z",
+      "capturedAt": "2026-07-15T12:32:00.244Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.json"
     },
     {
       "id": "desktop-reduced-motion-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": true,
       "viewport": {
@@ -1293,13 +1293,13 @@
           "height": 1200
         }
       },
-      "capturedAt": "2026-07-15T12:30:32.680Z",
+      "capturedAt": "2026-07-15T12:32:01.025Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-reduced-motion-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-reduced-motion-open.json"
     },
     {
       "id": "narrow-320-nested-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -1464,13 +1464,13 @@
           "height": 2721
         }
       },
-      "capturedAt": "2026-07-15T12:30:33.814Z",
+      "capturedAt": "2026-07-15T12:32:02.162Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.json"
     },
     {
       "id": "narrow-340-nested-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -1635,13 +1635,13 @@
           "height": 2640
         }
       },
-      "capturedAt": "2026-07-15T12:30:34.978Z",
+      "capturedAt": "2026-07-15T12:32:03.310Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.json"
     },
     {
       "id": "seam-767-nav-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -1772,13 +1772,13 @@
           "height": 1270
         }
       },
-      "capturedAt": "2026-07-15T12:30:36.057Z",
+      "capturedAt": "2026-07-15T12:32:04.422Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/seam-767-nav-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/seam-767-nav-open.json"
     },
     {
       "id": "seam-768-nav-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -1977,13 +1977,13 @@
           "height": 2337
         }
       },
-      "capturedAt": "2026-07-15T12:30:37.240Z",
+      "capturedAt": "2026-07-15T12:32:05.602Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/seam-768-nav-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/seam-768-nav-open.json"
     },
     {
       "id": "seam-769-open",
-      "commit": "9074106188abe5d7c81ae69b6ff73fe78eaeb2bc",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
       "theme": "light",
       "reducedMotion": false,
       "viewport": {
@@ -2094,7 +2094,7 @@
           "height": 1000
         }
       },
-      "capturedAt": "2026-07-15T12:30:38.310Z",
+      "capturedAt": "2026-07-15T12:32:06.674Z",
       "png": ".ren10-workflow/navbar29-captures/navbar29/seam-769-open.png",
       "json": ".ren10-workflow/navbar29-captures/navbar29/seam-769-open.json"
     }
