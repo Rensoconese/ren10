@@ -300,7 +300,7 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
     await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
   });
 
-  test('menu links, privacy, phone/email, and social close the overlay', async ({ page }) => {
+  test('menu links, privacy, phone/email, and social close the overlay and restore toggle focus', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 1100 });
     await gotoNavbar20Block(page, staticServer.origin);
 
@@ -314,30 +314,37 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
       await expect(page.locator('a.rn20-menu-link').first()).toBeVisible();
     }
 
+    async function expectClosedWithToggleFocus(label) {
+      await expect(toggle, label).toHaveAttribute('aria-expanded', 'false');
+      await expect(overlay, label).toBeHidden();
+      await expect
+        .poll(
+          () => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle')),
+          { message: `${label}: focus must return to toggle, not a hidden anchor` }
+        )
+        .toBe(true);
+    }
+
+    // Five activation classes: menu-link, privacy (terms), phone, email, social.
     await reopen();
     await page.locator('a.rn20-menu-link').first().click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(overlay).toBeHidden();
+    await expectClosedWithToggleFocus('rn20-menu-link');
 
     await reopen();
     await page.locator(`${ROOT} .rn20-terms a[href]`).click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(overlay).toBeHidden();
+    await expectClosedWithToggleFocus('rn20-terms privacy');
 
     await reopen();
     await page.locator(`${ROOT} .rn20-contact a[href]`).first().click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(overlay).toBeHidden();
+    await expectClosedWithToggleFocus('rn20-contact phone');
 
     await reopen();
     await page.locator(`${ROOT} .rn20-contact a[href]`).nth(1).click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(overlay).toBeHidden();
+    await expectClosedWithToggleFocus('rn20-contact email');
 
     await reopen();
     await page.locator('a.rn20-social').first().click();
-    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await expect(overlay).toBeHidden();
+    await expectClosedWithToggleFocus('rn20-social');
   });
 
   test('same-band desktop resizes and 769→768 preserve open; only real band crossing closes', async ({ page }) => {

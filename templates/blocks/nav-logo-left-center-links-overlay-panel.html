@@ -1029,6 +1029,8 @@
       });
 
       // Overlay destinations close the shell (menu, privacy, contact, social).
+      // Hash without a real in-document target must not leave focus on a now-hidden
+      // anchor — return focus to the toggle. Real destinations receive focus.
       const closeOnActivate = overlay.querySelectorAll(
         'a.rn20-menu-link, .rn20-terms a[href], .rn20-contact a[href], a.rn20-social'
       );
@@ -1036,7 +1038,36 @@
         link.addEventListener(
           'click',
           () => {
-            setOverlayOpen(false);
+            const href = link.getAttribute('href') || '';
+            let realTarget = null;
+            if (href.startsWith('#') && href.length > 1) {
+              try {
+                const candidate = document.querySelector(href);
+                if (candidate instanceof HTMLElement) realTarget = candidate;
+              } catch {
+                realTarget = null;
+              }
+            }
+
+            if (realTarget) {
+              setOverlayOpen(false);
+              const focusable = realTarget;
+              requestAnimationFrame(() => {
+                if (!focusable.isConnected) return;
+                if (!focusable.matches('a[href], button, input, select, textarea, [tabindex]')) {
+                  focusable.setAttribute('tabindex', '-1');
+                }
+                focusable.focus({ preventScroll: true });
+              });
+              return;
+            }
+
+            setOverlayOpen(false, { returnFocus: true });
+            // Re-assert after the click default (hash/tel/mailto) so focus does not
+            // remain on the now-hidden activating anchor.
+            requestAnimationFrame(() => {
+              if (!isOverlayOpen()) toggle.focus({ preventScroll: true });
+            });
           },
           { signal }
         );
