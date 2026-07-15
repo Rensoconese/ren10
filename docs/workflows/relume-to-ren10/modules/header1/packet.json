@@ -4,7 +4,7 @@
   "moduleId": "header1",
   "blockSlug": "hero-split-copy-dual-cta-media",
   "blockPath": "templates/blocks/hero-split-copy-dual-cta-media.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/hero-split-copy-dual-cta-media.html",
     "tests/components/header1-header.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
