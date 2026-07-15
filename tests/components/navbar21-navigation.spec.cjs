@@ -352,6 +352,177 @@ test.describe('Navbar Logo Center Links Fullscreen Featured (navbar21)', () => {
     await expect(page.locator('#rn21-fullscreen-panel')).toBeHidden();
   });
 
+  test('fullscreen open contains focus: exterior is inert; Tab cannot reach hero/chrome', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar21Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const panel = page.locator('#rn21-fullscreen-panel');
+
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await expect(panel).toHaveAttribute('role', 'dialog');
+    await expect(panel).toHaveAttribute('aria-modal', 'true');
+
+    // Exterior nodes must be inert while open.
+    await expect(page.locator('header.dx-nav')).toHaveAttribute('inert', '');
+    await expect(page.locator('header.rn21-page-header')).toHaveAttribute('inert', '');
+    await expect(page.locator(`${ROOT} .rn21-hero`)).toHaveAttribute('inert', '');
+    await expect(page.locator(`${ROOT} .ren-nav-brand`)).toHaveAttribute('inert', '');
+    await expect(page.locator('#rn21-primary-links')).toHaveAttribute('inert', '');
+
+    // Focus lands on a panel destination.
+    await expect.poll(() => page.evaluate(() => (
+      document.activeElement?.classList.contains('rn21-menu-link')
+      || document.activeElement?.classList.contains('ren-nav-toggle')
+    ))).toBe(true);
+
+    // Walk Tab many times — active element must stay in toggle + panel shell.
+    for (let i = 0; i < 24; i += 1) {
+      await page.keyboard.press('Tab');
+      const location = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!(el instanceof Element)) return { ok: false, reason: 'no-active' };
+        const inPanel = Boolean(el.closest('#rn21-fullscreen-panel'));
+        const isToggle = el.classList.contains('ren-nav-toggle');
+        const inHero = Boolean(el.closest('.rn21-hero'));
+        const inChrome = Boolean(el.closest('header.dx-nav, header.rn21-page-header'));
+        const inBrand = Boolean(el.closest('.ren-nav-brand'));
+        const inBarLinks = Boolean(el.closest('#rn21-primary-links'));
+        return {
+          ok: (inPanel || isToggle) && !inHero && !inChrome && !inBrand && !inBarLinks,
+          tag: el.tagName,
+          className: el.className?.toString?.().slice(0, 40) || '',
+        };
+      });
+      expect(location.ok, `Tab step ${i}: ${location.tag}.${location.className}`).toBe(true);
+    }
+
+    await page.keyboard.press('Escape');
+    await expect(panel).toBeHidden();
+
+    // Inert restored on close.
+    await expect(page.locator('header.dx-nav')).not.toHaveAttribute('inert', '');
+    await expect(page.locator(`${ROOT} .rn21-hero`)).not.toHaveAttribute('inert', '');
+    await expect(page.locator('#rn21-primary-links')).not.toHaveAttribute('inert', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.classList.contains('ren-nav-toggle'))).toBe(true);
+  });
+
+  test('shell seam is exact at 767/768/769 (CSS + JS band)', async ({ page }) => {
+    await gotoNavbar21Block(page, staticServer.origin);
+
+    async function bandAt(width) {
+      await page.setViewportSize({ width, height: 900 });
+      // Allow layout + matchMedia to settle.
+      await page.waitForTimeout(30);
+      return page.evaluate(() => {
+        const links = document.querySelector('#rn21-primary-links');
+        const style = links ? getComputedStyle(links) : null;
+        const linksVisible = Boolean(
+          links
+          && style
+          && style.display !== 'none'
+          && style.visibility !== 'hidden'
+          && links.getBoundingClientRect().width > 0
+          && links.getBoundingClientRect().height > 0
+        );
+        return {
+          desktopMq: window.matchMedia('(min-width: 768px)').matches,
+          linksVisible,
+        };
+      });
+    }
+
+    const at767 = await bandAt(767);
+    expect(at767.desktopMq, '767 is below desktop MQ').toBe(false);
+    expect(at767.linksVisible, '767 hides bar links').toBe(false);
+
+    const at768 = await bandAt(768);
+    expect(at768.desktopMq, '768 matches desktop MQ').toBe(true);
+    expect(at768.linksVisible, '768 shows bar links').toBe(true);
+
+    const at769 = await bandAt(769);
+    expect(at769.desktopMq, '769 matches desktop MQ').toBe(true);
+    expect(at769.linksVisible, '769 shows bar links').toBe(true);
+  });
+
+  test('same-band resize keeps fullscreen open; only 768 crossing closes', async ({ page }) => {
+    await page.setViewportSize({ width: 900, height: 900 });
+    await gotoNavbar21Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const panel = page.locator('#rn21-fullscreen-panel');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(panel).toBeVisible();
+
+    // Stay on desktop band.
+    await page.setViewportSize({ width: 1100, height: 900 });
+    await page.waitForTimeout(40);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(panel).toBeVisible();
+
+    // Cross down through 768 → close.
+    await page.setViewportSize({ width: 700, height: 900 });
+    await page.waitForTimeout(40);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(panel).toBeHidden();
+
+    // Re-open on mobile band; same-band resize stays open.
+    await toggle.click();
+    await expect(panel).toBeVisible();
+    await page.setViewportSize({ width: 500, height: 900 });
+    await page.waitForTimeout(40);
+    await expect(panel).toBeVisible();
+
+    // Cross up through 768 → close.
+    await page.setViewportSize({ width: 820, height: 900 });
+    await page.waitForTimeout(40);
+    await expect(panel).toBeHidden();
+  });
+
+  test('document has no horizontal overflow at 320 and 340 including standalone chrome', async ({ page }) => {
+    for (const width of [320, 340]) {
+      await page.setViewportSize({ width, height: 900 });
+      await gotoNavbar21Block(page, staticServer.origin);
+
+      const closed = await page.evaluate(() => ({
+        html: {
+          scrollWidth: document.documentElement.scrollWidth,
+          clientWidth: document.documentElement.clientWidth,
+        },
+        body: {
+          scrollWidth: document.body.scrollWidth,
+          clientWidth: document.body.clientWidth,
+        },
+      }));
+      expect(
+        closed.html.scrollWidth,
+        `${width} closed html overflow`
+      ).toBeLessThanOrEqual(closed.html.clientWidth + 1);
+      expect(
+        closed.body.scrollWidth,
+        `${width} closed body overflow`
+      ).toBeLessThanOrEqual(closed.body.clientWidth + 1);
+
+      await page.locator(`${ROOT} .ren-nav-toggle`).click();
+      await expect(page.locator('#rn21-fullscreen-panel')).toBeVisible();
+
+      const opened = await page.evaluate(() => ({
+        scrollWidth: document.documentElement.scrollWidth,
+        clientWidth: document.documentElement.clientWidth,
+      }));
+      expect(
+        opened.scrollWidth,
+        `${width} open html overflow`
+      ).toBeLessThanOrEqual(opened.clientWidth + 1);
+
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+    }
+  });
+
   test('desktop chrome: single dropdown chevron, neutral details, aligned top-level peers', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar21Block(page, staticServer.origin);

@@ -11,9 +11,46 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
+    /*
+     * Shell seam shared with block JS (min-width: 768px / max-width: 767px).
+     * Matches ren-nav’s 768px interaction boundary exactly.
+     */
+    html {
+      overflow-x: clip;
+    }
+
+    body {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+
+    /* Standalone docs chrome: prevent horizontal overflow at 320/340. */
+    .dx-nav-inner {
+      flex-wrap: wrap;
+      row-gap: var(--space-2);
+      padding-inline: var(--space-4);
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .dx-nav-actions {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .dx-shell {
+      padding-inline: var(--space-4);
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-x: clip;
+    }
+
     .rn21-page-header {
-      max-width: 74ch;
+      max-width: min(74ch, 100%);
       padding-block: var(--space-8);
+      overflow-wrap: anywhere;
     }
 
     .rn21-page-header h1 {
@@ -21,6 +58,7 @@
       font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
       line-height: 1.1;
       font-weight: var(--weight-bold);
+      overflow-wrap: anywhere;
     }
 
     .rn21-page-header .lede {
@@ -28,13 +66,14 @@
       color: var(--color-text-muted);
       font-size: var(--text-lg);
       line-height: 1.55;
+      overflow-wrap: anywhere;
     }
 
     .rn21-preview {
       --ren-z-sticky: var(--z-sticky);
       --rn21-bar-z: calc(var(--ren-z-sticky) + 2);
       --rn21-panel-z: calc(var(--ren-z-sticky) + 1);
-      --ren-nav-height: 4.5rem;
+      --ren-nav-height: var(--space-18, 4.5rem);
       position: relative;
       isolation: isolate;
       display: grid;
@@ -45,8 +84,9 @@
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
       overflow: hidden;
+      max-width: 100%;
       /* Definite min block size so absolute fullscreen panel can fill the shell. */
-      min-height: min(36rem, 90vh);
+      min-height: min(var(--width-sm, 24rem), 90vh);
     }
 
     /*
@@ -478,10 +518,11 @@
       z-index: 0;
       grid-row: 2;
       padding: clamp(var(--space-8), 8vw, var(--space-16));
-      min-height: 360px;
+      min-height: var(--width-xs, 20rem);
       align-content: center;
       background:
         linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+      overflow-wrap: anywhere;
     }
 
     .rn21-hero h2 {
@@ -500,8 +541,26 @@
       line-height: 1.6;
     }
 
-    /* Desktop shell: absolute compact dropdown under the trigger. */
-    @media (min-width: 48rem) {
+    /* Desktop shell (≥768px): absolute compact dropdown under the trigger. */
+    @media (min-width: 768px) {
+      /*
+       * ren-nav hides .ren-nav-links at max-width: 48rem (includes 768px).
+       * Force the bar list visible for the inclusive desktop band ≥768px so
+       * CSS, this block’s matchMedia, and ren-nav’s JS (<768 mobile) agree.
+       */
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav .ren-nav-links {
+        display: flex;
+        position: static;
+        inset: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        background: transparent;
+        border: none;
+        padding: 0;
+        animation: none;
+      }
+
       .rn21-disclosure {
         position: relative;
         height: auto;
@@ -515,8 +574,8 @@
         left: 50%;
         right: auto;
         z-index: var(--rn21-bar-z);
-        width: 12rem;
-        max-width: min(12rem, calc(100vw - var(--space-8)));
+        width: var(--width-3xs, 12rem);
+        max-width: min(var(--width-3xs, 12rem), calc(100vw - var(--space-8)));
         transform: translateX(-50%);
         animation: rn21-panel-enter var(--duration-enter) var(--ease-enter);
       }
@@ -559,14 +618,14 @@
       }
 
       .rn21-article {
-        grid-template-columns: minmax(7rem, 40%) minmax(0, 1fr);
+        grid-template-columns: minmax(var(--size-xl, 6rem), 40%) minmax(0, 1fr);
         align-items: center;
         gap: var(--space-4);
       }
     }
 
-    /* Mobile / tablet: bar is logo + toggle; hide center bar links. */
-    @media (max-width: 47.999rem) {
+    /* Mobile / tablet (≤767px): bar is logo + toggle; hide center bar links. */
+    @media (max-width: 767px) {
       .rn21-preview .ren-nav {
         grid-template-columns: minmax(0, 1fr) auto;
         min-height: var(--ren-nav-height);
@@ -580,8 +639,14 @@
         grid-column: 2;
       }
 
-      .rn21-preview .ren-nav-links {
-        display: none !important;
+      /*
+       * Beat ren-nav’s [data-open] / :has(aria-expanded) show rule without
+       * !important by adding the block + enhanced + element selectors.
+       */
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav .ren-nav-links,
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav[data-open] .ren-nav-links,
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+        display: none;
       }
 
       .rn21-dropdown-panel {
@@ -595,15 +660,25 @@
         padding: var(--space-1) 0 var(--space-2);
         transform: none;
       }
+
+      .rn21-hero {
+        min-height: 0;
+        padding: var(--space-6) var(--space-4);
+      }
+
+      .rn21-panel-inner {
+        padding-inline: var(--space-4);
+      }
     }
 
     /*
      * Progressive enhancement (no JS / ren-nav not defined):
      * hide inert toggle; expose bar destinations + fullscreen content in flow.
+     * Specificity beats ren-nav mobile hide without !important.
      */
     .rn21-preview ren-nav:not(:defined) .ren-nav-toggle,
     .rn21-preview:not([data-rn21-enhanced]) .ren-nav-toggle {
-      display: none !important;
+      display: none;
     }
 
     .rn21-preview ren-nav:not(:defined) .ren-nav,
@@ -619,9 +694,9 @@
       align-self: flex-start;
     }
 
-    .rn21-preview ren-nav:not(:defined) .ren-nav-links,
-    .rn21-preview:not([data-rn21-enhanced]) .ren-nav-links {
-      display: flex !important;
+    .rn21-preview ren-nav:not(:defined) nav.ren-nav .ren-nav-links,
+    .rn21-preview:not([data-rn21-enhanced]) nav.ren-nav .ren-nav-links {
+      display: flex;
       position: static;
       flex-direction: column;
       align-items: stretch;
@@ -632,16 +707,13 @@
     }
 
     .rn21-preview ren-nav:not(:defined) #rn21-fullscreen-panel,
-    .rn21-preview:not([data-rn21-enhanced]) #rn21-fullscreen-panel {
-      position: static;
-      display: block !important;
-      min-height: 0;
-      overflow: visible;
-    }
-
+    .rn21-preview:not([data-rn21-enhanced]) #rn21-fullscreen-panel,
     .rn21-preview ren-nav:not(:defined) #rn21-fullscreen-panel[hidden],
     .rn21-preview:not([data-rn21-enhanced]) #rn21-fullscreen-panel[hidden] {
-      display: block !important;
+      position: static;
+      display: block;
+      min-height: 0;
+      overflow: visible;
     }
 
     @keyframes rn21-panel-enter {
@@ -754,7 +826,13 @@
             <span></span>
           </button>
 
-          <div id="rn21-fullscreen-panel" hidden>
+          <div
+            id="rn21-fullscreen-panel"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
+            hidden
+          >
             <div class="rn21-panel-inner">
               <ul class="rn21-menu-list" aria-label="Primary destinations">
                 <li><a class="rn21-menu-link" href="#overview">Overview</a></li>
@@ -864,10 +942,22 @@
     /**
      * Block-local controllers for:
      * 1) compact bar disclosure (hover preview + click pin)
-     * 2) always-visible fullscreen panel (syncs with ren-nav toggle)
+     * 2) always-visible fullscreen panel with inert exterior + focus trap
+     *
+     * Shell seam: (min-width: 768px) — shared with block CSS, matches ren-nav 768.
      */
     const RN21_CONTROLLER = Symbol.for('ren10.rn21.controller');
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /** Inclusive desktop shell; complements max-width: 767px CSS. */
+    const DESKTOP_MQ = '(min-width: 768px)';
+    const FOCUSABLE_SEL = [
+      'a[href]',
+      'button:not([disabled])',
+      'summary',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(',');
 
     export function initNavLogoCenterLinksFullscreenFeatured(scope = document) {
       const root = scope.querySelector?.('[data-rn21-root]') ?? scope;
@@ -903,46 +993,130 @@
       let hoverTransient = false;
       let pointerPinned = false;
       let ignoreHoverUntilLeave = false;
+      /** Last media match used to detect band crossings only. */
+      let lastDesktop = desktopQuery.matches;
+      /**
+       * Exterior nodes made inert while the panel is open.
+       * @type {Array<{ el: Element, hadInert: boolean }>}
+       */
+      let inertSnapshots = [];
+      /** Overflow values restored on close. */
+      let savedHtmlOverflow = '';
+      let savedBodyOverflow = '';
 
       function isDesktop() {
         return desktopQuery.matches;
       }
 
       function isPanelOpen() {
-        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+        return toggle.getAttribute('aria-expanded') === 'true';
       }
 
-      function setPanelOpen(open, { returnFocus = false } = {}) {
-        if (open) {
-          panel.hidden = false;
-          toggle.setAttribute('aria-expanded', 'true');
-          toggle.setAttribute('aria-label', 'Close site menu');
-          renNavHost?.setAttribute('data-open', '');
-          document.documentElement.style.overflow = 'hidden';
-        } else {
-          panel.hidden = true;
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.setAttribute('aria-label', 'Open site menu');
-          renNavHost?.removeAttribute('data-open');
-          document.documentElement.style.overflow = '';
-          if (returnFocus) toggle.focus();
+      /**
+       * Collect focusables in the dialog shell: close toggle + panel contents.
+       * @returns {HTMLElement[]}
+       */
+      function getShellFocusables() {
+        /** @type {HTMLElement[]} */
+        const list = [];
+        if (toggle instanceof HTMLElement) list.push(toggle);
+        panel.querySelectorAll(FOCUSABLE_SEL).forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.closest('[inert]')) return;
+          if (node.hasAttribute('disabled')) return;
+          const style = getComputedStyle(node);
+          if (style.display === 'none' || style.visibility === 'hidden') return;
+          if (node.getClientRects().length === 0) return;
+          list.push(node);
+        });
+        return list;
+      }
+
+      function restoreExteriorInert() {
+        for (const { el, hadInert } of inertSnapshots) {
+          if (hadInert) el.setAttribute('inert', '');
+          else el.removeAttribute('inert');
+        }
+        inertSnapshots = [];
+      }
+
+      /**
+       * Inert everything outside the panel + toggle shell so Tab cannot reach
+       * hidden hero / docs chrome / bar links while the fullscreen menu is open.
+       * Uses the public `inert` attribute only.
+       */
+      function setExteriorInert(active) {
+        restoreExteriorInert();
+        if (!active) return;
+
+        const candidates = [
+          document.querySelector('body > header.dx-nav'),
+          document.querySelector('main > header.rn21-page-header'),
+          root.querySelector('.rn21-hero'),
+          root.querySelector('.ren-nav-brand'),
+          root.querySelector('#rn21-primary-links'),
+        ];
+
+        for (const el of candidates) {
+          if (!(el instanceof Element)) continue;
+          if (el === panel || panel.contains(el)) continue;
+          if (el === toggle || el.contains(toggle)) continue;
+          inertSnapshots.push({ el, hadInert: el.hasAttribute('inert') });
+          el.setAttribute('inert', '');
         }
       }
 
-      function syncPanelFromToggle() {
-        setPanelOpen(isPanelOpen(), { returnFocus: false });
+      function setPanelOpen(open, { returnFocus = false, moveFocus = true } = {}) {
+        if (open) {
+          panel.hidden = false;
+          panel.setAttribute('aria-modal', 'true');
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.setAttribute('aria-label', 'Close site menu');
+          renNavHost?.setAttribute('data-open', '');
+          root.setAttribute('data-rn21-panel-open', '');
+
+          savedHtmlOverflow = document.documentElement.style.overflow;
+          savedBodyOverflow = document.body.style.overflow;
+          document.documentElement.style.overflow = 'hidden';
+          document.body.style.overflow = 'hidden';
+
+          setExteriorInert(true);
+
+          if (moveFocus) {
+            // Prefer first destination inside the panel; fall back to toggle.
+            const inside = getShellFocusables().filter((el) => el !== toggle);
+            const target = inside[0] || toggle;
+            queueMicrotask(() => target.focus());
+          }
+        } else {
+          panel.hidden = true;
+          panel.setAttribute('aria-modal', 'true');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open site menu');
+          renNavHost?.removeAttribute('data-open');
+          root.removeAttribute('data-rn21-panel-open');
+
+          document.documentElement.style.overflow = savedHtmlOverflow;
+          document.body.style.overflow = savedBodyOverflow;
+          savedHtmlOverflow = '';
+          savedBodyOverflow = '';
+
+          setExteriorInert(false);
+
+          if (returnFocus) queueMicrotask(() => toggle.focus());
+        }
       }
 
       // Initial closed state for enhanced mode.
-      setPanelOpen(false);
+      setPanelOpen(false, { moveFocus: false });
 
-      function closeDisclosure(returnFocus) {
+      function closeDisclosure(returnFocusToSummary) {
         if (!disclosure || !summary) return;
         if (!disclosure.open) return;
         disclosure.open = false;
         hoverTransient = false;
         pointerPinned = false;
-        if (returnFocus) summary.focus();
+        if (returnFocusToSummary) summary.focus();
       }
 
       function openDisclosure(source = 'programmatic') {
@@ -964,7 +1138,7 @@
           event.preventDefault();
           event.stopImmediatePropagation();
           const next = !isPanelOpen();
-          setPanelOpen(next, { returnFocus: false });
+          setPanelOpen(next, { returnFocus: false, moveFocus: next });
           if (next) closeDisclosure(false);
         },
         { capture: true, signal }
@@ -973,23 +1147,61 @@
       document.addEventListener(
         'keydown',
         (event) => {
-          if (event.key !== 'Escape') return;
-
-          if (isPanelOpen()) {
-            event.preventDefault();
-            event.stopImmediatePropagation();
-            closeDisclosure(false);
-            setPanelOpen(false, { returnFocus: true });
+          if (event.key === 'Escape') {
+            if (isPanelOpen()) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              closeDisclosure(false);
+              setPanelOpen(false, { returnFocus: true, moveFocus: false });
+              return;
+            }
+            if (disclosure?.open) {
+              event.stopImmediatePropagation();
+              markIntentionalCloseWhilePointerInside();
+              closeDisclosure(true);
+            }
             return;
           }
 
-          if (disclosure?.open) {
-            event.stopImmediatePropagation();
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(true);
+          // Focus trap: Tab cycles toggle ↔ panel only while open.
+          if (event.key !== 'Tab' || !isPanelOpen()) return;
+
+          const focusables = getShellFocusables();
+          if (focusables.length === 0) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          const active = document.activeElement;
+          const activeInShell = focusables.includes(/** @type {HTMLElement} */ (active));
+
+          if (event.shiftKey) {
+            if (!activeInShell || active === first) {
+              event.preventDefault();
+              last.focus();
+            }
+          } else if (!activeInShell || active === last) {
+            event.preventDefault();
+            first.focus();
           }
         },
         { capture: true, signal }
+      );
+
+      // If focus somehow lands outside the shell while open, pull it back.
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!isPanelOpen()) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          const focusables = getShellFocusables();
+          if (focusables.some((el) => el === target || el.contains(/** @type {Node} */ (target)))) {
+            return;
+          }
+          const fallback = focusables[0] || toggle;
+          queueMicrotask(() => fallback.focus());
+        },
+        { signal }
       );
 
       // Close fullscreen when activating destinations inside the panel.
@@ -997,7 +1209,7 @@
         anchor.addEventListener(
           'click',
           () => {
-            setPanelOpen(false, { returnFocus: false });
+            setPanelOpen(false, { returnFocus: false, moveFocus: false });
             closeDisclosure(false);
           },
           { signal }
@@ -1095,8 +1307,12 @@
       }
 
       function onBreakpointChange() {
+        const nowDesktop = desktopQuery.matches;
+        // Only reset open state when the shell band actually crosses 768.
+        if (nowDesktop === lastDesktop) return;
+        lastDesktop = nowDesktop;
         closeDisclosure(false);
-        if (isPanelOpen()) setPanelOpen(false, { returnFocus: false });
+        if (isPanelOpen()) setPanelOpen(false, { returnFocus: false, moveFocus: false });
         pointerInside = false;
         hoverTransient = false;
         pointerPinned = false;
@@ -1110,18 +1326,14 @@
         signal.addEventListener('abort', () => desktopQuery.removeListener(onBreakpointChange));
       }
 
-      window.addEventListener(
-        'resize',
-        () => {
-          // Keep panel + disclosure coherent if ren-nav also reacts.
-          if (!isDesktop() && disclosure?.open) closeDisclosure(false);
-        },
-        { signal }
-      );
+      signal.addEventListener('abort', () => {
+        restoreExteriorInert();
+        document.documentElement.style.overflow = savedHtmlOverflow;
+        document.body.style.overflow = savedBodyOverflow;
+      });
 
       return {
         abort: () => controller.abort(),
-        syncPanelFromToggle,
       };
     }
 
