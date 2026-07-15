@@ -4,7 +4,7 @@
   "moduleId": "navbar28",
   "blockSlug": "nav-mega-menu-topics-collection-cards",
   "blockPath": "templates/blocks/nav-mega-menu-topics-collection-cards.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-topics-collection-cards.html",
     "tests/components/navbar28-navigation.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
