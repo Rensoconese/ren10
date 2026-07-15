@@ -1,6 +1,6 @@
 {
   "id": "mobile-light-closed",
-  "url": "http://127.0.0.1:56360/templates/blocks/hero-text-left-video-lightbox.html?ren10_capture=header3-mobile-light-closed-d45ae3a34adc",
+  "url": "http://127.0.0.1:62496/templates/blocks/hero-text-left-video-lightbox.html?ren10_capture=header3-mobile-light-closed-e019f02991df",
   "viewport": {
     "width": 390,
     "height": 844
@@ -13,6 +13,6 @@
     ".rh3-media-trigger": 1,
     "#rh3-video[open]": 0
   },
-  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
-  "capturedAt": "2026-07-15T16:11:08.369Z"
+  "commit": "e019f02991df978c6b23326f717a2be38acab414",
+  "capturedAt": "2026-07-15T16:33:02.759Z"
 }

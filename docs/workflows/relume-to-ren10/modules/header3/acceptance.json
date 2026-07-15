@@ -10,7 +10,7 @@
     {
       "id": "function-primary",
       "kind": "behavior",
-      "description": "Media trigger opens ren-dialog lightbox; Escape and close control dismiss; focus returns to trigger; iframe loads with busy indicator then visible embed",
+      "description": "Media trigger opens ren-dialog lightbox; Escape and close control dismiss; focus returns to trigger; iframe loads with busy indicator then exposes a native playable video surface",
       "automated": true
     },
     {
@@ -28,7 +28,7 @@
     {
       "id": "progressive-fallback",
       "kind": "behavior",
-      "description": "JavaScript-disabled view keeps heading, lede, both CTAs, and a usable media destination link without a dead play control",
+      "description": "JavaScript-disabled view keeps heading, lede, both CTAs, and a visible native video with controls at the media trigger destination",
       "automated": true
     },
     {

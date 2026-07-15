@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "moduleId": "header3",
+  "sourceStage": "green",
+  "capturedCommit": "e019f02991df978c6b23326f717a2be38acab414",
+  "capturesFresh": true,
+  "states": 9,
+  "captures": {
+    "desktopLightClosed": "captures/header3/desktop-light-closed.png",
+    "desktopLightOpen": "captures/header3/desktop-light-open.png",
+    "desktopDarkClosed": "captures/header3/desktop-dark-closed.png",
+    "desktopDarkOpen": "captures/header3/desktop-dark-open.png",
+    "mobileLightClosed": "captures/header3/mobile-light-closed.png",
+    "mobileLightOpen": "captures/header3/mobile-light-open.png",
+    "mobileDarkClosed": "captures/header3/mobile-dark-closed.png",
+    "mobileDarkOpenReducedMotion": "captures/header3/mobile-dark-open.png",
+    "mobileLightJavaScriptDisabled": "captures/header3/mobile-light-js-disabled.png"
+  },
+  "inspection": "Fresh cache-busted captures from the functional fix commit preserve the exact split copy/media anatomy in light and dark themes. Closed states retain one play affordance. Open states show the Ren10 dialog and loading surface without clipping or overflow while the permitted CC0 video loads. The JavaScript-disabled mobile state visibly exposes native video controls at the media destination instead of a hidden text target. No duplicate CTAs, media triggers, dialog close controls, or navigation inside the block were introduced."
+}
