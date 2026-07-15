@@ -278,21 +278,22 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
     await expect(page.locator(`${ROOT} form.rn22-contact-form`)).toBeVisible();
 
     const fullscreen = await page.evaluate(() => {
-      const overlayEl = document.querySelector('[data-rn22-root] .rn22-overlay');
-      if (!overlayEl) return null;
+      const root = document.querySelector('[data-rn22-root]');
+      const overlayEl = root?.querySelector('.rn22-overlay');
+      if (!root || !overlayEl) return null;
       const rect = overlayEl.getBoundingClientRect();
+      const rootRect = root.getBoundingClientRect();
       return {
         width: rect.width,
         height: rect.height,
-        top: rect.top,
-        left: rect.left,
-        vw: window.innerWidth,
-        vh: window.innerHeight,
+        rootWidth: rootRect.width,
+        rootHeight: rootRect.height,
       };
     });
     expect(fullscreen).toBeTruthy();
-    expect(fullscreen.width, 'overlay width').toBeGreaterThanOrEqual(fullscreen.vw * 0.9);
-    expect(fullscreen.height, 'overlay height').toBeGreaterThanOrEqual(fullscreen.vh * 0.85);
+    // Fullscreen fills the preview root (docs shell may be narrower than the viewport).
+    expect(fullscreen.width, 'overlay width').toBeGreaterThanOrEqual(fullscreen.rootWidth * 0.95);
+    expect(fullscreen.height, 'overlay height').toBeGreaterThanOrEqual(fullscreen.rootHeight * 0.85);
 
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
@@ -643,5 +644,194 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
       expect(colors.navBg, theme).not.toBe('');
       expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
     }
+  });
+
+  test('overlay open applies real inert to background/chrome and restores on close', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar22Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(toggle).toHaveAttribute('aria-label', /close/i);
+    await expect(toggle).toHaveAttribute('aria-haspopup', 'dialog');
+
+    const openState = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn22-root]');
+      const brand = root?.querySelector('.ren-nav-brand');
+      const links = root?.querySelector('#rn22-primary-links');
+      const hero = root?.querySelector('.rn22-hero');
+      const site = document.querySelector('header.dx-nav');
+      const pageHeader = document.querySelector('.rn22-page-header');
+      const overlay = root?.querySelector('.rn22-overlay');
+      const toggleEl = root?.querySelector('.ren-nav-toggle');
+      return {
+        brandInert: Boolean(brand?.inert),
+        linksInert: Boolean(links?.inert),
+        heroInert: Boolean(hero?.inert),
+        siteInert: Boolean(site?.inert),
+        pageHeaderInert: Boolean(pageHeader?.inert),
+        overlayInert: Boolean(overlay?.inert),
+        toggleInert: Boolean(toggleEl?.inert),
+      };
+    });
+
+    expect(openState.brandInert, 'brand inert').toBe(true);
+    expect(openState.linksInert, 'bar links inert').toBe(true);
+    expect(openState.heroInert, 'hero inert').toBe(true);
+    expect(openState.siteInert, 'site chrome inert').toBe(true);
+    expect(openState.pageHeaderInert, 'page header inert').toBe(true);
+    expect(openState.overlayInert, 'overlay not inert').toBe(false);
+    expect(openState.toggleInert, 'close toggle not inert').toBe(false);
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(toggle).toHaveAttribute('aria-label', /open/i);
+
+    const closedState = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn22-root]');
+      return {
+        brandInert: Boolean(root?.querySelector('.ren-nav-brand')?.inert),
+        heroInert: Boolean(root?.querySelector('.rn22-hero')?.inert),
+        siteInert: Boolean(document.querySelector('header.dx-nav')?.inert),
+        pageHeaderInert: Boolean(document.querySelector('.rn22-page-header')?.inert),
+      };
+    });
+    expect(closedState.brandInert).toBe(false);
+    expect(closedState.heroInert).toBe(false);
+    expect(closedState.siteInert).toBe(false);
+    expect(closedState.pageHeaderInert).toBe(false);
+  });
+
+  test('focus stays contained in toggle+overlay while open; Tab cycles the trap', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar22Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    await toggle.click();
+    await expect(page.locator(`${ROOT} .rn22-overlay`)).toBeVisible();
+
+    await expect.poll(() =>
+      page.evaluate(() => {
+        const active = document.activeElement;
+        const root = document.querySelector('[data-rn22-root]');
+        const overlay = root?.querySelector('.rn22-overlay');
+        const toggleEl = root?.querySelector('.ren-nav-toggle');
+        return Boolean(
+          active
+          && (overlay?.contains(active) || toggleEl === active || toggleEl?.contains(active))
+        );
+      })
+    ).toBe(true);
+
+    // Attempt to park focus on inert hero control — trap must pull it back.
+    await page.evaluate(() => {
+      const heroLink = document.querySelector('[data-rn22-root] .rn22-hero a.ren-btn');
+      if (heroLink instanceof HTMLElement) heroLink.focus();
+    });
+    await expect.poll(() =>
+      page.evaluate(() => {
+        const active = document.activeElement;
+        const root = document.querySelector('[data-rn22-root]');
+        const overlay = root?.querySelector('.rn22-overlay');
+        const toggleEl = root?.querySelector('.ren-nav-toggle');
+        return Boolean(
+          active
+          && (overlay?.contains(active) || toggleEl === active || toggleEl?.contains(active))
+        );
+      })
+    ).toBe(true);
+
+    await page.keyboard.press('Tab');
+    await expect.poll(() =>
+      page.evaluate(() => {
+        const active = document.activeElement;
+        const root = document.querySelector('[data-rn22-root]');
+        const overlay = root?.querySelector('.rn22-overlay');
+        const toggleEl = root?.querySelector('.ren-nav-toggle');
+        return Boolean(
+          active
+          && (overlay?.contains(active) || toggleEl === active || toggleEl?.contains(active))
+        );
+      })
+    ).toBe(true);
+  });
+
+  test('terms, phone, email, and social destinations close the overlay', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar22Block(page, staticServer.origin);
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const overlay = page.locator(`${ROOT} .rn22-overlay`);
+
+    const destinations = [
+      'a.rn22-terms-link',
+      'a.rn22-contact-phone',
+      'a.rn22-contact-email',
+      'a.rn22-social',
+      'a.rn22-menu-link',
+    ];
+
+    for (const selector of destinations) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect(overlay).toBeVisible();
+      await page.locator(selector).first().click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(overlay).toBeHidden();
+    }
+  });
+
+  test('valid submit closes overlay; invalid submit keeps it open', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar22Block(page, staticServer.origin);
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const overlay = page.locator(`${ROOT} .rn22-overlay`);
+    const form = page.locator(`${ROOT} form.rn22-contact-form`);
+
+    await toggle.click();
+    await expect(overlay).toBeVisible();
+
+    // Invalid: empty required fields
+    await form.locator('button[type="submit"]').click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(overlay).toBeVisible();
+
+    // Valid fill
+    await form.locator('#rn22-name').fill('Ada Lovelace');
+    await form.locator('#rn22-email').fill('ada@example.com');
+    await form.locator('#rn22-message').fill('Hello from Harbor Studio.');
+    // Custom checkbox control intercepts the native input hit target.
+    await form.locator('input[name="terms"]').check({ force: true });
+    await form.locator('button[type="submit"]').click();
+
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(overlay).toBeHidden();
+  });
+
+  test('standalone narrow 320 and 340 viewports have no horizontal overflow', async ({ page }) => {
+    for (const width of [320, 340]) {
+      await page.setViewportSize({ width, height: 900 });
+      await gotoNavbar22Block(page, staticServer.origin);
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+
+      await page.locator(`${ROOT} .ren-nav-toggle`).click();
+      await expect(page.locator(`${ROOT} .rn22-overlay`)).toBeVisible();
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+      await expectNoOverflow(page, `${ROOT} .rn22-overlay`);
+
+      await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    }
+  });
+
+  test('does not expose window.initNavSticky public global', async ({ page }) => {
+    await gotoNavbar22Block(page, staticServer.origin);
+    const exposed = await page.evaluate(() => ({
+      sticky: typeof window.initNavStickyLogoCenterDropdownFullscreenContact,
+      stickyShort: typeof window.initNavSticky,
+    }));
+    expect(exposed.sticky).toBe('undefined');
+    expect(exposed.stickyShort).toBe('undefined');
   });
 });

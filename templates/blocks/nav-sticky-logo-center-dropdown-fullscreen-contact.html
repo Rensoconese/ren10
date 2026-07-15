@@ -11,9 +11,26 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
+    /* Standalone page: prevent horizontal overflow at 320–340px without shared CSS edits. */
+    html {
+      overflow-x: clip;
+    }
+
+    body {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+
+    .dx-shell,
     .rn22-page-header {
-      max-width: 74ch;
+      max-width: min(74ch, 100%);
+      box-sizing: border-box;
+      min-width: 0;
+    }
+
+    .rn22-page-header {
       padding-block: var(--space-8);
+      padding-inline: var(--space-3);
     }
 
     .rn22-page-header h1 {
@@ -36,11 +53,16 @@
       position: relative;
       isolation: isolate;
       margin-block: var(--space-6) var(--space-10);
+      margin-inline: 0;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
       background: var(--color-surface-sunken);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
-      overflow: hidden;
+      overflow-x: clip;
+      overflow-y: hidden;
       min-height: min(100vh, 56rem);
     }
 
@@ -58,21 +80,28 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       align-items: center;
-      column-gap: var(--space-3);
+      column-gap: var(--space-2);
       min-height: var(--ren-nav-height);
-      padding-inline: var(--space-4);
+      max-width: 100%;
+      min-width: 0;
+      padding-inline: var(--space-3);
       background: var(--color-surface);
       border-bottom: 1px solid var(--color-border);
       overflow: visible;
+      box-sizing: border-box;
     }
 
     .rn22-preview .ren-nav-brand {
       grid-column: 1;
       justify-self: start;
       min-height: var(--touch-min);
-      min-width: var(--touch-min);
+      min-width: 0;
+      max-width: 100%;
       position: relative;
       z-index: 2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .rn22-preview .ren-nav-links {
@@ -237,12 +266,15 @@
       inset: 0;
       z-index: calc(var(--ren-z-sticky) + 1);
       display: none;
-      overflow: auto;
+      overflow-x: clip;
+      overflow-y: auto;
       background: var(--color-surface);
       color: var(--color-text);
       padding-block-start: var(--ren-nav-height, 4rem);
       box-sizing: border-box;
       min-height: 100%;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .rn22-preview[data-menu-open] .rn22-overlay {
@@ -250,9 +282,20 @@
       /* No opacity animation: mid-frame opacity fails axe contrast sampling. */
     }
 
+    .rn22-overlay:focus {
+      outline: none;
+    }
+
+    .rn22-overlay:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(-1 * var(--ring-offset));
+    }
+
     .rn22-overlay-inner {
       min-height: calc(100% - var(--ren-nav-height, 4rem));
-      min-block-size: calc(100vh - var(--ren-nav-height, 4rem));
+      min-block-size: calc(100dvh - var(--ren-nav-height, 4rem));
+      max-width: 100%;
+      min-width: 0;
       box-sizing: border-box;
       background: var(--color-surface);
       color: var(--color-text);
@@ -261,23 +304,32 @@
     .rn22-menu-links {
       list-style: none;
       margin: 0;
-      padding: var(--space-6) var(--space-5);
+      padding: var(--space-6) var(--space-4);
       display: grid;
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-2);
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .rn22-menu-link {
       display: flex;
       align-items: center;
       box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
       min-height: var(--touch-min);
       padding-block: var(--space-2);
+      padding-inline: var(--space-1);
       color: var(--color-text);
       text-decoration: none;
-      font-size: clamp(var(--text-2xl), 4vw, var(--text-5xl));
+      font-size: clamp(var(--text-lg), 5.5vw, var(--text-5xl));
       font-weight: var(--weight-bold);
-      line-height: 1.1;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+      word-break: break-word;
       border-radius: var(--radius-md);
       transition: color var(--duration-state) var(--ease-state-change);
     }
@@ -295,7 +347,10 @@
       background: var(--color-surface);
       color: var(--color-text);
       border-block-start: 1px solid var(--color-border);
-      padding: var(--space-8) var(--space-5);
+      padding: var(--space-8) var(--space-4);
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .rn22-contact-rail h2 {
@@ -313,16 +368,23 @@
 
     .rn22-contact-form {
       --stack-gap: var(--space-4);
-      max-width: 28rem;
+      max-width: min(28rem, 100%);
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     .rn22-contact-form ren-field {
       display: block;
+      max-width: 100%;
+      min-width: 0;
     }
 
     .rn22-contact-form .ren-input,
     .rn22-contact-form textarea.ren-input {
       width: 100%;
+      max-width: 100%;
+      min-width: 0;
       box-sizing: border-box;
     }
 
@@ -364,18 +426,25 @@
     }
 
     .rn22-contact-meta {
-      padding: var(--space-6) var(--space-5) var(--space-8);
+      padding: var(--space-6) var(--space-4) var(--space-8);
       --stack-gap: var(--space-1);
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
     }
 
     .rn22-contact-phone,
     .rn22-contact-email {
       display: inline-flex;
       align-items: center;
+      max-width: 100%;
+      min-width: 0;
       color: var(--color-text);
       text-decoration: underline;
       text-underline-offset: 0.15em;
       font-size: var(--text-sm);
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .rn22-contact-phone:focus-visible,
@@ -491,13 +560,14 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr);
         grid-template-rows: 1fr auto;
-        min-height: calc(100vh - var(--ren-nav-height, 4rem));
+        min-height: calc(100dvh - var(--ren-nav-height, 4rem));
+        max-width: 100%;
       }
 
       .rn22-menu-links {
         grid-column: 1;
         grid-row: 1;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: var(--space-3) var(--space-8);
         padding: var(--space-12) var(--space-8);
         align-content: start;
@@ -526,6 +596,7 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-rows: auto;
+        padding-inline: var(--space-2);
       }
 
       .rn22-preview .ren-nav-brand {
@@ -546,6 +617,29 @@
       .rn22-preview .ren-nav[data-open] .ren-nav-links,
       .rn22-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
         display: none !important;
+      }
+
+      .rn22-page-header h1 {
+        font-size: clamp(var(--text-2xl), 8vw, var(--text-5xl));
+        overflow-wrap: anywhere;
+      }
+    }
+
+    @media (max-width: 22.5rem) {
+      /* 360px and below — tighten chrome without shared layout edits */
+      .rn22-preview .ren-nav {
+        column-gap: var(--space-1);
+        padding-inline: var(--space-2);
+      }
+
+      .rn22-menu-links,
+      .rn22-contact-rail,
+      .rn22-contact-meta {
+        padding-inline: var(--space-3);
+      }
+
+      .rn22-menu-link {
+        font-size: clamp(var(--text-md), 7vw, var(--text-3xl));
       }
     }
 
@@ -692,6 +786,7 @@
             type="button"
             aria-expanded="false"
             aria-controls="rn22-overlay"
+            aria-haspopup="dialog"
             aria-label="Open contact menu"
           >
             <span></span>
@@ -707,6 +802,7 @@
         role="dialog"
         aria-modal="true"
         aria-labelledby="rn22-overlay-title"
+        tabindex="-1"
         hidden
       >
         <div class="rn22-overlay-inner">
@@ -806,12 +902,25 @@
   <script type="module">
     /**
      * Block-local controller for the centered bar disclosure and fullscreen
-     * contact overlay. Native details owns open/close via click/Enter/Space;
-     * desktop pointer hover is additive. Overlay is activation-only.
+     * contact overlay. Public entry: exported init only (no window global).
+     * Overlay is aria-modal with real inert background + focus containment.
      */
     const RN22_CONTROLLER = Symbol.for('ren10.rn22.controller');
     const DESKTOP_MQ = '(min-width: 48rem)';
+    const FOCUSABLE_SELECTOR = [
+      'a[href]',
+      'button:not([disabled])',
+      'input:not([disabled]):not([type="hidden"])',
+      'textarea:not([disabled])',
+      'select:not([disabled])',
+      'summary',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(',');
 
+    /**
+     * @param {ParentNode | Document | Element} [scope]
+     * @returns {AbortController | null}
+     */
     export function initNavStickyLogoCenterDropdownFullscreenContact(scope = document) {
       const root = scope.querySelector?.('[data-rn22-root]') ?? scope;
       if (!(root instanceof Element) || !root.hasAttribute('data-rn22-root')) {
@@ -822,11 +931,16 @@
       return initOn(root);
     }
 
+    /**
+     * @param {Element} root
+     * @returns {AbortController | null}
+     */
     function initOn(root) {
       const disclosure = root.querySelector('.rn22-disclosure');
       const summary = disclosure?.querySelector('summary');
       const toggle = root.querySelector('.ren-nav-toggle');
       const overlay = root.querySelector('.rn22-overlay');
+      const form = root.querySelector('form.rn22-contact-form');
       const renNavHost = root.querySelector('ren-nav');
 
       if (!disclosure || !summary || !toggle || !overlay) return null;
@@ -838,6 +952,11 @@
       root[RN22_CONTROLLER] = controller;
       const { signal } = controller;
       const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** @type {Map<Element, boolean>} */
+      const inertOriginal = new Map();
+      /** @type {Element | null} */
+      let returnFocusEl = null;
 
       let pointerInside = false;
       let hoverTransient = false;
@@ -878,23 +997,133 @@
         return root.hasAttribute('data-menu-open');
       }
 
-      function setOverlayOpen(open) {
+      /**
+       * Collect background/chrome nodes that must be inert while the modal is open.
+       * Toggle + overlay stay interactive.
+       * @returns {Element[]}
+       */
+      function collectInertTargets() {
+        /** @type {Element[]} */
+        const targets = [];
+        const siteChrome = document.querySelector('header.dx-nav');
+        if (siteChrome) targets.push(siteChrome);
+
+        const main = document.querySelector('main.dx-shell');
+        if (main) {
+          for (const child of main.children) {
+            if (child === root) continue;
+            targets.push(child);
+          }
+        }
+
+        const brand = root.querySelector('.ren-nav-brand');
+        const links = root.querySelector('#rn22-primary-links');
+        const hero = root.querySelector('.rn22-hero');
+        if (brand) targets.push(brand);
+        if (links) targets.push(links);
+        if (hero) targets.push(hero);
+
+        return targets;
+      }
+
+      /**
+       * @param {boolean} active
+       */
+      function setBackgroundInert(active) {
+        if (active) {
+          for (const el of collectInertTargets()) {
+            if (!inertOriginal.has(el)) {
+              inertOriginal.set(el, Boolean(el.inert));
+            }
+            el.inert = true;
+          }
+          return;
+        }
+
+        for (const [el, wasInert] of inertOriginal) {
+          el.inert = wasInert;
+        }
+        inertOriginal.clear();
+      }
+
+      /**
+       * Focusables that participate in the modal trap: close toggle + overlay contents.
+       * @returns {HTMLElement[]}
+       */
+      function getModalFocusables() {
+        /** @type {HTMLElement[]} */
+        const nodes = [];
+        if (toggle instanceof HTMLElement) nodes.push(toggle);
+        overlay.querySelectorAll(FOCUSABLE_SELECTOR).forEach((el) => {
+          if (!(el instanceof HTMLElement)) return;
+          if (el.hasAttribute('disabled') || el.getAttribute('aria-hidden') === 'true') return;
+          const style = window.getComputedStyle(el);
+          if (style.display === 'none' || style.visibility === 'hidden') return;
+          nodes.push(el);
+        });
+        return nodes;
+      }
+
+      /**
+       * @param {EventTarget | null} target
+       */
+      function isInsideModalSurface(target) {
+        if (!(target instanceof Node)) return false;
+        return toggle.contains(target) || overlay.contains(target);
+      }
+
+      /**
+       * @param {boolean} open
+       * @param {{ restoreFocus?: boolean }} [options]
+       */
+      function setOverlayOpen(open, options = {}) {
+        const restoreFocus = options.restoreFocus !== false;
+
         if (open) {
+          if (isOverlayOpen()) return;
+          returnFocusEl =
+            document.activeElement instanceof Element ? document.activeElement : toggle;
+          closeDisclosure(false);
           root.setAttribute('data-menu-open', '');
           overlay.removeAttribute('hidden');
           overlay.setAttribute('aria-hidden', 'false');
           toggle.setAttribute('aria-expanded', 'true');
           toggle.setAttribute('aria-label', 'Close contact menu');
           renNavHost?.setAttribute('data-open', '');
-          closeDisclosure(false);
-        } else {
-          root.removeAttribute('data-menu-open');
-          overlay.setAttribute('hidden', '');
-          overlay.setAttribute('aria-hidden', 'true');
-          toggle.setAttribute('aria-expanded', 'false');
-          toggle.setAttribute('aria-label', 'Open contact menu');
-          renNavHost?.removeAttribute('data-open');
+          setBackgroundInert(true);
+
+          // Move focus into the dialog surface after inert paints.
+          requestAnimationFrame(() => {
+            const firstLink = overlay.querySelector('a.rn22-menu-link');
+            if (firstLink instanceof HTMLElement) {
+              firstLink.focus({ preventScroll: true });
+            } else if (overlay instanceof HTMLElement) {
+              overlay.focus({ preventScroll: true });
+            }
+          });
+          return;
         }
+
+        if (!isOverlayOpen() && !overlay.hasAttribute('hidden')) {
+          // Initial closed sync path still needs clean attributes.
+        }
+
+        root.removeAttribute('data-menu-open');
+        overlay.setAttribute('hidden', '');
+        overlay.setAttribute('aria-hidden', 'true');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open contact menu');
+        renNavHost?.removeAttribute('data-open');
+        setBackgroundInert(false);
+
+        if (restoreFocus) {
+          const target =
+            returnFocusEl && document.contains(returnFocusEl) ? returnFocusEl : toggle;
+          if (target instanceof HTMLElement) {
+            target.focus({ preventScroll: true });
+          }
+        }
+        returnFocusEl = null;
       }
 
       function openFromDesktopPointer() {
@@ -909,7 +1138,11 @@
         (event) => {
           event.preventDefault();
           event.stopImmediatePropagation();
-          setOverlayOpen(!isOverlayOpen());
+          if (isOverlayOpen()) {
+            setOverlayOpen(false, { restoreFocus: true });
+          } else {
+            setOverlayOpen(true);
+          }
         },
         { capture: true, signal }
       );
@@ -918,7 +1151,7 @@
         'click',
         (event) => {
           event.stopImmediatePropagation();
-          if (!isDesktop()) return;
+          if (!isDesktop() || isOverlayOpen()) return;
 
           if (event.detail === 0) {
             hoverTransient = false;
@@ -952,7 +1185,7 @@
       disclosure.addEventListener(
         'pointermove',
         () => {
-          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave || isOverlayOpen()) return;
           openFromDesktopPointer();
         },
         { signal }
@@ -973,22 +1206,69 @@
       document.addEventListener(
         'keydown',
         (event) => {
-          if (event.key !== 'Escape') return;
+          if (event.key === 'Escape') {
+            if (disclosure.open && !isOverlayOpen()) {
+              event.stopImmediatePropagation();
+              markIntentionalCloseWhilePointerInside();
+              closeDisclosure(true);
+              return;
+            }
 
-          if (disclosure.open) {
-            event.stopImmediatePropagation();
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(true);
-            return;
+            if (isOverlayOpen()) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              setOverlayOpen(false, { restoreFocus: true });
+              return;
+            }
           }
 
-          if (isOverlayOpen()) {
-            event.stopImmediatePropagation();
-            setOverlayOpen(false);
-            toggle.focus();
+          if (event.key === 'Tab' && isOverlayOpen()) {
+            const focusables = getModalFocusables();
+            if (focusables.length === 0) {
+              event.preventDefault();
+              return;
+            }
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            const active = document.activeElement;
+            if (event.shiftKey) {
+              if (active === first || !isInsideModalSurface(active)) {
+                event.preventDefault();
+                last.focus();
+              }
+            } else if (active === last || !isInsideModalSurface(active)) {
+              event.preventDefault();
+              first.focus();
+            }
           }
         },
         { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (isOverlayOpen()) {
+            if (!isInsideModalSurface(event.target)) {
+              event.stopPropagation();
+              const focusables = getModalFocusables();
+              const fallback = focusables[0] || toggle;
+              if (fallback instanceof HTMLElement) {
+                fallback.focus({ preventScroll: true });
+              }
+            }
+            return;
+          }
+
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
       );
 
       document.addEventListener(
@@ -997,29 +1277,15 @@
           const target = event.target;
           if (!(target instanceof Node)) return;
 
-          if (disclosure.open && !disclosure.contains(target)) {
+          if (disclosure.open && !isOverlayOpen() && !disclosure.contains(target)) {
             markIntentionalCloseWhilePointerInside();
             closeDisclosure(false);
           }
 
-          if (isOverlayOpen()) {
-            if (toggle.contains(target) || overlay.contains(target)) return;
-            // Outside the dialog (and not the toggle) dismisses the overlay.
-            setOverlayOpen(false);
-          }
-        },
-        { signal }
-      );
-
-      document.addEventListener(
-        'focusin',
-        (event) => {
-          if (!disclosure.open) return;
-          const target = event.target;
-          if (!(target instanceof Node)) return;
-          if (!disclosure.contains(target)) {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+          // Outside dismiss is blocked while modal: inert + no actionable outside.
+          // Keep a safety close only if something non-inert outside is clicked.
+          if (isOverlayOpen() && !isInsideModalSurface(target)) {
+            setOverlayOpen(false, { restoreFocus: true });
           }
         },
         { signal }
@@ -1036,15 +1302,40 @@
         );
       });
 
-      overlay.querySelectorAll('a.rn22-menu-link').forEach((anchor) => {
+      // Close destinations: large menu links, terms, phone, email, socials.
+      const closeSelectors = [
+        'a.rn22-menu-link',
+        'a.rn22-terms-link',
+        'a.rn22-contact-phone',
+        'a.rn22-contact-email',
+        'a.rn22-social',
+      ];
+      overlay.querySelectorAll(closeSelectors.join(',')).forEach((anchor) => {
         anchor.addEventListener(
           'click',
           () => {
-            setOverlayOpen(false);
+            setOverlayOpen(false, { restoreFocus: true });
           },
           { signal }
         );
       });
+
+      if (form instanceof HTMLFormElement) {
+        form.addEventListener(
+          'submit',
+          (event) => {
+            if (!form.checkValidity()) {
+              // Invalid submit keeps the overlay open for correction.
+              event.preventDefault();
+              form.reportValidity();
+              return;
+            }
+            event.preventDefault();
+            setOverlayOpen(false, { restoreFocus: true });
+          },
+          { signal }
+        );
+      }
 
       let wasDesktop = isDesktop();
       const onViewportChange = () => {
@@ -1052,7 +1343,7 @@
         if (wasDesktop !== nowDesktop) {
           resetHoverFlags();
           closeDisclosure(false);
-          if (isOverlayOpen()) setOverlayOpen(false);
+          if (isOverlayOpen()) setOverlayOpen(false, { restoreFocus: true });
         }
         wasDesktop = nowDesktop;
       };
@@ -1062,14 +1353,17 @@
         window.addEventListener('resize', onViewportChange, { signal });
       }
 
+      signal.addEventListener('abort', () => {
+        setBackgroundInert(false);
+      });
+
       // Initial closed overlay state for upgraded JS environment.
-      setOverlayOpen(false);
+      setOverlayOpen(false, { restoreFocus: false });
 
       return controller;
     }
 
     initNavStickyLogoCenterDropdownFullscreenContact();
-    window.initNavStickyLogoCenterDropdownFullscreenContact = initNavStickyLogoCenterDropdownFullscreenContact;
   </script>
 </body>
 </html>
