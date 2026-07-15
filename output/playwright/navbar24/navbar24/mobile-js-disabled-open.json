@@ -1,0 +1,19 @@
+{
+  "id": "mobile-js-disabled-open",
+  "url": "http://127.0.0.1:52553/templates/blocks/nav-mega-menu-product-rail.html?ren10_capture=navbar24-mobile-js-disabled-open-e623b3782c52",
+  "viewport": {
+    "width": 390,
+    "height": 1600
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rmpr-sublink": 8,
+    ".rmpr-product": 1,
+    ".rmpr-intro-cta": 1,
+    ".rmpr-chevron": 1
+  },
+  "commit": "e623b3782c527bf9c85ca14d50def2bcd8e9fc6e",
+  "capturedAt": "2026-07-15T11:38:44.629Z"
+}
