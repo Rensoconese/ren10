@@ -4,13 +4,14 @@
   "moduleId": "navbar24",
   "blockSlug": "nav-mega-menu-product-rail",
   "blockPath": "templates/blocks/nav-mega-menu-product-rail.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-product-rail.html",
     "tests/components/navbar24-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
   }
 }
