@@ -1,0 +1,16 @@
+{
+  "id": "narrow-320-closed",
+  "url": "http://127.0.0.1:63828/templates/blocks/hero-split-email-video-lightbox.html?ren10_capture=header4-narrow-320-closed-94e70dc439f7",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh4-cta": 1
+  },
+  "commit": "94e70dc439f787bb3e7798aa2b074b6c5cdd93a3",
+  "capturedAt": "2026-07-15T16:37:38.781Z"
+}

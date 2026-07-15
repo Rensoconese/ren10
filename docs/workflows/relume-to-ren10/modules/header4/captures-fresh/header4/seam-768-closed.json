@@ -1,0 +1,16 @@
+{
+  "id": "seam-768-closed",
+  "url": "http://127.0.0.1:63828/templates/blocks/hero-split-email-video-lightbox.html?ren10_capture=header4-seam-768-closed-94e70dc439f7",
+  "viewport": {
+    "width": 768,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh4-media-trigger": 1
+  },
+  "commit": "94e70dc439f787bb3e7798aa2b074b6c5cdd93a3",
+  "capturedAt": "2026-07-15T16:37:40.140Z"
+}
