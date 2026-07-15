@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated Navbar20 suite (tests/components/navbar20-navigation.spec.cjs) was added before production HTML. Focused Playwright run (Desktop Light, --max-failures=3) discovered 20 tests and failed the first three on genuine missing-block 404 (response status 404 for templates/blocks/nav-logo-left-center-links-overlay-panel.html; message requires implementing that path). Remaining tests did not run after the failure budget. No production block file existed at RED time."
+}
