@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "moduleId": "header4",
+  "sourceStage": "green",
+  "cacheKey": "header4-*-green4",
+  "capturesFresh": true,
+  "captures": {
+    "desktopLightClosed": "captures/desktop-light-closed.png",
+    "desktopLightOpen": "captures/desktop-light-open.png",
+    "desktopDarkClosed": "captures/desktop-dark-closed.png",
+    "desktopDarkOpen": "captures/desktop-dark-open.png",
+    "mobileLightClosed": "captures/mobile-light-closed.png",
+    "mobileLightOpen": "captures/mobile-light-open.png",
+    "mobileDarkClosed": "captures/mobile-dark-closed.png",
+    "mobileDarkOpen": "captures/mobile-dark-open.png"
+  },
+  "inspection": "Fresh captures show one coherent hero: equal copy/media peers at desktop, copy-first stack at mobile, one horizontal desktop email row and full-width mobile submit, no prematurely visible field error, one poster/scrim/play affordance, and a centered modal with one 44px close control. The loader is absent after iframe load and light/dark surfaces remain coherent."
+}

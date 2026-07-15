@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hero Split Email Video Lightbox — Ren10</title>
+  <meta name="description" content="A responsive Ren10 hero with one email CTA and an accessible video lightbox.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-link/ren-link.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-icon/ren-icon.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-spinner/ren-spinner.css">
+  <link rel="stylesheet" href="../../components/composites/ren-dialog/ren-dialog.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh4-section {
+      padding-block: var(--space-section-lg);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh4-layout {
+      --switcher-gap: var(--space-12);
+      --switcher-threshold: var(--width-4xl);
+      align-items: center;
+    }
+
+    .rh4-copy {
+      --stack-gap: var(--space-6);
+      min-width: 0;
+    }
+
+    .rh4-title {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 5vw, var(--text-7xl));
+      line-height: var(--leading-tight);
+      text-wrap: balance;
+    }
+
+    .rh4-lede {
+      max-width: 54ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+    }
+
+    .rh4-form-wrap {
+      --stack-gap: var(--space-1);
+      max-width: var(--width-xl);
+    }
+
+    .rh4-form-row {
+      --cluster-gap: var(--space-3);
+      align-items: end;
+    }
+
+    .rh4-form-row ren-field {
+      flex: 1 1 var(--width-sm);
+      min-width: 0;
+    }
+
+    .rh4-cta {
+      flex: 0 0 auto;
+      position: relative;
+      z-index: var(--z-raised);
+    }
+
+    .rh4-terms {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    .rh4-terms .ren-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+    }
+
+    .rh4-form [data-error][hidden],
+    .rh4-loader[hidden] {
+      display: none;
+    }
+
+    .rh4-media {
+      min-width: 0;
+    }
+
+    .rh4-media-trigger {
+      position: relative;
+      width: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color: var(--color-text);
+      background: var(--color-fill);
+      border: var(--stroke-1) solid var(--color-border-interactive);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+    }
+
+    .rh4-media-trigger:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rh4-poster {
+      --frame-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill-active));
+    }
+
+    .rh4-poster img {
+      background:
+        radial-gradient(circle at 68% 30%, var(--color-accent) 0 7%, transparent 8%),
+        linear-gradient(150deg, transparent 0 46%, var(--color-surface-raised) 47% 67%, transparent 68%),
+        linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill));
+    }
+
+    .rh4-scrim {
+      position: absolute;
+      inset: 0;
+      background: var(--color-overlay);
+    }
+
+    .rh4-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border: var(--stroke-1) solid var(--color-border-strong);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-md);
+      transform: translate(-50%, -50%);
+    }
+
+    #rh4-video {
+      --ren-dialog-width: min(90vw, var(--width-4xl));
+    }
+
+    #rh4-video .ren-dialog-close {
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+    }
+
+    .rh4-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh4-video-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh4-loader {
+      --cover-height: 100%;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-4);
+    }
+
+    @media (max-width: 39.9375rem) {
+      .rh4-section {
+        padding-block: var(--space-12);
+      }
+
+      .rh4-layout {
+        --switcher-gap: var(--space-8);
+      }
+
+      .rh4-form-row > * {
+        flex-basis: 100%;
+      }
+
+      .rh4-cta {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh4-section *,
+      .rh4-section *::before,
+      .rh4-section *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="rh4-section" data-rh4-root aria-labelledby="rh4-title">
+      <div class="rh4-layout ren-center ren-center-wide ren-switcher">
+        <div class="rh4-copy ren-stack-lg">
+          <h1 class="rh4-title" id="rh4-title">Hero Split Email Video Lightbox</h1>
+          <p class="rh4-lede">
+            See how a shared design language turns product intent into interfaces teams can ship with confidence.
+          </p>
+
+          <div class="rh4-form-wrap ren-stack-xs">
+            <form class="rh4-form" action="#joined" method="get">
+              <div class="rh4-form-row ren-cluster">
+                <ren-field>
+                  <label for="rh4-email">Work email</label>
+                  <input
+                    class="ren-input"
+                    id="rh4-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="team@example.com"
+                    required
+                  >
+                  <span data-error>Enter a valid email address.</span>
+                </ren-field>
+                <button class="rh4-cta ren-btn" type="submit">Join the preview</button>
+              </div>
+            </form>
+            <p class="rh4-terms">
+              By continuing, you agree to our <a class="ren-link" href="#terms">terms of use</a>.
+            </p>
+          </div>
+        </div>
+
+        <div class="rh4-media">
+          <button
+            class="rh4-media-trigger"
+            type="button"
+            data-dialog-trigger="rh4-video"
+            aria-label="Play the Ren10 product overview"
+          >
+            <span class="rh4-poster ren-frame ren-frame-video">
+              <img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3C/svg%3E"
+                alt="Abstract Ren10 video workspace"
+                width="960"
+                height="540"
+                decoding="async"
+              >
+            </span>
+            <span class="rh4-scrim" aria-hidden="true"></span>
+            <span class="rh4-play ren-icon ren-icon-2xl" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M8 5v14l11-7z" fill="currentColor"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <ren-dialog id="rh4-video" size="xl">
+    <dialog>
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title">Ren10 product overview</h2>
+        <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+          <span class="ren-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+      <div class="ren-dialog-body">
+        <div class="rh4-video-stage ren-frame ren-frame-video" aria-busy="false">
+          <div class="rh4-loader ren-cover" hidden>
+            <span class="ren-spinner ren-spinner-lg ren-cover-center" role="status" aria-label="Loading video"></span>
+          </div>
+          <iframe
+            title="Ren10 product overview video"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+            hidden
+          ></iframe>
+        </div>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <script>
+    const form = document.querySelector('.rh4-form');
+    const lightbox = document.querySelector('#rh4-video');
+    const stage = lightbox.querySelector('.rh4-video-stage');
+    const loader = lightbox.querySelector('.rh4-loader');
+    const frame = lightbox.querySelector('iframe');
+
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      form.dataset.demoSubmitted = 'true';
+      return false;
+    };
+
+    frame.addEventListener('load', () => {
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      const scheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html>
+        <html style="color-scheme: ${scheme}">
+          <head>
+            <meta name="viewport" content="width=device-width">
+            <style>
+              html, body { height: 100%; margin: 0; }
+              body { display: grid; place-items: center; background: Canvas; color: CanvasText; font-family: system-ui; }
+              main { padding: 1em; text-align: center; }
+              h1 { margin: 0 0 0.5em; font-size: 1.5em; }
+              p { margin: 0; font-size: 0.875em; }
+            </style>
+          </head>
+          <body><main><h1>Ren10 video preview</h1><p>Your product overview is ready.</p></main></body>
+        </html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('src');
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

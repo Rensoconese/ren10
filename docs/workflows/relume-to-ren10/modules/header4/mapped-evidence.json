@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header4 mapped to hero-split-email-video-lightbox: ren-switcher two-region split, ren-field email + single ren-btn CTA, ren-link terms, media trigger with ren-frame poster + ren-icon play, ren-dialog video lightbox with ren-spinner until iframe load. Rejected navbar/ren-nav mappings, second CTA, Relume CDN assets, and framework dialog/input primitives."
+}
