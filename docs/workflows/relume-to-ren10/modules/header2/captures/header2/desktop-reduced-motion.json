@@ -1,6 +1,6 @@
 {
   "id": "desktop-reduced-motion",
-  "url": "http://127.0.0.1:55921/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-desktop-reduced-motion-d45ae3a34adc",
+  "url": "http://127.0.0.1:60846/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-desktop-reduced-motion-8ba0f8ffb397",
   "viewport": {
     "width": 1280,
     "height": 900
@@ -12,6 +12,6 @@
     ".rh2-heading": 1,
     ".rh2-cta": 1
   },
-  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
-  "capturedAt": "2026-07-15T16:10:23.733Z"
+  "commit": "8ba0f8ffb397ddcea707c189d742aac7baf93aa0",
+  "capturedAt": "2026-07-15T16:27:03.488Z"
 }

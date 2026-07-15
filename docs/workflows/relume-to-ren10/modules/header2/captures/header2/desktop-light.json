@@ -1,6 +1,6 @@
 {
   "id": "desktop-light",
-  "url": "http://127.0.0.1:55921/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-desktop-light-d45ae3a34adc",
+  "url": "http://127.0.0.1:60846/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-desktop-light-8ba0f8ffb397",
   "viewport": {
     "width": 1280,
     "height": 900
@@ -16,6 +16,6 @@
     ".rh2-media": 1,
     "input[type=email]": 1
   },
-  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
-  "capturedAt": "2026-07-15T16:10:19.267Z"
+  "commit": "8ba0f8ffb397ddcea707c189d742aac7baf93aa0",
+  "capturedAt": "2026-07-15T16:26:59.120Z"
 }
