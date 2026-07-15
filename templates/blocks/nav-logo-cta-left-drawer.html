@@ -108,9 +108,9 @@
     .rn32-toggle > span {
       position: absolute;
       left: 50%;
-      width: 1.125rem;
+      width: 1.5rem;
       height: 2px;
-      margin-left: -0.5625rem;
+      margin-left: -0.75rem;
       display: block;
       background: currentColor;
       border-radius: var(--radius-full);
@@ -121,7 +121,8 @@
     }
 
     .rn32-toggle > span:nth-child(1) {
-      top: calc(50% - 6px);
+      top: calc(50% - var(--space-2));
+      translate: 0 -50%;
     }
 
     .rn32-toggle > span:nth-child(2) {
@@ -130,7 +131,8 @@
     }
 
     .rn32-toggle > span:nth-child(3) {
-      top: calc(50% + 4px);
+      top: calc(50% + var(--space-2));
+      translate: 0 -50%;
     }
 
     /*
@@ -432,8 +434,8 @@
     <section class="rn32-preview" data-rn32-root aria-label="Logo CTA left drawer preview">
       <div class="rn32-bar ren-row-spread">
         <a class="rn32-brand ren-row" href="#home">
-          <span class="rn32-brand-mark ren-center" aria-hidden="true">N</span>
-          <span class="rn32-brand-label">Northline</span>
+          <span class="rn32-brand-mark ren-center" aria-hidden="true">R</span>
+          <span class="rn32-brand-label">Ren10</span>
         </a>
         <div class="rn32-actions ren-cluster">
           <a class="ren-btn ren-btn-primary ren-btn-sm rn32-destination rn32-cta" href="#cta">Start project</a>

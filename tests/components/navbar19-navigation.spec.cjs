@@ -785,4 +785,17 @@ test.describe('Navbar Logo Left Center Links Site Panel (navbar19)', () => {
       expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
     }
   });
+  test('opening the site panel does not move the Ren10 brand', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar19Block(page, staticServer.origin);
+    const brand = page.locator(`${ROOT} .ren-nav-brand`);
+    const before = await brand.boundingBox();
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await expect(page.locator('#rn19-site-panel')).toBeVisible();
+    const after = await brand.boundingBox();
+
+    expect(before).toBeTruthy();
+    expect(after).toBeTruthy();
+    expect(Math.abs(after.y - before.y)).toBeLessThan(0.5);
+  });
 });

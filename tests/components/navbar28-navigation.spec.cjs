@@ -57,7 +57,7 @@ test.describe('Navbar 28 — Topics Collection Cards Mega Menu (navbar28)', () =
 
     await expect(
       page.getByRole('heading', {
-        name: /Navbar Mega Menu Topics Collection Cards|Topics Collection Cards/i,
+        name: /Navbar Mega Menu Topic Collections|Topic Collections/i,
         level: 1,
       })
     ).toBeVisible();

@@ -834,4 +834,17 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
     expect(exposed.sticky).toBe('undefined');
     expect(exposed.stickyShort).toBe('undefined');
   });
+
+  test('fullscreen contact preview uses the available Ren10 content width', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar22Block(page, staticServer.origin);
+    const preview = await page.locator(ROOT).boundingBox();
+    expect(preview).toBeTruthy();
+    expect(preview.width).toBeGreaterThan(1000);
+
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    const overlay = await page.locator(`${ROOT} .rn22-overlay`).boundingBox();
+    expect(overlay).toBeTruthy();
+    expect(Math.abs(overlay.width - preview.width)).toBeLessThan(3);
+  });
 });

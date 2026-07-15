@@ -519,4 +519,17 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
       },
     });
   });
+  test('drawer trigger keeps a centered canonical Ren10 hamburger', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoBlock(page, staticServer.origin, { width: 390, height: 844 });
+    const toggle = page.locator(`${ROOT} .rn32-toggle`);
+    const geometry = await toggle.locator('span').evaluateAll((spans) => spans.map((span) => {
+      const rect = span.getBoundingClientRect();
+      return { width: rect.width, height: rect.height, centerY: rect.y + rect.height / 2 };
+    }));
+    expect(geometry).toHaveLength(3);
+    expect(geometry.every(({ width, height }) => width === 24 && height === 2)).toBe(true);
+    expect(Math.abs((geometry[1].centerY - geometry[0].centerY) - 8)).toBeLessThan(0.5);
+    expect(Math.abs((geometry[2].centerY - geometry[1].centerY) - 8)).toBeLessThan(0.5);
+  });
 });

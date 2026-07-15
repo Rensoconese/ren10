@@ -54,6 +54,8 @@
       z-index: var(--ren-z-sticky);
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-rows: calc(var(--ren-nav-height) - var(--space-4)) auto;
+      align-content: start;
       align-items: center;
       column-gap: var(--space-3);
       min-height: var(--ren-nav-height);
@@ -635,8 +637,8 @@
       <ren-nav>
         <nav class="ren-nav" aria-label="Example site">
           <a class="ren-nav-brand ren-row" href="#home">
-            <span class="rn19-brand-mark ren-row" aria-hidden="true">H</span>
-            <span>Harbor &amp; Co</span>
+            <span class="rn19-brand-mark ren-row" aria-hidden="true">R</span>
+            <span>Ren10</span>
           </a>
 
           <ul id="rn19-bar-links" class="ren-nav-links">

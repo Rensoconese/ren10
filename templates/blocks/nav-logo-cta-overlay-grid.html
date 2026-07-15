@@ -197,6 +197,14 @@
       display: flex;
     }
 
+    @media (min-width: 48rem) {
+      .rn18-menu {
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline: 0;
+      }
+    }
+
     /*
      * Narrow chrome (≤340px): keep 44px targets non-overlapping — drop the
      * wordmark, tighten gaps, keep mark + CTA + toggle.
@@ -445,8 +453,8 @@
       <ren-nav>
         <nav class="ren-nav" aria-label="Example site">
           <a class="ren-nav-brand ren-row" href="#home">
-            <span class="rn18-brand-mark ren-row" aria-hidden="true">N</span>
-            <span class="rn18-brand-label">Northwind</span>
+            <span class="rn18-brand-mark ren-row" aria-hidden="true">R</span>
+            <span class="rn18-brand-label">Ren10</span>
           </a>
 
           <div class="ren-nav-actions ren-cluster">

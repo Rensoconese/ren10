@@ -631,4 +631,16 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
       },
     });
   });
+
+  test('opening the fullscreen grid does not move the Ren10 brand', async ({ page }) => {
+    await openBlock(page, { width: 1280, height: 900 });
+    const brand = root(page).locator('.ren-nav-brand');
+    const before = await brand.boundingBox();
+    await openMenu(page);
+    const after = await brand.boundingBox();
+
+    expect(before).toBeTruthy();
+    expect(after).toBeTruthy();
+    expect(Math.abs(after.y - before.y)).toBeLessThan(0.5);
+  });
 });

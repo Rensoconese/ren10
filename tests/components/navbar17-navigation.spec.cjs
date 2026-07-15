@@ -744,4 +744,18 @@ test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
       await expect(page.locator(`${LINKS} > li > a.ren-nav-link`).first()).toBeVisible();
     }
   });
+  test('menu-to-contact boundary renders exactly one separator', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar17Block(page, staticServer.origin);
+    await openMenu(page);
+    const borders = await page.evaluate(() => {
+      const lastItem = document.querySelector('#rn17-primary-links > li:last-child');
+      const footer = document.querySelector('.rn17-menu-footer');
+      return {
+        listEnd: parseFloat(getComputedStyle(lastItem).borderBottomWidth),
+        footerStart: parseFloat(getComputedStyle(footer).borderTopWidth),
+      };
+    });
+    expect([borders.listEnd, borders.footerStart].filter((width) => width > 0)).toHaveLength(1);
+  });
 });

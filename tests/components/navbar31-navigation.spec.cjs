@@ -798,4 +798,27 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
       expect(colors.barBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
     }
   });
+  test('hamburger and close state use the canonical centered Ren10 geometry', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar31Block(page, staticServer.origin);
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const closed = await toggle.locator('span').evaluateAll((spans) => spans.map((span) => {
+      const rect = span.getBoundingClientRect();
+      return { width: rect.width, height: rect.height };
+    }));
+    expect(closed).toHaveLength(3);
+    expect(closed.every(({ width, height }) => width === 24 && height === 2)).toBe(true);
+
+    await openSheet(page);
+    await expect.poll(async () => Number(await toggle.locator('span').nth(1).evaluate((span) => (
+      getComputedStyle(span).opacity
+    )))).toBe(0);
+    const open = await toggle.locator('span').evaluateAll((spans) => spans.map((span) => {
+      const style = getComputedStyle(span);
+      const rect = span.getBoundingClientRect();
+      return { opacity: Number(style.opacity), centerY: rect.y + rect.height / 2 };
+    }));
+    expect(open[1].opacity).toBe(0);
+    expect(Math.abs(open[0].centerY - open[2].centerY)).toBeLessThan(0.5);
+  });
 });
