@@ -100,15 +100,23 @@ test.describe('Relume Header 5 translated to Ren10', () => {
       expect(box.height).toBeGreaterThanOrEqual(44);
     }
 
-    await actions.first().focus();
-    await expect(actions.first()).toBeFocused();
-    const focusChrome = await actions.first().evaluate((element) => {
-      const style = getComputedStyle(element);
-      return { outline: style.outlineStyle, shadow: style.boxShadow };
-    });
-    expect(focusChrome.outline !== 'none' || focusChrome.shadow !== 'none').toBe(true);
-    await page.keyboard.press('Tab');
-    await expect(actions.nth(1)).toBeFocused();
+    for (let index = 0; index < 2; index += 1) {
+      await actions.nth(index).focus();
+      await expect(actions.nth(index)).toBeFocused();
+      const focusChrome = await actions.nth(index).evaluate((element) => {
+        const style = getComputedStyle(element);
+        const heading = element.closest('[data-rh5-root]')?.querySelector('.rh5-heading');
+        return {
+          outlineStyle: style.outlineStyle,
+          outlineColor: style.outlineColor,
+          outlineOffset: Number.parseFloat(style.outlineOffset),
+          invertedText: heading ? getComputedStyle(heading).color : '',
+        };
+      });
+      expect(focusChrome.outlineStyle).not.toBe('none');
+      expect(focusChrome.outlineColor).toBe(focusChrome.invertedText);
+      expect(focusChrome.outlineOffset).toBeGreaterThanOrEqual(2);
+    }
   });
 
   test('keeps readable overlay contrast in light and dark modes with reduced motion', async ({ page }) => {
@@ -120,14 +128,69 @@ test.describe('Relume Header 5 translated to Ren10', () => {
       const state = await page.locator('[data-rh5-root]').evaluate((root) => {
         const heading = root.querySelector('.rh5-heading');
         const primary = root.querySelector('.rh5-primary');
+        const scrim = root.querySelector('.rh5-scrim');
+
+        const compositeOverWhite = (cssColors) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 1;
+          canvas.height = 1;
+          const context = canvas.getContext('2d', { willReadFrequently: true });
+          context.fillStyle = 'rgb(255, 255, 255)';
+          context.fillRect(0, 0, 1, 1);
+          for (const cssColor of cssColors) {
+            context.fillStyle = cssColor;
+            context.fillRect(0, 0, 1, 1);
+          }
+          return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+        };
+
+        const rgb = (cssColor) => {
+          const canvas = document.createElement('canvas');
+          canvas.width = 1;
+          canvas.height = 1;
+          const context = canvas.getContext('2d', { willReadFrequently: true });
+          context.fillStyle = cssColor;
+          context.fillRect(0, 0, 1, 1);
+          return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+        };
+
+        const luminance = (channels) => {
+          const [red, green, blue] = channels.map((channel) => {
+            const value = channel / 255;
+            return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+          });
+          return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+        };
+
+        const contrast = (first, second) => {
+          const lighter = Math.max(luminance(first), luminance(second));
+          const darker = Math.min(luminance(first), luminance(second));
+          return (lighter + 0.05) / (darker + 0.05);
+        };
+
+        const headingColor = getComputedStyle(heading).color;
+        const scrimStyle = getComputedStyle(scrim);
+        const scrimLayers = scrimStyle.backgroundImage === 'none' ? 1 : 2;
+        const worstCaseSurface = compositeOverWhite(
+          Array.from({ length: scrimLayers }, () => scrimStyle.backgroundColor)
+        );
+        const invertedText = rgb(headingColor);
+        primary.focus();
+        const focusRing = rgb(getComputedStyle(primary).outlineColor);
         return {
-          headingColor: getComputedStyle(heading).color,
+          headingColor,
           primaryBackground: getComputedStyle(primary).backgroundColor,
           transitionDuration: getComputedStyle(primary).transitionDuration,
+          scrimLayers,
+          textContrast: contrast(invertedText, worstCaseSurface),
+          focusContrast: contrast(focusRing, worstCaseSurface),
         };
       });
       expect(state.headingColor).not.toBe('rgba(0, 0, 0, 0)');
       expect(state.primaryBackground).not.toBe('rgba(0, 0, 0, 0)');
+      expect(state.scrimLayers).toBe(2);
+      expect(state.textContrast).toBeGreaterThanOrEqual(4.5);
+      expect(state.focusContrast).toBeGreaterThanOrEqual(3);
       expect(state.transitionDuration.split(',').every((value) => ['0s', '0ms'].includes(value.trim()))).toBe(true);
     }
   });

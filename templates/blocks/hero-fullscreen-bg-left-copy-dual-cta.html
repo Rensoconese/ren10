@@ -41,7 +41,8 @@
     }
 
     .rh5-scrim {
-      background: color-mix(in srgb, var(--color-overlay), var(--color-text) 42%);
+      background-color: var(--color-overlay);
+      background-image: linear-gradient(var(--color-overlay), var(--color-overlay));
     }
 
     .rh5-content {
@@ -77,6 +78,7 @@
 
     .rh5-actions {
       --cluster-gap: var(--space-inline-loose);
+      --ren-btn-ring-color: var(--color-text-inverted);
       margin-block-start: var(--space-stack-tight);
     }
 
