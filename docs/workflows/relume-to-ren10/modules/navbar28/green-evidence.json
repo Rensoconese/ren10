@@ -36,7 +36,7 @@
       "result": "clean"
     }
   },
-  "blockPath": "templates/blocks/nav-mega-menu-category-collections.html",
+  "blockPath": "templates/blocks/nav-mega-menu-topics-collection-cards.html",
   "intentionalDifferences": [
     "One responsive Light DOM tree and one actions cluster instead of duplicated mobile action chrome",
     "Native details/summary with public ARIA shell close, Escape focus return, and destination close policy",

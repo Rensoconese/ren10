@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "path": "/templates/blocks/nav-mega-menu-category-collections.html",
+  "path": "/templates/blocks/nav-mega-menu-topics-collection-cards.html",
   "root": "[data-rmcc-root]",
   "notes": "Final shell policy: 767 mobile (max-width 47.999rem); 768/769 inclusive desktop (min-width 48rem / DESKTOP_MQ), matching ren-nav JS (innerWidth < 768 ⇒ mobile).",
   "states": [

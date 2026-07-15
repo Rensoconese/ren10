@@ -2,7 +2,7 @@
 
 ## Objective
 
-Implement `navbar28` as `templates/blocks/nav-mega-menu-category-collections.html`
+Implement `navbar28` as `templates/blocks/nav-mega-menu-topics-collection-cards.html`
 with isolated coverage in `tests/components/navbar28-navigation.spec.cjs`.
 Change only the packet directory, that HTML path, and that isolated spec.
 
@@ -50,7 +50,7 @@ Do not author Codex green-evidence or advance green→reviewed.
 ## Allowed files
 
 - `docs/workflows/relume-to-ren10/modules/navbar28/**`
-- `templates/blocks/nav-mega-menu-category-collections.html`
+- `templates/blocks/nav-mega-menu-topics-collection-cards.html`
 - `tests/components/navbar28-navigation.spec.cjs`
 
 ## Required validation

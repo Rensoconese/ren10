@@ -2,11 +2,11 @@
   "version": 1,
   "family": "navbars",
   "moduleId": "navbar28",
-  "blockSlug": "nav-mega-menu-category-collections",
-  "blockPath": "templates/blocks/nav-mega-menu-category-collections.html",
+  "blockSlug": "nav-mega-menu-topics-collection-cards",
+  "blockPath": "templates/blocks/nav-mega-menu-topics-collection-cards.html",
   "stage": "green",
   "allowedFiles": [
-    "templates/blocks/nav-mega-menu-category-collections.html",
+    "templates/blocks/nav-mega-menu-topics-collection-cards.html",
     "tests/components/navbar28-navigation.spec.cjs"
   ],
   "evidence": {

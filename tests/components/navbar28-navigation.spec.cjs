@@ -1,7 +1,7 @@
 // @ts-check
 /**
- * Isolated Navbar 28 — Category + Collections Mega Menu
- * (nav-mega-menu-category-collections).
+ * Isolated Navbar 28 — Topics Collection Cards Mega Menu
+ * (nav-mega-menu-topics-collection-cards).
  *
  * Uses only public DOM/ARIA contracts. Does not access private custom-element
  * properties. Relies on tests/utils/static-server.cjs and block-quality.cjs.
@@ -18,7 +18,7 @@ const {
 } = require('../utils/block-quality.cjs');
 
 const PKG_ROOT = path.resolve(__dirname, '../..');
-const BLOCK = '/templates/blocks/nav-mega-menu-category-collections.html';
+const BLOCK = '/templates/blocks/nav-mega-menu-topics-collection-cards.html';
 const ROOT = '[data-rmcc-root]';
 
 /**
@@ -27,17 +27,17 @@ const ROOT = '[data-rmcc-root]';
  */
 async function gotoBlock(page, origin) {
   const response = await page.goto(`${origin}${BLOCK}`);
-  expect(response, 'HTTP response for category-collections mega block').toBeTruthy();
+  expect(response, 'HTTP response for topics-collection-cards mega block').toBeTruthy();
   expect(
     response.status(),
-    'block must not 404 — implement templates/blocks/nav-mega-menu-category-collections.html'
+    'block must not 404 — implement templates/blocks/nav-mega-menu-topics-collection-cards.html'
   ).toBe(200);
   await expect(page.locator(ROOT), 'missing [data-rmcc-root] shell').toHaveCount(1, {
     timeout: 2000,
   });
 }
 
-test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
+test.describe('Navbar 28 — Topics Collection Cards Mega Menu (navbar28)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
 
@@ -52,12 +52,12 @@ test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
     await staticServer?.close();
   });
 
-  test('block page loads with ren-nav shell and category-collections root', async ({ page }) => {
+  test('block page loads with ren-nav shell and topics-collection-cards root', async ({ page }) => {
     await gotoBlock(page, staticServer.origin);
 
     await expect(
       page.getByRole('heading', {
-        name: /Navbar Mega Menu Category Collections|Category Collections/i,
+        name: /Navbar Mega Menu Topics Collection Cards|Topics Collection Cards/i,
         level: 1,
       })
     ).toBeVisible();
@@ -125,7 +125,7 @@ test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
     await expectSingleVisibleAffordance(
       page,
       ['.rmcc-disclosure summary .rmcc-chevron'],
-      'category-collections mega-menu chevron'
+      'topics-collection-cards mega-menu chevron'
     );
   });
 
@@ -844,7 +844,7 @@ test.describe('Navbar 28 — Category Collections Mega Menu (navbar28)', () => {
     await expectSingleVisibleAffordance(
       page,
       ['.rmcc-disclosure summary .rmcc-chevron'],
-      'category-collections mega-menu chevron'
+      'topics-collection-cards mega-menu chevron'
     );
 
     const peerLinks = page.locator('#rmcc-primary-links > li > a.ren-nav-link');
