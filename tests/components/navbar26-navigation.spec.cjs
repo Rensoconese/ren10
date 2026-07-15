@@ -338,6 +338,97 @@ test.describe('Navbar 26 Category Promo Mega Menu (navbar26)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
+  test('mobile matrix: dest, promo CTA, both actions, and brand close details + ren-nav shell with stable focus', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 1100 });
+    await gotoBlock(page, staticServer.origin);
+
+    const disclosure = page.locator(DISCLOSURE);
+    const toggle = page.locator(TOGGLE);
+    const renNav = page.locator(`${ROOT} ren-nav`);
+
+    /** @type {{ id: string, selector: string, openMega: boolean, expectFocus: 'toggle' | 'brand' }[]} */
+    const cases = [
+      { id: 'n26-dest', selector: DEST, openMega: true, expectFocus: 'toggle' },
+      { id: 'n26-promo-cta', selector: PROMO_CTA, openMega: true, expectFocus: 'toggle' },
+      {
+        id: 'ren-nav-actions-secondary',
+        selector: `${ROOT} .ren-nav-actions a.ren-btn-secondary`,
+        openMega: false,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-actions-primary',
+        selector: `${ROOT} .ren-nav-actions a.ren-btn-primary`,
+        openMega: false,
+        expectFocus: 'toggle',
+      },
+      { id: 'ren-nav-brand', selector: BRAND, openMega: true, expectFocus: 'brand' },
+    ];
+
+    for (const item of cases) {
+      await openMobileShell(page);
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+      if (item.openMega) {
+        await page.locator(SUMMARY).click();
+        await expect(disclosure, `${item.id}: mega open`).toHaveAttribute('open', '');
+      }
+
+      const target = page.locator(item.selector).first();
+      await expect(target, `${item.id}: target visible`).toBeVisible();
+      await target.click();
+
+      await expect(disclosure, `${item.id}: details closed`).not.toHaveAttribute('open', '');
+      await expect(toggle, `${item.id}: shell aria-expanded false`).toHaveAttribute(
+        'aria-expanded',
+        'false'
+      );
+      await expect(renNav, `${item.id}: ren-nav data-open removed`).not.toHaveAttribute(
+        'data-open',
+        ''
+      );
+
+      const focusState = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!(el instanceof HTMLElement)) return { missing: true };
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          missing: false,
+          tag: el.tagName,
+          className: String(el.className || ''),
+          isToggle: el.classList.contains('ren-nav-toggle'),
+          isBrand: el.classList.contains('ren-nav-brand'),
+          visible:
+            style.display !== 'none'
+            && style.visibility !== 'hidden'
+            && Number(style.opacity || '1') > 0
+            && rect.width > 0
+            && rect.height > 0,
+        };
+      });
+
+      expect(focusState.missing, `${item.id}: activeElement present`).toBe(false);
+      expect(focusState.visible, `${item.id}: post-close focus must be visible`).toBe(true);
+
+      if (item.expectFocus === 'toggle') {
+        expect(focusState.isToggle, `${item.id}: focus returns to toggle`).toBe(true);
+      } else {
+        expect(focusState.isBrand, `${item.id}: brand may keep focus (still visible)`).toBe(true);
+      }
+
+      // Ensure no leftover global controller hook (P2).
+      const hasGlobal = await page.evaluate(
+        () => typeof window.initNavMegaMenuCategoryPromoPanel === 'function'
+      );
+      expect(hasGlobal, 'window.initNavMegaMenuCategoryPromoPanel must not be published').toBe(
+        false
+      );
+    }
+  });
+
   test('breakpoint crossing closes open mega; same-breakpoint resize keeps open state', async ({
     page,
   }) => {

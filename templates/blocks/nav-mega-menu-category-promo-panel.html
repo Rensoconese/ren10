@@ -18,6 +18,15 @@
       overflow-x: clip;
     }
 
+    /*
+     * Full-page captures + sticky site chrome produce a mid-page “floating bar”
+     * artifact on tall mobile states (e.g. narrow-340-dropdown-open). This page
+     * only demos the block — pin the docs top bar to normal flow.
+     */
+    .dx-nav {
+      position: static;
+    }
+
     .dx-nav,
     .dx-nav-inner,
     .dx-shell,
@@ -846,6 +855,68 @@
         return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
       }
 
+      /**
+       * Close the mobile shell through the public toggle control so ren-nav's
+       * internal open state stays in sync (no private _isOpen / _closeMenu).
+       */
+      function closeMobileShell() {
+        if (isDesktop() || !toggle) return false;
+        if (toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.click();
+          return true;
+        }
+        // Public DOM fallback if host attribute drifted without expanded toggle.
+        if (renNavHost?.hasAttribute('data-open')) {
+          renNavHost.removeAttribute('data-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          return true;
+        }
+        return false;
+      }
+
+      /**
+       * After shell collapse, destinations/actions may become display:none.
+       * Keep a visible, stable focus target (toggle) when the prior active
+       * element is no longer a visible tab stop. Brand can keep focus because
+       * it remains visible in the top row after close.
+       */
+      function ensureVisibleFocusAfterMobileClose() {
+        if (isDesktop() || !toggle) return;
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement) || active === document.body) {
+          toggle.focus({ preventScroll: true });
+          return;
+        }
+        const style = getComputedStyle(active);
+        const rect = active.getBoundingClientRect();
+        const hidden =
+          style.display === 'none'
+          || style.visibility === 'hidden'
+          || Number(style.opacity || '1') === 0
+          || rect.width === 0
+          || rect.height === 0
+          || !root.contains(active);
+        if (hidden) {
+          toggle.focus({ preventScroll: true });
+        }
+      }
+
+      /**
+       * Mobile destination activation: close mega details + ren-nav shell and
+       * restore a visible focus target. Desktop only closes the disclosure.
+       */
+      function closeFromDestinationActivation() {
+        markIntentionalCloseWhilePointerInside();
+        const mobileShellOpen = !isDesktop() && isMobileNavOpen();
+        closeDisclosure(false);
+        if (mobileShellOpen) {
+          closeMobileShell();
+          queueMicrotask(() => {
+            ensureVisibleFocusAfterMobileClose();
+          });
+        }
+      }
+
       // stopImmediatePropagation keeps ren-nav from treating summary activation
       // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
       // and mobile keep native details toggle (no preventDefault).
@@ -954,27 +1025,24 @@
         { signal }
       );
 
-      // Destination close for every in-panel destination class.
-      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
-        anchor.addEventListener(
-          'click',
-          () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
-          },
-          { signal }
-        );
-      });
-
-      // Also close when bar peers / actions activate (outside the disclosure).
-      root.querySelectorAll(
-        '#n26-primary-links > li > a.ren-nav-link, .ren-nav-actions a[href], .ren-nav-actions .ren-btn'
-      ).forEach((el) => {
+      // Destination classes that close details (+ mobile shell): category dests,
+      // promo CTA, both bar actions, and brand. Peers (ren-nav-link) already
+      // close the shell via ren-nav's public link handler.
+      const destinationClosers = root.querySelectorAll(
+        [
+          'a.n26-dest',
+          'a.n26-promo-cta',
+          '.ren-nav-actions a[href]',
+          '.ren-nav-actions .ren-btn',
+          'a.ren-nav-brand',
+          '#n26-primary-links > li > a.ren-nav-link',
+        ].join(', ')
+      );
+      destinationClosers.forEach((el) => {
         el.addEventListener(
           'click',
           () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+            closeFromDestinationActivation();
           },
           { signal }
         );
@@ -1011,7 +1079,6 @@
     }
 
     initNavMegaMenuCategoryPromoPanel();
-    window.initNavMegaMenuCategoryPromoPanel = initNavMegaMenuCategoryPromoPanel;
   </script>
 </body>
 </html>
