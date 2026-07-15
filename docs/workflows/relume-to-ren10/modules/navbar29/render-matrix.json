@@ -10,7 +10,11 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": false
+      }
     },
     {
       "id": "desktop-light-open",
@@ -19,7 +23,12 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card", ".rmoc-mega-link"]
+      }
     },
     {
       "id": "desktop-light-hover-open",
@@ -28,7 +37,12 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "hover", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "desktop-dark-open",
@@ -37,7 +51,12 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "tablet-light-open",
@@ -46,7 +65,12 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "mobile-light-nav-open",
@@ -55,7 +79,13 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": false,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-disclosure > summary"]
+      }
     },
     {
       "id": "mobile-light-nested-open",
@@ -65,9 +95,16 @@
       "reducedMotion": false,
       "actions": [
         { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "focus", "selector": ".rmoc-disclosure > summary" },
         { "type": "click", "selector": ".rmoc-disclosure > summary" }
       ],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-panel", "a.rmoc-card", ".rmoc-mega-link"]
+      }
     },
     {
       "id": "mobile-dark-nested-open",
@@ -77,9 +114,16 @@
       "reducedMotion": false,
       "actions": [
         { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "focus", "selector": ".rmoc-disclosure > summary" },
         { "type": "click", "selector": ".rmoc-disclosure > summary" }
       ],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "mobile-js-disabled-open",
@@ -88,7 +132,12 @@
       "javaScript": false,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "desktop-reduced-motion-open",
@@ -97,7 +146,12 @@
       "javaScript": true,
       "reducedMotion": true,
       "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "narrow-320-nested-open",
@@ -107,9 +161,16 @@
       "reducedMotion": false,
       "actions": [
         { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "focus", "selector": ".rmoc-disclosure > summary" },
         { "type": "click", "selector": ".rmoc-disclosure > summary" }
       ],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "narrow-340-nested-open",
@@ -119,9 +180,16 @@
       "reducedMotion": false,
       "actions": [
         { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "focus", "selector": ".rmoc-disclosure > summary" },
         { "type": "click", "selector": ".rmoc-disclosure > summary" }
       ],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-panel", "a.rmoc-card"]
+      }
     },
     {
       "id": "seam-767-nav-open",
@@ -130,7 +198,13 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": false,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-disclosure > summary"]
+      }
     },
     {
       "id": "seam-768-nav-open",
@@ -140,9 +214,16 @@
       "reducedMotion": false,
       "actions": [
         { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "focus", "selector": ".rmoc-disclosure > summary" },
         { "type": "click", "selector": ".rmoc-disclosure > summary" }
       ],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": { ".ren-nav-toggle": { "aria-expanded": "true" } },
+        "visible": ["#rmoc-primary-links", ".rmoc-panel", "a.rmoc-card", ".rmoc-mega-link"]
+      }
     },
     {
       "id": "seam-769-open",
@@ -151,7 +232,12 @@
       "javaScript": true,
       "reducedMotion": false,
       "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [".rmoc-panel", "a.rmoc-card"]
+      }
     }
   ]
 }

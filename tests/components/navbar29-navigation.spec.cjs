@@ -895,7 +895,18 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
 
       for (const action of state.actions) {
         if (action.type === 'click') {
-          await page.locator(action.selector).click();
+          const loc = page.locator(action.selector);
+          await loc.waitFor({ state: 'visible' });
+          await loc.click();
+          // Stabilize shell before nested summary (seam-768 race).
+          if (String(action.selector).includes('ren-nav-toggle')) {
+            await page.locator('.ren-nav-toggle[aria-expanded="true"]').waitFor();
+            await page.locator('#rmoc-primary-links').waitFor({ state: 'visible' });
+            await page.locator(SUMMARY).waitFor({ state: 'visible' });
+          }
+        } else if (action.type === 'focus') {
+          await page.locator(action.selector).waitFor({ state: 'visible' });
+          await page.locator(action.selector).focus();
         } else if (action.type === 'hover') {
           await page.locator(action.selector).hover();
         }
@@ -906,6 +917,37 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
           page.locator(selector),
           `${state.id} expects ${count}× ${selector}`
         ).toHaveCount(count);
+      }
+
+      const expectedState = state.expectedState;
+      if (expectedState && typeof expectedState === 'object') {
+        if (expectedState.detailsOpen === true) {
+          await expect(
+            page.locator('.rmoc-disclosure'),
+            `${state.id} details must be open`
+          ).toHaveAttribute('open', '');
+        } else if (expectedState.detailsOpen === false) {
+          await expect(
+            page.locator('.rmoc-disclosure'),
+            `${state.id} details must stay closed`
+          ).not.toHaveAttribute('open', '');
+        }
+
+        if (expectedState.aria && expectedState.aria['.ren-nav-toggle']) {
+          await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveAttribute(
+            'aria-expanded',
+            expectedState.aria['.ren-nav-toggle']['aria-expanded']
+          );
+        }
+
+        if (Array.isArray(expectedState.visible)) {
+          for (const selector of expectedState.visible) {
+            await expect(
+              page.locator(selector).first(),
+              `${state.id} expects visible ${selector}`
+            ).toBeVisible();
+          }
+        }
       }
     }
   });

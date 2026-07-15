@@ -11,11 +11,14 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    /* Narrow viewports: keep the template page from generating root horizontal scroll. */
+    /*
+     * Narrow viewports: constrain page chrome without clipping document scroll.
+     * overflow-x:clip on html/body forces overflow-y to non-visible (CSS overflow
+     * pairing) and breaks full-page capture / scrollIntoView for open mobile shells.
+     */
     html,
     body {
       max-width: 100%;
-      overflow-x: clip;
     }
 
     .dx-nav-inner {
@@ -37,9 +40,16 @@
 
     .dx-shell,
     .rmoc-preview,
-    .rmoc-page-header {
+    .rmoc-page-header,
+    .rmoc-panel,
+    .rmoc-card-grid {
       min-width: 0;
       max-width: 100%;
+    }
+
+    .rmoc-preview {
+      overflow-x: clip;
+      overflow-y: visible;
     }
 
     .rmoc-page-header {
