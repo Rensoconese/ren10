@@ -4,7 +4,7 @@
   "moduleId": "navbar16",
   "blockSlug": "nav-logo-left-action-overlay-menu",
   "blockPath": "templates/blocks/nav-logo-left-action-overlay-menu.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-logo-left-action-overlay-menu.html",
     "tests/components/navbar16-navigation.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
