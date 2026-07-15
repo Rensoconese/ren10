@@ -1,0 +1,8 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "rawResponseSha256": "67e3adfe39f79ddc2dca3568503cae6720719fbd7257a092b949bfa169dae4f0",
+  "notes": "Authenticated get_component for header6 returned one complete section plus utils/button/input primitive names. Sanitized evidence preserves all observable anatomy, ownership, counts, responsive form states, interaction logic, accessibility defects, dependencies, and unavailable visual evidence without persisting proprietary source, copy, classes, or URLs."
+}

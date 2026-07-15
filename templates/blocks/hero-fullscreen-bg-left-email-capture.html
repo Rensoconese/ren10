@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fullscreen Email Capture Hero — Ren10 Blocks</title>
+  <meta name="description" content="A fullscreen Ren10 hero with a background image, accessible email capture, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .rh6-hero {
+      --cover-height: 100dvh;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 0;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-text);
+    }
+
+    .rh6-background,
+    .rh6-background > img,
+    .rh6-scrim {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh6-background {
+      z-index: var(--z-base);
+      margin: 0;
+    }
+
+    .rh6-background > img {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .rh6-scrim {
+      background-color: var(--color-overlay);
+      background-image: linear-gradient(var(--color-overlay), var(--color-overlay));
+    }
+
+    .rh6-content {
+      position: relative;
+      z-index: var(--z-raised);
+      width: 100%;
+    }
+
+    .rh6-copy {
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+      max-width: var(--width-md);
+    }
+
+    .rh6-heading,
+    .rh6-description,
+    .rh6-terms,
+    .rh6-status {
+      margin: 0;
+      color: var(--color-text-inverted);
+    }
+
+    .rh6-heading {
+      font-size: clamp(var(--display-md-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh6-description {
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh6-signup,
+    .rh6-form {
+      --stack-gap: var(--space-stack-tight);
+      width: 100%;
+      max-width: var(--width-sm);
+    }
+
+    .rh6-form {
+      --ren-field-height: var(--touch-min);
+      --ren-btn-ring-color: var(--color-text-inverted);
+    }
+
+    .rh6-form-row {
+      --switcher-gap: var(--space-inline-tight);
+      align-items: end;
+    }
+
+    .rh6-form-row > ren-field,
+    .rh6-form-row > .ren-btn {
+      flex: 1 1 100%;
+      width: 100%;
+      min-width: 100%;
+    }
+
+    .rh6-form-row label,
+    .rh6-form-row [data-error] {
+      color: var(--color-text-inverted);
+    }
+
+    .rh6-form-row [data-error]:empty,
+    .rh6-status:empty {
+      display: none;
+    }
+
+    .rh6-terms {
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    .rh6-terms a {
+      color: var(--color-text-inverted);
+      text-decoration: underline;
+      text-underline-offset: var(--space-1);
+    }
+
+    .rh6-terms a:focus-visible {
+      border-radius: var(--radius-sm);
+      outline: var(--focus-ring-width) solid var(--color-text-inverted);
+      outline-offset: var(--focus-ring-offset);
+    }
+
+    @media (min-width: 40rem) {
+      .rh6-form-row > ren-field {
+        flex: 1 1 auto;
+        width: 0;
+        min-width: 0;
+      }
+
+      .rh6-form-row > .ren-btn {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: var(--touch-min);
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh6-content {
+        --center-padding: var(--space-section-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="rh6-hero ren-cover" data-rh6-root aria-labelledby="rh6-heading">
+      <div class="rh6-background" aria-hidden="true">
+        <img
+          src="../../examples/reference-app/screenshots/light.png"
+          alt=""
+          width="1440"
+          height="900"
+        >
+        <div class="rh6-scrim"></div>
+      </div>
+
+      <div class="rh6-content ren-center ren-center-wide ren-cover-center">
+        <div class="rh6-copy ren-stack">
+          <h1 id="rh6-heading" class="rh6-heading">Build with confidence from the first screen</h1>
+          <p class="rh6-description">Get practical Ren10 patterns, accessibility guidance, and system updates delivered in one concise email.</p>
+
+          <div class="rh6-signup ren-stack">
+            <form class="rh6-form ren-stack" action="../../docs/getting-started.html" method="get">
+              <div class="rh6-form-row ren-switcher">
+                <ren-field>
+                  <label for="rh6-email">Work email</label>
+                  <input
+                    class="ren-input"
+                    id="rh6-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="you@company.com"
+                    required
+                  >
+                  <span data-error>Enter a valid email address.</span>
+                </ren-field>
+                <button class="ren-btn" type="submit">Get updates</button>
+              </div>
+              <p class="rh6-terms">By subscribing, you agree to the <a href="../../LICENSE">terms of use</a>.</p>
+            </form>
+            <p class="rh6-status" data-rh6-status role="status" aria-live="polite"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const signupForm = document.querySelector('.rh6-form');
+    const signupStatus = document.querySelector('[data-rh6-status]');
+
+    signupForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      signupStatus.textContent = 'Thanks — check your inbox for the next Ren10 update.';
+      signupForm.reset();
+    });
+  </script>
+</body>
+</html>

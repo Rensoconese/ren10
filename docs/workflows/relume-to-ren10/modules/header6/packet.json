@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header6",
+  "blockSlug": "hero-fullscreen-bg-left-email-capture",
+  "blockPath": "templates/blocks/hero-fullscreen-bg-left-email-capture.html",
+  "stage": "green",
+  "allowedFiles": [
+    "templates/blocks/hero-fullscreen-bg-left-email-capture.html",
+    "tests/components/header6-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
+  }
+}
