@@ -4,7 +4,7 @@
   "moduleId": "navbar20",
   "blockSlug": "nav-logo-left-center-links-overlay-panel",
   "blockPath": "templates/blocks/nav-logo-left-center-links-overlay-panel.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/nav-logo-left-center-links-overlay-panel.html",
     "tests/components/navbar20-navigation.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }
