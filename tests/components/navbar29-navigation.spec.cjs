@@ -7,6 +7,7 @@
  * blocks-navigation suite.
  */
 const { test, expect } = require('@playwright/test');
+const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const {
@@ -28,6 +29,14 @@ const PANEL = '.rmoc-panel';
 const CHEVRON = '.rmoc-disclosure summary .rmoc-chevron';
 const MEGA_LINK = '.rmoc-mega-link';
 const CARD = 'a.rmoc-card';
+
+/** @type {{ version: number, path: string, root: string, states: Array<{ id: string, viewport: { width: number, height: number }, theme: string, javaScript: boolean, reducedMotion: boolean, actions: Array<{ type: string, selector: string }>, expectedMarkers: Record<string, number> }> }} */
+const RMOC_RENDER_MATRIX = JSON.parse(
+  fs.readFileSync(
+    path.join(PKG_ROOT, 'docs/workflows/relume-to-ren10/modules/navbar29/render-matrix.json'),
+    'utf8'
+  )
+);
 
 /**
  * @param {import('@playwright/test').Page} page
@@ -295,6 +304,96 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile destinations close nested mega + shell via public toggle and leave stable visible focus', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 900 });
+    await gotoNavbar29Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const disclosure = page.locator(DISCLOSURE);
+    const summary = page.locator(SUMMARY);
+    const brand = page.locator(`${ROOT} .ren-nav-brand`);
+
+    /**
+     * @param {string} openPath
+     * @param {import('@playwright/test').Locator} activator
+     * @param {'brand'|'toggle'} focusKind
+     */
+    async function assertDestinationClosesShell(openPath, activator, focusKind) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      if (openPath === 'nested') {
+        await summary.click();
+        await expect(disclosure).toHaveAttribute('open', '');
+      }
+
+      await activator.click();
+      await expect(disclosure).not.toHaveAttribute('open', '');
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.locator(`${ROOT} ren-nav`)).not.toHaveAttribute('data-open', '');
+
+      await expect
+        .poll(async () => page.evaluate(() => {
+          const active = document.activeElement;
+          if (!(active instanceof HTMLElement)) return null;
+          const style = getComputedStyle(active);
+          const rect = active.getBoundingClientRect();
+          return {
+            tag: active.tagName,
+            isBrand: active.classList.contains('ren-nav-brand'),
+            isToggle: active.classList.contains('ren-nav-toggle'),
+            visible:
+              style.display !== 'none'
+              && style.visibility !== 'hidden'
+              && Number(style.opacity || '1') > 0
+              && rect.width > 0
+              && rect.height > 0,
+          };
+        }))
+        .toMatchObject(
+          focusKind === 'brand'
+            ? { isBrand: true, visible: true }
+            : { isToggle: true, visible: true }
+        );
+    }
+
+    // Category mega-link with nested open.
+    await assertDestinationClosesShell('nested', page.locator(MEGA_LINK).first(), 'toggle');
+
+    // Collection card with nested open.
+    await assertDestinationClosesShell('nested', page.locator(CARD).first(), 'toggle');
+
+    // Secondary + primary actions (shell open; nested optional).
+    await assertDestinationClosesShell(
+      'shell',
+      page.locator(`${ROOT} .ren-nav-actions .ren-btn-secondary`).first(),
+      'toggle'
+    );
+    await assertDestinationClosesShell(
+      'shell',
+      page.locator(`${ROOT} .ren-nav-actions .ren-btn-primary`).first(),
+      'toggle'
+    );
+
+    // Brand stays visible — focus may remain on brand.
+    await assertDestinationClosesShell('nested', brand, 'brand');
+
+    // Peer top-level link.
+    await assertDestinationClosesShell(
+      'nested',
+      page.locator(`${LINKS_ID} > li > a.ren-nav-link`).first(),
+      'toggle'
+    );
+  });
+
+  test('does not publish window.initNavMegaMenuOverlayCollections global', async ({ page }) => {
+    await gotoNavbar29Block(page, staticServer.origin);
+    const hasGlobal = await page.evaluate(() => Object.hasOwn(window, 'initNavMegaMenuOverlayCollections')
+      || typeof window.initNavMegaMenuOverlayCollections !== 'undefined');
+    expect(hasGlobal, 'block must not assign window.initNavMegaMenuOverlayCollections').toBe(false);
   });
 
   test('breakpoint crossing closes an open mega and resets interaction policy', async ({ page }) => {
@@ -772,6 +871,42 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
       expect(colors.text, theme).toBeTruthy();
       expect(colors.navBg, theme).not.toBe('');
       expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+
+  test('render-matrix marker counts hold across packet viewport states', async ({ page }) => {
+    expect(RMOC_RENDER_MATRIX.states.length, 'packet render matrix must have 15 states').toBe(15);
+
+    for (const state of RMOC_RENDER_MATRIX.states) {
+      if (!state.javaScript) continue;
+
+      if (state.reducedMotion) {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+      } else {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+      }
+
+      await page.setViewportSize(state.viewport);
+      await gotoNavbar29Block(page, staticServer.origin);
+
+      await page.evaluate((theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, state.theme);
+
+      for (const action of state.actions) {
+        if (action.type === 'click') {
+          await page.locator(action.selector).click();
+        } else if (action.type === 'hover') {
+          await page.locator(action.selector).hover();
+        }
+      }
+
+      for (const [selector, count] of Object.entries(state.expectedMarkers)) {
+        await expect(
+          page.locator(selector),
+          `${state.id} expects ${count}× ${selector}`
+        ).toHaveCount(count);
+      }
     }
   });
 });

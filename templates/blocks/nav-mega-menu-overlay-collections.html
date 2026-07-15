@@ -900,7 +900,88 @@
 
       function isMobileNavOpen() {
         if (!toggle) return false;
-        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+        // Public ARIA / host contract only — never read private ren-nav fields.
+        return toggle.getAttribute('aria-expanded') === 'true'
+          || renNavHost?.hasAttribute('data-open')
+          || root.querySelector('.ren-nav')?.hasAttribute('data-open');
+      }
+
+      /**
+       * Close mobile shell through the public toggle affordance (click).
+       * ren-nav owns aria-expanded / data-open; we never set private fields.
+       */
+      function closeMobileShellViaPublicToggle() {
+        if (!toggle) return false;
+        if (toggle.getAttribute('aria-expanded') !== 'true') return false;
+        toggle.click();
+        return true;
+      }
+
+      function isElementVisiblyFocusable(el) {
+        if (!(el instanceof Element)) return false;
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        if (Number(style.opacity || '1') === 0) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      }
+
+      /**
+       * After mobile shell collapse, destinations often leave the accessibility
+       * tree. Park focus on a still-visible public control:
+       * - brand activation → brand (always visible in the top row)
+       * - every other destination → toggle (named open/close control)
+       */
+      function restoreStableVisibleFocus(preferred) {
+        const brand = root.querySelector('.ren-nav-brand');
+        const brandHit = preferred instanceof Element
+          ? preferred.closest?.('.ren-nav-brand')
+          : null;
+        const candidates = brandHit
+          ? [brandHit, brand, toggle]
+          : [toggle, brand];
+        const pick = candidates.find(isElementVisiblyFocusable);
+        if (pick && typeof pick.focus === 'function') {
+          pick.focus({ preventScroll: true });
+        }
+      }
+
+      /**
+       * Destination activation: always close nested mega; on mobile also close
+       * the shell via the public toggle and leave a stable visible focus.
+       */
+      function closeNestedAndMaybeShell(preferredFocus) {
+        markIntentionalCloseWhilePointerInside();
+        closeDisclosure(false);
+        if (isDesktop()) return;
+
+        // Let ren-nav's own peer-link bubble handlers run first, then finish
+        // with the public toggle if the shell is still expanded.
+        queueMicrotask(() => {
+          if (isMobileNavOpen()) {
+            closeMobileShellViaPublicToggle();
+          }
+          // One frame so display:none from the closed shell applies before focus.
+          requestAnimationFrame(() => {
+            restoreStableVisibleFocus(preferredFocus);
+          });
+        });
+      }
+
+      function destinationFromEventTarget(target) {
+        if (!(target instanceof Element)) return null;
+        // Summary is the mega trigger, not a navigation destination.
+        if (target.closest('summary')) return null;
+        return target.closest(
+          [
+            '.rmoc-mega-link',
+            'a.rmoc-card',
+            '.ren-nav-actions a',
+            '.ren-nav-actions .ren-btn',
+            '.ren-nav-brand',
+            '#rmoc-primary-links > li > a.ren-nav-link',
+          ].join(', '),
+        );
       }
 
       /**
@@ -1077,16 +1158,17 @@
         { signal }
       );
 
-      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
-        anchor.addEventListener(
-          'click',
-          () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
-          },
-          { signal }
-        );
-      });
+      // Destinations: mega links, collection cards, header actions, brand, peers.
+      // Capture phase so mobile shell close still runs when ren-nav also listens.
+      root.addEventListener(
+        'click',
+        (event) => {
+          const destination = destinationFromEventTarget(event.target);
+          if (!destination || !root.contains(destination)) return;
+          closeNestedAndMaybeShell(destination);
+        },
+        { signal }
+      );
 
       if (toggle) {
         const observer = new MutationObserver(() => {
@@ -1118,7 +1200,6 @@
     }
 
     initNavMegaMenuOverlayCollections();
-    window.initNavMegaMenuOverlayCollections = initNavMegaMenuOverlayCollections;
   </script>
 </body>
 </html>

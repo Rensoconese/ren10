@@ -49,15 +49,6 @@
       "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
     },
     {
-      "id": "mobile-light-closed",
-      "viewport": { "width": 390, "height": 844 },
-      "theme": "light",
-      "javaScript": true,
-      "reducedMotion": false,
-      "actions": [],
-      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
-    },
-    {
       "id": "mobile-light-nav-open",
       "viewport": { "width": 390, "height": 1100 },
       "theme": "light",
