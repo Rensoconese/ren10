@@ -191,6 +191,81 @@ test.describe('Navbar Logo Left Action Overlay Menu (navbar16)', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
+  test('overlay state is owned via public ARIA/DOM only (no private ren-nav fields)', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar16Block(page, staticServer.origin);
+
+    const probe = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn16-root]');
+      const host = root?.querySelector('ren-nav');
+      const toggle = root?.querySelector('.ren-nav-toggle');
+      const panel = root?.querySelector('#rn16-panel');
+      if (!host || !toggle || !panel) return { missing: true };
+
+      const scripts = Array.from(document.querySelectorAll('script[type="module"]'));
+      const controllerSource = scripts
+        .map((node) => node.textContent || '')
+        .find((text) => text.includes('initNavLogoLeftActionOverlayMenu') || text.includes('RN16_CONTROLLER'))
+        || scripts.map((node) => node.textContent || '').join('\n');
+
+      const touchesPrivate =
+        controllerSource.includes('._isOpen')
+        || controllerSource.includes("['_isOpen']")
+        || controllerSource.includes('["_isOpen"]')
+        || controllerSource.includes('._closeMenu')
+        || controllerSource.includes("['_closeMenu']")
+        || controllerSource.includes('["_closeMenu"]')
+        || /_isOpen\s*=/.test(controllerSource)
+        || /_closeMenu\s*\(/.test(controllerSource);
+
+      toggle.click();
+      const openPublic = {
+        ariaExpanded: toggle.getAttribute('aria-expanded'),
+        hostDataOpen: host.hasAttribute('data-open'),
+        panelDataOpen: panel.hasAttribute('data-open'),
+        panelAriaHidden: panel.getAttribute('aria-hidden'),
+      };
+
+      // Public state remains consistent after a same-band resize (no private reassert).
+      window.dispatchEvent(new Event('resize'));
+      const afterResize = {
+        ariaExpanded: toggle.getAttribute('aria-expanded'),
+        hostDataOpen: host.hasAttribute('data-open'),
+        panelDataOpen: panel.hasAttribute('data-open'),
+      };
+
+      toggle.click();
+      const closedPublic = {
+        ariaExpanded: toggle.getAttribute('aria-expanded'),
+        hostDataOpen: host.hasAttribute('data-open'),
+        panelDataOpen: panel.hasAttribute('data-open'),
+        panelAriaHidden: panel.getAttribute('aria-hidden'),
+      };
+
+      return { touchesPrivate, openPublic, afterResize, closedPublic };
+    });
+
+    expect(probe.missing, 'missing host/toggle/panel').toBeFalsy();
+    expect(
+      probe.touchesPrivate,
+      'controller must not access private ren-nav _isOpen / _closeMenu'
+    ).toBe(false);
+
+    expect(probe.openPublic.ariaExpanded).toBe('true');
+    expect(probe.openPublic.hostDataOpen).toBe(true);
+    expect(probe.openPublic.panelDataOpen).toBe(true);
+    expect(probe.openPublic.panelAriaHidden).toBe('false');
+
+    expect(probe.afterResize.ariaExpanded).toBe('true');
+    expect(probe.afterResize.hostDataOpen).toBe(true);
+    expect(probe.afterResize.panelDataOpen).toBe(true);
+
+    expect(probe.closedPublic.ariaExpanded).toBe('false');
+    expect(probe.closedPublic.hostDataOpen).toBe(false);
+    expect(probe.closedPublic.panelDataOpen).toBe(false);
+    expect(probe.closedPublic.panelAriaHidden).toBe('true');
+  });
+
   test('Escape from a focused overlay destination restores focus to the toggle', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar16Block(page, staticServer.origin);

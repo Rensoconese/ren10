@@ -162,7 +162,8 @@
     }
 
     .rn16-preview ren-nav[data-open] .rn16-panel,
-    .rn16-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .rn16-panel {
+    .rn16-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .rn16-panel,
+    .rn16-panel[data-open] {
       display: flex;
     }
 
@@ -532,7 +533,7 @@
             <span></span>
           </button>
 
-          <div id="rn16-panel" class="rn16-panel">
+          <div id="rn16-panel" class="rn16-panel" aria-hidden="true">
             <ul id="rn16-primary-links" class="ren-nav-links">
               <li>
                 <a class="ren-nav-link rn16-primary-link" href="#product">Product</a>
@@ -617,9 +618,15 @@
   <script type="module">
     /**
      * Block-local controller for toggle-driven overlay at every width.
-     * Host ren-nav owns open/close ARIA, Escape, outside click, and link close.
-     * This script only keeps the open shell available on wide viewports
-     * (ren-nav would otherwise close when width ≥ 48rem on resize/init).
+     * Overlay open/close is owned entirely via public DOM/ARIA:
+     *   - .ren-nav-toggle[aria-expanded]
+     *   - ren-nav[data-open]
+     *   - #rn16-panel[data-open] + aria-hidden
+     *
+     * Does not read or write private ren-nav fields/methods (e.g. _isOpen,
+     * _closeMenu). Toggle clicks are captured so ren-nav's mobile-shell
+     * handler does not race; Escape, outside click, and every destination
+     * class close through the same public contract.
      */
     const RN16_CONTROLLER = Symbol.for('ren10.rn16.controller');
 
@@ -649,93 +656,102 @@
       // Ensure aria-controls points at the overlay shell.
       toggle.setAttribute('aria-controls', 'rn16-panel');
 
-      /**
-       * ren-nav closes on resize when width ≥ 768. Preserve intentional open
-       * state for this always-toggle anatomy by re-opening when the user has
-       * expanded the shell.
-       */
-      let userOpen = false;
-
-      const isExpanded = () => toggle.getAttribute('aria-expanded') === 'true';
-
-      const syncUserOpen = () => {
-        userOpen = isExpanded();
-      };
+      /** Public contract only: toggle aria-expanded is the source of truth. */
+      const isShellOpen = () => toggle.getAttribute('aria-expanded') === 'true';
 
       /**
-       * Close the overlay while keeping ren-nav internal open state in sync.
-       * Primary `.ren-nav-link` destinations already close via ren-nav; contact
-       * and social destinations need this explicit path.
+       * Apply open/closed overlay state through documented public attributes.
+       * Never touch private ren-nav fields or methods.
        */
-      const closeShell = ({ returnFocus = false } = {}) => {
-        userOpen = false;
-        if (isExpanded()) {
-          if (typeof host._closeMenu === 'function') {
-            host._closeMenu();
-          } else {
-            host.removeAttribute('data-open');
-            toggle.setAttribute('aria-expanded', 'false');
-            host._isOpen = false;
-          }
+      const setShellOpen = (open, { returnFocus = false } = {}) => {
+        if (open) {
+          toggle.setAttribute('aria-expanded', 'true');
+          host.setAttribute('data-open', '');
+          panel.setAttribute('data-open', '');
+          panel.setAttribute('aria-hidden', 'false');
+        } else {
+          toggle.setAttribute('aria-expanded', 'false');
+          host.removeAttribute('data-open');
+          panel.removeAttribute('data-open');
+          panel.setAttribute('aria-hidden', 'true');
         }
-        if (returnFocus) {
+        if (!open && returnFocus) {
           toggle.focus();
         }
       };
 
-      toggle.addEventListener('click', () => {
-        // Read after ren-nav handles the click (microtask).
-        queueMicrotask(syncUserOpen);
-      }, { signal });
-
-      // Escape (capture): read focus before ren-nav closes and hides the panel
-      // (which moves focus to body). Restore to the toggle afterward.
-      document.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape') return;
-        if (!isExpanded()) return;
-        const active = document.activeElement;
-        const fromOverlay = active instanceof Node && panel.contains(active);
-        if (!fromOverlay) {
-          userOpen = false;
+      const closeShell = (returnFocus = false) => {
+        if (!isShellOpen()) {
+          if (returnFocus) toggle.focus();
           return;
         }
-        queueMicrotask(() => {
-          userOpen = false;
-          toggle.focus();
-        });
-      }, { signal, capture: true });
+        setShellOpen(false, { returnFocus });
+      };
+
+      const openShell = () => {
+        setShellOpen(true);
+      };
+
+      // Own the toggle fully so ren-nav mobile-shell click/resize does not race.
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (isShellOpen()) {
+            closeShell(false);
+          } else {
+            openShell();
+          }
+        },
+        { capture: true, signal }
+      );
+
+      // Escape: close via public attributes; restore focus when leaving a
+      // focused overlay destination (otherwise focus would fall to body).
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!isShellOpen()) return;
+          const active = document.activeElement;
+          const fromOverlay = active instanceof Node && panel.contains(active);
+          event.stopImmediatePropagation();
+          closeShell(fromOverlay);
+        },
+        { capture: true, signal }
+      );
+
+      // Outside the ren-nav host closes the overlay (public ownership).
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!(event.target instanceof Node)) return;
+          if (!isShellOpen()) return;
+          if (!host.contains(event.target)) {
+            closeShell(false);
+          }
+        },
+        { signal }
+      );
 
       // Every destination class closes the overlay (primary, contact, social).
       panel.querySelectorAll('a.ren-nav-link, a.rn16-contact, a.rn16-social-link').forEach((link) => {
-        link.addEventListener('click', () => {
-          closeShell();
-        }, { signal });
+        link.addEventListener(
+          'click',
+          () => {
+            closeShell(false);
+          },
+          { signal }
+        );
       });
 
-      const reassertOpen = () => {
-        if (!userOpen) return;
-        if (isExpanded()) return;
-        host.setAttribute('data-open', '');
-        toggle.setAttribute('aria-expanded', 'true');
-        host._isOpen = true;
-      };
-
-      window.addEventListener('resize', () => {
-        // ren-nav may close on wide viewports; reassert if still user-open.
-        queueMicrotask(reassertOpen);
-      }, { signal });
-
-      document.addEventListener('click', (event) => {
-        if (!(event.target instanceof Node)) return;
-        if (!host.contains(event.target)) {
-          userOpen = false;
-        }
-      }, { signal });
-
+      // Closed initial public state (no private ren-nav fields).
+      setShellOpen(false);
       return {
         abort: () => controller.abort(),
         get open() {
-          return userOpen;
+          return isShellOpen();
         },
       };
     }
