@@ -92,6 +92,24 @@ test.describe('Header1 — split copy, dual CTA, media', () => {
     expect(outline).not.toBe('none');
   });
 
+  test('both CTA links resolve to real Ren10 destinations', async ({ page }) => {
+    await gotoHeader1(page, staticServer.origin);
+
+    const hrefs = await page.locator(`${ROOT} .rh1-actions > .ren-btn`).evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href'))
+    );
+    expect(hrefs).toEqual([
+      '../../docs/getting-started.html',
+      '../../docs/components.html',
+    ]);
+
+    for (const href of hrefs) {
+      const destination = new URL(href, page.url());
+      const response = await page.request.get(destination.href);
+      expect(response.ok(), `${destination.pathname} must be a real destination`).toBe(true);
+    }
+  });
+
   test('uses theme tokens in light and dark modes', async ({ page }) => {
     await gotoHeader1(page, staticServer.origin);
 
