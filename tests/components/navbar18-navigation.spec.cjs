@@ -170,8 +170,10 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
       const brandRect = brand.getBoundingClientRect();
       const ctaRect = cta.getBoundingClientRect();
       const toggleRect = toggle.getBoundingClientRect();
+      const barBottom = Math.max(brandRect.bottom, ctaRect.bottom, toggleRect.bottom);
       return {
-        menuBelowBar: menuRect.top >= navRect.top + navRect.height * 0.5,
+        // Menu is in-flow under the permanent bar row (grid row 2).
+        menuBelowBar: menuRect.top >= barBottom - 2,
         brandLeftOfCta: brandRect.left < ctaRect.left,
         ctaLeftOfToggle: ctaRect.left < toggleRect.left,
         menuWidth: menuRect.width,
@@ -210,7 +212,8 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
   test('desktop outside click closes overlay', async ({ page }) => {
     await openBlock(page, { width: 1280, height: 900 });
     await openMenu(page);
-    await root(page).locator('.rn18-hero').click({ position: { x: 20, y: 20 } });
+    // Overlay covers in-preview siblings; click demo chrome outside ren-nav.
+    await page.locator('.rn18-page-header h1').click();
     await expect(root(page).locator('.ren-nav-toggle')).toHaveAttribute('aria-expanded', 'false');
   });
 
@@ -404,7 +407,9 @@ test.describe('Navbar 18 logo CTA overlay grid (navbar18)', () => {
   test('open overlay does not overflow the viewport horizontally', async ({ page }) => {
     await openBlock(page, { width: 390, height: 1100 });
     await openMenu(page);
-    await expectNoOverflow(page, [ROOT, `${ROOT} .rn18-menu`, `${ROOT} .ren-nav`]);
+    await expectNoOverflow(page, ROOT);
+    await expectNoOverflow(page, `${ROOT} .rn18-menu`);
+    await expectNoOverflow(page, `${ROOT} .ren-nav`);
   });
 
   test('navbar18 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {

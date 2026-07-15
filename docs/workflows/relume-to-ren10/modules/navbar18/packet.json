@@ -4,13 +4,14 @@
   "moduleId": "navbar18",
   "blockSlug": "nav-logo-cta-overlay-grid",
   "blockPath": "templates/blocks/nav-logo-cta-overlay-grid.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-logo-cta-overlay-grid.html",
     "tests/components/navbar18-navigation.spec.cjs"
   ],
   "evidence": {
     "reference": "reference-evidence.json",
-    "mapped": "mapped-evidence.json"
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
   }
 }
