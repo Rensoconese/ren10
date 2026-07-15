@@ -245,6 +245,65 @@ test.describe('Navbar Mega Menu Product Rail (navbar24)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
+  test('mobile: sublink, product, and intro CTA close details and ren-nav shell; focus not left hidden', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 1200 });
+    await gotoProductRailBlock(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const disclosure = page.locator('.rmpr-disclosure');
+    const renNav = page.locator(`${ROOT} ren-nav`);
+
+    const destinations = [
+      { name: 'sublink', selector: 'a.rmpr-sublink' },
+      { name: 'product', selector: 'a.rmpr-product' },
+      { name: 'intro CTA', selector: 'a.rmpr-intro-cta' },
+    ];
+
+    for (const dest of destinations) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await disclosure.locator('summary').click();
+      await expect(disclosure).toHaveAttribute('open', '');
+
+      const target = page.locator(dest.selector).first();
+      await expect(target).toBeVisible();
+      await target.focus();
+      await target.click();
+
+      await expect(disclosure, `${dest.name} closes details`).not.toHaveAttribute('open', '');
+      await expect(toggle, `${dest.name} collapses ren-nav shell`).toHaveAttribute('aria-expanded', 'false');
+      await expect(renNav).not.toHaveAttribute('data-open', '');
+
+      // Hash/SPA: focus must not remain on a control inside the closed (hidden) tree.
+      const focusState = await page.evaluate(() => {
+        const active = document.activeElement;
+        const links = document.querySelector('#rmpr-primary-links');
+        const toggleEl = document.querySelector('[data-rmpr-root] .ren-nav-toggle');
+        if (!active || !links || !toggleEl) return { ok: false, reason: 'missing' };
+        const linksStyle = getComputedStyle(links);
+        const linksHidden =
+          linksStyle.display === 'none' || linksStyle.visibility === 'hidden';
+        const inHiddenTree = linksHidden && links.contains(active);
+        return {
+          ok: !inHiddenTree,
+          tag: active.tagName,
+          cls: (active.className || '').toString().slice(0, 60),
+          linksDisplay: linksStyle.display,
+          activeIsToggle: active === toggleEl,
+        };
+      });
+      expect(focusState.ok, `${dest.name} left focus in hidden tree: ${JSON.stringify(focusState)}`).toBe(
+        true
+      );
+    }
+  });
+
+  test('block does not expose window.initNavMegaMenuProductRail global', async ({ page }) => {
+    await gotoProductRailBlock(page, staticServer.origin);
+    const hasGlobal = await page.evaluate(() => typeof window.initNavMegaMenuProductRail);
+    expect(hasGlobal).toBe('undefined');
+  });
+
   test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await gotoProductRailBlock(page, staticServer.origin);
@@ -307,32 +366,88 @@ test.describe('Navbar Mega Menu Product Rail (navbar24)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
-  test('breakpoint seams 767/768/769 switch shell without overflow', async ({ page }) => {
+  test('breakpoint seams 767/768/769: real display/rect for toggle and links', async ({ page }) => {
     await gotoProductRailBlock(page, staticServer.origin);
 
     for (const width of [767, 768, 769]) {
       await page.setViewportSize({ width, height: 900 });
+      // Force layout after resize so computed styles and rects are current.
+      await page.evaluate(() => document.body.offsetHeight);
+
       const shell = await page.evaluate((w) => {
         const toggle = document.querySelector('[data-rmpr-root] .ren-nav-toggle');
         const links = document.querySelector('#rmpr-primary-links');
-        if (!toggle || !links) return null;
+        const firstLink = document.querySelector('#rmpr-primary-links > li > a.ren-nav-link');
+        if (!toggle || !links || !firstLink) return null;
+
         const toggleStyle = getComputedStyle(toggle);
+        const linksStyle = getComputedStyle(links);
+        const toggleRect = toggle.getBoundingClientRect();
+        const linksRect = links.getBoundingClientRect();
+        const firstLinkRect = firstLink.getBoundingClientRect();
+
+        const toggleDisplay = toggleStyle.display;
+        const linksDisplay = linksStyle.display;
         const toggleVisible =
-          toggleStyle.display !== 'none'
+          toggleDisplay !== 'none'
           && toggleStyle.visibility !== 'hidden'
-          && toggle.getBoundingClientRect().width > 0;
+          && toggleRect.width > 0
+          && toggleRect.height > 0;
+        const linksVisible =
+          linksDisplay !== 'none'
+          && linksStyle.visibility !== 'hidden'
+          && linksRect.width > 0
+          && linksRect.height > 0
+          && firstLinkRect.width > 0
+          && firstLinkRect.height > 0;
+
         const desktop = w >= 768;
         return {
           width: w,
+          desktop,
+          toggleDisplay,
+          linksDisplay,
           toggleVisible,
+          linksVisible,
+          toggleW: Math.round(toggleRect.width),
+          toggleH: Math.round(toggleRect.height),
+          linksW: Math.round(linksRect.width),
+          linksH: Math.round(linksRect.height),
+          firstLinkW: Math.round(firstLinkRect.width),
+          firstLinkH: Math.round(firstLinkRect.height),
           expectsToggle: !desktop,
-          linksPresent: !!links,
+          expectsLinks: desktop,
         };
       }, width);
 
-      expect(shell, `shell at ${width}`).toBeTruthy();
-      expect(shell.toggleVisible, `toggle visibility at ${width}`).toBe(shell.expectsToggle);
+      expect(shell, `shell metrics at ${width}`).toBeTruthy();
+      expect(shell.toggleVisible, `toggle visible at ${width} (display=${shell.toggleDisplay})`).toBe(
+        shell.expectsToggle
+      );
+      if (shell.desktop) {
+        expect(shell.toggleDisplay, `toggle display none at ${width}`).toBe('none');
+        expect(shell.linksVisible, `links visible at ${width} (display=${shell.linksDisplay})`).toBe(true);
+        expect(shell.linksDisplay, `links display flex-ish at ${width}`).not.toBe('none');
+        expect(shell.firstLinkW, `peer link hit width at ${width}`).toBeGreaterThanOrEqual(24);
+        expect(shell.firstLinkH, `peer link hit height at ${width}`).toBeGreaterThanOrEqual(24);
+      } else {
+        expect(shell.toggleVisible, `toggle shown at ${width}`).toBe(true);
+        expect(shell.toggleDisplay, `toggle display at ${width}`).not.toBe('none');
+        expect(shell.toggleW, `toggle width at ${width}`).toBeGreaterThanOrEqual(44);
+        expect(shell.toggleH, `toggle height at ${width}`).toBeGreaterThanOrEqual(44);
+        // Closed mobile: links may be display:none until the shell opens.
+        expect(shell.linksDisplay === 'none' || !shell.linksVisible, `closed mobile links at ${width}`).toBe(
+          true
+        );
+      }
       await expectNoOverflow(page, 'html');
+    }
+
+    // JS coherence: matchMedia(min-width:48rem) matches desktop shell at 768/769.
+    for (const width of [767, 768, 769]) {
+      await page.setViewportSize({ width, height: 900 });
+      const mq = await page.evaluate(() => window.matchMedia('(min-width: 48rem)').matches);
+      expect(mq, `DESKTOP_MQ at ${width}`).toBe(width >= 768);
     }
   });
 

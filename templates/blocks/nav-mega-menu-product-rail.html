@@ -383,12 +383,32 @@
 
     /*
      * Seam-free shell boundary: mobile ends below 48rem; desktop mega chrome
-     * and JS DESKTOP_MQ start at 48rem.
+     * and JS DESKTOP_MQ start at 48rem (inclusive). At exact 768px ren-nav's
+     * max-width:48rem still applies mobile link/toggle rules — override so
+     * links stay visible and the toggle is hidden, matching matchMedia and
+     * ren-nav JS (innerWidth < 768 ⇒ mobile).
      */
     @media (min-width: 48rem) {
-      /* Align shell with DESKTOP_MQ: hide ren-nav toggle at the inclusive 48rem seam. */
       .rmpr-preview .ren-nav-toggle {
         display: none;
+      }
+
+      /* Beat ren-nav max-width:48rem { display:none } at the inclusive seam. */
+      .rmpr-preview .ren-nav-links,
+      .rmpr-preview .ren-nav[data-open] .ren-nav-links,
+      .rmpr-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+        display: flex;
+        position: static;
+        inset: auto;
+        top: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        max-width: none;
+        border-block-end: none;
+        padding-block: 0;
+        animation: none;
+        z-index: auto;
       }
 
       .rmpr-disclosure {
@@ -896,6 +916,48 @@
       }
 
       /**
+       * Close the ren-nav mobile shell via the public toggle activation path so
+       * the custom element state stays in sync (no private _isOpen access).
+       * After close, if focus remains on a now-hidden tree control (hash/SPA
+       * destinations that do not unload), move it to the visible toggle.
+       */
+      function closeMobileShell() {
+        if (isDesktop() || !toggle) return;
+        if (!isMobileNavOpen()) return;
+
+        const active = document.activeElement;
+        const links = root.querySelector('#rmpr-primary-links');
+        const focusWasInTree =
+          active instanceof Node
+          && links instanceof Element
+          && links.contains(active);
+
+        if (toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.click();
+        } else if (renNavHost?.hasAttribute('data-open')) {
+          renNavHost.removeAttribute('data-open');
+        }
+
+        if (
+          focusWasInTree
+          && document.activeElement instanceof HTMLElement
+          && links instanceof Element
+          && links.contains(document.activeElement)
+        ) {
+          const linksStyle = getComputedStyle(links);
+          if (linksStyle.display === 'none' || linksStyle.visibility === 'hidden') {
+            toggle.focus();
+          }
+        }
+      }
+
+      function closeDisclosureAndMobileShell(returnFocus) {
+        markIntentionalCloseWhilePointerInside();
+        closeDisclosure(returnFocus);
+        closeMobileShell();
+      }
+
+      /**
        * Compound hover zone for full-width product-rail mega menus.
        * Keep open while the pointer is over the disclosure, the summary→panel
        * seam, or anywhere across the full-width panel (including product rail).
@@ -1070,12 +1132,12 @@
       );
 
       // Destination close for every destination class (sublink, product, intro CTA).
+      // On mobile also collapse the ren-nav shell so focus is not left in a hidden tree.
       disclosure.querySelectorAll('a[href]').forEach((anchor) => {
         anchor.addEventListener(
           'click',
           () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+            closeDisclosureAndMobileShell(false);
           },
           { signal }
         );
@@ -1111,7 +1173,6 @@
     }
 
     initNavMegaMenuProductRail();
-    window.initNavMegaMenuProductRail = initNavMegaMenuProductRail;
   </script>
 </body>
 </html>
