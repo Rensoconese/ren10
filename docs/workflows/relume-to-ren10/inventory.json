@@ -60,6 +60,11 @@
           "status": "accepted",
           "packet": "navbar13",
           "ren10Block": "templates/blocks/nav-logo-left-menu-center-dropdown.html"
+        },
+        {
+          "id": "navbar14",
+          "status": "in_progress",
+          "packet": "navbar14"
         }
       ]
     }
