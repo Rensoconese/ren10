@@ -647,6 +647,53 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     expect(probe.toggleVisible, '768 open still no toggle').toBe(false);
     expect(probe.linksVisible, '768 open links still visible').toBe(true);
 
+    // Collection cards: single column, readable min-inline-size, no break-all overflow.
+    /**
+     * @param {string} label
+     */
+    async function assertNarrowDesktopCollections(label) {
+      const cards = await page.evaluate(() => {
+        const nodes = Array.from(document.querySelectorAll('a.rmcc-collection'));
+        if (nodes.length < 2) return null;
+        const metrics = nodes.map((card) => {
+          const r = card.getBoundingClientRect();
+          const style = getComputedStyle(card);
+          const title = card.querySelector('.rmcc-collection-title');
+          const tStyle = title ? getComputedStyle(title) : null;
+          return {
+            width: Math.round(r.width),
+            height: Math.round(r.height),
+            top: Math.round(r.top),
+            bottom: Math.round(r.bottom),
+            left: Math.round(r.left),
+            minInline: style.minInlineSize || style.minWidth,
+            wordBreak: tStyle?.wordBreak || '',
+            overflowWrap: tStyle?.overflowWrap || '',
+          };
+        });
+        const stacked = metrics[1].top >= metrics[0].bottom - 8;
+        const html = document.documentElement;
+        return {
+          metrics,
+          stacked,
+          overflow: html.scrollWidth > html.clientWidth + 1,
+          gridColumns: getComputedStyle(document.querySelector('.rmcc-collections')).gridTemplateColumns,
+        };
+      });
+      expect(cards, `${label} collection metrics`).toBeTruthy();
+      expect(cards.stacked, `${label} collections stack one column`).toBe(true);
+      expect(cards.overflow, `${label} no html overflow`).toBe(false);
+      expect(cards.gridColumns.split(' ').length, `${label} single grid track`).toBe(1);
+      for (const [i, m] of cards.metrics.entries()) {
+        expect(m.width, `${label} card ${i} min readable width`).toBeGreaterThanOrEqual(160);
+        expect(m.wordBreak, `${label} card ${i} no break-all`).not.toBe('break-all');
+      }
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+    }
+
+    await assertNarrowDesktopCollections('768');
+
     // 768 → 769 same desktop band: open state stays stable.
     probe = await probeSeam(769);
     expect(probe.desktopMq, '769 desktopMq').toBe(true);
@@ -655,6 +702,8 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     expect(probe.panelPosition, '769 panel absolute').toBe('absolute');
     expect(probe.toggleVisible, '769 toggle hidden').toBe(false);
     expect(probe.linksVisible, '769 links visible').toBe(true);
+
+    await assertNarrowDesktopCollections('769');
 
     // Same-breakpoint resize within desktop keeps open.
     await page.setViewportSize({ width: 900, height: 900 });
@@ -699,14 +748,19 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     const tablet = await page.evaluate(() => {
       const cats = document.querySelector('.rmcc-categories');
       const cols = document.querySelector('.rmcc-collections');
-      if (!cats || !cols) return null;
+      const cards = Array.from(document.querySelectorAll('a.rmcc-collection'));
+      if (!cats || !cols || cards.length < 2) return null;
       const cR = cats.getBoundingClientRect();
       const oR = cols.getBoundingClientRect();
+      const card0 = cards[0].getBoundingClientRect();
+      const card1 = cards[1].getBoundingClientRect();
       return {
         catsWidth: Math.round(cR.width),
         colsWidth: Math.round(oR.width),
         catsNarrower: cR.width < oR.width * 0.95 || cR.width <= 26 * 16 + 8,
         sideBySide: Math.abs(cR.top - oR.top) < 64 && oR.left >= cR.right - 24,
+        stackedCards: card1.top >= card0.bottom - 8,
+        card0Width: Math.round(card0.width),
       };
     });
     expect(tablet, 'tablet composition metrics').toBeTruthy();
@@ -714,6 +768,8 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
       tablet.catsNarrower || tablet.sideBySide,
       `categories ${tablet.catsWidth} vs collections ${tablet.colsWidth}`
     ).toBe(true);
+    expect(tablet.stackedCards, 'tablet band stacks collection cards (under 60rem)').toBe(true);
+    expect(tablet.card0Width, 'tablet collection min readable width').toBeGreaterThanOrEqual(160);
     await expectNoOverflow(page, 'html');
 
     await page.setViewportSize({ width: 1280, height: 900 });

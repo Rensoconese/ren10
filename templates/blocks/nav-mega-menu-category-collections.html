@@ -250,7 +250,8 @@
     }
 
     .rmcc-collections.ren-grid-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      /* Default single column; two-up only from --width-4xl / wide desktop. */
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--grid-gap, var(--space-4));
       min-width: 0;
       width: 100%;
@@ -263,6 +264,7 @@
       flex-direction: column;
       justify-content: flex-end;
       min-width: 0;
+      min-inline-size: min(100%, 12rem);
       min-height: 14rem;
       overflow: hidden;
       color: var(--color-text-inverted);
@@ -272,6 +274,14 @@
       transition:
         box-shadow var(--duration-state) var(--ease-state-change),
         transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcc-collection-title,
+    .rmcc-collection-desc,
+    .rmcc-collection-cta {
+      word-break: normal;
+      overflow-wrap: break-word;
+      hyphens: manual;
     }
 
     a.rmcc-collection:hover {
@@ -446,6 +456,51 @@
 
       .rmcc-categories {
         flex-grow: 0;
+      }
+
+      /*
+       * Narrow tablet–desktop band (48rem → just under 60rem / ~--width-4xl+):
+       * keep desktop shell + categories | collections relationship, but stack
+       * collection cards to one column so promo copy stays readable (~768px).
+       */
+      .rmcc-layout.ren-with-sidebar {
+        --sidebar-width: 16rem;
+        --sidebar-content-min: 48%;
+        --sidebar-gap: var(--space-5);
+      }
+
+      .rmcc-categories {
+        max-width: 16rem;
+      }
+
+      .rmcc-collections.ren-grid-2 {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      a.rmcc-collection {
+        min-inline-size: min(100%, 14rem);
+        min-height: 12rem;
+      }
+    }
+
+    /* Wide desktop: two-up collection promos (readable dual cards). */
+    @media (min-width: 60rem) {
+      .rmcc-layout.ren-with-sidebar {
+        --sidebar-width: 26rem;
+        --sidebar-content-min: 52%;
+        --sidebar-gap: var(--space-8);
+      }
+
+      .rmcc-categories {
+        max-width: 26rem;
+      }
+
+      .rmcc-collections.ren-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      a.rmcc-collection {
+        min-height: 14rem;
       }
     }
 
