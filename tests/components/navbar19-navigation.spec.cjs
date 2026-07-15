@@ -75,6 +75,12 @@ test.describe('Navbar Logo Left Center Links Site Panel (navbar19)', () => {
     await expect(page.locator(`${ROOT} ul.ren-nav-links`)).toHaveCount(1);
     await expect(page.locator(`${ROOT} nav`)).toHaveCount(1);
     await expect(page.locator('nav nav')).toHaveCount(0);
+
+    // ren-breadcrumb owns link chrome — crumb anchors must not wrap ren-link / ren-btn classes.
+    const crumb = page.locator('nav.ren-breadcrumb[aria-label="Breadcrumb"]');
+    await expect(crumb).toHaveCount(1);
+    await expect(crumb.locator('ol > li > a')).toHaveCount(2);
+    await expect(crumb.locator('a.ren-link, a.ren-link-plain, a.ren-btn, .ren-link, .ren-btn')).toHaveCount(0);
   });
 
   test('exactly one landmark serves bar and site panel content', async ({ page }) => {
