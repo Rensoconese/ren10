@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
     /* Keep template chrome from forcing horizontal overflow on 320–340 viewports.
-     * Mobile policy is inclusive through 768px (matches ren-nav max-width: 48rem). */
-    @media (max-width: 768px) {
+     * Mobile ends below 48rem (excludes exact 768px — desktop-inclusive seam). */
+    @media (max-width: 47.999rem) {
       .dx-nav-inner {
         flex-wrap: wrap;
         row-gap: var(--space-2);
@@ -373,13 +373,52 @@
     }
 
     /*
-     * Seam policy (aligned with ren-nav CSS):
-     * - Mobile inclusive: width ≤ 768px (max-width: 48rem / 768px)
-     * - Desktop: width ≥ 769px
-     * JS DESKTOP_MQ uses the same (min-width: 769px) so 768 never mixes
-     * ren-nav mobile chrome with an absolute mega panel.
+     * Band policy (Navbar20/24 + ren-nav JS):
+     *   desktop = min-width: 48rem (includes exact 768px)
+     *   mobile  = max-width: 47.999rem (767 and below)
+     * ren-nav.css still uses max-width: 48rem (includes 768) for mobile collapse,
+     * so desktop overrides must beat toggle/links rules at the inclusive seam.
+     * JS DESKTOP_MQ is (min-width: 48rem) — 767→768 is a real desktop crossing.
      */
-    @media (min-width: 769px) {
+    @media (min-width: 48rem) {
+      /* Align shell with DESKTOP_MQ / ren-nav JS: hide toggle at inclusive 768. */
+      .rmcc-preview .ren-nav-toggle {
+        display: none !important;
+      }
+
+      /* Beat ren-nav max-width:48rem { display:none; position:absolute } at 768. */
+      .rmcc-preview .ren-nav-links,
+      .rmcc-preview #rmcc-primary-links.ren-nav-links,
+      .rmcc-preview .ren-nav[data-open] .ren-nav-links,
+      .rmcc-preview .ren-nav[data-open] #rmcc-primary-links.ren-nav-links,
+      .rmcc-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links,
+      .rmcc-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) #rmcc-primary-links.ren-nav-links {
+        display: flex !important;
+        position: static !important;
+        inset: auto;
+        top: auto;
+        inset-inline: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        max-width: none;
+        border-block-end: none;
+        padding-block: 0;
+        animation: none !important;
+        z-index: auto;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .rmcc-preview .ren-nav-actions {
+        display: flex !important;
+        flex-direction: row;
+        width: auto;
+        margin-inline-start: auto;
+        padding: 0;
+        border-block-start: none;
+      }
+
       .rmcc-disclosure {
         height: auto;
         align-self: center;
@@ -410,7 +449,7 @@
       }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 47.999rem) {
       .rmcc-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -519,7 +558,7 @@
     }
 
     /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
-    @media (max-width: 768px) {
+    @media (max-width: 47.999rem) {
       .rmcc-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
@@ -744,10 +783,10 @@
      */
     const RMCC_CONTROLLER = Symbol.for('ren10.rmcc.controller');
     /**
-     * Desktop shell starts at 769px — ren-nav is mobile-inclusive at 768
-     * (max-width: 48rem CSS). Complements max-width: 768px mobile CSS.
+     * Inclusive desktop shell (Navbar20/24 + ren-nav JS): min-width 48rem
+     * includes exact 768px. Complements max-width: 47.999rem mobile CSS.
      */
-    const DESKTOP_MQ = '(min-width: 769px)';
+    const DESKTOP_MQ = '(min-width: 48rem)';
 
     export function initNavMegaMenuCategoryCollections(scope = document) {
       const root = scope.querySelector?.('[data-rmcc-root]') ?? scope;
