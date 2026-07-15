@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar19",
+  "blockSlug": "nav-logo-left-center-links-site-panel",
+  "blockPath": "templates/blocks/nav-logo-left-center-links-site-panel.html",
+  "stage": "red",
+  "allowedFiles": [
+    "templates/blocks/nav-logo-left-center-links-site-panel.html",
+    "tests/components/navbar19-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json"
+  }
+}
