@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar18 mapped to one ren-nav landmark with permanent bar CTA, always-visible toggle, eight title-only overlay destinations in a responsive grid, one contact footer action, five social destinations, zero chevrons, and progressive enhancement that exposes the single tree without JS. Rejected ren-sheet drawer, details dropdowns, panel-owned CTA relocation, horizontal desktop link rows, and copied source assets."
+}
