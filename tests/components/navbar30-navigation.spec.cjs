@@ -469,22 +469,22 @@ test.describe('Navbar Mega Menu Categories Products (navbar30)', () => {
       await expect(page.locator(TOGGLE)).toBeVisible();
     }
 
-    // Just below Ren10 48rem shell.
-    await page.setViewportSize({ width: 767, height: 900 });
-    await gotoNavbar30Block(page, staticServer.origin);
-    await expect(page.locator(TOGGLE)).toBeVisible();
-    await openMobileNested(page);
-    await expectNoOverflow(page, 'html');
-
-    // At and above 48rem shell.
-    for (const width of [768, 769]) {
+    // ren-nav shell uses max-width: 48rem (≤768px mobile; ≥769px desktop).
+    for (const width of [767, 768]) {
       await page.setViewportSize({ width, height: 900 });
       await gotoNavbar30Block(page, staticServer.origin);
-      await expect(page.locator(TOGGLE)).toBeHidden();
-      await openDesktopMega(page);
+      await expect(page.locator(TOGGLE)).toBeVisible();
+      await openMobileNested(page);
       await expect(page.locator(MEGA_LINK)).toHaveCount(15);
       await expectNoOverflow(page, 'html');
     }
+
+    await page.setViewportSize({ width: 769, height: 900 });
+    await gotoNavbar30Block(page, staticServer.origin);
+    await expect(page.locator(TOGGLE)).toBeHidden();
+    await openDesktopMega(page);
+    await expect(page.locator(MEGA_LINK)).toHaveCount(15);
+    await expectNoOverflow(page, 'html');
   });
 
   test('product media uses approximately 3:2 frames with cover crop', async ({ page }) => {
