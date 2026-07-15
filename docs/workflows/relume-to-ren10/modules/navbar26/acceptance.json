@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary shell and mega disclosure reach every documented state: desktop hover/click open-close with stable corridor and click pin, keyboard Enter/Space, Escape with focus return from summary and from focused destinations, outside/destination/mobile/breakpoint close, same-breakpoint resize stability, mobile activation-only panel",
+      "automated": true
+    },
+    {
+      "id": "one-tree",
+      "kind": "structure",
+      "description": "Exactly one primary links tree (#n26-primary-links / ul.ren-nav-links) and one nav landmark serve desktop and mobile — no duplicated responsive branches or nested nav",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, four top entries (3 plain + 1 disclosure), three groups × five title-only destinations (15), one promo CTA, two bar actions, one named toggle, one chevron — no duplicates or invented icon/description destination chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop full-width logo-left / links / end actions row; mega full-width absolute under bar with category columns + promo rail; mobile top row logo+toggle only with links and stacked full-width actions below when open; no html overflow at 320/340/390/767/768/769/834/1280",
+      "automated": true
+    },
+    {
+      "id": "destination-close",
+      "kind": "behavior",
+      "description": "Activating every destination class (category .n26-dest, promo CTA, top-level peers, bar actions) closes the open mega disclosure",
+      "automated": true
+    },
+    {
+      "id": "touch-axe-motion-theme",
+      "kind": "behavior",
+      "description": "Visible 44px targets, axe WCAG 2.1 AA, reduced motion, light/dark token surfaces",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}
