@@ -1,0 +1,47 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "6d26003a2f650a21d519e1d96da5d348a0cdc662",
+  "captures": {
+    "desktop": "output/playwright/navbar28/navbar28/desktop-light-open.png",
+    "tablet": "output/playwright/navbar28/navbar28/tablet-light-open.png",
+    "mobile": "output/playwright/navbar28/navbar28/mobile-light-nested-open.png",
+    "dark": "output/playwright/navbar28/navbar28/desktop-dark-open.png",
+    "noJavaScript": "output/playwright/navbar28/navbar28/mobile-js-disabled-open.png",
+    "narrow320": "output/playwright/navbar28/navbar28/narrow-320-nav-open.png",
+    "narrow340": "output/playwright/navbar28/navbar28/narrow-340-nav-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Inspected all 13 fresh captures regenerated from commit 6d26003 after P0 mobile shell-close and 767/768/769 seam fixes. Desktop open shows full-width mega under the bar with a narrow five-link category column beside three overlay collection cards, logo-left peers, and two end actions; no second tree or duplicate chevron. Mobile nested open shows brand+toggle top row, in-flow mega, stacked collections, and both full-width actions with a single centered close X and one action separator. Cascade confirms ren-nav toggle/links use public aria-expanded and data-open only; block CSS mobile band is max-width 48rem and desktop mega/JS use min-width 48.01rem so 767/768 keep a visible toggle (display/rect) while 769 is display:none. Destination activation closes details and shell via public toggle.click without private _isOpen. No window.init global. No root overflow, nested landmarks, or double chevrons observed.",
+  "testResults": {
+    "navbar28FocusedLightDark": {
+      "command": "npx playwright test tests/components/navbar28-navigation.spec.cjs --config=tests/components/playwright.config.cjs --project=\"Desktop Light\" --project=\"Desktop Dark\"",
+      "result": "40 passed, 0 failed; axe WCAG 2.1 AA clean on both projects"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "capture": {
+      "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar28/render-matrix.json --module navbar28 --output output/playwright/navbar28",
+      "result": "13 PNG and 13 JSON states captured after commit 6d26003"
+    },
+    "packetValidate": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar28",
+      "result": "Valid workflow packet: navbar28 (red→green after this evidence)"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-mega-menu-category-collections.html",
+  "intentionalDifferences": [
+    "One responsive Light DOM tree and one actions cluster instead of duplicated mobile action chrome",
+    "Native details/summary with public ARIA shell close, Escape focus return, and destination close policy",
+    "Desktop shell interaction at min-width 48.01rem (769) with mobile ≤48rem (767/768), not the source 991px/lg split",
+    "Whole-card collection anchors without nested interactive CTAs",
+    "Ren10 tokens and layout primitives determine dimensions rather than pixel-matching Relume"
+  ]
+}

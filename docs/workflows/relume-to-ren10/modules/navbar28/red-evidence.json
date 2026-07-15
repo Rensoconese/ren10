@@ -1,5 +1,5 @@
 {
   "stage": "red",
   "passed": true,
-  "notes": "Phase A RED was recorded before production HTML existed. Isolated suite tests/components/navbar28-navigation.spec.cjs was run with templates/blocks/nav-mega-menu-category-collections.html absent via npx playwright test tests/components/navbar28-navigation.spec.cjs --config=tests/components/playwright.config.cjs --project=\"Desktop Light\". Result: 19 failed, 0 passed. Every case failed at gotoBlock with HTTP 404 and the explicit message to implement the production block path — anatomy and interaction assertions never ran because the page was missing."
+  "notes": "Phase A RED (pre-production): isolated suite failed 19/19 with HTTP 404 while templates/blocks/nav-mega-menu-category-collections.html was absent. Phase B GREEN (post-production + P0 fix commit 6d26003): npx playwright test tests/components/navbar28-navigation.spec.cjs --config=tests/components/playwright.config.cjs --project=\"Desktop Light\" --project=\"Desktop Dark\" → 40 passed, 0 failed; axe WCAG 2.1 AA clean; npm run lint exit 0 (0 errors); 13 render-matrix captures regenerated from 6d26003. Packet advances red→green on this intermediate evidence; Codex-form green-evidence.json is recorded for cascade/capture lineage."
 }

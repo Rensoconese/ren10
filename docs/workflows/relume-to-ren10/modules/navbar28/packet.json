@@ -4,7 +4,7 @@
   "moduleId": "navbar28",
   "blockSlug": "nav-mega-menu-category-collections",
   "blockPath": "templates/blocks/nav-mega-menu-category-collections.html",
-  "stage": "red",
+  "stage": "green",
   "allowedFiles": [
     "templates/blocks/nav-mega-menu-category-collections.html",
     "tests/components/navbar28-navigation.spec.cjs"
