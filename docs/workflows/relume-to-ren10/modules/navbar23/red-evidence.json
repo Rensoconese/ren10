@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Phase A RED recorded before production edits. Isolated suite tests/components/navbar23-navigation.spec.cjs ran while templates/blocks/nav-mega-menu-product-intro.html was absent. Playwright reported 46 failures (23 cases × Desktop Light + Desktop Dark projects): every case failed with HTTP 404 / missing block anatomy for the product-intro path. Production implementation begins only after this result."
+}
