@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-mega-menu-overlay-collections.html",
+  "root": "[data-rmoc-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 1200 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "viewport": { "width": 1280, "height": 1200 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "hover", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 1200 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "tablet-light-open",
+      "viewport": { "width": 834, "height": 1400 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "viewport": { "width": 390, "height": 1600 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmoc-disclosure > summary" }
+      ],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "viewport": { "width": 390, "height": 1600 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmoc-disclosure > summary" }
+      ],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 1600 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 1200 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "narrow-320-nested-open",
+      "viewport": { "width": 320, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmoc-disclosure > summary" }
+      ],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "narrow-340-nested-open",
+      "viewport": { "width": 340, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [
+        { "type": "click", "selector": ".ren-nav-toggle" },
+        { "type": "click", "selector": ".rmoc-disclosure > summary" }
+      ],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "seam-767-nav-open",
+      "viewport": { "width": 767, "height": 1000 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "seam-768-open",
+      "viewport": { "width": 768, "height": 1000 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    },
+    {
+      "id": "seam-769-open",
+      "viewport": { "width": 769, "height": 1000 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rmoc-disclosure > summary" }],
+      "expectedMarkers": { ".rmoc-mega-link": 5, ".rmoc-card": 4, ".rmoc-chevron": 1 }
+    }
+  ]
+}

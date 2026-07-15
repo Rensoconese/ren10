@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar29",
+  "blockSlug": "nav-mega-menu-overlay-collections",
+  "blockPath": "templates/blocks/nav-mega-menu-overlay-collections.html",
+  "stage": "red",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-overlay-collections.html",
+    "tests/components/navbar29-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json"
+  }
+}
