@@ -382,6 +382,73 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
     await expect(overlay).toBeHidden();
   });
 
+  test('primary links display/rect policy is coherent at 767 mobile and 768/769 desktop', async ({ page }) => {
+    await gotoNavbar20Block(page, staticServer.origin);
+
+    /**
+     * @param {number} width
+     */
+    async function measurePrimary(width) {
+      await page.setViewportSize({ width, height: 900 });
+      // Closed overlay so desktop primary row is eligible to show.
+      const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+      if ((await toggle.getAttribute('aria-expanded')) === 'true') {
+        await toggle.click();
+      }
+
+      return page.evaluate((viewportWidth) => {
+        const links = document.querySelector('#rn20-primary-links');
+        const first = links?.querySelector(':scope > li > a.ren-nav-link, :scope > li > .rn20-disclosure > summary');
+        if (!links) return null;
+        const style = getComputedStyle(links);
+        const rect = links.getBoundingClientRect();
+        const firstRect = first instanceof Element ? first.getBoundingClientRect() : null;
+        const desktopMq = window.matchMedia('(min-width: 48rem)').matches;
+        return {
+          viewportWidth,
+          desktopMq,
+          display: style.display,
+          visibility: style.visibility,
+          position: style.position,
+          width: rect.width,
+          height: rect.height,
+          firstWidth: firstRect?.width ?? 0,
+          firstHeight: firstRect?.height ?? 0,
+        };
+      }, width);
+    }
+
+    const at767 = await measurePrimary(767);
+    const at768 = await measurePrimary(768);
+    const at769 = await measurePrimary(769);
+
+    expect(at767, '767 metrics').toBeTruthy();
+    expect(at768, '768 metrics').toBeTruthy();
+    expect(at769, '769 metrics').toBeTruthy();
+
+    // JS + CSS band: only below 48rem is mobile.
+    expect(at767.desktopMq, '767 is mobile MQ').toBe(false);
+    expect(at768.desktopMq, '768 is desktop MQ').toBe(true);
+    expect(at769.desktopMq, '769 is desktop MQ').toBe(true);
+
+    // 767: primary tree must not paint as a desktop row.
+    expect(at767.display, '767 display').toBe('none');
+    expect(at767.width, '767 width').toBe(0);
+    expect(at767.height, '767 height').toBe(0);
+
+    // 768/769: inclusive desktop — real flex row with positive geometry
+    // (overrides ren-nav max-width:48rem mobile collapse at exact 48rem).
+    for (const sample of [at768, at769]) {
+      expect(sample.display, `${sample.viewportWidth} display`).not.toBe('none');
+      expect(['flex', 'inline-flex']).toContain(sample.display);
+      expect(sample.position, `${sample.viewportWidth} position`).toBe('static');
+      expect(sample.width, `${sample.viewportWidth} width`).toBeGreaterThan(40);
+      expect(sample.height, `${sample.viewportWidth} height`).toBeGreaterThan(20);
+      expect(sample.firstWidth, `${sample.viewportWidth} first peer width`).toBeGreaterThan(20);
+      expect(sample.firstHeight, `${sample.viewportWidth} first peer height`).toBeGreaterThan(20);
+    }
+  });
+
   test('mobile closed is logo+toggle only; open reveals overlay stack; primary row stays absent', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await gotoNavbar20Block(page, staticServer.origin);

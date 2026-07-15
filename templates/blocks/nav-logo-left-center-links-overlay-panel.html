@@ -444,7 +444,41 @@
       line-height: 1.6;
     }
 
+    /*
+     * Band policy (aligned with block JS DESKTOP_MQ and ren-nav JS < 768):
+     *   desktop = min-width: 48rem (includes exact 768px)
+     *   mobile  = max-width: 47.999rem (excludes 768px)
+     * ren-nav.css still uses max-width: 48rem (includes 768) for mobile collapse,
+     * so desktop overrides must beat that rule at exactly 48rem via higher
+     * specificity + !important on display/position.
+     */
     @media (min-width: 48rem) {
+      /*
+       * Inclusive desktop primary tree: visible horizontal row even at 768px,
+       * neutralizing ren-nav's max-width:48rem display:none / absolute panel.
+       */
+      .rn20-preview .ren-nav-links,
+      .rn20-preview #rn20-primary-links.ren-nav-links {
+        display: flex !important;
+        position: static !important;
+        inset: auto;
+        top: auto;
+        inset-inline: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        border: none;
+        border-block-end: none;
+        padding: 0;
+        margin: 0;
+        animation: none !important;
+        z-index: auto;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
       .rn20-disclosure {
         position: relative;
         height: auto;
@@ -480,7 +514,9 @@
 
       /* Hide primary row while the overlay panel is open (source relationship). */
       .rn20-preview ren-nav[data-open] .ren-nav-links,
-      .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+      .rn20-preview ren-nav[data-open] #rn20-primary-links.ren-nav-links,
+      .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links,
+      .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) #rn20-primary-links.ren-nav-links {
         display: none !important;
         visibility: hidden;
         pointer-events: none;
@@ -526,7 +562,8 @@
        * Primary bar links are desktop-only in this anatomy. Never use ren-nav's
        * absolute mobile links panel — the overlay owns mobile destinations.
        */
-      .rn20-preview .ren-nav-links {
+      .rn20-preview .ren-nav-links,
+      .rn20-preview #rn20-primary-links.ren-nav-links {
         display: none !important;
       }
 
@@ -549,10 +586,12 @@
     }
 
     @media (min-width: 48rem) {
-      .rn20-preview ren-nav:not(:defined) .ren-nav-links {
+      .rn20-preview ren-nav:not(:defined) .ren-nav-links,
+      .rn20-preview ren-nav:not(:defined) #rn20-primary-links.ren-nav-links {
         visibility: visible;
         pointer-events: auto;
-        display: flex;
+        display: flex !important;
+        position: static !important;
       }
     }
 
