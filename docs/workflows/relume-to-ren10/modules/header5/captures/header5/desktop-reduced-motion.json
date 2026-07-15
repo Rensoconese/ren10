@@ -1,6 +1,6 @@
 {
   "id": "desktop-reduced-motion",
-  "url": "http://127.0.0.1:58272/templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html?ren10_capture=header5-desktop-reduced-motion-d45ae3a34adc",
+  "url": "http://127.0.0.1:63050/templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html?ren10_capture=header5-desktop-reduced-motion-5f5e20827434",
   "viewport": {
     "width": 1280,
     "height": 900
@@ -11,6 +11,6 @@
   "markerCounts": {
     ".rh5-actions > .ren-btn": 2
   },
-  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
-  "capturedAt": "2026-07-15T16:18:56.660Z"
+  "commit": "5f5e20827434d56c5a7caa06ec83e8155e1f18e4",
+  "capturedAt": "2026-07-15T16:35:36.904Z"
 }
