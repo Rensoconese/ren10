@@ -905,8 +905,45 @@ test.describe('Navbar Mega Menu Product Intro (navbar23)', () => {
   });
 
   test('navbar23 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    /**
+     * Deterministic contrast sampling:
+     * - Disable enter fades via reduced motion so axe does not sample mid-opacity
+     *   product variant text against the panel (transient false failures).
+     * - Align data-theme with the project colorScheme (Light vs Dark).
+     * - Open mega, assert final open state, then wait for any remaining
+     *   animations to settle before scanning. Does not disable rules or exclude
+     *   product destinations — real settled contrast defects still fail.
+     */
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await gotoNavbar23Block(page, staticServer.origin);
-    await page.locator('.rn23-disclosure > summary').click();
+
+    const theme = await page.evaluate(() =>
+      window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    );
+    await page.evaluate((nextTheme) => {
+      document.documentElement.setAttribute('data-theme', nextTheme);
+      document.documentElement.style.colorScheme = nextTheme;
+    }, theme);
+
+    const disclosure = page.locator('.rn23-disclosure');
+    const panel = page.locator('.rn23-panel');
+    await disclosure.locator('summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('a.rn23-product').first()).toBeVisible();
+    await expect(page.locator('.rn23-product-variant').first()).toBeVisible();
+
+    await panel.evaluate(async (el) => {
+      const animations =
+        typeof el.getAnimations === 'function' ? el.getAnimations({ subtree: true }) : [];
+      await Promise.all(animations.map((animation) => animation.finished.catch(() => {})));
+      // One frame after paint so computed opacity/colors are final.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    });
+
+    const opacity = await panel.evaluate((el) => getComputedStyle(el).opacity);
+    expect(opacity, `panel must be fully opaque before axe (${theme})`).toBe('1');
+
     await injectAxe(page);
     await checkA11y(page, ROOT, {
       detailedReport: true,
