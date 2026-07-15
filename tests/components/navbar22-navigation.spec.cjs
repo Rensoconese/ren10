@@ -200,9 +200,12 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
   });
 
   test('tablet/mobile closed: logo + toggle only; bar tree not an under-bar mobile list', async ({ page }) => {
+    // Ren10 desktop shell starts at 48rem (768px). 834 is desktop-class geometry
+    // (centered bar visible + always-visible toggle). Sub-48rem widths hide the bar tree.
     for (const viewport of [
-      { width: 834, height: 1112, label: 'tablet' },
-      { width: 390, height: 844, label: 'mobile' },
+      { width: 834, height: 1112, label: 'tablet-desktop-shell', expectBarLinks: true },
+      { width: 767, height: 1024, label: 'tablet-compact', expectBarLinks: false },
+      { width: 390, height: 844, label: 'mobile', expectBarLinks: false },
     ]) {
       await page.setViewportSize(viewport);
       await gotoNavbar22Block(page, staticServer.origin);
@@ -216,6 +219,7 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
         if (!brand || !links || !toggle || !overlay) return { label, missing: true };
         const brandRect = brand.getBoundingClientRect();
         const linksStyle = getComputedStyle(links);
+        const linksRect = links.getBoundingClientRect();
         const toggleRect = toggle.getBoundingClientRect();
         const overlayStyle = getComputedStyle(overlay);
         const overlayHidden =
@@ -232,7 +236,11 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
           linksHidden:
             linksStyle.display === 'none'
             || linksStyle.visibility === 'hidden'
-            || links.getBoundingClientRect().height === 0,
+            || linksRect.height === 0,
+          linksNotUnderBarPanel:
+            linksStyle.position !== 'absolute'
+            || linksStyle.display === 'none'
+            || linksRect.height === 0,
           sameTopRow: Math.abs(brandRect.top - toggleRect.top) <= 16,
           overlayClosed: overlayHidden,
           toggleExpanded: toggle.getAttribute('aria-expanded'),
@@ -242,7 +250,12 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
       expect(closed.missing, viewport.label).toBe(false);
       expect(closed.toggleVisible, `${viewport.label} toggle`).toBe(true);
       expect(closed.brandVisible, `${viewport.label} brand`).toBe(true);
-      expect(closed.linksHidden, `${viewport.label} bar tree hidden when closed`).toBe(true);
+      if (viewport.expectBarLinks) {
+        expect(closed.linksHidden, `${viewport.label} bar tree visible on desktop shell`).toBe(false);
+      } else {
+        expect(closed.linksHidden, `${viewport.label} bar tree hidden when closed`).toBe(true);
+      }
+      expect(closed.linksNotUnderBarPanel, `${viewport.label} no under-bar mobile tree`).toBe(true);
       expect(closed.sameTopRow, `${viewport.label} logo+toggle top row`).toBe(true);
       expect(closed.overlayClosed, `${viewport.label} overlay closed`).toBe(true);
       expect(closed.toggleExpanded).toBe('false');
@@ -590,6 +603,12 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar22Block(page, staticServer.origin);
     await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await expect(page.locator(`${ROOT} .rn22-overlay`)).toBeVisible();
+    await expect(page.locator('a.rn22-menu-link').first()).toBeVisible();
+    await expect(page.locator(`${ROOT} form.rn22-contact-form button[type="submit"]`)).toBeVisible();
+    // Ensure form paint/layout settles so axe contrast samples solid surfaces.
+    await page.locator(`${ROOT} form.rn22-contact-form button[type="submit"]`).scrollIntoViewIfNeeded();
+    await page.locator('a.rn22-menu-link').first().scrollIntoViewIfNeeded();
     await injectAxe(page);
     await checkA11y(page, ROOT, {
       detailedReport: true,

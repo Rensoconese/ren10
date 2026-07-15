@@ -1,0 +1,16 @@
+{
+  "id": "mobile-light-overlay-open",
+  "url": "http://127.0.0.1:49214/templates/blocks/nav-sticky-logo-center-dropdown-fullscreen-contact.html?ren10_capture=navbar22-mobile-light-overlay-open-3a2656aed3f0",
+  "viewport": {
+    "width": 390,
+    "height": 1100
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rn22-menu-link": 8
+  },
+  "commit": "3a2656aed3f0fe2b58abe653cbccd657a91337d5",
+  "capturedAt": "2026-07-15T11:12:24.430Z"
+}

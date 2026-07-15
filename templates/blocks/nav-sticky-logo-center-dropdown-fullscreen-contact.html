@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Sticky Logo Center Dropdown Fullscreen Contact — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS sticky navbar with a centered title-only dropdown and a fullscreen contact menu overlay.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn22-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn22-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn22-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn22-preview {
+      --ren-z-sticky: var(--z-sticky);
+      --ren-nav-height: 4rem;
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      min-height: min(100vh, 56rem);
+    }
+
+    .rn22-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: calc(var(--ren-z-sticky) + 2);
+    }
+
+    .rn22-preview .ren-nav {
+      --ren-nav-height: 4rem;
+      position: sticky;
+      top: 0;
+      z-index: calc(var(--ren-z-sticky) + 2);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--space-4);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rn22-preview .ren-nav-brand {
+      grid-column: 1;
+      justify-self: start;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      position: relative;
+      z-index: 2;
+    }
+
+    .rn22-preview .ren-nav-links {
+      grid-column: 2;
+      justify-self: center;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn22-preview .ren-nav-toggle {
+      grid-column: 3;
+      justify-self: end;
+      display: flex !important;
+      position: relative;
+      z-index: 3;
+      margin-inline-start: 0;
+    }
+
+    .rn22-preview .ren-nav-link,
+    .rn22-preview .rn22-destination,
+    .rn22-preview .rn22-menu-link,
+    .rn22-preview .rn22-social,
+    .rn22-preview .rn22-contact-phone,
+    .rn22-preview .rn22-contact-email {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn22-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn22-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn22-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn22-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn22-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn22-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn22-disclosure > summary::after,
+    .rn22-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn22-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn22-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn22-disclosure[open] > summary .rn22-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn22-panel {
+      padding: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn22-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rn22-destination {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn22-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn22-destination:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /* Fullscreen contact overlay — positioned against the preview root, not ren-nav. */
+    .rn22-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: calc(var(--ren-z-sticky) + 1);
+      display: none;
+      overflow: auto;
+      background: var(--color-surface);
+      color: var(--color-text);
+      padding-block-start: var(--ren-nav-height, 4rem);
+      box-sizing: border-box;
+      min-height: 100%;
+    }
+
+    .rn22-preview[data-menu-open] .rn22-overlay {
+      display: block;
+      /* No opacity animation: mid-frame opacity fails axe contrast sampling. */
+    }
+
+    .rn22-overlay-inner {
+      min-height: calc(100% - var(--ren-nav-height, 4rem));
+      min-block-size: calc(100vh - var(--ren-nav-height, 4rem));
+      box-sizing: border-box;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    .rn22-menu-links {
+      list-style: none;
+      margin: 0;
+      padding: var(--space-6) var(--space-5);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+
+    .rn22-menu-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      padding-block: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.1;
+      border-radius: var(--radius-md);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn22-menu-link:hover {
+      color: var(--color-accent);
+    }
+
+    .rn22-menu-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn22-contact-rail {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-block-start: 1px solid var(--color-border);
+      padding: var(--space-8) var(--space-5);
+    }
+
+    .rn22-contact-rail h2 {
+      margin: 0 0 var(--space-3);
+      font-size: var(--text-xl);
+      font-weight: var(--weight-bold);
+      color: var(--color-text);
+    }
+
+    .rn22-contact-rail > p {
+      margin: 0 0 var(--space-6);
+      color: var(--color-text);
+      max-width: 40ch;
+    }
+
+    .rn22-contact-form {
+      --stack-gap: var(--space-4);
+      max-width: 28rem;
+    }
+
+    .rn22-contact-form ren-field {
+      display: block;
+    }
+
+    .rn22-contact-form .ren-input,
+    .rn22-contact-form textarea.ren-input {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .rn22-contact-form textarea.ren-input {
+      min-height: 8rem;
+      resize: vertical;
+    }
+
+    .rn22-terms {
+      margin-block: var(--space-2) var(--space-3);
+      color: var(--color-text);
+    }
+
+    .rn22-terms-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding-inline: var(--space-1);
+      color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+      font-weight: var(--weight-semibold);
+    }
+
+    .rn22-terms-link:hover {
+      color: var(--color-accent);
+    }
+
+    .rn22-terms-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn22-contact-form .ren-btn-primary {
+      color: var(--color-on-accent);
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    .rn22-contact-meta {
+      padding: var(--space-6) var(--space-5) var(--space-8);
+      --stack-gap: var(--space-1);
+    }
+
+    .rn22-contact-phone,
+    .rn22-contact-email {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+      font-size: var(--text-sm);
+    }
+
+    .rn22-contact-phone:focus-visible,
+    .rn22-contact-email:focus-visible,
+    .rn22-social:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn22-contact-address {
+      margin: 0;
+      color: var(--color-text);
+      font-size: var(--text-sm);
+    }
+
+    .rn22-socials {
+      list-style: none;
+      margin: var(--space-5) 0 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+
+    .rn22-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--touch-min);
+      height: var(--touch-min);
+      color: var(--color-text);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+    }
+
+    .rn22-social:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn22-social svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      fill: currentColor;
+    }
+
+    .rn22-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn22-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn22-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    @media (min-width: 48rem) {
+      .rn22-preview .ren-nav-links {
+        display: flex !important;
+        position: static;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        background: transparent;
+        border: none;
+        padding: 0;
+        animation: none;
+      }
+
+      .rn22-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn22-panel {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        left: 50%;
+        right: auto;
+        z-index: var(--ren-z-sticky);
+        width: 12rem;
+        max-width: min(12rem, calc(100vw - var(--space-8)));
+        transform: translateX(-50%);
+        animation: rn22-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+
+      .rn22-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+
+      .rn22-overlay-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr);
+        grid-template-rows: 1fr auto;
+        min-height: calc(100vh - var(--ren-nav-height, 4rem));
+      }
+
+      .rn22-menu-links {
+        grid-column: 1;
+        grid-row: 1;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-3) var(--space-8);
+        padding: var(--space-12) var(--space-8);
+        align-content: start;
+      }
+
+      .rn22-contact-rail {
+        grid-column: 2;
+        grid-row: 1 / -1;
+        border-block-start: none;
+        border-inline-start: 1px solid var(--color-border);
+        padding: var(--space-12) var(--space-8);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .rn22-contact-meta {
+        grid-column: 1;
+        grid-row: 2;
+        padding: var(--space-6) var(--space-8) var(--space-10);
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn22-preview .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto;
+      }
+
+      .rn22-preview .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .rn22-preview .ren-nav-toggle {
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      /*
+       * Toggle owns the fullscreen overlay — never an under-bar ren-nav link list,
+       * even when ren-nav sets data-open / aria-expanded.
+       */
+      .rn22-preview .ren-nav-links,
+      .rn22-preview .ren-nav[data-open] .ren-nav-links,
+      .rn22-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+        display: none !important;
+      }
+    }
+
+    /* Progressive enhancement: no custom-element upgrade / no JS */
+    .rn22-preview ren-nav:not(:defined) .ren-nav-toggle {
+      display: none !important;
+    }
+
+    .rn22-preview:has(ren-nav:not(:defined)) .rn22-overlay,
+    .rn22-preview:has(ren-nav:not(:defined)) .rn22-overlay[hidden] {
+      display: block !important;
+      position: static;
+      inset: auto;
+      height: auto;
+      min-height: 0;
+      min-block-size: 0;
+      padding-block-start: 0;
+      overflow: visible;
+      animation: none;
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    @media (min-width: 48rem) {
+      .rn22-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex !important;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn22-preview ren-nav:not(:defined) .ren-nav {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .rn22-preview ren-nav:not(:defined) .ren-nav-links {
+        display: none !important;
+      }
+    }
+
+    @keyframes rn22-panel-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn22-chevron,
+      .rn22-destination,
+      .rn22-panel,
+      .rn22-overlay,
+      .rn22-menu-link,
+      .rn22-social {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell">
+    <header class="rn22-page-header">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Sticky Logo Center Dropdown Fullscreen Contact</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Sticky Logo Center Dropdown Fullscreen Contact</h1>
+      <p class="lede">
+        A sticky site bar with a centered title-only dropdown and an always-visible
+        menu control that opens a fullscreen contact surface — large destinations,
+        a contact form, details, and socials. Built with <code>ren-nav</code>,
+        native <code>details</code>/<code>summary</code>, <code>ren-field</code>,
+        and progressive enhancement. No mega menu cards or nested landmarks.
+      </p>
+    </header>
+
+    <section class="rn22-preview" data-rn22-root aria-label="Navbar sticky logo center dropdown fullscreen contact preview">
+      <ren-nav>
+        <nav class="ren-nav ren-nav-sticky" aria-label="Example site">
+          <a class="ren-nav-brand ren-row" href="#home">
+            <span class="rn22-brand-mark ren-row" aria-hidden="true">H</span>
+            <span>Harbor Studio</span>
+          </a>
+
+          <ul id="rn22-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#customers">Customers</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <details class="rn22-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Resources
+                  <span class="rn22-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rn22-panel">
+                  <ul class="rn22-dest-list ren-stack-sm" aria-label="Resources">
+                    <li>
+                      <a class="rn22-destination" href="#guides">Guides</a>
+                    </li>
+                    <li>
+                      <a class="rn22-destination" href="#changelog">Changelog</a>
+                    </li>
+                    <li>
+                      <a class="rn22-destination" href="#community">Community</a>
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn22-overlay"
+            aria-label="Open contact menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div
+        id="rn22-overlay"
+        class="rn22-overlay"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="rn22-overlay-title"
+        hidden
+      >
+        <div class="rn22-overlay-inner">
+          <ul class="rn22-menu-links" aria-label="Site destinations">
+            <li><a class="rn22-menu-link" href="#overview">Overview</a></li>
+            <li><a class="rn22-menu-link" href="#platform">Platform</a></li>
+            <li><a class="rn22-menu-link" href="#solutions">Solutions</a></li>
+            <li><a class="rn22-menu-link" href="#customers-menu">Customers</a></li>
+            <li><a class="rn22-menu-link" href="#pricing-menu">Pricing</a></li>
+            <li><a class="rn22-menu-link" href="#resources-menu">Resources</a></li>
+            <li><a class="rn22-menu-link" href="#company">Company</a></li>
+            <li><a class="rn22-menu-link" href="#careers">Careers</a></li>
+          </ul>
+
+          <div class="rn22-contact-rail">
+            <h2 id="rn22-overlay-title">Contact</h2>
+            <p>Tell us about your project and a teammate will follow up.</p>
+
+            <form class="rn22-contact-form ren-stack" action="#contact" method="post">
+              <ren-field>
+                <label for="rn22-name">Name</label>
+                <input class="ren-input" type="text" id="rn22-name" name="name" autocomplete="name" required>
+              </ren-field>
+
+              <ren-field>
+                <label for="rn22-email">Email</label>
+                <input class="ren-input" type="email" id="rn22-email" name="email" autocomplete="email" required>
+              </ren-field>
+
+              <ren-field>
+                <label for="rn22-message">Message</label>
+                <textarea class="ren-input" id="rn22-message" name="message" rows="5" placeholder="How can we help?" required></textarea>
+              </ren-field>
+
+              <label class="ren-checkbox rn22-terms">
+                <input type="checkbox" name="terms" value="accepted" required>
+                <span class="ren-checkbox-control"></span>
+                <span>I accept the <a class="rn22-terms-link" href="#terms">terms</a></span>
+              </label>
+
+              <button class="ren-btn ren-btn-primary" type="submit">Send message</button>
+            </form>
+          </div>
+
+          <div class="rn22-contact-meta ren-stack-sm">
+            <a class="rn22-contact-phone" href="tel:+18005550122">+1 (800) 555-0122</a>
+            <a class="rn22-contact-email" href="mailto:hello@example.com">hello@example.com</a>
+            <p class="rn22-contact-address">120 Harbor Ave, Suite 4, Portland OR 97201</p>
+            <ul class="rn22-socials">
+              <li>
+                <a class="rn22-social" href="#social-a" aria-label="Social network A">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                </a>
+              </li>
+              <li>
+                <a class="rn22-social" href="#social-b" aria-label="Social network B">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="4" width="16" height="16" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="7" r="1" fill="currentColor"/></svg>
+                </a>
+              </li>
+              <li>
+                <a class="rn22-social" href="#social-c" aria-label="Social network C">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 17c4 0 7-3 9-7 0 0 1-5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 7h5v5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </a>
+              </li>
+              <li>
+                <a class="rn22-social" href="#social-d" aria-label="Social network D">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 10v7M8 7.5v.5M12 17v-4a2 2 0 0 1 4 0v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </a>
+              </li>
+              <li>
+                <a class="rn22-social" href="#social-e" aria-label="Social network E">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M10 15V9l6 3-6 3z" fill="currentColor"/><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="rn22-hero ren-stack">
+        <h2>Menus that invite conversation.</h2>
+        <p>
+          A quiet marketing surface under the sticky bar so the centered dropdown,
+          always-visible menu control, and fullscreen contact overlay stay easy to
+          judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#product">Explore product</a>
+          <a class="ren-btn ren-btn-ghost" href="#contact">Contact sales</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module">
+    /**
+     * Block-local controller for the centered bar disclosure and fullscreen
+     * contact overlay. Native details owns open/close via click/Enter/Space;
+     * desktop pointer hover is additive. Overlay is activation-only.
+     */
+    const RN22_CONTROLLER = Symbol.for('ren10.rn22.controller');
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavStickyLogoCenterDropdownFullscreenContact(scope = document) {
+      const root = scope.querySelector?.('[data-rn22-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn22-root')) {
+        const nested = document.querySelector('[data-rn22-root]');
+        if (!nested) return null;
+        return initOn(nested);
+      }
+      return initOn(root);
+    }
+
+    function initOn(root) {
+      const disclosure = root.querySelector('.rn22-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const overlay = root.querySelector('.rn22-overlay');
+      const renNavHost = root.querySelector('ren-nav');
+
+      if (!disclosure || !summary || !toggle || !overlay) return null;
+
+      const previous = root[RN22_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN22_CONTROLLER] = controller;
+      const { signal } = controller;
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      let pointerInside = false;
+      let hoverTransient = false;
+      let pointerPinned = false;
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isOverlayOpen() {
+        return root.hasAttribute('data-menu-open');
+      }
+
+      function setOverlayOpen(open) {
+        if (open) {
+          root.setAttribute('data-menu-open', '');
+          overlay.removeAttribute('hidden');
+          overlay.setAttribute('aria-hidden', 'false');
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.setAttribute('aria-label', 'Close contact menu');
+          renNavHost?.setAttribute('data-open', '');
+          closeDisclosure(false);
+        } else {
+          root.removeAttribute('data-menu-open');
+          overlay.setAttribute('hidden', '');
+          overlay.setAttribute('aria-hidden', 'true');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open contact menu');
+          renNavHost?.removeAttribute('data-open');
+        }
+      }
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave || isOverlayOpen()) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      // Capture-phase toggle ownership: fullscreen overlay, not ren-nav under-bar list.
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          setOverlayOpen(!isOverlayOpen());
+        },
+        { capture: true, signal }
+      );
+
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          hoverTransient = false;
+          if (!pointerPinned) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+
+          if (disclosure.open) {
+            event.stopImmediatePropagation();
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(true);
+            return;
+          }
+
+          if (isOverlayOpen()) {
+            event.stopImmediatePropagation();
+            setOverlayOpen(false);
+            toggle.focus();
+          }
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+
+          if (disclosure.open && !disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+
+          if (isOverlayOpen()) {
+            if (toggle.contains(target) || overlay.contains(target)) return;
+            // Outside the dialog (and not the toggle) dismisses the overlay.
+            setOverlayOpen(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      overlay.querySelectorAll('a.rn22-menu-link').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            setOverlayOpen(false);
+          },
+          { signal }
+        );
+      });
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+          if (isOverlayOpen()) setOverlayOpen(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      // Initial closed overlay state for upgraded JS environment.
+      setOverlayOpen(false);
+
+      return controller;
+    }
+
+    initNavStickyLogoCenterDropdownFullscreenContact();
+    window.initNavStickyLogoCenterDropdownFullscreenContact = initNavStickyLogoCenterDropdownFullscreenContact;
+  </script>
+</body>
+</html>
