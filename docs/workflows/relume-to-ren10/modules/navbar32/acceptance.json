@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, one permanent bar CTA, one toggle, five primary destinations, contact block (heading + phone + email + address), five social destinations, zero dropdowns/chevrons",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Toggle opens/closes left ren-sheet; Escape restores focus from a focused destination; outside/backdrop close; every destination class closes the drawer; same-breakpoint resize stays stable",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "One primary tree/landmark, one toggle close morph, no duplicate mobile chrome or chevrons",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Bar keeps logo start and action+toggle end at all widths; left drawer geometry; no root overflow at 320/340 and 767/768/769 seams",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled view exposes the one primary tree, contact, social destinations, and permanent CTA without relying on the toggle",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Visible focus, fully visible 44px targets, reduced motion, light/dark tokens, public DOM/ARIA only, axe WCAG 2.1 AA",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, dark, and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Phase A RED recorded before production edits. Focused suite tests/components/navbar32-navigation.spec.cjs lists 15 cases. With templates/blocks/nav-logo-cta-left-drawer.html absent, Desktop Light run ended 15 failed / 0 passed: first cases fail waiting for [data-rn32-root] / heading (HTTP 404 Not found for the block path); openDrawer and geometry cases time out on missing .rn32-toggle; JS-disabled case fails on missing tree visibility; axe case fails with no include elements. No production HTML existed when this evidence was recorded on 2026-07-15."
+}

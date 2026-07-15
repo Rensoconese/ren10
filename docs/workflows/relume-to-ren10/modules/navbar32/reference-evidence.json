@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated relume_oauth get_component for slug navbar32 with primitives include returned one complete section plus three vendored primitives (utils/cn, button, sheet). Anatomy sanitized into reference-brief.md without persisting protected source."
+}
