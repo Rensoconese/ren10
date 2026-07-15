@@ -2,8 +2,8 @@
   "version": 1,
   "moduleId": "header4",
   "sourceStage": "green",
-  "cacheKey": "header4-94e70dc-green-fix",
-  "capturedCommit": "94e70dc439f787bb3e7798aa2b074b6c5cdd93a3",
+  "cacheKey": "header4-65b22e4-mobile-sheet-fix",
+  "capturedCommit": "65b22e48e7ec10ea59d7278271626d48a4c0f279",
   "capturesFresh": true,
   "captures": {
     "desktopLightClosed": "captures-fresh/header4/desktop-light-closed.png",
@@ -19,5 +19,5 @@
     "mobileJsDisabled": "captures-fresh/header4/mobile-js-disabled.png",
     "desktopReducedMotionOpen": "captures-fresh/header4/desktop-reduced-motion-open.png"
   },
-  "inspection": "Fresh 12-state captures at commit 94e70dc show one coherent hero: equal copy/media peers at desktop, copy-first stack at mobile, horizontal desktop email row and full-width mobile submit, no premature custom error with JavaScript disabled, one poster/scrim/play affordance, and a centered modal with one 44px close control. Open states now visibly contain native video controls backed by deterministic playable WebM media; loaded captures show the loader dismissed, and light/dark/reduced-motion surfaces remain coherent."
+  "inspection": "Fresh 12-state captures at commit 65b22e4 show one coherent hero: equal copy/media peers at desktop, copy-first stack at mobile, horizontal desktop email row and full-width mobile submit, no premature custom error with JavaScript disabled, one poster/scrim/play affordance, and one 44px close control. The mobile open state is now a full-width bottom sheet with zero left/right gap and bottom edge aligned to the viewport; desktop remains centered. Open states visibly contain native video controls backed by deterministic playable WebM media; loaded captures show the loader dismissed, and light/dark/reduced-motion surfaces remain coherent."
 }
