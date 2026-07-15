@@ -1,0 +1,16 @@
+{
+  "id": "desktop-reduced-motion-open",
+  "url": "http://127.0.0.1:62095/templates/blocks/nav-logo-left-action-overlay-menu.html?ren10_capture=navbar16-desktop-reduced-motion-open-839d30804128",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    "#rn16-primary-links > li": 6
+  },
+  "commit": "839d30804128526c3aca7af3fe69347e4df25bd3",
+  "capturedAt": "2026-07-15T10:54:31.119Z"
+}

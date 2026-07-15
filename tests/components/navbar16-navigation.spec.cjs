@@ -179,19 +179,11 @@ test.describe('Navbar Logo Left Action Overlay Menu (navbar16)', () => {
 
     await toggle.click();
     await expect(panel).toBeVisible();
-    await page.locator(`${ROOT} .rn16-hero, ${ROOT} .rn16-page-header, main`).first().click({ position: { x: 20, y: 20 } }).catch(async () => {
-      await page.locator('body').click({ position: { x: 8, y: 400 } });
-    });
-    // Outside click on the host closes via ren-nav document listener.
-    await page.evaluate(() => {
-      document.body.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
-    // Click a known outside target in the page chrome.
-    const brandOutside = page.locator('.dx-brand, .rn16-page-header h1').first();
-    if (await brandOutside.count()) {
-      await brandOutside.click();
-    }
+    // Click a non-navigating surface outside ren-nav and above the overlay
+    // (page heading). The open panel covers the hero under the bar.
+    await page.locator('.rn16-page-header h1').click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(panel).toBeHidden();
 
     await toggle.click();
     await expect(panel).toBeVisible();
