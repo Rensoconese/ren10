@@ -360,6 +360,12 @@ test.describe('Navbar Mega Menu Product Intro (navbar23)', () => {
   });
 
   test('48rem seam: 767/768 mobile shell and 769 desktop shell agree with ren-nav', async ({ page }) => {
+    /**
+     * ren-nav base CSS uses max-width: 48rem for mobile (toggle flex, links
+     * hidden until open). Block CSS/JS must not claim desktop at 768px via
+     * min-width: 48rem — that leaves a visible toggle and a hidden tree while
+     * the local controller enables desktop hover. Desktop starts at 48.01rem.
+     */
     await gotoNavbar23Block(page, staticServer.origin);
 
     /**
@@ -368,7 +374,8 @@ test.describe('Navbar Mega Menu Product Intro (navbar23)', () => {
      */
     async function shellAt(p, width) {
       await p.setViewportSize({ width, height: 900 });
-      return p.evaluate((w) => {
+      await p.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+      return p.evaluate(() => {
         const toggle = document.querySelector('[data-rn23-root] .ren-nav-toggle');
         const links = document.querySelector('#rn23-primary-links');
         if (!toggle || !links) return null;
@@ -377,9 +384,9 @@ test.describe('Navbar Mega Menu Product Intro (navbar23)', () => {
         const toggleRect = toggle.getBoundingClientRect();
         const linksRect = links.getBoundingClientRect();
         const renNavMobileMq = window.matchMedia('(max-width: 48rem)').matches;
-        const desktopMq = window.matchMedia('(min-width: 48rem)').matches;
+        const desktopMq = window.matchMedia('(min-width: 48.01rem)').matches;
         return {
-          width: w,
+          width: window.innerWidth,
           renNavMobileMq,
           desktopMq,
           toggleDisplay: toggleStyle.display,

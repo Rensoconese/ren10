@@ -1,0 +1,19 @@
+{
+  "id": "seam-768-light-closed",
+  "url": "http://127.0.0.1:58261/templates/blocks/nav-mega-menu-product-intro.html?ren10_capture=navbar23-seam-768-light-closed-a8eb1dddc966",
+  "viewport": {
+    "width": 768,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rn23-product": 3,
+    ".rn23-product-media": 3,
+    ".rn23-intro-cta": 1,
+    ".rn23-chevron": 1
+  },
+  "commit": "a8eb1dddc9664cb95bf6fb53e7858e28cd0fb047",
+  "capturedAt": "2026-07-15T11:25:27.321Z"
+}
