@@ -379,10 +379,19 @@
     }
 
     /*
-     * Seam-free shell boundary: mobile ends below 48rem; desktop mega chrome
-     * and JS DESKTOP_MQ start at 48rem.
+     * Seam-free shell boundary aligned with ren-nav max-width: 48rem:
+     * mobile shell at 767/768 (≤48rem); desktop chrome/JS from 48.01rem (769px).
      */
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
+      .rmcc-preview .ren-nav-toggle {
+        display: none !important;
+      }
+
+      .rmcc-preview .ren-nav-links {
+        display: flex;
+        position: static;
+      }
+
       .rmcc-disclosure {
         height: auto;
         align-self: center;
@@ -413,7 +422,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rmcc-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -424,6 +433,7 @@
       }
 
       .rmcc-preview .ren-nav-toggle {
+        display: flex;
         order: 2;
         margin-inline-start: auto;
       }
@@ -513,20 +523,20 @@
     }
 
     /* Intermediate tablet band: keep collections readable before three-up. */
-    @media (min-width: 48rem) and (max-width: 63.999rem) {
+    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
       .rmcc-collection-grid.ren-grid-3 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rmcc-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
 
       .rmcc-preview ren-nav:not(:defined) .ren-nav-toggle {
-        display: none;
+        display: none !important;
       }
 
       .rmcc-preview ren-nav:not(:defined) .ren-nav-links {
@@ -750,10 +760,14 @@
      * Keyboard Enter/Space: native details toggle (event.detail === 0).
      */
     const RMCC_CONTROLLER = Symbol.for('ren10.rmcc.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /**
+     * Desktop shell starts just above ren-nav's max-width: 48rem mobile band.
+     * Complements block CSS min-width: 48.01rem / max-width: 48rem
+     * (767/768 mobile, 769 desktop).
+     */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
-    export function initNavMegaMenuCategoryCollections(scope = document) {
+    function initNavMegaMenuCategoryCollections(scope = document) {
       const root = scope.querySelector?.('[data-rmcc-root]') ?? scope;
       if (!(root instanceof Element) || !root.hasAttribute('data-rmcc-root')) {
         const nested = document.querySelector('[data-rmcc-root]');
@@ -822,6 +836,87 @@
       function isMobileNavOpen() {
         if (!toggle) return false;
         return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      /**
+       * Close the mobile shell through the public toggle control so ren-nav's
+       * internal open state stays in sync (no private _isOpen / _closeMenu).
+       */
+      function closeMobileShell() {
+        if (isDesktop() || !toggle) return false;
+        if (toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.click();
+          return true;
+        }
+        // Public DOM fallback if host attribute drifted without expanded toggle.
+        if (renNavHost?.hasAttribute('data-open')) {
+          renNavHost.removeAttribute('data-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          return true;
+        }
+        return false;
+      }
+
+      /**
+       * After shell collapse, destinations/actions may become display:none.
+       * Keep a visible, stable focus target (toggle) when the prior active
+       * element is no longer a visible tab stop.
+       */
+      function ensureVisibleFocusAfterMobileClose(forceToggle = false) {
+        if (isDesktop() || !toggle) return;
+        if (forceToggle) {
+          toggle.focus({ preventScroll: true });
+          return;
+        }
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement) || active === document.body) {
+          toggle.focus({ preventScroll: true });
+          return;
+        }
+        const style = getComputedStyle(active);
+        const rect = active.getBoundingClientRect();
+        const hidden =
+          style.display === 'none'
+          || style.visibility === 'hidden'
+          || Number(style.opacity || '1') === 0
+          || rect.width === 0
+          || rect.height === 0
+          || !root.contains(active);
+        if (hidden) {
+          toggle.focus({ preventScroll: true });
+        }
+      }
+
+      /**
+       * Destination activation policy (public ARIA/DOM only):
+       * - Desktop mega-link / collection: close details and restore summary focus.
+       * - Desktop peer / actions / brand: close details; focus stays on the
+       *   still-visible control (peer focus stable).
+       * - Mobile mega-link / collection / actions / peer: close details + shell,
+       *   then focus the toggle (stable, visible).
+       * - Mobile brand: close details + shell; brand may keep focus when visible.
+       * @param {'mega-link'|'collection'|'action'|'peer'|'brand'} kind
+       */
+      function closeFromDestinationActivation(kind) {
+        markIntentionalCloseWhilePointerInside();
+        const mobileShellOpen = !isDesktop() && isMobileNavOpen();
+
+        if (isDesktop()) {
+          if (kind === 'mega-link' || kind === 'collection') {
+            closeDisclosure(true);
+          } else {
+            closeDisclosure(false);
+          }
+          return;
+        }
+
+        closeDisclosure(false);
+        if (mobileShellOpen) {
+          closeMobileShell();
+          queueMicrotask(() => {
+            ensureVisibleFocusAfterMobileClose(kind !== 'brand');
+          });
+        }
       }
 
       /**
@@ -1000,16 +1095,33 @@
         { signal }
       );
 
-      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
-        anchor.addEventListener(
-          'click',
-          () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
-          },
-          { signal }
-        );
-      });
+      // Destination classes that close details (+ mobile shell / focus policy).
+      /** @type {Array<{ selector: string, kind: 'mega-link'|'collection'|'action'|'peer'|'brand' }>} */
+      const destinationClosers = [
+        { selector: 'a.rmcc-mega-link', kind: 'mega-link' },
+        { selector: 'a.rmcc-collection', kind: 'collection' },
+        { selector: '.ren-nav-actions a[href], .ren-nav-actions .ren-btn', kind: 'action' },
+        { selector: '#rmcc-primary-links > li > a.ren-nav-link', kind: 'peer' },
+        { selector: 'a.ren-nav-brand', kind: 'brand' },
+      ];
+
+      for (const { selector, kind } of destinationClosers) {
+        root.querySelectorAll(selector).forEach((el) => {
+          el.addEventListener(
+            'click',
+            () => {
+              // Always coordinate close policy even when details were already closed
+              // (mobile actions/peers still need shell close + stable focus).
+              if (!disclosure.open && isDesktop()) return;
+              if (!disclosure.open && !isMobileNavOpen() && kind !== 'action' && kind !== 'peer') {
+                return;
+              }
+              closeFromDestinationActivation(kind);
+            },
+            { signal }
+          );
+        });
+      }
 
       if (toggle) {
         const observer = new MutationObserver(() => {
@@ -1025,9 +1137,15 @@
       let wasDesktop = isDesktop();
       const onViewportChange = () => {
         const nowDesktop = isDesktop();
+        // Close only when crossing the shell breakpoint either direction.
         if (wasDesktop !== nowDesktop) {
           resetHoverFlags();
           closeDisclosure(false);
+          // Public shell collapse if still expanded while ren-nav resize races.
+          if (toggle?.getAttribute('aria-expanded') === 'true') {
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+          renNavHost?.removeAttribute('data-open');
         }
         wasDesktop = nowDesktop;
       };
@@ -1041,7 +1159,6 @@
     }
 
     initNavMegaMenuCategoryCollections();
-    window.initNavMegaMenuCategoryCollections = initNavMegaMenuCategoryCollections;
   </script>
 </body>
 </html>
