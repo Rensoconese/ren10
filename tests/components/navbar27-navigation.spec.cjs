@@ -378,10 +378,16 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     await page.locator('.rmcc-disclosure > summary').click();
     await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
 
-    // Crossing to desktop must close mega and hide toggle.
+    // At exactly 768px: block DESKTOP_MQ (min-width: 48rem) matches, so the mega
+    // closes on the boundary cross. ren-nav still uses max-width: 48rem, so the
+    // toggle can remain in the mobile chrome at this single-pixel seam.
     await page.setViewportSize({ width: 768, height: 900 });
-    await expect(toggle).toBeHidden();
     await expect(page.locator('.rmcc-disclosure')).not.toHaveAttribute('open', '');
+    await expect(page.locator('#rmcc-primary-links')).toHaveCount(1);
+
+    // Full desktop shell: toggle hidden, permanent end actions visible.
+    await page.setViewportSize({ width: 769, height: 900 });
+    await expect(toggle).toBeHidden();
     await expect(page.locator('#rmcc-primary-links')).toBeVisible();
     await expect(
       page.locator(`${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn`).first()
@@ -390,8 +396,8 @@ test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
     await page.locator('.rmcc-disclosure > summary').click();
     await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
 
-    // Same-breakpoint resize must keep open state stable.
-    await page.setViewportSize({ width: 769, height: 900 });
+    // Same-breakpoint resize must keep open state stable (stay desktop).
+    await page.setViewportSize({ width: 900, height: 900 });
     await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
     await expect(page.locator('.rmcc-panel')).toBeVisible();
     await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
