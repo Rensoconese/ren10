@@ -11,8 +11,12 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    /* Keep docs chrome from forcing horizontal page scroll on 320/340 demos. */
+    /* Keep docs chrome from forcing horizontal scroll or sticky overlay on narrow captures. */
     @media (max-width: 48rem) {
+      .dx-nav {
+        position: static;
+      }
+
       .dx-nav-inner {
         flex-wrap: wrap;
         row-gap: var(--space-2);
@@ -21,6 +25,12 @@
       .dx-nav-menu,
       .dx-nav-actions {
         display: none;
+      }
+
+      .dx-shell {
+        padding-inline: var(--space-3);
+        max-width: 100%;
+        box-sizing: border-box;
       }
     }
 
@@ -285,14 +295,27 @@
       color: var(--color-text);
     }
 
+    /*
+     * Square promo media: tokenized frame so the aspect is perceptible even
+     * with a transparent placeholder (no invented content / extra copy).
+     */
     .rn25-promo-media.ren-frame {
       --frame-ratio: 1;
+      aspect-ratio: 1;
       width: 100%;
       max-width: 18rem;
+      min-height: 8rem;
       justify-self: end;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      background: var(--color-fill);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      background:
+        linear-gradient(
+          145deg,
+          var(--color-surface-sunken),
+          color-mix(in srgb, var(--color-accent) 18%, var(--color-surface))
+        );
     }
 
     .rn25-promo-media img {
@@ -300,6 +323,8 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      /* Transparent placeholder still lets the tokenized gradient show through. */
+      background: transparent;
     }
 
     .rn25-hero {
@@ -494,8 +519,9 @@
       }
 
       .rn25-promo-media.ren-frame {
-        max-width: none;
-        justify-self: stretch;
+        max-width: min(100%, 14rem);
+        min-height: 10rem;
+        justify-self: start;
       }
     }
 
@@ -800,6 +826,62 @@
       }
 
       /**
+       * Close the ren-nav mobile shell via the public toggle activation path so
+       * the custom element state stays in sync (no private _isOpen access).
+       * After close, if focus remains on a now-hidden tree/action control
+       * (hash/SPA destinations that do not unload), move it to the visible toggle.
+       */
+      function closeMobileShell() {
+        if (isDesktop() || !toggle) return;
+        if (!isMobileNavOpen()) return;
+
+        const active = document.activeElement;
+        const links = root.querySelector('#rn25-primary-links');
+        const actions = root.querySelector('.ren-nav-actions');
+        const focusWasInCollapsible =
+          active instanceof Node
+          && (
+            (links instanceof Element && links.contains(active))
+            || (actions instanceof Element && actions.contains(active))
+            || disclosure.contains(active)
+          );
+
+        if (toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.click();
+        } else if (renNavHost?.hasAttribute('data-open')) {
+          renNavHost.removeAttribute('data-open');
+        }
+
+        if (!focusWasInCollapsible || !(document.activeElement instanceof HTMLElement)) {
+          return;
+        }
+
+        const still = document.activeElement;
+        const linksHidden =
+          links instanceof Element
+          && (getComputedStyle(links).display === 'none'
+            || getComputedStyle(links).visibility === 'hidden');
+        const actionsHidden =
+          actions instanceof Element
+          && (getComputedStyle(actions).display === 'none'
+            || getComputedStyle(actions).visibility === 'hidden');
+        const stillInHiddenRegion =
+          (links instanceof Element && links.contains(still) && linksHidden)
+          || (actions instanceof Element && actions.contains(still) && actionsHidden)
+          || (disclosure.contains(still) && linksHidden);
+
+        if (stillInHiddenRegion) {
+          toggle.focus();
+        }
+      }
+
+      function closeDisclosureAndMobileShell(returnFocus) {
+        markIntentionalCloseWhilePointerInside();
+        closeDisclosure(returnFocus);
+        closeMobileShell();
+      }
+
+      /**
        * Compound hover zone for full-band mega menus.
        * Keep open while the pointer is over the disclosure, the summary→panel
        * seam, or the lateral strip from the trigger toward the panel.
@@ -923,14 +1005,31 @@
         { signal }
       );
 
+      /**
+       * Hierarchical Escape (capture, before ren-nav's bubble handler):
+       * 1) open disclosure → close it and return focus to summary
+       * 2) else mobile shell open → close shell via toggle and restore focus
+       *    to the toggle so focus does not remain on a now-hidden tree link
+       */
       document.addEventListener(
         'keydown',
         (event) => {
           if (event.key !== 'Escape') return;
-          if (!disclosure.open) return;
-          event.stopImmediatePropagation();
-          markIntentionalCloseWhilePointerInside();
-          closeDisclosure(true);
+
+          if (disclosure.open) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(true);
+            return;
+          }
+
+          if (!isDesktop() && isMobileNavOpen() && toggle) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            toggle.click();
+            toggle.focus();
+          }
         },
         { capture: true, signal }
       );
@@ -963,23 +1062,23 @@
         { signal }
       );
 
+      // Category destinations + promo CTA: close mega; on mobile also collapse shell.
       disclosure.querySelectorAll('a[href]').forEach((anchor) => {
         anchor.addEventListener(
           'click',
           () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+            closeDisclosureAndMobileShell(false);
           },
           { signal }
         );
       });
 
+      // Header actions: same destination-close policy (details + mobile shell).
       root.querySelectorAll('.ren-nav-actions a[href], .ren-nav-actions .ren-btn').forEach((action) => {
         action.addEventListener(
           'click',
           () => {
-            markIntentionalCloseWhilePointerInside();
-            closeDisclosure(false);
+            closeDisclosureAndMobileShell(false);
           },
           { signal }
         );
@@ -1015,7 +1114,6 @@
     }
 
     initNavMegaMenuCategoriesPromo();
-    window.initNavMegaMenuCategoriesPromo = initNavMegaMenuCategoriesPromo;
   </script>
 </body>
 </html>

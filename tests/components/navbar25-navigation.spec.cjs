@@ -301,6 +301,105 @@ test.describe('Navbar Mega Menu Categories Promo (navbar25)', () => {
     }
   });
 
+  test('mobile: category, promo CTA, and header action close details and shell; focus not left hidden', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 1200 });
+    await gotoNavbar25Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const disclosure = page.locator('.rn25-disclosure');
+    const renNav = page.locator(`${ROOT} ren-nav`);
+
+    const destinations = [
+      { name: 'category', selector: 'a.rn25-destination' },
+      { name: 'promo CTA', selector: 'a.rn25-promo-cta' },
+      { name: 'header action', selector: `${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn` },
+    ];
+
+    for (const dest of destinations) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await disclosure.locator('summary').click();
+      await expect(disclosure).toHaveAttribute('open', '');
+
+      const target = page.locator(dest.selector).first();
+      await expect(target).toBeVisible();
+      await target.focus();
+      await target.click();
+
+      await expect(disclosure, `${dest.name} closes details`).not.toHaveAttribute('open', '');
+      await expect(toggle, `${dest.name} collapses ren-nav shell`).toHaveAttribute('aria-expanded', 'false');
+      await expect(renNav).not.toHaveAttribute('data-open', '');
+
+      // Hash/SPA: focus must not remain on a control inside the closed (hidden) tree/actions.
+      const focusState = await page.evaluate(() => {
+        const active = document.activeElement;
+        const links = document.querySelector('#rn25-primary-links');
+        const actions = document.querySelector('[data-rn25-root] .ren-nav-actions');
+        const toggleEl = document.querySelector('[data-rn25-root] .ren-nav-toggle');
+        if (!active || !links || !toggleEl) return { ok: false, reason: 'missing' };
+        const linksStyle = getComputedStyle(links);
+        const actionsStyle = actions ? getComputedStyle(actions) : null;
+        const linksHidden =
+          linksStyle.display === 'none' || linksStyle.visibility === 'hidden';
+        const actionsHidden =
+          !actionsStyle
+          || actionsStyle.display === 'none'
+          || actionsStyle.visibility === 'hidden';
+        const inHiddenTree = linksHidden && links.contains(active);
+        const inHiddenActions = actions && actionsHidden && actions.contains(active);
+        return {
+          ok: !inHiddenTree && !inHiddenActions,
+          tag: active.tagName,
+          cls: (active.className || '').toString().slice(0, 60),
+          linksDisplay: linksStyle.display,
+          activeIsToggle: active === toggleEl,
+        };
+      });
+      expect(focusState.ok, `${dest.name} left focus hidden: ${JSON.stringify(focusState)}`).toBe(true);
+    }
+  });
+
+  test('mobile hierarchical Escape: disclosure first, then shell with focus restored to toggle', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar25Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const disclosure = page.locator('.rn25-disclosure');
+    const summary = disclosure.locator('summary');
+    const peer = page.locator('#rn25-primary-links > li > a.ren-nav-link').first();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rn25-destination').first().focus();
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await peer.focus();
+    await page.keyboard.press('Escape');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => {
+      const el = document.activeElement;
+      if (!el) return null;
+      return {
+        isToggle: el.classList.contains('ren-nav-toggle'),
+        ariaExpanded: el.getAttribute('aria-expanded'),
+        tag: el.tagName,
+      };
+    })).toEqual({ isToggle: true, ariaExpanded: 'false', tag: 'BUTTON' });
+  });
+
+  test('block does not expose window.initNavMegaMenuCategoriesPromo global', async ({ page }) => {
+    await gotoNavbar25Block(page, staticServer.origin);
+    const hasGlobal = await page.evaluate(() => typeof window.initNavMegaMenuCategoriesPromo);
+    expect(hasGlobal).toBe('undefined');
+  });
+
   test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await gotoNavbar25Block(page, staticServer.origin);
@@ -678,38 +777,60 @@ test.describe('Navbar Mega Menu Categories Promo (navbar25)', () => {
     expect(opened.stacked, 'both actions stack vertically inside the open panel').toBe(true);
   });
 
-  test('promo media uses approximately square frames with cover crop', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await gotoNavbar25Block(page, staticServer.origin);
-    await page.locator('.rn25-disclosure > summary').click();
-    await expect(page.locator('.rn25-panel')).toBeVisible();
+  test('promo media uses approximately square frames with cover crop and tokenized surface', async ({ page }) => {
+    for (const viewport of [
+      { width: 1280, height: 900, label: 'desktop' },
+      { width: 390, height: 1100, label: 'mobile' },
+    ]) {
+      await page.setViewportSize(viewport);
+      await gotoNavbar25Block(page, staticServer.origin);
+      if (viewport.width < 769) {
+        await page.locator(`${ROOT} .ren-nav-toggle`).click();
+      }
+      await page.locator('.rn25-disclosure > summary').click();
+      await expect(page.locator('.rn25-panel')).toBeVisible();
 
-    const mediaAudit = await page.evaluate(() => {
-      const frame = document.querySelector('.rn25-promo-media');
-      if (!frame) return null;
-      const rect = frame.getBoundingClientRect();
-      const style = getComputedStyle(frame);
-      const ratio = rect.height > 0 ? rect.width / rect.height : 0;
-      const img = frame.querySelector('img');
-      const imgStyle = img ? getComputedStyle(img) : null;
-      return {
-        ratio: Number(ratio.toFixed(2)),
-        aspectRatio: style.aspectRatio,
-        objectFit: imgStyle?.objectFit || '',
-        hasRenFrame: frame.classList.contains('ren-frame'),
-      };
-    });
+      const mediaAudit = await page.evaluate(() => {
+        const frame = document.querySelector('.rn25-promo-media');
+        if (!frame) return null;
+        const rect = frame.getBoundingClientRect();
+        const style = getComputedStyle(frame);
+        const ratio = rect.height > 0 ? rect.width / rect.height : 0;
+        const img = frame.querySelector('img');
+        const imgStyle = img ? getComputedStyle(img) : null;
+        const bg = style.backgroundImage || style.backgroundColor || '';
+        return {
+          ratio: Number(ratio.toFixed(2)),
+          aspectRatio: style.aspectRatio,
+          objectFit: imgStyle?.objectFit || '',
+          hasRenFrame: frame.classList.contains('ren-frame'),
+          width: Math.round(rect.width),
+          height: Math.round(rect.height),
+          borderWidth: style.borderTopWidth,
+          hasGradient: /gradient/i.test(bg) || /gradient/i.test(style.backgroundImage),
+          bgImage: style.backgroundImage,
+          bgColor: style.backgroundColor,
+        };
+      });
 
-    expect(mediaAudit).toBeTruthy();
-    expect(mediaAudit.hasRenFrame, 'promo media ren-frame').toBe(true);
-    expect(mediaAudit.ratio, `square-ish box ratio ${mediaAudit.ratio}`).toBeGreaterThanOrEqual(0.85);
-    expect(mediaAudit.ratio, `square-ish box ratio ${mediaAudit.ratio}`).toBeLessThanOrEqual(1.15);
-    const aspect = String(mediaAudit.aspectRatio || '');
-    expect(
-      aspect.includes('1') || aspect.includes('square') || aspect === 'auto',
-      `promo aspect-ratio ${aspect}`
-    ).toBe(true);
-    expect(mediaAudit.objectFit, 'promo object-fit').toBe('cover');
+      expect(mediaAudit, `${viewport.label} media present`).toBeTruthy();
+      expect(mediaAudit.hasRenFrame, `${viewport.label} ren-frame`).toBe(true);
+      expect(mediaAudit.width, `${viewport.label} width > 0`).toBeGreaterThan(64);
+      expect(mediaAudit.height, `${viewport.label} height > 0`).toBeGreaterThan(64);
+      expect(mediaAudit.ratio, `${viewport.label} square-ish ${mediaAudit.ratio}`).toBeGreaterThanOrEqual(0.85);
+      expect(mediaAudit.ratio, `${viewport.label} square-ish ${mediaAudit.ratio}`).toBeLessThanOrEqual(1.15);
+      const aspect = String(mediaAudit.aspectRatio || '');
+      expect(
+        aspect.includes('1') || aspect.includes('square') || aspect === 'auto',
+        `${viewport.label} aspect-ratio ${aspect}`
+      ).toBe(true);
+      expect(mediaAudit.objectFit, `${viewport.label} object-fit`).toBe('cover');
+      expect(mediaAudit.borderWidth, `${viewport.label} framed border`).not.toBe('0px');
+      expect(
+        mediaAudit.hasGradient || (mediaAudit.bgColor && mediaAudit.bgColor !== 'rgba(0, 0, 0, 0)'),
+        `${viewport.label} tokenized surface visible`
+      ).toBe(true);
+    }
   });
 
   test('desktop chrome: single chevron, neutral details, aligned top-level peers', async ({ page }) => {
