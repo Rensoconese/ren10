@@ -77,24 +77,92 @@ test.describe('Header4 — email form and video lightbox', () => {
 
   test('submits the one-field demo form without navigation', async ({ page }) => {
     await gotoHeader4(page, staticServer.origin);
-    await page.locator(`${ROOT} input[type="email"]`).fill('team@example.com');
+    const input = page.locator(`${ROOT} input[type="email"]`);
+    const error = page.locator(`${ROOT} [data-error]`);
+    await page.locator(`${ROOT} .rh4-cta`).click();
+    await expect(error).toBeVisible();
+    await expect(input).toHaveAttribute('aria-invalid', 'true');
+
+    await input.fill('team@example.com');
+    await expect(error).toBeHidden();
+    await expect(input).not.toHaveAttribute('aria-invalid');
     const before = page.url();
     await page.locator(`${ROOT} .rh4-cta`).click();
     await expect(page.locator(`${ROOT} .rh4-form`)).toHaveAttribute('data-demo-submitted', 'true');
     expect(page.url()).toBe(before);
   });
 
-  test('opens busy, reveals the video on load, and Escape restores trigger focus', async ({ page }) => {
+  test('resolves the legal link and the native no-JavaScript form fallback', async ({ page, browser }) => {
+    await gotoHeader4(page, staticServer.origin);
+    const terms = page.locator(`${ROOT} .rh4-terms a`);
+    const termsHref = await terms.getAttribute('href');
+    expect(termsHref).toBe('../../LICENSE');
+    const termsResponse = await page.request.get(new URL(termsHref, page.url()).href);
+    expect(termsResponse.ok()).toBe(true);
+    await expect(termsResponse.text()).resolves.toContain('MIT License');
+
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
+    const noJs = await context.newPage();
+    await gotoHeader4(noJs, staticServer.origin);
+    await expect(noJs.locator(`${ROOT} [data-error]`)).toBeHidden();
+    await noJs.locator(`${ROOT} input[type="email"]`).fill('team@example.com');
+    const navigation = noJs.waitForNavigation();
+    await noJs.locator(`${ROOT} .rh4-cta`).click();
+    const fallbackResponse = await navigation;
+    expect(fallbackResponse?.ok()).toBe(true);
+    expect(noJs.url()).toMatch(/\/docs\/getting-started\.html\?email=team%40example\.com/);
+    await context.close();
+  });
+
+  test('shows a deterministic loader, reveals playable video, and Escape restores trigger focus', async ({ page }) => {
     await gotoHeader4(page, staticServer.origin);
     const trigger = page.locator(`${ROOT} .rh4-media-trigger`);
+    await page.evaluate(() => {
+      const frame = document.querySelector('#rh4-video iframe');
+      const nativeSrcdoc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'srcdoc');
+      let pendingSrcdoc = '';
+      Object.defineProperty(frame, 'srcdoc', {
+        configurable: true,
+        get: () => '',
+        set: (value) => { pendingSrcdoc = value; },
+      });
+      window.__releaseRh4Video = () => {
+        delete frame.srcdoc;
+        nativeSrcdoc.set.call(frame, pendingSrcdoc);
+      };
+    });
     await trigger.focus();
-    await trigger.click();
+    await page.evaluate(() => document.querySelector('.rh4-media-trigger').click());
 
     const dialog = page.locator('#rh4-video dialog');
+    const loader = page.locator('#rh4-video .rh4-loader');
+    const iframe = page.locator('#rh4-video iframe');
     await expect(dialog).toHaveAttribute('open', '');
-    await expect(page.locator('#rh4-video .rh4-video-stage')).toHaveAttribute('aria-busy', /true|false/);
-    await expect(page.locator('#rh4-video iframe')).toBeVisible();
+    await expect(page.locator('#rh4-video .rh4-video-stage')).toHaveAttribute('aria-busy', 'true');
+    await expect(loader).toBeVisible();
+    await expect(iframe).toBeHidden();
+
+    await page.evaluate(() => window.__releaseRh4Video());
+    await expect(iframe).toBeVisible();
+    await expect(loader).toBeHidden();
     await expect(page.locator('#rh4-video .rh4-video-stage')).toHaveAttribute('aria-busy', 'false');
+    await expect.poll(() => iframe.evaluate((element) => {
+      const video = element.contentDocument?.querySelector('video');
+      const source = video?.querySelector('source');
+      return {
+        video: Boolean(video),
+        controls: Boolean(video?.controls),
+        source: source?.getAttribute('src') || '',
+        playable: video?.canPlayType(source?.getAttribute('type') || '') || '',
+        hasDuration: Boolean(video && Number.isFinite(video.duration) && video.duration > 0),
+      };
+    })).toMatchObject({
+      video: true,
+      controls: true,
+      source: expect.stringMatching(/^data:video\/webm;base64,/),
+      playable: expect.stringMatching(/maybe|probably/),
+      hasDuration: true,
+    });
 
     await page.keyboard.press('Escape');
     await expect(dialog).not.toHaveAttribute('open', '');
@@ -151,6 +219,7 @@ test.describe('Header4 — email form and video lightbox', () => {
     await expect(noJs.locator(`${ROOT} h1`)).toBeVisible();
     await expect(noJs.locator(`${ROOT} input[type="email"]`)).toBeVisible();
     await expect(noJs.locator(`${ROOT} .rh4-media-trigger`)).toBeVisible();
+    await expect(noJs.locator(`${ROOT} [data-error]`)).toBeHidden();
     await context.close();
   });
 

@@ -83,7 +83,8 @@
     }
 
     .rh4-form [data-error][hidden],
-    .rh4-loader[hidden] {
+    .rh4-loader[hidden],
+    .rh4-video-stage iframe[hidden] {
       display: none;
     }
 
@@ -209,7 +210,7 @@
           </p>
 
           <div class="rh4-form-wrap ren-stack-xs">
-            <form class="rh4-form" action="#joined" method="get">
+            <form class="rh4-form" action="../../docs/getting-started.html" method="get">
               <div class="rh4-form-row ren-cluster">
                 <ren-field>
                   <label for="rh4-email">Work email</label>
@@ -222,13 +223,13 @@
                     placeholder="team@example.com"
                     required
                   >
-                  <span data-error>Enter a valid email address.</span>
+                  <span data-error hidden>Enter a valid email address.</span>
                 </ren-field>
                 <button class="rh4-cta ren-btn" type="submit">Join the preview</button>
               </div>
             </form>
             <p class="rh4-terms">
-              By continuing, you agree to our <a class="ren-link" href="#terms">terms of use</a>.
+              By continuing, you agree to our <a class="ren-link" href="../../LICENSE">terms of use</a>.
             </p>
           </div>
         </div>
@@ -291,6 +292,8 @@
 
   <script>
     const form = document.querySelector('.rh4-form');
+    const email = form.querySelector('input[type="email"]');
+    const emailError = form.querySelector('[data-error]');
     const lightbox = document.querySelector('#rh4-video');
     const stage = lightbox.querySelector('.rh4-video-stage');
     const loader = lightbox.querySelector('.rh4-loader');
@@ -302,6 +305,16 @@
       return false;
     };
 
+    email.addEventListener('invalid', () => {
+      emailError.hidden = false;
+      email.setAttribute('aria-invalid', 'true');
+    });
+
+    email.addEventListener('input', () => {
+      emailError.hidden = email.validity.valid;
+      if (email.validity.valid) email.removeAttribute('aria-invalid');
+    });
+
     frame.addEventListener('load', () => {
       loader.hidden = true;
       frame.hidden = false;
@@ -310,6 +323,7 @@
 
     lightbox.addEventListener('ren-open', () => {
       const scheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const videoSource = 'data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAIFEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggHv7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjIuMy4xMDBXQYxMYXZmNjIuMy4xMDBEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIUaapVNo4evqcgQAitZyDdW5kiIEAhoVWX1ZQOYOBASPjg4QdzWUA4JCwgaC6gVqagQJVsIRVuYEBElTDZ0B/c3OfY8CAZ8iZRaOHRU5DT0RFUkSHjExhdmY2Mi4zLjEwMHNz2mPAi2PFiFGmqVTaOHr6Z8ilRaOHRU5DT0RFUkSHmExhdmM2Mi4xMS4xMDAgbGlidnB4LXZwOWfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnXC54EAo6aBAACAgkmDQgAJ8AWWADgkHBhCAAAwYAAAZz///1mvETu4z4ZPgKOVgQH0AIYAQJKcAElAAAMgAABZ+YbgHFO7a5G7j7OBALeK94EB8YIBqPCBAw==';
       stage.setAttribute('aria-busy', 'true');
       loader.hidden = false;
       frame.hidden = true;
@@ -319,13 +333,16 @@
             <meta name="viewport" content="width=device-width">
             <style>
               html, body { height: 100%; margin: 0; }
-              body { display: grid; place-items: center; background: Canvas; color: CanvasText; font-family: system-ui; }
-              main { padding: 1em; text-align: center; }
-              h1 { margin: 0 0 0.5em; font-size: 1.5em; }
-              p { margin: 0; font-size: 0.875em; }
+              body { overflow: hidden; background: Canvas; color: CanvasText; }
+              video { width: 100%; height: 100%; object-fit: contain; }
             </style>
           </head>
-          <body><main><h1>Ren10 video preview</h1><p>Your product overview is ready.</p></main></body>
+          <body>
+            <video controls autoplay muted playsinline aria-label="Ren10 product overview preview">
+              <source src="${videoSource}" type="video/webm">
+              Your browser does not support embedded video.
+            </video>
+          </body>
         </html>`;
     });
 

@@ -22,7 +22,8 @@ Implement Relume `header4` as
 - Preview root: `[data-rh4-root]` / `.rh4-section`.
 - Layout: `ren-switcher` split for copy / media; form uses `ren-field` +
   `ren-btn`; terms use `ren-link`; media opens `ren-dialog`; spinner uses
-  `ren-spinner`; play glyph uses `ren-icon`.
+  `ren-spinner`; play glyph uses `ren-icon`; the iframe contains deterministic
+  native video media rather than a visual placeholder.
 - Demo page chrome brand: R-in-square + Ren10 (and version badge). No brand
   inside the hero (source has none).
 - Tokens only; Light DOM; real elements; ≥44px targets; reduced motion;
@@ -36,8 +37,9 @@ Implement Relume `header4` as
 2. Landmarks: section root; no nested interactive duplicate controls.
 3. Responsive: no root overflow at 320 / 390 / 767 / 768 / 1280; two-column at
    1280; stacked copy-above-media at 390.
-4. Behavior: trigger opens dialog; Escape/backdrop close; spinner until load;
-   form preventDefault submit; JS-disabled content usable.
+4. Behavior: trigger opens dialog with playable video; Escape/backdrop close;
+   spinner is visible until iframe load; form preventDefault submit;
+   JS-disabled form and legal destinations resolve locally.
 5. A11y: visible focus, 44px targets, reduced motion, light/dark, axe AA.
 
 ## RED then GREEN

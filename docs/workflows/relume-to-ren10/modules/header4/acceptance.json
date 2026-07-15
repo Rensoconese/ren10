@@ -10,7 +10,7 @@
     {
       "id": "function-primary",
       "kind": "behavior",
-      "description": "Media trigger opens ren-dialog lightbox; Escape and backdrop close; spinner until iframe load; form submit prevented for demo",
+      "description": "Media trigger opens ren-dialog lightbox with deterministic playable video; Escape and backdrop close; spinner until iframe load; form submit prevented for the enhanced demo",
       "automated": true
     },
     {
@@ -28,7 +28,7 @@
     {
       "id": "progressive-fallback",
       "kind": "behavior",
-      "description": "JavaScript-disabled view keeps heading, form, terms, and poster visible and usable without the lightbox",
+      "description": "JavaScript-disabled view keeps heading, form, terms, and poster visible; no premature custom error; legal link and valid form fallback resolve to owned local documents",
       "automated": true
     },
     {
