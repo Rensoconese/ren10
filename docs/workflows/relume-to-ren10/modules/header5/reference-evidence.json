@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated targeted relume_oauth__get_component(slug=header5, primitives=names-only) returned the complete Header5 TSX plus utils/button primitive names. Extracted facts: viewport-height cover hero, left constrained copy, one h1, one description, exactly two CTA variants, one absolute cover image and one dark full-inset scrim."
+}

@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:58272/templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html?ren10_capture=header5-narrow-320-d45ae3a34adc",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh5-heading": 1,
+    ".rh5-actions > .ren-btn": 2
+  },
+  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
+  "capturedAt": "2026-07-15T16:18:55.344Z"
+}

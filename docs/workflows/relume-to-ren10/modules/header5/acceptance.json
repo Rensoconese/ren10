@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "Exactly one h1, one description, two CTA controls, one full-bleed image, and one scrim; no nav, brand, or form",
+      "automated": true
+    },
+    {
+      "id": "viewport-cover",
+      "kind": "visual-structure",
+      "description": "Hero and background fill the viewport at 320/390/767/768/1280 with no overflow",
+      "automated": true
+    },
+    {
+      "id": "copy-position",
+      "kind": "visual-structure",
+      "description": "Constrained left-aligned copy remains vertically centered while the CTA cluster wraps when needed",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Overlay contrast, focus, 44px targets, light/dark host themes, reduced motion, and axe AA pass",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "Complete hero content and both CTA destinations remain usable without JavaScript",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

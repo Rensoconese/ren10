@@ -1,0 +1,20 @@
+{
+  "id": "desktop-light",
+  "url": "http://127.0.0.1:58272/templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html?ren10_capture=header5-desktop-light-d45ae3a34adc",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh5-heading": 1,
+    ".rh5-description": 1,
+    ".rh5-actions > .ren-btn": 2,
+    ".rh5-background > img": 1,
+    ".rh5-scrim": 1
+  },
+  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
+  "capturedAt": "2026-07-15T16:18:52.506Z"
+}

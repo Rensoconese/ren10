@@ -1,0 +1,16 @@
+{
+  "id": "desktop-reduced-motion",
+  "url": "http://127.0.0.1:58272/templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html?ren10_capture=header5-desktop-reduced-motion-d45ae3a34adc",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh5-actions > .ren-btn": 2
+  },
+  "commit": "d45ae3a34adc8881bb0dd414a1c893515d10c917",
+  "capturedAt": "2026-07-15T16:18:56.660Z"
+}
