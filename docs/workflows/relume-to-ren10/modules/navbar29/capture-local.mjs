@@ -64,14 +64,91 @@ async function runAction(page, action) {
 }
 
 /**
+ * Wait until open mega panel/cards/links finish enter transitions (opacity ≈ 1)
+ * or fail closed. Capture-only — does not change product behavior.
+ * @param {import('@playwright/test').Page} page
+ * @param {string[]} selectors
+ * @param {number} [timeoutMs]
+ */
+async function waitForPaintedOpen(page, selectors, timeoutMs = 4000) {
+  const unique = [...new Set(selectors.filter(Boolean))];
+  if (unique.length === 0) return;
+
+  await page.waitForFunction(
+    (sels) => {
+      const parseOpacity = (value) => {
+        const n = Number.parseFloat(String(value || '1'));
+        return Number.isFinite(n) ? n : 1;
+      };
+      for (const selector of sels) {
+        const el = document.querySelector(selector);
+        if (!el) return false;
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        if (parseOpacity(style.opacity) < 0.99) return false;
+        const rect = el.getBoundingClientRect();
+        if (rect.width < 1 || rect.height < 1) return false;
+      }
+      // No finite running animations/transitions on open mega chrome.
+      const anims = typeof document.getAnimations === 'function'
+        ? document.getAnimations({ subtree: true })
+        : [];
+      for (const anim of anims) {
+        const effect = anim.effect;
+        let target = null;
+        try {
+          target = effect && 'target' in effect ? effect.target : null;
+        } catch {
+          target = null;
+        }
+        if (!(target instanceof Element)) continue;
+        if (!target.closest('.rmoc-panel, .rmoc-disclosure, a.rmoc-card, .rmoc-mega-link, .rmoc-chevron')) {
+          continue;
+        }
+        if (anim.playState === 'running' || anim.playState === 'pending') return false;
+      }
+      return true;
+    },
+    unique,
+    { timeout: timeoutMs },
+  );
+}
+
+/**
+ * Capture-only: freeze enter motion so snapshots are not mid-opacity.
+ * Prefer reduced-motion media + local CSS kill for panel enter animation.
+ * @param {import('@playwright/test').Page} page
+ */
+async function disableCaptureMotion(page) {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addStyleTag({
+    content: `
+      [data-rmoc-root] .rmoc-panel,
+      [data-rmoc-root] .rmoc-chevron,
+      [data-rmoc-root] a.rmoc-card,
+      [data-rmoc-root] .rmoc-card-media,
+      [data-rmoc-root] .rmoc-mega-link {
+        animation: none !important;
+        transition: none !important;
+        opacity: 1 !important;
+      }
+      [data-rmoc-root] .rmoc-disclosure[open] > .rmoc-panel {
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+    `,
+  });
+}
+
+/**
  * Stabilize shell open before nested disclosure activation.
  * @param {import('@playwright/test').Page} page
  * @param {{ type: string, selector?: string }} action
  */
 async function stabilizeAfterAction(page, action) {
-  if (action.type !== 'click' || typeof action.selector !== 'string') return;
+  if (typeof action.selector !== 'string') return;
 
-  if (action.selector.includes('ren-nav-toggle')) {
+  if (action.type === 'click' && action.selector.includes('ren-nav-toggle')) {
     await page.locator(`${action.selector}[aria-expanded="true"]`).waitFor({
       state: 'visible',
       timeout: 5000,
@@ -82,9 +159,14 @@ async function stabilizeAfterAction(page, action) {
     return;
   }
 
-  if (action.selector.includes('summary') || action.selector.includes('rmoc-disclosure')) {
+  // Only after open-driving interactions (click/hover), not focus bridges.
+  if (
+    (action.type === 'click' || action.type === 'hover')
+    && (action.selector.includes('summary') || action.selector.includes('rmoc-disclosure'))
+  ) {
     await page.locator('.rmoc-disclosure[open]').waitFor({ state: 'attached', timeout: 5000 });
     await page.locator('.rmoc-panel').waitFor({ state: 'visible', timeout: 5000 });
+    await waitForPaintedOpen(page, ['.rmoc-panel', 'a.rmoc-card', '.rmoc-mega-link']);
   }
 }
 
@@ -161,19 +243,42 @@ async function assertExpectedState(page, expectedState, stateId) {
         out.visible[selector] = { present: false, playwrightVisible: false };
         continue;
       }
-      // Playwright actionability visibility (stricter than box metrics alone).
+      // Playwright actionability + computed final paint metrics.
       const playwrightVisible = await loc.isVisible();
-      const box = await loc.boundingBox();
+      const paint = await loc.evaluate((el) => {
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        const opacity = Number.parseFloat(String(style.opacity || '1'));
+        return {
+          display: style.display,
+          visibility: style.visibility,
+          opacity: Number.isFinite(opacity) ? opacity : 1,
+          width: rect.width,
+          height: rect.height,
+          x: rect.x,
+          y: rect.y,
+        };
+      });
+      const opacityOk = paint.opacity >= 0.99;
+      const displayOk = paint.display !== 'none';
+      const visibilityOk = paint.visibility !== 'hidden';
+      const rectOk = paint.width >= 1 && paint.height >= 1;
       out.visible[selector] = {
         present: true,
         playwrightVisible,
-        width: box ? Math.round(box.width) : 0,
-        height: box ? Math.round(box.height) : 0,
-        y: box ? Math.round(box.y) : null,
+        display: paint.display,
+        visibility: paint.visibility,
+        opacity: Number(paint.opacity.toFixed(3)),
+        width: Math.round(paint.width),
+        height: Math.round(paint.height),
+        x: Math.round(paint.x),
+        y: Math.round(paint.y),
       };
-      if (!playwrightVisible || !box || box.width < 1 || box.height < 1) {
+      if (!playwrightVisible || !opacityOk || !displayOk || !visibilityOk || !rectOk) {
         out.ok = false;
-        out.failures.push(`not visibly painted: ${selector}`);
+        out.failures.push(
+          `not fully painted: ${selector} (visible=${playwrightVisible}, opacity=${paint.opacity}, display=${paint.display}, visibility=${paint.visibility}, ${Math.round(paint.width)}x${Math.round(paint.height)})`,
+        );
       }
     }
   }
@@ -251,7 +356,24 @@ async function captureNavbar29({
           await runAction(page, action);
           if (state.javaScript !== false) {
             await stabilizeAfterAction(page, action);
+          } else if (
+            action.type === 'click'
+            && typeof action.selector === 'string'
+            && action.selector.includes('summary')
+          ) {
+            // Native details still opens without JS; wait for attribute only.
+            await page.locator('.rmoc-disclosure[open]').waitFor({ state: 'attached', timeout: 5000 });
           }
+        }
+
+        // Hover open must keep the pointer on the summary so leave does not close.
+        if (
+          state.javaScript !== false
+          && Array.isArray(state.actions)
+          && state.actions.some((a) => a.type === 'hover' && String(a.selector || '').includes('summary'))
+        ) {
+          await page.locator('.rmoc-disclosure > summary').hover({ force: true });
+          await page.locator('.rmoc-disclosure[open]').waitFor({ state: 'attached', timeout: 3000 });
         }
 
         await page.locator(matrix.root).waitFor({ state: 'visible' });
@@ -259,6 +381,21 @@ async function captureNavbar29({
           rootSelector: matrix.root,
           javaScriptEnabled: state.javaScript !== false,
         });
+
+        // Kill enter opacity/animation for snapshot (capture-only CSS + reduced motion).
+        if (state.javaScript !== false && state.expectedState?.detailsOpen === true) {
+          await disableCaptureMotion(page);
+          // Re-assert open after motion kill (hover may need a nudge).
+          if (Array.isArray(state.actions) && state.actions.some((a) => a.type === 'hover')) {
+            await page.locator('.rmoc-disclosure > summary').hover({ force: true });
+          }
+          await waitForPaintedOpen(
+            page,
+            Array.isArray(state.expectedState.visible)
+              ? state.expectedState.visible
+              : ['.rmoc-panel', 'a.rmoc-card'],
+          );
+        }
 
         const markerCounts = await collectMarkerCounts(page, state.expectedMarkers || {});
         const stateReport = await assertExpectedState(page, state.expectedState, state.id);
@@ -416,7 +553,7 @@ async function captureNavbar29({
         captureCount: capturedCount,
         captureRunner: 'navbar29/capture-local.mjs',
         settlePolicy:
-          'local stabilizeAfterAction (toggle→aria-expanded+tree+summary; summary→details[open]+panel) then shared settleDocument; expectedState visibility enforced',
+          'stabilizeAfterAction + waitForPaintedOpen (opacity≈1, display/visibility, rects, no running panel animations) + disableCaptureMotion for open snapshots + shared settleDocument; expectedState enforces computed opacity/display/visibility/rects; CDP captureBeyondViewport with open freeze for mobile seams',
         states: evidenceStates,
         openStatesReviewed: evidenceStates
           .map((s) => s.id)

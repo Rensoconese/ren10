@@ -904,11 +904,17 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
             await page.locator('#rmoc-primary-links').waitFor({ state: 'visible' });
             await page.locator(SUMMARY).waitFor({ state: 'visible' });
           }
+          if (String(action.selector).includes('summary')) {
+            await page.locator('.rmoc-disclosure[open]').waitFor({ state: 'attached' });
+          }
         } else if (action.type === 'focus') {
           await page.locator(action.selector).waitFor({ state: 'visible' });
           await page.locator(action.selector).focus();
         } else if (action.type === 'hover') {
           await page.locator(action.selector).hover();
+          await page.locator('.rmoc-disclosure[open]').waitFor({ state: 'attached' });
+          // Keep pointer parked so leave does not collapse hover-open.
+          await page.locator(action.selector).hover({ force: true });
         }
       }
 
@@ -942,10 +948,51 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
 
         if (Array.isArray(expectedState.visible)) {
           for (const selector of expectedState.visible) {
-            await expect(
-              page.locator(selector).first(),
-              `${state.id} expects visible ${selector}`
-            ).toBeVisible();
+            const target = page.locator(selector).first();
+            await expect(target, `${state.id} expects visible ${selector}`).toBeVisible();
+            if (expectedState.detailsOpen === true) {
+              // Wait through enter opacity transition — not a mid-animation snapshot.
+              await expect
+                .poll(async () => target.evaluate((el) => {
+                  const style = getComputedStyle(el);
+                  const rect = el.getBoundingClientRect();
+                  const opacity = Number.parseFloat(String(style.opacity || '1'));
+                  return {
+                    opacity: Number.isFinite(opacity) ? opacity : 1,
+                    display: style.display,
+                    visibility: style.visibility,
+                    width: rect.width,
+                    height: rect.height,
+                  };
+                }), { timeout: 4000, message: `${state.id} ${selector} paint settle` })
+                .toEqual(expect.objectContaining({
+                  opacity: expect.any(Number),
+                  display: expect.not.stringMatching(/^none$/),
+                  visibility: expect.not.stringMatching(/^hidden$/),
+                }));
+              await expect
+                .poll(async () => target.evaluate((el) => {
+                  const opacity = Number.parseFloat(String(getComputedStyle(el).opacity || '1'));
+                  return Number.isFinite(opacity) ? opacity : 1;
+                }), { timeout: 4000, message: `${state.id} ${selector} opacity≈1` })
+                .toBeGreaterThanOrEqual(0.99);
+              const paint = await target.evaluate((el) => {
+                const style = getComputedStyle(el);
+                const rect = el.getBoundingClientRect();
+                return {
+                  opacity: Number.parseFloat(String(style.opacity || '1')),
+                  display: style.display,
+                  visibility: style.visibility,
+                  width: rect.width,
+                  height: rect.height,
+                };
+              });
+              expect(paint.opacity, `${state.id} ${selector} opacity`).toBeGreaterThanOrEqual(0.99);
+              expect(paint.display, `${state.id} ${selector} display`).not.toBe('none');
+              expect(paint.visibility, `${state.id} ${selector} visibility`).not.toBe('hidden');
+              expect(paint.width, `${state.id} ${selector} width`).toBeGreaterThanOrEqual(1);
+              expect(paint.height, `${state.id} ${selector} height`).toBeGreaterThanOrEqual(1);
+            }
           }
         }
       }
