@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated suite tests/components/navbar27-navigation.spec.cjs run before production HTML. Command: npx playwright test --config tests/components/playwright.config.cjs tests/components/navbar27-navigation.spec.cjs --project=\"Desktop Light\" --max-failures=1. Discovered 17 tests; first failure was genuine HTTP 404 for missing templates/blocks/nav-mega-menu-category-collections.html (assertion: block must not 404); remaining 16 tests left unrun by --max-failures=1. HTML was confirmed absent at RED time."
+}
