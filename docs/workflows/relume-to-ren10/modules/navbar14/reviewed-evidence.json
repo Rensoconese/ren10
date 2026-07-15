@@ -1,0 +1,7 @@
+{
+  "stage": "reviewed",
+  "kind": "human-acceptance",
+  "acceptor": "product-owner",
+  "result": "accepted",
+  "notes": "The product owner explicitly approved Navbar14 in the Codex task and requested continuing the remaining navbar family without per-block approval pauses."
+}
