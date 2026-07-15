@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar30",
+  "blockSlug": "nav-mega-menu-categories-products",
+  "blockPath": "templates/blocks/nav-mega-menu-categories-products.html",
+  "stage": "green",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-categories-products.html",
+    "tests/components/navbar30-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
+  }
+}

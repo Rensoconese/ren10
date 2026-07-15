@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, four top-level entries (three plain links + one mega), three category groups of five title-only links, two media/title product cards, two actions, one toggle, and one chevron are authored",
+      "automated": true
+    },
+    {
+      "id": "single-tree-landmark",
+      "kind": "structure",
+      "description": "Exactly one primary navigation landmark and one links tree serve desktop and mobile",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Native activation, stable desktop hover corridor, click pin, Escape with focus return from focused destinations, outside close, category-link/product-card/CTA close, mobile nested disclosure, same-breakpoint resize stability, and breakpoint-crossing reset reach every documented state",
+      "automated": true
+    },
+    {
+      "id": "geometry-matrix",
+      "kind": "visual-structure",
+      "description": "Desktop full-width panel under bar; tablet mid-width readable composition; mobile in-flow; narrow 320/340 widths and 767/768/769 seams without html/root overflow; fully visible 44px targets",
+      "automated": true
+    },
+    {
+      "id": "product-card-semantics",
+      "kind": "accessibility",
+      "description": "Each product card is exactly one anchor with media + title only, no nested interactive descendant, no rendered description, and visible focus",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled mobile exposes the one tree, both actions, and usable native disclosure",
+      "automated": true
+    },
+    {
+      "id": "a11y-tokens-motion",
+      "kind": "accessibility",
+      "description": "WCAG 2.1 AA axe on the block root; light/dark token surfaces; reduced-motion disables block-local transitions; single chevron/close affordance",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}
