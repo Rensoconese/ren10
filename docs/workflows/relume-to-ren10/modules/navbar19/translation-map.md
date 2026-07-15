@@ -11,6 +11,8 @@
 - `components/primitives/ren-button/component.md`
 - `components/primitives/ren-link/component.md`
 - `components/primitives/ren-icon/component.md`
+- `components/primitives/ren-badge/component.md`
+- `components/primitives/ren-breadcrumb/component.md`
 
 ## RenDS mapping
 
@@ -39,6 +41,11 @@
   the expanded state.
 - Outside activation, destination activation, and breakpoint crossing close the
   disclosure. Site-panel destinations and outside clicks close the panel.
+- Site-panel open state is owned by the block controller through public DOM/ARIA
+  only (`aria-expanded` on `.ren-nav-toggle`, `data-open` on `ren-nav` and the
+  panel). Private ren-nav fields are never read or written.
+- Same-band resizes inside the desktop or mobile band preserve panel state;
+  only a 48rem band cross closes panel and disclosure.
 - Mobile never uses hover to open the dropdown or the site panel.
 - When the site panel is open on desktop, the centered bar row is hidden
   (source function). On narrow viewports the bar row stays closed chrome and

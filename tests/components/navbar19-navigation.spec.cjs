@@ -326,6 +326,106 @@ test.describe('Navbar Logo Left Center Links Site Panel (navbar19)', () => {
     await expect(disclosure).not.toHaveAttribute('open', '');
   });
 
+  test('same-band desktop resize preserves open site panel; only band cross closes', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar19Block(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const panel = page.locator('#rn19-site-panel');
+    const renNav = page.locator(`${ROOT} ren-nav`);
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(renNav).toHaveAttribute('data-open', '');
+    await expect(panel).toBeVisible();
+
+    // Same desktop band (still ≥ 48rem / 768px): open state must survive.
+    await page.setViewportSize({ width: 1279, height: 900 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(renNav).toHaveAttribute('data-open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('a.rn19-primary-link').first()).toBeVisible();
+
+    await page.setViewportSize({ width: 1024, height: 800 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(renNav).toHaveAttribute('data-open', '');
+    await expect(panel).toBeVisible();
+
+    // Cross below 48rem: must close.
+    await page.setViewportSize({ width: 767, height: 900 });
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(renNav).not.toHaveAttribute('data-open', '');
+  });
+
+  test('site panel state is owned via public ARIA/DOM only (no private ren-nav fields)', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar19Block(page, staticServer.origin);
+
+    const probe = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn19-root]');
+      const host = root?.querySelector('ren-nav');
+      const toggle = root?.querySelector('.ren-nav-toggle');
+      const panel = root?.querySelector('#rn19-site-panel');
+      if (!host || !toggle || !panel) return { missing: true };
+
+      const controllerSource = String(
+        document.querySelector('script[type="module"]:last-of-type')?.textContent || ''
+      );
+      const touchesPrivate =
+        controllerSource.includes('._isOpen')
+        || controllerSource.includes("['_isOpen']")
+        || controllerSource.includes('["_isOpen"]')
+        || /_isOpen\s*=/.test(controllerSource);
+
+      toggle.click();
+      const openPublic = {
+        ariaExpanded: toggle.getAttribute('aria-expanded'),
+        hostDataOpen: host.hasAttribute('data-open'),
+        panelDataOpen: panel.hasAttribute('data-open'),
+        panelAriaHidden: panel.getAttribute('aria-hidden'),
+      };
+
+      // Public state remains consistent after a same-band resize.
+      window.dispatchEvent(new Event('resize'));
+      const afterResize = {
+        ariaExpanded: toggle.getAttribute('aria-expanded'),
+        hostDataOpen: host.hasAttribute('data-open'),
+        panelDataOpen: panel.hasAttribute('data-open'),
+      };
+
+      toggle.click();
+      const closedPublic = {
+        ariaExpanded: toggle.getAttribute('aria-expanded'),
+        hostDataOpen: host.hasAttribute('data-open'),
+        panelDataOpen: panel.hasAttribute('data-open'),
+        panelAriaHidden: panel.getAttribute('aria-hidden'),
+      };
+
+      return { touchesPrivate, openPublic, afterResize, closedPublic };
+    });
+
+    expect(probe.missing, 'missing host/toggle/panel').toBeFalsy();
+    expect(probe.touchesPrivate, 'controller must not access ren-nav _isOpen').toBe(false);
+
+    expect(probe.openPublic.ariaExpanded).toBe('true');
+    expect(probe.openPublic.hostDataOpen).toBe(true);
+    expect(probe.openPublic.panelDataOpen).toBe(true);
+    expect(probe.openPublic.panelAriaHidden).toBe('false');
+
+    expect(probe.afterResize.ariaExpanded).toBe('true');
+    expect(probe.afterResize.hostDataOpen).toBe(true);
+    expect(probe.afterResize.panelDataOpen).toBe(true);
+
+    expect(probe.closedPublic.ariaExpanded).toBe('false');
+    expect(probe.closedPublic.hostDataOpen).toBe(false);
+    expect(probe.closedPublic.panelDataOpen).toBe(false);
+    expect(probe.closedPublic.panelAriaHidden).toBe('true');
+  });
+
   test('desktop geometry: logo start, centered bar cluster, toggle end', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoNavbar19Block(page, staticServer.origin);

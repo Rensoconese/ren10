@@ -800,8 +800,12 @@
     /**
      * Block-local controller for:
      * - compact bar disclosure (desktop hover corridor + pin, Escape, outside)
-     * - site panel sync with ren-nav toggle (aria-expanded / data-open)
-     * - breakpoint reset for both surfaces
+     * - site panel open/close owned entirely via public DOM/ARIA
+     *   (toggle aria-expanded, ren-nav data-open, panel data-open/aria-hidden)
+     * - close panel/disclosure only when the 48rem responsive band changes
+     *
+     * Does not read or write private ren-nav fields (e.g. _isOpen). Toggle
+     * clicks are captured so ren-nav's mobile-shell handler does not race.
      */
     const RN19_CONTROLLER = Symbol.for('ren10.rn19.controller');
     const DESKTOP_MQ = '(min-width: 48rem)';
@@ -836,41 +840,48 @@
       let hoverTransient = false;
       let pointerPinned = false;
       let ignoreHoverUntilLeave = false;
-      let panelWasOpen = false;
 
       function isDesktop() {
         return desktopQuery.matches;
       }
 
+      /** Public contract only: toggle aria-expanded is the source of truth. */
       function isPanelOpen() {
-        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+        return toggle.getAttribute('aria-expanded') === 'true';
       }
 
-      function syncSitePanel() {
-        const open = isPanelOpen();
+      /**
+       * Apply open/closed site-panel state through documented public attributes.
+       * - .ren-nav-toggle[aria-expanded]
+       * - ren-nav[data-open] (pattern open chrome / CSS hooks)
+       * - #rn19-site-panel data-open + aria-hidden
+       */
+      function setPanelOpen(open, returnFocus) {
+        const wasOpen = isPanelOpen();
         if (open) {
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.setAttribute('aria-label', 'Close site menu');
+          renNavHost?.setAttribute('data-open', '');
           sitePanel.setAttribute('data-open', '');
           sitePanel.setAttribute('aria-hidden', 'false');
-          toggle.setAttribute('aria-label', 'Close site menu');
-          if (!panelWasOpen) closeDisclosure(false);
+          if (!wasOpen) closeDisclosure(false);
         } else {
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open site menu');
+          renNavHost?.removeAttribute('data-open');
           sitePanel.removeAttribute('data-open');
           sitePanel.setAttribute('aria-hidden', 'true');
-          toggle.setAttribute('aria-label', 'Open site menu');
         }
-        panelWasOpen = open;
+        if (!open && returnFocus) toggle.focus();
       }
 
       function closePanel(returnFocus) {
         if (!isPanelOpen()) return;
-        renNavHost?.removeAttribute('data-open');
-        toggle.setAttribute('aria-expanded', 'false');
-        // Keep ren-nav internal flag in sync when present.
-        if (renNavHost && '_isOpen' in renNavHost) {
-          try { renNavHost._isOpen = false; } catch { /* ignore */ }
-        }
-        syncSitePanel();
-        if (returnFocus) toggle.focus();
+        setPanelOpen(false, returnFocus);
+      }
+
+      function openPanel() {
+        setPanelOpen(true, false);
       }
 
       function resetHoverFlags() {
@@ -899,6 +910,21 @@
       function markIntentionalCloseWhilePointerInside() {
         if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
       }
+
+      // Own the toggle fully so ren-nav mobile-shell resize/click does not race.
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (isPanelOpen()) {
+            closePanel(false);
+          } else {
+            openPanel();
+          }
+        },
+        { capture: true, signal }
+      );
 
       summary.addEventListener(
         'click',
@@ -991,14 +1017,9 @@
             closeDisclosure(false);
           }
 
-          if (isPanelOpen()) {
-            const insideNav = renNavHost?.contains(target);
-            const onToggle = toggle.contains(target);
-            if (!insideNav || onToggle) {
-              // ren-nav owns toggle clicks; outside-nav clicks close via ren-nav.
-              // Sync after ren-nav handlers in the same turn.
-              queueMicrotask(syncSitePanel);
-            }
+          // Outside the ren-nav host closes the site panel (public ownership).
+          if (isPanelOpen() && renNavHost && !renNavHost.contains(target)) {
+            closePanel(false);
           }
         },
         { signal }
@@ -1039,34 +1060,13 @@
         );
       });
 
-      const observer = new MutationObserver(() => {
-        syncSitePanel();
-        if (!isPanelOpen()) {
-          /* keep disclosure state independent when panel closes */
-        } else {
-          closeDisclosure(false);
-        }
-      });
-      observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
-      if (renNavHost) {
-        observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
-      }
-      signal.addEventListener('abort', () => observer.disconnect());
-
-      toggle.addEventListener(
-        'click',
-        () => {
-          // After ren-nav toggles, sync panel + close disclosure if opening.
-          queueMicrotask(() => {
-            syncSitePanel();
-            if (isPanelOpen()) closeDisclosure(false);
-          });
-        },
-        { signal }
-      );
-
+      /**
+       * Close only when the 48rem band flips. Same-band resizes (e.g. 1280→1279)
+       * must preserve panel and disclosure state. matchMedia 'change' is the
+       * authoritative band signal; do not close on raw window resize.
+       */
       let wasDesktop = isDesktop();
-      const onViewportChange = () => {
+      const onBandChange = () => {
         const nowDesktop = isDesktop();
         if (wasDesktop !== nowDesktop) {
           resetHoverFlags();
@@ -1076,12 +1076,15 @@
         wasDesktop = nowDesktop;
       };
       if (typeof desktopQuery.addEventListener === 'function') {
-        desktopQuery.addEventListener('change', onViewportChange, { signal });
-      } else {
-        window.addEventListener('resize', onViewportChange, { signal });
+        desktopQuery.addEventListener('change', onBandChange, { signal });
+      } else if (typeof desktopQuery.addListener === 'function') {
+        const legacy = () => onBandChange();
+        desktopQuery.addListener(legacy);
+        signal.addEventListener('abort', () => desktopQuery.removeListener(legacy));
       }
 
-      syncSitePanel();
+      // Closed initial public state (no private ren-nav fields).
+      setPanelOpen(false, false);
       return controller;
     }
 
