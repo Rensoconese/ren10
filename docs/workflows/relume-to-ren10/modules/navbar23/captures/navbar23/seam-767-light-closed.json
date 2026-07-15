@@ -1,6 +1,6 @@
 {
   "id": "seam-767-light-closed",
-  "url": "http://127.0.0.1:58261/templates/blocks/nav-mega-menu-product-intro.html?ren10_capture=navbar23-seam-767-light-closed-a8eb1dddc966",
+  "url": "http://127.0.0.1:50345/templates/blocks/nav-mega-menu-product-intro.html?ren10_capture=navbar23-seam-767-light-closed-17829f9c7b93",
   "viewport": {
     "width": 767,
     "height": 900
@@ -14,6 +14,6 @@
     ".rn23-intro-cta": 1,
     ".rn23-chevron": 1
   },
-  "commit": "a8eb1dddc9664cb95bf6fb53e7858e28cd0fb047",
-  "capturedAt": "2026-07-15T11:25:26.605Z"
+  "commit": "17829f9c7b931744e9250790d2ac52ad44e4fe68",
+  "capturedAt": "2026-07-15T11:36:14.828Z"
 }

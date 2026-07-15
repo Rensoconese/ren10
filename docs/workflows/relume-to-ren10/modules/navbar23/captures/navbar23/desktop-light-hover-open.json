@@ -1,6 +1,6 @@
 {
   "id": "desktop-light-hover-open",
-  "url": "http://127.0.0.1:58261/templates/blocks/nav-mega-menu-product-intro.html?ren10_capture=navbar23-desktop-light-hover-open-a8eb1dddc966",
+  "url": "http://127.0.0.1:50345/templates/blocks/nav-mega-menu-product-intro.html?ren10_capture=navbar23-desktop-light-hover-open-17829f9c7b93",
   "viewport": {
     "width": 1280,
     "height": 1200
@@ -14,6 +14,6 @@
     ".rn23-intro-cta": 1,
     ".rn23-chevron": 1
   },
-  "commit": "a8eb1dddc9664cb95bf6fb53e7858e28cd0fb047",
-  "capturedAt": "2026-07-15T11:25:15.619Z"
+  "commit": "17829f9c7b931744e9250790d2ac52ad44e4fe68",
+  "capturedAt": "2026-07-15T11:36:03.918Z"
 }
