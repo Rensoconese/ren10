@@ -1,0 +1,296 @@
+{
+  "version": 1,
+  "moduleId": "navbar29",
+  "blockSlug": "nav-mega-menu-overlay-collections",
+  "reviewedCommit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+  "captureCount": 15,
+  "settlePolicy": "capture-block-matrix settleDocument (finite animations + two frames / stable root; reducedMotion honored per state)",
+  "states": [
+    {
+      "id": "desktop-dark-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "dark",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:51.341Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.json"
+    },
+    {
+      "id": "desktop-light-closed",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:48.191Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-closed.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-closed.json"
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:50.306Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-hover-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-hover-open.json"
+    },
+    {
+      "id": "desktop-light-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:49.257Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.json"
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": true,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:57.589Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-reduced-motion-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-reduced-motion-open.json"
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "dark",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1600
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:55.750Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-dark-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-dark-nested-open.json"
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1600
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:56.817Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.json"
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1100
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:53.482Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nav-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nav-open.json"
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1600
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:54.635Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.json"
+    },
+    {
+      "id": "narrow-320-nested-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:58.696Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.json"
+    },
+    {
+      "id": "narrow-340-nested-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 340,
+        "height": 900
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:59.833Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.json"
+    },
+    {
+      "id": "seam-767-nav-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 767,
+        "height": 1000
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:55:01.012Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/seam-767-nav-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/seam-767-nav-open.json"
+    },
+    {
+      "id": "seam-768-nav-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 768,
+        "height": 1000
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:55:02.416Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/seam-768-nav-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/seam-768-nav-open.json"
+    },
+    {
+      "id": "seam-769-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 769,
+        "height": 1000
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:55:03.500Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/seam-769-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/seam-769-open.json"
+    },
+    {
+      "id": "tablet-light-open",
+      "commit": "a495b881089ad176f33ada832678eaa09a8fcb23",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 834,
+        "height": 1400
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "capturedAt": "2026-07-15T11:54:52.386Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.json"
+    }
+  ],
+  "openStatesReviewed": [
+    "desktop-dark-open",
+    "desktop-light-hover-open",
+    "desktop-light-open",
+    "desktop-reduced-motion-open",
+    "mobile-dark-nested-open",
+    "mobile-js-disabled-open",
+    "mobile-light-nav-open",
+    "mobile-light-nested-open",
+    "narrow-320-nested-open",
+    "narrow-340-nested-open",
+    "seam-767-nav-open",
+    "seam-768-nav-open",
+    "seam-769-open",
+    "tablet-light-open"
+  ]
+}
