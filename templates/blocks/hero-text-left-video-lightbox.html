@@ -40,7 +40,7 @@
 
     .rh3-layout {
       --switcher-gap: var(--space-10);
-      --switcher-threshold: 48rem;
+      --switcher-threshold: var(--width-3xl);
 
       align-items: center;
     }
@@ -57,7 +57,7 @@
       max-width: 16ch;
       margin: 0;
       font-size: clamp(var(--text-4xl), 5vw, var(--text-6xl));
-      line-height: 1.08;
+      line-height: var(--leading-tight);
       text-wrap: balance;
     }
 
@@ -66,7 +66,7 @@
       margin: 0;
       color: var(--color-text-muted);
       font-size: var(--text-lg);
-      line-height: 1.65;
+      line-height: var(--leading-relaxed);
     }
 
     .rh3-actions {
@@ -74,7 +74,7 @@
     }
 
     .rh3-actions .ren-btn {
-      min-height: 44px;
+      min-height: var(--touch-min);
       text-decoration: none;
     }
 
@@ -127,8 +127,8 @@
       position: absolute;
       inset: 0;
       display: grid;
-      min-width: 44px;
-      min-height: 44px;
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
       place-items: center;
       color: var(--color-text);
       text-decoration: none;
@@ -167,9 +167,9 @@
     }
 
     .rh3-dialog .ren-dialog-close {
-      flex: 0 0 44px;
-      width: 44px;
-      height: 44px;
+      flex: 0 0 var(--touch-min);
+      width: var(--touch-min);
+      height: var(--touch-min);
       font-size: var(--text-2xl);
     }
 
@@ -199,6 +199,17 @@
 
     .rh3-video-loading[hidden] {
       display: none;
+    }
+
+    .rh3-fallback-video {
+      display: block;
+      width: 100%;
+      margin-block-start: var(--space-4);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-lg);
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -279,8 +290,8 @@
                 and move from insight to delivery without losing context.
               </p>
               <div class="rh3-actions ren-cluster">
-                <a class="ren-btn ren-btn-primary" href="#start">Start exploring</a>
-                <a class="ren-btn ren-btn-secondary" href="#capabilities">View capabilities</a>
+                <a class="ren-btn ren-btn-primary" href="../../docs/getting-started.html">Start exploring</a>
+                <a class="ren-btn ren-btn-secondary" href="../../docs/components.html">View capabilities</a>
               </div>
             </div>
 
@@ -296,9 +307,19 @@
                   <span class="rh3-play" aria-hidden="true">&#9654;</span>
                 </a>
               </div>
-              <p id="rh3-video-fallback" class="ren-sr-only">
-                Product overview: a short introduction to organizing signals and decisions in Ren10.
-              </p>
+              <noscript>
+                <video
+                  id="rh3-video-fallback"
+                  class="rh3-fallback-video"
+                  controls
+                  preload="metadata"
+                  aria-label="Ren10 product overview video"
+                >
+                  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm">
+                  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+                  <a href="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Open the product overview video</a>
+                </video>
+              </noscript>
             </div>
           </div>
         </div>
@@ -328,6 +349,26 @@
     const nativeDialog = videoDialog?.querySelector('dialog');
     const iframe = videoDialog?.querySelector('iframe');
     const loading = videoDialog?.querySelector('.rh3-video-loading');
+    const videoDocument = `<!doctype html>
+      <html lang="en" style="color-scheme: light dark">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Ren10 product overview video</title>
+          <style>
+            html, body { height: 100%; margin: 0; }
+            body { background: Canvas; }
+            video { display: block; width: 100%; height: 100%; object-fit: contain; }
+          </style>
+        </head>
+        <body>
+          <video controls preload="metadata" aria-label="Ren10 product overview video">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+            <a href="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Open the product overview video</a>
+          </video>
+        </body>
+      </html>`;
 
     const resetVideo = () => {
       iframe?.removeAttribute('srcdoc');
@@ -346,10 +387,7 @@
       nativeDialog?.setAttribute('aria-busy', 'true');
       loading?.removeAttribute('hidden');
       iframe?.setAttribute('hidden', '');
-      iframe?.setAttribute(
-        'srcdoc',
-        '<!doctype html><html lang="en" style="color-scheme:light dark"><body style="font-family:system-ui;margin:0;padding:1rem"><main><h1 style="font-size:1.25rem;margin:0 0 0.75rem">Ren10 product film</h1><p style="font-size:0.875rem;line-height:1.5;margin:0">A focused overview of signals, decisions, and delivery.</p></main></body></html>'
-      );
+      iframe?.setAttribute('srcdoc', videoDocument);
     });
 
     videoDialog?.addEventListener('ren-close', resetVideo);

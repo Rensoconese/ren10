@@ -4,6 +4,7 @@ const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const { startStaticServer } = require('../utils/static-server.cjs');
 const { expectNoOverflow } = require('../utils/block-quality.cjs');
+const { readFileSync } = require('node:fs');
 
 const PKG_ROOT = path.resolve(__dirname, '../..');
 const BLOCK = '/templates/blocks/hero-text-left-video-lightbox.html';
@@ -63,6 +64,26 @@ test.describe('Header 3 — split copy and video lightbox', () => {
     await expect(page.locator('#rh3-video dialog')).toHaveAttribute('aria-busy', 'false');
     await expect(page.locator('#rh3-video .rh3-video-loading')).toBeHidden();
     await expect(page.locator('#rh3-video iframe')).toBeVisible();
+    const embeddedMedia = page.frameLocator('#rh3-video iframe');
+    await expect(embeddedMedia.locator('video[controls]')).toHaveCount(1);
+    await expect(embeddedMedia.locator('video source')).toHaveCount(2);
+  });
+
+  test('uses real verified Ren10 destinations for both CTAs', async ({ page }) => {
+    await gotoBlock(page, staticServer.origin);
+    const hrefs = await page.locator(`${ROOT} .rh3-actions .ren-btn`).evaluateAll((links) =>
+      links.map((link) => link.getAttribute('href'))
+    );
+    expect(hrefs).toEqual([
+      '../../docs/getting-started.html',
+      '../../docs/components.html',
+    ]);
+
+    for (const href of hrefs) {
+      const destination = new URL(href, page.url());
+      const response = await page.request.get(destination.href);
+      expect(response.ok(), `${destination.pathname} must be a real destination`).toBe(true);
+    }
   });
 
   test('Escape and close control dismiss and restore focus to the sole opener', async ({ page }) => {
@@ -151,7 +172,23 @@ test.describe('Header 3 — split copy and video lightbox', () => {
     await expect(page.locator(`${ROOT} .rh3-actions .ren-btn`)).toHaveCount(2);
     await expect(page.locator('.rh3-media-trigger[href]')).toBeVisible();
     await expect(page.locator('.rh3-media-trigger')).not.toHaveAttribute('aria-disabled', 'true');
+    await page.locator('.rh3-media-trigger').click();
+    await expect(page).toHaveURL(/#rh3-video-fallback$/);
+    const fallbackVideo = page.locator('video#rh3-video-fallback[controls]');
+    await expect(fallbackVideo).toBeVisible();
+    await expect(fallbackVideo.locator('source')).toHaveCount(2);
     await context.close();
+  });
+
+  test('routes threshold, typography, and touch sizing through Ren10 tokens', async () => {
+    const source = readFileSync(path.join(PKG_ROOT, 'templates/blocks/hero-text-left-video-lightbox.html'), 'utf8');
+    expect(source).toContain('--switcher-threshold: var(--width-3xl)');
+    expect(source).toContain('line-height: var(--leading-tight)');
+    expect(source).toContain('line-height: var(--leading-relaxed)');
+    expect(source).toContain('min-height: var(--touch-min)');
+    expect(source).not.toMatch(/(?:width|height|min-width|min-height|flex):[^;]*44px/);
+    expect(source).not.toMatch(/--switcher-threshold:\s*48rem/);
+    expect(source).not.toMatch(/line-height:\s*(?:1\.08|1\.65)/);
   });
 
   test('passes axe in closed/open light and dark reduced-motion states', async ({ page }) => {
