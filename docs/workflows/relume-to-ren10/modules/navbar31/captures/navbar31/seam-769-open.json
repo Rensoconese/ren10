@@ -1,6 +1,6 @@
 {
   "id": "seam-769-open",
-  "url": "http://127.0.0.1:61013/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-seam-769-open-f954f6ab2079",
+  "url": "http://127.0.0.1:51096/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-seam-769-open-25c8db6abf70",
   "viewport": {
     "width": 769,
     "height": 900
@@ -12,6 +12,6 @@
     "#rn31-primary-links > li": 5,
     ".rn31-social-link": 5
   },
-  "commit": "f954f6ab2079975bc0d8b7d719119a623368842a",
-  "capturedAt": "2026-07-15T11:48:28.039Z"
+  "commit": "25c8db6abf70e37530013281706892a98db842da",
+  "capturedAt": "2026-07-15T11:57:48.155Z"
 }

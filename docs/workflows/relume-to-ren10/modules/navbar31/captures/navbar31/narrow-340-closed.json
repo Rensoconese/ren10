@@ -1,6 +1,6 @@
 {
   "id": "narrow-340-closed",
-  "url": "http://127.0.0.1:61013/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-narrow-340-closed-f954f6ab2079",
+  "url": "http://127.0.0.1:51096/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-narrow-340-closed-25c8db6abf70",
   "viewport": {
     "width": 340,
     "height": 640
@@ -14,6 +14,6 @@
     ".ren-nav-actions .ren-btn-primary": 1,
     "#rn31-primary-links > li": 5
   },
-  "commit": "f954f6ab2079975bc0d8b7d719119a623368842a",
-  "capturedAt": "2026-07-15T11:48:24.435Z"
+  "commit": "25c8db6abf70e37530013281706892a98db842da",
+  "capturedAt": "2026-07-15T11:57:43.639Z"
 }
