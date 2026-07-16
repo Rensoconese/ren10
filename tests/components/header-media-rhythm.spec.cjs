@@ -89,6 +89,13 @@ for (const header of headers) {
     expect(media.naturalWidth).toBeGreaterThanOrEqual(1280);
     expect(media.naturalHeight).toBeGreaterThanOrEqual(900);
     expect(media.objectFit).toBe('cover');
+
+    if (header.file === 'hero-text-left-video-lightbox.html') {
+      const triggerBackground = await page.locator('.rh3-media-trigger').evaluate((node) =>
+        getComputedStyle(node).backgroundColor
+      );
+      expect(triggerBackground).toMatch(/(?:rgba\(0, 0, 0, 0\)|\/ 0\))/);
+    }
   });
 
   test(`${header.file} has intentional copy rhythm`, async ({ page }) => {
