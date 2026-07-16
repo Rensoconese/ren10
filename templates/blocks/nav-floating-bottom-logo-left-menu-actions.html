@@ -121,21 +121,6 @@
       font-weight: var(--weight-semibold);
     }
 
-    /* Desktop up-icon brand treatment; hidden on small viewports. */
-    .rn15-brand-up {
-      display: none;
-      width: var(--size-sm);
-      height: var(--size-sm);
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text);
-      border-radius: var(--radius-md);
-    }
-
-    .rn15-brand-up .ren-icon {
-      display: inline-flex;
-    }
-
     /* Neutralize Primitive Zero details chrome; one authored chevron only. */
     .rn15-disclosure {
       position: static;
@@ -308,18 +293,9 @@
 
       .rn15-preview .ren-nav-brand {
         margin-inline-end: auto;
-        justify-content: center;
-        width: var(--size-sm);
+        justify-content: flex-start;
+        width: auto;
         min-width: var(--touch-min);
-      }
-
-      .rn15-brand-mark,
-      .rn15-brand-label {
-        display: none;
-      }
-
-      .rn15-brand-up {
-        display: inline-flex;
       }
 
       /*
@@ -541,14 +517,9 @@
     <section class="rn15-preview" data-rn15-root aria-label="Navbar floating bottom logo-left menu actions preview">
       <ren-nav>
         <nav class="ren-nav" aria-label="Example site">
-          <a class="ren-nav-brand ren-row" href="#home" aria-label="Ren10 home">
-            <span class="rn15-brand-mark ren-row" aria-hidden="true">R</span>
-            <span class="rn15-brand-label">Ren10</span>
-            <span class="rn15-brand-up" aria-hidden="true">
-              <span class="ren-icon ren-icon-sm">
-                <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M8 3.25a.75.75 0 0 1 .53.22l3.5 3.5a.75.75 0 1 1-1.06 1.06L8.75 5.31v6.44a.75.75 0 0 1-1.5 0V5.31L4.78 8.03a.75.75 0 0 1-1.06-1.06l3.5-3.5A.75.75 0 0 1 8 3.25z"/></svg>
-              </span>
-            </span>
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home" aria-label="Ren10 home">
+            <span class="rn15-brand-mark ren-row ren10-demo-brand-mark" aria-hidden="true">R</span>
+            <span class="rn15-brand-label ren10-demo-brand-label">Ren10</span>
           </a>
 
           <ul id="rn15-primary-links" class="ren-nav-links">

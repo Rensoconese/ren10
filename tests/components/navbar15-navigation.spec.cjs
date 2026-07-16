@@ -675,65 +675,35 @@ test.describe('Navbar Floating Bottom Logo Left Menu Actions (navbar15)', () => 
     expect(opened.linksBelowChrome, 'opened mobile stacks the tree under brand+action+toggle').toBe(true);
   });
 
-  test('desktop brand shows up-icon; mobile brand shows logo mark treatment', async ({ page }) => {
-    await page.setViewportSize({ width: 1280, height: 900 });
-    await gotoNavbar15Block(page, staticServer.origin);
+  test('desktop and mobile use the shared Ren10 brand treatment', async ({ page }) => {
+    for (const viewport of [
+      { width: 1280, height: 900 },
+      { width: 390, height: 844 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await gotoNavbar15Block(page, staticServer.origin);
 
-    const desktopBrand = await page.evaluate(() => {
-      const up = document.querySelector('[data-rn15-root] .rn15-brand-up');
-      const mark = document.querySelector('[data-rn15-root] .rn15-brand-mark');
-      const label = document.querySelector('[data-rn15-root] .rn15-brand-label');
-      if (!up) return null;
-      const upStyle = getComputedStyle(up);
-      const markStyle = mark ? getComputedStyle(mark) : null;
-      const labelStyle = label ? getComputedStyle(label) : null;
-      const upRect = up.getBoundingClientRect();
-      return {
-        upVisible:
-          upRect.width > 0
-          && upRect.height > 0
-          && upStyle.display !== 'none'
-          && upStyle.visibility !== 'hidden',
-        markHidden: !mark || markStyle.display === 'none' || markStyle.visibility === 'hidden' || mark.getBoundingClientRect().width === 0,
-        labelHidden: !label || labelStyle.display === 'none' || labelStyle.visibility === 'hidden' || label.getBoundingClientRect().width === 0,
-      };
-    });
-    expect(desktopBrand).toBeTruthy();
-    expect(desktopBrand.upVisible, 'desktop brand presents the up-icon').toBe(true);
-    expect(desktopBrand.markHidden, 'desktop hides logo mark treatment').toBe(true);
-    expect(desktopBrand.labelHidden, 'desktop hides brand label text').toBe(true);
-
-    await page.setViewportSize({ width: 390, height: 844 });
-    await gotoNavbar15Block(page, staticServer.origin);
-
-    const mobileBrand = await page.evaluate(() => {
-      const up = document.querySelector('[data-rn15-root] .rn15-brand-up');
-      const mark = document.querySelector('[data-rn15-root] .rn15-brand-mark');
-      const label = document.querySelector('[data-rn15-root] .rn15-brand-label');
-      if (!mark || !label) return null;
-      const upStyle = up ? getComputedStyle(up) : null;
-      const markStyle = getComputedStyle(mark);
-      const labelStyle = getComputedStyle(label);
-      const markRect = mark.getBoundingClientRect();
-      const labelRect = label.getBoundingClientRect();
-      return {
-        markVisible:
-          markRect.width > 0
-          && markRect.height > 0
-          && markStyle.display !== 'none'
-          && markStyle.visibility !== 'hidden',
-        labelVisible:
-          labelRect.width > 0
-          && labelRect.height > 0
-          && labelStyle.display !== 'none'
-          && labelStyle.visibility !== 'hidden',
-        upHidden: !up || upStyle.display === 'none' || upStyle.visibility === 'hidden' || up.getBoundingClientRect().width === 0,
-      };
-    });
-    expect(mobileBrand).toBeTruthy();
-    expect(mobileBrand.markVisible, 'mobile brand shows logo mark').toBe(true);
-    expect(mobileBrand.labelVisible, 'mobile brand shows label').toBe(true);
-    expect(mobileBrand.upHidden, 'mobile hides desktop up-icon').toBe(true);
+      const brand = await page.evaluate(() => {
+        const mark = document.querySelector('[data-rn15-root] .rn15-brand-mark');
+        const label = document.querySelector('[data-rn15-root] .rn15-brand-label');
+        if (!mark || !label) return null;
+        const markStyle = getComputedStyle(mark);
+        const labelStyle = getComputedStyle(label);
+        const markRect = mark.getBoundingClientRect();
+        const labelRect = label.getBoundingClientRect();
+        return {
+          markVisible: markRect.width > 0 && markRect.height > 0 && markStyle.visibility !== 'hidden',
+          labelVisible: labelRect.width > 0 && labelRect.height > 0 && labelStyle.visibility !== 'hidden',
+          markText: mark.textContent.trim(),
+          labelText: label.textContent.trim(),
+        };
+      });
+      expect(brand).toBeTruthy();
+      expect(brand.markVisible, `${viewport.width}px brand shows logo mark`).toBe(true);
+      expect(brand.labelVisible, `${viewport.width}px brand shows label`).toBe(true);
+      expect(brand.markText).toBe('R');
+      expect(brand.labelText).toBe('Ren10');
+    }
   });
 
   test('desktop chrome: single chevron, neutral details, aligned top-level peers', async ({ page }) => {
