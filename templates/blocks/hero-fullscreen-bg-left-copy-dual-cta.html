@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../../components/index.css">
   <link rel="stylesheet" href="../../themes/appearance.css">
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
   <style>
     .rh5-hero {
       --cover-height: 100dvh;
@@ -120,8 +121,46 @@
   </style>
 </head>
 <body>
+  <a class="ren-link-skip" href="#rh5-preview">Skip to header preview</a>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a class="dx-brand" href="../../docs/index.html" aria-label="Ren10 documentation home">
+        <span class="dx-brand-mark" aria-hidden="true">R</span>
+        <span>Ren10</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
+    </div>
+  </header>
+
   <main>
-    <section class="rh5-hero ren-cover" data-rh5-root aria-labelledby="rh5-heading">
+    <div class="dx-shell">
+      <header class="bb-detail-header ren-stack">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a class="ren-link-plain" href="../index.html">Templates</a></li>
+            <li><a class="ren-link-plain" href="index.html">Blocks</a></li>
+            <li aria-current="page">Fullscreen background with dual CTA</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">Header block</p>
+        <p class="bb-detail-title">Fullscreen background with dual CTA</p>
+        <p class="bb-detail-description">An immersive viewport-height hero with constrained copy, two actions, cover media, and a contrast-safe scrim that keeps the message readable.</p>
+        <nav class="bb-detail-nav ren-cluster" aria-label="Header examples">
+          <a class="ren-link-nav" href="hero-split-email-video-lightbox.html">Previous</a>
+          <a class="ren-link-nav" href="index.html">All blocks</a>
+          <a class="ren-link-nav" href="hero-split-copy-dual-cta-media.html">Next</a>
+        </nav>
+      </header>
+    </div>
+
+    <section id="rh5-preview" class="rh5-hero ren-cover" data-rh5-root aria-labelledby="rh5-heading">
       <div class="rh5-background" aria-hidden="true">
         <img
           src="../../examples/reference-app/screenshots/light.png"

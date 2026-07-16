@@ -7,6 +7,9 @@
   <meta name="description" content="A responsive Ren10 split hero with two calls to action and one cover image.">
   <link rel="stylesheet" href="../../index.css">
   <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-link/ren-link.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-breadcrumb/ren-breadcrumb.css">
+  <link rel="stylesheet" href="../../site/shell.css">
   <style>
     .rh1-hero {
       padding-block: var(--space-section, var(--space-16));
@@ -84,8 +87,44 @@
   </style>
 </head>
 <body>
-  <main>
-    <section class="rh1-hero" data-rh1-root aria-labelledby="rh1-title">
+  <a class="ren-link-skip" href="#rh1-preview">Skip to header preview</a>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a class="dx-brand" href="../../docs/index.html" aria-label="Ren10 documentation home">
+        <span class="dx-brand-mark" aria-hidden="true">R</span>
+        <span>Ren10</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a class="ren-link-plain" href="../index.html">Templates</a></li>
+          <li><a class="ren-link-plain" href="index.html">Blocks</a></li>
+          <li aria-current="page">Split copy, dual CTA and media</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header block</p>
+      <p class="bb-detail-title">Split copy, dual CTA and media</p>
+      <p class="bb-detail-description">A balanced two-column hero with focused copy, two clear actions, and a responsive product image that stacks cleanly on smaller screens.</p>
+      <nav class="bb-detail-nav ren-cluster" aria-label="Header examples">
+        <a class="ren-link-nav" href="hero-fullscreen-bg-left-copy-dual-cta.html">Previous</a>
+        <a class="ren-link-nav" href="index.html">All blocks</a>
+        <a class="ren-link-nav" href="hero-split-email-form-media-right.html">Next</a>
+      </nav>
+    </header>
+
+    <section id="rh1-preview" class="rh1-hero" data-rh1-root aria-labelledby="rh1-title">
       <div class="rh1-layout ren-center ren-center-wide ren-switcher">
         <div class="rh1-copy ren-stack">
           <h1 id="rh1-title">Hero Split Copy Dual CTA Media</h1>

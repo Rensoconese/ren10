@@ -319,6 +319,49 @@ body {
   margin: 0 0 var(--space-2);
 }
 
+/* Shared detail chrome for standalone block previews. */
+.bb-detail-header {
+  --stack-gap: var(--space-3);
+  max-width: 74ch;
+  padding-block-end: var(--space-8);
+}
+
+.bb-detail-header .ren-breadcrumb {
+  margin-block-end: var(--space-2);
+}
+
+.bb-detail-title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+.bb-detail-description {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+}
+
+.bb-detail-nav {
+  --cluster-gap: var(--space-2);
+  padding-block-start: var(--space-3);
+  border-block-start: 1px solid var(--color-border-muted);
+}
+
+.bb-detail-nav .ren-link-nav {
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-md);
+}
+
+.bb-detail-nav .ren-link-nav:hover {
+  background: var(--color-fill);
+}
+
 /* ─────────────────────────────────────────────
    API surface badge — flags whether a component
    works without JS, requires JS, or both.

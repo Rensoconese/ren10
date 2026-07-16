@@ -11,10 +11,6 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    .rh2-page {
-      padding-block: var(--space-page-top) var(--space-page-bottom);
-    }
-
     .rh2-hero {
       color: var(--color-text);
       background: var(--color-surface);
@@ -155,17 +151,42 @@
 <body>
   <a href="#rh2-main" class="ren-link-skip">Skip to header example</a>
 
-  <header class="dx-header">
-    <div class="dx-container dx-header-inner">
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
       <a href="../../docs/index.html" class="dx-brand" aria-label="Ren10 documentation home">
         <span class="dx-brand-mark" aria-hidden="true">R</span>
         <span>Ren10</span>
       </a>
-      <a href="index.html" class="ren-link ren-link-muted">All blocks</a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
     </div>
   </header>
 
-  <main id="rh2-main" class="rh2-page ren-center ren-center-wide">
+  <main id="rh2-main" class="dx-shell">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a class="ren-link-plain" href="../index.html">Templates</a></li>
+          <li><a class="ren-link-plain" href="index.html">Blocks</a></li>
+          <li aria-current="page">Split email signup with media</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header block</p>
+      <p class="bb-detail-title">Split email signup with media</p>
+      <p class="bb-detail-description">A two-column acquisition header combining concise product messaging, an accessible email form, legal context, and a responsive product preview.</p>
+      <nav class="bb-detail-nav ren-cluster" aria-label="Header examples">
+        <a class="ren-link-nav" href="hero-split-copy-dual-cta-media.html">Previous</a>
+        <a class="ren-link-nav" href="index.html">All blocks</a>
+        <a class="ren-link-nav" href="hero-text-left-video-lightbox.html">Next</a>
+      </nav>
+    </header>
+
     <section class="rh2-hero" data-rh2-root aria-labelledby="rh2-heading">
       <div class="rh2-layout ren-switcher">
         <div class="rh2-copy ren-stack">
