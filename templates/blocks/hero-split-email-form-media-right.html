@@ -21,8 +21,7 @@
     }
 
     .rh2-layout {
-      --switcher-gap: var(--space-section-lg);
-      --switcher-threshold: var(--width-7xl);
+      --grid-gap: var(--space-section-lg);
       align-items: center;
       padding: var(--space-section-lg);
     }
@@ -116,10 +115,6 @@
     }
 
     @media (min-width: 48rem) {
-      .rh2-layout > * {
-        flex-basis: 0;
-      }
-
       .rh2-signup-row > ren-field {
         flex: 1 1 auto;
         width: 0;
@@ -134,7 +129,8 @@
 
     @media (max-width: 47.999rem) {
       .rh2-layout {
-        --switcher-gap: var(--space-section-sm);
+        --grid-gap: var(--space-section-sm);
+        grid-template-columns: 1fr;
         padding: var(--space-section-sm) var(--space-card-padding-sm);
       }
 
@@ -142,9 +138,6 @@
         font-size: var(--display-md-size);
       }
 
-      .rh2-media {
-        flex-basis: 100%;
-      }
     }
   </style>
 </head>
@@ -168,7 +161,7 @@
     </div>
   </header>
 
-  <main id="rh2-main" class="dx-shell">
+  <main id="rh2-main" class="dx-shell bb-detail-page">
     <header class="bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb">
         <ol>
@@ -183,7 +176,7 @@
     </header>
 
     <section class="rh2-hero bb-detail-preview" data-rh2-root aria-labelledby="rh2-heading">
-      <div class="rh2-layout ren-switcher">
+      <div class="rh2-layout ren-grid ren-grid-2">
         <div class="rh2-copy ren-stack">
           <h1 id="rh2-heading" class="rh2-heading">Make space for your team’s best thinking</h1>
           <p class="rh2-description">A calm, shared workspace helps ideas move from a rough note to a decision everyone can follow.</p>
@@ -228,7 +221,18 @@
         </figure>
       </div>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-copy-dual-cta-media.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Hero Split Copy Dual CTA Media</span>
+      </a>
+      <a class="bb-block-pagination-link" href="hero-text-left-video-lightbox.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Header Text Left Video Lightbox Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 
   <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
   <script type="module" src="../../components/patterns/ren-form/ren-form.js"></script>

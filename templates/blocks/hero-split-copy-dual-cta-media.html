@@ -18,8 +18,7 @@
     }
 
     .rh1-layout {
-      --switcher-gap: var(--space-12);
-      --switcher-threshold: var(--width-4xl);
+      --grid-gap: var(--space-12);
       align-items: center;
     }
 
@@ -62,13 +61,14 @@
       object-position: top;
     }
 
-    @media (max-width: 39.9375rem) {
+    @media (max-width: 47.999rem) {
       .rh1-hero {
         padding-block: var(--space-12);
       }
 
       .rh1-layout {
-        --switcher-gap: var(--space-8);
+        --grid-gap: var(--space-8);
+        grid-template-columns: 1fr;
       }
 
       .rh1-actions > .ren-btn {
@@ -105,7 +105,7 @@
     </div>
   </header>
 
-  <main class="dx-shell">
+  <main class="dx-shell bb-detail-page">
     <header class="bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb">
         <ol>
@@ -120,7 +120,7 @@
     </header>
 
     <section id="rh1-preview" class="rh1-hero bb-detail-preview" data-rh1-root aria-labelledby="rh1-title">
-      <div class="rh1-layout ren-center ren-center-wide ren-switcher">
+      <div class="rh1-layout ren-center ren-center-wide ren-grid ren-grid-2">
         <div class="rh1-copy ren-stack">
           <h1 id="rh1-title">Hero Split Copy Dual CTA Media</h1>
           <p class="rh1-description">
@@ -144,6 +144,17 @@
         </figure>
       </div>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-cta-left-drawer.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo CTA Left Drawer Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="hero-split-email-form-media-right.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split Email Header with Media</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 </body>
 </html>

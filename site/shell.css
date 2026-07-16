@@ -371,6 +371,65 @@ body {
   box-shadow: var(--shadow-lg);
 }
 
+/* Standalone block pages share one exact vertical rhythm. The page itself is
+   a grid so headers, previews, and pagination never accumulate child margins. */
+.bb-detail-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-header {
+  padding-block: 0;
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview {
+  margin-block: 0;
+}
+
+.bb-block-pagination {
+  --grid-gap: var(--space-4);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--color-border-muted);
+}
+
+.bb-block-pagination-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-min);
+  padding: var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-interactive);
+  border-radius: var(--radius-lg);
+}
+
+.bb-block-pagination-link[rel="prev"] {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.bb-block-pagination-link[rel="next"] {
+  text-align: end;
+}
+
+.bb-block-pagination-link:hover {
+  color: var(--color-text-link-hover);
+  border-color: var(--color-border-accent);
+}
+
+.bb-block-pagination-link:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset);
+}
+
+.bb-block-pagination-direction {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
 /* ─────────────────────────────────────────────
    API surface badge — flags whether a component
    works without JS, requires JS, or both.

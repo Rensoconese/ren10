@@ -39,9 +39,7 @@
     }
 
     .rh3-layout {
-      --switcher-gap: var(--space-10);
-      --switcher-threshold: var(--width-3xl);
-
+      --grid-gap: var(--space-10);
       align-items: center;
     }
 
@@ -200,7 +198,7 @@
       }
     }
 
-    @media (max-width: 40rem) {
+    @media (max-width: 47.999rem) {
       .dx-nav-inner {
         padding-inline: var(--space-4);
       }
@@ -222,7 +220,8 @@
       }
 
       .rh3-layout {
-        --switcher-gap: var(--space-8);
+        --grid-gap: var(--space-8);
+        grid-template-columns: 1fr;
       }
 
       .rh3-actions > * {
@@ -250,7 +249,7 @@
     </div>
   </header>
 
-  <main class="dx-shell">
+  <main class="dx-shell bb-detail-page">
     <header class="bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb">
         <ol>
@@ -267,7 +266,7 @@
     <section id="rh3-preview" class="rh3-preview bb-detail-preview" data-rh3-root data-block-root aria-label="Header 3 preview">
       <header class="rh3-hero" aria-labelledby="rh3-heading">
         <div class="ren-center ren-center-wide">
-          <div class="rh3-layout ren-switcher">
+          <div class="rh3-layout ren-grid ren-grid-2">
             <div class="rh3-copy ren-stack">
               <p class="dx-kicker">Operational clarity</p>
               <h2 id="rh3-heading">Turn every signal into confident action</h2>
@@ -318,7 +317,18 @@
         </div>
       </header>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-email-form-media-right.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Split Email Header with Media</span>
+      </a>
+      <a class="bb-block-pagination-link" href="hero-split-email-video-lightbox.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Hero Split Email Video Lightbox</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 
   <ren-dialog id="rh3-video" class="rh3-dialog" size="xl">
     <dialog aria-busy="false">

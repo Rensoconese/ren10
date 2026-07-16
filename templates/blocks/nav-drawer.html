@@ -207,8 +207,8 @@
     </div>
   </header>
 
-  <main class="dx-shell">
-    <header class="rb-page-header">
+  <main class="dx-shell bb-detail-page">
+    <header class="rb-page-header bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
         <ol>
           <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
@@ -224,7 +224,7 @@
       </p>
     </header>
 
-    <section class="rb-preview" aria-label="Navbar drawer preview">
+    <section class="rb-preview bb-detail-preview" aria-label="Navbar drawer preview">
       <nav class="rb-nav ren-row-spread" aria-label="Example site">
         <a class="rb-brand ren-row ren10-demo-brand" href="#">
           <span class="rb-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
@@ -285,7 +285,18 @@
         <a class="ren-btn ren-btn-full" href="#" data-sheet-close>Book a call</a>
       </footer>
     </ren-sheet>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>All blocks</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-mega-menu.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Mega Menu Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 
   <script type="module">
     import '../../components/composites/ren-sheet/ren-sheet.js';

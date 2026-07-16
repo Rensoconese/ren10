@@ -24,8 +24,7 @@
     }
 
     .rh4-layout {
-      --switcher-gap: var(--space-12);
-      --switcher-threshold: var(--width-4xl);
+      --grid-gap: var(--space-12);
       align-items: center;
     }
 
@@ -171,7 +170,7 @@
       padding: var(--space-4);
     }
 
-    @media (max-width: 39.9375rem) {
+    @media (max-width: 47.999rem) {
       .rh4-section {
         padding-block: var(--space-12);
       }
@@ -185,7 +184,8 @@
       }
 
       .rh4-layout {
-        --switcher-gap: var(--space-8);
+        --grid-gap: var(--space-8);
+        grid-template-columns: 1fr;
       }
 
       .rh4-form-row > * {
@@ -226,7 +226,7 @@
     </div>
   </header>
 
-  <main class="dx-shell">
+  <main class="dx-shell bb-detail-page">
     <header class="bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb">
         <ol>
@@ -241,7 +241,7 @@
     </header>
 
     <section id="rh4-preview" class="rh4-section bb-detail-preview" data-rh4-root aria-labelledby="rh4-title">
-      <div class="rh4-layout ren-center ren-center-wide ren-switcher">
+      <div class="rh4-layout ren-center ren-center-wide ren-grid ren-grid-2">
         <div class="rh4-copy ren-stack">
           <h1 class="rh4-title" id="rh4-title">Hero Split Email Video Lightbox</h1>
           <p class="rh4-lede">
@@ -299,7 +299,18 @@
         </div>
       </div>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-text-left-video-lightbox.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Header Text Left Video Lightbox Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="hero-fullscreen-bg-left-copy-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen Background Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 
   <ren-dialog id="rh4-video" size="xl">
     <dialog>

@@ -112,10 +112,10 @@ Run:
 ```bash
 npx playwright test --config tests/components/playwright.config.cjs \
   tests/components/block-detail-shell.spec.cjs \
-  --project="Desktop Light" --project="Mobile Light" --workers=1 --retries=0
+  --project="Desktop Light" --workers=1 --retries=0
 ```
 
-Expected: all currently present block pages pass in both projects.
+Expected: all currently present block pages pass at the mobile and desktop widths encoded by the suite.
 
 - [ ] **Step 4: Run repository checks for the approved polish**
 
@@ -310,10 +310,10 @@ npx playwright test --config tests/components/playwright.config.cjs \
   tests/components/header27-header.spec.cjs \
   tests/components/header28-header.spec.cjs \
   tests/components/block-detail-shell.spec.cjs \
-  --project="Desktop Light" --project="Mobile Light" --workers=1 --retries=0
+  --project="Desktop Light" --workers=1 --retries=0
 ```
 
-Expected: Header 26–28 and shared shell cases pass in both projects.
+Expected: Header 26–28 and shared shell cases pass across the viewport matrices encoded by the suites.
 
 - [ ] **Step 4: Commit the imported reviewed headers**
 
@@ -507,7 +507,7 @@ Use `.rh29-form-row { grid-template-columns: minmax(0, 1fr) max-content; }` and 
 ```bash
 npx playwright test --config tests/components/playwright.config.cjs \
   tests/components/header29-header.spec.cjs \
-  --project="Desktop Light" --project="Mobile Light" --workers=1 --retries=0
+  --project="Desktop Light" --workers=1 --retries=0
 node scripts/relume-workflow.mjs status \
   docs/workflows/relume-to-ren10/modules/header29
 ```
@@ -652,7 +652,7 @@ The root uses `--cover-height: min(80dvh, 50rem)`, while the canonical standalon
 ```bash
 npx playwright test --config tests/components/playwright.config.cjs \
   tests/components/header30-header.spec.cjs \
-  --project="Desktop Light" --project="Mobile Light" --workers=1 --retries=0
+  --project="Desktop Light" --workers=1 --retries=0
 node scripts/relume-workflow.mjs status \
   docs/workflows/relume-to-ren10/modules/header30
 ```
@@ -792,7 +792,7 @@ npx playwright test --config tests/components/playwright.config.cjs \
   tests/components/header-docs-navigation.spec.cjs \
   tests/components/header-media-rhythm.spec.cjs \
   tests/components/block-detail-shell.spec.cjs \
-  --project="Desktop Light" --project="Mobile Light" --workers=1 --retries=0
+  --project="Desktop Light" --workers=1 --retries=0
 ```
 
 Expected: 30 ordered cards, all destinations 200, all pages use shared detail chrome, and no overflow.
@@ -837,7 +837,7 @@ npx playwright test --config tests/components/playwright.config.cjs \
   tests/components/header-docs-navigation.spec.cjs \
   tests/components/header-media-rhythm.spec.cjs \
   tests/components/block-detail-shell.spec.cjs \
-  --project="Desktop Light" --project="Mobile Light" --workers=1 --retries=0
+  --project="Desktop Light" --workers=1 --retries=0
 ```
 
 Expected: zero failures.

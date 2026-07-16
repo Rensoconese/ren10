@@ -401,8 +401,8 @@
       </div>
     </div>
   </header>
-  <main class="dx-shell">
-    <header class="rn12-page-header">
+  <main class="dx-shell bb-detail-page">
+    <header class="rn12-page-header bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
         <ol>
           <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
@@ -420,7 +420,7 @@
         mobile tree, or nested landmark.
       </p>
     </header>
-    <section class="rn12-preview" data-rn12-root aria-label="Navbar logo-left menu-right grouped preview">
+    <section class="rn12-preview bb-detail-preview" data-rn12-root aria-label="Navbar logo-left menu-right grouped preview">
       <ren-nav>
         <nav class="ren-nav" aria-label="Example site">
           <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
@@ -546,7 +546,18 @@
         </p>
       </div>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-menu-right-dropdown.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Menu-Right Dropdown Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-left-menu-center-dropdown.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo-Left Menu-Center Dropdown Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
   <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
   <script type="module">
     const RN12_CONTROLLER = Symbol.for('ren10.rn12.controller');
