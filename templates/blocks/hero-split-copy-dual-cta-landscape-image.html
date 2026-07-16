@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Split Copy Landscape Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height Ren10 hero with responsive split copy, two destinations, and one landscape image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh15-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh15-container {
+      --stack-gap: var(--space-10);
+      width: 100%;
+    }
+
+    .rh15-copy-layout {
+      --switcher-gap: var(--space-8);
+      --switcher-threshold: var(--width-5xl);
+      align-items: flex-start;
+    }
+
+    .rh15-copy-layout > * {
+      min-width: 0;
+    }
+
+    .rh15-heading,
+    .rh15-description {
+      margin: 0;
+    }
+
+    .rh15-heading {
+      max-width: var(--width-lg);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh15-support {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-lg);
+    }
+
+    .rh15-description {
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+      color: var(--color-text-secondary);
+    }
+
+    .rh15-actions {
+      --cluster-gap: var(--space-inline-loose);
+      align-items: stretch;
+    }
+
+    .rh15-media {
+      width: 100%;
+      margin: 0;
+      border-radius: var(--radius-xl);
+      background: var(--color-surface-sunken);
+    }
+
+    .rh15-media > img {
+      object-position: center;
+    }
+
+    @media (min-width: 48rem) {
+      .rh15-hero {
+        padding-block: var(--space-section);
+      }
+
+      .rh15-container {
+        --center-padding: var(--space-8);
+        --stack-gap: var(--space-16);
+      }
+
+      .rh15-copy-layout {
+        --switcher-gap: var(--space-12);
+        flex-wrap: nowrap;
+      }
+
+      .rh15-copy-layout > * {
+        flex: 1 1 0;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh15-hero {
+        padding-block: var(--space-section-lg);
+      }
+
+      .rh15-container {
+        --stack-gap: var(--space-20);
+      }
+
+      .rh15-copy-layout {
+        --switcher-gap: var(--space-20);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 15</p>
+      <h1>Split Copy Landscape Hero</h1>
+      <p>A content-height Ren10 hero with responsive split copy, two destinations, and one landscape image.</p>
+    </header>
+
+    <section class="rh15-hero bb-detail-preview" data-rh15-root aria-labelledby="rh15-heading">
+      <div class="rh15-container ren-center ren-center-wide ren-stack">
+        <div class="rh15-copy-layout ren-switcher">
+          <h1 id="rh15-heading" class="rh15-heading">Build clarity into every stage of the experience</h1>
+
+          <div class="rh15-support ren-stack">
+            <p class="rh15-description">Move from shared intent to a coherent interface with foundations that keep accessibility, responsive behavior, and product decisions connected.</p>
+            <div class="rh15-actions ren-cluster">
+              <a class="ren-btn" href="../../docs/index.html">Explore Ren10</a>
+              <a class="ren-btn ren-btn-outline" href="index.html">Browse blocks</a>
+            </div>
+          </div>
+        </div>
+
+        <figure class="rh15-media ren-frame">
+          <img
+            src="../../examples/reference-app/screenshots/light.png"
+            alt="Ren10 workspace showing project status, reviews, and settings"
+            width="1440"
+            height="900"
+          >
+        </figure>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+</body>
+</html>

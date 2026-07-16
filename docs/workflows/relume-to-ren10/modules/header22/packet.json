@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header22",
+  "blockSlug": "hero-split-video-lightbox-left-email-form",
+  "blockPath": "templates/blocks/hero-split-video-lightbox-left-email-form.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-split-video-lightbox-left-email-form.html",
+    "tests/components/header22-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "seam-767",
+  "url": "http://127.0.0.1:59513/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-seam-767-82765e64cf41",
+  "viewport": {
+    "width": 767,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh6-form-row": 1,
+    ".rh6-background": 1,
+    ".rh6-scrim": 1
+  },
+  "commit": "82765e64cf412feebe86413488db84b651380ed8",
+  "capturedAt": "2026-07-15T17:27:12.861Z"
+}

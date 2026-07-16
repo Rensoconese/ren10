@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy-counts","kind":"structure","description":"One fullscreen hero, h1, description, labeled email, submit CTA, legal link, cover video, scrim, poster, and pause control; zero nav/logo/menu/second CTA","automated":true},
+    {"id":"video-behavior","kind":"behavior","description":"Permitted deterministic video is muted, autoplaying, looping, plays inline, cover-sized, and user-pausable","automated":true},
+    {"id":"responsive-form","kind":"visual-structure","description":"Form stacks narrow and forms a row when room exists; no overflow at 320/390/767/768/1280","automated":true},
+    {"id":"progressive-fallback","kind":"behavior","description":"Reduced motion pauses/hides moving media; JS-off retains static poster, native form action, and real legal destination","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Visible label/focus, 44px targets, light/dark contrast, public ARIA, and axe WCAG 2.1 AA","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Codex reviewed fresh desktop/mobile/light/dark/reduced-motion/JS-off captures","automated":false}
+  ]
+}

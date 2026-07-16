@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-split-email-form-landscape-image.html",
+  "root": "[data-rh16-root]",
+  "states": [
+    {"id":"desktop-light","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh16-heading":1,"form.rh16-form":1,".rh16-media img":1}},
+    {"id":"desktop-dark","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh16-copy-layout":1,".rh16-media":1}},
+    {"id":"tablet-768","viewport":{"width":768,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh16-support":1,".rh16-form":1}},
+    {"id":"seam-767","viewport":{"width":767,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh16-copy-layout":1,".rh16-description":1}},
+    {"id":"form-row-640","viewport":{"width":640,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh16-form-row":1,".rh16-submit":1}},
+    {"id":"mobile-390","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"input.rh16-email":1,".rh16-media img":1}},
+    {"id":"narrow-320","viewport":{"width":320,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh16-heading":1,".rh16-media":1}},
+    {"id":"desktop-reduced-motion-focus","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[{"type":"focus","selector":".rh16-email"}],"expectedMarkers":{".rh16-email":1,".rh16-submit":1}},
+    {"id":"mobile-dark","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh16-description":1,".rh16-media":1}},
+    {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{"form.rh16-form[action]":1,"a.rh16-terms[href]":1,".rh16-media img":1}}
+  ]
+}

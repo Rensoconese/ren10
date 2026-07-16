@@ -1,0 +1,16 @@
+{
+  "id": "seam-767-closed",
+  "url": "http://127.0.0.1:64465/templates/blocks/hero-lightbox-top-copy-band-dual-cta.html?ren10_capture=header13-seam-767-closed-ab5d4e90e9f2",
+  "viewport": {
+    "width": 767,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh13-band-layout": 1
+  },
+  "commit": "ab5d4e90e9f2613164437f2c2b991a866d49e8f3",
+  "capturedAt": "2026-07-15T17:53:28.655Z"
+}

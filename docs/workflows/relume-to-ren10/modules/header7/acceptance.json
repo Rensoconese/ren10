@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "Exactly one h1, one description, two CTA anchors, one native background video, one scrim and one non-CTA motion control; no nav, logo, form or image",
+      "automated": true
+    },
+    {
+      "id": "viewport-cover",
+      "kind": "visual-structure",
+      "description": "Hero and cover video fill the viewport without overflow at 320/390/767/768/1280",
+      "automated": true
+    },
+    {
+      "id": "video-behavior",
+      "kind": "behavior",
+      "description": "Owned deterministic WebM autoplays muted and looped, custom pause/play works, and reduced motion starts paused",
+      "automated": true
+    },
+    {
+      "id": "destinations",
+      "kind": "behavior",
+      "description": "Both CTA anchors resolve to real owned documents",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "AA overlay contrast, visible focus, 44px targets, reduced motion, light/dark and axe WCAG 2.1 AA",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled view keeps copy, destinations, video and native pause controls usable",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviews fresh desktop, tablet, mobile, dark, paused, reduced-motion and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}

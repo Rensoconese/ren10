@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "All Header18 parts map to documented Ren10 center/stack/switcher/frame layouts, ren-dialog, ren-field, ren-button, ren-spinner, and native progressive fallbacks. Cascade, module-scope, responsive, form, media, and no-JavaScript risks are explicit."
+}

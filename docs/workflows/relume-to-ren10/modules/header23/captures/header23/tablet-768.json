@@ -1,0 +1,16 @@
+{
+  "id": "tablet-768",
+  "url": "http://127.0.0.1:57831/templates/blocks/hero-centered-copy-dual-cta.html?ren10_capture=header23-tablet-768-65c1f903619a",
+  "viewport": {
+    "width": 768,
+    "height": 800
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh23-content": 1
+  },
+  "commit": "65c1f903619a4f276584f887cd2b6ef43aa6cbcf",
+  "capturedAt": "2026-07-15T19:33:01.420Z"
+}

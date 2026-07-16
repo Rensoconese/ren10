@@ -1,0 +1,24 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header15",
+  "block": "hero-split-copy-dual-cta-landscape-image",
+  "capturedCommit": "34e1629c781d648d8d0addd0f5d492240b2f3d52",
+  "fresh": true,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "tablet-768",
+    "seam-767",
+    "mobile-390",
+    "narrow-320",
+    "desktop-reduced-motion-focus",
+    "mobile-dark",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Independently inspected all nine cache-busted states from functional commit 34e1629c781d648d8d0addd0f5d492240b2f3d52. The content-height section contains one constrained copy split followed by one full-width rounded landscape image. Heading-left and support-right align at 768px and wider; 767px and narrower preserve one source-ordered column. The two real CTA links wrap cleanly at 320px, remain touch-safe, and show a visible reduced-motion focus ring. Light, dark, mobile dark, and JavaScript-disabled states remain complete and legible. The owned image preserves its landscape frame and intrinsic crop without overflow. No full-viewport forcing, overlay, scrim, video, form, navigation, logo, dialog, third action, duplicate tree, clipping, overlap, or stale-pixel drift is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

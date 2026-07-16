@@ -1,0 +1,17 @@
+{
+  "id": "tablet-767",
+  "url": "http://127.0.0.1:61529/templates/blocks/hero-split-image-left-copy-dual-cta.html?ren10_capture=header19-tablet-767-b220e503f204",
+  "viewport": {
+    "width": 767,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh19-copy": 1,
+    ".rh19-media": 1
+  },
+  "commit": "b220e503f204d4d1f7979dbdfe4df6671ed25743",
+  "capturedAt": "2026-07-15T19:00:17.136Z"
+}

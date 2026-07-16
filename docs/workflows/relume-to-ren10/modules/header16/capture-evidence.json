@@ -1,0 +1,25 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header16",
+  "block": "hero-split-email-form-landscape-image",
+  "capturedCommit": "353a3432ce598bf53edf334cce0da6035e607745",
+  "fresh": true,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "tablet-768",
+    "seam-767",
+    "form-row-640",
+    "mobile-390",
+    "narrow-320",
+    "desktop-reduced-motion-focus",
+    "mobile-dark",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Codex independently inspected all ten cache-busted states from functional commit 353a3432ce598bf53edf334cce0da6035e607745. The content-height section preserves one constrained copy split above one full-width rounded landscape image. Heading-left and support-right form equal top-aligned peers at 768px and wider; 767px and narrower preserve source order. The email and submit share one row from 640px and stack cleanly at 390px and 320px. The initial field has no premature error, reduced-motion focus is visible, and light, dark, mobile dark, and JavaScript-disabled states remain complete and legible. The owned image preserves its 1280 by 900 crop without overflow. No full-viewport forcing, extra CTA, navigation, logo, video, dialog, overlay, duplicated tree, clipping, overlap, or stale-pixel drift is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

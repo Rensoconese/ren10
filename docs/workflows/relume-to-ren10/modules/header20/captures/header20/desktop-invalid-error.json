@@ -1,0 +1,17 @@
+{
+  "id": "desktop-invalid-error",
+  "url": "http://127.0.0.1:50563/templates/blocks/hero-email-copy-image-left.html?ren10_capture=header20-desktop-invalid-error-20bba216766d",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "ren-field[data-invalid]": 1,
+    "[data-error]": 1
+  },
+  "commit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturedAt": "2026-07-15T19:17:29.944Z"
+}

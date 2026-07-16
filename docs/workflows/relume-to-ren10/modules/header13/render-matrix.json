@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-lightbox-top-copy-band-dual-cta.html",
+  "root": "[data-rh13-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-title": 1, ".rh13-media-trigger": 1, ".rh13-cta": 2, "ren-dialog#rh13-video": 1 }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rh13-media-trigger" }],
+      "expectedMarkers": { ".rh13-media-trigger": 1, "ren-dialog#rh13-video": 1 }
+    },
+    {
+      "id": "desktop-dark-closed",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-title": 1, ".rh13-media-trigger": 1 }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rh13-media-trigger" }],
+      "expectedMarkers": { "#rh13-video dialog": 1 }
+    },
+    {
+      "id": "tablet-light-closed",
+      "viewport": { "width": 834, "height": 1112 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-title": 1, ".rh13-cta": 2 }
+    },
+    {
+      "id": "seam-767-closed",
+      "viewport": { "width": 767, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-band-layout": 1 }
+    },
+    {
+      "id": "seam-768-closed",
+      "viewport": { "width": 768, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-band-layout": 1 }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-media-trigger": 1, ".rh13-cta": 2 }
+    },
+    {
+      "id": "mobile-light-open",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rh13-media-trigger" }],
+      "expectedMarkers": { "#rh13-video dialog": 1 }
+    },
+    {
+      "id": "narrow-320-closed",
+      "viewport": { "width": 320, "height": 720 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-title": 1, ".rh13-cta": 2 }
+    },
+    {
+      "id": "mobile-js-disabled",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": { ".rh13-media-trigger": 1, ".rh13-cta": 2, ".rh13-video-fallback": 1 }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [{ "type": "click", "selector": ".rh13-media-trigger" }],
+      "expectedMarkers": { "#rh13-video dialog": 1 }
+    }
+  ]
+}

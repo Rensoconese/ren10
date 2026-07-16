@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-fullscreen-bg-left-email-capture.html",
+  "root": "[data-rh6-root]",
+  "states": [
+    { "id": "desktop-light", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-heading": 1, ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1, ".rh6-terms a": 1, ".rh6-background > img": 1, ".rh6-scrim": 1 } },
+    { "id": "desktop-dark", "viewport": { "width": 1280, "height": 900 }, "theme": "dark", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-heading": 1, ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1 } },
+    { "id": "tablet-light", "viewport": { "width": 768, "height": 1024 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-copy": 1, ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1 } },
+    { "id": "seam-767", "viewport": { "width": 767, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-form-row": 1, ".rh6-background": 1, ".rh6-scrim": 1 } },
+    { "id": "mobile-light", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-heading": 1, ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1 } },
+    { "id": "narrow-320", "viewport": { "width": 320, "height": 720 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-heading": 1, ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1 } },
+    { "id": "desktop-reduced-motion", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": true, "actions": [{ "type": "focus", "selector": ".rh6-form-row input[type=email]" }], "expectedMarkers": { ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1 } },
+    { "id": "mobile-js-disabled", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": false, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh6-heading": 1, ".rh6-form-row input[type=email]": 1, ".rh6-form-row button[type=submit]": 1, ".rh6-terms a": 1 } }
+  ]
+}

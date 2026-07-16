@@ -1,0 +1,17 @@
+{
+  "id": "mobile-dark",
+  "url": "http://127.0.0.1:58170/templates/blocks/hero-cover-image-email-split-band.html?ren10_capture=header10-mobile-dark-d4f05cc1cab5",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh10-description": 1,
+    ".rh10-terms": 1
+  },
+  "commit": "d4f05cc1cab57959f7b4d3393d374b7032df95a0",
+  "capturedAt": "2026-07-15T17:21:42.754Z"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:59513/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-mobile-js-disabled-82765e64cf41",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh6-heading": 1,
+    ".rh6-form-row input[type=email]": 1,
+    ".rh6-form-row button[type=submit]": 1,
+    ".rh6-terms a": 1
+  },
+  "commit": "82765e64cf412feebe86413488db84b651380ed8",
+  "capturedAt": "2026-07-15T17:27:15.506Z"
+}

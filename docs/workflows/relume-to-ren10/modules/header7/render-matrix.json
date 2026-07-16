@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-fullscreen-bg-video-left-copy-dual-cta.html",
+  "root": "[data-rh7-root]",
+  "states": [
+    { "id": "desktop-light-playing", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-heading": 1, ".rh7-actions > .ren-btn": 2, ".rh7-video": 1, ".rh7-motion": 1 } },
+    { "id": "desktop-dark-paused", "viewport": { "width": 1280, "height": 900 }, "theme": "dark", "javaScript": true, "reducedMotion": true, "actions": [], "expectedMarkers": { ".rh7-heading": 1, ".rh7-actions > .ren-btn": 2, ".rh7-motion": 1 } },
+    { "id": "tablet-light", "viewport": { "width": 834, "height": 1112 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-copy": 1, ".rh7-actions > .ren-btn": 2 } },
+    { "id": "mobile-light", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-heading": 1, ".rh7-motion": 1 } },
+    { "id": "narrow-320", "viewport": { "width": 320, "height": 720 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-actions > .ren-btn": 2 } },
+    { "id": "seam-767", "viewport": { "width": 767, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-video": 1, ".rh7-scrim": 1 } },
+    { "id": "seam-768", "viewport": { "width": 768, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-video": 1, ".rh7-scrim": 1 } },
+    { "id": "mobile-js-disabled", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": false, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh7-heading": 1, ".rh7-actions > .ren-btn": 2, ".rh7-video": 1 } }
+  ]
+}

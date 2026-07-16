@@ -1,0 +1,18 @@
+{
+  "id": "desktop-light",
+  "url": "http://127.0.0.1:58170/templates/blocks/hero-cover-image-email-split-band.html?ren10_capture=header10-desktop-light-d4f05cc1cab5",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh10-media": 1,
+    "h1.rh10-heading": 1,
+    ".rh10-submit": 1
+  },
+  "commit": "d4f05cc1cab57959f7b4d3393d374b7032df95a0",
+  "capturedAt": "2026-07-15T17:21:39.794Z"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "desktop-light-focus",
+  "url": "http://127.0.0.1:62537/templates/blocks/hero-centered-search.html?ren10_capture=header25-desktop-light-focus-c8df400ef212",
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh25-search:focus": 1
+  },
+  "commit": "c8df400ef2122be87867a2cf910533d3f0e42209",
+  "capturedAt": "2026-07-15T19:47:13.995Z"
+}

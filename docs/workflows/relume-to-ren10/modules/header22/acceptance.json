@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy","kind":"structure","description":"Exactly one split/copy/h1/description/form/email/submit/legal/terms/poster/trigger/dialog/loader/video and no extra UI","automated":true},
+    {"id":"responsive-layout","kind":"visual-structure","description":"Mobile copy/form then media; desktop media-left/copy-right equal centered columns at 1024px","automated":true},
+    {"id":"responsive-form","kind":"visual-structure","description":"Form stacks below 640px and becomes growing-email/intrinsic-submit row at 640px","automated":true},
+    {"id":"form-states","kind":"accessibility","description":"Pristine, single invalid feedback, success status, real action/terms and no-JS native submission","automated":true},
+    {"id":"lightbox","kind":"behavior","description":"One loading/playable video dialog closes by Escape, close and backdrop with focus restoration","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Visible labels/focus, 44px targets, reduced motion, light/dark and axe WCAG 2.1 AA","automated":true},
+    {"id":"isolation","kind":"behavior","description":"One root-scoped module and no global selector or framework leakage","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Codex inspects fresh light/dark/mobile/desktop/open/noJS/reduced captures","automated":false}
+  ]
+}

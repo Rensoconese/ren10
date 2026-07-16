@@ -1,0 +1,16 @@
+{
+  "id": "mobile-390-dark",
+  "url": "http://127.0.0.1:57831/templates/blocks/hero-centered-copy-dual-cta.html?ren10_capture=header23-mobile-390-dark-65c1f903619a",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh23-description": 1
+  },
+  "commit": "65c1f903619a4f276584f887cd2b6ef43aa6cbcf",
+  "capturedAt": "2026-07-15T19:33:03.558Z"
+}

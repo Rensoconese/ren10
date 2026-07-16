@@ -1,0 +1,27 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header21",
+  "block": "hero-split-video-lightbox-left-copy-dual-cta",
+  "capturedCommit": "4f8dca2250ac5defefeb6f762ba6eaf60132e5d7",
+  "fresh": true,
+  "states": [
+    "desktop-light-closed",
+    "desktop-light-open",
+    "desktop-dark-closed",
+    "desktop-dark-open",
+    "tablet-768",
+    "seam-767",
+    "mobile-390-closed",
+    "mobile-390-open",
+    "narrow-320",
+    "reduced-motion-open",
+    "mobile-dark-open",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Inspected all twelve cache-busted states from functional commit 4f8dca2250ac5defefeb6f762ba6eaf60132e5d7. Mobile preserves copy, two actions, then landscape media in source order; from 768px the media is left and the equally sized, top-aligned copy column is right. The truthful 1280x900 poster, single scrim, and play affordance remain centered and unclipped at 320, 390, 767, 768, and 1280px. Desktop and mobile dialogs preserve one labelled close affordance and one 16:9 video stage. Light, dark, reduced-motion, and no-JavaScript states remain complete and usable. No form, nav, logo, background video, third CTA, duplicate media/dialog/control, overflow, clipping, or cascade artifact is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

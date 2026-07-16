@@ -1,0 +1,1 @@
+{"stage":"red","passed":true,"module":"header24","command":"npx playwright test tests/components/header24-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1 --grep owns\\ the\\ exact","expectedFailure":"Header24 block must exist","result":"2 failed in light/dark with HTTP 404 before production HTML existed"}

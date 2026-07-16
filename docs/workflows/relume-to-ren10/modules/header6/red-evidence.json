@@ -1,0 +1,8 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "playwright test tests/components/header6-header.spec.cjs --config=tests/components/playwright.config.cjs --project='Desktop Light' --workers=1 --reporter=line",
+  "result": "14 failed, 0 passed",
+  "failure": "The production block did not exist. Thirteen browser cases failed the required successful-load assertion because templates/blocks/hero-fullscreen-bg-left-email-capture.html returned HTTP 404, and the source-policy case failed with ENOENT for the same absent file.",
+  "recordedAt": "2026-07-15"
+}

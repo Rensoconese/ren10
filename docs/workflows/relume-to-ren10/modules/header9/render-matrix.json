@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-fullscreen-media-top-copy-band-dual-cta.html",
+  "root": "[data-rh9-root]",
+  "states": [
+    { "id": "desktop-light", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-heading": 1, ".rh9-media img": 1, ".rh9-actions a": 2 } },
+    { "id": "desktop-dark", "viewport": { "width": 1280, "height": 900 }, "theme": "dark", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-heading": 1, ".rh9-description": 1, ".rh9-actions a": 2 } },
+    { "id": "tablet-768", "viewport": { "width": 768, "height": 1024 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-band-layout": 1, ".rh9-media img": 1 } },
+    { "id": "seam-767", "viewport": { "width": 767, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-band-layout": 1, ".rh9-actions a": 2 } },
+    { "id": "mobile-390", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-heading": 1, ".rh9-description": 1, ".rh9-actions a": 2 } },
+    { "id": "narrow-320", "viewport": { "width": 320, "height": 720 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-media img": 1, ".rh9-actions a": 2 } },
+    { "id": "reduced-focus", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": true, "actions": [{ "type": "focus", "selector": ".rh9-actions a:first-child" }], "expectedMarkers": { ".rh9-actions a": 2 } },
+    { "id": "mobile-js-disabled", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": false, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh9-heading": 1, ".rh9-media img": 1, ".rh9-actions a": 2 } }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version":1,
+  "path":"/templates/blocks/hero-centered-email-capture.html",
+  "root":"[data-rh24-root]",
+  "states":[
+    {"id":"desktop-1280-light","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh24-heading":1,"form.rh24-form":1}},
+    {"id":"desktop-1280-dark","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-content":1,".rh24-submit":1}},
+    {"id":"desktop-invalid","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh24-submit"}],"expectedMarkers":{"ren-field[data-invalid]":1,".rh24-error:not([hidden])":1}},
+    {"id":"desktop-1024","viewport":{"width":1024,"height":800},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-form-row":1}},
+    {"id":"form-row-640","viewport":{"width":640,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-email":1,".rh24-submit":1}},
+    {"id":"form-stack-639","viewport":{"width":639,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-form-row":1}},
+    {"id":"mobile-390-light","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-legal":1}},
+    {"id":"mobile-390-dark","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-terms-link":1}},
+    {"id":"narrow-320","viewport":{"width":320,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh24-submit":1}},
+    {"id":"reduced-motion-focus","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[{"type":"focus","selector":".rh24-email"}],"expectedMarkers":{".rh24-email:focus":1}},
+    {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{"form[action]":1,".rh24-terms-link[href]":1}}
+  ]
+}

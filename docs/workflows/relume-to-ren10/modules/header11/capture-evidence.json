@@ -1,0 +1,24 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header11",
+  "block": "hero-fullscreen-video-top-copy-band-dual-cta",
+  "capturedCommit": "8a0392bce9da510defcd238128ad9440fd35c433",
+  "fresh": true,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "desktop-paused",
+    "tablet-768",
+    "seam-767",
+    "mobile-390",
+    "narrow-320",
+    "reduced-motion",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Inspected all nine cache-busted states from functional commit 8a0392bce9da510defcd238128ad9440fd35c433. The single cover video and single scrim own only the flexible top region; the pause/play control remains inset, touch-safe, readable, and above the scrim. The lower band stays flush to the viewport bottom, switches cleanly from one source-ordered column at 767px to two equal top-aligned columns at 768px, and preserves exactly two wrapping CTA links at 320px. Light and dark surfaces retain clear hierarchy; the paused and reduced-motion captures expose Play video. In the JavaScript-disabled fallback the scrim is intentionally suppressed so the native controls remain clearly visible while the full heading, description, and both links remain in the viewport. No overflow, clipping, overlap, duplicated controls, generated artifacts, excluded navigation/form/logo content, or stale-pixel drift is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

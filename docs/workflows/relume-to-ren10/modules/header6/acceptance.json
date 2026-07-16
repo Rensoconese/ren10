@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "Exactly one h1, one description, one form, one visible label/email input, one submit CTA, one legal line/terms anchor, one cover image, and one scrim; no nav, logo, second CTA, video, or dialog",
+      "automated": true
+    },
+    {
+      "id": "viewport-cover",
+      "kind": "visual-structure",
+      "description": "Hero, image, and scrim fill the viewport at 320/390/767/768/1280 with no overflow and vertically centered constrained left copy",
+      "automated": true
+    },
+    {
+      "id": "responsive-form",
+      "kind": "visual-structure",
+      "description": "Visible label/input and submit stack narrow, become one growing-field/intrinsic-submit row from small widths, and never overlap",
+      "automated": true
+    },
+    {
+      "id": "enhanced-submit",
+      "kind": "behavior",
+      "description": "Invalid email is blocked natively; valid JavaScript submission stays on the block, clears the field, and announces local success",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "Without JavaScript, the browser validates email and a valid form submits to a real HTTP-200 Ren10 destination; terms remains a real independent link",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Visible label, input/terms/submit names, overlay AA contrast, visible focus, 44px targets, light/dark, reduced motion, and axe WCAG 2.1 AA pass",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, dark, reduced-motion, and JavaScript-disabled captures against the complete reference brief",
+      "automated": false
+    }
+  ]
+}

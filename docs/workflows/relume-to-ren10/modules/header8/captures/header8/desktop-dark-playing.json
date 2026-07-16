@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dark-playing",
+  "url": "http://127.0.0.1:57990/templates/blocks/hero-fullscreen-video-email-form.html?ren10_capture=header8-desktop-dark-playing-47fe5dc1aabe",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh8-form": 1,
+    ".rh8-motion-toggle": 1
+  },
+  "commit": "47fe5dc1aabe98a8b8bfd5c8357dd169456229fd",
+  "capturedAt": "2026-07-15T17:20:43.307Z"
+}

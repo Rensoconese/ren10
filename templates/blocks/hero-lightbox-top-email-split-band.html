@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lightbox and Email Split Band Hero — Ren10</title>
+  <meta name="description" content="A full-height Ren10 hero with accessible video lightbox and email capture band.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-spinner/ren-spinner.css">
+  <link rel="stylesheet" href="../../components/composites/ren-dialog/ren-dialog.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh14-hero {
+      --cover-height: 100svh;
+      width: 100%;
+      height: var(--cover-height);
+      min-height: var(--cover-height);
+      padding: 0;
+      overflow: hidden;
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh14-hero > * { margin: 0; }
+
+    .rh14-media {
+      position: relative;
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: var(--space-32);
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh14-media-trigger {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+      border: 0;
+      cursor: pointer;
+    }
+
+    .rh14-media-trigger:focus-visible {
+      z-index: var(--z-raised);
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(var(--ring-width) * -1);
+    }
+
+    .rh14-poster { position: absolute; inset: 0; aspect-ratio: auto; }
+    .rh14-poster img { object-position: center; }
+
+    .rh14-scrim {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: var(--color-overlay);
+    }
+
+    .rh14-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      pointer-events: none;
+      filter: drop-shadow(var(--shadow-md));
+      transform: translate(-50%, -50%);
+    }
+
+    .rh14-play svg { width: 100%; height: 100%; }
+
+    .rh14-band {
+      flex: 0 0 auto;
+      width: 100%;
+      padding-block: var(--space-6);
+      background: var(--color-surface);
+    }
+
+    .rh14-band-inner { width: 100%; }
+
+    .rh14-band-layout {
+      --switcher-gap: var(--space-6);
+      --switcher-threshold: var(--width-5xl);
+      align-items: flex-start;
+    }
+
+    .rh14-title,
+    .rh14-lede,
+    .rh14-legal,
+    .rh14-status { margin: 0; }
+
+    .rh14-title {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-md-size));
+      font-weight: var(--display-md-weight);
+      line-height: var(--display-md-leading);
+      letter-spacing: var(--display-md-tracking);
+    }
+
+    .rh14-copy { --stack-gap: var(--space-stack-loose); min-width: 0; }
+
+    .rh14-lede {
+      max-width: var(--width-prose);
+      color: var(--color-text-muted);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh14-form-wrap { --stack-gap: var(--space-stack-tight); max-width: var(--width-sm); }
+
+    .rh14-form-row {
+      --switcher-gap: var(--space-3);
+      --switcher-threshold: 36rem;
+      align-items: flex-end;
+    }
+
+    .rh14-form-row > * { flex-basis: 100%; }
+    .rh14-form-row ren-field { min-width: 0; }
+    .rh14-submit { width: 100%; }
+
+    .rh14-email:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset-width);
+    }
+
+    .rh14-form ren-field:not([data-invalid]) [data-error] { display: none; }
+
+    .rh14-legal,
+    .rh14-status {
+      color: var(--color-text-muted);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    .rh14-terms,
+    .rh14-video-fallback {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    .rh14-status { color: var(--color-success-strong); }
+    .rh14-status[hidden], .rh14-loader[hidden], .rh14-video-stage iframe[hidden] { display: none; }
+
+    .rh14-fallback-note {
+      position: absolute;
+      inset: auto var(--space-4) var(--space-4);
+      z-index: var(--z-raised);
+      margin: 0;
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    #rh14-video { --ren-dialog-width: min(90vw, var(--width-4xl)); }
+    #rh14-video .ren-dialog-close { min-width: var(--touch-min); min-height: var(--touch-min); }
+
+    .rh14-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh14-video-stage iframe { width: 100%; height: 100%; border: 0; background: var(--color-surface-sunken); }
+    .rh14-loader { --cover-height: 100%; position: absolute; inset: 0; padding: var(--space-4); }
+
+    @media (max-width: 40rem) { #rh14-video { --ren-dialog-width: 100%; } }
+
+    @media (min-width: 40rem) {
+      .rh14-form-row { flex-wrap: nowrap; }
+      .rh14-form-row ren-field { flex: 1 1 auto; }
+      .rh14-form-row .rh14-submit { flex: 0 0 auto; width: auto; }
+    }
+
+    @media (min-width: 48rem) {
+      .rh14-band { padding-block: var(--space-10); }
+      .rh14-band-inner { --center-padding: var(--space-8); }
+      .rh14-band-layout { --switcher-gap: var(--space-12); flex-wrap: nowrap; }
+      .rh14-band-layout > * { flex: 1 1 0; min-width: 0; }
+    }
+
+    @media (min-width: 64rem) { .rh14-band-layout { --switcher-gap: var(--space-20); } }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 14</p>
+      <h1>Header 14</h1>
+      <p>A full-height Ren10 hero with accessible video lightbox and email capture band.</p>
+    </header>
+
+    <section class="rh14-hero ren-cover bb-detail-preview" data-rh14-root aria-labelledby="rh14-title">
+      <div class="rh14-media">
+        <button class="rh14-media-trigger" type="button" data-dialog-trigger="rh14-video" aria-label="Play the Ren10 product overview">
+          <span class="rh14-poster ren-frame">
+            <img src="../../examples/reference-app/screenshots/light.png" alt="" width="1440" height="900">
+          </span>
+          <span class="rh14-scrim" aria-hidden="true"></span>
+          <span class="rh14-play" aria-hidden="true">
+            <svg viewBox="0 0 64 64" focusable="false">
+              <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"></circle>
+              <path d="M26 20v24l20-12z" fill="currentColor"></path>
+            </svg>
+          </span>
+        </button>
+
+        <noscript>
+          <p class="rh14-fallback-note">Video playback requires JavaScript. <a class="rh14-video-fallback" href="../../docs/getting-started.html">Read the product overview</a>.</p>
+        </noscript>
+
+        <ren-dialog id="rh14-video" size="xl">
+          <dialog>
+            <div class="ren-dialog-header">
+              <h2 class="ren-dialog-title">Ren10 product overview</h2>
+              <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+              </button>
+            </div>
+            <div class="ren-dialog-body">
+              <div class="rh14-video-stage ren-frame ren-frame-video" aria-busy="false">
+                <div class="rh14-loader ren-cover" hidden><span class="ren-spinner ren-spinner-xl ren-cover-center" role="status" aria-label="Loading video"></span></div>
+                <iframe title="Ren10 product overview video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen hidden></iframe>
+              </div>
+            </div>
+          </dialog>
+        </ren-dialog>
+      </div>
+
+      <div class="rh14-band">
+        <div class="rh14-band-inner ren-center ren-center-wide">
+          <div class="rh14-band-layout ren-switcher">
+            <h1 class="rh14-title" id="rh14-title">Give every strong idea a clearer path forward</h1>
+            <div class="rh14-copy ren-stack">
+              <p class="rh14-lede">See how accessible foundations and composable patterns help teams turn shared intent into coherent product experiences.</p>
+              <div class="rh14-form-wrap ren-stack">
+                <form class="rh14-form" action="../../docs/getting-started.html" method="get">
+                  <div class="rh14-form-row ren-switcher">
+                    <ren-field>
+                      <label for="rh14-email">Work email</label>
+                      <input class="rh14-email ren-input" id="rh14-email" name="email" type="email" autocomplete="email" placeholder="team@example.com" required>
+                      <span data-error>Enter a valid email address.</span>
+                    </ren-field>
+                    <button class="rh14-submit ren-btn" type="submit">Join the preview</button>
+                  </div>
+                </form>
+                <p class="rh14-status" role="status" aria-live="polite" hidden></p>
+                <p class="rh14-legal">By continuing, you agree to our <a class="rh14-terms" href="../../LICENSE">terms of use</a>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh14-root]');
+    const form = root.querySelector('.rh14-form');
+    const status = root.querySelector('.rh14-status');
+    const lightbox = root.querySelector('#rh14-video');
+    const stage = lightbox.querySelector('.rh14-video-stage');
+    const loader = lightbox.querySelector('.rh14-loader');
+    const frame = lightbox.querySelector('iframe');
+    const videoSource = 'data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAIFEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggHv7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjIuMy4xMDBXQYxMYXZmNjIuMy4xMDBEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIUaapVNo4evqcgQAitZyDdW5kiIEAhoVWX1ZQOYOBASPjg4QdzWUA4JCwgaC6gVqagQJVsIRVuYEBElTDZ0B/c3OfY8CAZ8iZRaOHRU5DT0RFUkSHjExhdmY2Mi4zLjEwMHNz2mPAi2PFiFGmqVTaOHr6Z8ilRaOHRU5DT0RFUkSHmExhdmM2Mi4xMS4xMDAgbGlidnB4LXZwOWfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnXC54EAo6aBAACAgkmDQgAJ8AWWADgkHBhCAAAwYAAAZz///1mvETu4z4ZPgKOVgQH0AIYAQJKcAElAAAMgAABZ+YbgHFO7a5G7j7OBALeK94EB8YIBqPCBAw==';
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      status.hidden = false;
+      status.textContent = 'Thanks — your email is ready for the Ren10 preview.';
+    });
+
+    frame.addEventListener('load', () => {
+      if (!lightbox.isOpen) return;
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html><html><head><meta name="viewport" content="width=device-width"></head><body style="height:100%;margin:0"><video style="width:100%;height:100%;object-fit:contain" controls autoplay muted playsinline aria-label="Ren10 product overview preview"><source src="${videoSource}" type="video/webm">Your browser does not support embedded video.</video></body></html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('src');
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image Left Copy Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height Ren10 hero with mobile-first copy, two destinations, and a responsive landscape image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh19-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh19-container { width: 100%; }
+
+    .rh19-layout {
+      --switcher-gap: var(--space-10);
+      --switcher-threshold: var(--width-6xl);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .rh19-layout > * {
+      min-width: 0;
+      flex-basis: 100%;
+    }
+
+    .rh19-copy {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-xl);
+    }
+
+    .rh19-heading,
+    .rh19-description,
+    .rh19-media {
+      margin: 0;
+    }
+
+    .rh19-heading {
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh19-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh19-actions {
+      --cluster-gap: var(--space-inline-loose);
+      align-items: stretch;
+    }
+
+    .rh19-media {
+      width: 100%;
+      border-radius: var(--radius-xl);
+      background: var(--color-surface-sunken);
+    }
+
+    .rh19-media > img { object-position: center; }
+
+    @media (min-width: 48rem) {
+      .rh19-hero { padding-block: var(--space-section); }
+      .rh19-container { --center-padding: var(--space-8); }
+      .rh19-layout { --switcher-gap: var(--space-16); }
+    }
+
+    @media (min-width: 64rem) {
+      .rh19-hero { padding-block: var(--space-section-lg); }
+
+      .rh19-layout {
+        --switcher-gap: var(--space-20);
+        flex-wrap: nowrap;
+      }
+
+      .rh19-layout > * { flex: 1 1 0; }
+      .rh19-media { order: -1; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 19</p>
+      <h1>Image Left Copy Hero</h1>
+      <p>A content-height Ren10 hero with mobile-first copy, two destinations, and a responsive landscape image.</p>
+    </header>
+    <section class="rh19-preview bb-detail-preview" data-rh19-root>
+    <section class="rh19-hero" aria-labelledby="rh19-heading">
+      <div class="rh19-container ren-center ren-center-wide">
+        <div class="rh19-layout ren-switcher">
+          <div class="rh19-copy ren-stack">
+            <h1 id="rh19-heading" class="rh19-heading">Give every product decision a clearer foundation</h1>
+            <p class="rh19-description">Connect shared intent to an accessible, responsive interface with a system that keeps teams aligned from the first idea to the final detail.</p>
+            <div class="rh19-actions ren-cluster">
+              <a class="ren-btn" href="../../docs/getting-started.html">Start with Ren10</a>
+              <a class="ren-btn ren-btn-outline" href="index.html">Explore the block library</a>
+            </div>
+          </div>
+
+          <figure class="rh19-media ren-frame">
+            <img
+              src="../../examples/reference-app/screenshots/dialog-open.png"
+              alt="Ren10 workspace with an accessible invitation dialog over the project dashboard"
+              width="1280"
+              height="900"
+            >
+          </figure>
+        </div>
+      </div>
+    </section>
+  </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+</body>
+</html>

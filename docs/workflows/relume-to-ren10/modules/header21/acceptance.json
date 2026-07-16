@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"exact-anatomy","kind":"structure","description":"One content-height section/split/h1/description/two CTA anchors/landscape trigger/image/scrim/play/dialog/loader/iframe without excluded extras","automated":true},
+    {"id":"responsive-split","kind":"geometry","description":"Mobile source order is copy then media; desktop is media left and equal top-aligned copy right","automated":true},
+    {"id":"landscape-media","kind":"geometry","description":"One truthful owned landscape image fills one 16:9 trigger without overflow at 320, 390, 767, 768, and 1280","automated":true},
+    {"id":"dialog-media","kind":"behavior","description":"One loader hands off to one playable video iframe and teardown removes media on close","automated":true},
+    {"id":"dialog-a11y","kind":"accessibility","description":"Focus trap/restore, Escape, backdrop, explicit close, accessible names, focus, 44px targets, and axe AA pass","automated":true},
+    {"id":"progressive-enhancement","kind":"behavior","description":"No-JavaScript preserves copy, two CTA destinations, poster, and one real video alternative; reduced motion remains usable","automated":true},
+    {"id":"composition-safety","kind":"source","description":"Vanilla module behavior selects one root and scopes descendants; documented Ren10 layouts/components/tokens only","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Twelve fresh closed/open responsive light/dark/noJS/reduced-motion captures await inspection","automated":false}
+  ]
+}

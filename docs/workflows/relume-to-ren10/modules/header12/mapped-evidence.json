@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header12 maps to hero-video-email-split-band: ren-cover vertical shell, owned cover video/poster/scrim, real pause/play control, surface band with ren-center and ren-switcher, one ren-field email plus one submit ren-btn, and one real ren-link terms destination. Navigation, logo, second CTA, external assets, injected legal HTML, and framework abstractions were rejected."
+}

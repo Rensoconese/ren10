@@ -1,0 +1,17 @@
+{
+  "id": "tablet-light",
+  "url": "http://127.0.0.1:60335/templates/blocks/hero-fullscreen-bg-video-left-copy-dual-cta.html?ren10_capture=header7-tablet-light-eae1b3065e91",
+  "viewport": {
+    "width": 834,
+    "height": 1112
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh7-copy": 1,
+    ".rh7-actions > .ren-btn": 2
+  },
+  "commit": "eae1b3065e918a01abcd410d7eaa8a4596de60c7",
+  "capturedAt": "2026-07-15T17:33:29.282Z"
+}

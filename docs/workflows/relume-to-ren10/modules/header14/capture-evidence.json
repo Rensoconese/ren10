@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "moduleId": "header14",
+  "blockSlug": "hero-lightbox-top-email-split-band",
+  "sourceStage": "green",
+  "capturedCommit": "0d031bbc558122e498c9471fc76e076f8639db8d",
+  "capturesFresh": true,
+  "stateCount": 10,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "desktop-dialog",
+    "tablet-768",
+    "seam-767",
+    "form-row-640",
+    "mobile-390",
+    "narrow-320",
+    "reduced-dialog",
+    "mobile-js-disabled"
+  ],
+  "inspection": "Codex inspected all ten fresh PNGs. The top media and lower copy/form band remain aligned and unclipped at desktop, tablet, 767px, 640px, 390px and 320px. The form changes cleanly from a row to a stack without exposing premature validation. Light and dark themes are coherent. The single lightbox is centered on desktop, compact on mobile, exposes one close control and one playable video surface, and remains coherent with reduced motion. The JavaScript-disabled state preserves the poster, explanatory fallback destination and native form. No extra CTA, navigation, logo, duplicate trigger, duplicate dialog or background video is present.",
+  "independentReview": {
+    "passed": true,
+    "reviewer": "Codex",
+    "reviewedCommit": "cdef0d97c658269b6e1a93a4d413ffcfa5402150",
+    "notes": "Independently inspected all 10 PNG states against the reference brief and acceptance contract. The captured block is byte-identical at the reviewed commit; only the focused test gained repeated focus-containment, backdrop focus-restore, and documented reduced-motion spinner assertions. No Important or Critical visual defect was found."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "desktop-reduced-motion-focus",
+  "url": "http://127.0.0.1:61529/templates/blocks/hero-split-image-left-copy-dual-cta.html?ren10_capture=header19-desktop-reduced-motion-focus-b220e503f204",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh19-actions .ren-btn": 2
+  },
+  "commit": "b220e503f204d4d1f7979dbdfe4df6671ed25743",
+  "capturedAt": "2026-07-15T19:00:19.119Z"
+}

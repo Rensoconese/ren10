@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header15 maps to hero-split-copy-dual-cta-landscape-image: one content-height section, ren-center/stack/switcher/cluster/frame skeleton, two real ren-btn anchors, and one owned cover image. Full-svh, overlay, video, form, nav, logo, dialog, external media, duplicate trees, and framework abstractions were rejected."
+}

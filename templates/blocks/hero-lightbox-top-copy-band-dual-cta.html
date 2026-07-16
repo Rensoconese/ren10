@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lightbox Media and Dual CTA Hero — Ren10</title>
+  <meta name="description" content="A full-height Ren10 hero with an accessible video lightbox and responsive dual-CTA copy band.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-spinner/ren-spinner.css">
+  <link rel="stylesheet" href="../../components/composites/ren-dialog/ren-dialog.css">
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh13-hero {
+      --cover-height: 100svh;
+      width: 100%;
+      height: var(--cover-height);
+      min-height: var(--cover-height);
+      padding: 0;
+      overflow: hidden;
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh13-hero > * {
+      margin: 0;
+    }
+
+    .rh13-media {
+      position: relative;
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: var(--space-32);
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh13-media-trigger {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+      border: 0;
+      cursor: pointer;
+    }
+
+    .rh13-media-trigger:focus-visible {
+      z-index: var(--z-raised);
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(var(--ring-width) * -1);
+    }
+
+    .rh13-poster {
+      position: absolute;
+      inset: 0;
+      aspect-ratio: auto;
+    }
+
+    .rh13-poster img {
+      object-position: center;
+    }
+
+    .rh13-scrim {
+      position: absolute;
+      inset: 0;
+      background: var(--color-overlay);
+      pointer-events: none;
+    }
+
+    .rh13-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      color: var(--color-text-inverted);
+      filter: drop-shadow(var(--shadow-md));
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .rh13-play svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh13-band {
+      flex: 0 0 auto;
+      width: 100%;
+      padding-block: var(--space-6);
+      background: var(--color-surface);
+    }
+
+    .rh13-band-inner {
+      width: 100%;
+    }
+
+    .rh13-band-layout {
+      --switcher-gap: var(--space-6);
+      --switcher-threshold: var(--width-5xl);
+      align-items: flex-start;
+    }
+
+    .rh13-title,
+    .rh13-lede {
+      margin: 0;
+    }
+
+    .rh13-title {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-md-size));
+      font-weight: var(--display-md-weight);
+      line-height: var(--display-md-leading);
+      letter-spacing: var(--display-md-tracking);
+    }
+
+    .rh13-copy {
+      --stack-gap: var(--space-stack-loose);
+      min-width: 0;
+    }
+
+    .rh13-lede {
+      max-width: var(--width-prose);
+      color: var(--color-text-muted);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh13-actions {
+      --cluster-gap: var(--space-inline-loose);
+    }
+
+    #rh13-video {
+      --ren-dialog-width: min(90vw, var(--width-4xl));
+    }
+
+    #rh13-video .ren-dialog-close {
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+    }
+
+    .rh13-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh13-video-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh13-loader {
+      --cover-height: 100%;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-4);
+    }
+
+    .rh13-loader[hidden],
+    .rh13-video-stage iframe[hidden] {
+      display: none;
+    }
+
+    .rh13-fallback-note {
+      position: absolute;
+      inset: auto var(--space-4) var(--space-4);
+      z-index: var(--z-raised);
+      margin: 0;
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .rh13-video-fallback {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    @media (max-width: 40rem) {
+      #rh13-video {
+        --ren-dialog-width: 100%;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh13-band {
+        padding-block: var(--space-10);
+      }
+
+      .rh13-band-inner {
+        --center-padding: var(--space-8);
+      }
+
+      .rh13-band-layout {
+        --switcher-gap: var(--space-12);
+        flex-wrap: nowrap;
+      }
+
+      .rh13-band-layout > * {
+        flex: 1 1 0;
+        min-width: 0;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh13-band-layout {
+        --switcher-gap: var(--space-20);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh13-hero *,
+      .rh13-hero *::before,
+      .rh13-hero *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 13</p>
+      <h1>Header 13</h1>
+      <p>A full-height Ren10 hero with an accessible video lightbox and responsive dual-CTA copy band.</p>
+    </header>
+
+    <section class="rh13-hero ren-cover bb-detail-preview" data-rh13-root aria-labelledby="rh13-title">
+      <div class="rh13-media">
+        <button
+          class="rh13-media-trigger"
+          type="button"
+          data-dialog-trigger="rh13-video"
+          aria-label="Play the Ren10 system overview"
+        >
+          <span class="rh13-poster ren-frame">
+            <img
+              src="../../examples/reference-app/screenshots/light.png"
+              alt=""
+              width="1440"
+              height="900"
+            >
+          </span>
+          <span class="rh13-scrim" aria-hidden="true"></span>
+          <span class="rh13-play" aria-hidden="true">
+            <svg viewBox="0 0 64 64" focusable="false">
+              <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"></circle>
+              <path d="M26 20v24l20-12z" fill="currentColor"></path>
+            </svg>
+          </span>
+        </button>
+
+        <noscript>
+          <p class="rh13-fallback-note">
+            Video playback requires JavaScript.
+            <a class="rh13-video-fallback" href="../../docs/getting-started.html">Read the system overview</a>.
+          </p>
+        </noscript>
+
+        <ren-dialog id="rh13-video" size="xl">
+          <dialog>
+            <div class="ren-dialog-header">
+              <h2 class="ren-dialog-title">Ren10 system overview</h2>
+              <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="ren-dialog-body">
+              <div class="rh13-video-stage ren-frame ren-frame-video" aria-busy="false">
+                <div class="rh13-loader ren-cover" hidden>
+                  <span class="ren-spinner ren-spinner-lg ren-cover-center" role="status" aria-label="Loading video"></span>
+                </div>
+                <iframe
+                  title="Ren10 system overview video"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowfullscreen
+                  hidden
+                ></iframe>
+              </div>
+            </div>
+          </dialog>
+        </ren-dialog>
+      </div>
+
+      <div class="rh13-band">
+        <div class="rh13-band-inner ren-center ren-center-wide">
+          <div class="rh13-band-layout ren-switcher">
+            <h1 class="rh13-title" id="rh13-title">Build a system people can understand at a glance</h1>
+            <div class="rh13-copy ren-stack">
+              <p class="rh13-lede">See how clear foundations, accessible patterns, and composable blocks turn product intent into interfaces that stay coherent as teams grow.</p>
+              <div class="rh13-actions ren-cluster">
+                <a class="rh13-cta ren-btn" href="../../docs/index.html">Explore Ren10</a>
+                <a class="rh13-cta ren-btn ren-btn-outline" href="index.html">Browse blocks</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh13-root]');
+    const lightbox = root.querySelector('#rh13-video');
+    const stage = lightbox.querySelector('.rh13-video-stage');
+    const loader = lightbox.querySelector('.rh13-loader');
+    const frame = lightbox.querySelector('iframe');
+    const videoSource = 'data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAIFEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggHv7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjIuMy4xMDBXQYxMYXZmNjIuMy4xMDBEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIUaapVNo4evqcgQAitZyDdW5kiIEAhoVWX1ZQOYOBASPjg4QdzWUA4JCwgaC6gVqagQJVsIRVuYEBElTDZ0B/c3OfY8CAZ8iZRaOHRU5DT0RFUkSHjExhdmY2Mi4zLjEwMHNz2mPAi2PFiFGmqVTaOHr6Z8ilRaOHRU5DT0RFUkSHmExhdmM2Mi4xMS4xMDAgbGlidnB4LXZwOWfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnXC54EAo6aBAACAgkmDQgAJ8AWWADgkHBhCAAAwYAAAZz///1mvETu4z4ZPgKOVgQH0AIYAQJKcAElAAAMgAABZ+YbgHFO7a5G7j7OBALeK94EB8YIBqPCBAw==';
+
+    frame.addEventListener('load', () => {
+      if (!lightbox.isOpen) return;
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      const scheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html>
+        <html style="color-scheme: ${scheme}">
+          <head>
+            <meta name="viewport" content="width=device-width">
+            <style>
+              html, body { height: 100%; margin: 0; }
+              body { overflow: hidden; background: Canvas; color: CanvasText; }
+              video { width: 100%; height: 100%; object-fit: contain; }
+            </style>
+          </head>
+          <body>
+            <video controls autoplay muted playsinline aria-label="Ren10 system overview preview">
+              <source src="${videoSource}" type="video/webm">
+              Your browser does not support embedded video.
+            </video>
+          </body>
+        </html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('src');
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

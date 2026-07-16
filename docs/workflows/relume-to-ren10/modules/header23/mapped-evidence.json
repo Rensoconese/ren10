@@ -1,0 +1,6 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "module": "header23",
+  "contractsLoaded": ["ren-design.md", "tokens/tokens.md", "base/layouts.md", "base/primitive-zero.md", "components/components.md", "components/primitives/ren-button/component.md"]
+}

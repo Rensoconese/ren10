@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy","kind":"structure","description":"One content-height section/container/copy split/h1/description/two CTA anchors/full-width landscape trigger/dialog/loader/iframe; zero form/nav/logo/background video/third CTA/duplicates","automated":true},
+    {"id":"responsive-copy","kind":"visual-structure","description":"Copy stacks through 767px and forms equal top-aligned columns at 768px; media remains full-width below and CTAs wrap","automated":true},
+    {"id":"media-quality","kind":"visual-structure","description":"One owned meaningful intrinsic image covers one rounded landscape trigger with one scrim and one play affordance","automated":true},
+    {"id":"dialog-media","kind":"behavior","description":"One loader transitions to exactly one iframe/video; stage is 16:9 and targets 738px medium and 940px large","automated":true},
+    {"id":"dialog-accessibility","kind":"accessibility","description":"Focus trap/restore, Escape, backdrop, close, accessible names, visible focus, 44px targets, light/dark axe AA","automated":true},
+    {"id":"progressive-fallback","kind":"behavior","description":"Poster, copy, two destinations, and alternative media destination remain usable without JavaScript; reduced motion removes optional animation","automated":true},
+    {"id":"composition-safety","kind":"behavior","description":"Inline script is an ES module and all descendant DOM queries are rooted in Header17","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh closed/open responsive light/dark/noJS/reduced-motion matrix awaits independent review","automated":false}
+  ]
+}

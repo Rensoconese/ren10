@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centered Search Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height centered Ren10 hero with one accessible native search form.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .rh25-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh25-container {
+      --stack-gap: var(--space-8);
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh25-title,
+    .rh25-description,
+    .rh25-status {
+      margin: 0;
+    }
+
+    .rh25-title {
+      font-size: clamp(var(--display-sm-size), 8vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh25-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh25-form-wrap {
+      --stack-gap: var(--space-stack-tight);
+      width: 100%;
+      text-align: left;
+    }
+
+    .rh25-form-row {
+      --switcher-gap: var(--space-3);
+      --switcher-threshold: 36rem;
+      align-items: flex-end;
+    }
+
+    .rh25-form-row > * {
+      flex-basis: 100%;
+    }
+
+    .rh25-form-row ren-field,
+    .rh25-input-wrapper {
+      min-width: 0;
+      width: 100%;
+    }
+
+    .rh25-search-icon svg {
+      width: var(--icon-lg);
+      height: var(--icon-lg);
+    }
+
+    .rh25-submit {
+      width: 100%;
+    }
+
+    .rh25-form ren-field:not([data-invalid]) [data-error] {
+      display: none;
+    }
+
+    .rh25-status {
+      color: var(--color-success-strong);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+      text-align: center;
+    }
+
+    .rh25-status[hidden] {
+      display: none;
+    }
+
+    @media (min-width: 40rem) {
+      .rh25-hero {
+        padding-block: var(--space-section);
+      }
+
+      .rh25-container {
+        --center-padding: var(--space-8);
+        --stack-gap: var(--space-10);
+      }
+
+      .rh25-form-row {
+        flex-wrap: nowrap;
+      }
+
+      .rh25-form-row ren-field {
+        flex: 1 1 auto;
+      }
+
+      .rh25-form-row .rh25-submit {
+        flex: 0 0 auto;
+        width: auto;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh25-hero {
+        padding-block: var(--space-section-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 25</p>
+      <h1>Centered Search Hero</h1>
+      <p>A content-height centered Ren10 hero with one accessible native search form.</p>
+    </header>
+
+    <section class="rh25-hero bb-detail-preview" data-rh25-root aria-labelledby="rh25-title">
+      <div class="rh25-container ren-center ren-center-prose ren-stack">
+        <h1 id="rh25-title" class="rh25-title">Find the right foundation for the work ahead</h1>
+        <p class="rh25-description">Search Ren10 guidance, components, and patterns to move from a product question to a clear next step.</p>
+
+        <div class="rh25-form-wrap ren-stack">
+          <form class="rh25-form" action="../../docs/index.html" method="get" role="search">
+            <div class="rh25-form-row ren-switcher">
+              <ren-field>
+                <label for="rh25-search">Search Ren10 resources</label>
+                <span class="rh25-input-wrapper ren-input-wrapper">
+                  <span class="rh25-search-icon ren-input-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <circle cx="11" cy="11" r="6" fill="none" stroke="currentColor" stroke-width="2"></circle>
+                      <path d="m16 16 4 4" fill="none" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                  </span>
+                  <input class="rh25-search ren-input" id="rh25-search" name="q" type="search" placeholder="Search Ren10 resources" required>
+                </span>
+                <span data-error>Enter a search term.</span>
+              </ren-field>
+              <button class="rh25-submit ren-btn" type="submit">Search</button>
+            </div>
+          </form>
+          <p class="rh25-status" role="status" aria-live="polite" hidden></p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh25-root]');
+    const form = root.querySelector('.rh25-form');
+    const input = root.querySelector('.rh25-search');
+    const status = root.querySelector('.rh25-status');
+
+    input.addEventListener('input', () => {
+      status.hidden = true;
+      status.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const term = input.value.trim();
+      status.textContent = `Searching Ren10 resources for “${term}”.`;
+      status.hidden = false;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "sourceSha256": "e61c924a756fbf78e5c9ef2a17dad188474f51672aaf7a96304f9eb041fc0700",
+  "notes": "Authenticated MCP returned the complete Header9 section source and its primitive inventory. The sanitized brief records exact anatomy, order, responsive behavior, unavailable evidence, and public exclusions without persisting framework source."
+}

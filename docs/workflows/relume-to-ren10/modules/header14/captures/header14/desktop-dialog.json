@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dialog",
+  "url": "http://127.0.0.1:51331/templates/blocks/hero-lightbox-top-email-split-band.html?ren10_capture=header14-desktop-dialog-0d031bbc5581",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "#rh14-video dialog[open]": 1,
+    "#rh14-video iframe": 1
+  },
+  "commit": "0d031bbc558122e498c9471fc76e076f8639db8d",
+  "capturedAt": "2026-07-15T18:06:24.233Z"
+}

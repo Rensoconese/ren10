@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Split Email and Video Lightbox Hero — Ren10</title>
+  <meta name="description" content="A content-height Ren10 hero with an accessible email form and video lightbox.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh18-hero {
+      width: 100%;
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh18-container {
+      --stack-gap: var(--space-10);
+      width: 100%;
+    }
+
+    .rh18-copy-layout {
+      --switcher-gap: var(--space-8);
+      --switcher-threshold: var(--width-5xl);
+      align-items: flex-start;
+    }
+
+    .rh18-title,
+    .rh18-lede,
+    .rh18-legal,
+    .rh18-status {
+      margin: 0;
+    }
+
+    .rh18-title {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+    }
+
+    .rh18-support {
+      --stack-gap: var(--space-stack-loose);
+      min-width: 0;
+    }
+
+    .rh18-lede {
+      max-width: var(--width-prose);
+      color: var(--color-text-muted);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh18-form-wrap {
+      --stack-gap: var(--space-stack-tight);
+      max-width: var(--width-sm);
+    }
+
+    .rh18-form-row {
+      --switcher-gap: var(--space-3);
+      --switcher-threshold: 36rem;
+      align-items: flex-end;
+    }
+
+    .rh18-form-row > * { flex-basis: 100%; }
+    .rh18-form-row ren-field { min-width: 0; }
+    .rh18-submit { width: 100%; }
+
+    .rh18-email:focus-visible,
+    .rh18-terms:focus-visible,
+    .rh18-video-fallback:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset-width);
+    }
+
+    .rh18-form ren-field:not([data-invalid]) [data-error] { display: none; }
+
+    .rh18-legal,
+    .rh18-status {
+      color: var(--color-text-muted);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    .rh18-terms,
+    .rh18-video-fallback {
+      display: inline-flex;
+      align-items: center;
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    .rh18-status { color: var(--color-success-strong); }
+    .rh18-status[hidden],
+    .rh18-loader[hidden],
+    .rh18-video-stage iframe[hidden] { display: none; }
+
+    .rh18-media {
+      position: relative;
+      width: calc(100% + (var(--center-padding, var(--space-4)) * 2));
+      margin-inline: calc(var(--center-padding, var(--space-4)) * -1);
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rh18-media-trigger {
+      position: relative;
+      width: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+      border: 0;
+      cursor: pointer;
+    }
+
+    .rh18-media-trigger:focus-visible {
+      z-index: var(--z-raised);
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(var(--ring-width) * -1);
+    }
+
+    .rh18-media-trigger img { object-position: center; }
+
+    .rh18-scrim {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: var(--color-overlay);
+    }
+
+    .rh18-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      pointer-events: none;
+      filter: drop-shadow(var(--shadow-md));
+      transform: translate(-50%, -50%);
+    }
+
+    .rh18-play svg { width: 100%; height: 100%; }
+
+    .rh18-fallback-note {
+      position: absolute;
+      inset: auto var(--space-4) var(--space-4);
+      z-index: var(--z-raised);
+      margin: 0;
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    #rh18-video { --ren-dialog-width: min(90vw, var(--width-3xl)); }
+    #rh18-video .ren-dialog-close { min-width: var(--touch-min); min-height: var(--touch-min); }
+
+    .rh18-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh18-video-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh18-loader {
+      --cover-height: 100%;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-4);
+    }
+
+    @media (max-width: 40rem) {
+      #rh18-video { --ren-dialog-width: 100%; }
+    }
+
+    @media (min-width: 40rem) {
+      .rh18-form-row { flex-wrap: nowrap; }
+      .rh18-form-row ren-field { flex: 1 1 auto; }
+      .rh18-form-row .rh18-submit { flex: 0 0 auto; width: auto; }
+    }
+
+    @media (min-width: 48rem) {
+      .rh18-hero { padding-block: var(--space-section-md); }
+      .rh18-container { --center-padding: var(--space-8); --stack-gap: var(--space-14); }
+      .rh18-copy-layout { --switcher-gap: var(--space-12); flex-wrap: nowrap; }
+      .rh18-copy-layout > * { flex: 1 1 0; min-width: 0; }
+    }
+
+    @media (min-width: 64rem) {
+      .rh18-hero { padding-block: var(--space-section-lg); }
+      .rh18-copy-layout { --switcher-gap: var(--space-20); }
+      #rh18-video { --ren-dialog-width: min(92vw, var(--width-5xl)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 18</p>
+      <h1>Header 18</h1>
+      <p>A content-height Ren10 hero with an accessible email form and video lightbox.</p>
+    </header>
+
+    <section class="rh18-hero bb-detail-preview" data-rh18-root aria-labelledby="rh18-title">
+      <div class="rh18-container ren-center ren-center-wide ren-stack">
+        <div class="rh18-copy-layout ren-switcher">
+          <h1 class="rh18-title" id="rh18-title">Move from first idea to confident release</h1>
+          <div class="rh18-support ren-stack">
+            <p class="rh18-lede">Build coherent, accessible product experiences with foundations and patterns your whole team can understand.</p>
+            <div class="rh18-form-wrap ren-stack">
+              <form class="rh18-form" action="../../docs/getting-started.html" method="get">
+                <div class="rh18-form-row ren-switcher">
+                  <ren-field>
+                    <label for="rh18-email">Work email</label>
+                    <input class="rh18-email ren-input" id="rh18-email" name="email" type="email" autocomplete="email" placeholder="team@example.com" required>
+                    <span data-error>Enter a valid email address.</span>
+                  </ren-field>
+                  <button class="rh18-submit ren-btn" type="submit">Join the preview</button>
+                </div>
+              </form>
+              <p class="rh18-status" role="status" aria-live="polite" hidden></p>
+              <p class="rh18-legal">By continuing, you agree to our <a class="rh18-terms" href="../../LICENSE">terms of use</a>.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rh18-media">
+          <button class="rh18-media-trigger ren-frame ren-frame-video" type="button" data-dialog-trigger="rh18-video" aria-label="Play the Ren10 product overview">
+            <img src="../../examples/reference-app/screenshots/dialog-open.png" alt="" width="1280" height="900">
+            <span class="rh18-scrim" aria-hidden="true"></span>
+            <span class="rh18-play" aria-hidden="true">
+              <svg viewBox="0 0 64 64" focusable="false">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"></circle>
+                <path d="M26 20v24l20-12z" fill="currentColor"></path>
+              </svg>
+            </span>
+          </button>
+
+          <noscript>
+            <p class="rh18-fallback-note">Video playback requires JavaScript. <a class="rh18-video-fallback" href="../../docs/getting-started.html">Read the product overview</a>.</p>
+          </noscript>
+
+          <ren-dialog id="rh18-video" size="xl">
+            <dialog>
+              <div class="ren-dialog-header">
+                <h2 class="ren-dialog-title">Ren10 product overview</h2>
+                <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2"></path></svg>
+                </button>
+              </div>
+              <div class="ren-dialog-body">
+                <div class="rh18-video-stage ren-frame ren-frame-video" aria-busy="false">
+                  <div class="rh18-loader ren-cover" hidden><span class="ren-spinner ren-spinner-xl ren-cover-center" role="status" aria-label="Loading video"></span></div>
+                  <iframe title="Ren10 product overview video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen hidden></iframe>
+                </div>
+              </div>
+            </dialog>
+          </ren-dialog>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh18-root]');
+    const form = root.querySelector('.rh18-form');
+    const status = root.querySelector('.rh18-status');
+    const lightbox = root.querySelector('#rh18-video');
+    const stage = lightbox.querySelector('.rh18-video-stage');
+    const loader = lightbox.querySelector('.rh18-loader');
+    const frame = lightbox.querySelector('iframe');
+    const videoSource = 'data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAIFEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggHv7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjIuMy4xMDBXQYxMYXZmNjIuMy4xMDBEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIUaapVNo4evqcgQAitZyDdW5kiIEAhoVWX1ZQOYOBASPjg4QdzWUA4JCwgaC6gVqagQJVsIRVuYEBElTDZ0B/c3OfY8CAZ8iZRaOHRU5DT0RFUkSHjExhdmY2Mi4zLjEwMHNz2mPAi2PFiFGmqVTaOHr6Z8ilRaOHRU5DT0RFUkSHmExhdmM2Mi4xMS4xMDAgbGlidnB4LXZwOWfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnXC54EAo6aBAACAgkmDQgAJ8AWWADgkHBhCAAAwYAAAZz///1mvETu4z4ZPgKOVgQH0AIYAQJKcAElAAAMgAABZ+YbgHFO7a5G7j7OBALeK94EB8YIBqPCBAw==';
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      status.hidden = false;
+      status.textContent = 'Thanks — your email is ready for the Ren10 preview.';
+    });
+
+    frame.addEventListener('load', () => {
+      if (!lightbox.isOpen) return;
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html><html><head><meta name="viewport" content="width=device-width"></head><body style="height:100%;margin:0"><video style="width:100%;height:100%;object-fit:contain" controls autoplay muted playsinline aria-label="Ren10 product overview preview"><source src="${videoSource}" type="video/webm">Your browser does not support embedded video.</video></body></html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('src');
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

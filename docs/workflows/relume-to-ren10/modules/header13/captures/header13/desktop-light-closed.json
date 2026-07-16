@@ -1,0 +1,19 @@
+{
+  "id": "desktop-light-closed",
+  "url": "http://127.0.0.1:64465/templates/blocks/hero-lightbox-top-copy-band-dual-cta.html?ren10_capture=header13-desktop-light-closed-ab5d4e90e9f2",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh13-title": 1,
+    ".rh13-media-trigger": 1,
+    ".rh13-cta": 2,
+    "ren-dialog#rh13-video": 1
+  },
+  "commit": "ab5d4e90e9f2613164437f2c2b991a866d49e8f3",
+  "capturedAt": "2026-07-15T17:53:24.878Z"
+}

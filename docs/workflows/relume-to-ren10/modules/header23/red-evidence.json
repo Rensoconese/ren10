@@ -1,0 +1,8 @@
+{
+  "stage": "red",
+  "passed": true,
+  "module": "header23",
+  "command": "npx playwright test tests/components/header23-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1 --grep owns\\ exactly",
+  "expectedFailure": "Header23 block must exist",
+  "result": "2 failed across Desktop Light and Desktop Dark because the required HTML returned HTTP 404 before implementation"
+}

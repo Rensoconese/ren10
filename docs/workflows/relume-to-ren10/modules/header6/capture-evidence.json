@@ -1,0 +1,23 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header6",
+  "block": "hero-fullscreen-bg-left-email-capture",
+  "capturedCommit": "82765e64cf412feebe86413488db84b651380ed8",
+  "fresh": true,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "tablet-light",
+    "seam-767",
+    "mobile-light",
+    "narrow-320",
+    "desktop-reduced-motion",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Refreshed after the no-JavaScript validation fix and inspected desktop light/dark, 768, 767, 390, and 320 renders. Copy remains vertically centered and left aligned; the image and two-layer scrim cover the viewport; the pristine validation error is hidden both before upgrade and with JavaScript disabled; the field and single CTA stack at narrow widths and align in one row from the small breakpoint; legal link remains visible; no overflow, clipping, duplicate controls, or framework artifacts were found. Reduced-motion focus and JavaScript-disabled states retain their required markers."
+  },
+  "recordedAt": "2026-07-15"
+}

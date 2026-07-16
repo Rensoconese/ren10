@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dark-open",
+  "url": "http://127.0.0.1:65314/templates/blocks/hero-top-split-email-video-lightbox.html?ren10_capture=header18-desktop-dark-open-0c5d2172bc1d",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "#rh18-video dialog[open]": 1,
+    "#rh18-video iframe": 1
+  },
+  "commit": "0c5d2172bc1dc127d1d2bdbbbe83963edb6223ab",
+  "capturedAt": "2026-07-15T19:10:44.495Z"
+}
