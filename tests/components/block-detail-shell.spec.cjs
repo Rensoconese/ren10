@@ -37,6 +37,7 @@ for (const file of pages) {
       const headerRect = header?.getBoundingClientRect();
       const previewRect = preview?.getBoundingClientRect();
       const paginationRect = pagination?.getBoundingClientRect();
+      const paginationLinks = Array.from(pagination?.querySelectorAll('a[href]') ?? []);
       return {
         display: main ? getComputedStyle(main).display : null,
         headerPreviewGap: headerRect && previewRect
@@ -46,9 +47,10 @@ for (const file of pages) {
           ? Math.round(paginationRect.top - previewRect.bottom)
           : null,
         nestedPreviewFrames: preview?.querySelectorAll('.bb-detail-preview').length ?? 0,
-        links: pagination?.querySelectorAll('a[href]').length ?? 0,
-        labels: Array.from(pagination?.querySelectorAll('a[href]') ?? [])
-          .map((link) => link.textContent.trim()),
+        links: paginationLinks.length,
+        labels: paginationLinks.map((link) => link.textContent.trim()),
+        rels: paginationLinks.map((link) => link.getAttribute('rel')),
+        destinations: paginationLinks.map((link) => link.href),
         overflow: document.documentElement.scrollWidth - innerWidth,
       };
     });
@@ -58,7 +60,12 @@ for (const file of pages) {
     expect(state.previewPaginationGap).toBe(32);
     expect(state.nestedPreviewFrames).toBe(0);
     expect(state.links).toBe(2);
+    expect(state.rels).toEqual(['prev', 'next']);
     expect(state.labels.every((label) => !/Previous block|Next block/.test(label))).toBe(true);
+    const destinationStatuses = await page.evaluate(async (urls) => Promise.all(
+      urls.map(async (url) => (await fetch(url)).status)
+    ), state.destinations);
+    expect(destinationStatuses).toEqual([200, 200]);
     expect(state.overflow).toBeLessThanOrEqual(0);
     });
   }

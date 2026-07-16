@@ -1,0 +1,16 @@
+{
+  "id": "reduced-motion-focus",
+  "url": "http://127.0.0.1:57809/templates/blocks/hero-fullscreen-bg-centered-copy-dual-cta.html?ren10_capture=header30-reduced-motion-focus-00ddd8d38cc9",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh30-actions a:focus": 1
+  },
+  "commit": "00ddd8d38cc9f80baa796b6a099580fb7362d5fe",
+  "capturedAt": "2026-07-16T20:56:51.219Z"
+}

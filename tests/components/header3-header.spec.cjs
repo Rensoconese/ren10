@@ -180,14 +180,15 @@ test.describe('Header 3 — split copy and video lightbox', () => {
     await context.close();
   });
 
-  test('routes threshold, typography, and touch sizing through Ren10 tokens', async () => {
+  test('routes grid spacing, typography, and touch sizing through Ren10 tokens', async () => {
     const source = readFileSync(path.join(PKG_ROOT, 'templates/blocks/hero-text-left-video-lightbox.html'), 'utf8');
-    expect(source).toContain('--switcher-threshold: var(--width-3xl)');
+    expect(source).toContain('--grid-gap: var(--space-10)');
+    expect(source).toContain('rh3-layout ren-grid ren-grid-2');
     expect(source).toContain('line-height: var(--leading-tight)');
     expect(source).toContain('line-height: var(--leading-relaxed)');
     expect(source).toContain('min-height: var(--touch-min)');
     expect(source).not.toMatch(/(?:width|height|min-width|min-height|flex):[^;]*44px/);
-    expect(source).not.toMatch(/--switcher-threshold:\s*48rem/);
+    expect(source).not.toMatch(/--switcher-threshold/);
     expect(source).not.toMatch(/line-height:\s*(?:1\.08|1\.65)/);
   });
 
