@@ -5,11 +5,11 @@ const path = require('node:path');
 
 const PKG_ROOT = path.resolve(__dirname, '../..');
 const headers = [
-  'hero-split-copy-dual-cta-media.html',
-  'hero-split-email-form-media-right.html',
-  'hero-text-left-video-lightbox.html',
-  'hero-split-email-video-lightbox.html',
-  'hero-fullscreen-bg-left-copy-dual-cta.html',
+  ['hero-split-copy-dual-cta-media.html', '[data-rh1-root]', '[data-rh1-root]'],
+  ['hero-split-email-form-media-right.html', '[data-rh2-root]', '[data-rh2-root]'],
+  ['hero-text-left-video-lightbox.html', '[data-rh3-root]', '[data-rh3-root]'],
+  ['hero-split-email-video-lightbox.html', '[data-rh4-root]', '[data-rh4-root]'],
+  ['hero-fullscreen-bg-left-copy-dual-cta.html', '[data-rh5-root]', '#rh5-preview-frame'],
 ];
 
 let server;
@@ -39,7 +39,7 @@ test.afterAll(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
-for (const file of headers) {
+for (const [file, rootSelector, previewSelector] of headers) {
   test(`${file} exposes consistent explanatory page chrome`, async ({ page }) => {
     await page.goto(`${origin}/templates/blocks/${file}`);
 
@@ -59,18 +59,27 @@ for (const file of headers) {
     await expect(crumbs.nth(2)).toHaveAttribute('aria-current', 'page');
   });
 
-  test(`${file} can move between headers or return to the catalog`, async ({ page }) => {
+  test(`${file} uses the shared contained preview without carousel controls`, async ({ page }) => {
     await page.goto(`${origin}/templates/blocks/${file}`);
-    const links = page.locator('.bb-detail-nav a');
-    await expect(links).toHaveCount(3);
-    await expect(links.nth(0)).toContainText('Previous');
-    await expect(links.nth(1)).toHaveText('All blocks');
-    await expect(links.nth(1)).toHaveAttribute('href', 'index.html');
-    await expect(links.nth(2)).toContainText('Next');
+    await expect(page.locator('.bb-detail-nav')).toHaveCount(0);
 
-    for (const href of await links.evaluateAll((nodes) => nodes.map((node) => node.getAttribute('href')))) {
-      const response = await page.request.get(`${origin}/templates/blocks/${href}`);
-      expect(response.ok(), `${href} should resolve`).toBe(true);
-    }
+    const preview = page.locator(previewSelector);
+    await expect(preview).toHaveClass(/bb-detail-preview/);
+    await expect(page.locator(rootSelector)).toHaveCount(1);
+    await expect(preview.locator('xpath=ancestor::main[contains(@class, "dx-shell")]')).toHaveCount(1);
+
+    const chrome = await preview.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return {
+        borderWidth: style.borderTopWidth,
+        borderRadius: style.borderTopLeftRadius,
+        boxShadow: style.boxShadow,
+        overflow: style.overflow,
+      };
+    });
+    expect(chrome.borderWidth).toBe('1px');
+    expect(chrome.borderRadius).not.toBe('0px');
+    expect(chrome.boxShadow).not.toBe('none');
+    expect(['clip', 'hidden']).toContain(chrome.overflow);
   });
 }

@@ -38,6 +38,10 @@ test.describe('Shared Ren10 demo brand across navigation blocks', () => {
           if (!mark || !label) return null;
           const markStyle = getComputedStyle(mark);
           const markRect = mark.getBoundingClientRect();
+          const glyph = mark.querySelector('.ren10-demo-brand-glyph');
+          const glyphStyle = glyph ? getComputedStyle(glyph) : null;
+          const glyphRect = glyph?.getBoundingClientRect();
+          const labelStyle = getComputedStyle(label);
           return {
             accessibleName: element.getAttribute('aria-label') || element.textContent.trim(),
             mark: mark.textContent.trim(),
@@ -48,6 +52,16 @@ test.describe('Shared Ren10 demo brand across navigation blocks', () => {
             width: Math.round(markRect.width),
             height: Math.round(markRect.height),
             visible: markRect.width > 0 && markRect.height > 0 && markStyle.visibility !== 'hidden',
+            hasCenterUtility: mark.classList.contains('ren-center'),
+            glyph: glyph?.textContent.trim() || null,
+            glyphTransform: glyphStyle?.transform || 'none',
+            glyphOffsetX: glyphRect ? (glyphRect.left + glyphRect.width / 2) - (markRect.left + markRect.width / 2) : null,
+            glyphOffsetY: glyphRect ? (glyphRect.top + glyphRect.height / 2) - (markRect.top + markRect.height / 2) : null,
+            markPadding: markStyle.padding,
+            markBackground: markStyle.backgroundColor,
+            labelColor: labelStyle.color,
+            labelSize: labelStyle.fontSize,
+            labelWeight: labelStyle.fontWeight,
           };
         });
 
@@ -61,6 +75,15 @@ test.describe('Shared Ren10 demo brand across navigation blocks', () => {
         expect(state.width).toBe(32);
         expect(state.height).toBe(32);
         expect(state.visible).toBe(true);
+        expect(state.hasCenterUtility).toBe(false);
+        expect(state.glyph).toBe('R');
+        expect(state.glyphTransform).not.toBe('none');
+        expect(Math.abs(state.glyphOffsetX)).toBeLessThanOrEqual(0.5);
+        expect(Math.abs(state.glyphOffsetY)).toBeLessThanOrEqual(1.25);
+        expect(state.markPadding).toBe('0px');
+        expect(state.markBackground).toBe(state.labelColor);
+        expect(state.labelSize).toBe('18px');
+        expect(state.labelWeight).toBe('700');
       }
     });
   }

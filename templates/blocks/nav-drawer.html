@@ -75,6 +75,11 @@
       border-radius: var(--radius-full);
     }
 
+    .rb-nav-drawer-close {
+      min-inline-size: var(--touch-min);
+      min-block-size: var(--touch-min);
+    }
+
     .rb-hero {
       padding: clamp(var(--space-8), 8vw, var(--space-16));
       min-height: 360px;
@@ -222,13 +227,13 @@
     <section class="rb-preview" aria-label="Navbar drawer preview">
       <nav class="rb-nav ren-row-spread" aria-label="Example site">
         <a class="rb-brand ren-row ren10-demo-brand" href="#">
-          <span class="rb-brand-mark ren-center ren10-demo-brand-mark" aria-hidden="true">R</span>
+          <span class="rb-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
           <span class="ren10-demo-brand-label">Ren10</span>
         </a>
         <div class="rb-nav-actions ren-cluster">
           <a class="ren-btn ren-btn-secondary" href="#">Book a call</a>
-          <button class="ren-btn ren-btn-icon" type="button" data-sheet-trigger="rb-nav-drawer" aria-label="Open navigation menu">
-            <span class="rb-menu-icon ren-stack-sm" aria-hidden="true">
+          <button class="ren-btn ren-btn-icon" type="button" data-sheet-trigger="rb-nav-drawer" aria-controls="rb-nav-drawer" aria-expanded="false" aria-haspopup="dialog" aria-label="Open navigation menu">
+            <span class="rb-menu-icon ren-stack ren-stack-sm" aria-hidden="true">
               <span></span>
               <span></span>
               <span></span>
@@ -253,10 +258,10 @@
     <ren-sheet side="right" size="md" id="rb-nav-drawer">
       <header class="ren-sheet-header">
         <h2 class="ren-sheet-title">Navigation</h2>
-        <button type="button" class="ren-sheet-close" data-sheet-close aria-label="Close navigation menu">×</button>
+        <button type="button" class="ren-sheet-close rb-nav-drawer-close" data-sheet-close aria-label="Close navigation menu">×</button>
       </header>
       <div class="ren-sheet-body">
-        <ul class="rb-drawer-links ren-stack-sm">
+        <ul class="rb-drawer-links ren-stack ren-stack-sm">
           <li><a class="ren-row" href="#" data-sheet-close>Work</a></li>
           <li><a class="ren-row" href="#" data-sheet-close>Services</a></li>
           <li><a class="ren-row" href="#" data-sheet-close>Process</a></li>
@@ -282,6 +287,17 @@
     </ren-sheet>
   </main>
 
-  <script type="module" src="../../components/composites/ren-sheet/ren-sheet.js"></script>
+  <script type="module">
+    import '../../components/composites/ren-sheet/ren-sheet.js';
+
+    const drawer = document.getElementById('rb-nav-drawer');
+    const trigger = document.querySelector('[data-sheet-trigger="rb-nav-drawer"]');
+    const syncTrigger = (isOpen) => {
+      trigger?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+
+    drawer?.addEventListener('ren-open', () => syncTrigger(true));
+    drawer?.addEventListener('ren-close', () => syncTrigger(false));
+  </script>
 </body>
 </html>

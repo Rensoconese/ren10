@@ -123,7 +123,7 @@ body {
   text-decoration: none;
 }
 
-.ren10-demo-brand-mark {
+.ren10-demo-brand > .ren10-demo-brand-mark {
   display: grid;
   place-items: center;
   flex: 0 0 var(--size-sm);
@@ -136,9 +136,22 @@ body {
   font-weight: var(--weight-bold);
   line-height: 1;
   text-align: center;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  align-self: center;
 }
 
-.ren10-demo-brand-label {
+.ren10-demo-brand-glyph {
+  display: block;
+  line-height: 1;
+  transform: translateY(-0.04em);
+}
+
+.ren10-demo-brand > .ren10-demo-brand-label {
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
   line-height: 1;
 }
 
@@ -347,19 +360,15 @@ body {
   line-height: var(--leading-relaxed);
 }
 
-.bb-detail-nav {
-  --cluster-gap: var(--space-2);
-  padding-block-start: var(--space-3);
-  border-block-start: 1px solid var(--color-border-muted);
-}
-
-.bb-detail-nav .ren-link-nav {
-  padding-inline: var(--space-3);
-  border-radius: var(--radius-md);
-}
-
-.bb-detail-nav .ren-link-nav:hover {
-  background: var(--color-fill);
+.bb-detail-preview.bb-detail-preview {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  margin-block: var(--space-6) var(--space-10);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ─────────────────────────────────────────────
