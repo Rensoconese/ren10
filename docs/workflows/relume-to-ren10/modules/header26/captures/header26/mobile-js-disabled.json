@@ -1,0 +1,17 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:49891/templates/blocks/hero-centered-copy-dual-cta-landscape-image.html?ren10_capture=header26-mobile-js-disabled-d96c39b3de47",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    "a[href]": 2,
+    "img[alt]": 1
+  },
+  "commit": "d96c39b3de47c0fb9fac7f8f9cf7402663a62b2c",
+  "capturedAt": "2026-07-15T20:02:26.913Z"
+}

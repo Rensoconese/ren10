@@ -1,0 +1,17 @@
+{
+  "id": "mobile-390-dark",
+  "url": "http://127.0.0.1:65354/templates/blocks/hero-centered-email-capture-landscape-image.html?ren10_capture=header27-mobile-390-dark-c9279be5a9ce",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh27-description": 1,
+    ".rh27-media": 1
+  },
+  "commit": "c9279be5a9ce92fe18282e7283670063048ff61d",
+  "capturedAt": "2026-07-15T20:00:22.040Z"
+}

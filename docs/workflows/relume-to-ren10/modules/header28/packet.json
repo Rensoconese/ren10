@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header28",
+  "blockSlug": "hero-centered-copy-dual-cta-landscape-lightbox",
+  "blockPath": "templates/blocks/hero-centered-copy-dual-cta-landscape-lightbox.html",
+  "stage": "green",
+  "allowedFiles": [
+    "templates/blocks/hero-centered-copy-dual-cta-landscape-lightbox.html",
+    "tests/components/header28-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
+  }
+}

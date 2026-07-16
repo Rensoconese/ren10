@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dark-default",
+  "url": "http://127.0.0.1:49891/templates/blocks/hero-centered-copy-dual-cta-landscape-image.html?ren10_capture=header26-desktop-dark-default-d96c39b3de47",
+  "viewport": {
+    "width": 1280,
+    "height": 1000
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh26-description": 1,
+    ".rh26-media": 1
+  },
+  "commit": "d96c39b3de47c0fb9fac7f8f9cf7402663a62b2c",
+  "capturedAt": "2026-07-15T20:02:20.977Z"
+}

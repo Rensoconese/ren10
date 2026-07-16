@@ -1,0 +1,18 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:65354/templates/blocks/hero-centered-email-capture-landscape-image.html?ren10_capture=header27-mobile-js-disabled-c9279be5a9ce",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    "form[action]": 1,
+    ".rh27-terms-link[href]": 1,
+    ".rh27-media img": 1
+  },
+  "commit": "c9279be5a9ce92fe18282e7283670063048ff61d",
+  "capturedAt": "2026-07-15T20:00:23.988Z"
+}

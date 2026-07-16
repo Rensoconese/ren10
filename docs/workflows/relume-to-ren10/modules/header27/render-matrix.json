@@ -1,0 +1,13 @@
+{"version":1,"path":"/templates/blocks/hero-centered-email-capture-landscape-image.html","root":"[data-rh27-root]","states":[
+  {"id":"desktop-1280-light","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh27-heading":1,"form.rh27-form":1,".rh27-media img":1}},
+  {"id":"desktop-1280-dark","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-layout":1,".rh27-media":1}},
+  {"id":"desktop-invalid","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh27-submit"}],"expectedMarkers":{"ren-field[data-invalid]":1,".rh27-error:not([hidden])":1}},
+  {"id":"desktop-1024","viewport":{"width":1024,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-copy":1,".rh27-media":1}},
+  {"id":"form-row-640","viewport":{"width":640,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-email":1,".rh27-submit":1}},
+  {"id":"form-stack-639","viewport":{"width":639,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-form-row":1}},
+  {"id":"mobile-390-light","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-legal":1,".rh27-media img":1}},
+  {"id":"mobile-390-dark","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-description":1,".rh27-media":1}},
+  {"id":"narrow-320","viewport":{"width":320,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh27-submit":1,".rh27-media":1}},
+  {"id":"reduced-motion-focus","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[{"type":"focus","selector":".rh27-email"}],"expectedMarkers":{".rh27-email:focus":1}},
+  {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{"form[action]":1,".rh27-terms-link[href]":1,".rh27-media img":1}}
+]}

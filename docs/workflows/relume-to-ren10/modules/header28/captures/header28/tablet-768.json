@@ -1,0 +1,17 @@
+{
+  "id": "tablet-768",
+  "url": "http://127.0.0.1:49979/templates/blocks/hero-centered-copy-dual-cta-landscape-lightbox.html?ren10_capture=header28-tablet-768-09b43f56c70d",
+  "viewport": {
+    "width": 768,
+    "height": 1000
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh28-title": 1,
+    ".rh28-media": 1
+  },
+  "commit": "09b43f56c70d5c387bbb0bc9948082e6a5f270e8",
+  "capturedAt": "2026-07-15T20:02:33.550Z"
+}

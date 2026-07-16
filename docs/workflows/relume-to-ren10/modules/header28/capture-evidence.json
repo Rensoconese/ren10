@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "moduleId": "header28",
+  "sourceStage": "green",
+  "capturedCommit": "09b43f56c70d5c387bbb0bc9948082e6a5f270e8",
+  "capturesFresh": true,
+  "stateCount": 10,
+  "captures": {
+    "desktopLight": "captures/header28/desktop-1280-light.png",
+    "desktopDark": "captures/header28/desktop-1280-dark.png",
+    "desktopDialogOpen": "captures/header28/desktop-dialog-open.png",
+    "tablet": "captures/header28/tablet-768.png",
+    "mobileLight": "captures/header28/mobile-390-light.png",
+    "mobileDark": "captures/header28/mobile-390-dark.png",
+    "narrow320": "captures/header28/narrow-320.png",
+    "reducedMotionFocus": "captures/header28/reduced-motion-focus.png",
+    "mobileDialogOpen": "captures/header28/mobile-dialog-open.png",
+    "mobileJavaScriptDisabled": "captures/header28/mobile-js-disabled.png"
+  },
+  "inspection": "Codex inspected all ten fresh states from commit 09b43f5 after correcting the invalid title-size token. The centered heading now has deliberate display scale at every viewport; exactly two CTA anchors remain aligned above one 16:9 poster trigger. Light, dark, 1280, 768, 390 and 320 states are coherent and overflow-free. Desktop and mobile dialogs expose one named video surface and one close control without clipping. Focus is visible with reduced motion, and JavaScript-disabled mobile exposes a real media fallback without duplicate controls."
+}

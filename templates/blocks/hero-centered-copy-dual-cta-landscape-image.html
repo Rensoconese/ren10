@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centered Dual-Action Landscape Hero — Ren10 Blocks</title>
+  <meta name="description" content="A centered Ren10 hero with two actions and one intrinsic landscape image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    html {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-surface);
+    }
+
+    .rh26-hero {
+      padding: var(--space-section-lg) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh26-container {
+      --center-padding: 0;
+      --stack-gap: var(--space-12);
+    }
+
+    .rh26-content {
+      --center-padding: 0;
+      --stack-gap: var(--space-6);
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh26-heading,
+    .rh26-description {
+      margin: 0;
+    }
+
+    .rh26-heading {
+      font-size: clamp(var(--text-5xl), 7vw, var(--text-7xl));
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+      text-wrap: balance;
+    }
+
+    .rh26-description {
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+      text-wrap: pretty;
+    }
+
+    .rh26-actions {
+      --cluster-gap: var(--space-4);
+      justify-content: center;
+      width: 100%;
+    }
+
+    .rh26-media {
+      width: 100%;
+      margin: 0;
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .rh26-image {
+      display: block;
+    }
+
+    @media (max-width: 22.5rem) {
+      .rh26-actions > .ren-btn {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh26-container {
+        --stack-gap: var(--space-16);
+      }
+
+      .rh26-description {
+        font-size: var(--text-xl);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh26-actions > .ren-btn {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <a class="bb-back" href="index.html"><span aria-hidden="true">←</span> All blocks</a>
+      <p class="bb-eyebrow">Header 26</p>
+      <h1>Centered Dual-Action Landscape Hero</h1>
+      <p>A centered Ren10 hero with two actions and one intrinsic landscape image.</p>
+    </header>
+
+    <section class="rh26-hero bb-detail-preview" data-rh26-root aria-labelledby="rh26-heading">
+      <div class="rh26-container ren-center ren-center-wide ren-stack">
+        <div class="rh26-content ren-center ren-center-prose ren-stack">
+          <h1 class="rh26-heading" id="rh26-heading">Build a clearer system around every product decision</h1>
+          <p class="rh26-description">
+            Give teams a shared foundation for turning complex requirements into accessible,
+            consistent experiences without slowing the work down.
+          </p>
+          <div class="rh26-actions ren-cluster" aria-label="Hero actions">
+            <a class="rh26-primary ren-btn ren-btn-primary" href="../../docs/getting-started.html">Start building</a>
+            <a class="rh26-secondary ren-btn ren-btn-secondary" href="../../docs/components.html">Explore components</a>
+          </div>
+        </div>
+        <div class="rh26-media ren-frame ren-frame-video">
+          <img
+            class="rh26-image"
+            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'%3E%3Crect width='1600' height='900' fill='gainsboro'/%3E%3Ccircle cx='1250' cy='220' r='190' fill='silver'/%3E%3Crect x='150' y='120' width='420' height='250' rx='32' fill='white'/%3E%3Crect x='215' y='185' width='210' height='26' rx='13' fill='gray'/%3E%3Crect x='215' y='240' width='290' height='18' rx='9' fill='silver'/%3E%3Cpath d='M0 710 L300 420 L610 660 L870 330 L1260 680 L1600 430 V900 H0 Z' fill='gray'/%3E%3Cpath d='M0 810 L410 600 L770 790 L1130 520 L1600 760 V900 H0 Z' fill='black'/%3E%3C/svg%3E"
+            width="1600"
+            height="900"
+            alt="Layered geometric forms illustrating a modular interface landscape"
+          >
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Navigation catalog</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="index.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Header catalog</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+</body>
+</html>
