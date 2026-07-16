@@ -23,7 +23,7 @@
 | Email + single CTA form | `<ren-form>` + native `<form>` + one `<ren-field>` email + one `button.ren-btn[type=submit]` | Visible label; `required` + email validation; one CTA only |
 | Form row (field + button) | `.rh2-signup-row` cluster inside constrained `.rh2-signup` | Side-by-side when space allows; stack full-width on narrow |
 | Terms prose + link | `p.rh2-terms` with one `a.ren-link[href="../../LICENSE"]` | Real elements (no HTML injection); destination resolves to the repository license; link is not a second CTA button |
-| Media column | `figure.rh2-media.ren-frame.ren-frame-photo` + tokenized placeholder | Cover media peer column; no CDN asset; no chromatic hardcodes |
+| Media column | `figure.rh2-media.ren-frame.ren-frame-photo` + local Ren10 product screenshot | Cover media peer column; no CDN asset; no chromatic hardcodes |
 | Demo brand (page chrome only) | shared `dx-brand` R-in-square + Ren10 | Hero source has no brand; brand appears only in shell |
 
 ## Interaction policy
@@ -42,7 +42,7 @@
 - `ren-field` visible label must not break the compact email+button row at 320px.
 - `ren-form-row` min-widths can force overflow; use a block-local `.rh2-signup-row` instead of `.ren-form-row` min-width 250px.
 - Media `ren-frame` must not force horizontal overflow at 320.
-- Placeholder gradient must use only semantic tokens (`--color-surface*`, `--color-accent` via `color-mix`).
+- The local screenshot uses `ren-frame` cover behavior and a tokenized surface fallback.
 
 ## Responsive adaptation
 

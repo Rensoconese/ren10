@@ -32,7 +32,7 @@
     }
 
     .rh2-copy {
-      --stack-gap: var(--space-stack-loose);
+      --stack-gap: var(--space-4);
       min-width: 0;
     }
 
@@ -63,6 +63,7 @@
     .rh2-signup {
       --stack-gap: var(--space-stack-tight);
       width: min(100%, var(--width-sm));
+      margin-block-start: var(--space-2);
     }
 
     .rh2-signup .ren-form {
@@ -112,6 +113,10 @@
       border: var(--ren-card-border-width) solid var(--color-border);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
+    }
+
+    .rh2-media img {
+      object-position: top;
     }
 
     @media (min-width: 48rem) {
@@ -199,10 +204,10 @@
 
         <figure class="rh2-media ren-frame ren-frame-photo">
           <img
-            src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cg opacity='.22'%3E%3Crect x='80' y='72' width='640' height='456' rx='40'/%3E%3C/g%3E%3Cg opacity='.42'%3E%3Ccircle cx='250' cy='230' r='72'/%3E%3Cpath d='M120 470 300 320l120 100 100-84 160 134z'/%3E%3C/g%3E%3C/svg%3E"
-            alt="Abstract collaborative workspace illustration"
-            width="800"
-            height="600"
+            src="../../examples/reference-app/screenshots/light.png"
+            alt="Ren10 workspace overview with project status and collaboration controls"
+            width="1280"
+            height="1845"
           >
         </figure>
       </div>

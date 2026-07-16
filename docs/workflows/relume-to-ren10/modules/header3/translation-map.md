@@ -21,7 +21,7 @@
 | Heading + description | `#rh3-heading` + `.rh3-lede` in `.rh3-copy.ren-stack` | One product heading and one supporting lede |
 | Two CTAs | `.rh3-actions.ren-cluster` with primary `.ren-btn` + secondary `.ren-btn.ren-btn-secondary` | Exactly two actions; real buttons/links; ≥44px targets |
 | Two-column composition | `.rh3-layout.ren-switcher` with tokenized threshold/gap | Stacks when narrow; equal columns when wide; no bespoke flex/grid unless switcher cannot express gap rhythm |
-| Video thumbnail + play | one `a.rh3-media-trigger` (or button) with image + scrim + play icon | Named control (`aria-label`); single play affordance |
+| Video thumbnail + play | one `a.rh3-media-trigger` over a local Ren10 product screenshot, scrim, and play icon | Named control (`aria-label`); single play affordance |
 | Video lightbox | `<ren-dialog id="rh3-video" size="xl">` with real `<dialog>` | Focus trap, Escape, backdrop dismiss, focus return via ren-dialog |
 | Loading while iframe loads | `.ren-spinner` with `role="status"` until load; hide after | Reduced-motion handled by spinner contract |
 | Iframe | one `iframe` with title; `src` applied on open / progressive link fallback | No autoplay surprise on page load; PE link when JS off |

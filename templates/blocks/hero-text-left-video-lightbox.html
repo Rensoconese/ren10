@@ -50,7 +50,7 @@
     }
 
     .rh3-copy {
-      --stack-gap: var(--space-6);
+      --stack-gap: var(--space-4);
     }
 
     .rh3-copy h2 {
@@ -71,6 +71,7 @@
 
     .rh3-actions {
       --cluster-gap: var(--space-3);
+      margin-block-start: var(--space-2);
     }
 
     .rh3-actions .ren-btn {
@@ -93,34 +94,11 @@
 
     .rh3-thumbnail {
       position: absolute;
-      inset: var(--space-6);
-      overflow: hidden;
-      background: var(--color-surface-raised);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-    }
-
-    .rh3-thumbnail::before,
-    .rh3-thumbnail::after {
-      position: absolute;
-      content: "";
-      border-radius: var(--radius-full);
-    }
-
-    .rh3-thumbnail::before {
-      inset: 18% 12% auto;
-      height: var(--space-4);
-      background: var(--color-fill-active);
-      box-shadow:
-        0 var(--space-8) 0 var(--color-fill),
-        0 var(--space-16) 0 var(--color-fill);
-    }
-
-    .rh3-thumbnail::after {
-      width: 46%;
-      aspect-ratio: 1;
-      inset: auto -8% -28% auto;
-      background: var(--color-accent-subtle);
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
     }
 
     .rh3-media-trigger {
@@ -297,7 +275,14 @@
 
             <div class="rh3-media">
               <div class="rh3-frame ren-frame ren-frame-video">
-                <span class="rh3-thumbnail" aria-hidden="true"></span>
+                <img
+                  class="rh3-thumbnail"
+                  src="../../examples/reference-app/screenshots/dialog-open.png"
+                  alt=""
+                  width="1280"
+                  height="900"
+                  decoding="async"
+                >
                 <a
                   class="rh3-media-trigger"
                   href="#rh3-video-fallback"

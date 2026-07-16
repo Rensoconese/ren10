@@ -28,7 +28,7 @@
     }
 
     .rh4-copy {
-      --stack-gap: var(--space-6);
+      --stack-gap: var(--space-4);
       min-width: 0;
     }
 
@@ -51,6 +51,7 @@
     .rh4-form-wrap {
       --stack-gap: var(--space-1);
       max-width: var(--width-xl);
+      margin-block-start: var(--space-2);
     }
 
     .rh4-form-row {
@@ -117,10 +118,7 @@
     }
 
     .rh4-poster img {
-      background:
-        radial-gradient(circle at 68% 30%, var(--color-accent) 0 7%, transparent 8%),
-        linear-gradient(150deg, transparent 0 46%, var(--color-surface-raised) 47% 67%, transparent 68%),
-        linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill));
+      object-position: top;
     }
 
     .rh4-scrim {
@@ -211,7 +209,7 @@
   <main>
     <section class="rh4-section" data-rh4-root aria-labelledby="rh4-title">
       <div class="rh4-layout ren-center ren-center-wide ren-switcher">
-        <div class="rh4-copy ren-stack-lg">
+        <div class="rh4-copy ren-stack">
           <h1 class="rh4-title" id="rh4-title">Hero Split Email Video Lightbox</h1>
           <p class="rh4-lede">
             See how a shared design language turns product intent into interfaces teams can ship with confidence.
@@ -251,10 +249,10 @@
           >
             <span class="rh4-poster ren-frame ren-frame-video">
               <img
-                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3C/svg%3E"
-                alt="Abstract Ren10 video workspace"
-                width="960"
-                height="540"
+                src="../../examples/reference-app/screenshots/dialog-open.png"
+                alt="Ren10 workspace with an open settings dialog"
+                width="1280"
+                height="900"
                 decoding="async"
               >
             </span>

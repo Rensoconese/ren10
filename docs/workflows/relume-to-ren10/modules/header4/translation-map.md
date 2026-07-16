@@ -24,7 +24,7 @@
 | Email form | Native `<form class="rh4-form">` with `ren-field` + `input.ren-input type=email` + `button.ren-btn type=submit` | One CTA; field/button row via `ren-cluster` / block form grid |
 | Terms line | `p.rh4-terms` with `a.ren-link[href="../../LICENSE"]` | Real, resolvable repository-license destination; not dangerouslySetInnerHTML |
 | Media trigger | `<button type="button" class="rh4-media-trigger">` wrapping `ren-frame ren-frame-video` poster + overlay + play icon | Real button; accessible name; ≥44px target |
-| Poster image | Local token-surface placeholder (no Relume CDN asset) | Gray/semantic surface + optional decorative mark |
+| Poster image | Local Ren10 product screenshot (no Relume CDN asset) | Real product context with a semantic surface fallback |
 | Play icon | `span.ren-icon ren-icon-2xl` + authored SVG (`currentColor`) | No `relume-icons` dependency |
 | Video lightbox | `<ren-dialog id="rh4-video" size="xl">` with real `<dialog>`, title, close, body iframe | Focus trap, Escape, backdrop, restore focus |
 | Loading spinner | `.ren-spinner.ren-spinner-lg` with `role="status"` until iframe `load` | Reduced-motion via spinner contract |
