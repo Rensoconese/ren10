@@ -36,11 +36,16 @@ for (const file of pages) {
       const pagination = main?.querySelector('.bb-block-pagination');
       const headerRect = header?.getBoundingClientRect();
       const previewRect = preview?.getBoundingClientRect();
+      const paginationRect = pagination?.getBoundingClientRect();
       return {
         display: main ? getComputedStyle(main).display : null,
-        gap: headerRect && previewRect
+        headerPreviewGap: headerRect && previewRect
           ? Math.round(previewRect.top - headerRect.bottom)
           : null,
+        previewPaginationGap: previewRect && paginationRect
+          ? Math.round(paginationRect.top - previewRect.bottom)
+          : null,
+        nestedPreviewFrames: preview?.querySelectorAll('.bb-detail-preview').length ?? 0,
         links: pagination?.querySelectorAll('a[href]').length ?? 0,
         labels: Array.from(pagination?.querySelectorAll('a[href]') ?? [])
           .map((link) => link.textContent.trim()),
@@ -49,7 +54,9 @@ for (const file of pages) {
     });
 
     expect(state.display).toBe('grid');
-    if (state.gap !== null) expect(state.gap).toBe(32);
+    expect(state.headerPreviewGap).toBe(32);
+    expect(state.previewPaginationGap).toBe(32);
+    expect(state.nestedPreviewFrames).toBe(0);
     expect(state.links).toBe(2);
     expect(state.labels.every((label) => !/Previous block|Next block/.test(label))).toBe(true);
     expect(state.overflow).toBeLessThanOrEqual(0);

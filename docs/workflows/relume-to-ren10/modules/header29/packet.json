@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header29",
+  "blockSlug": "hero-centered-email-capture-landscape-lightbox",
+  "blockPath": "templates/blocks/hero-centered-email-capture-landscape-lightbox.html",
+  "stage": "reference",
+  "allowedFiles": [
+    "templates/blocks/hero-centered-email-capture-landscape-lightbox.html",
+    "tests/components/header29-header.spec.cjs"
+  ],
+  "evidence": {}
+}
