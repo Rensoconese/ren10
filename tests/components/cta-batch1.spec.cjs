@@ -173,12 +173,12 @@ test.describe('CTA 1–6 translated to Ren10', () => {
     }
   });
 
-  test('block catalog exposes one CTA section with six ordered cards', async ({ page }) => {
+  test('block catalog keeps CTA 1–6 at the start of the ordered CTA family', async ({ page }) => {
     expect((await page.goto(`${server.origin}/templates/blocks/index.html`))?.status()).toBe(200);
     const section = page.locator('section[aria-labelledby="ctas-title"]');
     await expect(section).toHaveCount(1);
-    await expect(section.locator('.bb-card')).toHaveCount(6);
-    await expect(section.locator('.bb-card-eyebrow')).toHaveText(BLOCKS.map((block) => `CTA ${block.number}`));
+    await expect(section.locator('.bb-card')).toHaveCount(12);
+    expect(await section.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 6).map((node) => node.textContent))).toEqual(BLOCKS.map((block) => `CTA ${block.number}`));
     expect(await section.locator('.bb-card').evaluateAll((cards) => (
       cards.every((card) => /^cta-/.test(card.getAttribute('href') || ''))
     ))).toBe(true);
