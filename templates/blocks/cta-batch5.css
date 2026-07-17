@@ -80,6 +80,8 @@
   color-scheme: light;
 }
 
+.cta27-block { place-items: center; }
+
 :is(.cta27-background, .cta27-scrim, .cta28-background, .cta28-scrim) {
   position: absolute;
   inset: 0;
