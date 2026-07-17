@@ -84,10 +84,10 @@ test.describe('CTA 19–24 translated to Ren10', () => {
     }
   });
 
-  test('catalog exposes CTA 1–42 in order', async ({ page }) => {
+  test('catalog exposes CTA 1–48 in order', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="ctas-title"] .bb-card');
-    await expect(cards).toHaveCount(42);
-    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 42 }, (_, i) => `CTA ${i + 1}`));
+    await expect(cards).toHaveCount(48);
+    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 48 }, (_, i) => `CTA ${i + 1}`));
   });
 });

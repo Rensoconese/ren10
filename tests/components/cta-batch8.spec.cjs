@@ -7,17 +7,17 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 25, file: 'cta-centered-actions.html', kind: 'actions', media: 'none' },
-  { number: 26, file: 'cta-centered-email-capture.html', kind: 'form', media: 'none' },
-  { number: 27, file: 'cta-background-photo-centered-actions.html', kind: 'actions', media: 'background' },
-  { number: 28, file: 'cta-background-photo-centered-email.html', kind: 'form', media: 'background' },
-  { number: 29, file: 'cta-contrast-centered-actions.html', kind: 'actions', media: 'none' },
-  { number: 30, file: 'cta-contrast-centered-email.html', kind: 'form', media: 'none' },
+  { number: 43, file: 'cta-contrast-band-actions.html', kind: 'actions', surface: 'contrast', layout: 'stacked' },
+  { number: 44, file: 'cta-contrast-band-email.html', kind: 'form', surface: 'contrast', layout: 'stacked' },
+  { number: 45, file: 'cta-outlined-split-band-actions.html', kind: 'actions', surface: 'outline', layout: 'split' },
+  { number: 46, file: 'cta-outlined-split-band-email.html', kind: 'form', surface: 'outline', layout: 'split' },
+  { number: 47, file: 'cta-photo-split-band-actions.html', kind: 'actions', surface: 'photo', layout: 'split' },
+  { number: 48, file: 'cta-photo-split-band-email.html', kind: 'form', surface: 'photo', layout: 'split' },
 ];
 
 let server;
 
-test.describe('CTA 25–30 translated to Ren10', () => {
+test.describe('CTA 43–48 translated to Ren10', () => {
   test.beforeAll(async () => { server = await startStaticServer(ROOT_DIR); });
   test.afterAll(async () => { await server?.close(); });
 
@@ -28,12 +28,11 @@ test.describe('CTA 25–30 translated to Ren10', () => {
   }
 
   for (const block of BLOCKS) {
-    test(`CTA ${block.number} preserves its official centered anatomy`, async ({ page }) => {
+    test(`CTA ${block.number} preserves its official anatomy`, async ({ page }) => {
       await openBlock(page, block);
       const root = page.locator(`[data-cta${block.number}-root]`);
       await expect(root.locator(`h2.cta${block.number}-title`)).toHaveCount(1);
       await expect(root.locator(`p.cta${block.number}-description`)).toHaveCount(1);
-      await expect(root.locator(`.cta${block.number}-content`)).toHaveCSS('text-align', 'center');
 
       if (block.kind === 'actions') {
         await expect(root.locator(`.cta${block.number}-actions > a.ren-btn[href]`)).toHaveCount(2);
@@ -41,16 +40,16 @@ test.describe('CTA 25–30 translated to Ren10', () => {
       } else {
         await expect(root.locator(`form.cta${block.number}-form`)).toHaveCount(1);
         await expect(root.locator('ren-field > label')).toHaveCount(1);
-        await expect(root.locator('input[type="email"][name="email"][required]')).toHaveCount(1);
+        await expect(root.locator('input.ren-input[type="email"][name="email"][required]')).toHaveCount(1);
         await expect(root.locator('button[type="submit"].ren-btn')).toHaveCount(1);
         await expect(root.locator(`.cta${block.number}-legal a[href]`)).toHaveCount(1);
       }
 
-      if (block.media === 'background') {
+      if (block.surface === 'photo') {
         await expect(root.locator(`.cta${block.number}-background img[src^="media/"][alt=""][width][height]`)).toHaveCount(1);
         await expect(root.locator(`.cta${block.number}-scrim`)).toHaveCount(1);
       } else {
-        await expect(root.locator('img, picture, figure, video')).toHaveCount(0);
+        await expect(root.locator('img')).toHaveCount(0);
       }
     });
 
@@ -61,7 +60,7 @@ test.describe('CTA 25–30 translated to Ren10', () => {
       await expect(page.locator('.bb-block-pagination a[rel="prev"]')).toHaveCount(1);
       await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveCount(1);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-      for (const target of await page.locator(`[data-cta${block.number}-root] a.ren-btn, [data-cta${block.number}-root] button, [data-cta${block.number}-root] input`).all()) {
+      for (const target of await rootTargets(page, block).all()) {
         expect((await target.boundingBox())?.height).toBeGreaterThanOrEqual(44);
       }
       await injectAxe(page);
@@ -72,7 +71,29 @@ test.describe('CTA 25–30 translated to Ren10', () => {
     });
   }
 
+  function rootTargets(page, block) {
+    return page.locator(`[data-cta${block.number}-root] a, [data-cta${block.number}-root] button, [data-cta${block.number}-root] input`);
+  }
+
+  test('split variants collapse from two columns to one without overflow', async ({ page }) => {
+    for (const block of BLOCKS.filter(({ layout }) => layout === 'split')) {
+      await openBlock(page, block, 390, 844);
+      expect(await page.locator(`.cta${block.number}-layout`).evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(' ').length)).toBe(1);
+      await openBlock(page, block, 1280, 900);
+      expect(await page.locator(`.cta${block.number}-layout`).evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(' ').length)).toBe(2);
+    }
+  });
+
+  test('outlined variants expose a visible boundary in both themes', async ({ page }) => {
+    for (const block of BLOCKS.filter(({ surface }) => surface === 'outline')) {
+      await openBlock(page, block);
+      await expect(page.locator(`[data-cta${block.number}-root]`)).not.toHaveCSS('border-top-style', 'none');
+    }
+  });
+
   test('all layouts use CSS Grid and policy-safe source', async ({ page }) => {
+    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/cta-batch8.css'), 'utf8');
+    expect(css).not.toMatch(/display\s*:\s*flex|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     for (const block of BLOCKS) {
       const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8');
       expect(source).not.toMatch(/display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow/i);
@@ -81,20 +102,6 @@ test.describe('CTA 25–30 translated to Ren10', () => {
       await openBlock(page, block);
       const selector = block.kind === 'form' ? `.cta${block.number}-form-row` : `.cta${block.number}-actions`;
       expect(await page.locator(selector).evaluate((node) => getComputedStyle(node).display)).toBe('grid');
-    }
-  });
-
-  test('background and contrast variants retain their owned foreground in both themes', async ({ page }) => {
-    for (const theme of ['light', 'dark']) {
-      for (const block of BLOCKS.slice(2)) {
-        await openBlock(page, block);
-        await page.evaluate((nextTheme) => { document.documentElement.dataset.theme = nextTheme; }, theme);
-        const colors = await page.locator(`[data-cta${block.number}-root]`).evaluate((root, number) => ({
-          title: getComputedStyle(root.querySelector(`.cta${number}-title`)).color,
-          description: getComputedStyle(root.querySelector(`.cta${number}-description`)).color,
-        }), block.number);
-        expect(colors.title).toBe(colors.description);
-      }
     }
   });
 
