@@ -7,17 +7,17 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 49, file: 'cta-contrast-inline-actions.html', kind: 'actions', surface: 'contrast', layout: 'split' },
-  { number: 50, file: 'cta-contrast-split-email.html', kind: 'form', surface: 'contrast', layout: 'split' },
-  { number: 51, file: 'cta-outlined-centered-actions.html', kind: 'actions', surface: 'outline', layout: 'centered' },
-  { number: 52, file: 'cta-outlined-centered-email.html', kind: 'form', surface: 'outline', layout: 'centered' },
-  { number: 53, file: 'cta-photo-centered-actions.html', kind: 'actions', surface: 'photo', layout: 'centered' },
-  { number: 54, file: 'cta-photo-centered-email.html', kind: 'form', surface: 'photo', layout: 'centered' },
+  { number: 55, file: 'cta-video-background-centered-actions.html', kind: 'actions', media: 'video', layout: 'centered' },
+  { number: 56, file: 'cta-video-background-centered-email.html', kind: 'form', media: 'video', layout: 'centered' },
+  { number: 57, file: 'cta-centered-focus-actions.html', kind: 'actions', media: 'none', layout: 'centered' },
+  { number: 58, file: 'cta-centered-focus-email.html', kind: 'form', media: 'none', layout: 'centered' },
+  { number: 59, file: 'cta-split-photo-actions.html', kind: 'actions', media: 'image', layout: 'split' },
+  { number: 60, file: 'cta-split-photo-email.html', kind: 'form', media: 'image', layout: 'split' },
 ];
 
 let server;
 
-test.describe('CTA 49–54 translated to Ren10', () => {
+test.describe('CTA 55–60 translated to Ren10', () => {
   test.beforeAll(async () => { server = await startStaticServer(ROOT_DIR); });
   test.afterAll(async () => { await server?.close(); });
 
@@ -35,7 +35,7 @@ test.describe('CTA 49–54 translated to Ren10', () => {
       await expect(root.locator(`p.cta${block.number}-description`)).toHaveCount(1);
       if (block.kind === 'actions') {
         await expect(root.locator(`.cta${block.number}-actions > a.ren-btn[href]`)).toHaveCount(2);
-        await expect(root.locator('form, input, button')).toHaveCount(0);
+        await expect(root.locator('form, input')).toHaveCount(0);
       } else {
         await expect(root.locator(`form.cta${block.number}-form`)).toHaveCount(1);
         await expect(root.locator('ren-field > label')).toHaveCount(1);
@@ -43,10 +43,12 @@ test.describe('CTA 49–54 translated to Ren10', () => {
         await expect(root.locator('button[type="submit"].ren-btn')).toHaveCount(1);
         await expect(root.locator(`.cta${block.number}-legal a[href]`)).toHaveCount(1);
       }
-      if (block.surface === 'photo') {
-        await expect(root.locator(`.cta${block.number}-background img[src^="media/"][alt=""][width][height]`)).toHaveCount(1);
-        await expect(root.locator(`.cta${block.number}-scrim`)).toHaveCount(1);
-      } else await expect(root.locator('img')).toHaveCount(0);
+      if (block.media === 'video') {
+        await expect(root.locator(`video.cta${block.number}-video[muted][loop][playsinline][poster^="media/"] source[type="video/webm"]`)).toHaveCount(1);
+        await expect(root.locator(`button.cta${block.number}-motion[type="button"][aria-label]`)).toHaveCount(1);
+      } else if (block.media === 'image') {
+        await expect(root.locator(`.cta${block.number}-media img[src^="media/"][width][height]`)).toHaveCount(1);
+      } else await expect(root.locator('img, video')).toHaveCount(0);
     });
 
     test(`CTA ${block.number} is documented, paginated, responsive, and axe clean`, async ({ page }) => {
@@ -64,7 +66,7 @@ test.describe('CTA 49–54 translated to Ren10', () => {
     });
   }
 
-  test('split variants collapse from two columns to one without overflow', async ({ page }) => {
+  test('split photo variants collapse from two columns to one', async ({ page }) => {
     for (const block of BLOCKS.filter(({ layout }) => layout === 'split')) {
       await openBlock(page, block, 390, 844);
       expect(await page.locator(`.cta${block.number}-layout`).evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(' ').length)).toBe(1);
@@ -73,15 +75,19 @@ test.describe('CTA 49–54 translated to Ren10', () => {
     }
   });
 
-  test('outlined variants expose a visible boundary', async ({ page }) => {
-    for (const block of BLOCKS.filter(({ surface }) => surface === 'outline')) {
+  test('video variants expose keyboard-operable motion controls', async ({ page }) => {
+    for (const block of BLOCKS.filter(({ media }) => media === 'video')) {
       await openBlock(page, block);
-      await expect(page.locator(`[data-cta${block.number}-root]`)).not.toHaveCSS('border-top-style', 'none');
+      const control = page.locator(`.cta${block.number}-motion`);
+      const before = await control.getAttribute('aria-label');
+      await control.focus();
+      await page.keyboard.press('Enter');
+      await expect(control).not.toHaveAttribute('aria-label', before || '');
     }
   });
 
-  test('all layouts use CSS Grid and policy-safe source', async ({ page }) => {
-    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/cta-batch9.css'), 'utf8');
+  test('all compositions use CSS Grid and policy-safe source', async ({ page }) => {
+    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/cta-batch10.css'), 'utf8');
     expect(css).not.toMatch(/display\s*:\s*flex|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     for (const block of BLOCKS) {
       const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8');
