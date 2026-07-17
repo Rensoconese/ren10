@@ -27,13 +27,13 @@
   min-width: 0;
 }
 
-:is(.cta7-title, .cta8-title, .cta9-title, .cta10-title, .cta12-title),
-:is(.cta7-description, .cta8-description, .cta9-description, .cta10-description, .cta12-description),
+:is(.cta7-title, .cta8-title, .cta9-title, .cta10-title, .cta11-title, .cta12-title),
+:is(.cta7-description, .cta8-description, .cta9-description, .cta10-description, .cta11-description, .cta12-description),
 :is(.cta7-legal, .cta9-legal, .cta11-legal) {
   margin: 0;
 }
 
-:is(.cta7-title, .cta8-title, .cta9-title, .cta10-title, .cta12-title) {
+:is(.cta7-title, .cta8-title, .cta9-title, .cta10-title, .cta11-title, .cta12-title) {
   font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
   font-weight: var(--display-lg-weight);
   line-height: var(--display-lg-leading);
@@ -118,19 +118,18 @@
 }
 .cta8-actions .ren-btn-outline { color: var(--color-text-inverted); }
 
-.cta9-layout,
-.cta11-panel {
+:is(.cta9-layout, .cta11-layout) {
   --center-width: var(--width-7xl);
   width: 100%;
 }
 
-.cta9-layout {
+:is(.cta9-layout, .cta11-layout) {
   --grid-gap: var(--space-6);
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
 }
 
-.cta9-copy { --stack-gap: var(--space-stack-loose); }
+:is(.cta9-copy, .cta11-copy) { --stack-gap: var(--space-stack-loose); }
 
 .cta9-form,
 .cta11-form {
@@ -138,8 +137,7 @@
   width: min(100%, var(--width-3xl));
 }
 
-.cta9-form { margin-inline: auto; }
-.cta11-form { margin-inline-start: auto; }
+:is(.cta9-form, .cta11-form) { margin-inline: auto; }
 .cta9-form,
 .cta9-form label { color: var(--color-text-inverted); }
 .cta9-legal,
@@ -150,9 +148,8 @@
   color: var(--color-surface);
   background: var(--color-text);
 }
-.cta10-title,
-.cta10-description { color: var(--color-surface); }
-.cta10-description { font-size: var(--lead-size); line-height: var(--lead-leading); }
+:is(.cta10-title, .cta10-description, .cta11-title, .cta11-description) { color: var(--color-surface); }
+:is(.cta10-description, .cta11-description) { font-size: var(--lead-size); line-height: var(--lead-leading); }
 .cta10-actions { justify-content: end; }
 .cta10-actions .ren-btn,
 .cta11-form .ren-btn {
@@ -182,9 +179,9 @@
   :is(.cta7-layout, .cta12-layout) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   :is(.cta8-layout, .cta10-layout) { grid-template-columns: minmax(0, 1fr) max-content; }
 
-  .cta9-layout { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-  .cta9-copy { grid-column: 1 / 7; }
-  .cta9-form {
+  :is(.cta9-layout, .cta11-layout) { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  :is(.cta9-copy, .cta11-copy) { grid-column: 1 / 7; }
+  :is(.cta9-form, .cta11-form) {
     grid-column: 8 / 13;
     width: 100%;
   }
