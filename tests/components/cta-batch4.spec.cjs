@@ -7,17 +7,17 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 13, file: 'cta-split-heading-email-form.html', kind: 'form', media: 'none', layout: 'split' },
-  { number: 14, file: 'cta-background-image-heading-actions.html', kind: 'actions', media: 'background', layout: 'split' },
-  { number: 15, file: 'cta-background-image-heading-email.html', kind: 'form', media: 'background', layout: 'split' },
-  { number: 16, file: 'cta-contrast-heading-actions.html', kind: 'actions', media: 'none', layout: 'split' },
-  { number: 17, file: 'cta-contrast-heading-email.html', kind: 'form', media: 'none', layout: 'split' },
-  { number: 18, file: 'cta-editorial-stacked-actions.html', kind: 'actions', media: 'none', layout: 'stacked' },
+  { number: 19, file: 'cta-left-email-capture.html', kind: 'form', media: 'none', layout: 'stacked' },
+  { number: 20, file: 'cta-split-copy-actions-landscape.html', kind: 'actions', media: 'inline', layout: 'split' },
+  { number: 21, file: 'cta-split-copy-email-landscape.html', kind: 'form', media: 'inline', layout: 'split' },
+  { number: 22, file: 'cta-stacked-actions-landscape.html', kind: 'actions', media: 'inline', layout: 'stacked' },
+  { number: 23, file: 'cta-stacked-email-landscape.html', kind: 'form', media: 'inline', layout: 'stacked' },
+  { number: 24, file: 'cta-centered-actions.html', kind: 'actions', media: 'none', layout: 'centered' },
 ];
 
 let server;
 
-test.describe('CTA 13–18 translated to Ren10', () => {
+test.describe('CTA 19–24 translated to Ren10', () => {
   test.beforeAll(async () => { server = await startStaticServer(ROOT_DIR); });
   test.afterAll(async () => { await server?.close(); });
 
@@ -43,9 +43,8 @@ test.describe('CTA 13–18 translated to Ren10', () => {
         await expect(root.locator('button[type="submit"].ren-btn')).toHaveCount(1);
         await expect(root.locator(`.cta${block.number}-legal a[href]`)).toHaveCount(1);
       }
-      if (block.media === 'background') {
-        await expect(root.locator(`.cta${block.number}-background img[src^="media/"][alt=""][width][height]`)).toHaveCount(1);
-        await expect(root.locator(`.cta${block.number}-scrim`)).toHaveCount(1);
+      if (block.media === 'inline') {
+        await expect(root.locator(`figure.cta${block.number}-media img[src^="media/"][alt]:not([alt=""])[width][height]`)).toHaveCount(1);
       } else {
         await expect(root.locator('img, picture, video')).toHaveCount(0);
       }
@@ -69,7 +68,7 @@ test.describe('CTA 13–18 translated to Ren10', () => {
     });
   }
 
-  test('the five split variants use responsive CSS Grid and policy-safe source', async ({ page }) => {
+  test('split and action groups use CSS Grid with policy-safe source', async ({ page }) => {
     for (const block of BLOCKS) {
       const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8');
       expect(source).not.toMatch(/display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow/i);
@@ -79,31 +78,16 @@ test.describe('CTA 13–18 translated to Ren10', () => {
       if (block.layout === 'split') {
         expect(await page.locator(`.cta${block.number}-layout`).evaluate((node) => getComputedStyle(node).display)).toBe('grid');
       }
-    }
-  });
-
-  test('owned foregrounds remain legible in light and dark themes', async ({ page }) => {
-    for (const block of BLOCKS.slice(1, 5)) {
-      await openBlock(page, block);
-      for (const theme of ['light', 'dark']) {
-        await page.evaluate((value) => document.documentElement.setAttribute('data-theme', value), theme);
-        const colors = await page.locator(`[data-cta${block.number}-root]`).evaluate((root, number) => ({
-          background: getComputedStyle(root).backgroundColor,
-          title: getComputedStyle(root.querySelector(`.cta${number}-title`)).color,
-          description: getComputedStyle(root.querySelector(`.cta${number}-description`)).color,
-          label: root.querySelector('label') ? getComputedStyle(root.querySelector('label')).color : null,
-        }), block.number);
-        expect(colors.title).toBe(colors.description);
-        if (colors.label) expect(colors.label).toBe(colors.description);
-        if (block.media === 'none') expect(colors.background).not.toBe(colors.title);
+      if (block.kind === 'actions') {
+        expect(await page.locator(`.cta${block.number}-actions`).evaluate((node) => getComputedStyle(node).display)).toBe('grid');
       }
     }
   });
 
-  test('catalog keeps CTA 1–18 at the start of the ordered CTA family', async ({ page }) => {
+  test('catalog exposes CTA 1–24 in order', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="ctas-title"] .bb-card');
     await expect(cards).toHaveCount(24);
-    expect(await cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 18).map((node) => node.textContent))).toEqual(Array.from({ length: 18 }, (_, i) => `CTA ${i + 1}`));
+    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 24 }, (_, i) => `CTA ${i + 1}`));
   });
 });
