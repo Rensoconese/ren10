@@ -19,7 +19,7 @@
   width: 100%;
 }
 
-.cta13-layout { align-items: start; }
+:is(.cta13-layout, .cta15-layout) { align-items: start; }
 
 :is(.cta13-content, .cta14-content, .cta15-content, .cta16-content, .cta17-content),
 :is(.cta13-form, .cta15-form, .cta17-form),

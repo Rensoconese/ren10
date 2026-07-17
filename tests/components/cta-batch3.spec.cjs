@@ -82,19 +82,21 @@ test.describe('CTA 13–18 translated to Ren10', () => {
     }
   });
 
-  test('CTA 13 aligns its heading with the top of the form column', async ({ page }) => {
-    await openBlock(page, BLOCKS[0]);
-    const alignment = await page.locator('[data-cta13-root]').evaluate((root) => {
-      const title = root.querySelector('.cta13-title').getBoundingClientRect();
-      const content = root.querySelector('.cta13-content').getBoundingClientRect();
-      return {
-        titleTop: title.top,
-        contentTop: content.top,
-      };
-    });
+  for (const number of [13, 15]) {
+    test(`CTA ${number} aligns its heading with the top of the form column`, async ({ page }) => {
+      await openBlock(page, BLOCKS.find((block) => block.number === number));
+      const alignment = await page.locator(`[data-cta${number}-root]`).evaluate((root, currentNumber) => {
+        const title = root.querySelector(`.cta${currentNumber}-title`).getBoundingClientRect();
+        const content = root.querySelector(`.cta${currentNumber}-content`).getBoundingClientRect();
+        return {
+          titleTop: title.top,
+          contentTop: content.top,
+        };
+      }, number);
 
-    expect(Math.abs(alignment.titleTop - alignment.contentTop)).toBeLessThanOrEqual(1);
-  });
+      expect(Math.abs(alignment.titleTop - alignment.contentTop)).toBeLessThanOrEqual(1);
+    });
+  }
 
   test('owned foregrounds remain legible in light and dark themes', async ({ page }) => {
     for (const block of BLOCKS.slice(1, 5)) {
