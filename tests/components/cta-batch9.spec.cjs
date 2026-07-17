@@ -7,17 +7,17 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 43, file: 'cta-contrast-band-actions.html', kind: 'actions', surface: 'contrast', layout: 'stacked' },
-  { number: 44, file: 'cta-contrast-band-email.html', kind: 'form', surface: 'contrast', layout: 'stacked' },
-  { number: 45, file: 'cta-outlined-split-band-actions.html', kind: 'actions', surface: 'outline', layout: 'split' },
-  { number: 46, file: 'cta-outlined-split-band-email.html', kind: 'form', surface: 'outline', layout: 'split' },
-  { number: 47, file: 'cta-photo-split-band-actions.html', kind: 'actions', surface: 'photo', layout: 'split' },
-  { number: 48, file: 'cta-photo-split-band-email.html', kind: 'form', surface: 'photo', layout: 'split' },
+  { number: 49, file: 'cta-contrast-inline-actions.html', kind: 'actions', surface: 'contrast', layout: 'split' },
+  { number: 50, file: 'cta-contrast-split-email.html', kind: 'form', surface: 'contrast', layout: 'split' },
+  { number: 51, file: 'cta-outlined-centered-actions.html', kind: 'actions', surface: 'outline', layout: 'centered' },
+  { number: 52, file: 'cta-outlined-centered-email.html', kind: 'form', surface: 'outline', layout: 'centered' },
+  { number: 53, file: 'cta-photo-centered-actions.html', kind: 'actions', surface: 'photo', layout: 'centered' },
+  { number: 54, file: 'cta-photo-centered-email.html', kind: 'form', surface: 'photo', layout: 'centered' },
 ];
 
 let server;
 
-test.describe('CTA 43–48 translated to Ren10', () => {
+test.describe('CTA 49–54 translated to Ren10', () => {
   test.beforeAll(async () => { server = await startStaticServer(ROOT_DIR); });
   test.afterAll(async () => { await server?.close(); });
 
@@ -33,7 +33,6 @@ test.describe('CTA 43–48 translated to Ren10', () => {
       const root = page.locator(`[data-cta${block.number}-root]`);
       await expect(root.locator(`h2.cta${block.number}-title`)).toHaveCount(1);
       await expect(root.locator(`p.cta${block.number}-description`)).toHaveCount(1);
-
       if (block.kind === 'actions') {
         await expect(root.locator(`.cta${block.number}-actions > a.ren-btn[href]`)).toHaveCount(2);
         await expect(root.locator('form, input, button')).toHaveCount(0);
@@ -44,13 +43,10 @@ test.describe('CTA 43–48 translated to Ren10', () => {
         await expect(root.locator('button[type="submit"].ren-btn')).toHaveCount(1);
         await expect(root.locator(`.cta${block.number}-legal a[href]`)).toHaveCount(1);
       }
-
       if (block.surface === 'photo') {
         await expect(root.locator(`.cta${block.number}-background img[src^="media/"][alt=""][width][height]`)).toHaveCount(1);
         await expect(root.locator(`.cta${block.number}-scrim`)).toHaveCount(1);
-      } else {
-        await expect(root.locator('img')).toHaveCount(0);
-      }
+      } else await expect(root.locator('img')).toHaveCount(0);
     });
 
     test(`CTA ${block.number} is documented, paginated, responsive, and axe clean`, async ({ page }) => {
@@ -60,19 +56,12 @@ test.describe('CTA 43–48 translated to Ren10', () => {
       await expect(page.locator('.bb-block-pagination a[rel="prev"]')).toHaveCount(1);
       await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveCount(1);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
-      for (const target of await rootTargets(page, block).all()) {
+      for (const target of await page.locator(`[data-cta${block.number}-root] a, [data-cta${block.number}-root] button, [data-cta${block.number}-root] input`).all()) {
         expect((await target.boundingBox())?.height).toBeGreaterThanOrEqual(44);
       }
       await injectAxe(page);
-      await checkA11y(page, `[data-cta${block.number}-root]`, {
-        detailedReport: true,
-        detailedReportOptions: { html: true },
-      });
+      await checkA11y(page, `[data-cta${block.number}-root]`, { detailedReport: true, detailedReportOptions: { html: true } });
     });
-  }
-
-  function rootTargets(page, block) {
-    return page.locator(`[data-cta${block.number}-root] a, [data-cta${block.number}-root] button, [data-cta${block.number}-root] input`);
   }
 
   test('split variants collapse from two columns to one without overflow', async ({ page }) => {
@@ -84,7 +73,7 @@ test.describe('CTA 43–48 translated to Ren10', () => {
     }
   });
 
-  test('outlined variants expose a visible boundary in both themes', async ({ page }) => {
+  test('outlined variants expose a visible boundary', async ({ page }) => {
     for (const block of BLOCKS.filter(({ surface }) => surface === 'outline')) {
       await openBlock(page, block);
       await expect(page.locator(`[data-cta${block.number}-root]`)).not.toHaveCSS('border-top-style', 'none');
@@ -92,7 +81,7 @@ test.describe('CTA 43–48 translated to Ren10', () => {
   });
 
   test('all layouts use CSS Grid and policy-safe source', async ({ page }) => {
-    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/cta-batch8.css'), 'utf8');
+    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/cta-batch9.css'), 'utf8');
     expect(css).not.toMatch(/display\s*:\s*flex|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     for (const block of BLOCKS) {
       const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8');
