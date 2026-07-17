@@ -100,6 +100,34 @@ test.describe('CTA 7–12 translated to Ren10', () => {
     });
   }
 
+  test('CTA 9 centers its email panel in a responsive CSS Grid', async ({ page }) => {
+    for (const viewport of [
+      { width: 390, height: 844, columns: 1 },
+      { width: 1280, height: 900, columns: 12 },
+    ]) {
+      await openBlock(page, BLOCKS.find(({ number }) => number === 9), viewport.width, viewport.height);
+      const state = await page.locator('[data-cta9-root]').evaluate((root) => {
+        const panel = root.querySelector('.cta9-panel');
+        const form = root.querySelector('.cta9-form');
+        const panelRect = panel.getBoundingClientRect();
+        const formRect = form.getBoundingClientRect();
+        return {
+          display: getComputedStyle(panel).display,
+          columns: getComputedStyle(panel).gridTemplateColumns.split(' ').length,
+          offset: Math.abs((panelRect.left + panelRect.right) / 2 - (formRect.left + formRect.right) / 2),
+          formWidth: formRect.width,
+          panelWidth: panelRect.width,
+        };
+      });
+
+      expect(state.display).toBe('grid');
+      expect(state.columns).toBe(viewport.columns);
+      expect(state.offset).toBeLessThanOrEqual(2);
+      expect(state.formWidth).toBeLessThanOrEqual(state.panelWidth);
+      if (viewport.width >= 768) expect(state.formWidth / state.panelWidth).toBeLessThan(0.6);
+    }
+  });
+
   test('catalog keeps CTA 1–12 at the start of the ordered CTA family', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="ctas-title"] .bb-card');

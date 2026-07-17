@@ -121,12 +121,20 @@
   --center-width: var(--width-7xl);
   width: 100%;
 }
+
+.cta9-panel {
+  --grid-gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .cta9-form,
 .cta11-form {
   --stack-gap: var(--space-stack-loose);
   width: min(100%, var(--width-3xl));
-  margin-inline-start: auto;
 }
+
+.cta9-form { margin-inline: auto; }
+.cta11-form { margin-inline-start: auto; }
 .cta9-form,
 .cta9-form label { color: var(--color-text-inverted); }
 .cta9-legal,
@@ -168,6 +176,12 @@
   }
   :is(.cta7-layout, .cta12-layout) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   :is(.cta8-layout, .cta10-layout) { grid-template-columns: minmax(0, 1fr) max-content; }
+
+  .cta9-panel { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .cta9-form {
+    grid-column: 4 / 10;
+    width: 100%;
+  }
 }
 
 @media (max-width: 24rem) {
