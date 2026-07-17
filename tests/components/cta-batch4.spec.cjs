@@ -7,12 +7,12 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 19, file: 'cta-left-email-capture.html', kind: 'form', media: 'none', layout: 'stacked' },
-  { number: 20, file: 'cta-split-copy-actions-landscape.html', kind: 'actions', media: 'inline', layout: 'split' },
-  { number: 21, file: 'cta-split-copy-email-landscape.html', kind: 'form', media: 'inline', layout: 'split' },
-  { number: 22, file: 'cta-stacked-actions-landscape.html', kind: 'actions', media: 'inline', layout: 'stacked' },
-  { number: 23, file: 'cta-stacked-email-landscape.html', kind: 'form', media: 'inline', layout: 'stacked' },
-  { number: 24, file: 'cta-centered-actions.html', kind: 'actions', media: 'none', layout: 'centered' },
+  { number: 19, file: 'cta-left-actions.html', kind: 'actions', media: 'none', layout: 'stacked' },
+  { number: 20, file: 'cta-left-email-capture.html', kind: 'form', media: 'none', layout: 'stacked' },
+  { number: 21, file: 'cta-split-copy-actions-landscape.html', kind: 'actions', media: 'inline', layout: 'split' },
+  { number: 22, file: 'cta-split-copy-email-landscape.html', kind: 'form', media: 'inline', layout: 'split' },
+  { number: 23, file: 'cta-stacked-actions-landscape.html', kind: 'actions', media: 'inline', layout: 'stacked' },
+  { number: 24, file: 'cta-stacked-email-landscape.html', kind: 'form', media: 'inline', layout: 'stacked' },
 ];
 
 let server;
@@ -84,10 +84,10 @@ test.describe('CTA 19–24 translated to Ren10', () => {
     }
   });
 
-  test('catalog exposes CTA 1–24 in order', async ({ page }) => {
+  test('catalog exposes CTA 1–30 in order', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="ctas-title"] .bb-card');
-    await expect(cards).toHaveCount(24);
-    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 24 }, (_, i) => `CTA ${i + 1}`));
+    await expect(cards).toHaveCount(30);
+    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 30 }, (_, i) => `CTA ${i + 1}`));
   });
 });

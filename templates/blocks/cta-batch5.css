@@ -1,0 +1,155 @@
+.cta26-block,
+.cta27-block,
+.cta28-block,
+.cta29-block,
+.cta30-block {
+  padding-block: var(--space-section-sm);
+}
+
+:is(.cta26-content, .cta27-content, .cta28-content, .cta29-content, .cta30-content) {
+  --center-width: var(--width-5xl);
+  --stack-gap: var(--space-stack-loose);
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+:is(.cta26-title, .cta27-title, .cta28-title, .cta29-title, .cta30-title),
+:is(.cta26-description, .cta27-description, .cta28-description, .cta29-description, .cta30-description),
+:is(.cta26-legal, .cta28-legal, .cta30-legal) {
+  margin: 0;
+}
+
+:is(.cta26-title, .cta27-title, .cta28-title, .cta29-title, .cta30-title) {
+  font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.cta26-description, .cta27-description, .cta28-description, .cta29-description, .cta30-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.cta26-form, .cta28-form, .cta30-form) {
+  --stack-gap: var(--space-stack-loose);
+  justify-self: center;
+  width: min(100%, var(--width-3xl));
+  text-align: left;
+}
+
+:is(.cta26-form-row, .cta28-form-row, .cta30-form-row) {
+  --grid-gap: var(--space-inline-tight);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+}
+
+:is(.cta26-form-row, .cta28-form-row, .cta30-form-row) > * { min-width: 0; }
+:is(.cta26-form-row, .cta28-form-row, .cta30-form-row) :is(input, .ren-btn) { min-height: var(--touch-min); }
+:is(.cta26-form, .cta28-form, .cta30-form) [data-error][hidden] { display: none; }
+
+:is(.cta26-legal, .cta28-legal, .cta30-legal) {
+  color: var(--color-text-muted);
+  font-size: var(--caption-size);
+  line-height: var(--caption-leading);
+}
+
+:is(.cta26-legal, .cta28-legal, .cta30-legal) a {
+  display: inline-grid;
+  align-items: center;
+  min-height: var(--touch-min);
+}
+
+.cta27-actions,
+.cta29-actions {
+  --grid-gap: var(--space-inline-loose);
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+}
+
+.cta27-block,
+.cta28-block {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color-scheme: light;
+}
+
+:is(.cta27-background, .cta27-scrim, .cta28-background, .cta28-scrim) {
+  position: absolute;
+  inset: 0;
+}
+
+:is(.cta27-background, .cta28-background) { z-index: -2; }
+:is(.cta27-background, .cta28-background) img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+:is(.cta27-scrim, .cta28-scrim) {
+  z-index: -1;
+  background: var(--color-text);
+  opacity: 0.74;
+}
+
+:is(.cta27-title, .cta27-description, .cta28-title, .cta28-description),
+.cta28-form label,
+.cta28-legal,
+.cta28-legal a {
+  color: var(--color-text-inverted);
+}
+
+.cta27-actions .ren-btn,
+.cta28-form .ren-btn {
+  --ren-btn-bg: var(--color-text-inverted);
+  --ren-btn-color: var(--color-text);
+  --ren-btn-border-color: var(--color-text-inverted);
+}
+
+.cta27-actions .ren-btn-outline { color: var(--color-text-inverted); }
+
+.cta29-block.cta29-block,
+.cta30-block.cta30-block {
+  color: var(--color-surface);
+  background: var(--color-text);
+}
+
+:is(.cta29-title, .cta29-description, .cta30-title, .cta30-description),
+.cta30-form label,
+.cta30-legal,
+.cta30-legal a {
+  color: var(--color-surface);
+}
+
+.cta29-actions .ren-btn,
+.cta30-form .ren-btn {
+  --ren-btn-bg: var(--color-surface);
+  --ren-btn-color: var(--color-text);
+  --ren-btn-border-color: var(--color-surface);
+}
+
+.cta29-actions .ren-btn-outline { color: var(--color-surface); }
+.cta30-form ren-field { --ren-field-error-color: var(--color-surface); }
+
+@media (min-width: 40rem) {
+  :is(.cta26-form-row, .cta28-form-row, .cta30-form-row) {
+    grid-template-columns: minmax(0, 1fr) max-content;
+  }
+}
+
+@media (min-width: 48rem) {
+  :is(.cta26-block, .cta27-block, .cta28-block, .cta29-block, .cta30-block) {
+    padding-block: var(--space-section-lg);
+  }
+}
+
+@media (max-width: 24rem) {
+  :is(.cta27-actions, .cta29-actions) { grid-template-columns: minmax(0, 1fr); }
+  :is(.cta27-actions, .cta29-actions) .ren-btn { width: 100%; }
+}
