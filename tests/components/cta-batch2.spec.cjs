@@ -9,7 +9,7 @@ const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
   { number: 7, file: 'cta-split-copy-email-capture.html', kind: 'form', media: 'none' },
   { number: 8, file: 'cta-background-image-split-actions.html', kind: 'actions', media: 'background' },
-  { number: 9, file: 'cta-background-image-email-aside.html', kind: 'form-only', media: 'background' },
+  { number: 9, file: 'cta-background-image-email-aside.html', kind: 'form', media: 'background' },
   { number: 10, file: 'cta-contrast-split-actions.html', kind: 'actions', media: 'none' },
   { number: 11, file: 'cta-contrast-email-aside.html', kind: 'form-only', media: 'none' },
   { number: 12, file: 'cta-split-heading-copy-actions.html', kind: 'actions', media: 'none' },
@@ -100,31 +100,37 @@ test.describe('CTA 7–12 translated to Ren10', () => {
     });
   }
 
-  test('CTA 9 centers its email panel in a responsive CSS Grid', async ({ page }) => {
+  test('CTA 9 balances copy and email capture in a responsive CSS Grid', async ({ page }) => {
     for (const viewport of [
       { width: 390, height: 844, columns: 1 },
       { width: 1280, height: 900, columns: 12 },
     ]) {
       await openBlock(page, BLOCKS.find(({ number }) => number === 9), viewport.width, viewport.height);
-      const state = await page.locator('[data-cta9-root]').evaluate((root) => {
-        const panel = root.querySelector('.cta9-panel');
+      const state = await page.locator('[data-cta9-root]').evaluate((root, viewport) => {
+        const panel = root.querySelector('.cta9-layout');
+        const copy = root.querySelector('.cta9-copy');
         const form = root.querySelector('.cta9-form');
         const panelRect = panel.getBoundingClientRect();
+        const copyRect = copy.getBoundingClientRect();
         const formRect = form.getBoundingClientRect();
         return {
           display: getComputedStyle(panel).display,
           columns: getComputedStyle(panel).gridTemplateColumns.split(' ').length,
-          offset: Math.abs((panelRect.left + panelRect.right) / 2 - (formRect.left + formRect.right) / 2),
+          copyBeforeForm: viewport.width < 768 ? copyRect.bottom <= formRect.top : copyRect.right <= formRect.left,
           formWidth: formRect.width,
           panelWidth: panelRect.width,
+          title: root.querySelectorAll('h2.cta9-title').length,
+          description: root.querySelectorAll('p.cta9-description').length,
         };
-      });
+      }, viewport);
 
       expect(state.display).toBe('grid');
       expect(state.columns).toBe(viewport.columns);
-      expect(state.offset).toBeLessThanOrEqual(2);
+      expect(state.copyBeforeForm).toBe(true);
       expect(state.formWidth).toBeLessThanOrEqual(state.panelWidth);
-      if (viewport.width >= 768) expect(state.formWidth / state.panelWidth).toBeLessThan(0.6);
+      expect(state.title).toBe(1);
+      expect(state.description).toBe(1);
+      if (viewport.width >= 768) expect(state.formWidth / state.panelWidth).toBeLessThan(0.5);
     }
   });
 
