@@ -103,7 +103,7 @@ test.describe('CTA 13–18 translated to Ren10', () => {
   test('catalog keeps CTA 1–18 at the start of the ordered CTA family', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="ctas-title"] .bb-card');
-    await expect(cards).toHaveCount(30);
+    await expect(cards).toHaveCount(36);
     expect(await cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 18).map((node) => node.textContent))).toEqual(Array.from({ length: 18 }, (_, i) => `CTA ${i + 1}`));
   });
 });
