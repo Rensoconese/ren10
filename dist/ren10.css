@@ -8685,6 +8685,7 @@ ren-dialog {
   line-height: 1.4;
   margin: 0;
   inset: auto;
+  overflow: visible;
 
   /* Anchor positioning (modern browsers) */
   position-anchor: --tooltip-anchor;
@@ -11191,6 +11192,12 @@ ren-dialog {
     transform: rotate(360deg);
   }
 }
+/* The custom-element host is structural only. Keeping it out of layout prevents
+   an empty grid/flex item around the real dialog generated in light DOM. */
+ren-sheet {
+  display: contents;
+}
+
 /* Hide the dialog when it isn't open. The browser default for
    `<dialog>` without `open` is `display: none`, but the rule below
    sets `display: flex` for layout, so without this explicit reset

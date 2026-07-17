@@ -1066,6 +1066,10 @@
           const target = event.target;
           if (!(target instanceof Node)) return;
           if (!disclosure.contains(target)) {
+            // On mobile, keep the nested panel stable through pointer focus on
+            // another destination in this nav. Its click handler then closes
+            // both layers and restores focus to the still-visible toggle.
+            if (!isDesktop() && root.contains(target)) return;
             markIntentionalCloseWhilePointerInside();
             closeDisclosure(false);
           }

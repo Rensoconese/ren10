@@ -40,7 +40,7 @@ test.describe('Relume Header 10 translated to Ren10', () => {
   test('uses an owned image with meaningful alternative text and cover geometry', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator('.rh10-media > img');
-    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
     const state = await image.evaluate((node) => ({
       complete: node.complete,

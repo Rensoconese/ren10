@@ -38,7 +38,7 @@ test.describe('Relume Header28 translated to Ren10', () => {
     expect(new Set(hrefs).size).toBe(2);
     expect(hrefs.every((href) => href && href !== '#')).toBe(true);
     const image = page.locator(`${ROOT} .rh28-poster`);
-    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
     await expect(image).toHaveAttribute('width', /^\d+$/);
     await expect(image).toHaveAttribute('height', /^\d+$/);

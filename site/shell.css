@@ -398,7 +398,7 @@ body {
   margin-block: 0;
 }
 
-.bb-detail-page > .bb-detail-preview.bb-detail-preview:not(.ren-cover) {
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:not(.ren-cover):not(:has(ren-nav)) {
   min-height: 0;
 }
 
@@ -521,7 +521,13 @@ body {
 }
 
 @media (min-width: 48.0625rem) {
-  .bb-detail-page > .bb-detail-preview.bb-detail-preview:has(ren-nav details[open]) {
+  .bb-detail-page > .bb-detail-preview.bb-detail-preview:not(:is(
+    [data-rn11-root],
+    [data-rn12-root],
+    [data-rn13-root],
+    [data-rn14-root],
+    [data-rn15-root]
+  )):has(ren-nav details[open]) {
     min-height: var(--width-4xl);
   }
 }

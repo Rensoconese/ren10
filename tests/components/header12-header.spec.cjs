@@ -49,7 +49,7 @@ test.describe('Relume Header 12 translated to Ren10', () => {
     await expect(video).toHaveAttribute('loop', '');
     await expect(video).toHaveAttribute('muted', '');
     await expect(video).toHaveAttribute('playsinline', '');
-    await expect(video).toHaveAttribute('poster', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(video).toHaveAttribute('poster', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     await expect(video.locator('source[type="video/webm"]')).toHaveAttribute('src', /^data:video\/webm;base64,/);
     const state = await video.evaluate(async (node) => {
       if (node.readyState < 1) await new Promise((resolve) => node.addEventListener('loadedmetadata', resolve, { once: true }));

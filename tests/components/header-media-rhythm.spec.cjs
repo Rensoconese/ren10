@@ -75,7 +75,7 @@ for (const header of headers) {
     await page.goto(`${origin}/templates/blocks/${header.file}`);
     const image = page.locator(header.media);
     await expect(image).toHaveCount(1);
-    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     const media = await image.evaluate((node) => {
       const style = getComputedStyle(node);
       return {

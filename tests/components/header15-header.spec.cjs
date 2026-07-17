@@ -38,7 +38,7 @@ test.describe('Relume Header 15 translated to Ren10', () => {
   test('uses one owned meaningful landscape cover image', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator('.rh15-media > img');
-    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
     await expect(image).toHaveAttribute('width', /^\d+$/);
     await expect(image).toHaveAttribute('height', /^\d+$/);

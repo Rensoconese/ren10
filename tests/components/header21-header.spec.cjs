@@ -39,7 +39,7 @@ test.describe('Relume Header 21 translated to Ren10', () => {
   test('uses one owned image with truthful intrinsic landscape metadata', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh21-poster`);
-    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
     await expect(image).toHaveAttribute('width', /^\d+$/);
     await expect(image).toHaveAttribute('height', /^\d+$/);

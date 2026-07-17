@@ -105,7 +105,7 @@ test.describe('Relume Header 26 translated to Ren10', () => {
   test('owns a truthful intrinsic 16:9 image asset', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh26-image`);
-    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.(?:png|webp)$/);
     await expect(image).toHaveAttribute('width', /^\d+$/);
     await expect(image).toHaveAttribute('height', /^\d+$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
