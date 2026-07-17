@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contrast Email Capture CTA — Ren10 Blocks</title>
+  <meta name="description" content="A focused Ren10 CTA with a high-contrast surface and accessible email capture.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .cta6-block.cta6-block {
+      padding-block: var(--space-section-lg);
+      color: var(--color-surface);
+      background: var(--color-text);
+    }
+
+    .cta6-content,
+    .cta6-form {
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+    }
+
+    .cta6-content { --center-width: var(--width-5xl); }
+
+    .cta6-title,
+    .cta6-description,
+    .cta6-legal { margin: 0; }
+
+    .cta6-title {
+      color: var(--color-surface);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .cta6-description {
+      color: var(--color-surface);
+      font-size: var(--lead-size);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .cta6-form-row {
+      --grid-gap: var(--space-inline-tight);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: end;
+      max-width: var(--width-3xl);
+    }
+
+    .cta6-form-row > * { min-width: 0; }
+    .cta6-form-row .ren-btn,
+    .cta6-form-row input { min-height: var(--touch-min); }
+
+    .cta6-form-row ren-field {
+      --ren-field-bg: var(--color-surface);
+      --ren-field-color: var(--color-text);
+      --ren-field-placeholder: var(--color-text-muted);
+      --ren-field-error-color: var(--color-surface);
+    }
+
+    .cta6-form-row .ren-btn {
+      --ren-btn-bg: var(--color-surface);
+      --ren-btn-bg-hover: var(--color-surface-raised);
+      --ren-btn-bg-active: var(--color-surface-sunken);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-surface);
+    }
+
+    .cta6-legal {
+      color: var(--color-surface);
+      font-size: var(--caption-size);
+      line-height: var(--caption-leading);
+    }
+
+    .cta6-legal a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-surface);
+    }
+
+    @media (min-width: 40rem) {
+      .cta6-form-row { grid-template-columns: minmax(0, 1fr) max-content; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Contrast Email Capture CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">CTA 6 · Conversion block</p>
+      <h1 class="bb-detail-title">Contrast Email Capture CTA</h1>
+      <p class="bb-detail-description">A focused Ren10 conversion band using a high-contrast surface and accessible, labelled email capture.</p>
+    </header>
+
+    <section class="cta6-block bb-detail-preview" data-cta6-root aria-labelledby="cta6-title">
+      <div class="cta6-content ren-center ren-stack">
+        <h2 id="cta6-title" class="cta6-title">Get a clearer system into your team’s hands</h2>
+        <p class="cta6-description">Join the Ren10 updates for practical patterns on accessible components, responsive layouts, and sustainable product decisions.</p>
+        <form class="cta6-form ren-stack" action="../../docs/index.html" method="get">
+          <div class="cta6-form-row ren-grid">
+            <ren-field>
+              <label for="cta6-email">Work email</label>
+              <input class="ren-input" id="cta6-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+              <span data-error hidden>Enter a valid email address.</span>
+            </ren-field>
+            <button class="ren-btn" type="submit">Join the list</button>
+          </div>
+          <p class="cta6-legal">By subscribing, you agree to our <a href="../../docs/accessibility.html">terms and privacy practices</a>.</p>
+        </form>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="cta-contrast-dual-action.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Contrast Dual-Action CTA</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-split-image-dual-action.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split Image Dual-Action CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

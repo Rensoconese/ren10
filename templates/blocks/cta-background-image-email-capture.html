@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Background Image Email Capture CTA — Ren10 Blocks</title>
+  <meta name="description" content="A contrast-safe Ren10 CTA with background photography and an accessible email form.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .cta4-block {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      min-height: clamp(30rem, 44vw, 36rem);
+      padding-block: var(--space-section-sm);
+      overflow: hidden;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+    }
+
+    .cta4-background,
+    .cta4-scrim {
+      position: absolute;
+      inset: 0;
+    }
+
+    .cta4-background { z-index: -2; }
+    .cta4-background img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cta4-scrim {
+      z-index: -1;
+      background: var(--color-text);
+      opacity: 0.76;
+    }
+
+    .cta4-content,
+    .cta4-form {
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+    }
+
+    .cta4-content { --center-width: var(--width-5xl); }
+
+    .cta4-title,
+    .cta4-description,
+    .cta4-legal { margin: 0; }
+
+    .cta4-title {
+      color: var(--color-text-inverted);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .cta4-description {
+      color: var(--color-text-inverted);
+      font-size: var(--lead-size);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .cta4-form-row {
+      --grid-gap: var(--space-inline-tight);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: end;
+      max-width: var(--width-3xl);
+    }
+
+    .cta4-form-row > * { min-width: 0; }
+    .cta4-form-row .ren-btn,
+    .cta4-form-row input { min-height: var(--touch-min); }
+
+    .cta4-form-row .ren-btn {
+      --ren-btn-bg: var(--color-text-inverted);
+      --ren-btn-bg-hover: var(--color-surface-sunken);
+      --ren-btn-bg-active: var(--color-surface-raised);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-text-inverted);
+    }
+
+    .cta4-legal {
+      color: var(--color-text-inverted);
+      font-size: var(--caption-size);
+      line-height: var(--caption-leading);
+    }
+
+    .cta4-legal a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: inherit;
+    }
+
+    @media (min-width: 40rem) {
+      .cta4-form-row { grid-template-columns: minmax(0, 1fr) max-content; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Background Image Email Capture CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">CTA 4 · Conversion block</p>
+      <h1 class="bb-detail-title">Background Image Email Capture CTA</h1>
+      <p class="bb-detail-description">A contrast-safe Ren10 CTA with real background photography, clear copy, and an accessible email form.</p>
+    </header>
+
+    <section class="cta4-block bb-detail-preview" data-cta4-root aria-labelledby="cta4-title">
+      <div class="cta4-background" aria-hidden="true">
+        <img src="media/hero-material-studio.png" alt="" width="1536" height="1024">
+      </div>
+      <div class="cta4-scrim" aria-hidden="true"></div>
+      <div class="cta4-content ren-center ren-stack">
+        <h2 id="cta4-title" class="cta4-title">Get the patterns behind calmer product delivery</h2>
+        <p class="cta4-description">Receive focused guidance on accessible components, responsive composition, and design-system decisions that scale.</p>
+        <form class="cta4-form ren-stack" action="../../docs/index.html" method="get">
+          <div class="cta4-form-row ren-grid">
+            <ren-field>
+              <label for="cta4-email">Work email</label>
+              <input class="ren-input" id="cta4-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+              <span data-error hidden>Enter a valid email address.</span>
+            </ren-field>
+            <button class="ren-btn" type="submit">Subscribe</button>
+          </div>
+          <p class="cta4-legal">By subscribing, you agree to our <a href="../../docs/accessibility.html">terms and privacy practices</a>.</p>
+        </form>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="cta-background-image-dual-action.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Background Image Dual-Action CTA</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-contrast-dual-action.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Contrast Dual-Action CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contrast Dual-Action CTA — Ren10 Blocks</title>
+  <meta name="description" content="A focused Ren10 CTA with a high-contrast surface and two responsive actions.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .cta5-block.cta5-block {
+      padding-block: var(--space-section-lg);
+      color: var(--color-surface);
+      background: var(--color-text);
+    }
+
+    .cta5-content {
+      --center-width: var(--width-5xl);
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+    }
+
+    .cta5-title,
+    .cta5-description { margin: 0; }
+
+    .cta5-title {
+      color: var(--color-surface);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .cta5-description {
+      color: var(--color-surface);
+      font-size: var(--lead-size);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .cta5-actions {
+      --grid-gap: var(--space-inline-loose);
+      grid-template-columns: repeat(2, max-content);
+      justify-content: start;
+    }
+
+    .cta5-actions .ren-btn:not(.ren-btn-outline) {
+      --ren-btn-bg: var(--color-surface);
+      --ren-btn-bg-hover: var(--color-surface-raised);
+      --ren-btn-bg-active: var(--color-surface-sunken);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-surface);
+    }
+
+    .cta5-actions .ren-btn-outline {
+      color: var(--color-surface);
+      border-color: var(--color-surface);
+    }
+
+    @media (max-width: 24rem) {
+      .cta5-actions { grid-template-columns: minmax(0, 1fr); }
+      .cta5-actions .ren-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Contrast Dual-Action CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">CTA 5 · Conversion block</p>
+      <h1 class="bb-detail-title">Contrast Dual-Action CTA</h1>
+      <p class="bb-detail-description">A focused Ren10 conversion band using a high-contrast surface, concise copy, and two clear destinations.</p>
+    </header>
+
+    <section class="cta5-block bb-detail-preview" data-cta5-root aria-labelledby="cta5-title">
+      <div class="cta5-content ren-center ren-stack">
+        <h2 id="cta5-title" class="cta5-title">Build the next release on decisions your team can share</h2>
+        <p class="cta5-description">Bring structure, accessibility, and responsive intent together in one production-ready design language.</p>
+        <div class="cta5-actions ren-grid">
+          <a class="ren-btn" href="../../docs/getting-started.html">Start building</a>
+          <a class="ren-btn ren-btn-outline" href="index.html">Explore blocks</a>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="cta-background-image-email-capture.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Background Image Email Capture CTA</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-contrast-email-capture.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Contrast Email Capture CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

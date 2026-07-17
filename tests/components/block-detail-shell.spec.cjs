@@ -6,7 +6,7 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT = path.resolve(__dirname, '../..');
 const pages = readdirSync(path.join(ROOT, 'templates/blocks'))
-  .filter((file) => /^(hero|nav)-.*\.html$/.test(file))
+  .filter((file) => /^(cta|hero|nav)-.*\.html$/.test(file))
   .sort();
 
 let server;
@@ -75,7 +75,7 @@ for (const file of pages) {
     ), state.destinations);
     expect(destinationStatuses).toEqual([200, 200]);
     expect(state.overflow).toBeLessThanOrEqual(0);
-    if (file.startsWith('hero-')) {
+    if (/^(cta|hero)-/.test(file)) {
       expect(state.breadcrumb, `${file} breadcrumb`).toBe(1);
       expect(state.kicker, `${file} kicker`).toBe(1);
       expect(state.title, `${file} editorial title`).toBe(1);

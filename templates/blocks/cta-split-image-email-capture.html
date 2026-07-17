@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Split Image Email Capture CTA — Ren10 Blocks</title>
+  <meta name="description" content="A responsive Ren10 CTA with split copy, an accessible email form, and a real editorial image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .cta2-block {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .cta2-layout {
+      --center-width: var(--width-7xl);
+      --grid-gap: var(--space-section-sm);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: center;
+      width: 100%;
+    }
+
+    .cta2-copy,
+    .cta2-form {
+      --stack-gap: var(--space-stack-loose);
+      min-width: 0;
+    }
+
+    .cta2-title,
+    .cta2-description,
+    .cta2-legal {
+      margin: 0;
+    }
+
+    .cta2-title {
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .cta2-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .cta2-form-row {
+      --grid-gap: var(--space-inline-tight);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: end;
+    }
+
+    .cta2-form-row > * { min-width: 0; }
+    .cta2-form-row .ren-btn,
+    .cta2-form-row input { min-height: var(--touch-min); }
+
+    .cta2-legal {
+      color: var(--color-text-muted);
+      font-size: var(--caption-size);
+      line-height: var(--caption-leading);
+    }
+
+    .cta2-legal a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+    }
+
+    .cta2-media {
+      margin: 0;
+      min-height: calc(var(--space-16) * 3);
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-xl);
+    }
+
+    .cta2-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (min-width: 40rem) {
+      .cta2-form-row { grid-template-columns: minmax(0, 1fr) max-content; }
+    }
+
+    @media (min-width: 48rem) {
+      .cta2-block { padding-block: var(--space-section-lg); }
+      .cta2-layout {
+        --grid-gap: var(--space-section);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Split Image Email Capture CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">CTA 2 · Conversion block</p>
+      <h1 class="bb-detail-title">Split Image Email Capture CTA</h1>
+      <p class="bb-detail-description">A responsive Ren10 CTA combining focused conversion copy, a labelled email form, and a real editorial image.</p>
+    </header>
+
+    <section class="cta2-block bb-detail-preview" data-cta2-root aria-labelledby="cta2-title">
+      <div class="cta2-layout ren-center ren-grid ren-grid-2">
+        <div class="cta2-copy ren-stack">
+          <h2 id="cta2-title" class="cta2-title">Bring a calmer system into your next release</h2>
+          <p class="cta2-description">Get practical guidance for shaping accessible components, repeatable layouts, and product decisions that stay coherent.</p>
+          <form class="cta2-form ren-stack" action="../../docs/index.html" method="get">
+            <div class="cta2-form-row ren-grid">
+              <ren-field>
+                <label for="cta2-email">Work email</label>
+                <input class="ren-input" id="cta2-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+                <span data-error hidden>Enter a valid email address.</span>
+              </ren-field>
+              <button class="ren-btn" type="submit">Join the list</button>
+            </div>
+            <p class="cta2-legal">By subscribing, you agree to our <a href="../../docs/accessibility.html">terms and privacy practices</a>.</p>
+          </form>
+        </div>
+        <figure class="cta2-media ren-frame ren-frame-photo">
+          <img src="media/hero-botanical-conservatory.png" alt="Sunlit plants growing inside a spacious glass conservatory" width="1672" height="941">
+        </figure>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="cta-split-image-dual-action.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Split Image Dual-Action CTA</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-background-image-dual-action.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Background Image Dual-Action CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

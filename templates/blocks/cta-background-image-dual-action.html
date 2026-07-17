@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Background Image Dual-Action CTA — Ren10 Blocks</title>
+  <meta name="description" content="A contrast-safe Ren10 CTA with background photography and two clear destinations.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .cta3-block {
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      place-items: center;
+      min-height: clamp(28rem, 42vw, 34rem);
+      padding-block: var(--space-section-sm);
+      overflow: hidden;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+    }
+
+    .cta3-background,
+    .cta3-scrim {
+      position: absolute;
+      inset: 0;
+    }
+
+    .cta3-background { z-index: -2; }
+    .cta3-background img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cta3-scrim {
+      z-index: -1;
+      background: var(--color-text);
+      opacity: 0.74;
+    }
+
+    .cta3-content {
+      --center-width: var(--width-5xl);
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+    }
+
+    .cta3-title,
+    .cta3-description { margin: 0; }
+
+    .cta3-title {
+      color: var(--color-text-inverted);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .cta3-description {
+      color: var(--color-text-inverted);
+      font-size: var(--lead-size);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .cta3-actions {
+      --grid-gap: var(--space-inline-loose);
+      grid-template-columns: repeat(2, max-content);
+      justify-content: start;
+    }
+
+    .cta3-primary {
+      --ren-btn-bg: var(--color-text-inverted);
+      --ren-btn-bg-hover: var(--color-surface-sunken);
+      --ren-btn-bg-active: var(--color-surface-raised);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-text-inverted);
+    }
+
+    .cta3-secondary.ren-btn-outline {
+      color: var(--color-text-inverted);
+      border-color: var(--color-text-inverted);
+    }
+
+    @media (max-width: 24rem) {
+      .cta3-actions { grid-template-columns: minmax(0, 1fr); }
+      .cta3-actions .ren-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Background Image Dual-Action CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">CTA 3 · Conversion block</p>
+      <h1 class="bb-detail-title">Background Image Dual-Action CTA</h1>
+      <p class="bb-detail-description">A contrast-safe Ren10 CTA layering focused conversion copy and two destinations over real photography.</p>
+    </header>
+
+    <section class="cta3-block bb-detail-preview" data-cta3-root aria-labelledby="cta3-title">
+      <div class="cta3-background" aria-hidden="true">
+        <img src="media/hero-coastal-pavilion.png" alt="" width="1751" height="898">
+      </div>
+      <div class="cta3-scrim" aria-hidden="true"></div>
+      <div class="cta3-content ren-center ren-stack">
+        <h2 id="cta3-title" class="cta3-title">Turn a shared foundation into your next confident release</h2>
+        <p class="cta3-description">Use accessible primitives, responsive layouts, and explicit interaction contracts to keep every product surface coherent.</p>
+        <div class="cta3-actions ren-grid">
+          <a class="ren-btn cta3-primary" href="../../docs/getting-started.html">Start with Ren10</a>
+          <a class="ren-btn ren-btn-outline cta3-secondary" href="index.html">Browse the library</a>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="cta-split-image-email-capture.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Split Image Email Capture CTA</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-background-image-email-capture.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Background Image Email Capture CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>
