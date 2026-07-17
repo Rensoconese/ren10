@@ -52,6 +52,14 @@ for (const file of pages) {
         rels: paginationLinks.map((link) => link.getAttribute('rel')),
         destinations: paginationLinks.map((link) => link.href),
         overflow: document.documentElement.scrollWidth - innerWidth,
+        breadcrumb: header?.querySelectorAll('.ren-breadcrumb').length ?? 0,
+        kicker: header?.querySelectorAll('.dx-kicker').length ?? 0,
+        title: header?.querySelectorAll('h1.bb-detail-title').length ?? 0,
+        description: header?.querySelectorAll('p.bb-detail-description').length ?? 0,
+        previewHeight: previewRect ? Math.round(previewRect.height) : null,
+        mediaSources: Array.from(preview?.querySelectorAll('img[src], video[poster]') ?? [])
+          .flatMap((media) => [media.getAttribute('src'), media.getAttribute('poster')])
+          .filter(Boolean),
       };
     });
 
@@ -67,6 +75,16 @@ for (const file of pages) {
     ), state.destinations);
     expect(destinationStatuses).toEqual([200, 200]);
     expect(state.overflow).toBeLessThanOrEqual(0);
+    if (file.startsWith('hero-')) {
+      expect(state.breadcrumb, `${file} breadcrumb`).toBe(1);
+      expect(state.kicker, `${file} kicker`).toBe(1);
+      expect(state.title, `${file} editorial title`).toBe(1);
+      expect(state.description, `${file} introduction`).toBe(1);
+      expect(state.mediaSources.every((source) => !/reference-app|screenshots|data:image/.test(source))).toBe(true);
+      if (viewport.name === 'desktop') {
+        expect(state.previewHeight, `${file} documentation canvas`).toBeLessThanOrEqual(900);
+      }
+    }
     });
   }
 }

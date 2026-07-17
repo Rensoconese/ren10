@@ -32,21 +32,21 @@ test.afterAll(async () => {
   await new Promise((resolve) => server.close(resolve));
 });
 
-test("catalog exposes five unique working Header previews", async ({ page }) => {
+test("catalog exposes all thirty unique working Header previews", async ({ page }) => {
   await page.goto(`${origin}/templates/blocks/index.html`);
   const cards = page.locator('a.bb-card[href^="hero-"]');
-  await expect(cards).toHaveCount(5);
+  await expect(cards).toHaveCount(30);
 
   const entries = await cards.evaluateAll((nodes) => nodes.map((node) => ({
     href: node.getAttribute("href"),
     title: node.querySelector(".bb-card-title")?.textContent?.trim(),
   })));
-  expect(new Set(entries.map(({ href }) => href)).size).toBe(5);
+  expect(new Set(entries.map(({ href }) => href)).size).toBe(30);
 
   for (const { href, title } of entries) {
     expect(href).toMatch(/^hero-[a-z0-9-]+\.html$/);
     const response = await page.goto(`${origin}/templates/blocks/${href}`);
     expect(response?.ok(), `${href} should resolve`).toBe(true);
-    await expect(page.locator("h1")).toHaveText(title);
+    await expect(page.locator("h1.bb-detail-title")).toHaveText(title);
   }
 });

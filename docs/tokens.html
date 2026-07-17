@@ -36,10 +36,27 @@
     .dx-sem-dot { display: inline-block; width: 18px; height: 18px; border-radius: var(--radius-xs); vertical-align: -4px; margin-right: var(--space-2); border: 1px solid var(--color-border); }
 
     /* Space scale visual */
-    .dx-space-row { display: grid; grid-template-columns: 90px 1fr 80px; align-items: center; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-muted); font-size: var(--text-sm); }
-    .dx-space-bar { height: 8px; background: var(--color-accent); border-radius: 2px; }
+    .dx-space-row { display: grid; grid-template-columns: minmax(7.5rem, auto) minmax(0, 1fr) 4rem; align-items: center; gap: var(--space-4); padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-muted); font-size: var(--text-sm); }
+    .dx-space-bar { display: block; inline-size: var(--space-size); max-inline-size: 100%; block-size: var(--space-2); background: var(--color-accent); border-radius: var(--radius-xs); }
     .dx-space-row code { background: none; border: none; padding: 0; color: var(--color-text); font-size: var(--text-sm); }
     .dx-space-val { color: var(--color-text-muted); font-family: var(--font-mono); font-size: var(--text-xs); text-align: right; }
+    .dx-space-guide { margin-block: var(--space-6); padding: var(--space-5); border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-surface-raised); }
+    .dx-space-guide h3 { margin-block-start: 0; }
+    .dx-space-formula { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-3); margin-block: var(--space-4) var(--space-6); }
+    .dx-space-formula > div { display: grid; gap: var(--space-2); padding: var(--space-4); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
+    .dx-space-formula strong { font-family: var(--font-mono); font-size: var(--text-sm); }
+    .dx-space-formula span { color: var(--color-text-muted); font-size: var(--text-sm); }
+    .dx-space-uses { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+    .dx-space-use { display: grid; gap: var(--space-3); padding: var(--space-4); border: 1px solid var(--color-border-muted); border-radius: var(--radius-md); }
+    .dx-space-use-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--space-3); align-items: baseline; }
+    .dx-space-use-head strong { font-size: var(--text-sm); }
+    .dx-space-use-head code { font-size: var(--text-xs); }
+    .dx-space-demo { display: grid; grid-template-columns: minmax(0, 1fr) var(--demo-gap) minmax(0, 1fr); align-items: center; min-block-size: var(--space-8); }
+    .dx-space-demo span { block-size: var(--space-8); border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-fill); }
+    .dx-space-use p { margin: 0; color: var(--color-text-muted); font-size: var(--text-sm); }
+    .dx-space-reference { margin-block-start: var(--space-5); padding: var(--space-4); border-inline-start: var(--space-1) solid var(--color-accent); background: var(--color-accent-subtle); border-radius: 0 var(--radius-md) var(--radius-md) 0; }
+    .dx-space-reference p { margin: 0; }
+    .dx-space-reference p + p { margin-block-start: var(--space-2); }
 
     /* Type samples */
     .dx-type-row { display: grid; grid-template-columns: 90px 80px 1fr; align-items: baseline; gap: var(--space-4); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-border-muted); }
@@ -73,6 +90,8 @@
 
     @media (max-width: 720px) {
       .dx-tiers { grid-template-columns: 1fr; }
+      .dx-space-formula, .dx-space-uses { grid-template-columns: 1fr; }
+      .dx-space-row { grid-template-columns: minmax(7rem, auto) minmax(0, 1fr) 3.5rem; gap: var(--space-2); }
     }
   </style>
 </head>
@@ -483,23 +502,63 @@
     <!-- Spacing -->
     <section class="dx-section" id="spacing">
       <h2>Spacing</h2>
-      <p>An 8-point scale with half and quarter steps where real-world density demands them. <code>--space-4</code> (16px) is the canonical "one unit of breathing room".</p>
+      <p>Spacing tokens are reusable distances for <code>gap</code>, padding, margins, and positioning. The system is based on an 8px grid, while 4px half-steps handle tighter relationships.</p>
 
-      <div style="margin-top: var(--space-4);">
-        <div class="dx-space-row"><code>--space-1</code><span><span class="dx-space-bar" style="width: 4px;"></span></span><span class="dx-space-val">4px</span></div>
-        <div class="dx-space-row"><code>--space-2</code><span><span class="dx-space-bar" style="width: 8px;"></span></span><span class="dx-space-val">8px</span></div>
-        <div class="dx-space-row"><code>--space-3</code><span><span class="dx-space-bar" style="width: 12px;"></span></span><span class="dx-space-val">12px</span></div>
-        <div class="dx-space-row"><code>--space-4</code><span><span class="dx-space-bar" style="width: 16px;"></span></span><span class="dx-space-val">16px</span></div>
-        <div class="dx-space-row"><code>--space-5</code><span><span class="dx-space-bar" style="width: 20px;"></span></span><span class="dx-space-val">20px</span></div>
-        <div class="dx-space-row"><code>--space-6</code><span><span class="dx-space-bar" style="width: 24px;"></span></span><span class="dx-space-val">24px</span></div>
-        <div class="dx-space-row"><code>--space-8</code><span><span class="dx-space-bar" style="width: 32px;"></span></span><span class="dx-space-val">32px</span></div>
-        <div class="dx-space-row"><code>--space-10</code><span><span class="dx-space-bar" style="width: 40px;"></span></span><span class="dx-space-val">40px</span></div>
-        <div class="dx-space-row"><code>--space-12</code><span><span class="dx-space-bar" style="width: 48px;"></span></span><span class="dx-space-val">48px</span></div>
-        <div class="dx-space-row"><code>--space-16</code><span><span class="dx-space-bar" style="width: 64px;"></span></span><span class="dx-space-val">64px</span></div>
-        <div class="dx-space-row"><code>--space-24</code><span><span class="dx-space-bar" style="width: 96px;"></span></span><span class="dx-space-val">96px</span></div>
+      <div class="dx-space-guide">
+        <h3>How to read the name</h3>
+        <p><strong>The suffix is a scale step, not a pixel value.</strong> For the common numeric steps, multiply the suffix by 4px: <code>--space-2</code> means 2 × 4px = 8px.</p>
+        <div class="dx-space-formula" aria-label="Spacing token naming examples">
+          <div><strong>--space-1</strong><span>1 × 4px = 4px</span></div>
+          <div><strong>--space-2</strong><span>2 × 4px = 8px</span></div>
+          <div><strong>--space-4</strong><span>4 × 4px = 16px</span></div>
+        </div>
+
+        <h3>Choose by relationship</h3>
+        <div class="dx-space-uses">
+          <article class="dx-space-use" style="--demo-gap: var(--space-field-helper-gap);">
+            <div class="dx-space-use-head"><strong>Closely related</strong><code>4px</code></div>
+            <div class="dx-space-demo" aria-hidden="true"><span></span><i></i><span></span></div>
+            <p><code>--space-field-helper-gap</code> between an input and its helper text.</p>
+          </article>
+          <article class="dx-space-use" style="--demo-gap: var(--space-inline-tight);">
+            <div class="dx-space-use-head"><strong>Inline group</strong><code>8px</code></div>
+            <div class="dx-space-demo" aria-hidden="true"><span></span><i></i><span></span></div>
+            <p><code>--space-inline-tight</code> between an icon and its label.</p>
+          </article>
+          <article class="dx-space-use" style="--demo-gap: var(--space-card-padding);">
+            <div class="dx-space-use-head"><strong>Component interior</strong><code>24px</code></div>
+            <div class="dx-space-demo" aria-hidden="true"><span></span><i></i><span></span></div>
+            <p><code>--space-card-padding</code> gives content room inside a surface.</p>
+          </article>
+          <article class="dx-space-use" style="--demo-gap: var(--space-section);">
+            <div class="dx-space-use-head"><strong>Separate sections</strong><code>48px</code></div>
+            <div class="dx-space-demo" aria-hidden="true"><span></span><i></i><span></span></div>
+            <p><code>--space-section</code> separates major content groups.</p>
+          </article>
+        </div>
       </div>
 
-      <p style="margin-top: var(--space-4);">Full range: <code>--space-0</code>, <code>--space-px</code>, <code>--space-0-5</code>, <code>--space-1</code> … <code>--space-64</code>. Half-step <code>--space-1-5</code>, <code>--space-2-5</code>, etc. are also available.</p>
+      <h3>Primitive scale</h3>
+      <p>These are the most frequently used raw steps. The bars use the tokens themselves, so their rendered length is the documented value.</p>
+      <div class="ren-stack ren-stack-xs">
+        <div class="dx-space-row" style="--space-size: var(--space-1);"><code>--space-1</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">4px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-2);"><code>--space-2</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">8px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-3);"><code>--space-3</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">12px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-4);"><code>--space-4</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">16px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-5);"><code>--space-5</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">20px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-6);"><code>--space-6</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">24px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-8);"><code>--space-8</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">32px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-10);"><code>--space-10</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">40px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-12);"><code>--space-12</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">48px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-16);"><code>--space-16</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">64px</span></div>
+        <div class="dx-space-row" style="--space-size: var(--space-24);"><code>--space-24</code><span><span class="dx-space-bar"></span></span><span class="dx-space-val">96px</span></div>
+      </div>
+
+      <div class="dx-space-reference">
+        <p><strong>Exact range:</strong> <code>--space-0</code>, <code>--space-px</code>, <code>--space-0-25</code>, <code>--space-0-5</code>, <code>--space-1</code> through <code>--space-10</code>, then <code>--space-12</code>, <code>--space-14</code>, <code>--space-16</code>, <code>--space-20</code>, <code>--space-24</code>, <code>--space-32</code>, <code>--space-40</code>, <code>--space-48</code>, <code>--space-56</code>, and <code>--space-64</code>.</p>
+        <p><strong>Fractional tokens:</strong> only <code>--space-0-25</code> (1px), <code>--space-0-5</code> (2px), and <code>--space-1-5</code> (6px) exist. There are no other fractional names in the API.</p>
+        <p>For everyday layouts, prefer semantic names such as <code>--space-card-padding</code>, <code>--space-form-gap</code>, or <code>--space-section</code>. They describe intent and adapt to density settings.</p>
+      </div>
     </section>
 
     <!-- Typography -->

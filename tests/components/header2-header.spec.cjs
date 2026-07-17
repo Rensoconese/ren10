@@ -41,7 +41,7 @@ test.describe('Relume Header 2 translated to Ren10', () => {
     await expect(root).toHaveAttribute('aria-labelledby', 'rh2-heading');
     await expect(root.locator('label')).toHaveText(/email/i);
     await expect(root.locator('input[type="email"]')).toHaveAttribute('required', '');
-    await expect(root.locator('img')).toHaveAttribute('alt', /workspace/i);
+    await expect(root.locator('img')).toHaveAttribute('alt', /studio|pavilion|conservatory/i);
   });
 
   test('validates the email and handles a valid native-form submission in place', async ({ page }) => {

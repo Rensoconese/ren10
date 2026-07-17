@@ -35,7 +35,7 @@ test.describe('Header1 — split copy, dual CTA, media', () => {
     await expect(page.locator(`${ROOT} .rh1-actions > .ren-btn:not(.ren-btn-secondary)`)).toHaveCount(1);
     await expect(page.locator(`${ROOT} .rh1-actions > .ren-btn-secondary`)).toHaveCount(1);
     await expect(page.locator(`${ROOT} .rh1-media img`)).toHaveCount(1);
-    await expect(page.locator(`${ROOT} .rh1-media img`)).toHaveAttribute('alt', /workspace/i);
+    await expect(page.locator(`${ROOT} .rh1-media img`)).toHaveAttribute('alt', /studio|pavilion|conservatory/i);
   });
 
   test('stacks on mobile and becomes an equal split at large widths', async ({ page }) => {

@@ -334,8 +334,8 @@ body {
 
 /* Shared detail chrome for standalone block previews. */
 .bb-detail-header {
-  --stack-gap: var(--space-3);
-  max-width: 74ch;
+  --stack-gap: var(--space-2);
+  max-width: 68ch;
   padding-block-end: var(--space-8);
 }
 
@@ -379,6 +379,16 @@ body {
   gap: var(--space-8);
 }
 
+/* Every standalone block uses the same contained canvas. The doubled class
+   deliberately outranks legacy page-local `.dx-shell` overflow/width patches. */
+.bb-detail-page.dx-shell {
+  width: 100%;
+  max-width: var(--width-7xl, 1280px);
+  padding-inline: clamp(var(--space-6), 4vw, var(--space-12));
+  box-sizing: border-box;
+  overflow: visible;
+}
+
 .bb-detail-page > .bb-detail-header {
   padding-block: 0;
 }
@@ -390,6 +400,73 @@ body {
 
 .bb-detail-page > .bb-detail-preview.bb-detail-preview:not(.ren-cover) {
   min-height: 0;
+}
+
+/* Fullscreen is useful in production, but block documentation needs a stable
+   cinematic canvas so image/video examples can be compared without a 1:1 wall. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview.ren-cover,
+.bb-detail-page > .bb-detail-preview.bb-detail-preview > .ren-cover.ren-cover {
+  --cover-height: clamp(34rem, 56vw, 42rem);
+}
+
+/* Landscape-first compositions keep their generous production spacing in the
+   component itself. Inside the catalog, use a compact comparison canvas so the
+   media reads as a landscape rather than turning the example into a tall card. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:is(
+  [data-rh15-root],
+  [data-rh17-root],
+  [data-rh18-root],
+  [data-rh26-root],
+  [data-rh28-root],
+  [data-rh29-root]
+) {
+  padding-block: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:is(
+  [data-rh16-root],
+  [data-rh27-root]
+) > section {
+  padding-block: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview :is(
+  .rh15-container,
+  .rh16-shell,
+  .rh17-container,
+  .rh18-container,
+  .rh26-container,
+  .rh27-layout,
+  .rh28-container,
+  .rh29-container
+) {
+  --stack-gap: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview :is(
+  .rh15-media,
+  .rh16-media,
+  .rh17-media,
+  .rh18-media,
+  .rh26-media,
+  .rh27-media,
+  .rh28-media,
+  .rh29-media
+) {
+  width: min(100%, var(--width-3xl));
+  margin-inline: auto;
+}
+
+/* Mega panels are absolute on desktop, so the documentation preview must
+   preserve their visual canvas instead of clipping or overlapping pagination. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:has(ren-nav) {
+  overflow: visible;
+}
+
+@media (min-width: 48.0625rem) {
+  .bb-detail-page > .bb-detail-preview.bb-detail-preview:has(ren-nav details[open]) {
+    min-height: var(--width-4xl);
+  }
 }
 
 .bb-block-pagination {

@@ -25,6 +25,7 @@
     .dx-demo { padding: var(--space-5); border: 1px dashed var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-sunken); margin: var(--space-3) 0; }
     .dx-box { background: var(--color-accent-subtle); border: 1px solid var(--color-accent); color: var(--color-accent-active); padding: var(--space-3) var(--space-4); border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: var(--text-sm); text-align: center; }
     .dx-box-alt { background: var(--color-fill); border: 1px solid var(--color-border); color: var(--color-text-secondary); }
+    .dx-frame-sample { background: var(--color-accent-subtle); color: var(--color-accent-active); font-family: var(--font-mono); font-size: var(--text-sm); }
 
     /* Rules table */
     .dx-rules { background: var(--color-surface-sunken); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-5) var(--space-6); margin: var(--space-10) 0; }
@@ -174,7 +175,7 @@
             <tr><td>Horizontal items that wrap</td><td><code>ren-cluster</code></td><td><code>display: flex; flex-wrap: wrap</code></td></tr>
             <tr><td>Header with left + right content</td><td><code>ren-row-spread</code></td><td><code>justify-content: space-between</code></td></tr>
             <tr><td>Centered content container</td><td><code>ren-center</code></td><td><code>max-width: X; margin: 0 auto</code></td></tr>
-            <tr><td>Responsive card grid</td><td><code>ren-grid-3</code></td><td><code>grid-template-columns: repeat(3, 1fr)</code></td></tr>
+            <tr><td>Responsive card grid</td><td><code>ren-grid ren-grid-3</code></td><td><code>grid-template-columns: repeat(3, 1fr)</code></td></tr>
             <tr><td>Sidebar + main content</td><td><code>ren-with-sidebar</code></td><td>custom flex with fixed sidebar</td></tr>
             <tr><td>Full-screen centered (login, hero)</td><td><code>ren-cover</code></td><td><code>min-height: 100vh; flex center</code></td></tr>
           </tbody>
@@ -321,11 +322,11 @@
     <!-- GRID -->
     <section class="dx-prim" id="grid">
       <div class="dx-prim-head"><h2>ren-grid</h2><span class="dx-prim-tagline">Responsive card grid</span></div>
-      <p>Auto-fitting grid for cards, tiles, stat panels. Use <code>ren-grid-2</code>, <code>ren-grid-3</code>, or <code>ren-grid-4</code> for fixed column counts.</p>
+      <p>Auto-fitting grid for cards, tiles, stat panels. Combine <code>ren-grid</code> with <code>ren-grid-2</code>, <code>ren-grid-3</code>, or <code>ren-grid-4</code> for fixed column counts.</p>
 
       <h3>Preview (ren-grid-3)</h3>
       <div class="dx-demo">
-        <div class="ren-grid-3">
+        <div class="ren-grid ren-grid-3">
           <div class="dx-box">1</div>
           <div class="dx-box">2</div>
           <div class="dx-box">3</div>
@@ -336,7 +337,7 @@
       </div>
 
       <h3>Markup</h3>
-      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-grid-3"&gt;
+      <div class="dx-pre" tabindex="0"><code>&lt;div class="ren-grid ren-grid-3"&gt;
   &lt;div class="ren-card"&gt;...&lt;/div&gt;
   &lt;div class="ren-card"&gt;...&lt;/div&gt;
   &lt;div class="ren-card"&gt;...&lt;/div&gt;
@@ -376,10 +377,10 @@
 
       <h3>Preview</h3>
       <div class="dx-demo">
-        <div class="ren-grid-3">
-          <div class="ren-frame ren-frame-square" style="background: var(--color-accent-subtle); color: var(--color-accent-active); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-sm);">1 / 1</div>
-          <div class="ren-frame ren-frame-video" style="background: var(--color-accent-subtle); color: var(--color-accent-active); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-sm);">16 / 9</div>
-          <div class="ren-frame ren-frame-photo" style="background: var(--color-accent-subtle); color: var(--color-accent-active); display: grid; place-items: center; font-family: var(--font-mono); font-size: var(--text-sm);">4 / 3</div>
+        <div class="ren-grid ren-grid-3">
+          <div class="ren-frame ren-frame-square dx-frame-sample">1 / 1</div>
+          <div class="ren-frame ren-frame-video dx-frame-sample">16 / 9</div>
+          <div class="ren-frame ren-frame-photo dx-frame-sample">4 / 3</div>
         </div>
       </div>
 

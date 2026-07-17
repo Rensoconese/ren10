@@ -48,7 +48,7 @@ for (const [file, rootSelector, previewSelector] of headers) {
 
     const header = page.locator('.bb-detail-header');
     await expect(header).toHaveCount(1);
-    await expect(header.locator('.dx-kicker')).toHaveText('Header block');
+    await expect(header.locator('.dx-kicker')).toHaveText(/^Header \d+ · Hero block$/);
     await expect(header.locator('.bb-detail-title')).not.toBeEmpty();
     await expect(header.locator('.bb-detail-description')).not.toBeEmpty();
 

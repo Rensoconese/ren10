@@ -323,6 +323,58 @@ test.describe('Navigation blocks', () => {
     expect(errors, `console/page errors:\n${errors.join('\n')}`).toEqual([]);
   });
 
+  test('all navigation detail pages share one contained width and reserve room for open menus', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
+    const pages = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) =>
+      cards.map((card) => card.getAttribute('href')).filter(Boolean));
+
+    for (const file of pages) {
+      await page.goto(`${staticServer.origin}/templates/blocks/${file}`);
+      const shell = page.locator('main.dx-shell');
+      const preview = page.locator('.bb-detail-preview');
+
+      await expect(shell, `${file} shell`).toHaveCount(1);
+      await expect(preview, `${file} preview`).toHaveCount(1);
+
+      const closed = await page.evaluate(() => {
+        const shellRect = document.querySelector('main.dx-shell').getBoundingClientRect();
+        const previewRect = document.querySelector('.bb-detail-preview').getBoundingClientRect();
+        return {
+          shellWidth: Math.round(shellRect.width),
+          previewInsideShell:
+            previewRect.left >= shellRect.left - 1 && previewRect.right <= shellRect.right + 1,
+          overflow: document.documentElement.scrollWidth - innerWidth,
+        };
+      });
+
+      expect(closed.shellWidth, `${file} must use the shared 1280px shell`).toBe(1280);
+      expect(closed.previewInsideShell, `${file} preview must stay inside the shell`).toBe(true);
+      expect(closed.overflow, `${file} must not overflow horizontally`).toBeLessThanOrEqual(1);
+
+      const summaries = page.locator('.bb-detail-preview details > summary');
+      for (let index = 0; index < await summaries.count(); index += 1) {
+        const summary = summaries.nth(index);
+        if (await summary.isVisible()) await summary.click();
+      }
+
+      const openPanels = await page.evaluate(() => {
+        const previewRect = document.querySelector('.bb-detail-preview').getBoundingClientRect();
+        return [...document.querySelectorAll('.bb-detail-preview details[open] > div')].map((panel) => {
+          const panelRect = panel.getBoundingClientRect();
+          return {
+            bottom: Math.round(panelRect.bottom),
+            previewBottom: Math.round(previewRect.bottom),
+          };
+        });
+      });
+
+      for (const panel of openPanels) {
+        expect(panel.bottom, `${file} open panel must fit inside its preview`).toBeLessThanOrEqual(panel.previewBottom + 1);
+      }
+    }
+  });
+
   test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
     await page.goto(`${staticServer.origin}${MEGA_MENU}`);
     await expect(page.locator('#rbm-primary-links')).toHaveCount(1);

@@ -71,11 +71,11 @@ test.afterAll(async () => {
 });
 
 for (const header of headers) {
-  test(`${header.file} uses real local product media`, async ({ page }) => {
+  test(`${header.file} uses real local photographic media`, async ({ page }) => {
     await page.goto(`${origin}/templates/blocks/${header.file}`);
     const image = page.locator(header.media);
     await expect(image).toHaveCount(1);
-    await expect(image).toHaveAttribute('src', /examples\/reference-app\/screenshots\/(light|dark|dialog-open)\.png$/);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
     const media = await image.evaluate((node) => {
       const style = getComputedStyle(node);
       return {
@@ -87,7 +87,7 @@ for (const header of headers) {
     });
     expect(media.complete).toBe(true);
     expect(media.naturalWidth).toBeGreaterThanOrEqual(1280);
-    expect(media.naturalHeight).toBeGreaterThanOrEqual(900);
+    expect(media.naturalHeight).toBeGreaterThanOrEqual(800);
     expect(media.objectFit).toBe('cover');
 
     if (header.file === 'hero-text-left-video-lightbox.html') {

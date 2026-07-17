@@ -72,11 +72,6 @@
       min-width: 0;
     }
 
-    .dx-shell {
-      max-width: 100%;
-      overflow-x: clip;
-    }
-
     .rmcp-preview ren-nav {
       display: block;
       position: relative;
@@ -201,8 +196,7 @@
     /* Categories (multi-column) peer to product media cards. */
     .rmcp-layout {
       --stack-gap: var(--space-6);
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: minmax(0, 1fr);
       gap: var(--space-6);
       align-items: stretch;
       min-width: 0;
@@ -370,18 +364,16 @@
       }
 
       .rmcp-layout {
-        flex-direction: row;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
         align-items: start;
         gap: var(--space-10);
       }
 
       .rmcp-categories {
-        flex: 1 1 58%;
         min-width: 0;
       }
 
       .rmcp-products {
-        flex: 1 1 38%;
         min-width: 0;
         max-width: 28rem;
       }
@@ -403,7 +395,7 @@
       }
 
       .rmcp-layout {
-        flex-direction: column;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--space-6);
       }
 
@@ -503,7 +495,7 @@
       }
 
       .rmcp-layout {
-        flex-direction: column;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--space-4);
       }
 
@@ -647,7 +639,7 @@
 
                 <div class="rmcp-panel">
                   <div class="rmcp-panel-inner">
-                    <div class="rmcp-layout">
+                    <div class="rmcp-layout ren-grid">
                       <div class="rmcp-categories ren-grid ren-grid-3">
                         <div class="rmcp-group">
                           <h3 class="rmcp-group-heading" id="rmcp-group-build">Build</h3>
