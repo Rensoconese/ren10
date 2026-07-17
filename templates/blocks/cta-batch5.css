@@ -80,7 +80,17 @@
   color-scheme: light;
 }
 
-.cta27-block { place-items: center; }
+:is(.cta27-block, .cta28-block) { place-items: center; }
+
+.cta28-content {
+  align-items: start;
+  text-align: left;
+}
+
+.cta28-form {
+  justify-self: stretch;
+  width: 100%;
+}
 
 :is(.cta27-background, .cta27-scrim, .cta28-background, .cta28-scrim) {
   position: absolute;

@@ -33,7 +33,7 @@ test.describe('CTA 25–30 translated to Ren10', () => {
       const root = page.locator(`[data-cta${block.number}-root]`);
       await expect(root.locator(`h2.cta${block.number}-title`)).toHaveCount(1);
       await expect(root.locator(`p.cta${block.number}-description`)).toHaveCount(1);
-      await expect(root.locator(`.cta${block.number}-content`)).toHaveCSS('text-align', 'center');
+      await expect(root.locator(`.cta${block.number}-content`)).toHaveCSS('text-align', block.number === 28 ? 'left' : 'center');
 
       if (block.kind === 'actions') {
         await expect(root.locator(`.cta${block.number}-actions > a.ren-btn[href]`)).toHaveCount(2);
@@ -84,19 +84,21 @@ test.describe('CTA 25–30 translated to Ren10', () => {
     }
   });
 
-  test('CTA 27 centers its full content group vertically over the photo', async ({ page }) => {
-    await openBlock(page, BLOCKS.find((block) => block.number === 27));
-    const geometry = await page.locator('[data-cta27-root]').evaluate((root) => {
-      const block = root.getBoundingClientRect();
-      const content = root.querySelector('.cta27-content').getBoundingClientRect();
-      return {
-        blockCenter: block.top + (block.height / 2),
-        contentCenter: content.top + (content.height / 2),
-      };
-    });
+  for (const number of [27, 28]) {
+    test(`CTA ${number} centers its full content group vertically over the photo`, async ({ page }) => {
+      await openBlock(page, BLOCKS.find((block) => block.number === number));
+      const geometry = await page.locator(`[data-cta${number}-root]`).evaluate((root, currentNumber) => {
+        const block = root.getBoundingClientRect();
+        const content = root.querySelector(`.cta${currentNumber}-content`).getBoundingClientRect();
+        return {
+          blockCenter: block.top + (block.height / 2),
+          contentCenter: content.top + (content.height / 2),
+        };
+      }, number);
 
-    expect(Math.abs(geometry.blockCenter - geometry.contentCenter)).toBeLessThanOrEqual(1);
-  });
+      expect(Math.abs(geometry.blockCenter - geometry.contentCenter)).toBeLessThanOrEqual(1);
+    });
+  }
 
   test('background and contrast variants retain their owned foreground in both themes', async ({ page }) => {
     for (const theme of ['light', 'dark']) {
