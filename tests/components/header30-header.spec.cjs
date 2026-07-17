@@ -40,12 +40,17 @@ test.describe('Header30 fullscreen background and centered dual CTA', () => {
       await open(page, width, 900);
       const state = await page.locator(ROOT).evaluate((root) => {
         const copy = root.querySelector('.rh30-copy').getBoundingClientRect();
+        const title = root.querySelector('.rh30-title').getBoundingClientRect();
+        const description = root.querySelector('.rh30-description').getBoundingClientRect();
         const image = root.querySelector('.rh30-background img');
         const box = root.getBoundingClientRect();
         return {
           overflow: document.documentElement.scrollWidth - innerWidth,
           horizontal: Math.abs((copy.left + copy.right) / 2 - innerWidth / 2),
           vertical: Math.abs((copy.top + copy.bottom) / 2 - (box.top + box.bottom) / 2),
+          titleAlignment: Math.abs((title.left + title.right) / 2 - (copy.left + copy.right) / 2),
+          descriptionAlignment: Math.abs((description.left + description.right) / 2 - (copy.left + copy.right) / 2),
+          textAlign: getComputedStyle(root.querySelector('.rh30-copy')).textAlign,
           height: box.height,
           fit: getComputedStyle(image).objectFit,
         };
@@ -53,8 +58,11 @@ test.describe('Header30 fullscreen background and centered dual CTA', () => {
       expect(state.overflow).toBeLessThanOrEqual(1);
       expect(state.horizontal).toBeLessThanOrEqual(2);
       expect(state.vertical).toBeLessThanOrEqual(2);
-      expect(state.height).toBeGreaterThanOrEqual(500);
-      expect(state.height).toBeLessThanOrEqual(710);
+      expect(state.titleAlignment).toBeLessThanOrEqual(2);
+      expect(state.descriptionAlignment).toBeLessThanOrEqual(2);
+      expect(state.textAlign).toBe('center');
+      expect(state.height).toBeGreaterThanOrEqual(470);
+      expect(state.height).toBeLessThanOrEqual(590);
       expect(state.fit).toBe('cover');
     });
   }

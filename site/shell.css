@@ -402,11 +402,54 @@ body {
   min-height: 0;
 }
 
+/* CTA previews share one deliberate section rhythm. Batch-specific styles own
+   their anatomy, while this catalog layer keeps every composition equally
+   breathable and prevents split layouts from touching the preview edge. */
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] {
+  --center-padding: 0;
+  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
+  padding-inline: clamp(var(--space-6), 4vw, var(--space-12));
+}
+
+/* Media-backed CTAs need a stable landscape canvas in documentation. This
+   restores a useful minimum after the generic preview reset without turning
+   image and video examples into tall, nearly square cards. */
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"]:has(> [class$="-background"]) {
+  min-block-size: clamp(22rem, 34vw, 28rem);
+}
+
+/* A secondary CTA must remain a real surface on neutral, black, photographic,
+   and video backgrounds. The generic blue outline is intentionally replaced
+   by a neutral high-contrast treatment throughout the CTA catalog. */
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] .ren-btn.ren-btn-outline {
+  color: var(--color-text);
+  background-color: var(--color-surface-raised);
+  border-color: var(--color-border-interactive);
+}
+
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] .ren-btn.ren-btn-outline:hover:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+  background-color: var(--color-fill-hover);
+  border-color: var(--color-border-strong);
+}
+
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] .ren-btn.ren-btn-outline:active:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+  background-color: var(--color-fill-active);
+  border-color: var(--color-border-interactive);
+}
+
 /* Fullscreen is useful in production, but block documentation needs a stable
    cinematic canvas so image/video examples can be compared without a 1:1 wall. */
 .bb-detail-page > .bb-detail-preview.bb-detail-preview.ren-cover,
 .bb-detail-page > .bb-detail-preview.bb-detail-preview > .ren-cover.ren-cover {
   --cover-height: clamp(34rem, 56vw, 42rem);
+}
+
+/* This centered cover is intentionally cinematic but compact enough to read as
+   a landscape hero inside the catalog rather than a square viewport mockup. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview[data-rh30-root] {
+  --cover-height: clamp(30rem, 48vw, 36rem);
 }
 
 /* Media-over-band heroes need a minimum canvas, not a fixed block size: their

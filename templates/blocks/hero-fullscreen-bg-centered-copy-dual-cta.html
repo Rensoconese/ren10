@@ -44,6 +44,7 @@
       --stack-gap: var(--space-stack-loose);
       position: relative;
       z-index: var(--z-raised);
+      align-items: center;
       width: 100%;
       text-align: center;
     }
@@ -54,7 +55,9 @@
     }
 
     .rh30-title {
+      width: 100%;
       max-width: 16ch;
+      margin-inline: auto;
       color: var(--color-text-inverted);
       font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
       font-weight: var(--display-lg-weight);
@@ -64,7 +67,9 @@
     }
 
     .rh30-description {
+      width: 100%;
       max-width: var(--width-prose);
+      margin-inline: auto;
       color: var(--color-text-inverted);
       font-size: var(--lead-size);
       font-weight: var(--lead-weight);
@@ -84,9 +89,9 @@
     }
 
     .rh30-actions .ren-btn-outline {
-      color: var(--color-text-inverted);
-      border-color: var(--color-text-inverted);
-      background: var(--color-overlay);
+      color: var(--color-text);
+      border-color: var(--color-border-interactive);
+      background: var(--color-surface-raised);
     }
 
     @media (min-width: 40rem) {
