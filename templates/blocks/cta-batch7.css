@@ -86,8 +86,23 @@
   grid-template-columns: max-content minmax(0, 1fr);
   align-items: center;
   padding-block: var(--space-stack-loose);
-  border-bottom: var(--stroke-1) solid var(--color-border-strong);
 }
+
+.cta38-item {
+  position: relative;
+  isolation: isolate;
+}
+
+.cta38-item::after {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 0;
+  height: var(--stroke-1);
+  background: var(--color-border-strong);
+  content: "";
+}
+
+.cta38-link { z-index: 3; }
 
 .cta38-number {
   min-width: var(--size-sm);
@@ -110,13 +125,16 @@
 }
 
 .cta37-media {
-  inset: 50% auto auto 50%;
-  width: min(72vw, var(--width-lg));
-  aspect-ratio: 4 / 5;
-  translate: -50% -50%;
+  inset: 0;
+  width: auto;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+  translate: none;
 }
 
 .cta38-media {
+  z-index: 2;
   inset: 50% 4% auto auto;
   width: min(42vw, var(--width-lg));
   aspect-ratio: 1;

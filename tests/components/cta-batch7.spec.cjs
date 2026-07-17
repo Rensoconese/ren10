@@ -92,11 +92,32 @@ test.describe('CTA 37–42 translated to Ren10', () => {
       await firstLink.hover();
       await expect(firstMedia).toHaveCSS('opacity', '0.74');
       if (block.number === 37) {
-        const colors = await firstLink.evaluate((link) => ({
-          link: getComputedStyle(link).color,
-          heading: getComputedStyle(link.querySelector('h2')).color,
+        const state = await page.locator('[data-cta37-root]').evaluate((root) => {
+          const list = root.querySelector('.cta37-link-list').getBoundingClientRect();
+          const media = root.querySelector('.cta37-media').getBoundingClientRect();
+          const link = root.querySelector('.cta37-link');
+          return {
+            link: getComputedStyle(link).color,
+            heading: getComputedStyle(link.querySelector('h2')).color,
+            radius: getComputedStyle(root.querySelector('.cta37-media')).borderRadius,
+            shadow: getComputedStyle(root.querySelector('.cta37-media')).boxShadow,
+            edges: [media.top - list.top, media.right - list.right, media.bottom - list.bottom, media.left - list.left],
+          };
+        });
+        expect(state.heading).toBe(state.link);
+        expect(state.radius).toBe('0px');
+        expect(state.shadow).toBe('none');
+        expect(state.edges.every((delta) => Math.abs(delta) <= 1)).toBe(true);
+      } else {
+        const layers = await page.locator('.cta38-item').first().evaluate((item) => ({
+          divider: Number(getComputedStyle(item, '::after').zIndex),
+          media: Number(getComputedStyle(item.querySelector('.cta38-media')).zIndex),
+          link: Number(getComputedStyle(item.querySelector('.cta38-link')).zIndex),
+          linkBorder: getComputedStyle(item.querySelector('.cta38-link')).borderBottomStyle,
         }));
-        expect(colors.heading).toBe(colors.link);
+        expect(layers.divider).toBeLessThan(layers.media);
+        expect(layers.media).toBeLessThan(layers.link);
+        expect(layers.linkBorder).toBe('none');
       }
       await page.mouse.move(0, 0);
       await firstLink.focus();
