@@ -21,6 +21,11 @@
   text-align: center;
 }
 
+:is(.cta32-copy, .cta34-copy) {
+  --stack-gap: var(--space-stack-tight);
+  align-items: center;
+}
+
 :is(.cta31-title, .cta32-title, .cta33-title, .cta34-title),
 :is(.cta31-description, .cta32-description, .cta33-description, .cta34-description),
 :is(.cta32-legal, .cta34-legal),
@@ -69,7 +74,7 @@
 }
 
 :is(.cta32-form, .cta34-form) {
-  --stack-gap: var(--space-stack-loose);
+  --stack-gap: var(--space-stack-tight);
   justify-self: center;
   width: min(100%, var(--width-3xl));
   text-align: left;

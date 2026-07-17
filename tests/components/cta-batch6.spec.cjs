@@ -96,6 +96,23 @@ test.describe('CTA 31–36 translated to Ren10', () => {
     }
   });
 
+  for (const number of [32, 34]) {
+    test(`CTA ${number} keeps copy compact and separates the email form`, async ({ page }) => {
+      await openBlock(page, BLOCKS.find((block) => block.number === number));
+      const gaps = await page.locator(`[data-cta${number}-root]`).evaluate((root, currentNumber) => {
+        const title = root.querySelector(`.cta${currentNumber}-title`).getBoundingClientRect();
+        const description = root.querySelector(`.cta${currentNumber}-description`).getBoundingClientRect();
+        const form = root.querySelector(`.cta${currentNumber}-form`).getBoundingClientRect();
+        return {
+          copy: description.top - title.bottom,
+          conversion: form.top - description.bottom,
+        };
+      }, number);
+
+      expect(gaps.conversion).toBeGreaterThan(gaps.copy);
+    });
+  }
+
   test('dual-card variants switch from one to two columns without overflow', async ({ page }) => {
     for (const block of BLOCKS.slice(4)) {
       await openBlock(page, block, 390, 844);
