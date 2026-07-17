@@ -48,9 +48,9 @@ test.describe('Relume Header 18 translated to Ren10', () => {
   test('uses one owned image with truthful intrinsic landscape metadata', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh18-media-trigger img`);
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
-    await expect(image).toHaveAttribute('width', '1280');
-    await expect(image).toHaveAttribute('height', '900');
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('width', /^\d+$/);
+    await expect(image).toHaveAttribute('height', /^\d+$/);
     const metadata = await image.evaluate((node) => ({
       complete: node.complete,
       naturalWidth: node.naturalWidth,
@@ -70,13 +70,18 @@ test.describe('Relume Header 18 translated to Ren10', () => {
       const geometry = await page.locator(ROOT).evaluate((root) => {
         const copy = root.querySelector('.rh18-copy-layout').getBoundingClientRect();
         const trigger = root.querySelector('.rh18-media-trigger').getBoundingClientRect();
+        const media = root.querySelector('.rh18-media').getBoundingClientRect();
         const bounds = root.getBoundingClientRect();
         return {
           overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
           contentHeight: bounds.height,
           minimumHeight: getComputedStyle(root).minHeight,
           triggerBelowCopy: trigger.top > copy.bottom,
-          triggerWidthDelta: Math.abs(trigger.width - root.querySelector('.rh18-container').getBoundingClientRect().width),
+          triggerWidthDelta: Math.abs(trigger.width - media.width),
+          mediaInside: media.left >= bounds.left - 1 && media.right <= bounds.right + 1,
+          mediaCentered: Math.abs(
+            (media.left + media.right) / 2 - (bounds.left + bounds.right) / 2
+          ),
           ratio: trigger.width / trigger.height,
         };
       });
@@ -85,6 +90,8 @@ test.describe('Relume Header 18 translated to Ren10', () => {
       expect(geometry.minimumHeight).not.toMatch(/100(?:s|d|l)?vh/);
       expect(geometry.triggerBelowCopy).toBe(true);
       expect(geometry.triggerWidthDelta).toBeLessThanOrEqual(1);
+      expect(geometry.mediaInside).toBe(true);
+      expect(geometry.mediaCentered).toBeLessThanOrEqual(1);
       expect(geometry.ratio).toBeGreaterThan(1.7);
       expect(geometry.ratio).toBeLessThan(1.85);
     });
@@ -222,7 +229,7 @@ test.describe('Relume Header 18 translated to Ren10', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await gotoBlock(page, 390, 844);
     const targets = page.locator(`${ROOT} input, ${ROOT} .rh18-submit, ${ROOT} .rh18-terms, ${ROOT} .rh18-media-trigger`);
-    await page.locator('.bb-back').focus();
+    await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
     for (let index = 0; index < await targets.count(); index += 1) {
       const target = targets.nth(index);
       const box = await target.boundingBox();
@@ -250,7 +257,7 @@ test.describe('Relume Header 18 translated to Ren10', () => {
 
   test('uses module-scoped root queries and contains no policy leakage', async () => {
     const source = fs.readFileSync(path.join(PKG_ROOT, 'templates/blocks/hero-top-split-email-video-lightbox.html'), 'utf8');
-    for (const token of ['ren-center', 'ren-stack', 'ren-switcher', 'ren-frame', 'ren-btn', 'ren-field', 'ren-dialog', 'ren-spinner']) expect(source).toContain(token);
+    for (const token of ['ren-center', 'ren-stack', 'ren-grid', 'ren-switcher', 'ren-frame', 'ren-btn', 'ren-field', 'ren-dialog', 'ren-spinner']) expect(source).toContain(token);
     expect(source).toMatch(/<script type="module">[\s\S]*document\.querySelector\('\[data-rh18-root\]'\)/);
     expect(source.match(/document\.querySelector/g)).toHaveLength(1);
     expect(source).not.toMatch(/<script>(?![\s\S]*type="module")/);

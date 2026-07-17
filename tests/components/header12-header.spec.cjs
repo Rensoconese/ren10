@@ -49,7 +49,7 @@ test.describe('Relume Header 12 translated to Ren10', () => {
     await expect(video).toHaveAttribute('loop', '');
     await expect(video).toHaveAttribute('muted', '');
     await expect(video).toHaveAttribute('playsinline', '');
-    await expect(video).toHaveAttribute('poster', /^\.\.\/\.\.\//);
+    await expect(video).toHaveAttribute('poster', /^media\/hero-[a-z0-9-]+\.png$/);
     await expect(video.locator('source[type="video/webm"]')).toHaveAttribute('src', /^data:video\/webm;base64,/);
     const state = await video.evaluate(async (node) => {
       if (node.readyState < 1) await new Promise((resolve) => node.addEventListener('loadedmetadata', resolve, { once: true }));
@@ -69,7 +69,7 @@ test.describe('Relume Header 12 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills svh with contiguous flexible video media and no overflow at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled contiguous video canvas without overflow at ${width}px`, async ({ page }) => {
       const height = width >= 768 ? 900 : width === 320 ? 720 : 844;
       await page.setViewportSize({ width, height });
       await gotoBlock(page);
@@ -90,7 +90,8 @@ test.describe('Relume Header 12 translated to Ren10', () => {
           videoCovers: videoRect.width >= mediaRect.width - 1 && videoRect.height >= mediaRect.height - 1,
         };
       });
-      expect(Math.abs(state.rootHeight - state.viewportHeight)).toBeLessThanOrEqual(1);
+      expect(state.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(state.rootHeight).toBeLessThanOrEqual(900);
       expect(state.pageOverflow).toBeLessThanOrEqual(1);
       expect(state.rootOverflow).toBeLessThanOrEqual(1);
       expect(state.mediaHeight).toBeGreaterThanOrEqual(120);

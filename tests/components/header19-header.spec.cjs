@@ -54,12 +54,12 @@ test.describe('Relume Header 19 translated to Ren10', () => {
     });
   }
 
-  test('keeps copy before image through 1023px and image left at 1024px', async ({ page }) => {
-    await gotoBlock(page, 1023, 900);
+  test('keeps copy before image through 767px and image left from 768px', async ({ page }) => {
+    await gotoBlock(page, 767, 900);
     let boxes = await page.locator(`${ROOT} .rh19-copy, ${ROOT} .rh19-media`).evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().toJSON()));
     expect(boxes[1].y).toBeGreaterThan(boxes[0].bottom);
     expect(Math.abs(boxes[0].x - boxes[1].x)).toBeLessThan(2);
-    await gotoBlock(page, 1024, 900);
+    await gotoBlock(page, 768, 900);
     boxes = await page.locator(`${ROOT} .rh19-copy, ${ROOT} .rh19-media`).evaluateAll((nodes) => nodes.map((node) => node.getBoundingClientRect().toJSON()));
     expect(boxes[1].right).toBeLessThan(boxes[0].x);
     expect(Math.abs((boxes[0].y + boxes[0].height / 2) - (boxes[1].y + boxes[1].height / 2))).toBeLessThan(4);
@@ -83,7 +83,7 @@ test.describe('Relume Header 19 translated to Ren10', () => {
   test('owns one meaningful intrinsically sized rounded cover image', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh19-media img`);
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
     await expect(image).toHaveAttribute('width', /^\d+$/);
     await expect(image).toHaveAttribute('height', /^\d+$/);
@@ -104,7 +104,7 @@ test.describe('Relume Header 19 translated to Ren10', () => {
   test('shows keyboard focus and reduced-motion-safe states', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' }); await gotoBlock(page, 390, 844);
     const links = page.locator(`${ROOT} .rh19-actions a`);
-    await page.locator('.bb-back').focus();
+    await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
     for (let index = 0; index < 2; index += 1) {
       const link = links.nth(index); await page.keyboard.press('Tab'); await expect(link).toBeFocused();
       expect(await link.evaluate((node) => getComputedStyle(node).outlineStyle)).not.toBe('none');

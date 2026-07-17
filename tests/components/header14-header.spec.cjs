@@ -41,7 +41,7 @@ test.describe('Relume Header 14 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills the viewport without overflow at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled media canvas without overflow at ${width}px`, async ({ page }) => {
       const height = width === 320 ? 720 : width < 768 ? 844 : 900;
       await gotoBlock(page, width, height);
       const g = await page.locator(ROOT).evaluate((root) => {
@@ -57,8 +57,8 @@ test.describe('Relume Header 14 translated to Ren10', () => {
           objectFit: getComputedStyle(root.querySelector('.rh14-poster img')).objectFit,
         };
       });
-      expect(g.rootHeight).toBeGreaterThanOrEqual(g.viewport - 1);
-      expect(g.rootHeight).toBeLessThanOrEqual(g.viewport + 1);
+      expect(g.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(g.rootHeight).toBeLessThanOrEqual(900);
       expect(g.overflow).toBeLessThanOrEqual(1);
       expect(g.adjacent).toBeLessThanOrEqual(1);
       expect(g.triggerDelta).toBeLessThanOrEqual(1);
@@ -151,7 +151,7 @@ test.describe('Relume Header 14 translated to Ren10', () => {
   test('keeps targets touch-safe, focus visible, themes and reduced motion coherent', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' }); await gotoBlock(page, 390, 844);
     const targets = page.locator(`${ROOT} .rh14-media-trigger, ${ROOT} input, ${ROOT} .rh14-submit, ${ROOT} .rh14-terms`);
-    await page.locator('.bb-back').focus();
+    await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
     for (let i = 0; i < await targets.count(); i += 1) {
       const target = targets.nth(i); const box = await target.boundingBox();
       expect(box.width).toBeGreaterThanOrEqual(44); expect(box.height).toBeGreaterThanOrEqual(44);

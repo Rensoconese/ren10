@@ -409,6 +409,20 @@ body {
   --cover-height: clamp(34rem, 56vw, 42rem);
 }
 
+/* Media-over-band heroes need a minimum canvas, not a fixed block size: their
+   stacked mobile copy can grow while the media keeps a useful landscape band. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:is(
+  [data-rh9-root],
+  [data-rh10-root],
+  [data-rh11-root],
+  [data-rh12-root],
+  [data-rh13-root],
+  [data-rh14-root]
+) {
+  block-size: auto;
+  min-block-size: var(--cover-height);
+}
+
 /* Landscape-first compositions keep their generous production spacing in the
    component itself. Inside the catalog, use a compact comparison canvas so the
    media reads as a landscape rather than turning the example into a tall card. */

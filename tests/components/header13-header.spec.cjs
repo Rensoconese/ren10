@@ -43,7 +43,7 @@ test.describe('Header13 — lightbox top with dual-CTA copy band', () => {
     await expect(page.locator(`${ROOT} .rh13-actions > *`)).toHaveCount(2);
   });
 
-  test('uses a full-svh vertical shell with one flexible full-cover media region', async ({ page }) => {
+  test('uses a controlled vertical canvas with one flexible full-cover media region', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await gotoHeader13(page, staticServer.origin);
     const geometry = await page.locator(ROOT).evaluate((root) => {
@@ -64,7 +64,8 @@ test.describe('Header13 — lightbox top with dual-CTA copy band', () => {
         ),
       };
     });
-    expect(geometry.rootHeight).toBeGreaterThanOrEqual(900);
+    expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+    expect(geometry.rootHeight).toBeLessThanOrEqual(900);
     expect(Math.abs(geometry.mediaTop)).toBeLessThanOrEqual(1);
     expect(Math.abs(geometry.mediaBottom - geometry.bandTop)).toBeLessThanOrEqual(1);
     expect(geometry.triggerDelta).toBeLessThanOrEqual(1);

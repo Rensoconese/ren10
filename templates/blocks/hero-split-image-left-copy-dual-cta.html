@@ -20,15 +20,13 @@
     .rh19-container { width: 100%; }
 
     .rh19-layout {
-      --switcher-gap: var(--space-10);
-      --switcher-threshold: var(--width-6xl);
+      --grid-gap: var(--space-10);
+      grid-template-columns: minmax(0, 1fr);
       align-items: center;
-      flex-wrap: wrap;
     }
 
     .rh19-layout > * {
       min-width: 0;
-      flex-basis: 100%;
     }
 
     .rh19-copy {
@@ -73,19 +71,21 @@
     @media (min-width: 48rem) {
       .rh19-hero { padding-block: var(--space-section); }
       .rh19-container { --center-padding: var(--space-8); }
-      .rh19-layout { --switcher-gap: var(--space-16); }
+      .rh19-layout {
+        --grid-gap: var(--space-16);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .rh19-media { order: -1; }
     }
 
     @media (min-width: 64rem) {
       .rh19-hero { padding-block: var(--space-section-lg); }
 
       .rh19-layout {
-        --switcher-gap: var(--space-20);
-        flex-wrap: nowrap;
+        --grid-gap: var(--space-20);
       }
 
-      .rh19-layout > * { flex: 1 1 0; }
-      .rh19-media { order: -1; }
     }
   </style>
 </head>
@@ -106,7 +106,7 @@
     <section class="rh19-preview bb-detail-preview" data-rh19-root>
     <section class="rh19-hero" aria-labelledby="rh19-heading">
       <div class="rh19-container ren-center ren-center-wide">
-        <div class="rh19-layout ren-switcher">
+        <div class="rh19-layout ren-grid ren-grid-2">
           <div class="rh19-copy ren-stack">
             <h1 id="rh19-heading" class="rh19-heading">Give every product decision a clearer foundation</h1>
             <p class="rh19-description">Connect shared intent to an accessible, responsive interface with a system that keeps teams aligned from the first idea to the final detail.</p>

@@ -89,9 +89,9 @@
     .rh14-band-inner { width: 100%; }
 
     .rh14-band-layout {
-      --switcher-gap: var(--space-6);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
+      --grid-gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh14-title,
@@ -188,11 +188,14 @@
     @media (min-width: 48rem) {
       .rh14-band { padding-block: var(--space-10); }
       .rh14-band-inner { --center-padding: var(--space-8); }
-      .rh14-band-layout { --switcher-gap: var(--space-12); flex-wrap: nowrap; }
-      .rh14-band-layout > * { flex: 1 1 0; min-width: 0; }
+      .rh14-band-layout {
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .rh14-band-layout > * { min-width: 0; }
     }
 
-    @media (min-width: 64rem) { .rh14-band-layout { --switcher-gap: var(--space-20); } }
+    @media (min-width: 64rem) { .rh14-band-layout { --grid-gap: var(--space-20); } }
   </style>
 </head>
 <body>
@@ -249,7 +252,7 @@
 
       <div class="rh14-band">
         <div class="rh14-band-inner ren-center ren-center-wide">
-          <div class="rh14-band-layout ren-switcher">
+          <div class="rh14-band-layout ren-grid ren-grid-2">
             <h1 class="rh14-title" id="rh14-title">Give every strong idea a clearer path forward</h1>
             <div class="rh14-copy ren-stack">
               <p class="rh14-lede">See how accessible foundations and composable patterns help teams turn shared intent into coherent product experiences.</p>

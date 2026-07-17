@@ -28,7 +28,7 @@
     .rh9-media {
       flex: 1 1 auto;
       width: 100%;
-      min-height: 0;
+      min-height: calc(var(--space-16) * 2);
       aspect-ratio: auto;
       background: var(--color-surface-secondary);
     }
@@ -49,9 +49,9 @@
     }
 
     .rh9-band-layout {
-      --switcher-gap: var(--space-6);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
+      --grid-gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh9-heading,
@@ -92,19 +92,18 @@
       }
 
       .rh9-band-layout {
-        --switcher-gap: var(--space-12);
-        flex-wrap: nowrap;
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .rh9-band-layout > * {
-        flex: 1 1 0;
         min-width: 0;
       }
     }
 
     @media (min-width: 64rem) {
       .rh9-band-layout {
-        --switcher-gap: var(--space-20);
+        --grid-gap: var(--space-20);
       }
     }
   </style>
@@ -136,7 +135,7 @@
 
       <div class="rh9-band">
         <div class="rh9-band-inner ren-center ren-center-wide">
-          <div class="rh9-band-layout ren-switcher">
+          <div class="rh9-band-layout ren-grid ren-grid-2">
             <h1 id="rh9-heading" class="rh9-heading">Turn shared foundations into remarkable products</h1>
             <div class="rh9-body ren-stack">
               <p class="rh9-description">Build accessible interfaces from a clear system, keep every decision adaptable, and move from first composition to production with confidence.</p>

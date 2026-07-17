@@ -23,9 +23,9 @@
     }
 
     .rh21-split {
-      --switcher-gap: var(--space-10);
-      --switcher-threshold: 48rem;
-      align-items: flex-start;
+      --grid-gap: var(--space-10);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh21-split > * {
@@ -182,12 +182,8 @@
       }
 
       .rh21-split {
-        --switcher-gap: var(--space-12);
-        flex-wrap: nowrap;
-      }
-
-      .rh21-split > * {
-        flex: 1 1 0;
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .rh21-media {
@@ -201,7 +197,7 @@
       }
 
       .rh21-split {
-        --switcher-gap: var(--space-20);
+        --grid-gap: var(--space-20);
       }
 
       #rh21-video {
@@ -227,7 +223,7 @@
 
     <section class="rh21-hero bb-detail-preview" data-rh21-root aria-labelledby="rh21-title">
       <div class="rh21-container ren-center ren-center-wide">
-        <div class="rh21-split ren-switcher">
+        <div class="rh21-split ren-grid ren-grid-2">
           <div class="rh21-copy ren-stack">
             <h1 id="rh21-title" class="rh21-title">Bring a clearer story to every product decision</h1>
             <p class="rh21-description">Connect shared foundations, accessible patterns, and practical guidance so teams can move from intent to a dependable experience.</p>

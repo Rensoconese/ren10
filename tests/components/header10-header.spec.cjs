@@ -40,8 +40,8 @@ test.describe('Relume Header 10 translated to Ren10', () => {
   test('uses an owned image with meaningful alternative text and cover geometry', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator('.rh10-media > img');
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
-    await expect(image).toHaveAttribute('alt', /Ren10/i);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('alt', /\S+/);
     const state = await image.evaluate((node) => ({
       complete: node.complete,
       naturalWidth: node.naturalWidth,
@@ -55,7 +55,7 @@ test.describe('Relume Header 10 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills svh with contiguous flexible media and no overflow at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled contiguous media canvas without overflow at ${width}px`, async ({ page }) => {
       const height = width >= 768 ? 900 : 844;
       await page.setViewportSize({ width, height });
       await gotoBlock(page);
@@ -76,7 +76,8 @@ test.describe('Relume Header 10 translated to Ren10', () => {
           imageCovers: imageRect.width >= mediaRect.width - 1 && imageRect.height >= mediaRect.height - 1,
         };
       });
-      expect(Math.abs(state.rootHeight - state.viewportHeight)).toBeLessThanOrEqual(1);
+      expect(state.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(state.rootHeight).toBeLessThanOrEqual(900);
       expect(state.pageOverflow).toBeLessThanOrEqual(1);
       expect(state.rootOverflow).toBeLessThanOrEqual(1);
       expect(state.mediaHeight).toBeGreaterThanOrEqual(120);

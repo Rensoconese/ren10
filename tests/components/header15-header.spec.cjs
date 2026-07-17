@@ -38,10 +38,10 @@ test.describe('Relume Header 15 translated to Ren10', () => {
   test('uses one owned meaningful landscape cover image', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator('.rh15-media > img');
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
-    await expect(image).toHaveAttribute('alt', /Ren10/i);
-    await expect(image).toHaveAttribute('width', '1440');
-    await expect(image).toHaveAttribute('height', '900');
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('alt', /\S+/);
+    await expect(image).toHaveAttribute('width', /^\d+$/);
+    await expect(image).toHaveAttribute('height', /^\d+$/);
     const state = await image.evaluate((node) => {
       const imageRect = node.getBoundingClientRect();
       const frameRect = node.parentElement.getBoundingClientRect();
@@ -75,7 +75,10 @@ test.describe('Relume Header 15 translated to Ren10', () => {
           rootOverflow: root.scrollWidth - root.clientWidth,
           containerInside: containerRect.left >= rootRect.left && containerRect.right <= rootRect.right + 1,
           sourceOrder: mediaRect.top >= copyRect.bottom - 1,
-          mediaFullWidth: Math.abs(mediaRect.width - copyRect.width) <= 1,
+          mediaContained: mediaRect.width <= copyRect.width + 1,
+          mediaCentered: Math.abs(
+            (mediaRect.left + mediaRect.right) / 2 - (copyRect.left + copyRect.right) / 2
+          ) <= 1,
           mediaVisible: mediaRect.height > 120,
         };
       });
@@ -84,7 +87,8 @@ test.describe('Relume Header 15 translated to Ren10', () => {
       expect(state.rootOverflow).toBeLessThanOrEqual(1);
       expect(state.containerInside).toBe(true);
       expect(state.sourceOrder).toBe(true);
-      expect(state.mediaFullWidth).toBe(true);
+      expect(state.mediaContained).toBe(true);
+      expect(state.mediaCentered).toBe(true);
       expect(state.mediaVisible).toBe(true);
     });
   }

@@ -112,7 +112,7 @@ test.describe('Relume Header 11 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills the viewport and lets top video consume remaining height at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled canvas and lets top video consume remaining height at ${width}px`, async ({ page }) => {
       const height = width === 320 ? 720 : width < 768 ? 844 : 900;
       await gotoBlock(page, width, height);
       const geometry = await page.locator(ROOT).evaluate((root) => {
@@ -138,8 +138,8 @@ test.describe('Relume Header 11 translated to Ren10', () => {
           objectFit: getComputedStyle(video).objectFit,
         };
       });
-      expect(geometry.rootHeight).toBeGreaterThanOrEqual(geometry.viewportHeight - 1);
-      expect(geometry.rootHeight).toBeLessThanOrEqual(geometry.viewportHeight + 1);
+      expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(geometry.rootHeight).toBeLessThanOrEqual(900);
       expect(geometry.pageOverflow).toBeLessThanOrEqual(1);
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.mediaHeight).toBeGreaterThan(100);
@@ -218,7 +218,7 @@ test.describe('Relume Header 11 translated to Ren10', () => {
   test('uses documented Ren10 primitives and excludes copied source leakage', async () => {
     const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/hero-fullscreen-video-top-copy-band-dual-cta.html'), 'utf8');
     expect(source).toContain('--cover-height: 100svh');
-    for (const primitive of ['ren-cover', 'ren-center', 'ren-switcher', 'ren-stack', 'ren-cluster', 'ren-btn']) {
+    for (const primitive of ['ren-cover', 'ren-center', 'ren-grid', 'ren-stack', 'ren-cluster', 'ren-btn']) {
       expect(source).toContain(primitive);
     }
     expect(source).not.toMatch(/(?:React|className|Tailwind|@relume|cloudfront|placeholder-video|dangerouslySetInnerHTML)/i);

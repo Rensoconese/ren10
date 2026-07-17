@@ -102,9 +102,9 @@
     }
 
     .rh13-band-layout {
-      --switcher-gap: var(--space-6);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
+      --grid-gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh13-title,
@@ -205,19 +205,18 @@
       }
 
       .rh13-band-layout {
-        --switcher-gap: var(--space-12);
-        flex-wrap: nowrap;
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .rh13-band-layout > * {
-        flex: 1 1 0;
         min-width: 0;
       }
     }
 
     @media (min-width: 64rem) {
       .rh13-band-layout {
-        --switcher-gap: var(--space-20);
+        --grid-gap: var(--space-20);
       }
     }
 
@@ -307,7 +306,7 @@
 
       <div class="rh13-band">
         <div class="rh13-band-inner ren-center ren-center-wide">
-          <div class="rh13-band-layout ren-switcher">
+          <div class="rh13-band-layout ren-grid ren-grid-2">
             <h1 class="rh13-title" id="rh13-title">Build a system people can understand at a glance</h1>
             <div class="rh13-copy ren-stack">
               <p class="rh13-lede">See how clear foundations, accessible patterns, and composable blocks turn product intent into interfaces that stay coherent as teams grow.</p>

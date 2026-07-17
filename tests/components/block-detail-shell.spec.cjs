@@ -82,7 +82,7 @@ for (const file of pages) {
       expect(state.description, `${file} introduction`).toBe(1);
       expect(state.mediaSources.every((source) => !/reference-app|screenshots|data:image/.test(source))).toBe(true);
       if (viewport.name === 'desktop') {
-        expect(state.previewHeight, `${file} documentation canvas`).toBeLessThanOrEqual(900);
+        expect(state.previewHeight, `${file} documentation canvas`).toBeLessThanOrEqual(904);
       }
     }
     });

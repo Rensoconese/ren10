@@ -24,9 +24,9 @@
     }
 
     .rh17-copy-layout {
-      --switcher-gap: var(--space-8);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
+      --grid-gap: var(--space-8);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh17-copy-layout > * {
@@ -185,12 +185,8 @@
       }
 
       .rh17-copy-layout {
-        --switcher-gap: var(--space-12);
-        flex-wrap: nowrap;
-      }
-
-      .rh17-copy-layout > * {
-        flex: 1 1 0;
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -204,7 +200,7 @@
       }
 
       .rh17-copy-layout {
-        --switcher-gap: var(--space-20);
+        --grid-gap: var(--space-20);
       }
 
       #rh17-video {
@@ -239,7 +235,7 @@
 
     <section class="rh17-hero bb-detail-preview" data-rh17-root aria-labelledby="rh17-title">
       <div class="rh17-container ren-center ren-center-wide ren-stack">
-        <div class="rh17-copy-layout ren-switcher">
+        <div class="rh17-copy-layout ren-grid ren-grid-2">
           <h1 id="rh17-title" class="rh17-title">Turn a shared direction into an experience people can trust</h1>
 
           <div class="rh17-support ren-stack">

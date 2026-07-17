@@ -70,7 +70,7 @@ test.describe('Relume Header 7 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills the viewport with cover video and centered left copy at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled cover-video canvas with centered left copy at ${width}px`, async ({ page }) => {
       const height = width >= 768 ? 900 : 844;
       await page.setViewportSize({ width, height });
       await gotoBlock(page);
@@ -100,7 +100,8 @@ test.describe('Relume Header 7 translated to Ren10', () => {
         };
       });
 
-      expect(geometry.rootHeight).toBeGreaterThanOrEqual(geometry.viewportHeight - 1);
+      expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(geometry.rootHeight).toBeLessThanOrEqual(710);
       expect(geometry.pageOverflow).toBeLessThanOrEqual(1);
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.backgroundCovers).toBe(true);
@@ -161,6 +162,7 @@ test.describe('Relume Header 7 translated to Ren10', () => {
   });
 
   test('keeps overlay contrast and theme-independent foreground semantics', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await gotoBlock(page);
     for (const theme of ['light', 'dark']) {
       await page.evaluate((value) => document.documentElement.setAttribute('data-theme', value), theme);

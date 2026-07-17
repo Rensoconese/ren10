@@ -66,7 +66,7 @@ test.describe('Relume Header 8 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills the viewport and avoids overflow at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled video canvas and avoids overflow at ${width}px`, async ({ page }) => {
       const height = width >= 768 ? 900 : 844;
       await page.setViewportSize({ width, height });
       await gotoBlock(page);
@@ -85,7 +85,8 @@ test.describe('Relume Header 8 translated to Ren10', () => {
           videoCovers: video.width >= rect.width - 2 && video.height >= rect.height - 2,
         };
       });
-      expect(state.rootHeight).toBeGreaterThanOrEqual(state.viewportHeight - 1);
+      expect(state.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(state.rootHeight).toBeLessThanOrEqual(710);
       expect(state.pageOverflow).toBeLessThanOrEqual(1);
       expect(state.rootOverflow).toBeLessThanOrEqual(1);
       expect(state.contentLeft).toBeGreaterThanOrEqual(16);

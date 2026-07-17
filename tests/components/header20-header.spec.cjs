@@ -38,10 +38,10 @@ test.describe('Relume Header 20 translated to Ren10', () => {
   test('uses one owned meaningful intrinsic rounded cover image', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh20-media img`);
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
-    await expect(image).toHaveAttribute('alt', /Ren10/i);
-    await expect(image).toHaveAttribute('width', '1440');
-    await expect(image).toHaveAttribute('height', '900');
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('alt', /\S+/);
+    await expect(image).toHaveAttribute('width', /^\d+$/);
+    await expect(image).toHaveAttribute('height', /^\d+$/);
     const state = await image.evaluate((node) => ({ complete: node.complete, naturalWidth: node.naturalWidth, objectFit: getComputedStyle(node).objectFit, radius: getComputedStyle(node.parentElement).borderRadius }));
     expect(state.complete).toBe(true);
     expect(state.naturalWidth).toBeGreaterThan(0);

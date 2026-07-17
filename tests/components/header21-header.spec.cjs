@@ -39,10 +39,10 @@ test.describe('Relume Header 21 translated to Ren10', () => {
   test('uses one owned image with truthful intrinsic landscape metadata', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh21-poster`);
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
-    await expect(image).toHaveAttribute('alt', /Ren10/i);
-    await expect(image).toHaveAttribute('width', '1280');
-    await expect(image).toHaveAttribute('height', '900');
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('alt', /\S+/);
+    await expect(image).toHaveAttribute('width', /^\d+$/);
+    await expect(image).toHaveAttribute('height', /^\d+$/);
     const metadata = await image.evaluate((node) => ({
       complete: node.complete,
       naturalWidth: node.naturalWidth,
@@ -255,7 +255,7 @@ test.describe('Relume Header 21 translated to Ren10', () => {
 
   test('uses a root-scoped module and documented Ren10 primitives without policy leakage', async () => {
     const source = fs.readFileSync(SOURCE, 'utf8');
-    for (const token of ['ren-center', 'ren-stack', 'ren-switcher', 'ren-cluster', 'ren-frame', 'ren-cover', 'ren-btn', 'ren-dialog', 'ren-spinner']) expect(source).toContain(token);
+    for (const token of ['ren-center', 'ren-stack', 'ren-grid', 'ren-cluster', 'ren-frame', 'ren-cover', 'ren-btn', 'ren-dialog', 'ren-spinner']) expect(source).toContain(token);
     expect(source).toMatch(/<script type="module">\s*const root = document\.querySelector\('\[data-rh21-root\]'\);/);
     expect((source.match(/document\.querySelector/g) || []).length).toBe(1);
     expect(source).not.toMatch(/React|className|Tailwind|@relume|cloudfront|youtube|attachShadow/i);

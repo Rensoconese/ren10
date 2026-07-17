@@ -23,9 +23,9 @@
     }
 
     .rh18-copy-layout {
-      --switcher-gap: var(--space-8);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
+      --grid-gap: var(--space-8);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh18-title,
@@ -198,13 +198,16 @@
     @media (min-width: 48rem) {
       .rh18-hero { padding-block: var(--space-section-md); }
       .rh18-container { --center-padding: var(--space-8); --stack-gap: var(--space-14); }
-      .rh18-copy-layout { --switcher-gap: var(--space-12); flex-wrap: nowrap; }
-      .rh18-copy-layout > * { flex: 1 1 0; min-width: 0; }
+      .rh18-copy-layout {
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .rh18-copy-layout > * { min-width: 0; }
     }
 
     @media (min-width: 64rem) {
       .rh18-hero { padding-block: var(--space-section-lg); }
-      .rh18-copy-layout { --switcher-gap: var(--space-20); }
+      .rh18-copy-layout { --grid-gap: var(--space-20); }
       #rh18-video { --ren-dialog-width: min(92vw, var(--width-5xl)); }
     }
   </style>
@@ -226,7 +229,7 @@
 
     <section class="rh18-hero bb-detail-preview" data-rh18-root aria-labelledby="rh18-title">
       <div class="rh18-container ren-center ren-center-wide ren-stack">
-        <div class="rh18-copy-layout ren-switcher">
+        <div class="rh18-copy-layout ren-grid ren-grid-2">
           <h1 class="rh18-title" id="rh18-title">Move from first idea to confident release</h1>
           <div class="rh18-support ren-stack">
             <p class="rh18-lede">Build coherent, accessible product experiences with foundations and patterns your whole team can understand.</p>

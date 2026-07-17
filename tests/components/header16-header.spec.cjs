@@ -110,7 +110,7 @@ test.describe('Relume Header 16 translated to Ren10', () => {
   test('owns one meaningful intrinsically sized cover image', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh16-media img`);
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
     await expect(image).toHaveAttribute('alt', /\S+/);
     await expect(image).toHaveAttribute('width', /^\d+$/);
     await expect(image).toHaveAttribute('height', /^\d+$/);
@@ -137,7 +137,7 @@ test.describe('Relume Header 16 translated to Ren10', () => {
   test('keeps controls touch-safe and keyboard focus visible with reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' }); await gotoBlock(page, 390, 844);
     const targets = page.locator(`${ROOT} .rh16-email, ${ROOT} .rh16-submit, ${ROOT} .rh16-terms`);
-    await page.locator('.bb-back').focus();
+    await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
     for (let index = 0; index < await targets.count(); index += 1) {
       const target = targets.nth(index); const box = await target.boundingBox();
       expect(box.width).toBeGreaterThanOrEqual(44); expect(box.height).toBeGreaterThanOrEqual(44);

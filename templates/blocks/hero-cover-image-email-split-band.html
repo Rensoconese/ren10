@@ -27,7 +27,7 @@
     .rh10-media {
       position: relative;
       flex: 1 1 auto;
-      min-block-size: 0;
+      min-block-size: calc(var(--space-16) * 2);
       overflow: hidden;
       margin: 0;
       background: var(--color-surface-sunken);
@@ -53,8 +53,8 @@
     }
 
     .rh10-band-layout {
-      --switcher-gap: var(--space-section);
-      --switcher-threshold: var(--width-lg);
+      --grid-gap: var(--space-section);
+      grid-template-columns: minmax(0, 1fr);
       align-items: start;
     }
 
@@ -129,6 +129,10 @@
         width: auto;
       }
     }
+
+    @media (min-width: 48rem) {
+      .rh10-band-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
   </style>
 </head>
 <body>
@@ -158,7 +162,7 @@
 
       <div class="rh10-band">
         <div class="rh10-band-inner ren-center ren-center-wide">
-          <div class="rh10-band-layout ren-switcher">
+          <div class="rh10-band-layout ren-grid ren-grid-2">
             <h1 id="rh10-heading" class="rh10-heading">Build the next experience from a stronger foundation</h1>
 
             <div class="rh10-support ren-stack">

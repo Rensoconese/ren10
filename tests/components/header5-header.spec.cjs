@@ -42,7 +42,7 @@ test.describe('Relume Header 5 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills the viewport with centered left copy and cover media at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled centered cover canvas at ${width}px`, async ({ page }) => {
       const height = width >= 768 ? 900 : 844;
       await page.setViewportSize({ width, height });
       await gotoBlock(page);
@@ -77,7 +77,8 @@ test.describe('Relume Header 5 translated to Ren10', () => {
       });
 
       expect(geometry).toBeTruthy();
-      expect(geometry.rootHeight).toBeGreaterThanOrEqual(geometry.viewportHeight - 1);
+      expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(geometry.rootHeight).toBeLessThanOrEqual(710);
       expect(geometry.pageOverflow).toBeLessThanOrEqual(1);
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.backgroundCovers).toBe(true);

@@ -107,7 +107,7 @@ test.describe('Relume Header 6 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`covers viewport and keeps constrained centered copy at ${width}px`, async ({ page }) => {
+    test(`uses a controlled canvas and keeps constrained centered copy at ${width}px`, async ({ page }) => {
       const height = width === 320 ? 720 : width < 768 ? 844 : 900;
       await gotoBlock(page, width, height);
       const geometry = await page.locator(ROOT).evaluate((root) => {
@@ -136,7 +136,8 @@ test.describe('Relume Header 6 translated to Ren10', () => {
         };
       });
 
-      expect(geometry.rootHeight).toBeGreaterThanOrEqual(geometry.viewportHeight - 1);
+      expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(geometry.rootHeight).toBeLessThanOrEqual(710);
       expect(geometry.pageOverflow).toBeLessThanOrEqual(1);
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.copyLeft).toBeGreaterThanOrEqual(16);

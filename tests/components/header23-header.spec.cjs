@@ -96,7 +96,7 @@ test.describe('Relume Header 23 translated to Ren10', () => {
   test('keeps logical keyboard order, visible focus, and 44px targets', async ({ page }) => {
     await gotoBlock(page, 390, 720);
     const links = page.locator(`${ROOT} .rh23-actions a`);
-    await page.locator('.bb-back').focus();
+    await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
     for (let index = 0; index < 2; index += 1) {
       await page.keyboard.press('Tab');
       await expect(links.nth(index)).toBeFocused();

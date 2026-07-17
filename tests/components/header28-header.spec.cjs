@@ -38,11 +38,21 @@ test.describe('Relume Header28 translated to Ren10', () => {
     expect(new Set(hrefs).size).toBe(2);
     expect(hrefs.every((href) => href && href !== '#')).toBe(true);
     const image = page.locator(`${ROOT} .rh28-poster`);
-    await expect(image).toHaveAttribute('src', /^\.\.\/\.\.\//);
-    await expect(image).toHaveAttribute('alt', /Ren10/i);
-    await expect(image).toHaveAttribute('width', '1280');
-    await expect(image).toHaveAttribute('height', '900');
-    expect(await image.evaluate((node) => node.complete && node.naturalWidth === 1280 && node.naturalHeight === 900)).toBe(true);
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('alt', /\S+/);
+    await expect(image).toHaveAttribute('width', /^\d+$/);
+    await expect(image).toHaveAttribute('height', /^\d+$/);
+    const state = await image.evaluate((node) => ({
+      complete: node.complete,
+      naturalWidth: node.naturalWidth,
+      naturalHeight: node.naturalHeight,
+      declaredWidth: Number(node.getAttribute('width')),
+      declaredHeight: Number(node.getAttribute('height')),
+    }));
+    expect(state.complete).toBe(true);
+    expect(state.naturalWidth).toBe(state.declaredWidth);
+    expect(state.naturalHeight).toBe(state.declaredHeight);
+    expect(state.naturalWidth).toBeGreaterThan(state.naturalHeight);
   });
 
   for (const width of [320, 390, 768, 1280]) {

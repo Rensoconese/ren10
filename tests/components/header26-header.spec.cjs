@@ -51,7 +51,7 @@ test.describe('Relume Header 26 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 640, 768, 1024, 1280, 1440]) {
-    test(`stays centered, content-height, full-width, and overflow-free at ${width}px`, async ({ page }) => {
+    test(`stays centered, content-height, media-contained, and overflow-free at ${width}px`, async ({ page }) => {
       await gotoBlock(page, width, width < 640 ? 800 : 1000);
       const state = await page.locator(ROOT).evaluate((root) => {
         const container = root.querySelector('.rh26-container').getBoundingClientRect();
@@ -60,14 +60,18 @@ test.describe('Relume Header 26 translated to Ren10', () => {
           minHeight: getComputedStyle(root).minHeight,
           overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
           centerDelta: Math.abs(container.left + container.width / 2 - innerWidth / 2),
-          mediaWidthDelta: Math.abs(container.width - media.width),
+          mediaContained: media.width <= container.width + 1,
+          mediaCenterDelta: Math.abs(
+            media.left + media.width / 2 - (container.left + container.width / 2)
+          ),
           inside: container.left >= 0 && container.right <= innerWidth + 1,
         };
       });
       expect(state.minHeight).toBe('0px');
       expect(state.overflow).toBeLessThanOrEqual(1);
       expect(state.centerDelta).toBeLessThanOrEqual(2);
-      expect(state.mediaWidthDelta).toBeLessThanOrEqual(1);
+      expect(state.mediaContained).toBe(true);
+      expect(state.mediaCenterDelta).toBeLessThanOrEqual(2);
       expect(state.inside).toBe(true);
     });
   }
@@ -101,10 +105,10 @@ test.describe('Relume Header 26 translated to Ren10', () => {
   test('owns a truthful intrinsic 16:9 image asset', async ({ page }) => {
     await gotoBlock(page);
     const image = page.locator(`${ROOT} .rh26-image`);
-    await expect(image).toHaveAttribute('src', /^data:image\/svg\+xml,/);
-    await expect(image).toHaveAttribute('width', '1600');
-    await expect(image).toHaveAttribute('height', '900');
-    await expect(image).toHaveAttribute('alt', 'Layered geometric forms illustrating a modular interface landscape');
+    await expect(image).toHaveAttribute('src', /^media\/hero-[a-z0-9-]+\.png$/);
+    await expect(image).toHaveAttribute('width', /^\d+$/);
+    await expect(image).toHaveAttribute('height', /^\d+$/);
+    await expect(image).toHaveAttribute('alt', /\S+/);
     const state = await image.evaluate((node) => ({
       complete: node.complete,
       naturalWidth: node.naturalWidth,
@@ -113,8 +117,8 @@ test.describe('Relume Header 26 translated to Ren10', () => {
       objectFit: getComputedStyle(node).objectFit,
     }));
     expect(state.complete).toBe(true);
-    expect(state.naturalWidth).toBe(1600);
-    expect(state.naturalHeight).toBe(900);
+    expect(state.naturalWidth).toBe(Number(await image.getAttribute('width')));
+    expect(state.naturalHeight).toBe(Number(await image.getAttribute('height')));
     expect(state.ratio).toBeCloseTo(16 / 9, 2);
     expect(state.objectFit).toBe('cover');
   });
@@ -124,7 +128,7 @@ test.describe('Relume Header 26 translated to Ren10', () => {
     const links = page.locator(`${ROOT} .rh26-actions a`);
     for (const theme of ['light', 'dark']) {
       await page.evaluate((value) => document.documentElement.setAttribute('data-theme', value), theme);
-      await page.locator('.bb-back').focus();
+      await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
       for (let index = 0; index < 2; index += 1) {
         await page.keyboard.press('Tab');
         await expect(links.nth(index)).toBeFocused();

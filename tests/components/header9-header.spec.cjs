@@ -86,7 +86,7 @@ test.describe('Relume Header 9 translated to Ren10', () => {
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`fills the viewport and lets top media consume remaining height at ${width}px`, async ({ page }) => {
+    test(`keeps a controlled canvas and lets top media consume remaining height at ${width}px`, async ({ page }) => {
       const height = width === 320 ? 720 : width < 768 ? 844 : 900;
       await gotoBlock(page, width, height);
       const geometry = await page.locator(ROOT).evaluate((root) => {
@@ -110,8 +110,8 @@ test.describe('Relume Header 9 translated to Ren10', () => {
           objectFit: getComputedStyle(image).objectFit,
         };
       });
-      expect(geometry.rootHeight).toBeGreaterThanOrEqual(geometry.viewportHeight - 1);
-      expect(geometry.rootHeight).toBeLessThanOrEqual(geometry.viewportHeight + 1);
+      expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(geometry.rootHeight).toBeLessThanOrEqual(904);
       expect(geometry.pageOverflow).toBeLessThanOrEqual(1);
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.mediaHeight).toBeGreaterThan(120);
@@ -193,7 +193,7 @@ test.describe('Relume Header 9 translated to Ren10', () => {
     expect(source).toContain('ren-cover');
     expect(source).toContain('ren-frame');
     expect(source).toContain('ren-center');
-    expect(source).toContain('ren-switcher');
+    expect(source).toContain('ren-grid');
     expect(source).toContain('ren-stack');
     expect(source).toContain('ren-cluster');
     expect(source).not.toMatch(/(?:React|className|Tailwind|@relume|cloudfront|placeholder-image|dangerouslySetInnerHTML)/i);

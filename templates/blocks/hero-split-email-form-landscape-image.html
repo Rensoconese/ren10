@@ -24,15 +24,13 @@
     }
 
     .rh16-copy-layout {
-      --switcher-gap: var(--space-8);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
-      flex-wrap: wrap;
+      --grid-gap: var(--space-8);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh16-copy-layout > * {
       min-width: 0;
-      flex-basis: 100%;
     }
 
     .rh16-heading,
@@ -127,17 +125,15 @@
       }
 
       .rh16-copy-layout {
-        --switcher-gap: var(--space-12);
-        flex-wrap: nowrap;
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-
-      .rh16-copy-layout > * { flex: 1 1 0; }
     }
 
     @media (min-width: 64rem) {
       .rh16-hero { padding-block: var(--space-section-lg); }
       .rh16-shell { --stack-gap: var(--space-20); }
-      .rh16-copy-layout { --switcher-gap: var(--space-20); }
+      .rh16-copy-layout { --grid-gap: var(--space-20); }
     }
   </style>
 </head>
@@ -158,7 +154,7 @@
     <section class="rh16-preview bb-detail-preview" data-rh16-root>
     <section class="rh16-hero" aria-labelledby="rh16-heading">
       <div class="rh16-shell ren-center ren-center-wide ren-stack">
-        <div class="rh16-copy-layout ren-switcher">
+        <div class="rh16-copy-layout ren-grid ren-grid-2">
           <h1 id="rh16-heading" class="rh16-heading">Turn a clear direction into a confident product</h1>
 
           <div class="rh16-support ren-stack">

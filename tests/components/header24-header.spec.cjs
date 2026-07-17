@@ -97,7 +97,7 @@ test.describe('Relume Header 24 translated to Ren10', () => {
   test('keeps input, submit, and terms touch-safe with visible keyboard focus', async ({ page }) => {
     await gotoBlock(page, 390, 720);
     const controls = page.locator(`${ROOT} input, ${ROOT} button, ${ROOT} .rh24-terms-link`);
-    await page.locator('.bb-back').focus();
+    await page.locator('.bb-detail-header .ren-breadcrumb a[href="index.html"]').focus();
     for (let index = 0; index < 3; index += 1) {
       await page.keyboard.press('Tab'); await expect(controls.nth(index)).toBeFocused();
       const state = await controls.nth(index).evaluate((node) => { const b = node.getBoundingClientRect(); const s = getComputedStyle(node); return { w:b.width,h:b.height,outline:s.outlineStyle,shadow:s.boxShadow }; });

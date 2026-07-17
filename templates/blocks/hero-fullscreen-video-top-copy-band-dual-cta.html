@@ -27,7 +27,7 @@
       position: relative;
       flex: 1 1 auto;
       width: 100%;
-      min-height: 0;
+      min-height: calc(var(--space-16) * 2);
       overflow: hidden;
       background: var(--color-surface-secondary);
     }
@@ -77,9 +77,9 @@
     }
 
     .rh11-band-layout {
-      --switcher-gap: var(--space-6);
-      --switcher-threshold: var(--width-5xl);
-      align-items: flex-start;
+      --grid-gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
     }
 
     .rh11-heading,
@@ -120,19 +120,18 @@
       }
 
       .rh11-band-layout {
-        --switcher-gap: var(--space-12);
-        flex-wrap: nowrap;
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .rh11-band-layout > * {
-        flex: 1 1 0;
         min-width: 0;
       }
     }
 
     @media (min-width: 64rem) {
       .rh11-band-layout {
-        --switcher-gap: var(--space-20);
+        --grid-gap: var(--space-20);
       }
     }
   </style>
@@ -173,7 +172,7 @@
 
       <div class="rh11-band">
         <div class="rh11-band-inner ren-center ren-center-wide">
-          <div class="rh11-band-layout ren-switcher">
+          <div class="rh11-band-layout ren-grid ren-grid-2">
             <h1 id="rh11-heading" class="rh11-heading">Move from a strong foundation to meaningful momentum</h1>
             <div class="rh11-body ren-stack">
               <p class="rh11-description">Create accessible interfaces from a shared language, keep every decision adaptable, and give teams room to focus on the experience that matters.</p>
