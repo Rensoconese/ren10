@@ -1,0 +1,21 @@
+// @ts-check
+const fs=require('node:fs');const path=require('node:path');const{test,expect}=require('@playwright/test');const{injectAxe,checkA11y}=require('axe-playwright');const{startStaticServer}=require('../utils/static-server.cjs');
+const ROOT_DIR=path.resolve(__dirname,'../..');
+const BLOCKS=[
+{number:67,file:'feature-modular-spec-sheet.html',items:'.feature67-row',count:4,images:0},
+{number:68,file:'feature-staggered-photo-notes.html',items:'.feature68-card',count:3,images:3},
+{number:69,file:'feature-layered-value-stack.html',items:'.feature69-layer',count:4,images:0},
+{number:70,file:'feature-contrast-metric-spotlight.html',items:'.feature70-card',count:4,images:0},
+{number:71,file:'feature-editorial-quote-columns.html',items:'.feature71-story',count:2,images:0},
+{number:72,file:'feature-image-capability-dock.html',items:'.feature72-card',count:5,images:1}];
+const CHAIN=[['feature-panorama-proof-footer.html','feature-staggered-photo-notes.html'],['feature-modular-spec-sheet.html','feature-layered-value-stack.html'],['feature-staggered-photo-notes.html','feature-contrast-metric-spotlight.html'],['feature-layered-value-stack.html','feature-editorial-quote-columns.html'],['feature-contrast-metric-spotlight.html','feature-image-capability-dock.html'],['feature-editorial-quote-columns.html','index.html']];let server;
+test.describe('Feature 67–72 Ren10 blocks',()=>{
+test.beforeAll(async()=>{server=await startStaticServer(ROOT_DIR)});test.afterAll(async()=>{await server?.close()});
+async function open(page,b,w=1280,h=900){await page.setViewportSize({width:w,height:h});expect((await page.goto(`${server.origin}/templates/blocks/${b.file}`))?.status()).toBe(200);await expect(page.locator(`[data-feature${b.number}-root]`)).toBeVisible()}
+for(const b of BLOCKS){test(`Feature ${b.number} preserves its anatomy`,async({page})=>{await open(page,b);const root=page.locator(`[data-feature${b.number}-root]`);await expect(page.locator('.bb-detail-header h1.bb-detail-title')).toHaveCount(1);await expect(page.locator('.bb-detail-header p.bb-detail-description')).toHaveCount(1);await expect(root.locator(`h2.feature${b.number}-title`)).toHaveCount(1);await expect(root.locator(`p.feature${b.number}-description`)).toHaveCount(1);await expect(root.locator(b.items)).toHaveCount(b.count);await expect(root.locator('img[src^="media/"][width][height][alt]')).toHaveCount(b.images);await expect(page.locator('a[rel="prev"]')).toHaveAttribute('href',CHAIN[b.number-67][0]);await expect(page.locator('a[rel="next"]')).toHaveAttribute('href',CHAIN[b.number-67][1])});
+test(`Feature ${b.number} is fluid, grid-based, and axe clean`,async({page})=>{await open(page,b,390,844);expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(1);expect(await rootGrids(page,b)).toBe(true);await injectAxe(page);await checkA11y(page,`[data-feature${b.number}-root]`)})}
+async function rootGrids(page,b){return page.locator(`[data-feature${b.number}-root] .ren-grid:not([hidden])`).evaluateAll(nodes=>nodes.every(node=>getComputedStyle(node).display==='grid'))}
+test('desktop column counts remain intentional',async({page})=>{for(const[b,s,c]of[[BLOCKS[0],'.feature67-layout',2],[BLOCKS[1],'.feature68-gallery',12],[BLOCKS[2],'.feature69-stack',1],[BLOCKS[3],'.feature70-grid',2],[BLOCKS[4],'.feature71-grid',2],[BLOCKS[5],'.feature72-dock',5]]){await open(page,b);expect(await page.locator(s).evaluate(n=>getComputedStyle(n).gridTemplateColumns.split(' ').length)).toBe(c)}});
+test('source remains vanilla, tokenized, and flex-free',()=>{const files=['feature-batch12.css',...BLOCKS.map(b=>b.file)];for(const file of files)expect(fs.readFileSync(path.join(ROOT_DIR,'templates/blocks',file),'utf8')).not.toMatch(/display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i)});
+test('catalog exposes Feature 1–72 in order',async({page})=>{await page.goto(`${server.origin}/templates/blocks/index.html`);const cards=page.locator('section[aria-labelledby="features-title"] .bb-card');await expect(cards).toHaveCount(72);await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({length:72},(_,i)=>`Feature ${i+1}`))});
+});

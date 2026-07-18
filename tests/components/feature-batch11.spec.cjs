@@ -19,7 +19,7 @@ const CHAIN = [
   ['feature-metric-timeline.html', 'feature-photo-quote-ledger.html'],
   ['feature-contrast-story-triptych.html', 'feature-capability-comparison-matrix.html'],
   ['feature-photo-quote-ledger.html', 'feature-panorama-proof-footer.html'],
-  ['feature-capability-comparison-matrix.html', 'index.html'],
+  ['feature-capability-comparison-matrix.html', 'feature-modular-spec-sheet.html'],
 ];
 let server;
 test.describe('Feature 61–66 Ren10 blocks', () => {
@@ -67,11 +67,11 @@ test.describe('Feature 61–66 Ren10 blocks', () => {
     expect(css).not.toMatch(/display\s*:\s*flex|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     for (const block of BLOCKS) expect(fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8')).not.toMatch(/display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
   });
-  test('catalog exposes Feature 1–66 in order and continues from Feature 60', async ({ page }) => {
+  test('catalog preserves Feature 1–66 in order and continues from Feature 60', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="features-title"] .bb-card');
-    await expect(cards).toHaveCount(66);
-    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 66 }, (_, index) => `Feature ${index + 1}`));
+    expect(await cards.count()).toBeGreaterThanOrEqual(66);
+    await expect(cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 66).map((node) => node.textContent?.trim()))).resolves.toEqual(Array.from({ length: 66 }, (_, index) => `Feature ${index + 1}`));
     await page.goto(`${server.origin}/templates/blocks/feature-dual-photo-manifesto.html`);
     await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', BLOCKS[0].file);
   });
