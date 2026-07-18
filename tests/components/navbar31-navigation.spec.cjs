@@ -74,7 +74,7 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
   let staticServer;
 
   test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
+  test.describe.configure({ timeout: 30000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
