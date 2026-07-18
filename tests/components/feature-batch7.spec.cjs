@@ -7,26 +7,26 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 31, file: 'feature-panorama-capability-deck.html', items: '.feature31-card', count: 3, images: 1 },
-  { number: 32, file: 'feature-split-statement-metrics.html', items: '.feature32-metric', count: 4, images: 0 },
-  { number: 33, file: 'feature-image-disclosure-aside.html', items: '.feature33-disclosures details', count: 3, images: 1 },
-  { number: 34, file: 'feature-product-pillars.html', items: '.feature34-pillar', count: 3, images: 0 },
-  { number: 35, file: 'feature-media-evidence-grid.html', items: '.feature35-card', count: 4, images: 2 },
-  { number: 36, file: 'feature-adoption-sequence.html', items: '.feature36-step', count: 4, images: 1 },
+  { number: 37, file: 'feature-editorial-chapter-index.html', items: '.feature37-chapter', count: 3, images: 0 },
+  { number: 38, file: 'feature-media-story-mosaic.html', items: '.feature38-card', count: 4, images: 2 },
+  { number: 39, file: 'feature-outcome-comparison.html', items: '.feature39-row', count: 4, images: 0 },
+  { number: 40, file: 'feature-centered-delivery-steps.html', items: '.feature40-step', count: 4, images: 0 },
+  { number: 41, file: 'feature-quote-proof-split.html', items: '.feature41-metric', count: 3, images: 1 },
+  { number: 42, file: 'feature-centered-media-matrix.html', items: '.feature42-item', count: 4, images: 1 },
 ];
 
 const CHAIN = [
-  ['feature-gallery-quote-rail.html', 'feature-split-statement-metrics.html'],
-  ['feature-panorama-capability-deck.html', 'feature-image-disclosure-aside.html'],
-  ['feature-split-statement-metrics.html', 'feature-product-pillars.html'],
-  ['feature-image-disclosure-aside.html', 'feature-media-evidence-grid.html'],
-  ['feature-product-pillars.html', 'feature-adoption-sequence.html'],
-  ['feature-media-evidence-grid.html', 'feature-editorial-chapter-index.html'],
+  ['feature-adoption-sequence.html', 'feature-media-story-mosaic.html'],
+  ['feature-editorial-chapter-index.html', 'feature-outcome-comparison.html'],
+  ['feature-media-story-mosaic.html', 'feature-centered-delivery-steps.html'],
+  ['feature-outcome-comparison.html', 'feature-quote-proof-split.html'],
+  ['feature-centered-delivery-steps.html', 'feature-centered-media-matrix.html'],
+  ['feature-quote-proof-split.html', 'index.html'],
 ];
 
 let server;
 
-test.describe('Feature 31–36 Ren10 blocks', () => {
+test.describe('Feature 37–42 Ren10 blocks', () => {
   test.beforeAll(async () => { server = await startStaticServer(ROOT_DIR); });
   test.afterAll(async () => { await server?.close(); });
 
@@ -46,8 +46,8 @@ test.describe('Feature 31–36 Ren10 blocks', () => {
       await expect(root.locator(`p.feature${block.number}-description`)).toHaveCount(1);
       await expect(root.locator(block.items)).toHaveCount(block.count);
       await expect(root.locator('img[src^="media/"][width][height][alt]')).toHaveCount(block.images);
-      await expect(page.locator('.bb-block-pagination a[rel="prev"]')).toHaveAttribute('href', CHAIN[block.number - 31][0]);
-      await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', CHAIN[block.number - 31][1]);
+      await expect(page.locator('.bb-block-pagination a[rel="prev"]')).toHaveAttribute('href', CHAIN[block.number - 37][0]);
+      await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', CHAIN[block.number - 37][1]);
     });
 
     test(`Feature ${block.number} stays fluid, grid-based, and axe clean`, async ({ page }) => {
@@ -61,12 +61,12 @@ test.describe('Feature 31–36 Ren10 blocks', () => {
 
   test('desktop compositions preserve their intended column counts', async ({ page }) => {
     const expectations = [
-      [BLOCKS[0], '.feature31-deck', 3],
-      [BLOCKS[1], '.feature32-layout', 2],
-      [BLOCKS[2], '.feature33-layout', 2],
-      [BLOCKS[3], '.feature34-grid', 3],
-      [BLOCKS[4], '.feature35-grid', 2],
-      [BLOCKS[5], '.feature36-layout', 2],
+      [BLOCKS[0], '.feature37-layout', 2],
+      [BLOCKS[1], '.feature38-grid', 12],
+      [BLOCKS[2], '.feature39-row:first-child', 3],
+      [BLOCKS[3], '.feature40-grid', 4],
+      [BLOCKS[4], '.feature41-layout', 2],
+      [BLOCKS[5], '.feature42-grid', 3],
     ];
     for (const [block, selector, columns] of expectations) {
       await openBlock(page, block);
@@ -74,18 +74,22 @@ test.describe('Feature 31–36 Ren10 blocks', () => {
     }
   });
 
-  test('image aside disclosures work without custom JavaScript', async ({ page }) => {
-    await openBlock(page, BLOCKS[2]);
-    const disclosures = page.locator('.feature33-disclosures details');
-    await expect(disclosures.first()).toHaveAttribute('open', '');
-    await disclosures.nth(1).locator('summary').click();
-    await expect(disclosures.nth(1)).toHaveAttribute('open', '');
-    await disclosures.first().locator('summary').press('Enter');
-    await expect(disclosures.first()).not.toHaveAttribute('open', '');
+  test('mosaic spans alternate while preserving semantic source order', async ({ page }) => {
+    await openBlock(page, BLOCKS[1]);
+    const cards = page.locator('.feature38-card');
+    const desktopWidths = await cards.evaluateAll((nodes) => nodes.map((node) => Math.round(node.getBoundingClientRect().width)));
+    expect(desktopWidths[0]).toBeGreaterThan(desktopWidths[1]);
+    expect(desktopWidths[1]).toBe(desktopWidths[2]);
+    expect(desktopWidths[0]).toBe(desktopWidths[3]);
+    await openBlock(page, BLOCKS[1], 390, 844);
+    expect(await cards.evaluateAll((nodes) => {
+      const widths = nodes.map((node) => Math.round(node.getBoundingClientRect().width));
+      return widths.every((width) => width === widths[0]);
+    })).toBe(true);
   });
 
   test('all feature source stays vanilla, tokenized, and flex-free', () => {
-    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/feature-batch6.css'), 'utf8');
+    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/feature-batch7.css'), 'utf8');
     expect(css).not.toMatch(/display\s*:\s*flex|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     for (const block of BLOCKS) {
       const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8');
@@ -94,12 +98,12 @@ test.describe('Feature 31–36 Ren10 blocks', () => {
     }
   });
 
-  test('catalog preserves Feature 1–36 in order and continues from Feature 30', async ({ page }) => {
+  test('catalog exposes Feature 1–42 in order and continues from Feature 36', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="features-title"] .bb-card');
-    expect(await cards.count()).toBeGreaterThanOrEqual(36);
-    expect(await cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 36).map((node) => node.textContent?.trim()))).toEqual(Array.from({ length: 36 }, (_, index) => `Feature ${index + 1}`));
-    await page.goto(`${server.origin}/templates/blocks/feature-gallery-quote-rail.html`);
+    await expect(cards).toHaveCount(42);
+    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 42 }, (_, index) => `Feature ${index + 1}`));
+    await page.goto(`${server.origin}/templates/blocks/feature-adoption-sequence.html`);
     await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', BLOCKS[0].file);
   });
 });
