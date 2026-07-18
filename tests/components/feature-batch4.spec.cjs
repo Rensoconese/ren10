@@ -21,7 +21,7 @@ const CHAIN = [
   ['feature-indexed-detail-grid.html', 'feature-contrast-metrics-band.html'],
   ['feature-image-stat-stack.html', 'feature-editorial-triptych.html'],
   ['feature-contrast-metrics-band.html', 'feature-photo-disclosure-list.html'],
-  ['feature-editorial-triptych.html', 'index.html'],
+  ['feature-editorial-triptych.html', 'feature-tabbed-media-showcase.html'],
 ];
 
 let server;
@@ -100,11 +100,11 @@ test.describe('Feature 19–24 Ren10 blocks', () => {
     }
   });
 
-  test('catalog exposes Feature 1–24 in order and continues from Feature 18', async ({ page }) => {
+  test('catalog preserves Feature 1–24 in order and continues from Feature 18', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="features-title"] .bb-card');
-    await expect(cards).toHaveCount(24);
-    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 24 }, (_, index) => `Feature ${index + 1}`));
+    expect(await cards.count()).toBeGreaterThanOrEqual(24);
+    expect(await cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 24).map((node) => node.textContent?.trim()))).toEqual(Array.from({ length: 24 }, (_, index) => `Feature ${index + 1}`));
     await page.goto(`${server.origin}/templates/blocks/feature-photo-overlay-panel.html`);
     await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', BLOCKS[0].file);
   });
