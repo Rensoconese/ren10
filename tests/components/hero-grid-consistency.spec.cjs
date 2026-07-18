@@ -26,9 +26,11 @@ test.afterAll(async () => { await server?.close(); });
 
 test('every two-column hero composition uses responsive CSS Grid rather than flexbox', async ({ page }) => {
   for (const [file, selector] of layouts) {
+    await page.setViewportSize({ width: 390, height: 1000 });
+    expect((await page.goto(`${server.origin}/templates/blocks/${file}`))?.status()).toBe(200);
+
     for (const [width, expectedColumns] of [[390, 1], [640, 1], [767, 1], [768, 2], [1280, 2]]) {
       await page.setViewportSize({ width, height: 1000 });
-      expect((await page.goto(`${server.origin}/templates/blocks/${file}`))?.status()).toBe(200);
 
       const state = await page.locator(selector).evaluate((node) => {
         const style = getComputedStyle(node);

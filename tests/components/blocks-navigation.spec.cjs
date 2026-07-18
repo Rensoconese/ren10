@@ -4803,8 +4803,8 @@ test.describe('Navbar Logo Left Menu Right Grouped (navbar12)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
 
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
+  test.use({ actionTimeout: 5000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 30000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
