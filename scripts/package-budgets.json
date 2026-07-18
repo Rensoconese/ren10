@@ -5,8 +5,8 @@
   "capturedFrom": "validated ren10@0.10.0 catalog through Feature 120 with cross-browser navigation and media hardening",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 24555090, "allowedDelta": 0, "target": 24555090 },
-    "tarballBytes": { "baseline": 5856881, "allowedDelta": 0, "target": 5856881 },
+    "unpackedBytes": { "baseline": 24555438, "allowedDelta": 0, "target": 24555438 },
+    "tarballBytes": { "baseline": 5856863, "allowedDelta": 0, "target": 5856863 },
     "fullCssBytes": { "baseline": 511857, "allowedDelta": 0, "target": 511857 },
     "minCssBytes": { "baseline": 291077, "allowedDelta": 0, "target": 291077 },
     "knowledgeJsonBytes": { "baseline": 4187375, "allowedDelta": 0, "target": 4187375 },
