@@ -21,7 +21,7 @@ const CHAIN = [
   ['feature-capability-checkerboard.html', 'feature-indexed-story-stack.html'],
   ['feature-image-metric-aside.html', 'feature-centered-proof-grid.html'],
   ['feature-indexed-story-stack.html', 'feature-asymmetric-media-statement.html'],
-  ['feature-centered-proof-grid.html', 'index.html'],
+  ['feature-centered-proof-grid.html', 'feature-media-annotation-board.html'],
 ];
 
 let server;
@@ -93,11 +93,11 @@ test.describe('Feature 49–54 Ren10 blocks', () => {
     }
   });
 
-  test('catalog exposes Feature 1–54 in order and continues from Feature 48', async ({ page }) => {
+  test('catalog preserves Feature 1–54 in order and continues from Feature 48', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="features-title"] .bb-card');
-    await expect(cards).toHaveCount(54);
-    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 54 }, (_, index) => `Feature ${index + 1}`));
+    expect(await cards.count()).toBeGreaterThanOrEqual(54);
+    await expect(cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 54).map((node) => node.textContent?.trim()))).resolves.toEqual(Array.from({ length: 54 }, (_, index) => `Feature ${index + 1}`));
     await page.goto(`${server.origin}/templates/blocks/feature-image-process-ribbon.html`);
     await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', BLOCKS[0].file);
   });
