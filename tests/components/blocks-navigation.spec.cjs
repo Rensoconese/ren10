@@ -5749,11 +5749,15 @@ test.describe('Navbar Logo Left Menu Center Dropdown (navbar13)', () => {
       const linksRect = links.getBoundingClientRect();
       const brandRect = brand.getBoundingClientRect();
       const actionsRect = actions.getBoundingClientRect();
+      const navStyle = getComputedStyle(nav);
+      const navColumns = navStyle.gridTemplateColumns
+        .split(/\s+/)
+        .map((value) => Number.parseFloat(value));
       return {
         navCenterX: navRect.left + navRect.width / 2,
         linksCenterX: linksRect.left + linksRect.width / 2,
-        brandWidth: brandRect.width,
-        actionsWidth: actionsRect.width,
+        navDisplay: navStyle.display,
+        navColumns,
         brandRight: brandRect.right,
         linksLeft: linksRect.left,
         linksRight: linksRect.right,
@@ -5771,10 +5775,12 @@ test.describe('Navbar Logo Left Menu Center Dropdown (navbar13)', () => {
       Math.abs(shell.linksCenterX - shell.navCenterX),
       'menu remains geometrically centered despite unequal side widths'
     ).toBeLessThanOrEqual(16);
+    expect(shell.navDisplay, 'desktop shell uses CSS Grid').toBe('grid');
+    expect(shell.navColumns, 'desktop shell exposes three grid tracks').toHaveLength(3);
     expect(
-      Math.abs(shell.brandWidth - shell.actionsWidth),
-      'side content widths are unequal so centering is not accidental'
-    ).toBeGreaterThan(8);
+      Math.abs(shell.navColumns[0] - shell.navColumns[2]),
+      'equal outer grid tracks guarantee geometric centering'
+    ).toBeLessThanOrEqual(1);
 
     await page.locator('.rn13-disclosure > summary').click();
     await expect(page.locator('.rn13-panel')).toBeVisible();
