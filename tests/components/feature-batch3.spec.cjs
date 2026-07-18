@@ -7,26 +7,26 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 
 const ROOT_DIR = path.resolve(__dirname, '../..');
 const BLOCKS = [
-  { number: 7, file: 'feature-split-image-metrics.html', items: '.feature7-stat', count: 2, images: 1 },
-  { number: 8, file: 'feature-process-steps.html', items: '.feature8-step', count: 4, images: 0 },
-  { number: 9, file: 'feature-sidebar-checklist.html', items: '.feature9-item', count: 4, images: 0 },
-  { number: 10, file: 'feature-dual-media-stories.html', items: '.feature10-item', count: 2, images: 2 },
-  { number: 11, file: 'feature-contrast-columns.html', items: '.feature11-item', count: 3, images: 0 },
-  { number: 12, file: 'feature-gallery-metrics.html', items: '.feature12-metric', count: 2, images: 2 },
+  { number: 13, file: 'feature-horizontal-capability-rail.html', items: '.feature13-item', count: 4, images: 0 },
+  { number: 14, file: 'feature-photo-quote.html', items: '.feature14-metric', count: 2, images: 1 },
+  { number: 15, file: 'feature-layered-media-cards.html', items: '.feature15-card', count: 2, images: 2 },
+  { number: 16, file: 'feature-comparison-grid.html', items: '.feature16-panel', count: 2, images: 0 },
+  { number: 17, file: 'feature-six-tile-grid.html', items: '.feature17-item', count: 6, images: 0 },
+  { number: 18, file: 'feature-photo-overlay-panel.html', items: '.feature18-panel', count: 1, images: 1 },
 ];
 
 const CHAIN = [
-  ['feature-staggered-media-grid.html', 'feature-process-steps.html'],
-  ['feature-split-image-metrics.html', 'feature-sidebar-checklist.html'],
-  ['feature-process-steps.html', 'feature-dual-media-stories.html'],
-  ['feature-sidebar-checklist.html', 'feature-contrast-columns.html'],
-  ['feature-dual-media-stories.html', 'feature-gallery-metrics.html'],
-  ['feature-contrast-columns.html', 'feature-horizontal-capability-rail.html'],
+  ['feature-gallery-metrics.html', 'feature-photo-quote.html'],
+  ['feature-horizontal-capability-rail.html', 'feature-layered-media-cards.html'],
+  ['feature-photo-quote.html', 'feature-comparison-grid.html'],
+  ['feature-layered-media-cards.html', 'feature-six-tile-grid.html'],
+  ['feature-comparison-grid.html', 'feature-photo-overlay-panel.html'],
+  ['feature-six-tile-grid.html', 'index.html'],
 ];
 
 let server;
 
-test.describe('Feature 7–12 Ren10 blocks', () => {
+test.describe('Feature 13–18 Ren10 blocks', () => {
   test.beforeAll(async () => { server = await startStaticServer(ROOT_DIR); });
   test.afterAll(async () => { await server?.close(); });
 
@@ -46,8 +46,8 @@ test.describe('Feature 7–12 Ren10 blocks', () => {
       await expect(root.locator(`p.feature${block.number}-description`)).toHaveCount(1);
       await expect(root.locator(block.items)).toHaveCount(block.count);
       await expect(root.locator('img[src^="media/"][width][height][alt]')).toHaveCount(block.images);
-      await expect(page.locator('.bb-block-pagination a[rel="prev"]')).toHaveAttribute('href', CHAIN[block.number - 7][0]);
-      await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', CHAIN[block.number - 7][1]);
+      await expect(page.locator('.bb-block-pagination a[rel="prev"]')).toHaveAttribute('href', CHAIN[block.number - 13][0]);
+      await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', CHAIN[block.number - 13][1]);
     });
 
     test(`Feature ${block.number} stays fluid, grid-based, and axe clean`, async ({ page }) => {
@@ -61,12 +61,12 @@ test.describe('Feature 7–12 Ren10 blocks', () => {
 
   test('desktop compositions preserve their intended column counts', async ({ page }) => {
     const expectations = [
-      [BLOCKS[0], '.feature7-layout', 2],
-      [BLOCKS[1], '.feature8-steps', 4],
-      [BLOCKS[2], '.feature9-layout', 2],
-      [BLOCKS[3], '.feature10-grid', 2],
-      [BLOCKS[4], '.feature11-grid', 3],
-      [BLOCKS[5], '.feature12-gallery', 2],
+      [BLOCKS[0], '.feature13-grid', 4],
+      [BLOCKS[1], '.feature14-layout', 2],
+      [BLOCKS[2], '.feature15-grid', 2],
+      [BLOCKS[3], '.feature16-grid', 2],
+      [BLOCKS[4], '.feature17-grid', 3],
+      [BLOCKS[5], '.feature18-scene', 1],
     ];
     for (const [block, selector, columns] of expectations) {
       await openBlock(page, block);
@@ -74,8 +74,17 @@ test.describe('Feature 7–12 Ren10 blocks', () => {
     }
   });
 
+  test('photo overlay layers stay aligned without absolute positioning', async ({ page }) => {
+    await openBlock(page, BLOCKS[5]);
+    const areas = await page.locator('.feature18-scene > *').evaluateAll((nodes) => nodes.map((node) => {
+      const style = getComputedStyle(node);
+      return `${style.gridColumnStart}/${style.gridColumnEnd}/${style.gridRowStart}/${style.gridRowEnd}`;
+    }));
+    expect(new Set(areas).size).toBe(1);
+  });
+
   test('all feature source stays vanilla, tokenized, and flex-free', () => {
-    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/feature-batch2.css'), 'utf8');
+    const css = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks/feature-batch3.css'), 'utf8');
     expect(css).not.toMatch(/display\s*:\s*flex|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     for (const block of BLOCKS) {
       const source = fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', block.file), 'utf8');
@@ -84,14 +93,12 @@ test.describe('Feature 7–12 Ren10 blocks', () => {
     }
   });
 
-  test('catalog preserves Feature 1–12 in order and continues from Feature 6', async ({ page }) => {
+  test('catalog exposes Feature 1–18 in order and continues from Feature 12', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="features-title"] .bb-card');
-    expect(await cards.count()).toBeGreaterThanOrEqual(12);
-    await expect(cards.locator('.bb-card-eyebrow').first()).toHaveText('Feature 1');
-    await expect(cards.locator('.bb-card-eyebrow').nth(11)).toHaveText('Feature 12');
-    expect(await cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 12).map((node) => node.textContent?.trim()))).toEqual(Array.from({ length: 12 }, (_, index) => `Feature ${index + 1}`));
-    await page.goto(`${server.origin}/templates/blocks/feature-staggered-media-grid.html`);
+    await expect(cards).toHaveCount(18);
+    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 18 }, (_, index) => `Feature ${index + 1}`));
+    await page.goto(`${server.origin}/templates/blocks/feature-gallery-metrics.html`);
     await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', BLOCKS[0].file);
   });
 });
