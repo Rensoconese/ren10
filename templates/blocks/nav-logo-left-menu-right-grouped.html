@@ -593,10 +593,18 @@
       let hoverTransient = false;
       let pointerPinned = false;
       let ignoreHoverUntilLeave = false;
+      let closeTimer = 0;
 
       function isDesktop() { return desktopQuery.matches; }
 
+      function clearScheduledClose() {
+        if (!closeTimer) return;
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      }
+
       function resetHoverFlags() {
+        clearScheduledClose();
         hoverTransient = false;
         pointerPinned = false;
         ignoreHoverUntilLeave = false;
@@ -604,6 +612,7 @@
       }
 
       function closeDisclosure(returnFocus) {
+        clearScheduledClose();
         if (!disclosure.open) return;
         disclosure.open = false;
         hoverTransient = false;
@@ -612,6 +621,7 @@
       }
 
       function openDisclosure(source = 'programmatic') {
+        clearScheduledClose();
         if (disclosure.open) return;
         disclosure.open = true;
         hoverTransient = source === 'hover';
@@ -671,6 +681,7 @@
 
       function openFromDesktopPointer() {
         if (!isDesktop() || ignoreHoverUntilLeave) return;
+        clearScheduledClose();
         pointerInside = true;
         if (!disclosure.open) openDisclosure('hover');
       }
@@ -685,8 +696,14 @@
         if (!isDesktop()) return;
         pointerInside = false;
         ignoreHoverUntilLeave = false;
-        hoverTransient = false;
-        if (!pointerPinned) closeDisclosure(false);
+        if (!pointerPinned) {
+          clearScheduledClose();
+          closeTimer = window.setTimeout(() => {
+            closeTimer = 0;
+            hoverTransient = false;
+            closeDisclosure(false);
+          }, 250);
+        }
       }, { signal });
 
       document.addEventListener('keydown', (event) => {
@@ -735,6 +752,8 @@
         signal.addEventListener('abort', () => observer.disconnect());
       }
 
+      signal.addEventListener('abort', clearScheduledClose);
+
       let wasDesktop = isDesktop();
       const onViewportChange = () => {
         const nowDesktop = isDesktop();
@@ -751,6 +770,13 @@
         window.addEventListener('resize', onViewportChange, { signal });
       }
       window.addEventListener('resize', syncPanelToNavEnd, { signal });
+      window.addEventListener('load', syncPanelToNavEnd, { signal });
+      const geometryObserver = new ResizeObserver(syncPanelToNavEnd);
+      const nav = root.querySelector('.ren-nav');
+      if (nav) geometryObserver.observe(nav);
+      geometryObserver.observe(summary);
+      signal.addEventListener('abort', () => geometryObserver.disconnect());
+      requestAnimationFrame(() => requestAnimationFrame(syncPanelToNavEnd));
       syncPanelToNavEnd();
 
       return controller;

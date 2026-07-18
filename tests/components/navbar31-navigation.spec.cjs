@@ -35,7 +35,7 @@ const RN31_RENDER_MATRIX = JSON.parse(
  * @param {import('@playwright/test').Page} page
  * @param {string} origin
  */
-async function gotoNavbar31Block(page, origin) {
+async function gotoNavbar31Block(page, origin, { waitForUpgrade = true } = {}) {
   const response = await page.goto(`${origin}${BLOCK_PATH}`);
   expect(response, 'HTTP response for logo-cta right sheet contact block').toBeTruthy();
   expect(
@@ -45,6 +45,9 @@ async function gotoNavbar31Block(page, origin) {
   await expect(page.locator(ROOT), 'missing [data-rn31-root] shell').toHaveCount(1, {
     timeout: 2000,
   });
+  if (waitForUpgrade) {
+    await page.evaluate(() => customElements.whenDefined('ren-sheet'));
+  }
 }
 
 /**
@@ -257,10 +260,9 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
         sheetOpenAttr: sheet.hasAttribute('open'),
       };
 
+      const closed = new Promise((resolve) => sheet.addEventListener('ren-close', resolve, { once: true }));
       if (typeof sheet.close === 'function') sheet.close();
-      // Allow public ren-close listeners + open-attribute observers to settle.
-      await Promise.resolve();
-      await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)));
+      await closed;
       const closedPublic = {
         ariaExpanded: toggle.getAttribute('aria-expanded'),
         sheetOpenAttr: sheet.hasAttribute('open'),
@@ -317,12 +319,16 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
 
     // Contact phone closes.
     await openSheet(page);
-    await page.locator(`${ROOT} a.rn31-contact-phone`).click();
+    const phone = page.locator(`${ROOT} a.rn31-contact-phone`);
+    await phone.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault(), { once: true }));
+    await phone.click();
     await expectSheetClosed(page);
 
     // Contact email closes.
     await openSheet(page);
-    await page.locator(`${ROOT} a.rn31-contact-email`).click();
+    const email = page.locator(`${ROOT} a.rn31-contact-email`);
+    await email.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault(), { once: true }));
+    await email.click();
     await expectSheetClosed(page);
 
     // Each of the five social destinations closes.
@@ -589,7 +595,7 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
       viewport: { width: 390, height: 1100 },
     });
     const page = await context.newPage();
-    await gotoNavbar31Block(page, staticServer.origin);
+    await gotoNavbar31Block(page, staticServer.origin, { waitForUpgrade: false });
 
     await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeHidden();
     await expect(page.locator('#rn31-primary-links')).toBeVisible();
@@ -611,7 +617,7 @@ test.describe('Navbar Logo CTA Right Sheet Contact (navbar31)', () => {
       viewport: { width: 390, height: 1100 },
     });
     const page = await context.newPage();
-    await gotoNavbar31Block(page, staticServer.origin);
+    await gotoNavbar31Block(page, staticServer.origin, { waitForUpgrade: false });
 
     const sheet = page.locator(`${ROOT} ren-sheet`);
     await expect(sheet).toBeVisible();

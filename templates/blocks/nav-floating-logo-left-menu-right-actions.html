@@ -600,7 +600,7 @@
      * Native details owns open/close via click, Enter, and Space on mobile and
      * for keyboard activation on desktop. Desktop pointer hover-open is additive.
      *
-     * Desktop pointer click state machine (deterministic, no timers):
+     * Desktop pointer click state machine (deterministic; only hover exit has a grace timer):
      *   - hover opens transiently
      *   - first pointer click while hover-open pins the disclosure open
      *   - second pointer click closes and suppresses hover re-open until leave
@@ -645,12 +645,21 @@
       let pointerPinned = false;
       /** After intentional close while pointer still inside — no hover re-open until leave. */
       let ignoreHoverUntilLeave = false;
+      /** Short hover-intent grace period for engines that split the generated corridor hit region. */
+      let closeTimer = 0;
 
       function isDesktop() {
         return desktopQuery.matches;
       }
 
+      function clearScheduledClose() {
+        if (!closeTimer) return;
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      }
+
       function resetHoverFlags() {
+        clearScheduledClose();
         hoverTransient = false;
         pointerPinned = false;
         ignoreHoverUntilLeave = false;
@@ -658,6 +667,7 @@
       }
 
       function closeDisclosure(returnFocus) {
+        clearScheduledClose();
         if (!disclosure.open) return;
         disclosure.open = false;
         hoverTransient = false;
@@ -666,6 +676,7 @@
       }
 
       function openDisclosure(source = 'programmatic') {
+        clearScheduledClose();
         if (disclosure.open) return;
         disclosure.open = true;
         hoverTransient = source === 'hover';
@@ -723,6 +734,7 @@
 
       function openFromDesktopPointer() {
         if (!isDesktop() || ignoreHoverUntilLeave) return;
+        clearScheduledClose();
         pointerInside = true;
         if (!disclosure.open) openDisclosure('hover');
       }
@@ -744,10 +756,18 @@
           pointerInside = false;
           ignoreHoverUntilLeave = false;
           hoverTransient = false;
-          if (!pointerPinned) closeDisclosure(false);
+          if (!pointerPinned) {
+            clearScheduledClose();
+            closeTimer = window.setTimeout(() => {
+              closeTimer = 0;
+              if (!pointerInside && !pointerPinned) closeDisclosure(false);
+            }, 250);
+          }
         },
         { signal }
       );
+
+      signal.addEventListener('abort', clearScheduledClose, { once: true });
 
       document.addEventListener(
         'keydown',

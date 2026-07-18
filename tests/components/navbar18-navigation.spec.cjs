@@ -54,6 +54,17 @@ async function openBlock(page, viewport, opts = {}) {
     waitUntil: 'domcontentloaded',
   });
 
+  // WebKit may dispatch DOMContentLoaded before linked component styles have
+  // finished applying on a same-page reload. Measure only the rendered block.
+  await page.waitForFunction((rootSel) => {
+    const rootEl = document.querySelector(rootSel);
+    const nav = rootEl?.querySelector('.ren-nav');
+    const toggle = rootEl?.querySelector('.ren-nav-toggle');
+    return nav && toggle
+      && getComputedStyle(nav).display === 'grid'
+      && toggle.getBoundingClientRect().width >= 44;
+  }, ROOT);
+
   if (theme === 'dark') {
     await page.locator('html').evaluate((el) => {
       el.setAttribute('data-theme', 'dark');

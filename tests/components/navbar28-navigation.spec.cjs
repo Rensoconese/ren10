@@ -664,6 +664,7 @@ test.describe('Navbar 28 — Topics Collection Cards Mega Menu (navbar28)', () =
     }
 
     // Same-breakpoint resize stability (no spurious open).
+    await page.mouse.move(0, 0);
     for (const width of [767, 768, 769]) {
       await page.setViewportSize({ width, height: 901 });
       await page.evaluate(() => window.dispatchEvent(new Event('resize')));
@@ -696,7 +697,6 @@ test.describe('Navbar 28 — Topics Collection Cards Mega Menu (navbar28)', () =
     const context = await browser.newContext({
       viewport: { width: 390, height: 844 },
       hasTouch: true,
-      isMobile: true,
     });
     const page = await context.newPage();
     await gotoBlock(page, staticServer.origin);

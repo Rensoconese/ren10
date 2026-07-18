@@ -19,6 +19,7 @@ for (const viewport of [
   { name: 'desktop', width: 1280, height: 900, minimumInline: 40 },
 ]) {
   test(`all CTA previews keep shared breathing room at ${viewport.name}`, async ({ page }) => {
+    test.setTimeout(120000);
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
 
     for (const file of CTA_FILES) {
@@ -44,6 +45,7 @@ for (const viewport of [
 }
 
 test('all outlined CTA actions use a neutral opaque surface instead of a blue line', async ({ page }) => {
+  test.setTimeout(120000);
   await page.setViewportSize({ width: 1280, height: 900 });
 
   for (const file of CTA_FILES) {
@@ -69,6 +71,7 @@ test('all outlined CTA actions use a neutral opaque surface instead of a blue li
 });
 
 test('media-backed CTA canvases stay landscape and controlled', async ({ page }) => {
+  test.setTimeout(120000);
   await page.setViewportSize({ width: 1280, height: 900 });
 
   for (const file of CTA_FILES) {

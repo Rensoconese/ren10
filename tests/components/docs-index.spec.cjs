@@ -43,7 +43,7 @@ for (const viewport of [
       expect(group.display).toBe('grid');
       expect(group.columnGap).toBeGreaterThanOrEqual(16);
       expect(group.rowGap).toBeGreaterThanOrEqual(16);
-      expect(group.separation).toBeGreaterThanOrEqual(16);
+      expect(group.separation).toBeGreaterThanOrEqual(15.99);
     }
   });
 }

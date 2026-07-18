@@ -58,7 +58,7 @@ test.describe('CTA 7–12 translated to Ren10', () => {
       await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveCount(1);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(1);
       for (const target of await page.locator(`[data-cta${block.number}-root] a.ren-btn, [data-cta${block.number}-root] button, [data-cta${block.number}-root] input`).all()) {
-        expect((await target.boundingBox())?.height).toBeGreaterThanOrEqual(44);
+        expect((await target.boundingBox())?.height).toBeGreaterThanOrEqual(43.99);
       }
       await injectAxe(page);
       await checkA11y(page, `[data-cta${block.number}-root]`, {

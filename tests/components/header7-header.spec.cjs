@@ -66,7 +66,10 @@ test.describe('Relume Header 7 translated to Ren10', () => {
       duration: expect.any(Number),
     });
     void state;
-    expect(await page.locator(`${SELECTOR} video`).evaluate((video) => Number.isFinite(video.duration) && video.duration > 0)).toBe(true);
+    await expect.poll(
+      () => page.locator(`${SELECTOR} video`).evaluate((video) => Number.isFinite(video.duration) && video.duration > 0),
+      { timeout: 15000 }
+    ).toBe(true);
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
@@ -342,7 +345,7 @@ test.describe('Relume Header 7 translated to Ren10', () => {
     await expect(page.locator(`${SELECTOR} h1`)).toBeVisible();
     await expect(page.locator(`${SELECTOR} .rh7-actions > .ren-btn`)).toHaveCount(2);
     await expect(page.locator(`${SELECTOR} video`)).toBeVisible();
-    await expect(page.locator(`${SELECTOR} video`)).toHaveJSProperty('controls', true);
+    await expect(page.locator(`${SELECTOR} video`)).toHaveAttribute('controls', '');
     await expect(page.locator(`${SELECTOR} .rh7-motion`)).toBeHidden();
     await context.close();
   });

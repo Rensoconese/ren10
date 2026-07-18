@@ -335,11 +335,15 @@ test.describe('Navbar Logo Left Center Links Overlay Panel (navbar20)', () => {
     await expectClosedWithToggleFocus('rn20-terms privacy');
 
     await reopen();
-    await page.locator(`${ROOT} .rn20-contact a[href]`).first().click();
+    const phone = page.locator(`${ROOT} .rn20-contact a[href]`).first();
+    await phone.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault(), { once: true }));
+    await phone.click();
     await expectClosedWithToggleFocus('rn20-contact phone');
 
     await reopen();
-    await page.locator(`${ROOT} .rn20-contact a[href]`).nth(1).click();
+    const email = page.locator(`${ROOT} .rn20-contact a[href]`).nth(1);
+    await email.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault(), { once: true }));
+    await email.click();
     await expectClosedWithToggleFocus('rn20-contact email');
 
     await reopen();

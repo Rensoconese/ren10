@@ -1191,6 +1191,9 @@
           el.addEventListener(
             'click',
             () => {
+              if (isDesktop() && kind === 'peer' && el instanceof HTMLElement) {
+                el.focus({ preventScroll: true });
+              }
               // Always coordinate close policy even when details were already closed
               // (mobile actions/peers still need shell close + stable focus).
               if (!disclosure.open && isDesktop()) return;

@@ -775,7 +775,12 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
       await toggle.click();
       await expect(toggle).toHaveAttribute('aria-expanded', 'true');
       await expect(overlay).toBeVisible();
-      await page.locator(selector).first().click();
+      const destination = page.locator(selector).first();
+      const href = await destination.getAttribute('href');
+      if (/^(?:tel|mailto):/.test(href || '')) {
+        await destination.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault(), { once: true }));
+      }
+      await destination.click();
       await expect(toggle).toHaveAttribute('aria-expanded', 'false');
       await expect(overlay).toBeHidden();
     }
@@ -800,8 +805,8 @@ test.describe('Navbar Sticky Logo Center Dropdown Fullscreen Contact (navbar22)'
     await form.locator('#rn22-name').fill('Ada Lovelace');
     await form.locator('#rn22-email').fill('ada@example.com');
     await form.locator('#rn22-message').fill('Hello from Harbor Studio.');
-    // Custom checkbox control intercepts the native input hit target.
-    await form.locator('input[name="terms"]').check({ force: true });
+    await form.locator('label.rn22-terms').click();
+    await expect(form.locator('input[name="terms"]')).toBeChecked();
     await form.locator('button[type="submit"]').click();
 
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');

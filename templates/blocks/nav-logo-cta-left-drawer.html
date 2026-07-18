@@ -539,7 +539,10 @@
       });
 
       sheet.addEventListener('ren-open', syncToggle);
-      sheet.addEventListener('ren-close', syncToggle);
+      sheet.addEventListener('ren-close', () => {
+        syncToggle();
+        requestAnimationFrame(() => toggle.focus({ preventScroll: true }));
+      });
 
       syncToggle();
     }

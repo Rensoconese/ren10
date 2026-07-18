@@ -190,6 +190,10 @@
     const alertDemo = document.getElementById('alert-demo');
     const alertDemoTrigger = document.querySelector('[data-trigger="alert-demo"]');
     alertDemoTrigger.addEventListener('click', () => alertDemo.showModal());
+    // `closedby="none"` is not implemented consistently by every engine yet.
+    // Keep the destructive confirmation explicit in WebKit as well.
+    alertDemo.addEventListener('cancel', (event) => event.preventDefault());
+    alertDemo.addEventListener('close', () => alertDemoTrigger.focus());
   </script>
   <script src="../../site/shell.js" defer></script>
 </body>

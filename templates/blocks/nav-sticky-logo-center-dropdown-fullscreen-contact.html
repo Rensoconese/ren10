@@ -1091,8 +1091,9 @@
 
         if (open) {
           if (isOverlayOpen()) return;
-          returnFocusEl =
-            document.activeElement instanceof Element ? document.activeElement : toggle;
+          // Safari does not focus buttons on pointer activation. The overlay is
+          // always opened by this toggle, so it is the stable return target.
+          returnFocusEl = toggle;
           closeDisclosure(false);
           root.setAttribute('data-menu-open', '');
           overlay.removeAttribute('hidden');
@@ -1130,7 +1131,7 @@
           const target =
             returnFocusEl && document.contains(returnFocusEl) ? returnFocusEl : toggle;
           if (target instanceof HTMLElement) {
-            target.focus({ preventScroll: true });
+            requestAnimationFrame(() => target.focus({ preventScroll: true }));
           }
         }
         returnFocusEl = null;

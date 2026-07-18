@@ -30,6 +30,7 @@ async function gotoBlock(page, origin, opts = {}) {
     await page.emulateMedia({ reducedMotion: opts.reducedMotion });
   }
   await page.goto(`${origin}${BLOCK}`);
+  await page.evaluate(() => customElements.whenDefined('ren-sheet'));
 }
 
 /**
@@ -230,7 +231,12 @@ test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
     for (const item of cases) {
       await openDrawer(page);
       // Real pointer click on destinations inside the modal sheet.
-      await page.locator(item.selector).first().click();
+      const destination = page.locator(item.selector).first();
+      const href = await destination.getAttribute('href');
+      if (/^(?:tel|mailto):/.test(href || '')) {
+        await destination.evaluate((link) => link.addEventListener('click', (event) => event.preventDefault(), { once: true }));
+      }
+      await destination.click();
       await expectSheetClosed(page);
     }
 

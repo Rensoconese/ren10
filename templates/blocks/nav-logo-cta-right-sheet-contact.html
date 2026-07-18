@@ -705,7 +705,10 @@
 
       // Capture so public ARIA updates even if a later listener stops propagation.
       sheet.addEventListener('ren-open', () => setExpanded(true), { signal, capture: true });
-      sheet.addEventListener('ren-close', () => setExpanded(false), { signal, capture: true });
+      sheet.addEventListener('ren-close', () => {
+        setExpanded(false);
+        requestAnimationFrame(() => toggle.focus({ preventScroll: true }));
+      }, { signal, capture: true });
 
       // Permanent bar CTA is a destination class: close an open sheet.
       if (cta) {

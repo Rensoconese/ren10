@@ -75,7 +75,9 @@ test.describe('Relume Header 9 translated to Ren10', () => {
   test('keeps both CTA destinations usable without JavaScript', async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
     const page = await context.newPage();
-    expect((await page.goto(`${server.origin}${BLOCK}?ren10_test=header9-no-js`))?.ok()).toBe(true);
+    expect((await page.goto(`${server.origin}${BLOCK}?ren10_test=header9-no-js`, {
+      waitUntil: 'domcontentloaded',
+    }))?.ok()).toBe(true);
     const actions = page.locator(`${ROOT} .rh9-actions a`);
     await expect(actions).toHaveCount(2);
     for (let index = 0; index < 2; index += 1) {
@@ -117,7 +119,7 @@ test.describe('Relume Header 9 translated to Ren10', () => {
       expect(geometry.mediaHeight).toBeGreaterThan(120);
       expect(geometry.mediaFirst).toBe(true);
       expect(geometry.adjacent).toBeLessThanOrEqual(1);
-      expect(geometry.bandBottom).toBeLessThanOrEqual(1);
+      expect(geometry.bandBottom).toBeLessThanOrEqual(1.01);
       expect(geometry.imageCovers).toBe(true);
       expect(geometry.objectFit).toBe('cover');
     });

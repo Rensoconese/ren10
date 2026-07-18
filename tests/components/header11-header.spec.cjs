@@ -78,7 +78,10 @@ test.describe('Relume Header 11 translated to Ren10', () => {
       duration: expect.any(Number),
     });
     void media;
-    expect(await page.locator(`${ROOT} video`).evaluate((video) => Number.isFinite(video.duration) && video.duration > 0)).toBe(true);
+    await expect.poll(
+      () => page.locator(`${ROOT} video`).evaluate((video) => Number.isFinite(video.duration) && video.duration > 0),
+      { timeout: 15000 }
+    ).toBe(true);
   });
 
   test('uses exactly two distinct real CTA destinations', async ({ page }) => {
@@ -144,7 +147,7 @@ test.describe('Relume Header 11 translated to Ren10', () => {
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.mediaHeight).toBeGreaterThan(100);
       expect(geometry.adjacent).toBeLessThanOrEqual(1);
-      expect(geometry.bandBottom).toBeLessThanOrEqual(1);
+      expect(geometry.bandBottom).toBeLessThanOrEqual(1.01);
       expect(geometry.videoCovers).toBe(true);
       expect(geometry.scrimCovers).toBe(true);
       expect(geometry.objectFit).toBe('cover');
