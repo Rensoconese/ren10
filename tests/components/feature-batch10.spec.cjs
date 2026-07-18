@@ -19,7 +19,7 @@ const CHAIN = [
   ['feature-alternating-story-pairs.html', 'feature-quote-metric-mosaic.html'],
   ['feature-signal-comparison-grid.html', 'feature-capability-sequence-band.html'],
   ['feature-quote-metric-mosaic.html', 'feature-dual-photo-manifesto.html'],
-  ['feature-capability-sequence-band.html', 'index.html'],
+  ['feature-capability-sequence-band.html', 'feature-editorial-side-notes.html'],
 ];
 let server;
 test.describe('Feature 55–60 Ren10 blocks', () => {
@@ -73,11 +73,11 @@ test.describe('Feature 55–60 Ren10 blocks', () => {
       expect(source).not.toMatch(/display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i);
     }
   });
-  test('catalog exposes Feature 1–60 in order and continues from Feature 54', async ({ page }) => {
+  test('catalog preserves Feature 1–60 in order and continues from Feature 54', async ({ page }) => {
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="features-title"] .bb-card');
-    await expect(cards).toHaveCount(60);
-    await expect(cards.locator('.bb-card-eyebrow')).toHaveText(Array.from({ length: 60 }, (_, index) => `Feature ${index + 1}`));
+    expect(await cards.count()).toBeGreaterThanOrEqual(60);
+    await expect(cards.locator('.bb-card-eyebrow').evaluateAll((nodes) => nodes.slice(0, 60).map((node) => node.textContent?.trim()))).resolves.toEqual(Array.from({ length: 60 }, (_, index) => `Feature ${index + 1}`));
     await page.goto(`${server.origin}/templates/blocks/feature-asymmetric-media-statement.html`);
     await expect(page.locator('.bb-block-pagination a[rel="next"]')).toHaveAttribute('href', BLOCKS[0].file);
   });
