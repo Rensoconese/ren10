@@ -22,7 +22,7 @@ const desktopDevice = {
   firefox: devices['Desktop Firefox'],
   webkit: devices['Desktop Safari'],
 }[browserName];
-const ciWorkers = browserName === 'chromium' ? 1 : 2;
+const ciWorkers = browserName === 'firefox' ? 2 : 1;
 
 module.exports = defineConfig({
   testDir: path.join(__dirname, '..'),
