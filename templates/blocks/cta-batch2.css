@@ -19,11 +19,15 @@
 }
 
 .cta7-copy,
-.cta7-form,
 .cta8-copy,
 .cta10-copy,
 .cta12-copy {
   --stack-gap: var(--space-stack-loose);
+  min-width: 0;
+}
+
+.cta7-form {
+  --stack-gap: var(--space-2);
   min-width: 0;
 }
 
@@ -77,6 +81,12 @@
   isolation: isolate;
   overflow: hidden;
   color-scheme: light;
+}
+
+.bb-detail-page > section.cta8-block.bb-detail-preview.bb-detail-preview[data-cta8-root] {
+  display: grid;
+  align-items: center;
+  min-block-size: clamp(18rem, 26vw, 22rem);
 }
 
 :is(.cta8-background, .cta8-scrim, .cta9-background, .cta9-scrim) {

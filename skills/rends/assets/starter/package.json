@@ -1,9 +1,9 @@
 {
   "name": "ren10-v0-starter",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": true,
   "type": "module",
   "dependencies": {
-    "ren10": "0.10.0"
+    "ren10": "0.11.0"
   }
 }

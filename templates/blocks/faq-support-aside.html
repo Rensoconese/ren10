@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A split Ren10 FAQ with a visible support destination beside the disclosure list."
+    />
+    <title>Support Aside FAQ — Ren10 Blocks</title>
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="../../site/shell.css" />
+    <link
+      rel="stylesheet"
+      href="../../components/composites/ren-accordion/ren-accordion.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../components/primitives/ren-button/ren-button.css"
+    />
+    <link rel="stylesheet" href="faq-batch1.css" />
+  </head>
+  <body>
+    <main class="dx-shell bb-detail-page">
+      <header class="bb-detail-header ren-stack">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Templates</a></li>
+            <li><a href="index.html">Blocks</a></li>
+            <li aria-current="page">Support Aside FAQ</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">FAQ 6 · Support block</p>
+        <h1 class="bb-detail-title">Support Aside FAQ</h1>
+        <p class="bb-detail-description">
+          A persistent support card gives unanswered questions a clear next step
+          without competing with the disclosure list.
+        </p>
+      </header>
+      <section
+        class="faq6-block bb-detail-preview"
+        aria-labelledby="faq6-title"
+      >
+        <div class="faq6-layout ren-grid">
+          <div class="faq6-copy ren-stack">
+            <h2 id="faq6-title" class="faq6-title">Help people move forward</h2>
+            <p class="faq6-description">
+              Answer repeat questions first and keep a real support destination
+              in reach.
+            </p>
+            <section
+              class="faq6-support ren-stack"
+              aria-labelledby="faq6-support-title"
+            >
+              <h3 id="faq6-support-title">Still need a hand?</h3>
+              <p>
+                Read the implementation guide or bring a specific question to
+                the team.
+              </p>
+              <a class="ren-btn" href="../../docs/getting-started.html"
+                >Open getting started</a
+              >
+            </section>
+          </div>
+          <ren-accordion
+            class="faq6-list ren-accordion-bordered"
+            type="single"
+            collapsible
+            default-value="0"
+            ><details>
+              <summary class="ren-accordion-trigger">
+                Where should a new project start?
+              </summary>
+              <div class="ren-accordion-content">
+                Load the foundation, choose a page skeleton from the layout
+                contract, then compose only the components the flow needs.
+              </div>
+            </details>
+            <details>
+              <summary class="ren-accordion-trigger">
+                How do we report a component issue?
+              </summary>
+              <div class="ren-accordion-content">
+                Include the component name, markup, browser, theme, expected
+                behavior, and a minimal reproduction.
+              </div>
+            </details>
+            <details>
+              <summary class="ren-accordion-trigger">
+                Can we copy these blocks?
+              </summary>
+              <div class="ren-accordion-content">
+                Yes. Each block is a standalone vanilla example intended to be
+                adapted with Ren10 tokens and contracts intact.
+              </div>
+            </details>
+            <details>
+              <summary class="ren-accordion-trigger">
+                What should be verified before release?
+              </summary>
+              <div class="ren-accordion-content">
+                Run lint and agent checks, then inspect responsive layout,
+                keyboard flow, contrast, themes, and reduced motion in a
+                browser.
+              </div>
+            </details></ren-accordion
+          >
+        </div>
+      </section>
+      <nav
+        class="bb-block-pagination ren-grid ren-grid-2"
+        aria-label="Block pagination"
+      >
+        <a
+          class="bb-block-pagination-link"
+          href="faq-contrast-split.html"
+          rel="prev"
+          ><span aria-hidden="true">←</span
+          ><span
+            ><span class="bb-block-pagination-direction">Previous</span
+            ><br />Contrast Split FAQ</span
+          ></a
+        ><a
+          class="bb-block-pagination-link bb-block-pagination-link-next"
+          href="faq-indexed-editorial-list.html"
+          rel="next"
+          ><span
+            ><span class="bb-block-pagination-direction">Next</span
+            ><br />Indexed Editorial FAQ</span
+          ><span aria-hidden="true">→</span></a
+        >
+      </nav>
+    </main>
+    <script
+      type="module"
+      src="../../components/composites/ren-accordion/ren-accordion.js"
+    ></script>
+  </body>
+</html>

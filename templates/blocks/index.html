@@ -13,7 +13,7 @@
   <style>
     .bb-hero {
       max-width: 72ch;
-      padding-block: var(--space-12) var(--space-8);
+      padding-block: var(--space-12) 0;
     }
 
     .bb-hero h1 {
@@ -29,6 +29,27 @@
       color: var(--color-text-muted);
       font-size: var(--text-xl);
       line-height: 1.55;
+    }
+
+    .bb-library {
+      --stack-gap: var(--space-section-lg);
+    }
+
+    .bb-library-section {
+      --stack-gap: var(--space-section-sm);
+    }
+
+    .bb-section-intro {
+      max-width: var(--width-prose);
+    }
+
+    .bb-section-intro p {
+      margin: 0;
+      color: var(--color-text-muted);
+    }
+
+    .bb-section-intro h2 {
+      scroll-margin-block-start: var(--space-16);
     }
 
     .bb-card {
@@ -59,7 +80,7 @@
 
     .bb-card:focus-visible {
       outline: var(--ring-width) solid var(--color-focus-ring);
-      outline-offset: var(--ring-offset);
+      outline-offset: var(--ring-offset-width);
     }
 
     .bb-card-eyebrow {
@@ -91,7 +112,7 @@
       <a href="../../docs/index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="../../docs/index.html">Docs</a>
@@ -106,19 +127,21 @@
     </div>
   </header>
 
-  <main class="dx-shell">
+  <main class="dx-shell ren-stack bb-library">
     <header class="bb-hero">
       <p class="dx-kicker">Blocks</p>
-      <h1>Standalone RenDS blocks</h1>
+      <h1>Page blocks</h1>
       <p class="lede">
-        Composable page sections built from RenDS primitives, patterns, layout helpers,
-        and tokens. Use one block at a time, or combine them into full templates.
+        Ready-to-use sections for composing consistent marketing and application pages.
+        Start with one block or combine several into a complete template.
       </p>
     </header>
 
-    <section aria-labelledby="navigation-blocks">
-      <p class="dx-kicker">Navigation</p>
-      <h2 id="navigation-blocks">Navigation blocks</h2>
+    <section class="ren-stack bb-library-section" aria-labelledby="navigation-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="navigation-blocks">Navigation</h2>
+        <p>Responsive navigation patterns for simple headers, drawers, and structured mega menus.</p>
+      </div>
       <div class="ren-grid">
         <a class="bb-card ren-stack-sm" href="nav-drawer.html">
           <span class="bb-card-eyebrow">Navbar</span>
@@ -354,11 +377,10 @@
         </a>
       </div>
     </section>
-    <section class="ren-stack-lg" aria-labelledby="headers-title">
-      <div class="ren-stack-sm">
-        <p class="bb-kicker">Ren10 block library</p>
+    <section class="ren-stack bb-library-section" aria-labelledby="headers-title">
+      <div class="ren-stack-sm bb-section-intro">
         <h2 id="headers-title">Headers</h2>
-        <p>Thirty accessible hero-header compositions built in native, accessible Ren10 HTML.</p>
+        <p>Thirty responsive hero compositions for introducing products, services, and campaigns.</p>
       </div>
       <div class="ren-grid">
         <a class="bb-card ren-stack-sm" href="hero-split-copy-dual-cta-media.html">
@@ -513,11 +535,10 @@
         </a>
       </div>
     </section>
-    <section class="ren-stack-lg" aria-labelledby="ctas-title">
-      <div class="ren-stack-sm">
-        <p class="bb-kicker">Ren10 block library</p>
+    <section class="ren-stack bb-library-section" aria-labelledby="ctas-title">
+      <div class="ren-stack-sm bb-section-intro">
         <h2 id="ctas-title">Calls to action</h2>
-        <p>Sixty focused conversion sections rebuilt as native, accessible Ren10 compositions.</p>
+        <p>Sixty focused conversion sections for actions, email capture, and campaign destinations.</p>
       </div>
       <div class="ren-grid">
         <a class="bb-card ren-stack-sm" href="cta-split-image-dual-action.html">
@@ -774,11 +795,10 @@
         <a class="bb-card ren-stack-sm" href="cta-split-photo-email.html"><span class="bb-card-eyebrow">CTA 60</span><h3 class="bb-card-title">Split Photo Email CTA</h3><p class="bb-card-desc">A two-column email conversion block paired with real coastal photography.</p></a>
       </div>
     </section>
-    <section class="ren-stack-lg" aria-labelledby="features-title">
-      <div class="ren-stack-sm">
-        <p class="bb-kicker">Ren10 block library</p>
+    <section class="ren-stack bb-library-section" aria-labelledby="features-title">
+      <div class="ren-stack-sm bb-section-intro">
         <h2 id="features-title">Features</h2>
-        <p>Product-value sections built with native semantics, real photography, and responsive Ren10 CSS Grid compositions.</p>
+        <p>Product-value sections combining clear hierarchy, real photography, and responsive Grid compositions.</p>
       </div>
       <div class="ren-grid">
         <a class="bb-card ren-stack-sm" href="feature-split-copy-image.html"><span class="bb-card-eyebrow">Feature 1</span><h3 class="bb-card-title">Split Copy Image Feature</h3><p class="bb-card-desc">Structured value copy and three benefits paired with real studio photography.</p></a>
@@ -901,6 +921,126 @@
         <a class="bb-card ren-stack-sm" href="feature-metric-narrative-quartet.html"><span class="bb-card-eyebrow">Feature 118</span><h3 class="bb-card-title">Metric Narrative Quartet Feature</h3><p class="bb-card-desc">Four measures balance outcome narratives in a quartet.</p></a>
         <a class="bb-card ren-stack-sm" href="feature-dual-photo-evidence-strip.html"><span class="bb-card-eyebrow">Feature 119</span><h3 class="bb-card-title">Dual Photo Evidence Strip Feature</h3><p class="bb-card-desc">Two real photographs lead into three proof cells.</p></a>
         <a class="bb-card ren-stack-sm" href="feature-system-operating-matrix.html"><span class="bb-card-eyebrow">Feature 120</span><h3 class="bb-card-title">System Operating Matrix Feature</h3><p class="bb-card-desc">One core principle anchors five system responsibilities.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="faq-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="faq-blocks">FAQs</h2>
+        <p>Support sections using native disclosures, responsive Grid compositions, and consistent spacing.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="faq-centered-accordion.html"><span class="bb-card-eyebrow">FAQ 1</span><h3 class="bb-card-title">Centered Accordion FAQ</h3><p class="bb-card-desc">A centered introduction and focused single-open disclosure list.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-split-heading-accordion.html"><span class="bb-card-eyebrow">FAQ 2</span><h3 class="bb-card-title">Split Heading Accordion FAQ</h3><p class="bb-card-desc">Orientation copy and implementation answers share a responsive two-column Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-two-column-groups.html"><span class="bb-card-eyebrow">FAQ 3</span><h3 class="bb-card-title">Two Column Groups FAQ</h3><p class="bb-card-desc">Independent disclosure groups create a denser desktop support section.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-category-cards.html"><span class="bb-card-eyebrow">FAQ 4</span><h3 class="bb-card-title">Category Cards FAQ</h3><p class="bb-card-desc">Separate card surfaces organize product and delivery questions.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-contrast-split.html"><span class="bb-card-eyebrow">FAQ 5</span><h3 class="bb-card-title">Contrast Split FAQ</h3><p class="bb-card-desc">A high-contrast split layout gives technical answers stronger presence.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-support-aside.html"><span class="bb-card-eyebrow">FAQ 6</span><h3 class="bb-card-title">Support Aside FAQ</h3><p class="bb-card-desc">A visible support destination sits beside the accessible FAQ list.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-indexed-editorial-list.html"><span class="bb-card-eyebrow">FAQ 7</span><h3 class="bb-card-title">Indexed Editorial FAQ</h3><p class="bb-card-desc">Numbered disclosure rows create a clear reading order for longer answer sets.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-proof-split.html"><span class="bb-card-eyebrow">FAQ 8</span><h3 class="bb-card-title">Proof Split FAQ</h3><p class="bb-card-desc">Product signals and accessible answers share a balanced responsive Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-accent-panel.html"><span class="bb-card-eyebrow">FAQ 9</span><h3 class="bb-card-title">Accent Panel FAQ</h3><p class="bb-card-desc">A strong orientation panel sits beside a neutral disclosure column.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-support-band.html"><span class="bb-card-eyebrow">FAQ 10</span><h3 class="bb-card-title">Support Band FAQ</h3><p class="bb-card-desc">A focused answer list ends with one calm documentation action.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-multiple-open.html"><span class="bb-card-eyebrow">FAQ 11</span><h3 class="bb-card-title">Multiple Open FAQ</h3><p class="bb-card-desc">Related system layers remain open when readers need to compare them.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-category-directory.html"><span class="bb-card-eyebrow">FAQ 12</span><h3 class="bb-card-title">Category Directory FAQ</h3><p class="bb-card-desc">Three compact categories form a responsive support directory.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="testimonial-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="testimonial-blocks">Testimonials</h2>
+        <p>Customer proof sections combining semantic quotations, real photography, and clear attribution.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="testimonial-centered-statement.html"><span class="bb-card-eyebrow">Testimonial 1</span><h3 class="bb-card-title">Centered Statement Testimonial</h3><p class="bb-card-desc">One high-confidence quote receives a spacious centered composition.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-split-photo-story.html"><span class="bb-card-eyebrow">Testimonial 2</span><h3 class="bb-card-title">Split Photo Story Testimonial</h3><p class="bb-card-desc">A real studio photograph and customer story share a responsive Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-three-card-grid.html"><span class="bb-card-eyebrow">Testimonial 3</span><h3 class="bb-card-title">Three Card Grid Testimonial</h3><p class="bb-card-desc">Three concise customer perspectives form a balanced proof row.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-contrast-metrics.html"><span class="bb-card-eyebrow">Testimonial 4</span><h3 class="bb-card-title">Contrast Metrics Testimonial</h3><p class="bb-card-desc">A high-contrast story connects customer language with measurable outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-editorial-photo-case.html"><span class="bb-card-eyebrow">Testimonial 5</span><h3 class="bb-card-title">Editorial Photo Case Testimonial</h3><p class="bb-card-desc">A landscape photograph gives a spacious customer case real context.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-editorial-mosaic.html"><span class="bb-card-eyebrow">Testimonial 6</span><h3 class="bb-card-title">Editorial Mosaic Testimonial</h3><p class="bb-card-desc">One lead voice and two supporting perspectives create an asymmetric Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-logo-rail-statement.html"><span class="bb-card-eyebrow">Testimonial 7</span><h3 class="bb-card-title">Logo Rail Statement Testimonial</h3><p class="bb-card-desc">A customer rail establishes breadth before one centered proof story.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-dual-perspectives.html"><span class="bb-card-eyebrow">Testimonial 8</span><h3 class="bb-card-title">Dual Perspectives Testimonial</h3><p class="bb-card-desc">Design and engineering describe the same system from complementary angles.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-photo-overlay.html"><span class="bb-card-eyebrow">Testimonial 9</span><h3 class="bb-card-title">Photo Overlay Testimonial</h3><p class="bb-card-desc">A real landscape photograph supports a high-contrast customer statement.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-customer-journey.html"><span class="bb-card-eyebrow">Testimonial 10</span><h3 class="bb-card-title">Customer Journey Testimonial</h3><p class="bb-card-desc">One quote connects directly to three observable adoption stages.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-proof-aside.html"><span class="bb-card-eyebrow">Testimonial 11</span><h3 class="bb-card-title">Proof Aside Testimonial</h3><p class="bb-card-desc">A large customer voice balances four compact evidence cells.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-asymmetric-wall.html"><span class="bb-card-eyebrow">Testimonial 12</span><h3 class="bb-card-title">Asymmetric Wall Testimonial</h3><p class="bb-card-desc">One dominant quote and three supporting voices create a varied proof wall.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="footer-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="footer-blocks">Footers</h2>
+        <p>Responsive closing sections with clear navigation landmarks, useful hierarchy, and accessible conversion paths.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="footer-compact-brand-links.html"><span class="bb-card-eyebrow">Footer 1</span><h3 class="bb-card-title">Compact Brand Links Footer</h3><p class="bb-card-desc">A calm two-zone footer for smaller sites and essential destinations.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-multi-column-directory.html"><span class="bb-card-eyebrow">Footer 2</span><h3 class="bb-card-title">Multi Column Directory Footer</h3><p class="bb-card-desc">Brand context and three clearly labeled navigation groups.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-newsletter-directory.html"><span class="bb-card-eyebrow">Footer 3</span><h3 class="bb-card-title">Newsletter Directory Footer</h3><p class="bb-card-desc">Accessible subscription capture followed by compact utilities.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-contrast-statement.html"><span class="bb-card-eyebrow">Footer 4</span><h3 class="bb-card-title">Contrast Statement Footer</h3><p class="bb-card-desc">A high-confidence statement with two clearly contrasted actions.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-split-contact.html"><span class="bb-card-eyebrow">Footer 5</span><h3 class="bb-card-title">Split Contact Footer</h3><p class="bb-card-desc">Direct support and partnership routes beside the brand statement.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-product-sitemap.html"><span class="bb-card-eyebrow">Footer 6</span><h3 class="bb-card-title">Product Sitemap Footer</h3><p class="bb-card-desc">A complete information architecture with stable group labels.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-editorial-wordmark.html"><span class="bb-card-eyebrow">Footer 7</span><h3 class="bb-card-title">Editorial Wordmark Footer</h3><p class="bb-card-desc">An expressive identity balanced by a restrained directory.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-social-proof.html"><span class="bb-card-eyebrow">Footer 8</span><h3 class="bb-card-title">Social Proof Footer</h3><p class="bb-card-desc">A proof statement and customer rail above compact utilities.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-cta-band.html"><span class="bb-card-eyebrow">Footer 9</span><h3 class="bb-card-title">CTA Band Footer</h3><p class="bb-card-desc">A distinct conversion band and concise four-column directory.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-legal-directory.html"><span class="bb-card-eyebrow">Footer 10</span><h3 class="bb-card-title">Legal Directory Footer</h3><p class="bb-card-desc">Policies, agreements, and regional information organized clearly.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-minimal-centered.html"><span class="bb-card-eyebrow">Footer 11</span><h3 class="bb-card-title">Minimal Centered Footer</h3><p class="bb-card-desc">A focused identity and four essential destinations.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-product-ecosystem.html"><span class="bb-card-eyebrow">Footer 12</span><h3 class="bb-card-title">Product Ecosystem Footer</h3><p class="bb-card-desc">Product families and developer resources in high contrast.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="application-shell-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="application-shell-blocks">Application Shells</h2>
+        <p>Responsive product frames for dashboards, workspaces, data, planning, and focused operational tasks.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="application-shell-sidebar-dashboard.html"><span class="bb-card-eyebrow">Application shell 1</span><h3 class="bb-card-title">Sidebar Dashboard Application Shell</h3><p class="bb-card-desc">Persistent navigation and a fluid metrics workspace.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-topbar-workspace.html"><span class="bb-card-eyebrow">Application shell 2</span><h3 class="bb-card-title">Topbar Workspace Application Shell</h3><p class="bb-card-desc">A horizontal product frame with lightweight project navigation.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-compact-rail-analytics.html"><span class="bb-card-eyebrow">Application shell 3</span><h3 class="bb-card-title">Compact Rail Analytics Application Shell</h3><p class="bb-card-desc">An accessible icon rail leaves more room for reporting.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-split-pane-inbox.html"><span class="bb-card-eyebrow">Application shell 4</span><h3 class="bb-card-title">Split Pane Inbox Application Shell</h3><p class="bb-card-desc">A message index and readable detail pane without clipping.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-command-center.html"><span class="bb-card-eyebrow">Application shell 5</span><h3 class="bb-card-title">Command Center Application Shell</h3><p class="bb-card-desc">Search, navigation, and recent destinations in one focused surface.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-content-studio.html"><span class="bb-card-eyebrow">Application shell 6</span><h3 class="bb-card-title">Content Studio Application Shell</h3><p class="bb-card-desc">A document outline and centered authoring canvas.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-project-board.html"><span class="bb-card-eyebrow">Application shell 7</span><h3 class="bb-card-title">Project Board Application Shell</h3><p class="bb-card-desc">Three workflow columns with stable task alignment.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-settings.html"><span class="bb-card-eyebrow">Application shell 8</span><h3 class="bb-card-title">Settings Application Shell</h3><p class="bb-card-desc">Persistent settings navigation beside a labeled form.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-data-explorer.html"><span class="bb-card-eyebrow">Application shell 9</span><h3 class="bb-card-title">Data Explorer Application Shell</h3><p class="bb-card-desc">A semantic table contained safely on narrow screens.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-calendar-planner.html"><span class="bb-card-eyebrow">Application shell 10</span><h3 class="bb-card-title">Calendar Planner Application Shell</h3><p class="bb-card-desc">A weekly schedule that becomes a readable mobile Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-service-operations.html"><span class="bb-card-eyebrow">Application shell 11</span><h3 class="bb-card-title">Service Operations Application Shell</h3><p class="bb-card-desc">High-contrast status reporting with explicit language.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-team-directory.html"><span class="bb-card-eyebrow">Application shell 12</span><h3 class="bb-card-title">Team Directory Application Shell</h3><p class="bb-card-desc">Search and profile cards in a flexible directory Grid.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="pricing-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="pricing-blocks">Pricing</h2>
+        <p>Accessible plan comparisons, calculators, programs, and enterprise offers with transparent scope and terms.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="pricing-three-tier-cards.html"><span class="bb-card-eyebrow">Pricing 1</span><h3 class="bb-card-title">Three Tier Cards Pricing</h3><p class="bb-card-desc">Three comparable plans with an explicit recommendation.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-comparison-table.html"><span class="bb-card-eyebrow">Pricing 2</span><h3 class="bb-card-title">Comparison Table Pricing</h3><p class="bb-card-desc">A semantic feature table contained on narrow screens.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-featured-plan-split.html"><span class="bb-card-eyebrow">Pricing 3</span><h3 class="bb-card-title">Featured Plan Split Pricing</h3><p class="bb-card-desc">A focused promise beside one recommended plan.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-usage-calculator.html"><span class="bb-card-eyebrow">Pricing 4</span><h3 class="bb-card-title">Usage Calculator Pricing</h3><p class="bb-card-desc">Visible inputs explain how usage shapes the estimate.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-billing-period-toggle.html"><span class="bb-card-eyebrow">Pricing 5</span><h3 class="bb-card-title">Billing Period Toggle Pricing</h3><p class="bb-card-desc">Native radio controls set monthly or annual billing.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-enterprise-split.html"><span class="bb-card-eyebrow">Pricing 6</span><h3 class="bb-card-title">Enterprise Split Pricing</h3><p class="bb-card-desc">A high-contrast enterprise promise and concrete plan card.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-compact-plan-rows.html"><span class="bb-card-eyebrow">Pricing 7</span><h3 class="bb-card-title">Compact Plan Rows Pricing</h3><p class="bb-card-desc">Fast horizontal comparison without oversized cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-outcome-packages.html"><span class="bb-card-eyebrow">Pricing 8</span><h3 class="bb-card-title">Outcome Packages Pricing</h3><p class="bb-card-desc">Services framed by result, scope, and completion signal.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-modular-add-ons.html"><span class="bb-card-eyebrow">Pricing 9</span><h3 class="bb-card-title">Modular Add-ons Pricing</h3><p class="bb-card-desc">Optional capabilities with visible billing units.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-startup-program.html"><span class="bb-card-eyebrow">Pricing 10</span><h3 class="bb-card-title">Startup Program Pricing</h3><p class="bb-card-desc">Eligibility, discount, and duration shown before applying.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-single-plan-checklist.html"><span class="bb-card-eyebrow">Pricing 11</span><h3 class="bb-card-title">Single Plan Checklist Pricing</h3><p class="bb-card-desc">One complete plan with scope and terms together.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-contrast-platform.html"><span class="bb-card-eyebrow">Pricing 12</span><h3 class="bb-card-title">Contrast Platform Pricing</h3><p class="bb-card-desc">A platform promise paired with a clear sales path.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="article-header-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="article-header-blocks">Blog / Article Headers</h2>
+        <p>Editorial entry points for essays, reports, series, and visual stories with consistent context, responsive Grid composition, and readable metadata.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="article-header-editorial-centered.html"><span class="bb-card-eyebrow">Article header 1</span><h3 class="bb-card-title">Editorial Centered Article Header</h3><p class="bb-card-desc">A quiet centered hierarchy for focused long-form reading.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-split-cover.html"><span class="bb-card-eyebrow">Article header 2</span><h3 class="bb-card-title">Split Cover Article Header</h3><p class="bb-card-desc">Editorial context and real photography share an equal Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-panorama.html"><span class="bb-card-eyebrow">Article header 3</span><h3 class="bb-card-title">Panorama Article Header</h3><p class="bb-card-desc">A broad photograph follows a compact editorial introduction.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-author-feature.html"><span class="bb-card-eyebrow">Article header 4</span><h3 class="bb-card-title">Author Feature Article Header</h3><p class="bb-card-desc">Portrait-oriented photography makes authorship prominent.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-contrast-type.html"><span class="bb-card-eyebrow">Article header 5</span><h3 class="bb-card-title">Contrast Type Article Header</h3><p class="bb-card-desc">A high-contrast statement and compact chapter index.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-category-index.html"><span class="bb-card-eyebrow">Article header 6</span><h3 class="bb-card-title">Category Index Blog Header</h3><p class="bb-card-desc">Publication context and topic discovery share two columns.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-photo-overlay.html"><span class="bb-card-eyebrow">Article header 7</span><h3 class="bb-card-title">Photo Overlay Article Header</h3><p class="bb-card-desc">A readable story opening sits over real editorial photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-sidebar-summary.html"><span class="bb-card-eyebrow">Article header 8</span><h3 class="bb-card-title">Sidebar Summary Article Header</h3><p class="bb-card-desc">A reading guide complements the primary story introduction.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-numbered-series.html"><span class="bb-card-eyebrow">Article header 9</span><h3 class="bb-card-title">Numbered Series Article Header</h3><p class="bb-card-desc">Issue numbering and a series map establish sequence.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-magazine-mosaic.html"><span class="bb-card-eyebrow">Article header 10</span><h3 class="bb-card-title">Magazine Mosaic Article Header</h3><p class="bb-card-desc">A disciplined photo mosaic supports visual reporting.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-research-brief.html"><span class="bb-card-eyebrow">Article header 11</span><h3 class="bb-card-title">Research Brief Article Header</h3><p class="bb-card-desc">Study facts and authorship frame a formal report.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-minimal-reading.html"><span class="bb-card-eyebrow">Article header 12</span><h3 class="bb-card-title">Minimal Reading Article Header</h3><p class="bb-card-desc">Type and rules alone prepare readers for long-form content.</p></a>
       </div>
     </section>
   </main>

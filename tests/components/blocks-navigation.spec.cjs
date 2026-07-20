@@ -301,7 +301,7 @@ test.describe('Navigation blocks', () => {
     const errors = await collectPageErrors(page);
 
     await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
-    await expect(page.getByRole('heading', { name: 'Navigation blocks' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Navigation', exact: true })).toBeVisible();
 
     const catalog = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) => cards.map((card) => ({
       href: card.getAttribute('href'),

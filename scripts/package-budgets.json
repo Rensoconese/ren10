@@ -1,22 +1,22 @@
 {
   "version": 1,
-  "capturedFor": "ren10@0.10.0",
-  "capturedAt": "2026-07-18",
-  "capturedFrom": "validated ren10@0.10.0 catalog through Feature 120 with cross-browser navigation and media hardening",
+  "capturedFor": "ren10@0.11.0",
+  "capturedAt": "2026-07-19",
+  "capturedFrom": "validated ren10@0.11.0 catalog with FAQ, testimonial, footer, application shell, pricing, and article header collections",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 24555438, "allowedDelta": 0, "target": 24555438 },
-    "tarballBytes": { "baseline": 5856863, "allowedDelta": 0, "target": 5856863 },
-    "fullCssBytes": { "baseline": 511857, "allowedDelta": 0, "target": 511857 },
-    "minCssBytes": { "baseline": 291077, "allowedDelta": 0, "target": 291077 },
-    "knowledgeJsonBytes": { "baseline": 4187375, "allowedDelta": 0, "target": 4187375 },
-    "knowledgeSqliteBytes": { "baseline": 9330688, "allowedDelta": 0, "target": 9330688 },
+    "unpackedBytes": { "baseline": 24886539, "allowedDelta": 0, "target": 24886539 },
+    "tarballBytes": { "baseline": 5909238, "allowedDelta": 0, "target": 5909238 },
+    "fullCssBytes": { "baseline": 512673, "allowedDelta": 0, "target": 512673 },
+    "minCssBytes": { "baseline": 291625, "allowedDelta": 0, "target": 291625 },
+    "knowledgeJsonBytes": { "baseline": 4189865, "allowedDelta": 0, "target": 4189865 },
+    "knowledgeSqliteBytes": { "baseline": 9338880, "allowedDelta": 0, "target": 9338880 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
     "cliRssBytes": { "baseline": 45334528, "allowedDelta": 8388608, "target": 53723136 }
   },
   "rationale": {
-    "package": "0.10.0 release-candidate npm pack measurements; zero growth allowed.",
+    "package": "0.11.0 release-candidate npm pack measurements; zero growth allowed.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."

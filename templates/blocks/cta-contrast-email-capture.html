@@ -55,11 +55,17 @@
     .cta6-form-row > * { min-width: 0; }
     .cta6-form-row .ren-btn,
     .cta6-form-row input { min-height: var(--touch-min); }
+    .cta6-form [data-error][hidden] { display: none; }
+
+    .cta6-form-row label,
+    .cta6-form-row [data-error] { color: var(--color-surface); }
 
     .cta6-form-row ren-field {
       --ren-field-bg: var(--color-surface);
       --ren-field-color: var(--color-text);
       --ren-field-placeholder: var(--color-text-muted);
+      --ren-field-border-color: var(--color-border-interactive);
+      --ren-field-focus-color: var(--color-accent);
       --ren-field-error-color: var(--color-surface);
     }
 
@@ -69,6 +75,7 @@
       --ren-btn-bg-active: var(--color-surface-sunken);
       --ren-btn-color: var(--color-text);
       --ren-btn-border-color: var(--color-surface);
+      --ren-btn-ring-color: var(--color-surface);
     }
 
     .cta6-legal {
@@ -82,10 +89,21 @@
       align-items: center;
       min-height: var(--touch-min);
       color: var(--color-surface);
+      font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-decoration-thickness: max(1px, 0.08em);
+      text-underline-offset: 0.2em;
     }
 
     @media (min-width: 40rem) {
-      .cta6-form-row { grid-template-columns: minmax(0, 1fr) max-content; }
+      .cta6-form-row {
+        grid-template-columns: minmax(0, 1fr) max-content;
+        align-items: start;
+      }
+
+      .cta6-form-row .ren-btn {
+        margin-block-start: calc(var(--label-size) * var(--body-leading) + var(--space-2));
+      }
     }
   </style>
 </head>

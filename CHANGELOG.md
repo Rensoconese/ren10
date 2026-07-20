@@ -23,6 +23,38 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Accessibility milestones
 
+## [0.11.0] — 2026-07-19
+
+### Added
+
+- Added complete twelve-block collections for FAQs, testimonials, footers,
+  application shells, pricing, and Blog / Article Headers, each with semantic
+  markup, responsive CSS Grid composition, explanatory detail pages, and
+  previous/next navigation.
+- Added automated anatomy, responsive overflow, source-policy, catalog-order,
+  and scoped accessibility coverage for every new block family.
+
+### Changed
+
+- Normalized block catalog spacing, preview containment, heading rhythm, real
+  editorial photography, and responsive behavior across navigation, hero,
+  CTA, feature, and blog surfaces.
+- Refined accordion disclosure motion and several feature compositions so
+  hierarchy, numbering, borders, and multi-column alignment remain coherent.
+
+### Fixed
+
+- Fixed contrast and form alignment regressions in photographic and contrast
+  CTA variants, including compact subscription legal copy.
+- Fixed clipped mega menus, irregular header padding, blog aside overflow,
+  documentation card gaps, layout examples, Alert Dialog behavior, and
+  overlapping tooltip and popover interactions.
+
+### Accessibility milestones
+
+- Preserved WCAG 2.1 AA contrast, keyboard focus, native semantics, reduced
+  motion, touch targets, and overflow safety throughout the expanded catalog.
+
 ## [0.10.0] — 2026-07-14
 
 ### Added
@@ -1217,7 +1249,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/Rensoconese/ren10/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/Rensoconese/ren10/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/Rensoconese/ren10/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/Rensoconese/ren10/compare/v0.9.1...v0.9.2

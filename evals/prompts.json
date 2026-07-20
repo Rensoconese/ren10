@@ -1,6 +1,6 @@
 {
   "name": "rends-agent-evals",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Deterministic prompt set for RenDS-aware agents. Entries cover UI composition, repair, refusal to invent APIs, and grounded migration. The grader scans HTML or prose artifacts for required evidence and forbidden patterns.",
   "evals": [
     {

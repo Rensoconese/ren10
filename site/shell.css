@@ -393,6 +393,30 @@ body {
   padding-block: 0;
 }
 
+/* CTA documentation titles and introductions form one compact text group.
+   Feature and navigation detail headers keep their existing rhythm. */
+.bb-detail-page:has(> section.bb-detail-preview[class^="cta"]) > .bb-detail-header {
+  --stack-gap: var(--space-1);
+}
+
+/* Legal consent belongs to the form control group, not to the surrounding
+   CTA copy. Keep that relationship compact across every email CTA. */
+.bb-detail-page > section.bb-detail-preview[class^="cta"] form.ren-stack:has(> [class^="cta"][class*="-legal"]) {
+  --stack-gap: var(--space-1);
+}
+
+/* Feature headings need a generous column gutter without turning that same
+   value into an oversized title-to-description gap when they stack. */
+.bb-detail-page > section.bb-detail-preview[class^="feature"] > [class*="-heading"] {
+  row-gap: var(--space-3);
+}
+
+/* Cap only pure text stacks. Structural stacks containing grids, media,
+   actions, or cards keep their authored section rhythm. */
+.bb-detail-page > section.bb-detail-preview[class^="feature"] .ren-stack:has(> :is(h2, h3, h4, p, span, strong, small, blockquote, cite)):not(:has(> :not(:is(h2, h3, h4, p, span, strong, small, blockquote, cite)))) {
+  row-gap: min(var(--stack-gap, var(--space-stack)), var(--space-3));
+}
+
 .bb-detail-page > .bb-detail-preview.bb-detail-preview {
   min-width: 0;
   margin-block: 0;

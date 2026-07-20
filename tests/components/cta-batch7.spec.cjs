@@ -90,38 +90,55 @@ test.describe('CTA 37–42 translated to Ren10', () => {
       const firstLink = page.locator(`.cta${block.number}-link-list a`).first();
       const firstMedia = page.locator(`.cta${block.number}-media`).first();
       await firstLink.hover();
-      await expect(firstMedia).toHaveCSS('opacity', '0.74');
+      await expect(firstMedia).toHaveCSS('opacity', block.number === 37 ? '1' : '0.74');
       if (block.number === 37) {
         const state = await page.locator('[data-cta37-root]').evaluate((root) => {
           const list = root.querySelector('.cta37-link-list').getBoundingClientRect();
           const media = root.querySelector('.cta37-media').getBoundingClientRect();
           const link = root.querySelector('.cta37-link');
+          const inactiveLinks = [...root.querySelectorAll('.cta37-link')].slice(1);
           return {
             link: getComputedStyle(link).color,
             heading: getComputedStyle(link.querySelector('h2')).color,
+            inactiveColors: inactiveLinks.map((item) => getComputedStyle(item).color),
+            inactiveOpacities: inactiveLinks.map((item) => Number(getComputedStyle(item).opacity)),
             radius: getComputedStyle(root.querySelector('.cta37-media')).borderRadius,
             shadow: getComputedStyle(root.querySelector('.cta37-media')).boxShadow,
             edges: [media.top - list.top, media.right - list.right, media.bottom - list.bottom, media.left - list.left],
           };
         });
         expect(state.heading).toBe(state.link);
+        expect(state.inactiveColors.every((color) => color === state.link)).toBe(true);
+        expect(state.inactiveOpacities.every((opacity) => opacity >= 0.7)).toBe(true);
         expect(state.radius).toBe('0px');
         expect(state.shadow).toBe('none');
         expect(state.edges.every((delta) => Math.abs(delta) <= 1)).toBe(true);
       } else {
-        const layers = await page.locator('.cta38-item').first().evaluate((item) => ({
-          divider: Number(getComputedStyle(item, '::after').zIndex),
-          media: Number(getComputedStyle(item.querySelector('.cta38-media')).zIndex),
-          link: Number(getComputedStyle(item.querySelector('.cta38-link')).zIndex),
-          linkBorder: getComputedStyle(item.querySelector('.cta38-link')).borderBottomStyle,
-        }));
+        const layers = await page.locator('.cta38-item').first().evaluate((item) => {
+          const mediaBox = item.querySelector('.cta38-media').getBoundingClientRect();
+          const listBox = item.closest('.cta38-link-list').getBoundingClientRect();
+          return {
+            item: Number(getComputedStyle(item).zIndex),
+            siblings: [...item.parentElement.children].slice(1).map((sibling) => getComputedStyle(sibling).zIndex),
+            divider: Number(getComputedStyle(item, '::after').zIndex),
+            media: Number(getComputedStyle(item.querySelector('.cta38-media')).zIndex),
+            mediaWidth: mediaBox.width,
+            mediaRight: listBox.right - mediaBox.right,
+            link: Number(getComputedStyle(item.querySelector('.cta38-link')).zIndex),
+            linkBorder: getComputedStyle(item.querySelector('.cta38-link')).borderBottomStyle,
+          };
+        });
+        expect(layers.item).toBeGreaterThan(0);
+        expect(layers.siblings.every((zIndex) => zIndex === 'auto')).toBe(true);
         expect(layers.divider).toBeLessThan(layers.media);
         expect(layers.media).toBeLessThan(layers.link);
+        expect(layers.mediaWidth).toBeLessThanOrEqual(384);
+        expect(Math.abs(layers.mediaRight)).toBeLessThanOrEqual(1);
         expect(layers.linkBorder).toBe('none');
       }
       await page.mouse.move(0, 0);
       await firstLink.focus();
-      await expect(firstMedia).toHaveCSS('opacity', '0.74');
+      await expect(firstMedia).toHaveCSS('opacity', block.number === 37 ? '1' : '0.74');
     }
   });
 

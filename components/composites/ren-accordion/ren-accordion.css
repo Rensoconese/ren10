@@ -134,6 +134,28 @@
   transform: rotate(180deg);
 }
 
+/* Animate the native details content box. The global reset enables
+   keyword-size interpolation, so block-size can transition to and from auto. */
+@supports selector(details::details-content) {
+  .ren-accordion > details::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size var(--duration-exit) var(--ease-exit),
+      opacity var(--duration-exit) var(--ease-exit),
+      content-visibility var(--duration-exit) var(--ease-exit);
+    transition-behavior: allow-discrete;
+  }
+
+  .ren-accordion > details[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+    transition-duration: var(--duration-enter);
+    transition-timing-function: var(--ease-enter);
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════ */
 /* CONTENT ANIMATION — MODERN APPROACH */
 /* ═══════════════════════════════════════════════════════════════════ */
@@ -278,6 +300,10 @@
   }
 
   .ren-accordion > details > .ren-accordion-content {
+    transition: none;
+  }
+
+  .ren-accordion > details::details-content {
     transition: none;
   }
 }

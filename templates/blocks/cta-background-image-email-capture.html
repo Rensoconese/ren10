@@ -19,8 +19,7 @@
       min-height: clamp(30rem, 44vw, 36rem);
       padding-block: var(--space-section-sm);
       overflow: hidden;
-      color-scheme: light;
-      color: var(--color-text-inverted);
+      color: var(--color-text);
       background: var(--color-surface-sunken);
     }
 
@@ -39,8 +38,7 @@
 
     .cta4-scrim {
       z-index: -1;
-      background: var(--color-text);
-      opacity: 0.76;
+      background: var(--color-overlay);
     }
 
     .cta4-content,
@@ -49,14 +47,32 @@
       width: 100%;
     }
 
-    .cta4-content { --center-width: var(--width-5xl); }
+    .cta4-content {
+      --center-width: var(--width-4xl);
+      padding: clamp(var(--space-6), 4vw, var(--space-10));
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .cta4-form {
+      --ren-field-bg: var(--color-surface);
+      --ren-field-color: var(--color-text);
+      --ren-field-border-color: var(--color-border-interactive);
+      --ren-field-focus-color: var(--color-accent);
+      --ren-field-error-color: var(--color-danger);
+      --ren-btn-ring-color: var(--color-accent-strong);
+      max-width: 100%;
+      color: var(--color-text);
+    }
 
     .cta4-title,
     .cta4-description,
     .cta4-legal { margin: 0; }
 
     .cta4-title {
-      color: var(--color-text-inverted);
+      color: var(--color-text);
       font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
       font-weight: var(--display-lg-weight);
       line-height: var(--display-lg-leading);
@@ -65,7 +81,7 @@
     }
 
     .cta4-description {
-      color: var(--color-text-inverted);
+      color: var(--color-text);
       font-size: var(--lead-size);
       line-height: var(--lead-leading);
       text-wrap: pretty;
@@ -81,17 +97,10 @@
     .cta4-form-row > * { min-width: 0; }
     .cta4-form-row .ren-btn,
     .cta4-form-row input { min-height: var(--touch-min); }
-
-    .cta4-form-row .ren-btn {
-      --ren-btn-bg: var(--color-text-inverted);
-      --ren-btn-bg-hover: var(--color-surface-sunken);
-      --ren-btn-bg-active: var(--color-surface-raised);
-      --ren-btn-color: var(--color-text);
-      --ren-btn-border-color: var(--color-text-inverted);
-    }
+    .cta4-form [data-error][hidden] { display: none; }
 
     .cta4-legal {
-      color: var(--color-text-inverted);
+      color: var(--color-text-secondary);
       font-size: var(--caption-size);
       line-height: var(--caption-leading);
     }
@@ -100,7 +109,11 @@
       display: inline-flex;
       align-items: center;
       min-height: var(--touch-min);
-      color: inherit;
+      color: var(--color-text-link);
+      font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-decoration-thickness: max(1px, 0.08em);
+      text-underline-offset: 0.2em;
     }
 
     @media (min-width: 40rem) {

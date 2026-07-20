@@ -81,7 +81,7 @@ test('media-backed CTA canvases stay landscape and controlled', async ({ page })
     if (!hasBackground) continue;
 
     const box = await root.boundingBox();
-    expect(box?.height, `${file} background height`).toBeGreaterThanOrEqual(350);
+    expect(box?.height, `${file} background height`).toBeGreaterThanOrEqual(320);
     expect(box?.height, `${file} background height`).toBeLessThanOrEqual(500);
     expect((box?.width || 0) / (box?.height || 1), `${file} landscape ratio`).toBeGreaterThan(2);
   }

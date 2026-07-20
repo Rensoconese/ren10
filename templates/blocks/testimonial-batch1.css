@@ -1,0 +1,233 @@
+.testimonial1-block,
+.testimonial2-block,
+.testimonial3-block,
+.testimonial4-block,
+.testimonial5-block,
+.testimonial6-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.testimonial1-title, .testimonial2-title, .testimonial3-title, .testimonial4-title, .testimonial5-title, .testimonial6-title),
+:is(.testimonial1-description, .testimonial2-description, .testimonial3-description, .testimonial4-description, .testimonial5-description, .testimonial6-description),
+:is(.testimonial1-quote, .testimonial2-quote, .testimonial3-quote, .testimonial4-quote, .testimonial5-quote, .testimonial6-quote),
+.testimonial4-metric dt,
+.testimonial4-metric dd,
+.testimonial6-card h3,
+.testimonial6-card p {
+  margin: 0;
+}
+
+:is(.testimonial1-title, .testimonial2-title, .testimonial3-title, .testimonial4-title, .testimonial5-title, .testimonial6-title) {
+  font-size: clamp(var(--display-sm-size), 4.5vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.testimonial1-description, .testimonial2-description, .testimonial3-description, .testimonial4-description, .testimonial5-description, .testimonial6-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.testimonial1-heading, .testimonial3-heading, .testimonial6-heading) {
+  --stack-gap: var(--space-4);
+  text-align: center;
+}
+
+.testimonial1-content {
+  --stack-gap: var(--space-8);
+  max-width: var(--width-4xl);
+  text-align: center;
+}
+
+.testimonial1-mark {
+  color: var(--color-accent-strong);
+  font-size: var(--display-lg-size);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+}
+
+.testimonial1-quote,
+.testimonial4-quote {
+  font-size: clamp(var(--title-lg-size), 3.5vw, var(--display-md-size));
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+.testimonial-person {
+  --stack-gap: var(--space-1);
+  color: var(--color-text-muted);
+  font-style: normal;
+}
+
+.testimonial-person strong {
+  color: var(--color-text);
+}
+
+.testimonial-rating {
+  color: var(--color-accent-strong);
+  letter-spacing: var(--tracking-wide);
+}
+
+:is(.testimonial2-layout, .testimonial4-layout, .testimonial5-layout, .testimonial6-grid) {
+  --grid-gap: clamp(var(--space-8), 5vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+:is(.testimonial2-copy, .testimonial4-copy, .testimonial5-copy) {
+  --stack-gap: var(--space-6);
+  min-width: 0;
+}
+
+:is(.testimonial2-media, .testimonial5-media) {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+:is(.testimonial2-media, .testimonial5-media) img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.testimonial2-quote,
+.testimonial5-quote,
+.testimonial6-quote {
+  font-size: clamp(var(--title-md-size), 2.7vw, var(--display-sm-size));
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  text-wrap: balance;
+}
+
+.testimonial3-grid {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+}
+
+.testimonial3-card,
+.testimonial6-card {
+  --stack-gap: var(--space-5);
+  min-width: 0;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.testimonial3-card:nth-child(2) {
+  background: var(--color-accent-subtle);
+  border-color: var(--color-border-accent);
+}
+
+.testimonial3-quote {
+  font-size: var(--title-md-size);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+}
+
+.testimonial4-block.bb-detail-preview {
+  color: var(--color-text-inverted);
+  background: var(--color-text);
+}
+
+.testimonial4-block :is(.dx-kicker, .testimonial4-title, .testimonial4-quote, .testimonial-person strong) {
+  color: var(--color-text-inverted);
+}
+
+.testimonial4-description,
+.testimonial4-block .testimonial-person,
+.testimonial4-metric dd {
+  color: var(--color-text-inverted);
+}
+
+.testimonial4-metrics {
+  --grid-gap: var(--space-4);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.testimonial4-metric {
+  --stack-gap: var(--space-1);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-border-strong);
+}
+
+.testimonial4-metric dt {
+  color: var(--color-text-inverted);
+  font-size: var(--title-lg-size);
+}
+
+.testimonial4-metric dd {
+  font-size: var(--text-sm);
+}
+
+.testimonial5-block {
+  background: var(--color-surface-sunken);
+}
+
+.testimonial5-logo {
+  color: var(--color-accent-strong);
+  font-size: var(--label-size);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-widest);
+  text-transform: uppercase;
+}
+
+.testimonial6-grid {
+  align-items: stretch;
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+}
+
+.testimonial6-lead {
+  --stack-gap: var(--space-6);
+  padding: clamp(var(--space-6), 4vw, var(--space-10));
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-radius: var(--radius-xl);
+}
+
+.testimonial6-lead .testimonial6-quote,
+.testimonial6-lead .testimonial-person,
+.testimonial6-lead .testimonial-person strong,
+.testimonial6-lead .testimonial-rating {
+  color: var(--color-on-accent);
+}
+
+.testimonial6-stack {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.testimonial6-card h3 {
+  font-size: var(--title-sm-size);
+  font-weight: var(--title-sm-weight);
+  line-height: var(--title-sm-leading);
+}
+
+.testimonial6-card p {
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+@media (min-width: 48rem) {
+  :is(.testimonial2-layout, .testimonial4-layout, .testimonial5-layout) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .testimonial3-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .testimonial6-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  }
+}

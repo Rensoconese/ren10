@@ -163,7 +163,7 @@ file, the CLI manifest, and the colocated contracts; it must not become a
 second source of truth.
 
 <!-- RENDS:START -->
-RenDS v0.10.0 · vanilla HTML/CSS/JS · Light DOM · 53 components
+RenDS v0.11.0 · vanilla HTML/CSS/JS · Light DOM · 53 components
 
 WORKFLOW — discover before writing UI:
 1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.
