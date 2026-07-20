@@ -109,6 +109,8 @@ npx ren10 build "settings form with sidebar" --json
 npx ren10 component button --dense
 npx ren10 docs layouts --dense
 npx ren10 search "dialog workflow" --json
+npx ren10 design-context --write
+npx ren10 detect templates/ --profile codex
 npx ren10 doctor
 ```
 

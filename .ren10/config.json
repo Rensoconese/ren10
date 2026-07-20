@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "detector": {
+    "profile": "generic",
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": []
+  },
+  "browser": {
+    "viewport": {
+      "width": 1440,
+      "height": 1000
+    }
+  },
+  "hook": {
+    "enabled": true,
+    "quiet": false,
+    "maxFileBytes": 131072
+  }
+}

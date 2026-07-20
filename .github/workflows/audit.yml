@@ -21,6 +21,8 @@ jobs:
       - run: npm run snapshots:check
       - run: npm run check:public-contracts
       - if: matrix.browser == 'chromium'
+        run: npm run test:detector
+      - if: matrix.browser == 'chromium'
         run: npm run smoke:installed
       - if: matrix.browser == 'chromium'
         run: npm run check:budgets

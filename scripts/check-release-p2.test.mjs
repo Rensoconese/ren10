@@ -62,6 +62,7 @@ requirePolicy(typeof pkg.scripts['test:portable'] === 'string', 'portable suite 
 const portableCommands = (pkg.scripts['test:portable'] || '').split('&&').map((command) => command.trim());
 requirePolicy(!portableCommands.some((command) => /^npm run test:visual(?::|\s|$)/.test(command)), 'portable suite must exclude visual snapshots');
 requirePolicy(portableCommands.includes('npm run test:release-policy'), 'portable suite must run release policy tests');
+requirePolicy(portableCommands.includes('npm run test:detector'), 'portable suite must run detector tests');
 requirePolicy(Boolean(pkg.scripts['test:visual:linux']), 'Linux visual gate needs a dedicated script');
 requirePolicy(pkg.scripts['audit:runtime'] === 'npm audit --omit=dev --audit-level=moderate', 'runtime moderate audit script missing');
 requirePolicy(pkg.scripts['audit:full'] === 'npm audit --audit-level=moderate', 'full moderate audit script missing');
@@ -99,6 +100,7 @@ if (fs.existsSync(budgetPath)) {
 }
 
 const requiredPackageCommands = [
+  'npm run test:detector',
   'npm run smoke:installed',
   'npm run check:budgets',
   'npm run test:budgets',

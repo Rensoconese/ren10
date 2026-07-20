@@ -48,6 +48,11 @@ const manifest = json(['manifest', '--json'], 'manifest');
 if (!manifest.commands?.some((command) => command.name === 'build')) {
   throw new Error('manifest is missing the build command');
 }
+for (const name of ['detect', 'design-context', 'ignores', 'hooks']) {
+  if (!manifest.commands?.some((command) => command.name === name)) {
+    throw new Error(`manifest is missing the ${name} command`);
+  }
+}
 if (!manifest.docs?.['agent-ready-roadmap']) {
   throw new Error('manifest is missing the agent-ready roadmap docs topic');
 }
@@ -118,6 +123,17 @@ for (const id of ['v0-adapter', 'starter-approval']) {
 const doctorText = run(['doctor']);
 for (const label of ['v0 adapter', 'Starter approval']) {
   if (!doctorText.includes(label)) throw new Error(`doctor text is missing the ${label} lifecycle check`);
+}
+
+const cleanDetectorFixture = path.join(root, 'tests', 'detector', 'fixtures', 'good.html');
+const detector = json(['detect', cleanDetectorFixture, '--json'], 'detector.report');
+if (detector.summary.total !== 0 || detector.exitCode !== 0) {
+  throw new Error('detector reported findings for its clean fixture');
+}
+
+const designContext = json(['design-context', '--json'], 'design-context.detail');
+if (designContext.components?.counts?.total !== 53 || !designContext.tokens?.semantic?.length) {
+  throw new Error('design-context JSON is incomplete');
 }
 
 console.log('RenDS agent CLI smoke: OK');

@@ -23,6 +23,7 @@
     "ren-design.md",
     "AGENTS.md",
     "CLAUDE.md",
+    ".ren10/design.json",
     ".cursorrules",
     ".windsurfrules",
     "tokens/",
@@ -45,6 +46,7 @@
     "CHANGELOG.md",
     "scripts/check-v0-adapter.mjs",
     "scripts/check-starter-approval.mjs",
+    "scripts/check-design-context.mjs",
     "scripts/relume-workflow.mjs",
     "scripts/lib/relume-workflow.mjs",
     "scripts/capture-block-matrix.mjs",
@@ -92,12 +94,13 @@
     "lint": "npm run lint:css && npm run lint:tokens && npm run lint:contracts && npm run lint:js",
     "check:release": "node scripts/check-release.mjs",
     "test": "npm run test:portable",
-    "test:portable": "npm run test:a11y && npm run test:components && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
+    "test:portable": "npm run test:detector && npm run test:a11y && npm run test:components && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
     "test:all": "npm run test:portable && npm run test:visual:linux",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
     "test:visual:linux": "node scripts/run-linux-visual.mjs",
     "test:components": "playwright test --config tests/components/playwright.config.cjs",
+    "test:detector": "node --test tests/detector/*.test.mjs scripts/check-design-context.test.mjs",
     "test:agent-starter": "playwright test --config tests/agent-starter/playwright.config.cjs",
     "test:theme": "node themes/theme-generator.test.js",
     "test:evals": "node evals/run-eval.mjs --all",
@@ -111,7 +114,9 @@
     "agent:v0:check": "node scripts/check-v0-adapter.mjs && node scripts/check-starter-approval.mjs",
     "agent:manifest": "node cli/index.js manifest --json",
     "agent:doctor": "node cli/index.js doctor",
-    "agent:check": "npm run agent:smoke && npm run agent:skill:check && npm run agent:v0:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
+    "agent:check": "npm run agent:smoke && npm run agent:skill:check && npm run agent:v0:check && npm run design:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check",
+    "design:build": "node scripts/check-design-context.mjs --write",
+    "design:check": "node scripts/check-design-context.mjs",
     "knowledge:build": "node scripts/build-knowledge-graph.mjs",
     "knowledge:check": "node scripts/check-knowledge-graph.mjs",
     "knowledge:query": "node scripts/query-knowledge-graph.mjs",
@@ -142,6 +147,14 @@
     "a11y",
     "tokens"
   ],
+  "peerDependencies": {
+    "playwright": ">=1.50.0"
+  },
+  "peerDependenciesMeta": {
+    "playwright": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
     "axe-core": "^4.11.3",

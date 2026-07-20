@@ -13,7 +13,19 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- Added `ren10 detect`, a deterministic visual-quality detector for files,
+  directories, and URLs with static and browser rules, text/JSON output,
+  CI-ready exit codes, generic/Codex/strict profiles, review artifacts, and
+  narrowly scoped auditable exceptions.
+- Added a generated Ren10 design manifest, Codex post-edit hook integration,
+  deduplicated pending-finding state, detector documentation, fixtures, and
+  automated coverage across the CLI, installed package, and CI workflows.
+
 ### Changed
+
+- Extended agent guidance, package smoke tests, release policy, and package
+  budgets to treat visual-quality detection and design-context freshness as
+  first-class Ren10 contracts.
 
 ### Fixed
 

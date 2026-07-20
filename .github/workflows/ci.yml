@@ -62,6 +62,8 @@ jobs:
 
       - run: npm run test:evals
 
+      - run: npm run test:detector
+
       - run: npm run agent:check
 
       - run: npm run test:exports

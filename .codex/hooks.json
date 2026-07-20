@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx ren10 hook-run",
+            "timeout": 8,
+            "statusMessage": "Checking Ren10 UI quality"
+          }
+        ]
+      }
+    ]
+  }
+}
