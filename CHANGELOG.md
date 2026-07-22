@@ -13,9 +13,10 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
-- Added the first six Blog / Article Content blocks covering featured-story
-  hierarchy, topic discovery, chronological feeds, editorial issue rails,
-  long-form reading with an in-page contents index, and year-grouped archives.
+- Added a complete twelve-block Blog / Article Content collection covering
+  featured-story hierarchy, topic discovery, chronological feeds, issue rails,
+  long-form reading, archives, search, author and topic pages, reading series,
+  related stories, and deliberate article endings.
 - Added responsive Grid, navigation-chain, visual hierarchy, source-policy,
   light/dark, and scoped accessibility coverage for the editorial content set.
 - Added a complete twelve-block Contact collection with accessible RenForm

@@ -13,6 +13,12 @@ const BLOCKS = [
   { file: 'blog-featured-split-rail.html', images: 1, stories: 4 },
   { file: 'blog-article-toc-layout.html', images: 1, stories: 0 },
   { file: 'blog-archive-index.html', images: 0, stories: 7 },
+  { file: 'blog-search-results.html', images: 0, stories: 4 },
+  { file: 'blog-author-profile-feed.html', images: 0, stories: 6 },
+  { file: 'blog-topic-landing.html', images: 1, stories: 5 },
+  { file: 'blog-reading-series.html', images: 0, stories: 4 },
+  { file: 'blog-related-stories-band.html', images: 3, stories: 3 },
+  { file: 'blog-article-closing-panel.html', images: 0, stories: 1 },
 ];
 const CHAIN = [
   'article-header-minimal-reading.html',
@@ -21,7 +27,7 @@ const CHAIN = [
 ];
 let server;
 
-test.describe('Blog content 1–6 Ren10 blocks', () => {
+test.describe('Blog content 1–12 Ren10 blocks', () => {
   test.beforeAll(async () => {
     server = await startStaticServer(ROOT_DIR);
   });
@@ -43,7 +49,7 @@ test.describe('Blog content 1–6 Ren10 blocks', () => {
       await expect(page.locator('.bb-detail-header .bb-detail-description')).toHaveCount(1);
       await expect(root.locator('h2')).toHaveCount(1);
       await expect(root.locator('img[src^="media/"][width][height][alt]')).toHaveCount(block.images);
-      await expect(root.locator('.blog-story-link, .blog-card, .blog-feed-item, .blog4-rail-item, .blog6-entry')).toHaveCount(block.stories);
+      await expect(root.locator('.blog-story-link, .blog-card, .blog-feed-item, .blog4-rail-item, .blog6-entry, .blog7-result, .blog8-story, .blog9-lead, .blog9-card, .blog10-step, .blog11-card, .blog12-next')).toHaveCount(block.stories);
       await expect(page.locator('a[rel="prev"]')).toHaveAttribute('href', CHAIN[index]);
       await expect(page.locator('a[rel="next"]')).toHaveAttribute('href', CHAIN[index + 2]);
     });
@@ -64,10 +70,23 @@ test.describe('Blog content 1–6 Ren10 blocks', () => {
   }
 
   test('desktop compositions resolve into intentional multi-column Grids', async ({ page }) => {
-    const selectors = ['.blog1-feature', '.blog2-grid', '.blog3-layout', '.blog4-layout', '.blog5-layout', '.blog6-heading'];
+    const selectors = [
+      '.blog1-feature',
+      '.blog2-grid',
+      '.blog3-layout',
+      '.blog4-layout',
+      '.blog5-layout',
+      '.blog6-heading',
+      '.blog7-result',
+      '.blog8-header',
+      '.blog9-lead',
+      '.blog10-step',
+      '.blog11-grid',
+      '.blog12-layout',
+    ];
     for (const [index, selector] of selectors.entries()) {
       await open(page, index);
-      const columns = await page.locator(selector).evaluate((node) =>
+      const columns = await page.locator(selector).first().evaluate((node) =>
         getComputedStyle(node).gridTemplateColumns.split(' ').filter(Boolean).length,
       );
       expect(columns).toBeGreaterThan(1);
@@ -98,8 +117,17 @@ test.describe('Blog content 1–6 Ren10 blocks', () => {
     await expect(page.locator('.blog5-prose blockquote')).toHaveCount(1);
   });
 
+  test('search block uses a labeled native query and real submit control', async ({ page }) => {
+    await open(page, 6);
+    const form = page.locator('form[role="search"]');
+    await expect(form).toHaveCount(1);
+    await expect(form.locator('ren-field > label')).toHaveText('Search journal');
+    await expect(form.locator('input[type="search"][name="q"]')).toHaveCount(1);
+    await expect(form.locator('button[type="submit"]')).toHaveText('Search');
+  });
+
   test('blog family obeys source policy and catalog order', async ({ page }) => {
-    for (const file of ['blog-content-batch1.css', ...BLOCKS.map(({ file }) => file)]) {
+    for (const file of ['blog-content-batch1.css', 'blog-content-batch2.css', ...BLOCKS.map(({ file }) => file)]) {
       expect(fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', file), 'utf8')).not.toMatch(
         /display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i,
       );
@@ -107,9 +135,9 @@ test.describe('Blog content 1–6 Ren10 blocks', () => {
 
     await page.goto(`${server.origin}/templates/blocks/index.html`);
     const cards = page.locator('section[aria-labelledby="blog-content-blocks"] .bb-card');
-    await expect(cards).toHaveCount(6);
+    await expect(cards).toHaveCount(12);
     await expect(cards.locator('.bb-card-eyebrow')).toHaveText(
-      Array.from({ length: 6 }, (_, index) => `Blog content ${index + 1}`),
+      Array.from({ length: 12 }, (_, index) => `Blog content ${index + 1}`),
     );
 
     await page.goto(`${server.origin}/templates/blocks/article-header-minimal-reading.html`);

@@ -2,11 +2,11 @@
   "version": 1,
   "capturedFor": "ren10@0.11.0",
   "capturedAt": "2026-07-22",
-  "capturedFrom": "validated ren10@0.11.0 catalog plus the native design-context, visual detector, review, exception, Codex hook, Contact collection, and first six Blog Content blocks",
+  "capturedFrom": "validated ren10@0.11.0 catalog plus the native design-context, visual detector, review, exception, Codex hook, Contact collection, and complete twelve-block Blog Content collection",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 25099873, "allowedDelta": 0, "target": 25099873 },
-    "tarballBytes": { "baseline": 5945524, "allowedDelta": 0, "target": 5945524 },
+    "unpackedBytes": { "baseline": 25132264, "allowedDelta": 0, "target": 25132264 },
+    "tarballBytes": { "baseline": 5951576, "allowedDelta": 0, "target": 5951576 },
     "fullCssBytes": { "baseline": 512760, "allowedDelta": 0, "target": 512760 },
     "minCssBytes": { "baseline": 291704, "allowedDelta": 0, "target": 291704 },
     "knowledgeJsonBytes": { "baseline": 4190051, "allowedDelta": 0, "target": 4190051 },
@@ -16,7 +16,7 @@
     "cliRssBytes": { "baseline": 45334528, "allowedDelta": 8388608, "target": 53723136 }
   },
   "rationale": {
-    "package": "0.11.0 detector-, Contact-, and Blog Content-enabled npm pack measurements; zero growth allowed.",
+    "package": "0.11.0 detector-, Contact-, and twelve-block Blog Content-enabled npm pack measurements; zero growth allowed.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."
