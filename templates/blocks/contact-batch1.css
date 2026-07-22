@@ -1,0 +1,220 @@
+.contact1-block,
+.contact2-block,
+.contact3-block,
+.contact4-block,
+.contact5-block,
+.contact6-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.contact1-title, .contact2-title, .contact3-title, .contact4-title, .contact5-title, .contact6-title),
+:is(.contact1-description, .contact2-description, .contact3-description, .contact4-description, .contact5-description, .contact6-description),
+.contact-card h3,
+.contact-card p,
+.contact-office h3,
+.contact-office p,
+.contact-office address {
+  margin: 0;
+}
+
+:is(.contact1-title, .contact2-title, .contact3-title, .contact4-title, .contact5-title, .contact6-title) {
+  font-size: clamp(var(--display-sm-size), 4.5vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.contact1-description, .contact2-description, .contact3-description, .contact4-description, .contact5-description, .contact6-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.contact1-layout, .contact4-layout) {
+  --grid-gap: clamp(var(--space-8), 5vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+:is(.contact1-copy, .contact4-copy, .contact5-heading, .contact6-heading) {
+  --stack-gap: var(--space-4);
+  min-width: 0;
+}
+
+.contact-direct-list {
+  --grid-gap: var(--space-4);
+  margin-block-start: var(--space-4);
+}
+
+.contact-direct-item {
+  --stack-gap: var(--space-1);
+  min-width: 0;
+  padding-block: var(--space-3);
+  border-block-start: var(--stroke-1) solid var(--color-border);
+}
+
+.contact-direct-label,
+.contact-card-label,
+.contact-office-label {
+  color: var(--color-text-muted);
+  font-size: var(--label-size);
+  font-weight: var(--label-weight);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.contact-direct-item a,
+.contact-card a:not(.ren-btn),
+.contact-office a {
+  overflow-wrap: anywhere;
+  color: var(--color-text-link);
+  font-weight: var(--weight-semibold);
+}
+
+.contact-form-surface {
+  --stack-gap: var(--space-form-gap);
+  min-width: 0;
+  padding: clamp(var(--space-card-padding), 4vw, var(--space-card-padding-lg));
+  background: var(--color-surface-raised);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-form-surface textarea.ren-input {
+  min-block-size: var(--space-32);
+  resize: vertical;
+}
+
+.contact-form-surface .ren-form-actions {
+  margin-block-start: var(--space-2);
+}
+
+.contact2-heading,
+.contact3-heading {
+  --stack-gap: var(--space-4);
+  max-width: var(--width-4xl);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.contact2-form {
+  max-width: var(--width-3xl);
+  margin: clamp(var(--space-8), 5vw, var(--space-12)) auto 0;
+}
+
+.contact2-row {
+  --grid-gap: var(--space-form-gap);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.contact3-grid,
+.contact5-grid,
+.contact6-grid {
+  --grid-gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--width-xs)), 1fr));
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+  align-items: stretch;
+}
+
+.contact-card,
+.contact-office {
+  --stack-gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-card-padding);
+  background: var(--color-surface-raised);
+  border: var(--stroke-1) solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.contact-card h3,
+.contact-office h3 {
+  font-size: var(--title-md-size);
+  font-weight: var(--title-md-weight);
+  line-height: var(--title-md-leading);
+}
+
+.contact-card p,
+.contact-office p,
+.contact-office address {
+  color: var(--color-text-secondary);
+  line-height: var(--body-leading);
+}
+
+.contact-card a {
+  align-self: start;
+  margin-block-start: auto;
+}
+
+.contact4-media {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.contact4-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact4-copy {
+  margin-block-end: var(--space-6);
+}
+
+.contact5-heading {
+  max-width: var(--width-4xl);
+}
+
+.contact-office address {
+  font-style: normal;
+}
+
+.contact-office-links {
+  --grid-gap: var(--space-2);
+  margin-block-start: auto;
+}
+
+.contact6-block.bb-detail-preview {
+  background: var(--color-surface-sunken);
+}
+
+.contact6-heading {
+  max-width: var(--width-4xl);
+}
+
+.contact6-grid .contact-card:first-child {
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.contact6-grid .contact-card:first-child :is(.contact-card-label, h3, p, a:not(.ren-btn)) {
+  color: var(--color-on-accent);
+}
+
+.contact6-grid .contact-card:first-child a:focus-visible {
+  outline-color: var(--color-on-accent);
+}
+
+@media (min-width: 48rem) {
+  :is(.contact1-layout, .contact4-layout) {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .contact2-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact1-copy {
+    position: sticky;
+    inset-block-start: var(--space-6);
+  }
+
+  .contact4-layout {
+    align-items: stretch;
+  }
+}

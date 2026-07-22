@@ -663,7 +663,7 @@ export class RenDateRangePicker extends HTMLElement {
 
     try {
       this.dropdown.showPopover();
-    } catch (e) {
+    } catch {
       this.dropdown.style.display = 'block';
     }
 
@@ -704,7 +704,7 @@ export class RenDateRangePicker extends HTMLElement {
 
     try {
       this.dropdown.hidePopover();
-    } catch (e) {
+    } catch {
       this.dropdown.style.display = 'none';
     }
 

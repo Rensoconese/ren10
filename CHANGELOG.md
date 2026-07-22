@@ -13,6 +13,12 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- Added a complete twelve-block Contact collection with accessible RenForm
+  variants, direct support routes, office and regional directories, real
+  photography, responsive CSS Grid composition, and continuous block
+  navigation into Pricing.
+- Added automated Contact anatomy, form-contract, responsive overflow,
+  catalog-order, navigation, light/dark, and scoped accessibility coverage.
 - Added `ren10 detect`, a deterministic visual-quality detector for files,
   directories, and URLs with static and browser rules, text/JSON output,
   CI-ready exit codes, generic/Codex/strict profiles, review artifacts, and
@@ -23,17 +29,26 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Changed
 
+- Rebalanced all twelve Article Header examples with a deliberate editorial
+  spacing hierarchy between kicker, title, deck, metadata, and author.
 - Extended agent guidance, package smoke tests, release policy, and package
   budgets to treat visual-quality detection and design-context freshness as
   first-class Ren10 contracts.
 
 ### Fixed
 
+- Fixed theme-dependent black-on-black text in the Contrast Type and Photo
+  Overlay Article Headers with a stable semantic contrast-surface token pair.
+
 ### Removed
 
 ### Security
 
 ### Accessibility milestones
+
+- Preserved WCAG 2.1 AA contrast, visible labels and focus treatment, native
+  form and address semantics, fluid narrow-screen layouts, and explicit
+  mail/phone destinations across all Contact blocks.
 
 ## [0.11.0] — 2026-07-19
 

@@ -81,4 +81,81 @@ test.describe('Article header 1–12 Ren10 blocks', () => {
       BLOCKS.map(([file]) => file),
     );
   });
+
+  test('editorial rhythm keeps the kicker close to the title and opens before provenance', async ({ page }) => {
+    for (const [index] of BLOCKS.entries()) {
+      await open(page, index);
+      const rhythm = await page.locator(`.article${index + 1}-block`).evaluate((root) => {
+        const kicker = root.querySelector('.article-kicker');
+        const title = root.querySelector('.article-title, .article12-title');
+        const deck = root.querySelector('.article-deck');
+        if (!kicker || !title || !deck) return null;
+        const kickerBox = kicker.getBoundingClientRect();
+        const titleBox = title.getBoundingClientRect();
+        const deckBox = deck.getBoundingClientRect();
+        const next = deck.nextElementSibling;
+        const nextBox = next?.getBoundingClientRect();
+        return {
+          kickerToTitle: titleBox.top - kickerBox.bottom,
+          titleToDeck: deckBox.top - titleBox.bottom,
+          deckToNext: nextBox ? nextBox.top - deckBox.bottom : null,
+        };
+      });
+
+      expect(rhythm).not.toBeNull();
+      expect(rhythm.kickerToTitle).toBeLessThan(rhythm.titleToDeck);
+      expect(rhythm.kickerToTitle).toBeLessThanOrEqual(12);
+      if (rhythm.deckToNext !== null) expect(rhythm.deckToNext).toBeGreaterThan(rhythm.titleToDeck);
+    }
+  });
+
+  test('numbered series keeps the issue number on one horizontal line', async ({ page }) => {
+    for (const width of [768, 1280]) {
+      await open(page, 8, width, 900);
+      const glyphTops = await page.locator('.article9-number').evaluate((number) => {
+        const text = number.firstChild;
+        return [0, 1].map((offset) => {
+          const range = document.createRange();
+          range.setStart(text, offset);
+          range.setEnd(text, offset + 1);
+          return range.getBoundingClientRect().top;
+        });
+      });
+      expect(Math.abs(glyphTops[0] - glyphTops[1])).toBeLessThanOrEqual(1);
+    }
+  });
+
+  test('fixed dark editorial surfaces keep readable light text in both themes', async ({ page }) => {
+    await open(page, 4);
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme);
+      const colors = await page.locator('.article5-block').evaluate((root) => {
+        const channels = (value) => value.match(/[\d.]+/g).slice(0, 3).map(Number);
+        const index = root.querySelector('.article5-index');
+        const row = index.querySelector('li');
+        return {
+          background: channels(getComputedStyle(root).backgroundColor),
+          foreground: channels(getComputedStyle(root.querySelector('.article-title')).color),
+          indexForeground: channels(getComputedStyle(index).color),
+          indexBorder: channels(getComputedStyle(index).borderTopColor),
+          rowBorder: channels(getComputedStyle(row).borderBottomColor),
+        };
+      });
+      const brightness = (channels) => channels.reduce((sum, channel) => sum + channel, 0) / channels.length;
+      expect(brightness(colors.background)).toBeLessThan(64);
+      expect(brightness(colors.foreground)).toBeGreaterThan(191);
+      expect(brightness(colors.indexForeground)).toBeGreaterThan(191);
+      expect(brightness(colors.indexBorder)).toBeGreaterThan(191);
+      expect(brightness(colors.rowBorder)).toBeGreaterThan(191);
+    }
+
+    await open(page, 6);
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((value) => { document.documentElement.dataset.theme = value; }, theme);
+      const foreground = await page.locator('.article7-copy .article-title').evaluate((title) =>
+        getComputedStyle(title).color.match(/[\d.]+/g).slice(0, 3).map(Number),
+      );
+      expect(foreground.reduce((sum, channel) => sum + channel, 0) / foreground.length).toBeGreaterThan(191);
+    }
+  });
 });

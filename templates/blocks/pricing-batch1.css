@@ -17,11 +17,19 @@
 }
 
 .pricing-heading {
-  --grid-gap: var(--space-4);
+  --grid-gap: 0;
   grid-template-columns: minmax(0, 1fr);
   max-width: var(--width-3xl);
   margin-inline: auto;
   text-align: center;
+}
+
+.pricing-heading .pricing-label + h2 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing-heading h2 + p {
+  margin-block-start: var(--space-4);
 }
 
 .pricing-heading h2,
@@ -166,17 +174,67 @@
   max-width: var(--width-prose);
 }
 
+.pricing3-copy,
+.pricing4-copy {
+  --grid-gap: 0;
+}
+
+:is(.pricing3-copy, .pricing4-copy) .pricing-label + h2 {
+  margin-block-start: var(--space-2);
+}
+
+:is(.pricing3-copy, .pricing4-copy) h2 + p {
+  margin-block-start: var(--space-4);
+}
+
+:is(.pricing3-copy, .pricing4-copy) > p:not(.pricing-label) + .pricing-features {
+  margin-block-start: var(--space-6);
+}
+
+.pricing3-block .pricing-card {
+  --grid-gap: 0;
+}
+
+.pricing3-block .pricing-card .pricing-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing3-block .pricing-card h3 + .pricing-price {
+  margin-block-start: var(--space-4);
+}
+
+.pricing3-block .pricing-card .pricing-price + p {
+  margin-block-start: var(--space-3);
+}
+
+.pricing3-block .pricing-card > p:not(.pricing-label, .pricing-price) + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing3-block .pricing-card .ren-btn + .ren-btn {
+  margin-block-start: var(--space-2);
+}
+
 .pricing4-block {
   background: var(--color-surface-sunken);
 }
 
 .pricing4-calculator {
-  --grid-gap: var(--space-5);
+  --grid-gap: 0;
   grid-template-columns: minmax(0, 1fr);
   padding: clamp(var(--space-5), 4vw, var(--space-8));
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
+}
+
+.pricing4-calculator .pricing4-field + .pricing4-field {
+  margin-block-start: var(--space-5);
+}
+
+.pricing4-calculator .pricing4-field + .pricing4-total,
+.pricing4-calculator .pricing4-total + .ren-btn {
+  margin-block-start: var(--space-6);
 }
 
 .pricing4-field {
@@ -214,12 +272,40 @@
 }
 
 .pricing6-block.bb-detail-preview {
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .pricing6-block :is(h2, h3, p, li, .pricing-label, .pricing-price span) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
+}
+
+.pricing6-copy,
+.pricing6-block .pricing-card {
+  --grid-gap: 0;
+}
+
+.pricing6-copy .pricing-label + h2,
+.pricing6-block .pricing-card .pricing-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing6-copy h2 + p,
+.pricing6-block .pricing-card h3 + .pricing-price {
+  margin-block-start: var(--space-4);
+}
+
+.pricing6-copy > p:not(.pricing-label) + .pricing-features,
+.pricing6-block .pricing-card > p:not(.pricing-label, .pricing-price) + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing6-block .pricing-card .pricing-price + p {
+  margin-block-start: var(--space-3);
+}
+
+.pricing6-copy .pricing-features li::before {
+  color: var(--color-on-surface-contrast);
 }
 
 .pricing6-block .pricing-card {
@@ -239,6 +325,16 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  :is(.pricing1-block, .pricing5-block) .pricing-grid {
+    row-gap: 0;
+  }
+
+  :is(.pricing1-block, .pricing5-block) .pricing-card {
+    --grid-gap: 0;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+  }
+
   .pricing3-layout,
   .pricing4-layout,
   .pricing6-layout {
@@ -248,4 +344,21 @@
   .pricing6-layout {
     align-items: center;
   }
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card {
+  --grid-gap: 0;
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card .pricing-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card h3 + .pricing-price {
+  margin-block-start: var(--space-4);
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card .pricing-price + .pricing-features,
+:is(.pricing1-block, .pricing5-block) .pricing-card .pricing-features + .ren-btn {
+  margin-block-start: var(--space-6);
 }

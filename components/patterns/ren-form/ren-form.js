@@ -78,7 +78,7 @@ const builtInValidators = {
     try {
       const regex = new RegExp(pattern);
       return regex.test(value) ? null : 'Invalid format';
-    } catch (e) {
+    } catch {
       return 'Invalid regex pattern';
     }
   },

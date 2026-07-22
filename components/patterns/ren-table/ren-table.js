@@ -88,7 +88,6 @@ export class RenTable extends HTMLElement {
    * @private
    */
   _initializeComponent() {
-    const wrapper = this.querySelector('.ren-table-wrapper');
     this.#table = this.querySelector('.ren-table');
     this.#thead = this.querySelector('.ren-table-header');
     this.#tbody = this.querySelector('.ren-table-body');

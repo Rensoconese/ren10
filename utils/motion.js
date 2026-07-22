@@ -88,7 +88,7 @@ export async function setMotionState(el, state /* 'open' | 'closed' */) {
     const prev = state === 'open' ? 'closed' : 'open';
     el.dataset.state = prev;
     // Force reflow so the browser registers the toggle.
-    void el.offsetWidth; // eslint-disable-line no-unused-expressions
+    void el.offsetWidth;
     el.dataset.state = state;
   }
   await waitForMotion(el);

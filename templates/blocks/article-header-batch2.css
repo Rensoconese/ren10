@@ -52,7 +52,7 @@
 }
 
 .article7-copy :is(.article-title, .article-deck, .article-kicker, .article-meta, .article-author-copy, .article-author-copy strong) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .article8-layout,
@@ -112,10 +112,11 @@
 
 .article9-number {
   color: var(--color-accent-strong);
-  font-size: clamp(var(--display-lg-size), 18vw, 10rem);
+  font-size: clamp(var(--display-lg-size), 12vw, 8rem);
   font-weight: var(--weight-bold);
-  line-height: 0.8;
+  line-height: var(--display-lg-leading);
   letter-spacing: var(--tracking-tight);
+  white-space: nowrap;
 }
 
 .article9-series {
@@ -253,4 +254,15 @@
   .article11-facts dd:not(:last-child) {
     margin-block-end: var(--space-3);
   }
+}
+
+:is(
+  .article7-copy,
+  .article8-copy,
+  .article9-copy,
+  .article10-copy,
+  .article11-copy,
+  .article12-header
+) {
+  --grid-gap: 0;
 }

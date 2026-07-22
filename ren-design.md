@@ -202,6 +202,8 @@ colors:
       raised:  light-dark(white, gray-1000)
       sunken:  light-dark(gray-100, black)
       overlay: light-dark(white, gray-1000)
+      contrast: black
+      on-contrast: white
     border:
       base:        light-dark(gray-200, gray-900)   # decorative (may fail 3:1)
       strong:      light-dark(gray-300, gray-800)

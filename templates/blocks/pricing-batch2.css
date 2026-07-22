@@ -104,6 +104,31 @@
   border-color: var(--color-border-accent);
 }
 
+.pricing8-card {
+  --grid-gap: 0;
+  grid-template-rows: repeat(5, auto);
+}
+
+.pricing8-card .pricingx-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing8-card h3 + .pricing8-measure {
+  margin-block-start: var(--space-4);
+}
+
+.pricing8-card .pricing8-measure + .pricing8-description {
+  margin-block-start: var(--space-3);
+}
+
+.pricing8-card .pricing8-description + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing8-description {
+  color: var(--color-text-muted);
+}
+
 .pricing8-measure {
   font-size: var(--display-sm-size);
   font-weight: var(--weight-bold);
@@ -112,6 +137,14 @@
 
 .pricing9-block {
   background: var(--color-surface-sunken);
+}
+
+.pricing9-card {
+  grid-template-rows: repeat(5, auto);
+}
+
+.pricing9-description {
+  color: var(--color-text-muted);
 }
 
 .pricing9-price {
@@ -124,6 +157,23 @@
 .pricing9-price strong {
   font-size: var(--display-sm-size);
   line-height: 1;
+}
+
+.pricing9-field {
+  --grid-gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr);
+  align-self: end;
+}
+
+.pricing9-field label {
+  margin: 0;
+  font-size: var(--label-size);
+  font-weight: var(--weight-medium);
+}
+
+.pricing9-card .ren-btn {
+  align-self: end;
+  width: 100%;
 }
 
 .pricing9-select {
@@ -141,7 +191,7 @@
 .pricing12-layout {
   --grid-gap: clamp(var(--space-8), 6vw, var(--space-16));
   grid-template-columns: minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
 }
 
 .pricing10-copy,
@@ -168,6 +218,30 @@
   font-size: clamp(var(--display-md-size), 8vw, var(--display-lg-size));
   font-weight: var(--weight-bold);
   line-height: 0.9;
+}
+
+.pricing10-copy,
+.pricing10-offer {
+  --grid-gap: 0;
+}
+
+.pricing10-copy .pricingx-label + h2,
+.pricing10-offer .pricingx-label + .pricing10-discount {
+  margin-block-start: var(--space-2);
+}
+
+.pricing10-copy h2 + p,
+.pricing10-offer .pricing10-discount + h3 {
+  margin-block-start: var(--space-4);
+}
+
+.pricing10-offer h3 + p {
+  margin-block-start: var(--space-3);
+}
+
+.pricing10-copy > p:not(.pricingx-label) + .pricingx-features,
+.pricing10-offer > p:not(.pricingx-label, .pricing10-discount) + .ren-btn {
+  margin-block-start: var(--space-6);
 }
 
 .pricingx-features {
@@ -199,13 +273,57 @@
   line-height: 1;
 }
 
+.pricing11-detail-page > .bb-detail-header,
+.pricing11-copy,
+.pricing11-plan {
+  --grid-gap: 0;
+  --stack-gap: 0;
+}
+
+.pricing11-detail-page > .bb-detail-header .ren-breadcrumb {
+  margin-block-end: var(--space-4);
+}
+
+.pricing11-detail-page > .bb-detail-header .dx-kicker {
+  margin-block-end: 0;
+}
+
+.pricing11-detail-page > .bb-detail-header .dx-kicker + .bb-detail-title,
+.pricing11-copy .pricingx-label + h2,
+.pricing11-plan .pricingx-label + .pricing11-price {
+  margin-block-start: var(--space-2);
+}
+
+.pricing11-detail-page > .bb-detail-header .bb-detail-title + .bb-detail-description,
+.pricing11-copy h2 + p {
+  margin-block-start: var(--space-4);
+}
+
+.pricing11-plan .pricing11-price + .pricingx-features,
+.pricing11-plan .pricingx-features + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing11-plan .ren-btn + .pricingx-note {
+  margin-block-start: var(--space-2);
+}
+
 .pricing12-block.bb-detail-preview {
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .pricing12-block :is(h2, h3, p, li, .pricingx-label) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
+}
+
+.pricing12-copy .pricingx-features li::before {
+  color: var(--color-on-surface-contrast);
+}
+
+.pricing12-actions {
+  --grid-gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .pricing12-summary {
@@ -217,16 +335,39 @@
 }
 
 @media (min-width: 40rem) {
-  .pricing7-row {
+  .pricing7-list {
     grid-template-columns: minmax(0, 1fr) max-content max-content;
+  }
+
+  .pricing7-row {
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
   }
 
   .pricing8-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  @supports (grid-template-rows: subgrid) {
+    .pricing8-grid {
+      row-gap: 0;
+    }
+
+    .pricing8-card {
+      grid-row: span 5;
+      grid-template-rows: subgrid;
+    }
+  }
+
   .pricing9-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @supports (grid-template-rows: subgrid) {
+    .pricing9-card {
+      grid-row: span 5;
+      grid-template-rows: subgrid;
+    }
   }
 }
 

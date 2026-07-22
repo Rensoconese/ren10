@@ -9,8 +9,6 @@
 import {
   generateTheme,
   contrast,
-  relLum,
-  scaleFromHex,
 } from './theme-generator.js';
 
 let FAIL = 0;

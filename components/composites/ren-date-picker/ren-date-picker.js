@@ -249,7 +249,7 @@ export class RenDatePicker extends HTMLElement {
 
     try {
       this.dropdown.showPopover();
-    } catch (e) {
+    } catch {
       /* ═══ FALLBACK FOR UNSUPPORTED BROWSERS ═══ */
       this.dropdown.style.display = 'block';
     }
@@ -286,7 +286,7 @@ export class RenDatePicker extends HTMLElement {
 
     try {
       this.dropdown.hidePopover();
-    } catch (e) {
+    } catch {
       /* ═══ FALLBACK FOR UNSUPPORTED BROWSERS ═══ */
       this.dropdown.style.display = 'none';
     }

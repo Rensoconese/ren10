@@ -481,7 +481,7 @@ export class RenMenu extends HTMLElement {
     if ('popover' in HTMLElement.prototype) {
       try {
         this.showPopover();
-      } catch (e) {
+      } catch {
         // Popover might already be open
       }
     } else {
@@ -528,7 +528,7 @@ export class RenMenu extends HTMLElement {
       if ('popover' in HTMLElement.prototype) {
         try {
           this.hidePopover();
-        } catch (e) {
+        } catch {
           // Popover might already be closed
         }
       } else {

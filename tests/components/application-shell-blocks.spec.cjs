@@ -20,7 +20,7 @@ const BLOCKS = [
   'application-shell-service-operations.html',
   'application-shell-team-directory.html',
 ];
-const CHAIN = ['footer-product-ecosystem.html', ...BLOCKS, 'index.html#pricing-blocks'];
+const CHAIN = ['footer-product-ecosystem.html', ...BLOCKS, 'contact-split-form-details.html'];
 let server;
 
 test.describe('Application shell 1–12 Ren10 blocks', () => {
