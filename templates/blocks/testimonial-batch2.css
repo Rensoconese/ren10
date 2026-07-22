@@ -113,7 +113,7 @@
   background: var(--color-accent);
 }
 
-.testimonial8-card:nth-child(2) :is(.testimonial8-quote, .testimonial-person, .testimonial-person strong, .testimonial-rating) {
+.testimonial8-card:nth-child(2) :is(.dx-kicker, .testimonial8-quote, .testimonial-person, .testimonial-person strong, .testimonial-rating) {
   color: var(--color-on-accent);
 }
 
@@ -130,8 +130,8 @@
   display: grid;
   min-block-size: clamp(28rem, 48vw, 36rem);
   padding: 0;
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .testimonial9-background,
@@ -158,15 +158,13 @@
 }
 
 .testimonial9-content :is(.dx-kicker, .testimonial9-title, .testimonial9-description, .testimonial9-quote, .testimonial-person, .testimonial-person strong) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .testimonial10-story {
   --stack-gap: var(--space-6);
   max-width: var(--width-4xl);
   margin-block: clamp(var(--space-8), 5vw, var(--space-12));
-  padding-inline-start: var(--space-6);
-  border-inline-start: var(--space-1) solid var(--color-accent);
 }
 
 .testimonial10-step {
@@ -248,12 +246,12 @@
 }
 
 .testimonial12-card:first-child {
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .testimonial12-card:first-child :is(.testimonial12-quote, .testimonial-person, .testimonial-person strong, .testimonial-rating) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 @media (min-width: 48rem) {

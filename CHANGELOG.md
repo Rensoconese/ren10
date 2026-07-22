@@ -43,6 +43,9 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Fixed
 
+- Corrected testimonial content grouping, dark-theme contrast surfaces,
+  accent-card kicker visibility, and duplicate quotation rules across the
+  twelve-block Testimonial collection.
 - Restored deliberate inline spacing for contained FAQ disclosures so indexed,
   split, contrast, and category variants no longer crowd text against borders.
 - Fixed theme-dependent black-on-black text in the Contrast Type and Photo

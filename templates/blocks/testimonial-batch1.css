@@ -44,6 +44,14 @@
   text-align: center;
 }
 
+.testimonial1-heading {
+  --stack-gap: var(--space-3);
+}
+
+.testimonial1-attribution {
+  --stack-gap: var(--space-3);
+}
+
 .testimonial1-mark {
   color: var(--color-accent-strong);
   font-size: var(--display-lg-size);
@@ -136,18 +144,18 @@
 }
 
 .testimonial4-block.bb-detail-preview {
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .testimonial4-block :is(.dx-kicker, .testimonial4-title, .testimonial4-quote, .testimonial-person strong) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .testimonial4-description,
 .testimonial4-block .testimonial-person,
 .testimonial4-metric dd {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .testimonial4-metrics {
@@ -162,7 +170,7 @@
 }
 
 .testimonial4-metric dt {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
   font-size: var(--title-lg-size);
 }
 

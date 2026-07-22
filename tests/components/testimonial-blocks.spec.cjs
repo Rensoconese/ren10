@@ -64,6 +64,51 @@ test.describe('Testimonial 1–12 Ren10 blocks', () => {
     });
   }
 
+  test('centered statement groups heading and attribution with deliberate rhythm', async ({ page }) => {
+    await open(page, 0, 390, 844);
+    const gaps = await page.locator('.testimonial1-content').evaluate((content) => ({
+      content: parseFloat(getComputedStyle(content).gap),
+      heading: parseFloat(getComputedStyle(content.querySelector('.testimonial1-heading')).gap),
+      attribution: parseFloat(getComputedStyle(content.querySelector('.testimonial1-attribution')).gap),
+    }));
+    expect(gaps.content).toBeGreaterThan(gaps.heading);
+    expect(gaps.content).toBeGreaterThan(gaps.attribution);
+  });
+
+  test('contrast testimonials retain stable contrast in dark theme', async ({ page }) => {
+    for (const [index, surfaceSelector, textSelector] of [
+      [3, '.testimonial4-block', '.testimonial4-quote'],
+      [8, '.testimonial9-block', '.testimonial9-quote'],
+      [11, '.testimonial12-card:first-child', '.testimonial12-quote'],
+    ]) {
+      await open(page, index);
+      await page.locator('html').evaluate((html) => { html.dataset.theme = 'dark'; });
+      const colors = await page.locator(surfaceSelector).evaluate((surface, selector) => ({
+        background: getComputedStyle(surface).backgroundColor,
+        foreground: getComputedStyle(document.querySelector(selector)).color,
+      }), textSelector);
+      expect(colors.background).toBe('rgb(0, 0, 0)');
+      expect(colors.foreground).toBe('rgb(255, 255, 255)');
+    }
+  });
+
+  test('accent perspective keeps its kicker visible and journey owns one quote rule', async ({ page }) => {
+    await open(page, 7);
+    const accentColors = await page.locator('.testimonial8-card:nth-child(2)').evaluate((card) => ({
+      kicker: getComputedStyle(card.querySelector('.dx-kicker')).color,
+      quote: getComputedStyle(card.querySelector('.testimonial8-quote')).color,
+    }));
+    expect(accentColors.kicker).toBe(accentColors.quote);
+
+    await open(page, 9);
+    const borders = await page.locator('.testimonial10-story').evaluate((story) => ({
+      story: parseFloat(getComputedStyle(story).borderInlineStartWidth),
+      quote: parseFloat(getComputedStyle(story.querySelector('blockquote')).borderInlineStartWidth),
+    }));
+    expect(borders.story).toBe(0);
+    expect(borders.quote).toBeGreaterThan(0);
+  });
+
   test('testimonial source policy and catalog order', async ({ page }) => {
     for (const file of [
       'testimonial-batch1.css',
