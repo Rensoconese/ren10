@@ -67,6 +67,11 @@
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.faq7-list .ren-accordion-content {
+  padding-inline: calc(var(--space-8) + var(--space-4));
 }
 
 .faq7-number {

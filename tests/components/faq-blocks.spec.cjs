@@ -83,6 +83,16 @@ test.describe('FAQ 1–12 Ren10 blocks', () => {
     await expect(details.nth(2)).toHaveAttribute('open', '');
   });
 
+  test('contained FAQ triggers preserve readable inline padding', async ({ page }) => {
+    for (const index of [1, 3, 4, 6, 11]) {
+      await open(page, index, 390, 844);
+      const padding = await page.locator(`.faq${index + 1}-block .ren-accordion-trigger`).evaluateAll(
+        (triggers) => triggers.map((trigger) => parseFloat(getComputedStyle(trigger).paddingInlineStart)),
+      );
+      expect(padding.every((value) => value >= 12)).toBe(true);
+    }
+  });
+
   test('FAQ source policy and catalog order', async ({ page }) => {
     for (const file of ['faq-batch1.css', 'faq-batch2.css', ...BLOCKS.map(([name]) => name)]) {
       expect(fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', file), 'utf8')).not.toMatch(
