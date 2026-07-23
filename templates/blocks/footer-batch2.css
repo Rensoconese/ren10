@@ -17,6 +17,10 @@
 }
 
 :is(.footer7-block, .footer8-block, .footer9-block, .footer10-block, .footer11-block, .footer12-block) a:not(.ren-btn) {
+  display: inline-grid;
+  min-block-size: var(--touch-min);
+  align-items: center;
+  justify-self: start;
   color: inherit;
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
@@ -47,10 +51,12 @@
 
 .footerx-links {
   --grid-gap: var(--space-3);
+  row-gap: 0;
 }
 
 .footerx-meta {
   --grid-gap: var(--space-4);
+  row-gap: 0;
   padding-block-start: var(--space-6);
   color: var(--color-text-muted);
   font-size: var(--text-sm);
@@ -59,6 +65,7 @@
 
 .footer7-main {
   --grid-gap: clamp(var(--space-10), 7vw, var(--space-20));
+  grid-template-columns: minmax(0, 1fr);
   margin-block-end: clamp(var(--space-12), 8vw, var(--space-24));
 }
 
@@ -123,6 +130,10 @@
   text-align: center;
 }
 
+.footer11-nav {
+  row-gap: 0;
+}
+
 .footer9-block {
   background: var(--color-accent-subtle);
 }
@@ -148,6 +159,10 @@
 .footer9-directory {
   --grid-gap: var(--space-8);
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.footer9-directory > div:not(:first-child) {
+  row-gap: 0;
 }
 
 .footer10-directory {
@@ -211,20 +226,25 @@
 }
 
 .footer12-block.bb-detail-preview {
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .footer12-block :is(h2, h3, a:not(.ren-btn), .footerx-brand) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .footer12-block :is(p, .footerx-eyebrow, .footerx-meta) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .footer12-block .footerx-meta {
   border-color: var(--color-border-strong);
+}
+
+.footer12-block a:not(.ren-btn):hover {
+  color: var(--color-on-surface-contrast);
+  text-decoration-thickness: var(--space-0-5);
 }
 
 .footer12-main {

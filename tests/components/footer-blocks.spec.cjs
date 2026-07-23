@@ -59,6 +59,11 @@ test.describe('Footer 1–12 Ren10 blocks', () => {
           nodes.every((node) => getComputedStyle(node).display === 'grid'),
         ),
       ).toBe(true);
+      expect(
+        await root.locator('a[href]').evaluateAll((links) =>
+          links.every((link) => link.getBoundingClientRect().height >= 44),
+        ),
+      ).toBe(true);
       await injectAxe(page);
       await checkA11y(page, `.footer${index + 1}-block`);
     });
@@ -76,6 +81,51 @@ test.describe('Footer 1–12 Ren10 blocks', () => {
     await expect(details).not.toHaveAttribute('open', '');
     await details.locator('summary').click();
     await expect(details).toHaveAttribute('open', '');
+  });
+
+  test('contrast footers retain stable surfaces and legible links in dark theme', async ({ page }) => {
+    for (const [index, rootSelector, textSelector] of [
+      [3, '.footer4-block', '.footer4-copy h2'],
+      [11, '.footer12-block', '.footer12-intro h2'],
+    ]) {
+      await open(page, index);
+      await page.locator('html').evaluate((html) => { html.dataset.theme = 'dark'; });
+      const colors = await page.locator(rootSelector).evaluate((root, selector) => ({
+        background: getComputedStyle(root).backgroundColor,
+        foreground: getComputedStyle(document.querySelector(selector)).color,
+      }), textSelector);
+      expect(colors.background).toBe('rgb(0, 0, 0)');
+      expect(colors.foreground).toBe('rgb(255, 255, 255)');
+    }
+  });
+
+  test('compact contact footers separate utility metadata from primary content', async ({ page }) => {
+    for (const [index, selector] of [
+      [0, '.footer1-main'],
+      [4, '.footer5-main'],
+    ]) {
+      await open(page, index);
+      const margin = await page.locator(selector).evaluate((node) =>
+        parseFloat(getComputedStyle(node).marginBlockEnd),
+      );
+      expect(margin).toBeGreaterThan(0);
+    }
+  });
+
+  test('editorial wordmark owns a full grid row and customer proof is a list', async ({ page }) => {
+    await open(page, 6);
+    const editorial = await page.locator('.footer7-main').evaluate((main) => ({
+      columns: getComputedStyle(main).gridTemplateColumns.split(' ').length,
+      wordmarkBottom: main.querySelector('h2').getBoundingClientRect().bottom,
+      directoryTop: main.querySelector('.footer7-directory').getBoundingClientRect().top,
+    }));
+    expect(editorial.columns).toBe(1);
+    expect(editorial.directoryTop).toBeGreaterThan(editorial.wordmarkBottom);
+
+    await open(page, 7);
+    const customers = page.getByRole('list', { name: 'Selected customers' });
+    await expect(customers).toHaveCount(1);
+    await expect(customers.getByRole('listitem')).toHaveCount(4);
   });
 
   test('footer source policy and catalog order', async ({ page }) => {

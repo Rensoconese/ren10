@@ -43,6 +43,10 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Fixed
 
+- Corrected Footer contrast surfaces in dark mode, restored deliberate
+  separation before utility metadata, normalized 44px link targets, kept the
+  editorial wordmark on its own Grid row, and exposed customer proof as a
+  semantic list.
 - Corrected testimonial content grouping, dark-theme contrast surfaces,
   accent-card kicker visibility, and duplicate quotation rules across the
   twelve-block Testimonial collection.
