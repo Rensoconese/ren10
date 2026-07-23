@@ -43,6 +43,9 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Fixed
 
+- Corrected Application Shell contrast surfaces in dark mode, normalized 44px
+  navigation targets, exposed the planner as a named calendar group, and made
+  the split Inbox selection update its pressed state and message detail.
 - Corrected Footer contrast surfaces in dark mode, restored deliberate
   separation before utility metadata, normalized 44px link targets, kept the
   editorial wordmark on its own Grid row, and exposed customer proof as a

@@ -18,6 +18,12 @@
   list-style: none;
 }
 
+:is(.app1-block, .app2-block, .app3-block, .app4-block, .app5-block, .app6-block) a[href] {
+  display: inline-grid;
+  min-block-size: var(--touch-min);
+  align-items: center;
+}
+
 :is(.app1-block, .app2-block, .app3-block, .app4-block, .app5-block, .app6-block) a:focus-visible,
 :is(.app1-block, .app2-block, .app3-block, .app4-block, .app5-block, .app6-block) button:focus-visible {
   outline: var(--ring-width) solid var(--color-focus-ring);
@@ -204,14 +210,14 @@
   align-content: start;
   width: var(--space-16);
   padding: var(--space-4) var(--space-2);
-  background: var(--color-text);
+  background: var(--color-surface-contrast);
 }
 
 .app-rail a {
   display: grid;
   aspect-ratio: 1;
   place-items: center;
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .app-rail a[aria-current="page"] {
@@ -248,6 +254,7 @@
   grid-template-columns: minmax(0, 1fr) max-content;
   gap: var(--space-3);
   width: 100%;
+  min-block-size: var(--touch-min);
   padding: var(--space-3);
   color: var(--color-text);
   text-align: start;
@@ -258,6 +265,14 @@
 }
 
 .app4-index button[aria-pressed="true"] {
+  background: var(--color-accent-subtle);
+}
+
+.app4-index button:hover {
+  background: var(--color-fill);
+}
+
+.app4-index button[aria-pressed="true"]:hover {
   background: var(--color-accent-subtle);
 }
 

@@ -58,6 +58,14 @@ test.describe('Application shell 1–12 Ren10 blocks', () => {
           nodes.every((node) => getComputedStyle(node).display === 'grid'),
         ),
       ).toBe(true);
+      expect(
+        await root.locator('a[href], button, input').evaluateAll((controls) =>
+          controls.every((control) => {
+            const bounds = control.getBoundingClientRect();
+            return bounds.width >= 44 && bounds.height >= 44;
+          }),
+        ),
+      ).toBe(true);
       await injectAxe(page);
       await checkA11y(page, `.app${index + 1}-block`);
     });
@@ -72,8 +80,41 @@ test.describe('Application shell 1–12 Ren10 blocks', () => {
     await expect(page.locator('.app9-table th[scope="col"]')).toHaveCount(4);
   });
 
+  test('contrast shells keep their intended dark surfaces in dark theme', async ({ page }) => {
+    await open(page, 2);
+    await page.locator('html').evaluate((html) => { html.dataset.theme = 'dark'; });
+    await expect(page.locator('.app-rail')).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+    await expect(page.locator('.app-rail a').first()).toHaveCSS('color', 'rgb(255, 255, 255)');
+
+    await open(page, 10);
+    await page.locator('html').evaluate((html) => { html.dataset.theme = 'dark'; });
+    await expect(page.locator('.app11-block')).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+    await expect(page.locator('.app11-block h2')).toHaveCSS('color', 'rgb(255, 255, 255)');
+    await expect(page.locator('.app11-service').first()).not.toHaveCSS('background-color', 'rgb(0, 0, 0)');
+  });
+
+  test('week calendar exposes its accessible group name', async ({ page }) => {
+    await open(page, 9);
+    await expect(page.getByRole('group', { name: 'Week calendar' })).toHaveCount(1);
+  });
+
+  test('inbox selection updates pressed state and message detail', async ({ page }) => {
+    await open(page, 3);
+    const messages = page.locator('[data-inbox-item]');
+    await messages.nth(1).click();
+    await expect(messages.nth(0)).toHaveAttribute('aria-pressed', 'false');
+    await expect(messages.nth(1)).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('[data-inbox-subject]')).toHaveText('Keyboard behavior');
+    await expect(page.locator('[data-inbox-body]')).toContainText('arrow-key order');
+  });
+
   test('application shell source policy and catalog order', async ({ page }) => {
-    for (const file of ['application-shell-batch1.css', 'application-shell-batch2.css', ...BLOCKS]) {
+    for (const file of [
+      'application-shell-batch1.css',
+      'application-shell-batch2.css',
+      'application-shell-inbox.js',
+      ...BLOCKS,
+    ]) {
       expect(fs.readFileSync(path.join(ROOT_DIR, 'templates/blocks', file), 'utf8')).not.toMatch(
         /display\s*:\s*flex|React|Vue|Svelte|Tailwind|attachShadow|#[0-9a-f]{3,8}\b|--(?:blue|gray|red|green|orange|yellow|teal|purple|pink)-/i,
       );

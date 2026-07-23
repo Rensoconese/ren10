@@ -18,6 +18,12 @@
   list-style: none;
 }
 
+:is(.app7-block, .app8-block, .app9-block, .app10-block, .app11-block, .app12-block) a[href] {
+  display: inline-grid;
+  min-block-size: var(--touch-min);
+  align-items: center;
+}
+
 :is(.app7-block, .app8-block, .app9-block, .app10-block, .app11-block, .app12-block) a:focus-visible,
 :is(.app7-block, .app8-block, .app9-block, .app10-block, .app11-block, .app12-block) button:focus-visible,
 :is(.app7-block, .app8-block, .app9-block, .app10-block, .app11-block, .app12-block) input:focus-visible {
@@ -224,8 +230,8 @@
 }
 
 .app11-block.bb-detail-preview {
-  color: var(--color-text-inverted);
-  background: var(--color-text);
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
 }
 
 .app11-pane {
@@ -235,7 +241,7 @@
 }
 
 .app11-block :is(h2, h3, p) {
-  color: var(--color-text-inverted);
+  color: var(--color-on-surface-contrast);
 }
 
 .app11-status-grid {
@@ -247,7 +253,8 @@
   --grid-gap: var(--space-3);
   grid-template-columns: minmax(0, 1fr);
   padding: var(--space-5);
-  background: var(--color-surface);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
 }
 
