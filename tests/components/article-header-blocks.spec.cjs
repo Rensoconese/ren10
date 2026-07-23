@@ -20,7 +20,7 @@ const BLOCKS = [
   ['article-header-research-brief.html', 0],
   ['article-header-minimal-reading.html', 0],
 ];
-const CHAIN = ['pricing-contrast-platform.html', ...BLOCKS.map(([file]) => file), 'index.html#article-header-blocks'];
+const CHAIN = ['pricing-contrast-platform.html', ...BLOCKS.map(([file]) => file), 'blog-featured-story-grid.html'];
 let server;
 
 test.describe('Article header 1–12 Ren10 blocks', () => {
