@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Mega Menu Categories Products Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS categories-and-products mega-menu navbar block built with ren-nav, native details disclosure, ren-grid-3, ren-grid-2, ren-frame, and ren-card.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Keep the shared docs chrome from forcing html overflow on 320–340px. */
+    @media (max-width: 22.5rem) {
+      .dx-nav-inner {
+        padding-inline: var(--space-3);
+        gap: var(--space-2);
+      }
+
+      .dx-nav-actions {
+        gap: var(--space-1);
+      }
+
+      .dx-nav-actions .ren-btn {
+        min-width: 0;
+        padding-inline: var(--space-2);
+        font-size: var(--text-xs);
+      }
+
+      .dx-brand span:not(.dx-brand-mark):not(.ren-badge) {
+        max-width: 6ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .dx-brand .ren-badge {
+        display: none;
+      }
+    }
+
+    .rmcp-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rmcp-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmcp-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rmcp-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .rmcp-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    .rmcp-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rmcp-preview .ren-nav-brand,
+    .rmcp-preview .ren-nav-link,
+    .rmcp-preview .ren-nav-actions .ren-btn,
+    .rmcp-preview .rmcp-mega-link,
+    .rmcp-preview a.rmcp-card {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rmcp-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Native details: neutralize classless card chrome, marker, divider, pseudo-chevron. */
+    .rmcp-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rmcp-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rmcp-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+
+    .rmcp-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rmcp-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rmcp-disclosure > summary::after,
+    .rmcp-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rmcp-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rmcp-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcp-disclosure[open] > summary .rmcp-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rmcp-panel {
+      padding: 0;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rmcp-panel-inner {
+      --center-padding: 0;
+      max-width: var(--width-7xl);
+      margin-inline: auto;
+      padding: var(--space-5) var(--space-6);
+    }
+
+    /* Categories (multi-column) peer to product media cards. */
+    .rmcp-layout {
+      --stack-gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-6);
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    .rmcp-categories.ren-grid-3 {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+      min-width: 0;
+      width: 100%;
+    }
+
+    .rmcp-group {
+      min-width: 0;
+    }
+
+    .rmcp-group-heading {
+      margin: 0 0 var(--space-3);
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+    }
+
+    .rmcp-link-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rmcp-mega-link {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      line-height: 1.3;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcp-mega-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rmcp-mega-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmcp-products.ren-grid-2 {
+      grid-template-columns: 1fr;
+      gap: var(--grid-gap, var(--space-4));
+      min-width: 0;
+      width: 100%;
+    }
+
+    a.rmcp-card.ren-card {
+      --grid-gap: 0;
+      grid-template-columns: minmax(0, 1fr);
+      min-width: 0;
+      min-height: var(--touch-min);
+      color: inherit;
+      text-decoration: none;
+      transition:
+        box-shadow var(--duration-state) var(--ease-state-change),
+        border-color var(--duration-state) var(--ease-state-change),
+        transform var(--duration-state) var(--ease-state-change);
+    }
+
+    a.rmcp-card.ren-card:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-md);
+    }
+
+    a.rmcp-card.ren-card:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmcp-card-media.ren-frame {
+      --frame-ratio: 3 / 2;
+      aspect-ratio: 3 / 2;
+      width: 100%;
+      background:
+        linear-gradient(
+          135deg,
+          var(--color-surface-sunken),
+          color-mix(in srgb, var(--color-accent) 22%, var(--color-surface))
+        );
+      transition: opacity var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmcp-card:nth-child(2) .rmcp-card-media {
+      background:
+        linear-gradient(
+          145deg,
+          color-mix(in srgb, var(--color-info) 18%, var(--color-surface)),
+          var(--color-surface-sunken)
+        );
+    }
+
+    .rmcp-card-media.ren-frame > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .rmcp-card-body {
+      --stack-gap: var(--space-2);
+      padding: var(--space-3) var(--space-4) var(--space-4);
+      min-width: 0;
+    }
+
+    .rmcp-card-title {
+      margin: 0;
+      font-size: var(--text-base);
+      font-weight: var(--weight-bold);
+      line-height: 1.25;
+      color: var(--color-text);
+    }
+
+    a.rmcp-card:hover .rmcp-card-title {
+      color: var(--color-accent);
+    }
+
+    .rmcp-hero {
+      --stack-gap: var(--space-3);
+      padding: var(--space-8) var(--space-6) var(--space-10);
+      max-width: 52rem;
+    }
+
+    .rmcp-hero h2 {
+      margin: 0;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+      line-height: 1.15;
+    }
+
+    .rmcp-hero p {
+      margin: 0;
+      color: var(--color-text-muted);
+      line-height: 1.55;
+    }
+
+    /* Desktop: full-width mega under the bar. */
+    @media (min-width: 48rem) {
+      .rmcp-disclosure {
+        position: static;
+      }
+
+      .rmcp-panel {
+        position: absolute;
+        inset-inline: 0;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        z-index: var(--ren-z-sticky);
+        box-shadow: var(--shadow-md);
+      }
+
+      .rmcp-layout {
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+        align-items: start;
+        gap: var(--space-10);
+      }
+
+      .rmcp-categories {
+        min-width: 0;
+      }
+
+      .rmcp-products {
+        min-width: 0;
+        max-width: 28rem;
+      }
+
+      .rmcp-categories.ren-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--space-6);
+      }
+
+      .rmcp-products.ren-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* Tablet band: keep horizontal shell; allow two-up cards and multi-col groups when space allows. */
+    @media (min-width: 48rem) and (max-width: 63.999rem) {
+      .rmcp-panel-inner {
+        padding: var(--space-5) var(--space-5);
+      }
+
+      .rmcp-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-6);
+      }
+
+      .rmcp-categories.ren-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .rmcp-products {
+        max-width: none;
+        width: 100%;
+      }
+
+      .rmcp-products.ren-grid-2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rmcp-preview .ren-nav {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .rmcp-preview .ren-nav-brand {
+        order: 1;
+      }
+
+      .rmcp-preview .ren-nav-toggle {
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .rmcp-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .rmcp-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rmcp-preview .ren-nav-links .ren-nav-link,
+      .rmcp-preview .rmcp-disclosure,
+      .rmcp-preview .rmcp-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rmcp-preview .rmcp-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+
+      .rmcp-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        width: 100%;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmcp-preview .ren-nav[data-open] .ren-nav-actions,
+      .rmcp-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .rmcp-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .rmcp-panel {
+        width: 100%;
+        position: static;
+        border-block-end: none;
+        background: transparent;
+        box-shadow: none;
+      }
+
+      .rmcp-panel-inner {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .rmcp-layout {
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--space-4);
+      }
+
+      .rmcp-categories.ren-grid-3 {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+      }
+
+      .rmcp-products.ren-grid-2 {
+        grid-template-columns: 1fr;
+        width: 100%;
+      }
+
+      .rmcp-products {
+        max-width: none;
+      }
+    }
+
+    /* Small tablet+ within mobile shell: two-up products when width allows inside open panel. */
+    @media (min-width: 30rem) and (max-width: 47.999rem) {
+      .rmcp-products.ren-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
+    @media (max-width: 47.999rem) {
+      .rmcp-preview ren-nav:not(:defined) .ren-nav {
+        flex-wrap: wrap;
+      }
+
+      .rmcp-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rmcp-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+
+      .rmcp-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-inline-start: 0;
+        order: 4;
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmcp-preview ren-nav:not(:defined) .ren-nav-brand {
+        order: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rmcp-chevron,
+      .rmcp-mega-link,
+      .rmcp-panel,
+      a.rmcp-card,
+      .rmcp-card-media {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rmcp-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Mega Menu Categories Products</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Mega Menu Categories Products</h1>
+      <p class="lede">
+        A single navigation tree with a native mega-menu disclosure: three
+        category columns of simple links beside two media-and-title product
+        cards. Built with <code>ren-nav</code>, <code>ren-grid-3</code>,
+        <code>ren-grid-2</code>, <code>ren-frame</code>, and progressive
+        enhancement — no second mobile tree or framework code.
+      </p>
+    </header>
+
+    <section class="rmcp-preview bb-detail-preview" data-rmcp-root aria-label="Navbar mega menu categories products preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rmcp-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rmcp-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#platform">Platform</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#solutions">Solutions</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#resources">Resources</a>
+            </li>
+            <li>
+              <details class="rmcp-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Catalog
+                  <span class="rmcp-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rmcp-panel">
+                  <div class="rmcp-panel-inner">
+                    <div class="rmcp-layout ren-grid">
+                      <div class="rmcp-categories ren-grid ren-grid-3">
+                        <div class="rmcp-group">
+                          <h3 class="rmcp-group-heading" id="rmcp-group-build">Build</h3>
+                          <ul class="rmcp-link-list ren-stack-sm" aria-labelledby="rmcp-group-build">
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-components">Components</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-patterns">Patterns</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-layouts">Layouts</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-tokens">Tokens</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-themes">Themes</a></li>
+                          </ul>
+                        </div>
+                        <div class="rmcp-group">
+                          <h3 class="rmcp-group-heading" id="rmcp-group-operate">Operate</h3>
+                          <ul class="rmcp-link-list ren-stack-sm" aria-labelledby="rmcp-group-operate">
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-dashboards">Dashboards</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-workflows">Workflows</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-alerts">Alerts</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-audit">Audit trails</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-roles">Roles</a></li>
+                          </ul>
+                        </div>
+                        <div class="rmcp-group">
+                          <h3 class="rmcp-group-heading" id="rmcp-group-grow">Grow</h3>
+                          <ul class="rmcp-link-list ren-stack-sm" aria-labelledby="rmcp-group-grow">
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-onboarding">Onboarding</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-experiments">Experiments</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-insights">Insights</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-partners">Partners</a></li>
+                            <li><a class="rmcp-mega-link ren-row" href="#cat-releases">Releases</a></li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div class="rmcp-products ren-grid ren-grid-2">
+                        <a class="rmcp-card ren-card ren-card-interactive ren-grid" href="#product-workspace">
+                          <div class="rmcp-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcp-card-body ren-stack-xs">
+                            <h3 class="rmcp-card-title">Workspace kit</h3>
+                          </div>
+                        </a>
+
+                        <a class="rmcp-card ren-card ren-card-interactive ren-grid" href="#product-signals">
+                          <div class="rmcp-card-media ren-frame">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E"
+                              alt=""
+                              width="3"
+                              height="2"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmcp-card-body ren-stack-xs">
+                            <h3 class="rmcp-card-title">Signal board</h3>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-secondary" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rmcp-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rmcp-hero ren-stack">
+        <h2>Catalog that scales with the product.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the three category
+          columns, two product cards, and full-width mega panel stay easy to
+          judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#platform">See platform</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-mega-menu-overlay-collections.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Mega Menu Overlay Collections Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-cta-right-sheet-contact.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo CTA Right Sheet Contact Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local categories/products mega-menu controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic, no timers):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     * Escape restores focus to the summary even when a destination is focused.
+     */
+    const RMCP_CONTROLLER = Symbol.for('ren10.rmcp.controller');
+    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavMegaMenuCategoriesProducts(scope = document) {
+      const root = scope.querySelector?.('[data-rmcp-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rmcp-root')) {
+        const nested = document.querySelector('[data-rmcp-root]');
+        if (!nested) return null;
+        return initNavMegaMenuCategoriesProductsOn(nested);
+      }
+      return initNavMegaMenuCategoriesProductsOn(root);
+    }
+
+    function initNavMegaMenuCategoriesProductsOn(root) {
+      const disclosure = root.querySelector('.rmcp-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RMCP_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RMCP_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const panel = root.querySelector('.rmcp-panel');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) {
+          if (returnFocus) summary.focus();
+          return;
+        }
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      /** Focus an element only when it is painted and visible (public geometry). */
+      function focusIfVisible(el) {
+        if (!(el instanceof HTMLElement)) return;
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return;
+        if (Number(style.opacity || '1') === 0) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+        el.focus();
+      }
+
+      /**
+       * Close the mobile shell via ren-nav's public toggle contract only
+       * (click the visible .ren-nav-toggle while aria-expanded="true").
+       * Never touch private fields such as _isOpen / _closeMenu.
+       */
+      function closeMobileShellPublic() {
+        if (isDesktop() || !toggle) return false;
+        if (toggle.getAttribute('aria-expanded') !== 'true') return false;
+        toggle.click();
+        return true;
+      }
+
+      /**
+       * Destination activation policy by class:
+       * - Desktop mega-link / product card → close details, restore summary focus
+       * - Mobile mega-link / card / actions / top peer → close nested + shell
+       *   (shell via public toggle or ren-nav peer-link contract) and focus toggle
+       * @param {'mega-link'|'card'|'action'|'peer'} kind
+       */
+      function onDestinationActivate(kind) {
+        markIntentionalCloseWhilePointerInside();
+
+        if (isDesktop()) {
+          if (kind === 'mega-link' || kind === 'card') {
+            closeDisclosure(true);
+          } else {
+            closeDisclosure(false);
+          }
+          return;
+        }
+
+        // Mobile: collapse nested mega first.
+        closeDisclosure(false);
+
+        // Top peers are .ren-nav-link — ren-nav already closes the shell on click.
+        // Mega links, cards, and actions must drive the public toggle themselves.
+        if (kind !== 'peer') {
+          closeMobileShellPublic();
+        }
+
+        // Restore focus to the mobile toggle when it remains visible.
+        requestAnimationFrame(() => {
+          focusIfVisible(toggle);
+        });
+      }
+
+      /**
+       * Compound hover zone for full-width categories/products mega menus.
+       * Keep open while the pointer is over the disclosure, the summary→panel
+       * seam, or the lateral strip from the trigger toward the panel.
+       */
+      function isPointerInHoverZone(clientX, clientY) {
+        if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return false;
+
+        const hit = document.elementFromPoint(clientX, clientY);
+        if (hit instanceof Node && disclosure.contains(hit)) return true;
+        if (!disclosure.open || !panel) return false;
+
+        const panelRect = panel.getBoundingClientRect();
+        const summaryRect = summary.getBoundingClientRect();
+        if (panelRect.width === 0 || summaryRect.width === 0) return false;
+
+        const inPanelX = clientX >= panelRect.left && clientX <= panelRect.right;
+
+        const seamTop = Math.min(summaryRect.bottom, panelRect.top);
+        const seamBottom = Math.max(summaryRect.bottom, panelRect.top);
+        if (inPanelX && clientY >= seamTop - 1 && clientY <= seamBottom + 1) {
+          return true;
+        }
+
+        if (
+          inPanelX &&
+          clientY >= summaryRect.top &&
+          clientY <= summaryRect.bottom &&
+          clientX >= summaryRect.left
+        ) {
+          return true;
+        }
+
+        return false;
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (!isDesktop()) return;
+          const { clientX, clientY } = event;
+          requestAnimationFrame(() => {
+            if (!isDesktop()) return;
+            if (isPointerInHoverZone(clientX, clientY)) {
+              pointerInside = true;
+              return;
+            }
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            if (!pointerPinned) closeDisclosure(false);
+          });
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!isDesktop() || !disclosure.open || pointerPinned) return;
+          if (isPointerInHoverZone(event.clientX, event.clientY)) {
+            pointerInside = true;
+            return;
+          }
+          if (pointerInside) {
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            // On mobile, keep the nested panel stable through pointer focus on
+            // another destination in this nav. Its click handler then closes
+            // both layers and restores focus to the still-visible toggle.
+            if (!isDesktop() && root.contains(target)) return;
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a.rmcp-mega-link[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            onDestinationActivate('mega-link');
+          },
+          { signal }
+        );
+      });
+
+      disclosure.querySelectorAll('a.rmcp-card[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            onDestinationActivate('card');
+          },
+          { signal }
+        );
+      });
+
+      // CTA / action destinations outside the disclosure.
+      root.querySelectorAll('.ren-nav-actions a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            onDestinationActivate('action');
+          },
+          { signal }
+        );
+      });
+
+      // Top-level peer destinations (plain ren-nav-link anchors, not the summary).
+      root.querySelectorAll('#rmcp-primary-links > li > a.ren-nav-link[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            onDestinationActivate('peer');
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    // Module-local init only — no window global export.
+    initNavMegaMenuCategoriesProducts();
+  </script>
+</body>
+</html>

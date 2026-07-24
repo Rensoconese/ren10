@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar17 mapped to one ren-nav tree, always-visible named toggle, full-viewport under-bar .rn17-menu overlay owning eight large end-aligned ren-nav-link destinations plus footer contact and five social anchors, one permanent top-bar primary action, progressive enhancement for JS-disabled tree visibility, and zero chevrons/dropdowns. Rejected ren-sheet, floating card shell, mega-menu columns, nested social nav landmark, permanent desktop link row, and copied source."
+}

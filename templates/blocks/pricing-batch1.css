@@ -1,0 +1,364 @@
+.pricing1-block,
+.pricing2-block,
+.pricing3-block,
+.pricing4-block,
+.pricing5-block,
+.pricing6-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.pricing1-block, .pricing2-block, .pricing3-block, .pricing4-block, .pricing5-block, .pricing6-block) :is(h2, h3, p, ul, dl, dd) {
+  margin: 0;
+}
+
+:is(.pricing1-block, .pricing2-block, .pricing3-block, .pricing4-block, .pricing5-block, .pricing6-block) ul {
+  padding: 0;
+  list-style: none;
+}
+
+.pricing-heading {
+  --grid-gap: 0;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--width-3xl);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.pricing-heading .pricing-label + h2 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing-heading h2 + p {
+  margin-block-start: var(--space-4);
+}
+
+.pricing-heading h2,
+.pricing3-copy h2,
+.pricing4-copy h2,
+.pricing6-copy h2 {
+  font-size: clamp(var(--display-sm-size), 5vw, var(--display-lg-size));
+  line-height: var(--display-lg-leading);
+  text-wrap: balance;
+}
+
+.pricing-heading p,
+.pricing3-copy p,
+.pricing4-copy p,
+.pricing6-copy p {
+  color: var(--color-text-muted);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+}
+
+.pricing-grid {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+}
+
+.pricing-card {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  min-width: 0;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.pricing-card-featured {
+  background: var(--color-accent-subtle);
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.pricing-label {
+  color: var(--color-text-muted);
+  font-size: var(--label-size);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.pricing-price {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: end;
+}
+
+.pricing-price strong {
+  font-size: clamp(var(--display-sm-size), 5vw, var(--display-md-size));
+  line-height: 1;
+}
+
+.pricing-price span {
+  color: var(--color-text-muted);
+}
+
+.pricing-features {
+  --grid-gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pricing-features li {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-2);
+}
+
+.pricing-features li::before {
+  content: "✓";
+  color: var(--color-accent-strong);
+  font-weight: var(--weight-bold);
+}
+
+.pricing-card .ren-btn {
+  width: 100%;
+  margin-block-start: auto;
+}
+
+.pricing2-table-wrap {
+  min-width: 0;
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.pricing2-scroll-hint {
+  margin-block: var(--space-6) calc(var(--space-8) * -1);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.pricing2-table {
+  width: 100%;
+  min-width: 42rem;
+  border-collapse: collapse;
+}
+
+.pricing2-table :is(th, td) {
+  padding: var(--space-4);
+  text-align: center;
+  border-block-end: 1px solid var(--color-border);
+}
+
+.pricing2-table :is(th, td):first-child {
+  text-align: start;
+}
+
+.pricing2-table th {
+  background: var(--color-fill);
+}
+
+.pricing2-table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+.pricing3-layout,
+.pricing4-layout,
+.pricing6-layout {
+  --grid-gap: clamp(var(--space-8), 6vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.pricing3-copy,
+.pricing4-copy,
+.pricing6-copy {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--width-prose);
+}
+
+.pricing3-copy,
+.pricing4-copy {
+  --grid-gap: 0;
+}
+
+:is(.pricing3-copy, .pricing4-copy) .pricing-label + h2 {
+  margin-block-start: var(--space-2);
+}
+
+:is(.pricing3-copy, .pricing4-copy) h2 + p {
+  margin-block-start: var(--space-4);
+}
+
+:is(.pricing3-copy, .pricing4-copy) > p:not(.pricing-label) + .pricing-features {
+  margin-block-start: var(--space-6);
+}
+
+.pricing3-block .pricing-card {
+  --grid-gap: 0;
+}
+
+.pricing3-block .pricing-card .pricing-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing3-block .pricing-card h3 + .pricing-price {
+  margin-block-start: var(--space-4);
+}
+
+.pricing3-block .pricing-card .pricing-price + p {
+  margin-block-start: var(--space-3);
+}
+
+.pricing3-block .pricing-card > p:not(.pricing-label, .pricing-price) + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing3-block .pricing-card .ren-btn + .ren-btn {
+  margin-block-start: var(--space-2);
+}
+
+.pricing4-block {
+  background: var(--color-surface-sunken);
+}
+
+.pricing4-calculator {
+  --grid-gap: 0;
+  grid-template-columns: minmax(0, 1fr);
+  padding: clamp(var(--space-5), 4vw, var(--space-8));
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+}
+
+.pricing4-calculator .pricing4-field + .pricing4-field {
+  margin-block-start: var(--space-5);
+}
+
+.pricing4-calculator .pricing4-field + .pricing4-total,
+.pricing4-calculator .pricing4-total + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing4-field {
+  --grid-gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pricing4-total {
+  --grid-gap: var(--space-2);
+  grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: end;
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.pricing4-total strong {
+  font-size: var(--display-sm-size);
+}
+
+.pricing5-toggle {
+  --grid-gap: var(--space-2);
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  margin-block-start: var(--space-6);
+}
+
+.pricing5-toggle label {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: var(--touch-min);
+  padding-inline: var(--space-3);
+  cursor: pointer;
+}
+
+.pricing6-block.bb-detail-preview {
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
+}
+
+.pricing6-block :is(h2, h3, p, li, .pricing-label, .pricing-price span) {
+  color: var(--color-on-surface-contrast);
+}
+
+.pricing6-copy,
+.pricing6-block .pricing-card {
+  --grid-gap: 0;
+}
+
+.pricing6-copy .pricing-label + h2,
+.pricing6-block .pricing-card .pricing-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+.pricing6-copy h2 + p,
+.pricing6-block .pricing-card h3 + .pricing-price {
+  margin-block-start: var(--space-4);
+}
+
+.pricing6-copy > p:not(.pricing-label) + .pricing-features,
+.pricing6-block .pricing-card > p:not(.pricing-label, .pricing-price) + .ren-btn {
+  margin-block-start: var(--space-6);
+}
+
+.pricing6-block .pricing-card .pricing-price + p {
+  margin-block-start: var(--space-3);
+}
+
+.pricing6-copy .pricing-features li::before {
+  color: var(--color-on-surface-contrast);
+}
+
+.pricing6-block .pricing-card {
+  color: var(--color-text);
+}
+
+.pricing6-block .pricing-card :is(h3, p, li, .pricing-label, .pricing-price span) {
+  color: var(--color-text);
+}
+
+@media (min-width: 48rem) {
+  .pricing2-scroll-hint {
+    display: none;
+  }
+
+  .pricing-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  :is(.pricing1-block, .pricing5-block) .pricing-grid {
+    row-gap: 0;
+  }
+
+  :is(.pricing1-block, .pricing5-block) .pricing-card {
+    --grid-gap: 0;
+    grid-row: span 5;
+    grid-template-rows: subgrid;
+  }
+
+  .pricing3-layout,
+  .pricing4-layout,
+  .pricing6-layout {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  }
+
+  .pricing6-layout {
+    align-items: center;
+  }
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card {
+  --grid-gap: 0;
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card .pricing-label + h3 {
+  margin-block-start: var(--space-2);
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card h3 + .pricing-price {
+  margin-block-start: var(--space-4);
+}
+
+:is(.pricing1-block, .pricing5-block) .pricing-card .pricing-price + .pricing-features,
+:is(.pricing1-block, .pricing5-block) .pricing-card .pricing-features + .ren-btn {
+  margin-block-start: var(--space-6);
+}

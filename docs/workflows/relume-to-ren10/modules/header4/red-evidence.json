@@ -1,0 +1,6 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "historical-phase-a-red",
+  "note": "Before production HTML existed, the focused Desktop Light Header4 suite ran 14 cases and all 14 failed because templates/blocks/hero-split-email-video-lightbox.html returned HTTP 404."
+}

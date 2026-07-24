@@ -1,0 +1,17 @@
+{
+  "id": "tablet-768",
+  "url": "http://127.0.0.1:49287/templates/blocks/hero-fullscreen-video-top-copy-band-dual-cta.html?ren10_capture=header11-tablet-768-8a0392bce9da",
+  "viewport": {
+    "width": 768,
+    "height": 1024
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh11-band-layout": 1,
+    ".rh11-video": 1
+  },
+  "commit": "8a0392bce9da510defcd238128ad9440fd35c433",
+  "capturedAt": "2026-07-15T17:59:11.673Z"
+}

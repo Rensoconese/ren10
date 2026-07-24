@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header8 maps to hero-fullscreen-video-email-form: ren-cover/ren-center/ren-stack shell, native decorative deterministic video with semantic scrim and poster fallback, ren-field email + exactly one submit ren-btn, real ren-link terms, and a separate accessible pause/resume media control. Navbar, logo, second marketing CTA, external assets, and framework abstractions were rejected."
+}

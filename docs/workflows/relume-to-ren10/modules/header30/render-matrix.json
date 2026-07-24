@@ -1,0 +1,9 @@
+{"version":1,"path":"/templates/blocks/hero-fullscreen-bg-centered-copy-dual-cta.html","root":"[data-rh30-root]","states":[
+  {"id":"desktop-1280-light","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh30-title":1,".rh30-actions a":2,".rh30-background img":1}},
+  {"id":"desktop-1280-dark","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh30-copy":1,".rh30-scrim":1}},
+  {"id":"mobile-390-light","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh30-description":1,".rh30-actions":1}},
+  {"id":"mobile-390-dark","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh30-background img":1,".rh30-actions a":2}},
+  {"id":"narrow-320","viewport":{"width":320,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh30-title":1,".rh30-actions a":2}},
+  {"id":"reduced-motion-focus","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[{"type":"focus","selector":".rh30-actions a:first-child"}],"expectedMarkers":{".rh30-actions a:focus":1}},
+  {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh30-actions a[href]":2,".rh30-background img":1}}
+]}

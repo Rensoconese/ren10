@@ -1,0 +1,7 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "npx playwright test tests/components/header7-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1",
+  "result": "26 failed across light and dark because the target block returned HTTP 404",
+  "reason": "Genuine RED proved the isolated suite requires the absent Header7 implementation."
+}

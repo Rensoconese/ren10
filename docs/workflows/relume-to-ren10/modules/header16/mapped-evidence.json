@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header16 maps to hero-split-email-form-landscape-image: one content-height ren-center/stack module, one responsive ren-switcher copy region, one ren-field email form with real action/terms/status, and one owned rounded cover image. Full-svh, extra CTA, nav, logo, dialog, video, overlay, remote media, duplicate trees, and framework abstractions were rejected."
+}

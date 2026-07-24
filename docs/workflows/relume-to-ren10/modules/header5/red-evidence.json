@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "RED verified before production HTML existed: focused Desktop Light Playwright ran 10 tests and all 10 failed for the expected missing [data-rh5-root] / Header5 anatomy."
+}

@@ -1,0 +1,164 @@
+.cta49-block,
+.cta50-block,
+.cta51-block,
+.cta52-block,
+.cta53-block,
+.cta54-block {
+  padding-block: var(--space-section-sm);
+}
+
+:is(.cta49-block.cta49-block, .cta50-block.cta50-block) {
+  color-scheme: light;
+  background: var(--color-text);
+}
+
+:is(.cta49-layout, .cta50-layout) {
+  --grid-gap: var(--space-section-sm);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  width: 100%;
+  padding-inline: var(--space-stack-loose);
+}
+
+:is(.cta49-copy, .cta50-copy, .cta51-content, .cta52-content, .cta53-content, .cta54-content) {
+  --stack-gap: var(--space-stack);
+  min-width: 0;
+}
+
+:is(.cta49-title, .cta50-title, .cta51-title, .cta52-title, .cta53-title, .cta54-title),
+:is(.cta49-description, .cta50-description, .cta51-description, .cta52-description, .cta53-description, .cta54-description),
+:is(.cta50-legal, .cta52-legal, .cta54-legal) {
+  margin: 0;
+}
+
+:is(.cta49-title, .cta50-title, .cta51-title, .cta52-title, .cta53-title, .cta54-title) {
+  font-size: clamp(var(--display-sm-size), 5vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.cta49-description, .cta50-description, .cta51-description, .cta52-description, .cta53-description, .cta54-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.cta49-title, .cta49-description, .cta50-title, .cta50-description),
+.cta50-form label,
+.cta50-legal,
+.cta50-legal a {
+  color: var(--color-text-inverted);
+}
+
+:is(.cta49-actions, .cta51-actions, .cta53-actions) {
+  --grid-gap: var(--space-inline-loose);
+  grid-template-columns: repeat(2, max-content);
+}
+
+:is(.cta49-actions, .cta50-form) { justify-self: start; }
+
+:is(.cta50-form, .cta52-form, .cta54-form) {
+  --stack-gap: var(--space-stack-tight);
+  width: min(100%, var(--width-3xl));
+}
+
+:is(.cta50-form-row, .cta52-form-row, .cta54-form-row) {
+  --grid-gap: var(--space-inline-tight);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+}
+
+:is(.cta50-form-row, .cta52-form-row, .cta54-form-row) > * { min-width: 0; }
+:is(.cta50-form-row, .cta52-form-row, .cta54-form-row) :is(input, .ren-btn) { min-height: var(--touch-min); }
+:is(.cta50-form, .cta52-form, .cta54-form) [data-error][hidden] { display: none; }
+
+:is(.cta50-legal, .cta52-legal, .cta54-legal) {
+  color: var(--color-text-muted);
+  font-size: var(--caption-size);
+  line-height: var(--caption-leading);
+}
+
+:is(.cta50-legal, .cta52-legal, .cta54-legal) a {
+  display: inline-grid;
+  align-items: center;
+  min-height: var(--touch-min);
+}
+
+:is(.cta51-block.cta51-block, .cta52-block.cta52-block) {
+  padding-inline: var(--space-section-sm);
+  border: var(--stroke-1) solid var(--color-border-strong);
+  border-radius: var(--radius-xl);
+}
+
+:is(.cta51-content, .cta52-content, .cta53-content, .cta54-content) {
+  --center-width: var(--width-5xl);
+  align-items: center;
+  width: 100%;
+  text-align: center;
+}
+
+:is(.cta51-description, .cta52-description, .cta53-description, .cta54-description) { margin-inline: auto; }
+
+:is(.cta51-actions, .cta53-actions) { justify-content: center; }
+:is(.cta52-form, .cta54-form) { margin-inline: auto; text-align: start; }
+
+:is(.cta53-block, .cta54-block) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color-scheme: light;
+}
+
+:is(.cta53-background, .cta53-scrim, .cta54-background, .cta54-scrim) {
+  position: absolute;
+  inset: 0;
+}
+
+:is(.cta53-background, .cta54-background) { z-index: -2; }
+:is(.cta53-background, .cta54-background) img { width: 100%; height: 100%; object-fit: cover; }
+
+:is(.cta53-scrim, .cta54-scrim) {
+  z-index: -1;
+  background: var(--color-text);
+  opacity: 0.72;
+}
+
+:is(.cta53-title, .cta53-description, .cta54-title, .cta54-description),
+.cta50-legal,
+.cta50-legal a,
+.cta54-form label,
+.cta54-legal,
+.cta54-legal a {
+  color: var(--color-text-inverted);
+}
+
+:is(.cta49-actions, .cta50-form, .cta53-actions, .cta54-form) .ren-btn {
+  --ren-btn-bg: var(--color-text-inverted);
+  --ren-btn-color: var(--color-text);
+  --ren-btn-border-color: var(--color-text-inverted);
+}
+
+:is(.cta49-actions, .cta53-actions) .ren-btn-outline {
+  color: var(--color-text-inverted);
+  border-color: var(--color-text-inverted);
+}
+
+:is(.cta50-form, .cta54-form) ren-field { --ren-field-error-color: var(--color-text-inverted); }
+
+@media (min-width: 40rem) {
+  :is(.cta50-form-row, .cta52-form-row, .cta54-form-row) { grid-template-columns: minmax(0, 1fr) max-content; }
+}
+
+@media (min-width: 48rem) {
+  :is(.cta49-layout, .cta50-layout) { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); }
+  :is(.cta49-actions, .cta50-form) { justify-self: end; }
+}
+
+@media (max-width: 24rem) {
+  :is(.cta49-actions, .cta51-actions, .cta53-actions) { grid-template-columns: minmax(0, 1fr); width: 100%; }
+  :is(.cta49-actions, .cta51-actions, .cta53-actions) .ren-btn { width: 100%; }
+}

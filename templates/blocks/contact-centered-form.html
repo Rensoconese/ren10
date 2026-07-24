@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A focused centered contact form built with Ren10.">
+  <title>Centered Form Contact — Ren10 Blocks</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="contact-batch1.css">
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Templates</a></li><li><a href="index.html">Blocks</a></li><li aria-current="page">Centered Form Contact</li></ol></nav>
+      <p class="dx-kicker">Contact 2 · Focused form</p>
+      <h1 class="bb-detail-title">Centered Form Contact</h1>
+      <p class="bb-detail-description">A compact centered inquiry path keeps the introduction, fields, and response expectation in one readable column.</p>
+    </header>
+    <section class="contact2-block bb-detail-preview" aria-labelledby="contact2-title">
+      <div class="contact2-heading ren-stack">
+        <p class="dx-kicker">Contact our team</p>
+        <h2 id="contact2-title" class="contact2-title">Bring us the question that is slowing the work down.</h2>
+        <p class="contact2-description">A short brief is enough to begin. Prefer email? Write to <a href="mailto:projects@northstar.example">projects@northstar.example</a>.</p>
+      </div>
+      <ren-form data-validate="onTouched">
+        <form class="contact2-form contact-form-surface ren-form ren-stack" action="#contact2-sent" method="post" novalidate>
+          <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden><strong>Please review the highlighted fields.</strong><ul></ul></div>
+          <div class="contact2-row ren-grid">
+            <ren-field data-rules="required"><label>Name</label><input class="ren-input" type="text" name="name" autocomplete="name" required><span data-error></span></ren-field>
+            <ren-field data-rules="required|email"><label>Email</label><input class="ren-input" type="email" name="email" autocomplete="email" required><span data-error></span></ren-field>
+          </div>
+          <ren-field data-rules="required"><label>Topic</label><select class="ren-input" name="topic" required><option value="">Choose a topic</option><option>Design system audit</option><option>Product implementation</option><option>Accessibility review</option><option>Other</option></select><span data-error></span></ren-field>
+          <ren-field data-rules="required|min:20"><label>Message</label><textarea class="ren-input" name="message" rows="5" minlength="20" required></textarea><span data-description>We usually respond within one business day.</span><span data-error></span></ren-field>
+          <div class="ren-form-actions"><button class="ren-btn" type="submit">Send message</button></div>
+        </form>
+      </ren-form>
+    </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="contact-split-form-details.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Split Form Details Contact</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="contact-details-cards.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Details Cards Contact</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/patterns/ren-form/ren-form.js"></script>
+</body>
+</html>

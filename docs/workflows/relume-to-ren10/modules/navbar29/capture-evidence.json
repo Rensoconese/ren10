@@ -1,0 +1,2118 @@
+{
+  "version": 1,
+  "moduleId": "navbar29",
+  "blockSlug": "nav-mega-menu-overlay-collections",
+  "reviewedCommit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+  "captureCount": 15,
+  "captureRunner": "navbar29/capture-local.mjs",
+  "settlePolicy": "stabilizeAfterAction + waitForPaintedOpen (opacity≈1, display/visibility, rects, no running panel animations) + disableCaptureMotion for open snapshots + shared settleDocument; expectedState enforces computed opacity/display/visibility/rects; CDP captureBeyondViewport with open freeze for mobile seams",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": false
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": false,
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": false
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": false
+        },
+        "captureViewport": {
+          "width": 1280,
+          "height": 941
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:51.525Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-closed.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-closed.json"
+    },
+    {
+      "id": "desktop-light-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card",
+          ".rmoc-mega-link"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 1230,
+            "height": 308,
+            "x": 25,
+            "y": 489
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 218,
+            "height": 226,
+            "x": 313,
+            "y": 509
+          },
+          ".rmoc-mega-link": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 240,
+            "height": 44,
+            "x": 49,
+            "y": 536
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            },
+            ".rmoc-mega-link": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 240,
+              "height": 44,
+              "x": 49,
+              "y": 536
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            },
+            ".rmoc-mega-link": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 240,
+              "height": 44,
+              "x": 49,
+              "y": 536
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 1280,
+          "height": 1200
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:52.629Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.json"
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 1230,
+            "height": 308,
+            "x": 25,
+            "y": 489
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 218,
+            "height": 226,
+            "x": 313,
+            "y": 509
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 1280,
+          "height": 1200
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:53.714Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-hover-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-hover-open.json"
+    },
+    {
+      "id": "desktop-dark-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "dark",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 1230,
+            "height": 308,
+            "x": 25,
+            "y": 489
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 218,
+            "height": 226,
+            "x": 313,
+            "y": 509
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 1280,
+          "height": 1200
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:54.823Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.json"
+    },
+    {
+      "id": "tablet-light-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 834,
+        "height": 1400
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 784,
+            "height": 435,
+            "x": 25,
+            "y": 489
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 228,
+            "height": 189,
+            "x": 313,
+            "y": 509
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 784,
+              "height": 435,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 228,
+              "height": 189,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 784,
+              "height": 435,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 228,
+              "height": 189,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 834,
+          "height": 1400
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:55.884Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.json"
+    },
+    {
+      "id": "mobile-light-nav-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1100
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": false,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-disclosure > summary"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": false,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 224,
+            "x": 41,
+            "y": 635
+          },
+          ".rmoc-disclosure > summary": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 44,
+            "x": 41,
+            "y": 803
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": false,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 224,
+              "x": 41,
+              "y": 635
+            },
+            ".rmoc-disclosure > summary": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 44,
+              "x": 41,
+              "y": 803
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": false,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 224,
+              "x": 41,
+              "y": 635
+            },
+            ".rmoc-disclosure > summary": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 44,
+              "x": 41,
+              "y": 803
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 390,
+          "height": 1423
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:56.994Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nav-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nav-open.json"
+    },
+    {
+      "id": "mobile-light-nested-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1600
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-panel",
+          "a.rmoc-card",
+          ".rmoc-mega-link"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 1335,
+            "x": 41,
+            "y": 635
+          },
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 1111,
+            "x": 41,
+            "y": 847
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 276,
+            "height": 189,
+            "x": 57,
+            "y": 1142
+          },
+          ".rmoc-mega-link": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 276,
+            "height": 44,
+            "x": 57,
+            "y": 886
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1335,
+              "x": 41,
+              "y": 635
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1111,
+              "x": 41,
+              "y": 847
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 189,
+              "x": 57,
+              "y": 1142
+            },
+            ".rmoc-mega-link": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 44,
+              "x": 57,
+              "y": 886
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1335,
+              "x": 41,
+              "y": 635
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1111,
+              "x": 41,
+              "y": 847
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 189,
+              "x": 57,
+              "y": 1142
+            },
+            ".rmoc-mega-link": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 44,
+              "x": 57,
+              "y": 886
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 390,
+          "height": 2534
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:58.165Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.json"
+    },
+    {
+      "id": "mobile-dark-nested-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "dark",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1600
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 1335,
+            "x": 41,
+            "y": 635
+          },
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 1111,
+            "x": 41,
+            "y": 847
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 276,
+            "height": 189,
+            "x": 57,
+            "y": 1142
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1335,
+              "x": 41,
+              "y": 635
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1111,
+              "x": 41,
+              "y": 847
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 189,
+              "x": 57,
+              "y": 1142
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1335,
+              "x": 41,
+              "y": 635
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1111,
+              "x": 41,
+              "y": 847
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 189,
+              "x": 57,
+              "y": 1142
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 390,
+          "height": 2534
+        }
+      },
+      "capturedAt": "2026-07-15T12:31:59.269Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-dark-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-dark-nested-open.json"
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 390,
+        "height": 1600
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 308,
+            "height": 1111,
+            "x": 41,
+            "y": 847
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 276,
+            "height": 189,
+            "x": 57,
+            "y": 1142
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1111,
+              "x": 41,
+              "y": 847
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 189,
+              "x": 57,
+              "y": 1142
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 308,
+              "height": 1111,
+              "x": 41,
+              "y": 847
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 276,
+              "height": 189,
+              "x": 57,
+              "y": 1142
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 390,
+          "height": 1600
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:00.244Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.json"
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": true,
+      "viewport": {
+        "width": 1280,
+        "height": 1200
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 1230,
+            "height": 308,
+            "x": 25,
+            "y": 489
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 218,
+            "height": 226,
+            "x": 313,
+            "y": 509
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 1230,
+              "height": 308,
+              "x": 25,
+              "y": 489
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 218,
+              "height": 226,
+              "x": 313,
+              "y": 509
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 1280,
+          "height": 1200
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:01.025Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/desktop-reduced-motion-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/desktop-reduced-motion-open.json"
+    },
+    {
+      "id": "narrow-320-nested-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 320,
+        "height": 900
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 238,
+            "height": 1359,
+            "x": 41,
+            "y": 684
+          },
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 238,
+            "height": 1135,
+            "x": 41,
+            "y": 896
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 206,
+            "height": 189,
+            "x": 57,
+            "y": 1191
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 238,
+              "height": 1359,
+              "x": 41,
+              "y": 684
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 238,
+              "height": 1135,
+              "x": 41,
+              "y": 896
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 206,
+              "height": 189,
+              "x": 57,
+              "y": 1191
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 238,
+              "height": 1359,
+              "x": 41,
+              "y": 684
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 238,
+              "height": 1135,
+              "x": 41,
+              "y": 896
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 206,
+              "height": 189,
+              "x": 57,
+              "y": 1191
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 320,
+          "height": 2721
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:02.162Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.json"
+    },
+    {
+      "id": "narrow-340-nested-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 340,
+        "height": 900
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 258,
+            "height": 1335,
+            "x": 41,
+            "y": 656
+          },
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 258,
+            "height": 1111,
+            "x": 41,
+            "y": 868
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 226,
+            "height": 189,
+            "x": 57,
+            "y": 1163
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 258,
+              "height": 1335,
+              "x": 41,
+              "y": 656
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 258,
+              "height": 1111,
+              "x": 41,
+              "y": 868
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 226,
+              "height": 189,
+              "x": 57,
+              "y": 1163
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 258,
+              "height": 1335,
+              "x": 41,
+              "y": 656
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 258,
+              "height": 1111,
+              "x": 41,
+              "y": 868
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 226,
+              "height": 189,
+              "x": 57,
+              "y": 1163
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 340,
+          "height": 2640
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:03.310Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.json"
+    },
+    {
+      "id": "seam-767-nav-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 767,
+        "height": 1000
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": false,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-disclosure > summary"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": false,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 685,
+            "height": 224,
+            "x": 41,
+            "y": 470
+          },
+          ".rmoc-disclosure > summary": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 685,
+            "height": 44,
+            "x": 41,
+            "y": 638
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": false,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 685,
+              "height": 224,
+              "x": 41,
+              "y": 470
+            },
+            ".rmoc-disclosure > summary": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 685,
+              "height": 44,
+              "x": 41,
+              "y": 638
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": false,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 685,
+              "height": 224,
+              "x": 41,
+              "y": 470
+            },
+            ".rmoc-disclosure > summary": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 685,
+              "height": 44,
+              "x": 41,
+              "y": 638
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 767,
+          "height": 1270
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:04.422Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/seam-767-nav-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/seam-767-nav-open.json"
+    },
+    {
+      "id": "seam-768-nav-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 768,
+        "height": 1000
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": [
+          "#rmoc-primary-links",
+          ".rmoc-panel",
+          "a.rmoc-card",
+          ".rmoc-mega-link"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "aria": {
+          ".ren-nav-toggle": {
+            "aria-expanded": "true"
+          }
+        },
+        "visible": {
+          "#rmoc-primary-links": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 686,
+            "height": 1291,
+            "x": 41,
+            "y": 470
+          },
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 686,
+            "height": 1067,
+            "x": 41,
+            "y": 682
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 654,
+            "height": 178,
+            "x": 57,
+            "y": 977
+          },
+          ".rmoc-mega-link": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 654,
+            "height": 44,
+            "x": 57,
+            "y": 721
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 686,
+              "height": 1291,
+              "x": 41,
+              "y": 470
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 686,
+              "height": 1067,
+              "x": 41,
+              "y": 682
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 654,
+              "height": 178,
+              "x": 57,
+              "y": 977
+            },
+            ".rmoc-mega-link": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 654,
+              "height": 44,
+              "x": 57,
+              "y": 721
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "aria": {
+            ".ren-nav-toggle": {
+              "aria-expanded": "true"
+            }
+          },
+          "visible": {
+            "#rmoc-primary-links": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 686,
+              "height": 1291,
+              "x": 41,
+              "y": 470
+            },
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 686,
+              "height": 1067,
+              "x": 41,
+              "y": 682
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 654,
+              "height": 178,
+              "x": 57,
+              "y": 977
+            },
+            ".rmoc-mega-link": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 654,
+              "height": 44,
+              "x": 57,
+              "y": 721
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 768,
+          "height": 2337
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:05.602Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/seam-768-nav-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/seam-768-nav-open.json"
+    },
+    {
+      "id": "seam-769-open",
+      "commit": "cfd1be3a981a93bbaa81d9ce85349715e1190898",
+      "theme": "light",
+      "reducedMotion": false,
+      "viewport": {
+        "width": 769,
+        "height": 1000
+      },
+      "markerCounts": {
+        ".rmoc-mega-link": 5,
+        ".rmoc-card": 4,
+        ".rmoc-chevron": 1
+      },
+      "expectedState": {
+        "detailsOpenSelector": ".rmoc-disclosure",
+        "detailsOpen": true,
+        "visible": [
+          ".rmoc-panel",
+          "a.rmoc-card"
+        ]
+      },
+      "stateReport": {
+        "ok": true,
+        "failures": [],
+        "detailsOpen": true,
+        "visible": {
+          ".rmoc-panel": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "block",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 719,
+            "height": 459,
+            "x": 25,
+            "y": 530
+          },
+          "a.rmoc-card": {
+            "present": true,
+            "playwrightVisible": true,
+            "display": "flex",
+            "visibility": "visible",
+            "opacity": 1,
+            "width": 196,
+            "height": 189,
+            "x": 313,
+            "y": 550
+          }
+        },
+        "preScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 719,
+              "height": 459,
+              "x": 25,
+              "y": 530
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 196,
+              "height": 189,
+              "x": 313,
+              "y": 550
+            }
+          }
+        },
+        "postScreenshot": {
+          "ok": true,
+          "failures": [],
+          "detailsOpen": true,
+          "visible": {
+            ".rmoc-panel": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "block",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 719,
+              "height": 459,
+              "x": 25,
+              "y": 530
+            },
+            "a.rmoc-card": {
+              "present": true,
+              "playwrightVisible": true,
+              "display": "flex",
+              "visibility": "visible",
+              "opacity": 1,
+              "width": 196,
+              "height": 189,
+              "x": 313,
+              "y": 550
+            }
+          }
+        },
+        "captureViewport": {
+          "width": 769,
+          "height": 1000
+        }
+      },
+      "capturedAt": "2026-07-15T12:32:06.674Z",
+      "png": ".ren10-workflow/navbar29-captures/navbar29/seam-769-open.png",
+      "json": ".ren10-workflow/navbar29-captures/navbar29/seam-769-open.json"
+    }
+  ],
+  "openStatesReviewed": [
+    "desktop-light-open",
+    "desktop-light-hover-open",
+    "desktop-dark-open",
+    "tablet-light-open",
+    "mobile-light-nav-open",
+    "mobile-light-nested-open",
+    "mobile-dark-nested-open",
+    "mobile-js-disabled-open",
+    "desktop-reduced-motion-open",
+    "narrow-320-nested-open",
+    "narrow-340-nested-open",
+    "seam-767-nav-open",
+    "seam-768-nav-open",
+    "seam-769-open"
+  ]
+}

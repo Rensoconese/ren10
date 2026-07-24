@@ -22,6 +22,7 @@ npx ren10 manifest --json
 npx ren10 build "<user intent>" --json
 npx ren10 component <name> --dense
 npx ren10 docs layouts --dense
+npx ren10 detect <target> --profile codex
 npx ren10 doctor
 ```
 
@@ -86,6 +87,10 @@ npx ren10 docs primitive-zero --dense
 npx ren10 search "dialog workflow" --json
 npx ren10 build "settings form with sidebar" --json
 npx ren10 knowledge query "ren-toast status" --json
+npx ren10 design-context --write
+npx ren10 detect templates/ --profile codex
+npx ren10 detect --url http://localhost:3000 --save-review
+npx ren10 hooks install
 npx ren10 doctor
 ```
 

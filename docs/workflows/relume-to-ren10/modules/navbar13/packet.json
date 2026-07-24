@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar13",
+  "blockSlug": "nav-logo-left-menu-center-dropdown",
+  "blockPath": "templates/blocks/nav-logo-left-menu-center-dropdown.html",
+  "stage": "accepted",
+  "allowedFiles": [
+    "templates/blocks/nav-logo-left-menu-center-dropdown.html",
+    "tests/components/blocks-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
+  }
+}

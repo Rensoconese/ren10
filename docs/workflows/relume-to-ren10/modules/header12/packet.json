@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header12",
+  "blockSlug": "hero-video-email-split-band",
+  "blockPath": "templates/blocks/hero-video-email-split-band.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-video-email-split-band.html",
+    "tests/components/header12-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

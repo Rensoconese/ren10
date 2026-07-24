@@ -1,0 +1,141 @@
+.contact7-block,
+.contact8-block,
+.contact9-block,
+.contact10-block,
+.contact11-block,
+.contact12-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.contact7-title, .contact8-title, .contact9-title, .contact10-title, .contact11-title, .contact12-title),
+:is(.contact7-description, .contact8-description, .contact9-description, .contact10-description, .contact11-description, .contact12-description),
+.contact10-direct p {
+  margin: 0;
+}
+
+:is(.contact7-title, .contact8-title, .contact9-title, .contact10-title, .contact11-title, .contact12-title) {
+  font-size: clamp(var(--display-sm-size), 4.5vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.contact7-description, .contact8-description, .contact9-description, .contact10-description, .contact11-description, .contact12-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.contact7-layout, .contact8-layout, .contact9-layout, .contact12-layout) {
+  --grid-gap: clamp(var(--space-8), 5vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+:is(.contact7-copy, .contact8-copy, .contact9-copy, .contact11-heading, .contact12-copy) {
+  --stack-gap: var(--space-4);
+  min-width: 0;
+}
+
+.contact7-block.bb-detail-preview {
+  color: var(--color-text-inverted);
+  background: var(--color-text);
+}
+
+.contact7-copy :is(.dx-kicker, .contact7-title, .contact7-description, a) {
+  color: inherit;
+}
+
+.contact7-copy a {
+  font-weight: var(--weight-semibold);
+}
+
+.contact8-media {
+  --frame-ratio: 4 / 3;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.contact8-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact8-card {
+  margin-block-start: var(--space-6);
+}
+
+.contact8-card address {
+  font-style: normal;
+}
+
+.contact9-routes,
+.contact12-routes {
+  --grid-gap: var(--space-4);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.contact9-routes .contact-card,
+.contact12-routes .contact-card {
+  min-height: 100%;
+}
+
+.contact10-inner {
+  --stack-gap: var(--space-6);
+  max-width: var(--width-5xl);
+}
+
+.contact10-direct {
+  --grid-gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--width-xs)), 1fr));
+  padding-block-start: var(--space-4);
+  border-block-start: var(--stroke-1) solid var(--color-border-strong);
+}
+
+.contact10-direct > div {
+  --stack-gap: var(--space-1);
+  min-width: 0;
+}
+
+.contact10-direct a {
+  overflow-wrap: anywhere;
+  color: var(--color-text-link);
+  font-size: var(--title-sm-size);
+  font-weight: var(--weight-semibold);
+}
+
+.contact11-grid {
+  --grid-gap: var(--space-5);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--width-xs)), 1fr));
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+  align-items: stretch;
+}
+
+.contact12-routes {
+  margin-block-start: var(--space-6);
+}
+
+@media (min-width: 48rem) {
+  :is(.contact7-layout, .contact8-layout, .contact12-layout) {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  }
+
+  .contact8-layout {
+    align-items: stretch;
+  }
+
+  .contact9-layout {
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  }
+
+  .contact9-routes,
+  .contact12-routes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

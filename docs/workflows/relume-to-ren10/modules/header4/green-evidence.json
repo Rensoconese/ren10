@@ -1,0 +1,199 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "65b22e48e7ec10ea59d7278271626d48a4c0f279",
+  "captures": {
+    "desktop": "captures-fresh/header4/desktop-light-open.png",
+    "mobile": "captures-fresh/header4/mobile-light-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent root review inspected the final cache-busted desktop and mobile open captures plus DOM/CSS behavior. The desktop dialog remains centered; the mobile data-mobile-sheet spans the viewport and anchors to the bottom with no right gap. One labelled hero owns one h1, a single labelled email field and submit, a real legal destination, one media trigger, and one native playable video in a Ren10 dialog. Loading, hidden/error cascades, focus return, backdrop/Escape dismissal, JS-off fallback, responsive switch, tokens and touch geometry were verified; no duplicate affordance, overflow, dead target, static fake video, framework code, Shadow DOM or forbidden color/token use remains.",
+  "checklist": {
+    "total": 36,
+    "passed": 36,
+    "controls": [
+      {
+        "id": "A1",
+        "result": "passed",
+        "description": "Authenticated complete Relume source and reference lineage verified."
+      },
+      {
+        "id": "A2",
+        "result": "passed",
+        "description": "DOM matches source anatomy without protected source output."
+      },
+      {
+        "id": "A3",
+        "result": "passed",
+        "description": "Packet evidence and allowed scope validate."
+      },
+      {
+        "id": "A4",
+        "result": "passed",
+        "description": "RED precedes implementation and fails for the intended absence."
+      },
+      {
+        "id": "A5",
+        "result": "passed",
+        "description": "Twelve fresh states trace functional commit 65b22e4."
+      },
+      {
+        "id": "B1",
+        "result": "passed",
+        "description": "One labelled hero section and one h1."
+      },
+      {
+        "id": "B2",
+        "result": "passed",
+        "description": "Copy owns description, one email input, one submit and legal link."
+      },
+      {
+        "id": "B3",
+        "result": "passed",
+        "description": "Media owns one play trigger and one dialog video."
+      },
+      {
+        "id": "B4",
+        "result": "passed",
+        "description": "No extra CTA, navigation, logo or disclosure."
+      },
+      {
+        "id": "B5",
+        "result": "passed",
+        "description": "Real destinations and native no-JS form fallback resolve."
+      },
+      {
+        "id": "B6",
+        "result": "passed",
+        "description": "Playable native video and deterministic loading lifecycle verified."
+      },
+      {
+        "id": "C1",
+        "result": "passed",
+        "description": "Vanilla Light DOM only."
+      },
+      {
+        "id": "C2",
+        "result": "passed",
+        "description": "Exact field, button and dialog contracts/imports used."
+      },
+      {
+        "id": "C3",
+        "result": "passed",
+        "description": "Ren10 layout primitives own the skeleton."
+      },
+      {
+        "id": "C4",
+        "result": "passed",
+        "description": "Semantic/component tokens only; no forbidden palette or hardcoded chroma."
+      },
+      {
+        "id": "C5",
+        "result": "passed",
+        "description": "Real semantic controls and documented public APIs."
+      },
+      {
+        "id": "C6",
+        "result": "passed",
+        "description": "Reduced motion uses the Ren10 motion contract."
+      },
+      {
+        "id": "D1",
+        "result": "passed",
+        "description": "Mobile copy/form precedes media."
+      },
+      {
+        "id": "D2",
+        "result": "passed",
+        "description": "Desktop is an equal vertically aligned split."
+      },
+      {
+        "id": "D3",
+        "result": "passed",
+        "description": "320, 390, 767, 768 and 1280 have no overflow."
+      },
+      {
+        "id": "D4",
+        "result": "passed",
+        "description": "Form stacks and switches deliberately."
+      },
+      {
+        "id": "D5",
+        "result": "passed",
+        "description": "Mobile dialog is full-width and bottom-anchored."
+      },
+      {
+        "id": "E1",
+        "result": "passed",
+        "description": "All controls have accessible names and visible focus."
+      },
+      {
+        "id": "E2",
+        "result": "passed",
+        "description": "Touch targets meet 44px."
+      },
+      {
+        "id": "E3",
+        "result": "passed",
+        "description": "Form labeling, validation and live status are coherent."
+      },
+      {
+        "id": "E4",
+        "result": "passed",
+        "description": "Dialog traps/restores focus and closes by Escape, backdrop and close."
+      },
+      {
+        "id": "E5",
+        "result": "passed",
+        "description": "Axe WCAG 2.1 A/AA passes closed and open."
+      },
+      {
+        "id": "E6",
+        "result": "passed",
+        "description": "JS-off and reduced-motion states remain functional."
+      },
+      {
+        "id": "F1",
+        "result": "passed",
+        "description": "Desktop light/dark captures are aligned and unclipped."
+      },
+      {
+        "id": "F2",
+        "result": "passed",
+        "description": "Mobile light/dark captures are aligned and unclipped."
+      },
+      {
+        "id": "F3",
+        "result": "passed",
+        "description": "Open video surfaces contain no duplicate controls or cascade artifacts."
+      },
+      {
+        "id": "F4",
+        "result": "passed",
+        "description": "Ren10 visual differences preserve Relume hierarchy and proportions."
+      },
+      {
+        "id": "G1",
+        "result": "passed",
+        "description": "Focused Playwright passes 32/32."
+      },
+      {
+        "id": "G2",
+        "result": "passed",
+        "description": "Lint and token policy pass with zero errors."
+      },
+      {
+        "id": "G3",
+        "result": "passed",
+        "description": "Workflow, evals and agent checks pass."
+      },
+      {
+        "id": "G4",
+        "result": "passed",
+        "description": "Contract counts, stale refs and diff checks pass."
+      }
+    ]
+  },
+  "applicableEvalsChecklist": "All applicable RenDS self-check items pass, including form, dialog, focus restoration, reduced motion, vanilla Light DOM, tokens/layout primitives, lint, evals and browser verification."
+}

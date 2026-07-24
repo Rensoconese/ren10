@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fullscreen Background Video Hero — Ren10</title>
+  <meta name="description" content="A fullscreen Ren10 video hero with constrained copy, two destinations, and accessible motion control.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .rh7-hero {
+      --cover-height: 100dvh;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 0;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-text);
+    }
+
+    .rh7-background,
+    .rh7-video,
+    .rh7-scrim {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh7-background {
+      z-index: var(--z-base);
+      background: linear-gradient(135deg, var(--color-accent), var(--color-text));
+    }
+
+    .rh7-video {
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(1);
+    }
+
+    .rh7-enhanced .rh7-video {
+      pointer-events: none;
+    }
+
+    .rh7-scrim {
+      pointer-events: none;
+      background-color: var(--color-overlay);
+      background-image: linear-gradient(var(--color-overlay), var(--color-overlay));
+    }
+
+    .rh7-content {
+      position: relative;
+      z-index: var(--z-raised);
+      width: 100%;
+      transform: translateZ(0);
+    }
+
+    .rh7-copy {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-md);
+    }
+
+    .rh7-heading,
+    .rh7-description {
+      margin: 0;
+      color: var(--color-text-inverted);
+    }
+
+    .rh7-heading {
+      font-size: clamp(var(--display-md-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh7-description {
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh7-actions {
+      --cluster-gap: var(--space-inline-loose);
+      --ren-btn-ring-color: var(--color-text-inverted);
+      margin-block-start: var(--space-stack-tight);
+    }
+
+    html[data-theme="light"] .rh7-actions,
+    html[data-theme="light"] .rh7-motion {
+      color-scheme: light;
+    }
+
+    html[data-theme="dark"] .rh7-actions,
+    html[data-theme="dark"] .rh7-motion {
+      color-scheme: dark;
+    }
+
+    .rh7-primary {
+      --ren-btn-bg: var(--color-accent);
+      --ren-btn-bg-hover: var(--color-accent-hover);
+      --ren-btn-bg-active: var(--color-accent-active);
+      --ren-btn-color: var(--color-on-accent);
+      --ren-btn-border-color: var(--color-accent);
+    }
+
+    html[data-theme="dark"] .rh7-primary {
+      --ren-btn-bg: var(--color-text-inverted);
+      --ren-btn-bg-hover: var(--color-fill-hover);
+      --ren-btn-bg-active: var(--color-fill-active);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-text-inverted);
+    }
+
+    .rh7-secondary.ren-btn-outline,
+    .rh7-motion.ren-btn-outline {
+      --ren-btn-ring-color: var(--color-text-inverted);
+      color: var(--color-text-inverted);
+      border-color: var(--color-text-inverted);
+    }
+
+    html[data-theme="dark"] .rh7-actions,
+    html[data-theme="dark"] .rh7-motion.ren-btn-outline {
+      --ren-btn-ring-color: var(--color-text);
+    }
+
+    html[data-theme="dark"] .rh7-secondary.ren-btn-outline,
+    html[data-theme="dark"] .rh7-motion.ren-btn-outline {
+      color: var(--color-text);
+      border-color: var(--color-text);
+    }
+
+    .rh7-secondary.ren-btn-outline:hover:not(:disabled):not([aria-disabled="true"]),
+    .rh7-motion.ren-btn-outline:hover:not(:disabled):not([aria-disabled="true"]) {
+      color: var(--color-on-accent);
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+    }
+
+    .rh7-secondary.ren-btn-outline:active:not(:disabled):not([aria-disabled="true"]),
+    .rh7-motion.ren-btn-outline:active:not(:disabled):not([aria-disabled="true"]) {
+      color: var(--color-on-accent);
+      background: var(--color-accent-active);
+      border-color: var(--color-accent-active);
+    }
+
+    .rh7-motion {
+      position: absolute;
+      z-index: var(--z-raised);
+      inset-inline-end: var(--space-4);
+      inset-block-end: var(--space-4);
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+      backdrop-filter: blur(var(--blur-sm));
+      transform: translateZ(0);
+    }
+
+    .rh7-motion[hidden] {
+      display: none;
+    }
+
+    @media (max-width: 30rem) {
+      .rh7-actions > .ren-btn {
+        flex: 1 1 auto;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh7-content {
+        --center-padding: var(--space-section-lg);
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Fullscreen Background Video Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 7 · Hero block</p>
+      <h1 class="bb-detail-title">Fullscreen Background Video Hero</h1>
+      <p class="bb-detail-description">A fullscreen Ren10 video hero with constrained copy, two destinations, and accessible motion control.</p>
+    </header>
+
+    <section class="rh7-hero ren-cover bb-detail-preview" data-rh7-root aria-labelledby="rh7-heading">
+      <div class="rh7-background">
+        <video class="rh7-video" autoplay loop muted playsinline controls preload="auto">
+          <source
+            src="data:video/webm;base64,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"
+            type="video/webm"
+          >
+        </video>
+        <div class="rh7-scrim" aria-hidden="true"></div>
+      </div>
+
+      <div class="rh7-content ren-center ren-center-wide ren-cover-center">
+        <div class="rh7-copy ren-stack">
+          <h1 id="rh7-heading" class="rh7-heading">Turn shared intent into confident product decisions</h1>
+          <p class="rh7-description">Use one adaptable design language to move from a rough idea to a clear interface without losing the reasoning underneath.</p>
+          <div class="rh7-actions ren-cluster">
+            <a class="ren-btn rh7-primary" href="../../docs/index.html">Explore Ren10</a>
+            <a class="ren-btn ren-btn-outline rh7-secondary" href="index.html">Browse blocks</a>
+          </div>
+        </div>
+      </div>
+
+      <button class="rh7-motion ren-btn ren-btn-outline" type="button" aria-label="Pause background video" hidden>
+        Pause video
+      </button>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-fullscreen-bg-left-email-capture.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Fullscreen Email Capture Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-fullscreen-video-email-form.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen Video Email Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script>
+    const root = document.querySelector('[data-rh7-root]');
+    const video = root.querySelector('.rh7-video');
+    const motion = root.querySelector('.rh7-motion');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    document.documentElement.classList.add('rh7-enhanced');
+    video.controls = false;
+    motion.hidden = false;
+
+    const updateMotionControl = () => {
+      const paused = video.paused;
+      const label = paused ? 'Play background video' : 'Pause background video';
+      motion.setAttribute('aria-label', label);
+      motion.textContent = paused ? 'Play video' : 'Pause video';
+    };
+
+    const playVideo = () => {
+      video.play().then(updateMotionControl).catch(() => {
+        video.controls = true;
+        motion.hidden = true;
+        document.documentElement.classList.remove('rh7-enhanced');
+      });
+    };
+
+    const applyMotionPreference = () => {
+      if (reducedMotion.matches) {
+        video.pause();
+        updateMotionControl();
+        return;
+      }
+      playVideo();
+    };
+
+    motion.addEventListener('click', () => {
+      if (video.paused) playVideo();
+      else {
+        video.pause();
+        updateMotionControl();
+      }
+    });
+
+    reducedMotion.addEventListener('change', applyMotionPreference);
+    applyMotionPreference();
+  </script>
+</body>
+</html>

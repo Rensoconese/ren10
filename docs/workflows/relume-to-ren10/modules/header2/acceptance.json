@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One hero heading, one description, one email field, one submit CTA, one terms link, one media figure; zero nav toggles, drawers, or second CTAs",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Email signup form validates and submits without navigation; terms link is a real anchor; no disclosure open state required by source",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one primary CTA button; media is a peer column not a background; no duplicate interactive controls",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Copy-then-media stack on narrow; two-column side-by-side on wide; no root overflow at 320/390/767/768/1280",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled view keeps email field, submit control, terms link, and media reachable in normal flow",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Visible labels and focus, fully visible 44px targets, reduced motion, light/dark tokens, axe WCAG 2.1 AA",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, dark, and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}

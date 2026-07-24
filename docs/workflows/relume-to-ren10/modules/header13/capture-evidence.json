@@ -1,0 +1,33 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header13",
+  "block": "hero-lightbox-top-copy-band-dual-cta",
+  "capturedCommit": "ab5d4e90e9f2613164437f2c2b991a866d49e8f3",
+  "fresh": true,
+  "states": [
+    "desktop-light-closed",
+    "desktop-light-open",
+    "desktop-dark-closed",
+    "desktop-dark-open",
+    "tablet-light-closed",
+    "seam-767-closed",
+    "seam-768-closed",
+    "mobile-light-closed",
+    "mobile-light-open",
+    "narrow-320-closed",
+    "mobile-js-disabled",
+    "desktop-reduced-motion-open"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Inspected fresh closed/open desktop light and dark, tablet, 767/768 seam, mobile, 320, reduced-motion, and JavaScript-disabled renders. The upper poster remains one full-cover trigger with one scrim/play icon; the lower band is aligned and changes from stacked to equal columns without clipping; both CTA links remain distinct; desktop lightbox uses the intended wide aspect-video surface; mobile lightbox is a full-width bottom sheet; close control is singular and aligned; JavaScript-disabled fallback is clearly legible on its own surface. No duplicate affordance, extra CTA, overflow, broken stack, or stale-pixel artifact was found."
+  },
+  "independentReview": {
+    "passed": true,
+    "reviewer": "Codex",
+    "reviewedCommit": "d093f51daf86f131a4702e76d38549f1ce278526",
+    "notes": "Independently inspected every one of the 12 PNG states against the reference brief and acceptance contract. The captured block is byte-identical to the block at the reviewed commit; only the focused test gained an explicit repeated-Tab focus-containment assertion after capture. Desktop, tablet, 767/768 seam, mobile, narrow, dark, reduced-motion, open, closed, and no-JavaScript states remain coherent and unclipped."
+  },
+  "recordedAt": "2026-07-15"
+}

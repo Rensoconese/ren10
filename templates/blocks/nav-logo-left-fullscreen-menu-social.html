@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo-Left Fullscreen Menu Social Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS fullscreen overlay navbar with logo-left bar, permanent primary action, eight large destinations, footer contact and social links, ren-nav, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn17-page-header {
+      max-width: 74ch;
+      min-width: 0;
+      padding-block: var(--space-8);
+      box-sizing: border-box;
+    }
+
+    /*
+     * Demo page chrome must not blow out html scrollWidth at 320–360px.
+     * Block-local only — does not edit shared site/shell.css.
+     */
+    @media (max-width: 22.5rem) {
+      .dx-nav-inner {
+        gap: var(--space-2);
+        padding-inline: var(--space-3);
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+
+      .dx-nav-actions {
+        gap: var(--space-1);
+        flex-shrink: 1;
+        min-width: 0;
+      }
+
+      .dx-nav-actions .ren-btn {
+        padding-inline: var(--space-2);
+        font-size: var(--text-xs);
+      }
+
+      .dx-shell {
+        padding-inline: var(--space-3);
+        max-width: 100%;
+        box-sizing: border-box;
+        overflow-x: clip;
+      }
+
+      .rn17-page-header {
+        padding-inline: 0;
+        max-width: 100%;
+      }
+
+      .rn17-page-header h1 {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+    }
+
+    .rn17-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn17-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn17-preview {
+      --ren-z-sticky: var(--z-sticky);
+      --rn17-bar-height: 4.5rem;
+      --rn17-inline-pad: var(--space-5);
+      position: relative;
+      isolation: isolate;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-block: var(--space-6) var(--space-10);
+      margin-inline: 0;
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow-x: clip;
+      overflow-y: hidden;
+      min-height: 36rem;
+    }
+
+    .rn17-preview ren-nav {
+      display: block;
+      position: static;
+      z-index: var(--ren-z-sticky);
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    /*
+     * Full-width bar: logo at start, primary action + always-on toggle at end.
+     * Primary destinations live only in the under-bar overlay — never a
+     * permanent desktop link row. Keep .ren-nav position:static so the menu
+     * anchors to the preview root and fills remaining block space.
+     */
+    .rn17-preview .ren-nav {
+      --ren-nav-height: var(--rn17-bar-height);
+      position: static;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: nowrap;
+      column-gap: var(--space-2);
+      row-gap: var(--space-2);
+      min-width: 0;
+      max-width: 100%;
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--rn17-inline-pad);
+      box-sizing: border-box;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rn17-preview .ren-nav-brand {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      margin-inline-end: auto;
+      min-height: var(--touch-min);
+    }
+
+    .rn17-preview .ren-nav-brand-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .rn17-brand-mark {
+      --row-gap: 0;
+      flex-shrink: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    .rn17-preview .ren-nav-actions {
+      margin-inline-start: 0;
+      flex: 0 1 auto;
+      min-width: 0;
+    }
+
+    .rn17-preview .ren-nav-actions .ren-btn {
+      max-width: 100%;
+      white-space: nowrap;
+    }
+
+    .rn17-preview .ren-nav-actions .ren-btn,
+    .rn17-preview .ren-nav-brand,
+    .rn17-preview .ren-nav-toggle,
+    .rn17-preview .ren-nav-link,
+    .rn17-preview .rn17-contact,
+    .rn17-preview .rn17-social a {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    /* Always-on toggle (default ren-nav hides it above 48rem). */
+    .rn17-preview .ren-nav-toggle {
+      display: flex;
+      flex-shrink: 0;
+      margin-inline-start: 0;
+    }
+
+    /*
+     * Full-viewport overlay under the bar. Hidden unless open (or when the
+     * custom element is not defined — progressive enhancement).
+     */
+    .rn17-menu {
+      position: absolute;
+      top: var(--rn17-bar-height);
+      inset-inline: 0;
+      bottom: 0;
+      z-index: var(--ren-z-sticky);
+      display: none;
+      flex-direction: column;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      height: auto;
+      max-height: none;
+      overflow-x: clip;
+      overflow-y: auto;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-overlay) var(--ease-state-change),
+        visibility var(--duration-overlay) var(--ease-state-change);
+    }
+
+    .rn17-preview ren-nav[data-open] .rn17-menu,
+    .rn17-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .rn17-menu {
+      display: flex;
+    }
+
+    /* Override default ren-nav link-row geometry at every width. */
+    .rn17-preview .ren-nav-links {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: stretch;
+      flex: 1 1 auto;
+      min-height: 0;
+      position: static;
+      inset: auto;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      gap: 0;
+      list-style: none;
+      border: none;
+      background: transparent;
+      animation: none;
+      overflow-x: clip;
+      overflow-y: auto;
+    }
+
+    .rn17-preview .ren-nav-links > li {
+      display: flex;
+      flex: 1 1 0;
+      width: 100%;
+      min-height: var(--touch-min);
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    .rn17-preview .ren-nav-links > li:last-child {
+      border-block-end: 1px solid var(--color-border);
+    }
+
+    .rn17-preview .ren-nav-link {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: center;
+      justify-content: flex-end;
+      width: 100%;
+      min-height: calc(var(--touch-min) + var(--space-px));
+      box-sizing: border-box;
+      padding-block: var(--space-3);
+      padding-inline: var(--rn17-inline-pad);
+      color: var(--color-text);
+      font-size: clamp(var(--text-xl), 3.5vw, var(--text-3xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.15;
+      text-align: end;
+      text-decoration: none;
+      white-space: normal;
+      border-radius: 0;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn17-preview .ren-nav-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn17-preview .ren-nav-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(-1 * var(--ring-offset));
+    }
+
+    .rn17-menu-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      flex: 0 0 auto;
+      min-width: 0;
+      max-width: 100%;
+      min-height: var(--rn17-bar-height);
+      padding-inline: var(--rn17-inline-pad);
+      padding-block: var(--space-3);
+      box-sizing: border-box;
+      border-block-start: 0;
+      background: var(--color-surface);
+    }
+
+    .rn17-contact {
+      display: inline-flex;
+      align-items: center;
+      flex: 0 1 auto;
+      min-width: 0;
+      min-height: var(--touch-min);
+      max-width: 100%;
+      padding-inline: var(--space-1);
+      color: var(--color-text);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+      overflow-wrap: anywhere;
+    }
+
+    .rn17-contact:hover {
+      color: var(--color-accent);
+    }
+
+    .rn17-contact:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+      border-radius: var(--radius-sm);
+    }
+
+    .rn17-social {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: var(--space-1);
+      flex: 1 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rn17-social a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: var(--touch-min);
+      height: var(--touch-min);
+      flex: 0 0 auto;
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn17-social a:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn17-social a:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn17-social .ren-icon {
+      display: inline-flex;
+      pointer-events: none;
+    }
+
+    /*
+     * Narrow viewports: compact bar padding, ellipsis brand label, wrapping
+     * footer so contact + five social targets never clip or overflow root.
+     */
+    @media (max-width: 22.5rem) {
+      .rn17-preview {
+        --rn17-bar-height: 4rem;
+        --rn17-inline-pad: var(--space-3);
+        border-radius: var(--radius-lg);
+      }
+
+      .rn17-preview .ren-nav {
+        column-gap: var(--space-1);
+      }
+
+      .rn17-preview .ren-nav-actions .ren-btn {
+        padding-inline: var(--space-3);
+        font-size: var(--text-sm);
+      }
+
+      .rn17-preview .ren-nav-link {
+        padding-inline: var(--space-3);
+        font-size: clamp(var(--text-lg), 5.5vw, var(--text-2xl));
+      }
+
+      .rn17-menu-footer {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: var(--space-2);
+      }
+
+      .rn17-social {
+        justify-content: space-between;
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 20rem) {
+      .rn17-preview {
+        --rn17-inline-pad: var(--space-2);
+      }
+
+      .rn17-preview .ren-nav-brand-label {
+        max-width: 7ch;
+      }
+    }
+
+    .rn17-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 22rem;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn17-hero h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn17-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Progressive enhancement: before upgrade / without JS, expose the one
+     * tree + footer and hide the inert toggle. Top-bar primary action stays.
+     */
+    .rn17-preview ren-nav:not(:defined) .ren-nav-toggle {
+      display: none;
+    }
+
+    .rn17-preview ren-nav:not(:defined) .rn17-menu {
+      display: flex;
+      position: static;
+      height: auto;
+      max-height: none;
+      border-block-end: none;
+    }
+
+    .rn17-preview ren-nav:not(:defined) .ren-nav {
+      flex-wrap: wrap;
+    }
+
+    .rn17-preview ren-nav:not(:defined) .rn17-menu {
+      flex-basis: 100%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn17-menu,
+      .rn17-preview .ren-nav-link,
+      .rn17-social a,
+      .rn17-contact,
+      .rn17-preview .ren-nav-toggle span {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn17-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo-Left Fullscreen Menu Social</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo-Left Fullscreen Menu Social</h1>
+      <p class="lede">
+        A full-width bar with logo at the start and a permanent primary action
+        beside an always-on menu toggle. Opening the toggle reveals one
+        full-viewport overlay of eight large end-aligned destinations plus a
+        contact and social footer. Built with <code>ren-nav</code>, layout
+        primitives, and progressive enhancement. No dropdowns, floating card
+        shell, second tree, or nested landmark.
+      </p>
+    </header>
+
+    <section class="rn17-preview bb-detail-preview" data-rn17-root aria-label="Navbar logo-left fullscreen menu social preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn17-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="rn17-preview-brand-label ren-nav-brand-label ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-primary" href="#start">Get started</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn17-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div class="rn17-menu" id="rn17-menu" data-rn17-menu>
+            <ul id="rn17-primary-links" class="ren-nav-links">
+              <li><a class="ren-nav-link" href="#overview">Overview</a></li>
+              <li><a class="ren-nav-link" href="#platform">Platform</a></li>
+              <li><a class="ren-nav-link" href="#solutions">Solutions</a></li>
+              <li><a class="ren-nav-link" href="#customers">Customers</a></li>
+              <li><a class="ren-nav-link" href="#pricing">Pricing</a></li>
+              <li><a class="ren-nav-link" href="#resources">Resources</a></li>
+              <li><a class="ren-nav-link" href="#company">Company</a></li>
+              <li><a class="ren-nav-link" href="#support">Support</a></li>
+            </ul>
+
+            <div class="rn17-menu-footer">
+              <a class="rn17-contact" href="#contact">Contact</a>
+              <ul class="rn17-social" aria-label="Social links">
+                <li>
+                  <a href="#social-community" aria-label="Community">
+                    <span class="ren-icon ren-icon-md" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path fill="currentColor" d="M8.5 7a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm7 1.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3.5 18.2C3.5 15.7 5.9 14 8.5 14s5 1.7 5 4.2V20h-10v-1.8zm10.2-.2c.5-1.7 2.1-3 4.3-3 2.4 0 4.5 1.5 4.5 3.7V20h-8.8v-2z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#social-photos" aria-label="Photos">
+                    <span class="ren-icon ren-icon-md" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path fill="currentColor" d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13zM7 8.2a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6zM6 17.5l3.2-4.2 2.3 2.8 3.1-4.1L18 17.5H6z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#social-updates" aria-label="Updates">
+                    <span class="ren-icon ren-icon-md" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path fill="currentColor" d="M12 3a7 7 0 0 1 7 7v2.2l1.4 2.1A1 1 0 0 1 19.6 16H4.4a1 1 0 0 1-.8-1.7L5 12.2V10a7 7 0 0 1 7-7zm-2.2 15h4.4a2.2 2.2 0 0 1-4.4 0z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#social-network" aria-label="Network">
+                    <span class="ren-icon ren-icon-md" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path fill="currentColor" d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20zm0 2c-.9 0-2.4 1.8-2.9 5h5.8C14.4 5.8 12.9 4 12 4zm-4.1 7a13 13 0 0 0 0 2h8.2a13 13 0 0 0 0-2H7.9zm1.2 4c.5 3.2 2 5 2.9 5s2.4-1.8 2.9-5H9.1zm8.1-2h2.5A8 8 0 0 0 17 7.1V9c.2.9.3 1.9.3 3zm-10.4 0c0-1.1.1-2.1.3-3V7.1A8 8 0 0 0 4.5 13h2.5z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="#social-video" aria-label="Video">
+                    <span class="ren-icon ren-icon-md" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                        <path fill="currentColor" d="M4 6.5A2.5 2.5 0 0 1 6.5 4h7A2.5 2.5 0 0 1 16 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 4 17.5v-11zm14.2 1.1 3.3-1.9a1 1 0 0 1 1.5.9v11a1 1 0 0 1-1.5.9l-3.3-1.9V7.6z"/>
+                      </svg>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </ren-nav>
+
+      <div class="rn17-hero ren-stack">
+        <h2>One menu. Full attention.</h2>
+        <p>
+          A quiet marketing surface under the bar so the fullscreen overlay,
+          large destinations, and social footer stay easy to judge while you
+          copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Get started</a>
+          <a class="ren-btn ren-btn-ghost" href="#overview">See overview</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-action-overlay-menu.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Action Overlay Menu Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-cta-overlay-grid.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo CTA Overlay Grid Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local shell controller (on top of ren-nav public toggle API):
+     * - Focus trap inside the bar + overlay while open
+     * - Inert backdrop (hero / page chrome) so background is not interactive
+     * - Escape always closes and restores focus to the toggle (even if focus
+     *   escaped the shell)
+     * - Bar primary CTA, destinations, and footer links close the shell
+     * - Same-band resize keeps open; only breakpoint-band crossing closes
+     *   (overrides ren-nav's desktop-always-close-on-resize for this block)
+     */
+    const RN17_CONTROLLER = Symbol.for('ren10.rn17.controller');
+    /** Align with ren-nav MOBILE_BREAKPOINT / Ren10 48rem shell boundary. */
+    const RN17_BAND_MQ = '(min-width: 48rem)';
+
+    function isOpen(toggle) {
+      return toggle?.getAttribute('aria-expanded') === 'true';
+    }
+
+    function bandName() {
+      return window.matchMedia(RN17_BAND_MQ).matches ? 'desktop' : 'mobile';
+    }
+
+    function isFocusable(el) {
+      if (!(el instanceof HTMLElement)) return false;
+      if (el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true') return false;
+      if (el.tabIndex < 0 && el.tagName !== 'A' && el.tagName !== 'BUTTON') return false;
+      const style = getComputedStyle(el);
+      if (style.display === 'none' || style.visibility === 'hidden') return false;
+      const rect = el.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    }
+
+    function install() {
+      const root = document.querySelector('[data-rn17-root]');
+      if (!root || root[RN17_CONTROLLER]) return;
+      const navHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const menu = root.querySelector('[data-rn17-menu]');
+      if (!navHost || !toggle || !menu) return;
+
+      root[RN17_CONTROLLER] = true;
+
+      /** Intentional open intent (survives ren-nav same-band resize closes). */
+      let wantOpen = false;
+      let lastBand = bandName();
+
+      const backdropSelectors = ['.dx-nav', '.rn17-page-header', '.rn17-hero'];
+
+      const setBackdropInert = (active) => {
+        for (const selector of backdropSelectors) {
+          document.querySelectorAll(selector).forEach((el) => {
+            if (active) el.setAttribute('inert', '');
+            else el.removeAttribute('inert');
+          });
+        }
+      };
+
+      const shellFocusables = () => {
+        const nodes = [
+          root.querySelector('.ren-nav-brand'),
+          ...root.querySelectorAll('.ren-nav-actions a, .ren-nav-actions button, .ren-nav-actions .ren-btn'),
+          toggle,
+          ...menu.querySelectorAll('a[href], button:not([disabled])'),
+        ];
+        return nodes.filter((el, index, list) => el && list.indexOf(el) === index && isFocusable(el));
+      };
+
+      const syncOpenChrome = () => {
+        const open = isOpen(toggle);
+        if (open) {
+          navHost.setAttribute('data-open', '');
+          root.setAttribute('data-rn17-open', '');
+          menu.setAttribute('data-rn17-open', '');
+          setBackdropInert(true);
+        } else {
+          navHost.removeAttribute('data-open');
+          root.removeAttribute('data-rn17-open');
+          menu.removeAttribute('data-rn17-open');
+          setBackdropInert(false);
+        }
+      };
+
+      const closeShell = ({ restoreFocus = false } = {}) => {
+        wantOpen = false;
+        if (isOpen(toggle)) {
+          toggle.click();
+        } else {
+          toggle.setAttribute('aria-expanded', 'false');
+          navHost.removeAttribute('data-open');
+        }
+        queueMicrotask(() => {
+          syncOpenChrome();
+          if (restoreFocus) {
+            toggle.focus({ preventScroll: true });
+          }
+        });
+      };
+
+      const openShell = () => {
+        wantOpen = true;
+        if (!isOpen(toggle)) {
+          toggle.click();
+        }
+        queueMicrotask(syncOpenChrome);
+      };
+
+      toggle.addEventListener('click', () => {
+        // ren-nav flips expanded; mirror intent after its handler.
+        queueMicrotask(() => {
+          wantOpen = isOpen(toggle);
+          syncOpenChrome();
+        });
+      });
+
+      // Permanent bar CTA closes the overlay (does not navigate away of focus restore).
+      root.querySelectorAll('.ren-nav-actions a, .ren-nav-actions button, .ren-nav-actions .ren-btn').forEach((el) => {
+        el.addEventListener('click', () => {
+          if (!isOpen(toggle) && !wantOpen) return;
+          closeShell({ restoreFocus: false });
+        });
+      });
+
+      menu.querySelectorAll('a[href], button').forEach((anchor) => {
+        anchor.addEventListener('click', () => {
+          if (!isOpen(toggle) && !wantOpen) return;
+          closeShell({ restoreFocus: false });
+        });
+      });
+
+      /*
+       * Escape: always close + always restore toggle focus, even when focus
+       * has left the shell (body / inert-removed / programmatic).
+       */
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Escape') return;
+        const wasOpen = isOpen(toggle) || wantOpen || navHost.hasAttribute('data-open');
+        if (!wasOpen) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        closeShell({ restoreFocus: true });
+      }, true);
+
+      /* Tab trap while open: cycle within bar chrome + overlay only. */
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Tab') return;
+        if (!isOpen(toggle) && !wantOpen) return;
+
+        const nodes = shellFocusables();
+        if (nodes.length === 0) return;
+
+        const active = document.activeElement;
+        const inShell = nodes.includes(active) || navHost.contains(active);
+        const first = nodes[0];
+        const last = nodes[nodes.length - 1];
+
+        if (!inShell) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus({ preventScroll: true });
+          return;
+        }
+
+        if (event.shiftKey && active === first) {
+          event.preventDefault();
+          last.focus({ preventScroll: true });
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus({ preventScroll: true });
+        }
+      }, true);
+
+      /*
+       * Resize policy: keep open across width/height changes inside the same
+       * desktop/mobile band. Close only when the 48rem band boundary is crossed.
+       * ren-nav closes on every desktop resize — re-open when wantOpen and same band
+       * after ren-nav's handler (rAF) so intent is not lost.
+       */
+      window.addEventListener('resize', () => {
+        const nextBand = bandName();
+        if (nextBand !== lastBand) {
+          lastBand = nextBand;
+          if (isOpen(toggle) || wantOpen) {
+            closeShell({ restoreFocus: false });
+          } else {
+            syncOpenChrome();
+          }
+          return;
+        }
+        // Same band: restore after ren-nav's resize close has applied.
+        requestAnimationFrame(() => {
+          if (wantOpen && !isOpen(toggle)) {
+            openShell();
+          } else {
+            syncOpenChrome();
+          }
+        });
+      });
+
+      // ren-nav outside-click close: clear intent without fighting same-band restore.
+      document.addEventListener('click', (event) => {
+        if (!wantOpen) return;
+        if (navHost.contains(event.target)) return;
+        queueMicrotask(() => {
+          if (!isOpen(toggle)) {
+            wantOpen = false;
+            syncOpenChrome();
+          }
+        });
+      });
+
+      const observer = new MutationObserver(() => {
+        syncOpenChrome();
+      });
+      observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+      syncOpenChrome();
+    }
+
+    if (customElements.get('ren-nav')) {
+      install();
+    } else {
+      customElements.whenDefined('ren-nav').then(install).catch(() => {});
+    }
+  </script>
+</body>
+</html>

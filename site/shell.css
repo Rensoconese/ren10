@@ -115,6 +115,46 @@ body {
   font-weight: 800;
 }
 
+/* Shared identity for every standalone navigation preview. */
+.ren10-demo-brand {
+  --row-gap: var(--space-2);
+  color: var(--color-text);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+}
+
+.ren10-demo-brand > .ren10-demo-brand-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 var(--size-sm);
+  inline-size: var(--size-sm);
+  block-size: var(--size-sm);
+  color: var(--color-surface);
+  background: var(--color-text);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  align-self: center;
+}
+
+.ren10-demo-brand-glyph {
+  display: block;
+  line-height: 1;
+  transform: translateY(-0.04em);
+}
+
+.ren10-demo-brand > .ren10-demo-brand-label {
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+}
+
 .dx-nav-menu {
   display: flex;
   gap: var(--space-5);
@@ -290,6 +330,273 @@ body {
   text-transform: uppercase;
   color: var(--color-accent);
   margin: 0 0 var(--space-2);
+}
+
+/* Shared detail chrome for standalone block previews. */
+.bb-detail-header {
+  --stack-gap: var(--space-2);
+  max-width: 68ch;
+  padding-block-end: var(--space-8);
+}
+
+.bb-detail-header .ren-breadcrumb {
+  margin-block-end: var(--space-2);
+}
+
+.bb-detail-title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+.bb-detail-description {
+  max-width: 64ch;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+}
+
+.bb-detail-preview.bb-detail-preview {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  margin-block: var(--space-6) var(--space-10);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Standalone block pages share one exact vertical rhythm. The page itself is
+   a grid so headers, previews, and pagination never accumulate child margins. */
+.bb-detail-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+}
+
+/* Every standalone block uses the same contained canvas. The doubled class
+   deliberately outranks legacy page-local `.dx-shell` overflow/width patches. */
+.bb-detail-page.dx-shell {
+  width: 100%;
+  max-width: var(--width-7xl, 1280px);
+  padding-inline: clamp(var(--space-6), 4vw, var(--space-12));
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+.bb-detail-page > .bb-detail-header {
+  padding-block: 0;
+}
+
+/* CTA documentation titles and introductions form one compact text group.
+   Feature and navigation detail headers keep their existing rhythm. */
+.bb-detail-page:has(> section.bb-detail-preview[class^="cta"]) > .bb-detail-header {
+  --stack-gap: var(--space-1);
+}
+
+/* Legal consent belongs to the form control group, not to the surrounding
+   CTA copy. Keep that relationship compact across every email CTA. */
+.bb-detail-page > section.bb-detail-preview[class^="cta"] form.ren-stack:has(> [class^="cta"][class*="-legal"]) {
+  --stack-gap: var(--space-1);
+}
+
+/* Feature headings need a generous column gutter without turning that same
+   value into an oversized title-to-description gap when they stack. */
+.bb-detail-page > section.bb-detail-preview[class^="feature"] > [class*="-heading"] {
+  row-gap: var(--space-3);
+}
+
+/* Cap only pure text stacks. Structural stacks containing grids, media,
+   actions, or cards keep their authored section rhythm. */
+.bb-detail-page > section.bb-detail-preview[class^="feature"] .ren-stack:has(> :is(h2, h3, h4, p, span, strong, small, blockquote, cite)):not(:has(> :not(:is(h2, h3, h4, p, span, strong, small, blockquote, cite)))) {
+  row-gap: min(var(--stack-gap, var(--space-stack)), var(--space-3));
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview {
+  min-width: 0;
+  margin-block: 0;
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:not(.ren-cover):not(:has(ren-nav)) {
+  min-height: 0;
+}
+
+/* CTA previews share one deliberate section rhythm. Batch-specific styles own
+   their anatomy, while this catalog layer keeps every composition equally
+   breathable and prevents split layouts from touching the preview edge. */
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] {
+  --center-padding: 0;
+  padding-block: clamp(var(--space-10), 5vw, var(--space-16));
+  padding-inline: clamp(var(--space-6), 4vw, var(--space-12));
+}
+
+/* Media-backed CTAs need a stable landscape canvas in documentation. This
+   restores a useful minimum after the generic preview reset without turning
+   image and video examples into tall, nearly square cards. */
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"]:has(> [class$="-background"]) {
+  min-block-size: clamp(22rem, 34vw, 28rem);
+}
+
+/* A secondary CTA must remain a real surface on neutral, black, photographic,
+   and video backgrounds. The generic blue outline is intentionally replaced
+   by a neutral high-contrast treatment throughout the CTA catalog. */
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] .ren-btn.ren-btn-outline {
+  color: var(--color-text);
+  background-color: var(--color-surface-raised);
+  border-color: var(--color-border-interactive);
+}
+
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] .ren-btn.ren-btn-outline:hover:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+  background-color: var(--color-fill-hover);
+  border-color: var(--color-border-strong);
+}
+
+.bb-detail-page > section.bb-detail-preview.bb-detail-preview[class^="cta"] .ren-btn.ren-btn-outline:active:not(:disabled):not([aria-disabled="true"]) {
+  color: var(--color-text);
+  background-color: var(--color-fill-active);
+  border-color: var(--color-border-interactive);
+}
+
+/* Fullscreen is useful in production, but block documentation needs a stable
+   cinematic canvas so image/video examples can be compared without a 1:1 wall. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview.ren-cover,
+.bb-detail-page > .bb-detail-preview.bb-detail-preview > .ren-cover.ren-cover {
+  --cover-height: clamp(34rem, 56vw, 42rem);
+}
+
+/* This centered cover is intentionally cinematic but compact enough to read as
+   a landscape hero inside the catalog rather than a square viewport mockup. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview[data-rh30-root] {
+  --cover-height: clamp(30rem, 48vw, 36rem);
+}
+
+/* Media-over-band heroes need a minimum canvas, not a fixed block size: their
+   stacked mobile copy can grow while the media keeps a useful landscape band. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:is(
+  [data-rh9-root],
+  [data-rh10-root],
+  [data-rh11-root],
+  [data-rh12-root],
+  [data-rh13-root],
+  [data-rh14-root]
+) {
+  block-size: auto;
+  min-block-size: var(--cover-height);
+}
+
+/* Landscape-first compositions keep their generous production spacing in the
+   component itself. Inside the catalog, use a compact comparison canvas so the
+   media reads as a landscape rather than turning the example into a tall card. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:is(
+  [data-rh15-root],
+  [data-rh17-root],
+  [data-rh18-root],
+  [data-rh26-root],
+  [data-rh28-root],
+  [data-rh29-root]
+) {
+  padding-block: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:is(
+  [data-rh16-root],
+  [data-rh27-root]
+) > section {
+  padding-block: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview :is(
+  .rh15-container,
+  .rh16-shell,
+  .rh17-container,
+  .rh18-container,
+  .rh26-container,
+  .rh27-layout,
+  .rh28-container,
+  .rh29-container
+) {
+  --stack-gap: var(--space-8);
+}
+
+.bb-detail-page > .bb-detail-preview.bb-detail-preview :is(
+  .rh15-media,
+  .rh16-media,
+  .rh17-media,
+  .rh18-media,
+  .rh26-media,
+  .rh27-media,
+  .rh28-media,
+  .rh29-media
+) {
+  width: min(100%, var(--width-3xl));
+  margin-inline: auto;
+}
+
+/* Mega panels are absolute on desktop, so the documentation preview must
+   preserve their visual canvas instead of clipping or overlapping pagination. */
+.bb-detail-page > .bb-detail-preview.bb-detail-preview:has(ren-nav) {
+  overflow: visible;
+}
+
+@media (min-width: 48.0625rem) {
+  .bb-detail-page > .bb-detail-preview.bb-detail-preview:not(:is(
+    [data-rn11-root],
+    [data-rn12-root],
+    [data-rn13-root],
+    [data-rn14-root],
+    [data-rn15-root]
+  )):has(ren-nav details[open]) {
+    min-height: var(--width-4xl);
+  }
+}
+
+.bb-block-pagination {
+  --grid-gap: var(--space-4);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--color-border-muted);
+}
+
+.bb-block-pagination-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--touch-min);
+  padding: var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-interactive);
+  border-radius: var(--radius-lg);
+}
+
+.bb-block-pagination-link[rel="prev"] {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.bb-block-pagination-link[rel="next"] {
+  text-align: end;
+}
+
+.bb-block-pagination-link:hover {
+  color: var(--color-text-link-hover);
+  border-color: var(--color-border-accent);
+}
+
+.bb-block-pagination-link:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset);
+}
+
+.bb-block-pagination-direction {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 
 /* ─────────────────────────────────────────────

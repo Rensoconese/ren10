@@ -1,0 +1,25 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header19",
+  "block": "hero-split-image-left-copy-dual-cta",
+  "capturedCommit": "b220e503f204d4d1f7979dbdfe4df6671ed25743",
+  "fresh": true,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "large-1024",
+    "seam-1023",
+    "tablet-767",
+    "mobile-390",
+    "narrow-320",
+    "desktop-reduced-motion-focus",
+    "mobile-dark",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Codex independently inspected all ten cache-busted states from functional commit b220e503f204d4d1f7979dbdfe4df6671ed25743. The section remains content-height and owns one constrained composition. Copy appears first and the single image follows through 1023px; at 1024px and wider the image is left, copy is right, both columns are equal and vertically centered. Two actions wrap into separate rows at 390px and 320px without clipping or undersized targets. The owned 1280 by 900 image remains rounded and cover-fitted. Light, dark, reduced-motion focus, mobile dark, and JavaScript-disabled states are coherent. No form, navigation, logo, video, dialog, overlay, third CTA, duplicate tree, overlap, or stale-pixel drift is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

@@ -42,6 +42,176 @@
           "status": "accepted",
           "packet": "navbar10",
           "ren10Block": "templates/blocks/nav-mega-menu-card-grid.html"
+        },
+        {
+          "id": "navbar11",
+          "status": "accepted",
+          "packet": "navbar11",
+          "ren10Block": "templates/blocks/nav-logo-left-menu-right-dropdown.html"
+        },
+        {
+          "id": "navbar12",
+          "status": "accepted",
+          "packet": "navbar12",
+          "ren10Block": "templates/blocks/nav-logo-left-menu-right-grouped.html"
+        },
+        {
+          "id": "navbar13",
+          "status": "accepted",
+          "packet": "navbar13",
+          "ren10Block": "templates/blocks/nav-logo-left-menu-center-dropdown.html"
+        },
+        {
+          "id": "navbar14",
+          "status": "accepted",
+          "packet": "navbar14",
+          "ren10Block": "templates/blocks/nav-floating-logo-left-menu-right-actions.html"
+        },
+        {
+          "id": "navbar15",
+          "status": "reviewed",
+          "packet": "navbar15",
+          "ren10Block": "templates/blocks/nav-floating-bottom-logo-left-menu-actions.html"
+        },
+        {
+          "id": "navbar16",
+          "status": "reviewed",
+          "packet": "navbar16",
+          "ren10Block": "templates/blocks/nav-logo-left-action-overlay-menu.html"
+        },
+        {
+          "id": "navbar17",
+          "status": "reviewed",
+          "packet": "navbar17",
+          "ren10Block": "templates/blocks/nav-logo-left-fullscreen-menu-social.html"
+        },
+        {
+          "id": "navbar18",
+          "status": "reviewed",
+          "packet": "navbar18",
+          "ren10Block": "templates/blocks/nav-logo-cta-overlay-grid.html"
+        },
+        {
+          "id": "navbar19",
+          "status": "reviewed",
+          "packet": "navbar19",
+          "ren10Block": "templates/blocks/nav-logo-left-center-links-site-panel.html"
+        },
+        {
+          "id": "navbar20",
+          "status": "reviewed",
+          "packet": "navbar20",
+          "ren10Block": "templates/blocks/nav-logo-left-center-links-overlay-panel.html"
+        },
+        {
+          "id": "navbar21",
+          "status": "reviewed",
+          "packet": "navbar21",
+          "ren10Block": "templates/blocks/nav-logo-center-links-fullscreen-featured.html"
+        },
+        {
+          "id": "navbar22",
+          "status": "reviewed",
+          "packet": "navbar22",
+          "ren10Block": "templates/blocks/nav-sticky-logo-center-dropdown-fullscreen-contact.html"
+        },
+        {
+          "id": "navbar23",
+          "status": "reviewed",
+          "packet": "navbar23",
+          "ren10Block": "templates/blocks/nav-mega-menu-product-intro.html"
+        },
+        {
+          "id": "navbar24",
+          "status": "reviewed",
+          "packet": "navbar24",
+          "ren10Block": "templates/blocks/nav-mega-menu-product-rail.html"
+        },
+        {
+          "id": "navbar25",
+          "status": "reviewed",
+          "packet": "navbar25",
+          "ren10Block": "templates/blocks/nav-mega-menu-categories-promo.html"
+        },
+        {
+          "id": "navbar26",
+          "status": "reviewed",
+          "packet": "navbar26",
+          "ren10Block": "templates/blocks/nav-mega-menu-category-promo-panel.html"
+        },
+        {
+          "id": "navbar27",
+          "status": "reviewed",
+          "packet": "navbar27",
+          "ren10Block": "templates/blocks/nav-mega-menu-category-collections.html"
+        },
+        {
+          "id": "navbar28",
+          "status": "reviewed",
+          "packet": "navbar28",
+          "ren10Block": "templates/blocks/nav-mega-menu-topics-collection-cards.html"
+        },
+        {
+          "id": "navbar29",
+          "status": "reviewed",
+          "packet": "navbar29",
+          "ren10Block": "templates/blocks/nav-mega-menu-overlay-collections.html"
+        },
+        {
+          "id": "navbar30",
+          "status": "reviewed",
+          "packet": "navbar30",
+          "ren10Block": "templates/blocks/nav-mega-menu-categories-products.html"
+        },
+        {
+          "id": "navbar31",
+          "status": "reviewed",
+          "packet": "navbar31",
+          "ren10Block": "templates/blocks/nav-logo-cta-right-sheet-contact.html"
+        },
+        {
+          "id": "navbar32",
+          "status": "reviewed",
+          "packet": "navbar32",
+          "ren10Block": "templates/blocks/nav-logo-cta-left-drawer.html"
+        }
+      ]
+    },
+    {
+      "id": "headers",
+      "sourceCategory": "headers",
+      "status": "reviewed",
+      "baseline": "header1",
+      "modules": [
+        {
+          "id": "header1",
+          "status": "reviewed",
+          "packet": "header1",
+          "ren10Block": "templates/blocks/hero-split-copy-dual-cta-media.html"
+        },
+        {
+          "id": "header2",
+          "status": "reviewed",
+          "packet": "header2",
+          "ren10Block": "templates/blocks/hero-split-email-form-media-right.html"
+        },
+        {
+          "id": "header3",
+          "status": "reviewed",
+          "packet": "header3",
+          "ren10Block": "templates/blocks/hero-text-left-video-lightbox.html"
+        },
+        {
+          "id": "header4",
+          "status": "reviewed",
+          "packet": "header4",
+          "ren10Block": "templates/blocks/hero-split-email-video-lightbox.html"
+        },
+        {
+          "id": "header5",
+          "status": "reviewed",
+          "packet": "header5",
+          "ren10Block": "templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html"
         }
       ]
     }

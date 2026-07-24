@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Phase A RED: templates/blocks/nav-logo-left-center-links-site-panel.html absent. Focused Playwright navbar19 suite discovered tests and stopped at the first failure because the absent block returned HTTP 404 (expected 200). Command: CI= npx playwright test --config tests/components/playwright.config.cjs tests/components/navbar19-navigation.spec.cjs --project=\"Desktop Light\" --retries=0 --workers=1 --max-failures=1. First case failed with: navbar19 block must not 404 — implement templates/blocks/nav-logo-left-center-links-site-panel.html. 1 failed, 18 did not run. Recorded 2026-07-15 against packet stage red prior to Phase B production HTML."
+}

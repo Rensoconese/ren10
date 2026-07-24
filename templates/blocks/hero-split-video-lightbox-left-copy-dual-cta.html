@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Split Video Lightbox and Copy Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height Ren10 split hero with two destinations and one accessible landscape video lightbox.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-spinner/ren-spinner.css">
+  <link rel="stylesheet" href="../../components/composites/ren-dialog/ren-dialog.css">
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh21-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh21-container {
+      width: 100%;
+    }
+
+    .rh21-split {
+      --grid-gap: var(--space-10);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .rh21-split > * {
+      min-width: 0;
+    }
+
+    .rh21-copy {
+      --stack-gap: var(--space-stack-loose);
+    }
+
+    .rh21-title,
+    .rh21-description {
+      margin: 0;
+    }
+
+    .rh21-title {
+      max-width: var(--width-xl);
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh21-description {
+      max-width: var(--width-prose);
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh21-actions {
+      --cluster-gap: var(--space-inline-loose);
+      align-items: stretch;
+    }
+
+    .rh21-media {
+      position: relative;
+      width: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rh21-media-trigger {
+      position: relative;
+      width: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+      border: 0;
+      cursor: pointer;
+    }
+
+    .rh21-media-trigger:focus-visible {
+      z-index: var(--z-raised);
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(var(--ring-width) * -1);
+    }
+
+    .rh21-poster {
+      object-position: center;
+    }
+
+    .rh21-scrim {
+      position: absolute;
+      inset: 0;
+      background: var(--color-overlay);
+      pointer-events: none;
+    }
+
+    .rh21-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      color: var(--color-text-inverted);
+      filter: drop-shadow(var(--shadow-md));
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .rh21-play svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh21-fallback-note {
+      position: absolute;
+      inset: auto var(--space-4) var(--space-4);
+      z-index: var(--z-raised);
+      margin: 0;
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .rh21-video-fallback {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    #rh21-video {
+      --ren-dialog-width: min(calc(100vw - var(--space-8)), 46.125rem);
+    }
+
+    #rh21-video .ren-dialog-close {
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+    }
+
+    .rh21-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh21-video-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh21-loader {
+      --cover-height: 100%;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-4);
+    }
+
+    .rh21-loader[hidden],
+    .rh21-video-stage iframe[hidden] {
+      display: none;
+    }
+
+    @media (min-width: 48rem) {
+      .rh21-hero {
+        padding-block: var(--space-section);
+      }
+
+      .rh21-container {
+        --center-padding: var(--space-8);
+      }
+
+      .rh21-split {
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .rh21-media {
+        order: -1;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh21-hero {
+        padding-block: var(--space-section-lg);
+      }
+
+      .rh21-split {
+        --grid-gap: var(--space-20);
+      }
+
+      #rh21-video {
+        --ren-dialog-width: min(calc(100vw - var(--space-8)), 58.75rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Split Video Lightbox and Copy Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 21 · Hero block</p>
+      <h1 class="bb-detail-title">Split Video Lightbox and Copy Hero</h1>
+      <p class="bb-detail-description">A content-height Ren10 split hero with two destinations and one accessible landscape video lightbox.</p>
+    </header>
+
+    <section class="rh21-hero bb-detail-preview" data-rh21-root aria-labelledby="rh21-title">
+      <div class="rh21-container ren-center ren-center-wide">
+        <div class="rh21-split ren-grid ren-grid-2">
+          <div class="rh21-copy ren-stack">
+            <h1 id="rh21-title" class="rh21-title">Bring a clearer story to every product decision</h1>
+            <p class="rh21-description">Connect shared foundations, accessible patterns, and practical guidance so teams can move from intent to a dependable experience.</p>
+            <div class="rh21-actions ren-cluster">
+              <a class="ren-btn" href="../../docs/index.html">Explore Ren10</a>
+              <a class="ren-btn ren-btn-outline" href="index.html">Browse blocks</a>
+            </div>
+          </div>
+
+          <figure class="rh21-media">
+            <button class="rh21-media-trigger ren-frame ren-frame-video" type="button" data-dialog-trigger="rh21-video" aria-label="Play the Ren10 product story">
+<img
+                class="rh21-poster"
+                src="media/hero-botanical-conservatory.webp"
+                alt="Sunlit botanical conservatory with layered tropical foliage"
+                width="1672"
+                height="941"
+              >
+              <span class="rh21-scrim" aria-hidden="true"></span>
+              <span class="rh21-play" aria-hidden="true">
+                <svg viewBox="0 0 64 64" focusable="false">
+                  <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"></circle>
+                  <path d="M26 20v24l20-12z" fill="currentColor"></path>
+                </svg>
+              </span>
+            </button>
+
+            <noscript>
+              <p class="rh21-fallback-note">
+                Video playback requires JavaScript.
+                <a class="rh21-video-fallback" href="../../docs/getting-started.html">Read the product story</a>.
+              </p>
+            </noscript>
+
+            <ren-dialog id="rh21-video" size="full">
+              <dialog>
+                <div class="ren-dialog-header">
+                  <h2 class="ren-dialog-title">Ren10 product story</h2>
+                  <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="ren-dialog-body">
+                  <div class="rh21-video-stage ren-frame ren-frame-video" aria-busy="false">
+                    <div class="rh21-loader ren-cover" hidden>
+                      <span class="ren-spinner ren-spinner-xl ren-cover-center" role="status" aria-label="Loading video"></span>
+                    </div>
+                    <iframe
+                      title="Ren10 product story video"
+                      allow="autoplay; encrypted-media; picture-in-picture"
+                      allowfullscreen
+                      hidden
+                    ></iframe>
+                  </div>
+                </div>
+              </dialog>
+            </ren-dialog>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-email-copy-image-left.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Email Copy and Image Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-split-video-lightbox-left-email-form.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Video Lightbox and Email Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh21-root]');
+    const lightbox = root.querySelector('#rh21-video');
+    const stage = lightbox.querySelector('.rh21-video-stage');
+    const loader = lightbox.querySelector('.rh21-loader');
+    const frame = lightbox.querySelector('iframe');
+    const videoSource = 'data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAIFEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggHv7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjIuMy4xMDBXQYxMYXZmNjIuMy4xMDBEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIUaapVNo4evqcgQAitZyDdW5kiIEAhoVWX1ZQOYOBASPjg4QdzWUA4JCwgaC6gVqagQJVsIRVuYEBElTDZ0B/c3OfY8CAZ8iZRaOHRU5DT0RFUkSHjExhdmY2Mi4zLjEwMHNz2mPAi2PFiFGmqVTaOHr6Z8ilRaOHRU5DT0RFUkSHmExhdmM2Mi4xMS4xMDAgbGlidnB4LXZwOWfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnXC54EAo6aBAACAgkmDQgAJ8AWWADgkHBhCAAAwYAAAZz///1mvETu4z4ZPgKOVgQH0AIYAQJKcAElAAAMgAABZ+YbgHFO7a5G7j7OBALeK94EB8YIBqPCBAw==';
+
+    frame.addEventListener('load', () => {
+      if (!lightbox.isOpen) return;
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      const scheme = root.ownerDocument.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html>
+        <html style="color-scheme: ${scheme}">
+          <head>
+            <meta name="viewport" content="width=device-width">
+            <style>
+              html, body { height: 100%; margin: 0; }
+              body { overflow: hidden; background: Canvas; color: CanvasText; }
+              video { width: 100%; height: 100%; object-fit: contain; }
+            </style>
+          </head>
+          <body>
+            <video controls autoplay muted playsinline aria-label="Ren10 product story preview">
+              <source src="${videoSource}" type="video/webm">
+              Your browser does not support embedded video.
+            </video>
+          </body>
+        </html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('src');
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

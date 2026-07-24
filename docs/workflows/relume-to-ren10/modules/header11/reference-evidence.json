@@ -1,0 +1,8 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "sourceSha256": "490ea5aecfa79b7b4dd918a81013c9c70221fd52cfccd9dd5aff4448efbaa460",
+  "notes": "Authenticated MCP returned the complete Header11 section source and primitive inventory. The sanitized brief records exact video-first anatomy, order, responsive behavior, accessibility gaps, unavailable evidence, and public exclusions without persisting framework source."
+}

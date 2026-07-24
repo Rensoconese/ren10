@@ -1,0 +1,7 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "isolated-header13-red",
+  "command": "npx playwright test tests/components/header13-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1",
+  "result": "32/32 cases failed across Desktop Light and Desktop Dark for the intended reason: templates/blocks/hero-lightbox-top-copy-band-dual-cta.html returned HTTP 404 before production implementation existed."
+}

@@ -291,7 +291,7 @@ export class RenPopover extends HTMLElement {
     if ('popover' in HTMLElement.prototype) {
       try {
         this.showPopover();
-      } catch (e) {
+      } catch {
         // Already open or other error
       }
     } else {
@@ -324,7 +324,7 @@ export class RenPopover extends HTMLElement {
     if ('popover' in HTMLElement.prototype) {
       try {
         this.hidePopover();
-      } catch (e) {
+      } catch {
         // Already closed or other error
       }
     } else {

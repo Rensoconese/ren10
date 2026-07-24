@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centered Email and Landscape Lightbox Hero — Ren10 Blocks</title>
+  <meta name="description" content="A centered Ren10 email capture followed by one accessible landscape video lightbox.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-spinner/ren-spinner.css">
+  <link rel="stylesheet" href="../../components/composites/ren-dialog/ren-dialog.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh29-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh29-container {
+      --stack-gap: var(--space-12);
+      width: 100%;
+    }
+
+    .rh29-copy {
+      --center-width: var(--width-2xl);
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh29-title,
+    .rh29-description,
+    .rh29-legal,
+    .rh29-status,
+    .rh29-media {
+      margin: 0;
+    }
+
+    .rh29-title {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh29-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .rh29-form {
+      --stack-gap: var(--space-stack-tight);
+      width: 100%;
+    }
+
+    .rh29-form-row {
+      --grid-gap: var(--space-inline-tight);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: end;
+      width: 100%;
+      text-align: start;
+    }
+
+    .rh29-email,
+    .rh29-submit {
+      min-height: var(--touch-min);
+    }
+
+    .rh29-error[hidden],
+    .rh29-status[hidden],
+    .rh29-loader[hidden],
+    .rh29-video-stage iframe[hidden] {
+      display: none;
+    }
+
+    .rh29-legal {
+      color: var(--color-text-muted);
+      font-size: var(--caption-size);
+      line-height: var(--caption-leading);
+    }
+
+    .rh29-terms-link,
+    .rh29-video-fallback {
+      display: inline-grid;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    .rh29-status {
+      color: var(--color-success-strong);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    .rh29-media {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .rh29-media-trigger {
+      position: relative;
+      width: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color: var(--color-text-inverted);
+      background: var(--color-surface-sunken);
+      border: 0;
+      cursor: pointer;
+    }
+
+    .rh29-media-trigger:focus-visible {
+      z-index: var(--z-raised);
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: calc(var(--ring-width) * -1);
+    }
+
+    .rh29-poster {
+      object-position: center;
+    }
+
+    .rh29-scrim {
+      position: absolute;
+      inset: 0;
+      background: var(--color-overlay);
+      pointer-events: none;
+    }
+
+    .rh29-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      filter: drop-shadow(var(--shadow-md));
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .rh29-play svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh29-fallback-note {
+      position: absolute;
+      inset: auto var(--space-4) var(--space-4);
+      z-index: var(--z-raised);
+      margin: 0;
+      padding: var(--space-3) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    #rh29-video {
+      --ren-dialog-width: min(calc(100vw - var(--space-8)), var(--width-5xl));
+    }
+
+    #rh29-video .ren-dialog-close {
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+    }
+
+    .rh29-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh29-video-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh29-loader {
+      --cover-height: 100%;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-4);
+    }
+
+    @media (min-width: 40rem) {
+      .rh29-form-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh29-hero {
+        padding-block: var(--space-section-md);
+      }
+
+      .rh29-container {
+        --center-padding: var(--space-8);
+        --stack-gap: var(--space-16);
+      }
+
+      .rh29-copy {
+        --center-padding: var(--space-8);
+        --stack-gap: var(--space-8);
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh29-hero {
+        padding-block: var(--space-section-lg);
+      }
+
+      .rh29-container {
+        --stack-gap: var(--space-20);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh29-hero *,
+      .rh29-hero *::before,
+      .rh29-hero *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Centered Email and Landscape Lightbox Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 29 · Hero block</p>
+      <h1 class="bb-detail-title">Centered Email and Landscape Lightbox Hero</h1>
+      <p class="bb-detail-description">A centered Ren10 email capture followed by one accessible landscape video lightbox.</p>
+    </header>
+
+    <section class="rh29-hero bb-detail-preview" data-rh29-root aria-labelledby="rh29-title">
+      <div class="rh29-container ren-center ren-center-wide ren-stack">
+        <div class="rh29-copy ren-center ren-stack">
+          <h1 id="rh29-title" class="rh29-title">Build a system your whole team can move with</h1>
+          <p class="rh29-description">Get practical guidance for turning shared standards into accessible product work that stays coherent as you grow.</p>
+
+          <form class="rh29-form ren-stack" action="../../docs/getting-started.html" method="get">
+            <div class="rh29-form-row ren-grid">
+              <ren-field>
+                <label for="rh29-email">Work email</label>
+                <input id="rh29-email" class="rh29-email ren-input" name="email" type="email" autocomplete="email" placeholder="team@example.com" required>
+                <span class="rh29-error" data-error hidden>Enter a valid email address.</span>
+              </ren-field>
+              <button class="rh29-submit ren-btn" type="submit">Join the preview</button>
+            </div>
+            <p class="rh29-legal">By continuing, you agree to our <a class="rh29-terms-link" href="../../LICENSE">terms of use</a>.</p>
+            <p class="rh29-status" role="status" aria-live="polite" hidden></p>
+          </form>
+        </div>
+
+        <figure class="rh29-media">
+          <button class="rh29-media-trigger ren-frame ren-frame-video" type="button" data-dialog-trigger="rh29-video" aria-label="Play the Ren10 workflow overview">
+<img class="rh29-poster" src="media/hero-botanical-conservatory.webp" alt="Sunlit botanical conservatory with layered tropical foliage" width="1672" height="941">
+            <span class="rh29-scrim" aria-hidden="true"></span>
+            <span class="rh29-play" aria-hidden="true">
+              <svg viewBox="0 0 64 64" focusable="false">
+                <circle cx="32" cy="32" r="28" fill="none" stroke="currentColor" stroke-width="4"></circle>
+                <path d="M26 20v24l20-12z" fill="currentColor"></path>
+              </svg>
+            </span>
+          </button>
+
+          <noscript>
+            <p class="rh29-fallback-note">Video playback requires JavaScript. <a class="rh29-video-fallback" href="../../docs/getting-started.html">Read the workflow overview</a>.</p>
+          </noscript>
+
+          <ren-dialog id="rh29-video" size="xl">
+            <dialog aria-label="Ren10 workflow overview">
+              <div class="ren-dialog-header">
+                <h2 class="ren-dialog-title">Ren10 workflow overview</h2>
+                <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="ren-dialog-body">
+                <div class="rh29-video-stage ren-frame ren-frame-video" aria-busy="false">
+                  <div class="rh29-loader ren-cover" hidden>
+                    <span class="ren-spinner ren-spinner-xl ren-cover-center" role="status" aria-label="Loading video"></span>
+                  </div>
+                  <iframe title="Ren10 workflow overview video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen hidden></iframe>
+                </div>
+              </div>
+            </dialog>
+          </ren-dialog>
+        </figure>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-centered-copy-dual-cta-landscape-lightbox.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Centered Landscape Lightbox Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-fullscreen-bg-centered-copy-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen Background Centered Dual CTA Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh29-root]');
+    const form = root.querySelector('.rh29-form');
+    const email = root.querySelector('.rh29-email');
+    const status = root.querySelector('.rh29-status');
+    const lightbox = root.querySelector('#rh29-video');
+    const stage = lightbox.querySelector('.rh29-video-stage');
+    const loader = lightbox.querySelector('.rh29-loader');
+    const frame = lightbox.querySelector('iframe');
+
+    email.addEventListener('input', () => {
+      status.hidden = true;
+      status.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      status.textContent = 'Thanks — check your inbox for the next step.';
+      status.hidden = false;
+      form.reset();
+    });
+
+    frame.addEventListener('load', () => {
+      if (!lightbox.isOpen) return;
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      const scheme = root.ownerDocument.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html>
+        <html style="color-scheme: ${scheme}">
+          <head>
+            <meta name="viewport" content="width=device-width">
+            <style>
+              html, body { height: 100%; margin: 0; }
+              body { overflow: hidden; background: Canvas; color: CanvasText; font: 16px/1.5 system-ui; }
+              main { height: 100%; display: grid; place-items: center; padding: 2rem; box-sizing: border-box; text-align: center; }
+              strong { font-size: clamp(1.5rem, 5vw, 3rem); }
+            </style>
+          </head>
+          <body><main><div><strong>One shared system.</strong><p>Accessible foundations, adaptable patterns, and clearer product decisions.</p></div></main></body>
+        </html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

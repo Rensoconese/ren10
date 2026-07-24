@@ -1,0 +1,215 @@
+.faq7-block,
+.faq8-block,
+.faq9-block,
+.faq10-block,
+.faq11-block,
+.faq12-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.faq7-title, .faq8-title, .faq9-title, .faq10-title, .faq11-title, .faq12-title),
+:is(.faq7-description, .faq8-description, .faq9-description, .faq10-description, .faq11-description, .faq12-description),
+.faq8-proof strong,
+.faq8-proof span,
+.faq9-panel h3,
+.faq9-panel p,
+.faq10-band h3,
+.faq10-band p,
+.faq12-card h3,
+.faq12-card p {
+  margin: 0;
+}
+
+:is(.faq7-title, .faq8-title, .faq9-title, .faq10-title, .faq11-title, .faq12-title) {
+  font-size: clamp(var(--display-sm-size), 4.5vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.faq7-description, .faq8-description, .faq9-description, .faq10-description, .faq11-description, .faq12-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.faq7-heading, .faq10-heading, .faq11-heading, .faq12-heading) {
+  --stack-gap: var(--space-4);
+  max-width: var(--width-4xl);
+}
+
+.faq7-layout,
+.faq8-layout,
+.faq9-layout,
+.faq10-layout,
+.faq11-layout,
+.faq12-layout {
+  --grid-gap: clamp(var(--space-8), 5vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.faq7-list,
+.faq10-list,
+.faq11-list,
+.faq12-grid {
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+}
+
+.faq7-list {
+  max-width: var(--width-5xl);
+}
+
+.faq7-block .ren-accordion-trigger {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.faq7-list .ren-accordion-content {
+  padding-inline: calc(var(--space-8) + var(--space-4));
+}
+
+.faq7-number {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.faq8-copy,
+.faq9-copy {
+  --stack-gap: var(--space-6);
+  min-width: 0;
+}
+
+.faq8-proofs {
+  --grid-gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.faq8-proof {
+  --stack-gap: var(--space-1);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-border-strong);
+}
+
+.faq8-proof strong {
+  font-size: var(--title-lg-size);
+  line-height: var(--title-lg-leading);
+}
+
+.faq8-proof span {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.faq9-panel {
+  --stack-gap: var(--space-4);
+  padding: clamp(var(--space-6), 4vw, var(--space-10));
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-radius: var(--radius-xl);
+}
+
+.faq9-panel .dx-kicker,
+.faq9-panel h2,
+.faq9-panel h3,
+.faq9-panel p {
+  color: var(--color-on-accent);
+}
+
+.faq9-panel h3,
+.faq10-band h3,
+.faq12-card h3 {
+  font-size: var(--title-md-size);
+  font-weight: var(--title-md-weight);
+  line-height: var(--title-md-leading);
+}
+
+.faq9-panel p,
+.faq10-band p,
+.faq12-card p {
+  line-height: var(--leading-relaxed);
+}
+
+.faq9-note {
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--color-border-accent);
+}
+
+.faq10-heading,
+.faq11-heading,
+.faq12-heading {
+  margin-inline: auto;
+  text-align: center;
+}
+
+.faq10-list,
+.faq11-list {
+  max-width: var(--width-5xl);
+  margin-inline: auto;
+}
+
+.faq10-band {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  max-width: var(--width-5xl);
+  margin: var(--space-8) auto 0;
+  padding: var(--space-6);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.faq10-band-copy {
+  --stack-gap: var(--space-2);
+}
+
+.faq11-block.bb-detail-preview {
+  background: var(--color-surface-sunken);
+}
+
+.faq11-list > details {
+  background: var(--color-surface-raised);
+}
+
+.faq11-list .ren-accordion-content {
+  max-width: var(--width-prose);
+}
+
+.faq12-grid {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.faq12-card {
+  --stack-gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border-block-start: var(--space-1) solid var(--color-accent);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.faq12-card .ren-accordion {
+  margin-block-start: var(--space-2);
+}
+
+@media (min-width: 48rem) {
+  :is(.faq8-layout, .faq9-layout) {
+    grid-template-columns: minmax(16rem, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .faq10-band {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .faq12-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

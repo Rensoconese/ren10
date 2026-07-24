@@ -1,0 +1,18 @@
+{
+  "id": "desktop-light-closed",
+  "url": "http://127.0.0.1:57928/templates/blocks/nav-sticky-logo-center-dropdown-fullscreen-contact.html?ren10_capture=navbar22-desktop-light-closed-65e051e6db8f",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rn22-destination": 3,
+    ".rn22-chevron": 1,
+    ".rn22-menu-link": 8
+  },
+  "commit": "65e051e6db8f02d603a3e5c2913d3d0af84ad6e5",
+  "capturedAt": "2026-07-15T11:24:53.663Z"
+}

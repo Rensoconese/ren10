@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "The single Navbar13 suite was added before production. The focused run discovered 20 tests and stopped at the first failure because the absent block provided no [data-rn13-root] toggle; all remaining tests were correctly left unrun by --max-failures=1."
+}

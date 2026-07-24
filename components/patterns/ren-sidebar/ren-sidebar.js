@@ -169,7 +169,7 @@ class RenSidebar extends HTMLElement {
   _readCollapsedState() {
     try {
       return localStorage.getItem(this._storageKey) === 'true';
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -177,7 +177,7 @@ class RenSidebar extends HTMLElement {
   _writeCollapsedState(isCollapsed) {
     try {
       localStorage.setItem(this._storageKey, isCollapsed ? 'true' : 'false');
-    } catch (error) {
+    } catch {
       // Storage can be blocked in private contexts; visual state still updates.
     }
   }

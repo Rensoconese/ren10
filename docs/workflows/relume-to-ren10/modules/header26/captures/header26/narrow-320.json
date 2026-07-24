@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:49891/templates/blocks/hero-centered-copy-dual-cta-landscape-image.html?ren10_capture=header26-narrow-320-d96c39b3de47",
+  "viewport": {
+    "width": 320,
+    "height": 800
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh26-actions > a": 2,
+    ".rh26-image": 1
+  },
+  "commit": "d96c39b3de47c0fb9fac7f8f9cf7402663a62b2c",
+  "capturedAt": "2026-07-15T20:02:25.600Z"
+}

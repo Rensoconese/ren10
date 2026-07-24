@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header3",
+  "blockSlug": "hero-text-left-video-lightbox",
+  "blockPath": "templates/blocks/hero-text-left-video-lightbox.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-text-left-video-lightbox.html",
+    "tests/components/header3-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

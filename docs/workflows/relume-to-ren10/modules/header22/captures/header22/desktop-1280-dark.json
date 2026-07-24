@@ -1,0 +1,17 @@
+{
+  "id": "desktop-1280-dark",
+  "url": "http://127.0.0.1:59329/templates/blocks/hero-split-video-lightbox-left-email-form.html?ren10_capture=header22-desktop-1280-dark-12ad524a6166",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh22-layout": 1,
+    "#rh22-video": 1
+  },
+  "commit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturedAt": "2026-07-15T19:36:32.377Z"
+}

@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header3 mapped to a split hero: text column (heading + lede + primary/secondary ren-btn pair) and media column (single named play trigger opening ren-dialog video lightbox with ren-spinner until iframe load). Layout via ren-switcher + ren-frame-video. The iframe contains a native video with controls backed by permitted CC0 demo media; progressive enhancement targets a visible native video in noscript when JS is off. Rejected nav/sheet models, invented brand in the hero tree, and copied Relume assets/URLs."
+}

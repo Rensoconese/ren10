@@ -38,6 +38,9 @@ component token API.
 - Use `--color-border-interactive` for actionable control borders.
 - Use `--color-*-strong` for status/accent text on neutral surfaces.
 - Use `--color-on-*` only on the matching solid background.
+- Pair `--color-on-surface-contrast` only with
+  `--color-surface-contrast` for editorial surfaces that remain dark in every
+  theme.
 - Do not use `--color-text-faint` for information the user must read.
 - Use semantic motion tokens and transition presets; do not write raw
   durations or easings in components.

@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar23 mapped to one ren-nav tree, native details/summary, intro column + three whole-card product anchors (ren-card, ren-frame 5/6, ren-badge), one intro CTA, two header actions owned by the collapsible shell on mobile, one named toggle, one chevron, full-band desktop mega, and the established 48rem interaction boundary. Rejected ren-menu, ren-popover, nested controls, social/footer inventions, and copied source."
+}

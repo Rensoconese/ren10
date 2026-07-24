@@ -1,0 +1,17 @@
+{
+  "id": "form-row-640",
+  "url": "http://127.0.0.1:59329/templates/blocks/hero-split-video-lightbox-left-email-form.html?ren10_capture=header22-form-row-640-12ad524a6166",
+  "viewport": {
+    "width": 640,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh22-form-row": 1,
+    ".rh22-email": 1
+  },
+  "commit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturedAt": "2026-07-15T19:36:36.122Z"
+}

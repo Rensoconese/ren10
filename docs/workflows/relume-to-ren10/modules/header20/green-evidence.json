@@ -1,0 +1,33 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturesFresh": true,
+  "captures": {
+    "desktop": "captures/header20/desktop-1280-light.png",
+    "mobile": "captures/header20/mobile-390-light.png",
+    "desktopLight": "captures/header20/desktop-1280-light.png",
+    "desktopDark": "captures/header20/desktop-1280-dark.png",
+    "mobileLight": "captures/header20/mobile-390-light.png",
+    "mobileDark": "captures/header20/mobile-390-dark.png",
+    "invalid": "captures/header20/desktop-invalid-error.png",
+    "noJavaScript": "captures/header20/mobile-js-disabled.png"
+  },
+  "cascadeInspection": "Fresh visual and DOM review confirms one content-height Ren10 hero with the authenticated Header20 anatomy. The pristine validation message remains hidden despite the ren-field display rule; enhanced invalid feedback uses one Ren10 error without a duplicate browser bubble; success and JavaScript-off native fallback remain wired. Responsive source/visual order is deliberate, the single image is rounded and unclipped, and no duplicate or surplus affordance appears.",
+  "checklist": {
+    "total": 36,
+    "passed": 36,
+    "summary": {
+      "lineageAndScope": "5/5 passed: authenticated reference, translation map, packet scope, genuine RED and commit-traceable captures.",
+      "anatomy": "6/6 passed: one section, h1, description, email form, legal destination and image; no extra UI.",
+      "ren10Contract": "6/6 passed: vanilla Light DOM, documented field/button/layout primitives, semantic tokens, native controls and reduced motion.",
+      "responsive": "5/5 passed: 320/390/640/1023/1024/1280 ordering, equal desktop split, deliberate form seam and no overflow.",
+      "accessibility": "6/6 passed: label, names, focus, 44px targets, validation/live status, JS-off fallback and axe WCAG 2.1 AA.",
+      "visual": "4/4 passed: light/dark/mobile/desktop states aligned, pristine/error cascades correct, no clipping or duplicates.",
+      "verification": "4/4 passed: focused Playwright, lint/token policy, agent/workflow checks, contract counts/stale refs/diff checks."
+    }
+  },
+  "focusedTests": "32 passed across Desktop Light and Desktop Dark; axe clean in pristine, invalid and success states.",
+  "blockPath": "templates/blocks/hero-email-copy-image-left.html"
+}

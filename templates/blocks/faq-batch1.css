@@ -1,0 +1,157 @@
+.faq1-block,
+.faq2-block,
+.faq3-block,
+.faq4-block,
+.faq5-block,
+.faq6-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.faq1-title, .faq2-title, .faq3-title, .faq4-title, .faq5-title, .faq6-title),
+:is(.faq1-description, .faq2-description, .faq3-description, .faq4-description, .faq5-description, .faq6-description),
+.faq4-card h3,
+.faq4-card p,
+.faq6-support h3,
+.faq6-support p {
+  margin: 0;
+}
+
+:is(.faq1-title, .faq2-title, .faq3-title, .faq4-title, .faq5-title, .faq6-title) {
+  font-size: clamp(var(--display-sm-size), 4.5vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+:is(.faq1-description, .faq2-description, .faq3-description, .faq4-description, .faq5-description, .faq6-description) {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+:is(.faq1-heading, .faq3-heading, .faq4-heading) {
+  --stack-gap: var(--space-4);
+  max-width: var(--width-4xl);
+  margin-inline: auto;
+  text-align: center;
+}
+
+:is(.faq1-list, .faq3-columns, .faq4-grid) {
+  margin-block-start: clamp(var(--space-8), 5vw, var(--space-12));
+}
+
+.faq1-list {
+  max-width: var(--width-4xl);
+  margin-inline: auto;
+}
+
+:is(.faq2-layout, .faq5-layout, .faq6-layout) {
+  --grid-gap: clamp(var(--space-8), 5vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+:is(.faq2-copy, .faq5-copy, .faq6-copy) {
+  --stack-gap: var(--space-4);
+  min-width: 0;
+}
+
+:is(.faq2-list, .faq5-list, .faq6-list) {
+  min-width: 0;
+}
+
+.faq3-columns,
+.faq4-grid {
+  --grid-gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+
+.faq4-card {
+  --stack-gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.faq4-card h3,
+.faq6-support h3 {
+  font-size: var(--title-md-size);
+  font-weight: var(--title-md-weight);
+  line-height: var(--title-md-leading);
+}
+
+.faq4-card p,
+.faq6-support p {
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.faq5-block.bb-detail-preview {
+  color: var(--color-text-inverted);
+  background: var(--color-text);
+}
+
+.faq5-title,
+.faq5-block .dx-kicker {
+  color: var(--color-text-inverted);
+}
+
+.faq5-description,
+.faq5-block .ren-accordion-content {
+  color: var(--color-text-inverted);
+}
+
+.faq5-block .ren-accordion,
+.faq5-block .ren-accordion > details {
+  background: transparent;
+  border-color: var(--color-border-strong);
+}
+
+.faq5-block .ren-accordion-trigger {
+  color: var(--color-text-inverted);
+}
+
+.faq5-block .ren-accordion-trigger::after {
+  filter: invert(1);
+}
+
+.faq5-block .ren-accordion-trigger:hover,
+.faq5-block .ren-accordion-trigger:active {
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+}
+
+.faq5-block .ren-accordion-trigger:hover::after,
+.faq5-block .ren-accordion-trigger:active::after {
+  filter: none;
+}
+
+.faq6-support {
+  --stack-gap: var(--space-4);
+  padding: var(--space-6);
+  background: var(--color-accent-subtle);
+  border: 1px solid var(--color-border-accent);
+  border-radius: var(--radius-lg);
+}
+
+@media (min-width: 48rem) {
+  :is(.faq2-layout, .faq5-layout, .faq6-layout) {
+    grid-template-columns: minmax(16rem, 0.7fr) minmax(0, 1.3fr);
+  }
+
+  .faq3-columns,
+  .faq4-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .faq6-copy {
+    position: sticky;
+    inset-block-start: var(--space-6);
+  }
+}

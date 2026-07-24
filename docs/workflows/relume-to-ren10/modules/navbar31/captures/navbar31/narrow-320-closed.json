@@ -1,0 +1,19 @@
+{
+  "id": "narrow-320-closed",
+  "url": "http://127.0.0.1:51096/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-narrow-320-closed-25c8db6abf70",
+  "viewport": {
+    "width": 320,
+    "height": 640
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".ren-nav-toggle": 1,
+    ".ren-nav-brand": 1,
+    ".ren-nav-actions .ren-btn-primary": 1,
+    "#rn31-primary-links > li": 5
+  },
+  "commit": "25c8db6abf70e37530013281706892a98db842da",
+  "capturedAt": "2026-07-15T11:57:42.290Z"
+}

@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated get_component for header13 returned one complete section and names-only primitive dependencies. Sanitized packet preserves exact anatomy, responsive states, media/dialog lifecycle, CTA counts, omissions, and public-output exclusions without storing source code or proprietary assets."
+}

@@ -1,0 +1,48 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "e415dba5ff068fa0781d87f9ab43932a1aef0e09",
+  "captures": {
+    "desktop": "output/playwright/navbar13-final/navbar13/desktop-light-open.png",
+    "tablet": "output/playwright/navbar13-final/navbar13/tablet-light-open.png",
+    "mobile": "output/playwright/navbar13-final/navbar13/mobile-light-dropdown-open.png",
+    "dark": "output/playwright/navbar13-final/navbar13/mobile-dark-dropdown-open.png",
+    "noJavaScript": "output/playwright/navbar13-final/navbar13/mobile-js-disabled-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Inspected all 11 fresh light/dark, desktop/tablet/mobile, hover, reduced-motion, and JavaScript-disabled captures plus computed stacking and native details chrome. Corrected the public sticky token mapping so the absolute panel paints above the hero; confirmed one authored chevron, centered desktop menu, aligned peers, in-flow mobile dropdown, centered close icon, one responsive tree, and no overflow or duplicate affordances.",
+  "testResults": {
+    "navbar13Focused": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs -g 'Navbar 13|navbar13'",
+      "result": "19 passed, 0 failed; axe WCAG 2.1 AA clean"
+    },
+    "navbarFamilyRegression": {
+      "command": "npx playwright test tests/components/blocks-navigation.spec.cjs",
+      "result": "167 passed, 0 failed; all axe checks clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "agentCheck": {
+      "command": "npm run agent:check",
+      "result": "exit 0; smoke, skill, v0 adapter, starter approval, doctor, evals, and knowledge checks passed"
+    },
+    "capture": {
+      "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/navbar13/render-matrix.json --module navbar13 --output output/playwright/navbar13-final",
+      "result": "11 PNG and 11 JSON states captured and reviewed after commit e415dba"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-logo-left-menu-center-dropdown.html",
+  "intentionalDifferences": [
+    "Ren10 keeps one responsive Light DOM navigation tree instead of conditionally mounting alternate structures",
+    "Ren10 uses one 48rem shell and interaction boundary instead of the source 991px split",
+    "Native details/summary and complete keyboard, focus, outside, destination, mobile, and breakpoint dismissal replace the source fake trigger",
+    "Ren10 tokens and layout primitives determine dimensions and rhythm rather than pixel-matching Relume"
+  ]
+}

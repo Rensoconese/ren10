@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header26",
+  "blockSlug": "hero-centered-copy-dual-cta-landscape-image",
+  "blockPath": "templates/blocks/hero-centered-copy-dual-cta-landscape-image.html",
+  "stage": "green",
+  "allowedFiles": [
+    "templates/blocks/hero-centered-copy-dual-cta-landscape-image.html",
+    "tests/components/header26-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

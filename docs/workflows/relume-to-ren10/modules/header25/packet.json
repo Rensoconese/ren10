@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header25",
+  "blockSlug": "hero-centered-search",
+  "blockPath": "templates/blocks/hero-centered-search.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-centered-search.html",
+    "tests/components/header25-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

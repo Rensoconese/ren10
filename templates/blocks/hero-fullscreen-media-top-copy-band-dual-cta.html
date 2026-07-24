@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fullscreen Media and Copy Band Hero — Ren10 Blocks</title>
+  <meta name="description" content="A full-height Ren10 hero with flexible cover media and a responsive two-column copy band.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh9-hero {
+      --cover-height: 100svh;
+      width: 100%;
+      height: var(--cover-height);
+      padding: 0;
+      overflow: hidden;
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh9-hero > * {
+      margin: 0;
+    }
+
+    .rh9-media {
+      flex: 1 1 auto;
+      width: 100%;
+      min-height: calc(var(--space-16) * 2);
+      aspect-ratio: auto;
+      background: var(--color-surface-secondary);
+    }
+
+    .rh9-media > img {
+      object-position: center;
+    }
+
+    .rh9-band {
+      flex: 0 0 auto;
+      width: 100%;
+      padding-block: var(--space-6);
+      background: var(--color-surface);
+    }
+
+    .rh9-band-inner {
+      width: 100%;
+    }
+
+    .rh9-band-layout {
+      --grid-gap: var(--space-6);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .rh9-heading,
+    .rh9-description {
+      margin: 0;
+    }
+
+    .rh9-heading {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-md-size));
+      font-weight: var(--display-md-weight);
+      line-height: var(--display-md-leading);
+      letter-spacing: var(--display-md-tracking);
+    }
+
+    .rh9-body {
+      --stack-gap: var(--space-stack-loose);
+    }
+
+    .rh9-description {
+      max-width: var(--width-prose);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+      color: var(--color-text-muted);
+    }
+
+    .rh9-actions {
+      --cluster-gap: var(--space-inline-loose);
+    }
+
+    @media (min-width: 48rem) {
+      .rh9-band {
+        padding-block: var(--space-10);
+      }
+
+      .rh9-band-inner {
+        --center-padding: var(--space-8);
+      }
+
+      .rh9-band-layout {
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .rh9-band-layout > * {
+        min-width: 0;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh9-band-layout {
+        --grid-gap: var(--space-20);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Fullscreen Media and Copy Band Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 9 · Hero block</p>
+      <h1 class="bb-detail-title">Fullscreen Media and Copy Band Hero</h1>
+      <p class="bb-detail-description">A full-height Ren10 hero with flexible cover media and a responsive two-column copy band.</p>
+    </header>
+
+    <section class="rh9-hero ren-cover bb-detail-preview" data-rh9-root aria-labelledby="rh9-heading">
+      <figure class="rh9-media ren-frame">
+<img
+          src="media/hero-botanical-conservatory.webp"
+          alt="Sunlit botanical conservatory with layered tropical foliage"
+          width="1672"
+          height="941"
+        >
+      </figure>
+
+      <div class="rh9-band">
+        <div class="rh9-band-inner ren-center ren-center-wide">
+          <div class="rh9-band-layout ren-grid ren-grid-2">
+            <h1 id="rh9-heading" class="rh9-heading">Turn shared foundations into remarkable products</h1>
+            <div class="rh9-body ren-stack">
+              <p class="rh9-description">Build accessible interfaces from a clear system, keep every decision adaptable, and move from first composition to production with confidence.</p>
+              <div class="rh9-actions ren-cluster">
+                <a class="ren-btn" href="../../docs/index.html">Explore Ren10</a>
+                <a class="ren-btn ren-btn-outline" href="index.html">Browse blocks</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-fullscreen-video-email-form.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Fullscreen Video Email Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-cover-image-email-split-band.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Cover Image Email Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header13 maps to one ren-cover vertical shell, one full-cover native poster trigger, one ren-dialog with native dialog/loader/iframe, and one lower ren-center/ren-switcher band containing one h1 plus description and exactly two real CTA links. Deterministic media is attached only on open and removed on close. JavaScript-disabled content retains image, copy, CTA destinations, and a noscript alternative. Rejected forms, navigation, logos, background video, extra CTAs, external embeds, and framework APIs."
+}

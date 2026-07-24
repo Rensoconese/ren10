@@ -14,6 +14,7 @@
   line-height: 1.4;
   margin: 0;
   inset: auto;
+  overflow: visible;
 
   /* Anchor positioning (modern browsers) */
   position-anchor: --tooltip-anchor;

@@ -1,0 +1,22 @@
+{
+  "kind": "final-capture-evidence",
+  "moduleId": "header12",
+  "blockSlug": "hero-video-email-split-band",
+  "sourceCommit": "ab65fd4fc4b4493bb56645da7e5813f525ab2588",
+  "capturesFresh": true,
+  "captureCommand": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/header12/render-matrix.json --module header12 --output docs/workflows/relume-to-ren10/modules/header12/captures --repo-root .",
+  "outputRoot": "docs/workflows/relume-to-ren10/modules/header12/captures/header12",
+  "stateCount": 9,
+  "states": [
+    "desktop-light-playing",
+    "desktop-dark-paused",
+    "tablet-light",
+    "seam-767",
+    "mobile-light",
+    "mobile-dark-paused",
+    "narrow-320",
+    "desktop-reduced-motion",
+    "mobile-js-disabled"
+  ],
+  "inspection": "Codex independently inspected all nine final PNGs. The flexible video region and lower split band remain contiguous at 320, 390, 767, 768, and 1280 pixels. The band owns exactly one heading, description, labelled email field, submit, legal copy, and terms destination. Light and dark surfaces are readable; the motion control remains separated and unclipped; reduced motion exposes the static poster; JavaScript-disabled rendering hides the enhanced motion control while preserving the native form and terms destination. No duplicate affordance, navigation, logo, extra CTA, clipping, overflow, detached layer, or unexpected stacking is visible."
+}

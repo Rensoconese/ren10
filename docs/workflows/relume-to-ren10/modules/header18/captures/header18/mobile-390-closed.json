@@ -1,0 +1,18 @@
+{
+  "id": "mobile-390-closed",
+  "url": "http://127.0.0.1:65314/templates/blocks/hero-top-split-email-video-lightbox.html?ren10_capture=header18-mobile-390-closed-0c5d2172bc1d",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh18-title": 1,
+    ".rh18-form": 1,
+    ".rh18-media-trigger": 1
+  },
+  "commit": "0c5d2172bc1dc127d1d2bdbbbe83963edb6223ab",
+  "capturedAt": "2026-07-15T19:10:47.238Z"
+}

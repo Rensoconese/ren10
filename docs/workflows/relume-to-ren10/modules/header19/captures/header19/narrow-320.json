@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:61529/templates/blocks/hero-split-image-left-copy-dual-cta.html?ren10_capture=header19-narrow-320-b220e503f204",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "h1.rh19-heading": 1,
+    ".rh19-media": 1
+  },
+  "commit": "b220e503f204d4d1f7979dbdfe4df6671ed25743",
+  "capturedAt": "2026-07-15T19:00:18.454Z"
+}

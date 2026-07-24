@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"exact-anatomy","kind":"structure","description":"One content-height section, one centered constrained copy region, one h1, one description, one action group and exactly two CTA anchors; zero form/media/dialog/overlay/nav/logo/icon/third CTA","automated":true},
+    {"id":"centered-composition","kind":"visual-structure","description":"Heading, description and action cluster share a centered axis and finite readable measure at every width","automated":true},
+    {"id":"safe-wrap","kind":"visual-structure","description":"The two intrinsic CTAs wrap naturally at narrow widths without clipping, overlap, undersized controls, or horizontal overflow","automated":true},
+    {"id":"real-actions","kind":"behavior","description":"Both CTA anchors have distinct resolvable local destinations and remain usable without JavaScript","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"One labelled section/h1, logical focus order, visible focus, 44px targets, light/dark contrast, reduced motion and axe WCAG 2.1 AA","automated":true},
+    {"id":"responsive-quality","kind":"visual-structure","description":"Content-height composition remains centered and overflow-free at 320/390/639/640/767/768/1023/1024/1280","automated":true},
+    {"id":"ren10-policy","kind":"behavior","description":"Vanilla Light DOM, Ren10 layout primitives and semantic/component tokens only; no script or framework leakage","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh light/dark/mobile/noJS/reduced-motion captures await Codex inspection","automated":false}
+  ]
+}

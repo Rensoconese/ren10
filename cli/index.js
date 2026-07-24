@@ -14,6 +14,16 @@ import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from '
 import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
 import { validateV0Adapter } from '../scripts/check-v0-adapter.mjs';
 import { validateStarterApproval } from '../scripts/check-starter-approval.mjs';
+import { buildDesignManifest, detectTargets, saveReview } from './detector/index.js';
+import { detectUrl } from './detector/browser.js';
+import {
+  addIgnoreFile,
+  addIgnoreRule,
+  addIgnoreValue,
+  loadConfig,
+  writeConfig,
+} from './detector/config.js';
+import { installCodexHook, processHookEvent } from './detector/hook.js';
 import {
   formatKnowledgeRows,
   loadJsonGraph,
@@ -51,6 +61,10 @@ const RESPONSE_TYPES = {
   search: ['search'],
   build: ['build.help', 'build.kit'],
   doctor: ['doctor'],
+  detect: ['detector.report'],
+  'design-context': ['design-context.detail', 'design-context.write'],
+  ignores: ['detector.ignores'],
+  hooks: ['detector.hooks'],
   'agent-docs': ['agent-docs.write', 'agent-docs.remove'],
   knowledge: ['knowledge.path', 'knowledge.check', 'knowledge.query'],
 };
@@ -90,6 +104,11 @@ const DOC_TOPICS = {
     title: 'Agent evals',
     path: 'evals/README.md',
     aliases: ['evaluation', 'evaluations'],
+  },
+  detector: {
+    title: 'Ren10 visual quality detector',
+    path: 'docs/detector.md',
+    aliases: ['detect', 'quality', 'visual-quality'],
   },
   'agent-ready-roadmap': {
     title: 'Agent-ready roadmap',
@@ -197,6 +216,43 @@ const COMMAND_SPECS = [
     json: true,
   },
   {
+    name: 'detect',
+    description: 'Detect deterministic Ren10 quality and visual-system violations',
+    arguments: [{ name: 'target', required: false, variadic: true }],
+    options: [
+      { flag: '--url <url>', type: 'string', description: 'Audit a rendered URL with Playwright' },
+      { flag: '--profile <generic|codex|strict>', type: 'enum', choices: ['generic', 'codex', 'strict'], description: 'Rule profile' },
+      { flag: '--save-review', type: 'boolean', description: 'Persist the report under .ren10/reviews' },
+      { flag: '--review-slug <slug>', type: 'string', description: 'Stable review filename slug' },
+      { flag: '--json', type: 'boolean', description: 'Emit typed JSON' },
+    ],
+    json: true,
+  },
+  {
+    name: 'design-context',
+    description: 'Generate machine-readable Ren10 design context from canonical contracts',
+    arguments: [],
+    options: [
+      { flag: '--write', type: 'boolean', description: 'Write .ren10/design.json in the current project' },
+      { flag: '--json', type: 'boolean', description: 'Emit typed JSON' },
+    ],
+    json: true,
+  },
+  {
+    name: 'ignores',
+    description: 'Manage narrow, auditable detector exceptions',
+    arguments: [{ name: 'action', required: false }],
+    options: [{ flag: '--json', type: 'boolean', description: 'Emit typed JSON' }],
+    json: true,
+  },
+  {
+    name: 'hooks',
+    description: 'Install and manage the Ren10 post-edit detector hook',
+    arguments: [{ name: 'action', required: false }],
+    options: [{ flag: '--json', type: 'boolean', description: 'Emit typed JSON' }],
+    json: true,
+  },
+  {
     name: 'agent-docs',
     description: 'Install, update, or remove generated RenDS context in agent docs',
     arguments: [],
@@ -296,7 +352,9 @@ function stripCommandFlags(values) {
     if (value === '--json' || value === '--dense' || value === '--list' || value === '--remove' || value === '--source-json') {
       continue;
     }
-    if (value === '--limit' || value === '--agent' || value === '--agent-docs-path') {
+    if (value === '--limit' || value === '--agent' || value === '--agent-docs-path'
+      || value === '--profile' || value === '--url' || value === '--review-slug'
+      || value === '--rule' || value === '--value' || value === '--file' || value === '--reason') {
       i++;
       continue;
     }
@@ -1457,6 +1515,166 @@ async function cmdDoctor() {
   if (summary.fail > 0) process.exitCode = 1;
 }
 
+async function cmdDesignContext() {
+  const manifest = await buildDesignManifest(RENDS_ROOT);
+  let outputPath = null;
+  if (hasFlag('--write')) {
+    outputPath = path.join(process.cwd(), '.ren10', 'design.json');
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  }
+  const data = { ...manifest, ...(outputPath ? { outputPath: relFromCwd(outputPath) } : {}) };
+  if (hasFlag('--json')) {
+    jsonOut(outputPath ? 'design-context.write' : 'design-context.detail', data);
+    return;
+  }
+  if (outputPath) success(`Wrote ${relFromCwd(outputPath)}`);
+  else console.log(JSON.stringify(manifest, null, 2));
+}
+
+async function cmdDetect() {
+  const cwd = process.cwd();
+  const config = await loadConfig(cwd);
+  const profile = optionValue('--profile', config.detector.profile ?? 'generic');
+  const url = optionValue('--url');
+  const targets = stripCommandFlags(args.slice(1));
+  const designPath = path.join(cwd, '.ren10', 'design.json');
+  const manifest = fs.existsSync(designPath)
+    ? JSON.parse(fs.readFileSync(designPath, 'utf8'))
+    : await buildDesignManifest(RENDS_ROOT);
+  const reports = [];
+
+  if (targets.length > 0 || !url) {
+    reports.push(await detectTargets(targets, { cwd, manifest, profile, config }));
+  }
+  if (url) {
+    reports.push(await detectUrl(url, {
+      profile,
+      config,
+      viewport: config.browser?.viewport,
+    }));
+  }
+
+  const findings = reports.flatMap((report) => report.findings);
+  const summary = {
+    files: reports.reduce((sum, report) => sum + (report.summary.files ?? 0), 0),
+    pages: reports.reduce((sum, report) => sum + (report.summary.pages ?? 0), 0),
+    errors: findings.filter((finding) => finding.severity === 'error').length,
+    warnings: findings.filter((finding) => finding.severity === 'warning').length,
+    total: findings.length,
+  };
+  const report = {
+    schemaVersion: 1,
+    profile,
+    targets: [...targets, ...(url ? [url] : [])],
+    findings,
+    summary,
+    exitCode: summary.errors > 0 ? 1 : 0,
+  };
+  if (hasFlag('--save-review')) {
+    report.reviewPath = relFromCwd(await saveReview(report, {
+      cwd,
+      slug: optionValue('--review-slug', targets[0] ?? 'url-review'),
+    }));
+  }
+
+  if (hasFlag('--json')) jsonOut('detector.report', report);
+  else printDetectorReport(report);
+  process.exitCode = report.exitCode;
+}
+
+function printDetectorReport(report) {
+  console.log(`\n${c.bold}Ren10 detector${c.reset} ${c.dim}profile=${report.profile}${c.reset}\n`);
+  for (const finding of report.findings) {
+    const marker = finding.severity === 'error' ? `${c.red}error${c.reset}` : `${c.yellow}warning${c.reset}`;
+    const location = finding.selector ? `${finding.file} ${finding.selector}` : `${finding.file}:${finding.line}`;
+    console.log(`${marker} ${c.bold}${finding.rule}${c.reset} ${location}`);
+    console.log(`  ${finding.message}`);
+    console.log(`  ${c.dim}→ ${finding.suggestion}${c.reset}`);
+  }
+  if (report.findings.length === 0) console.log(`${c.green}No findings.${c.reset}`);
+  console.log(`\n${report.summary.errors} error(s), ${report.summary.warnings} warning(s).\n`);
+  if (report.reviewPath) console.log(`${c.dim}Review: ${report.reviewPath}${c.reset}\n`);
+}
+
+function relFromCwd(absolute) {
+  return path.relative(process.cwd(), absolute).split(path.sep).join('/');
+}
+
+async function cmdIgnores() {
+  const cwd = process.cwd();
+  const action = args[1] ?? 'status';
+  let config = await loadConfig(cwd);
+  const reason = optionValue('--reason');
+  if (action === 'add-rule') config = addIgnoreRule(config, args[2], reason);
+  else if (action === 'add-file') config = addIgnoreFile(config, args[2], reason);
+  else if (action === 'add-value') {
+    config = addIgnoreValue(config, {
+      rule: args[2],
+      value: args[3],
+      files: repeatedOptionValues('--file'),
+      reason,
+    });
+  } else if (action !== 'status') {
+    error(`Unknown ignores action "${action}". Use status, add-rule, add-file, or add-value.`);
+  }
+  let configPath = null;
+  if (action !== 'status') configPath = await writeConfig(cwd, config);
+  const data = { action, config, ...(configPath ? { configPath: relFromCwd(configPath) } : {}) };
+  if (hasFlag('--json')) jsonOut('detector.ignores', data);
+  else console.log(JSON.stringify(data, null, 2));
+}
+
+async function cmdHooks() {
+  const cwd = process.cwd();
+  const action = args[1] ?? 'status';
+  let config = await loadConfig(cwd);
+  let installation = null;
+  if (action === 'install' || action === 'on') {
+    config.hook.enabled = true;
+    installation = await installCodexHook(cwd);
+    await writeConfig(cwd, config);
+  } else if (action === 'off') {
+    config.hook.enabled = false;
+    await writeConfig(cwd, config);
+  } else if (action !== 'status') {
+    error(`Unknown hooks action "${action}". Use status, install, on, or off.`);
+  }
+  const data = {
+    action,
+    enabled: config.hook.enabled,
+    manifestPath: installation ? relFromCwd(installation.path) : '.codex/hooks.json',
+    installed: installation?.installed ?? fs.existsSync(path.join(cwd, '.codex', 'hooks.json')),
+  };
+  if (hasFlag('--json')) jsonOut('detector.hooks', data);
+  else console.log(JSON.stringify(data, null, 2));
+}
+
+async function cmdHookRun() {
+  const input = await readStdinJson();
+  const result = await processHookEvent(input, { cwd: process.cwd(), packageRoot: RENDS_ROOT });
+  if (result.status !== 'skipped' && result.message) console.log(result.message);
+}
+
+function repeatedOptionValues(flag) {
+  const values = [];
+  for (let index = 0; index < args.length; index++) {
+    if (args[index] === flag && args[index + 1] && !args[index + 1].startsWith('--')) values.push(args[index + 1]);
+  }
+  return values;
+}
+
+async function readStdinJson() {
+  let input = '';
+  for await (const chunk of process.stdin) input += chunk;
+  if (!input.trim()) return {};
+  try {
+    return JSON.parse(input);
+  } catch (error) {
+    throw new Error(`Invalid hook event JSON: ${error.message}`);
+  }
+}
+
 function injectGeneratedBlock(filePath, block, { createIfMissing = true } = {}) {
   let content = '';
   if (fs.existsSync(filePath)) {
@@ -2004,6 +2222,21 @@ async function main() {
       case 'doctor':
         await cmdDoctor();
         break;
+      case 'detect':
+        await cmdDetect();
+        break;
+      case 'design-context':
+        await cmdDesignContext();
+        break;
+      case 'ignores':
+        await cmdIgnores();
+        break;
+      case 'hooks':
+        await cmdHooks();
+        break;
+      case 'hook-run':
+        await cmdHookRun();
+        break;
       case 'agent-docs':
       case 'agents':
         await cmdAgentDocs();
@@ -2061,6 +2294,10 @@ ${c.bold}Commands:${c.reset}
   build <idea>      Return a RenDS composition kit for a UI idea
   manifest          Emit the self-describing CLI manifest for agents
   doctor            Diagnose package health and agent-readiness
+  detect [target]   Check static files, directories, or a rendered URL
+  design-context    Generate .ren10/design.json from canonical contracts
+  ignores           Manage narrow detector exceptions with reasons
+  hooks             Install or toggle the Codex post-edit detector
   agent-docs        Install/update generated RenDS context in agent docs
   scales            List available type scale ratios
   knowledge         Show packaged graph paths
@@ -2101,6 +2338,10 @@ ${c.bold}Examples:${c.reset}
   npx ren10 search "dialog workflow" --json
   npx ren10 build "dashboard with sidebar"
   npx ren10 doctor
+  npx ren10 design-context --write
+  npx ren10 detect templates/ --profile codex
+  npx ren10 detect --url http://localhost:3000 --save-review
+  npx ren10 hooks install
   npx ren10 agent-docs --agent codex
   npx ren10 scales
   npx ren10 knowledge

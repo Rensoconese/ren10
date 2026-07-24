@@ -1,0 +1,17 @@
+{
+  "id": "seam-767",
+  "url": "http://127.0.0.1:63507/templates/blocks/hero-split-copy-dual-cta-landscape-lightbox.html?ren10_capture=header17-seam-767-27a3fd3b3735",
+  "viewport": {
+    "width": 767,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh17-copy-layout": 1,
+    ".rh17-description": 1
+  },
+  "commit": "27a3fd3b373547af7cf3bec2752eeb6f76df45b6",
+  "capturedAt": "2026-07-15T19:05:59.177Z"
+}

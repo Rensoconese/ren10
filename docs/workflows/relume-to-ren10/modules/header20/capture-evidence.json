@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "moduleId": "header20",
+  "sourceStage": "green",
+  "capturedCommit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturesFresh": true,
+  "captureCommand": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/header20/render-matrix.json --module header20 --output docs/workflows/relume-to-ren10/modules/header20/captures --repo-root .",
+  "stateCount": 11,
+  "outputRoot": "captures/header20",
+  "states": [
+    "desktop-1280-light",
+    "desktop-1280-dark",
+    "desktop-invalid-error",
+    "lg-1024",
+    "seam-1023",
+    "form-row-640",
+    "mobile-390-light",
+    "mobile-390-dark",
+    "narrow-320",
+    "reduced-motion-focus",
+    "mobile-js-disabled"
+  ],
+  "inspection": "Codex inspected every fresh cache-busted PNG. The pristine field error is hidden; the enhanced invalid capture shows exactly one coherent Ren10 error without a duplicate browser validation bubble, while JavaScript-disabled native validation remains intact. Copy precedes the image through 1023px, the 1024/1280 layouts place the owned image left and copy right in centered equal columns, and the email control switches from a full-width stack to a growing-field/intrinsic-submit row at 640px. Light, dark, 320px, 390px, JavaScript-disabled, focus, and reduced-motion states are aligned, unclipped, free of overflow and contain no extra CTA, dialog, video, overlay, navigation, or logo."
+}

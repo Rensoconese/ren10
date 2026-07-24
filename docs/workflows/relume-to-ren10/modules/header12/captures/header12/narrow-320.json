@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:64146/templates/blocks/hero-video-email-split-band.html?ren10_capture=header12-narrow-320-ab65fd4fc4b4",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh12-form-row": 1,
+    ".rh12-motion-toggle": 1
+  },
+  "commit": "ab65fd4fc4b4493bb56645da7e5813f525ab2588",
+  "capturedAt": "2026-07-15T17:52:48.725Z"
+}

@@ -1,0 +1,8 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "NODE_PATH=/Users/rensoconese/RenDS/rends/node_modules /Users/rensoconese/RenDS/rends/node_modules/.bin/playwright test tests/components/header22-header.spec.cjs --config=tests/components/playwright.config.cjs --project='Desktop Light' --workers=1 --reporter=line",
+  "result": "16 failed, 0 passed",
+  "failure": "Production did not exist. Fifteen browser cases returned HTTP 404 and the source-policy case failed because the mandatory block file was absent.",
+  "recordedAt": "2026-07-15"
+}

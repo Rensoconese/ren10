@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Mega Menu Category Promo Panel — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS category-promo mega-menu navbar block built with ren-nav, native details disclosure, and vanilla HTML/CSS/JS.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Narrow viewports: keep demo chrome from forcing horizontal document overflow. */
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
+    /*
+     * Full-page captures + sticky site chrome produce a mid-page “floating bar”
+     * artifact on tall mobile states (e.g. narrow-340-dropdown-open). This page
+     * only demos the block — pin the docs top bar to normal flow.
+     */
+    .dx-nav {
+      position: static;
+    }
+
+    .dx-nav,
+    .dx-nav-inner,
+    .n26-preview {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .dx-nav-inner {
+      flex-wrap: wrap;
+      row-gap: var(--space-2);
+    }
+
+    .n26-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .n26-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .n26-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .n26-preview {
+      --ren-z-sticky: var(--z-sticky);
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .n26-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    .n26-preview .ren-nav {
+      /* Demo bar taller than component default --ren-nav-height (3.5rem). */
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: 2;
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .n26-preview .ren-nav-brand,
+    .n26-preview .ren-nav-link,
+    .n26-preview .ren-nav-actions .ren-btn,
+    .n26-preview .n26-dest,
+    .n26-preview .n26-promo-cta {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .n26-brand-mark {
+      width: var(--size-sm);
+      height: var(--size-sm);
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /*
+     * Neutralize base/classless.css details/summary chrome inside the navbar.
+     * Classless adds border, radius, padding, margin, summary::after chevron,
+     * and open-summary divider — all wrong for a ren-nav trigger.
+     */
+    .n26-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .n26-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .n26-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+
+    .n26-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .n26-disclosure > summary::marker {
+      content: "";
+    }
+
+    /* Kill classless chevron — only .n26-chevron SVG may render. */
+    .n26-disclosure > summary::after,
+    .n26-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .n26-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .n26-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .n26-disclosure[open] > summary .n26-chevron {
+      transform: rotate(180deg);
+    }
+
+    .n26-panel {
+      padding: 0;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .n26-panel-inner {
+      --switcher-threshold: 48rem;
+      --switcher-gap: 0;
+      max-width: var(--width-7xl);
+      margin-inline: auto;
+      align-items: stretch;
+    }
+
+    .n26-groups {
+      --grid-gap: var(--space-6);
+      /* Custom 3-up track floor (no width token between --size-* and --width-xs). */
+      --grid-min: 8rem;
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: var(--space-5) var(--space-6);
+      background: var(--color-surface);
+    }
+
+    .n26-group-title {
+      margin: 0 0 var(--space-3);
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+    }
+
+    .n26-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .n26-dest {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      font-size: var(--text-sm);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .n26-dest:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .n26-dest:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /* Promo rail: media-backed overlay with inverted copy + one CTA. */
+    .n26-promo {
+      position: relative;
+      flex: 0 1 var(--width-xs);
+      max-width: var(--width-xs);
+      width: 100%;
+      min-height: 12rem;
+      margin: var(--space-5) var(--space-6) var(--space-5) 0;
+      padding: var(--space-6);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      color: var(--color-text-inverted);
+      background: var(--color-text);
+      transition: opacity var(--duration-state) var(--ease-state-change);
+    }
+
+    .n26-promo-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(
+          145deg,
+          color-mix(in srgb, var(--color-text) 88%, var(--color-accent)),
+          color-mix(in srgb, var(--color-text) 72%, var(--color-surface-sunken))
+        );
+    }
+
+    .n26-promo-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: color-mix(in srgb, var(--color-text) 45%, transparent);
+    }
+
+    .n26-promo-body {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-4);
+      min-height: 100%;
+      height: 100%;
+    }
+
+    .n26-promo-title {
+      margin: 0;
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      line-height: 1.2;
+      color: var(--color-text-inverted);
+    }
+
+    .n26-promo-desc {
+      margin: 0;
+      font-size: var(--text-sm);
+      line-height: 1.5;
+      color: color-mix(in srgb, var(--color-text-inverted) 88%, transparent);
+    }
+
+    .n26-promo-cta {
+      align-self: flex-start;
+      /* Inverted outline action on dark promo surface. */
+      border-color: color-mix(in srgb, var(--color-text-inverted) 70%, transparent);
+      color: var(--color-text-inverted);
+      background: transparent;
+    }
+
+    .n26-promo-cta:hover {
+      background: color-mix(in srgb, var(--color-text-inverted) 14%, transparent);
+      color: var(--color-text-inverted);
+      border-color: var(--color-text-inverted);
+    }
+
+    .n26-promo-cta:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .n26-hero {
+      position: relative;
+      z-index: 0;
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      /* Preview-page hero canvas only (not mega chrome); no matching size token. */
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .n26-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .n26-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Unavoidable ren-nav integration (desktop mega panel).
+     * ren-nav has no full-width disclosure panel API; position the panel under
+     * the bar relative to .ren-nav so it spans the preview without a second tree.
+     *
+     * Shell breakpoint remains 48rem (ren-nav). Mega content has a second band:
+     * 48rem–63.999rem stacks groups full-width then promo below; ≥64rem restores
+     * groups + constrained promo rail.
+     */
+    @media (min-width: 48.01rem) {
+      .n26-disclosure {
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .n26-panel {
+        position: absolute;
+        inset-inline: 0;
+        top: 100%;
+        z-index: 3;
+        background: var(--color-surface);
+        box-shadow: var(--shadow-lg);
+        border-block-end: 1px solid var(--color-border);
+      }
+
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .n26-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+
+      .n26-panel-inner > .n26-groups {
+        flex: 1 1 auto;
+        flex-basis: auto;
+        min-width: 0;
+        width: 100%;
+      }
+
+      .n26-groups.ren-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    /* Tablet / mid desktop: groups full band, promo stacked below. */
+    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
+      .n26-panel-inner.ren-switcher {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        align-items: stretch;
+      }
+
+      .n26-panel-inner > .n26-promo {
+        flex: 1 1 auto;
+        max-width: none;
+        width: auto;
+        margin: 0 var(--space-6) var(--space-6);
+      }
+    }
+
+    /* Wide desktop: groups + constrained promo rail. */
+    @media (min-width: 64rem) {
+      .n26-panel-inner.ren-switcher {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        align-items: stretch;
+      }
+
+      .n26-panel-inner > .n26-groups {
+        flex: 1 1 auto;
+        flex-basis: auto;
+        min-width: 0;
+        width: auto;
+      }
+
+      .n26-panel-inner > .n26-promo {
+        flex: 0 0 18rem;
+        max-width: 18rem;
+        width: 18rem;
+        margin: var(--space-5) var(--space-6) var(--space-5) 0;
+      }
+    }
+
+    /*
+     * Unavoidable ren-nav integration (mobile open shell).
+     * Core ren-nav uses absolute .ren-nav-links + a JS toggle. This block keeps
+     * one tree by making links/actions in-flow when open, and reordering the
+     * flex children of .ren-nav so CTAs sit in the expanded region.
+     */
+    @media (max-width: 48rem) {
+      .n26-preview .ren-nav {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .n26-preview .ren-nav-brand {
+        order: 1;
+      }
+
+      .n26-preview .ren-nav-toggle {
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .n26-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .n26-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .n26-preview .ren-nav-links .ren-nav-link,
+      .n26-preview .n26-disclosure,
+      .n26-preview .n26-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .n26-preview .n26-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--ren-space-4, 1rem);
+      }
+
+      .n26-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding-block: var(--space-2) var(--space-3);
+        padding-inline: 0;
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .n26-preview .ren-nav[data-open] .ren-nav-actions,
+      .n26-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .n26-preview .ren-nav-actions .ren-btn {
+        display: flex;
+        width: 100%;
+        max-width: none;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+
+      .n26-panel {
+        width: 100%;
+        padding: 0;
+        border-block-end: none;
+        background: transparent;
+        position: static;
+      }
+
+      .n26-groups {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .n26-groups.ren-grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .n26-promo {
+        max-width: none;
+        flex: 1 1 auto;
+        width: auto;
+        margin: 0 var(--space-4) var(--space-4);
+      }
+    }
+
+    /*
+     * Progressive fallback when <ren-nav> has not upgraded (JS off / CE not defined).
+     * Core ren-nav CSS hides .ren-nav-links below 48rem and relies on the toggle;
+     * without JS the toggle is inert, so force the single tree + actions visible.
+     */
+    @media (max-width: 48rem) {
+      .n26-preview ren-nav:not(:defined) .ren-nav {
+        flex-wrap: wrap;
+      }
+
+      .n26-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .n26-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+
+      .n26-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        margin-inline-start: 0;
+        order: 4;
+        padding-block: var(--space-2) var(--space-3);
+        padding-inline: 0;
+        border-block-start: 1px solid var(--color-border);
+        gap: var(--space-2);
+      }
+
+      .n26-preview ren-nav:not(:defined) .ren-nav-brand {
+        order: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .n26-chevron,
+      .n26-dest,
+      .n26-promo,
+      .n26-promo-cta,
+      .n26-panel {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="n26-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Mega Menu Category Promo Panel</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Mega Menu Category Promo Panel</h1>
+      <p class="lede">
+        A single navigation tree with a native mega-menu disclosure, three
+        category columns of title-only destinations, and one media-backed promo
+        rail. Built with <code>ren-nav</code>, layout primitives, and progressive
+        enhancement — no second mobile tree.
+      </p>
+    </header>
+
+    <section class="n26-preview bb-detail-preview" data-n26-root aria-label="Navbar mega menu category promo preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="n26-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="n26-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#platform">Platform</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#solutions">Solutions</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <details class="n26-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Catalog
+                  <span class="n26-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+                      <path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/>
+                    </svg>
+                  </span>
+                </summary>
+
+                <div class="n26-panel">
+                  <div class="n26-panel-inner ren-switcher">
+                    <div class="n26-groups ren-grid ren-grid-3">
+                      <div class="n26-group ren-stack-sm">
+                        <h3 class="n26-group-title" id="n26-group-browse">Browse</h3>
+                        <ul class="n26-dest-list ren-stack-sm" aria-labelledby="n26-group-browse">
+                          <li><a class="n26-dest" href="#browse-one">Fresh arrivals</a></li>
+                          <li><a class="n26-dest" href="#browse-two">Seasonal picks</a></li>
+                          <li><a class="n26-dest" href="#browse-three">Staff favorites</a></li>
+                          <li><a class="n26-dest" href="#browse-four">Limited runs</a></li>
+                          <li><a class="n26-dest" href="#browse-five">Bundles</a></li>
+                        </ul>
+                      </div>
+
+                      <div class="n26-group ren-stack-sm">
+                        <h3 class="n26-group-title" id="n26-group-use">Use cases</h3>
+                        <ul class="n26-dest-list ren-stack-sm" aria-labelledby="n26-group-use">
+                          <li><a class="n26-dest" href="#use-one">Studio teams</a></li>
+                          <li><a class="n26-dest" href="#use-two">Retail floors</a></li>
+                          <li><a class="n26-dest" href="#use-three">Field crews</a></li>
+                          <li><a class="n26-dest" href="#use-four">Classrooms</a></li>
+                          <li><a class="n26-dest" href="#use-five">Home offices</a></li>
+                        </ul>
+                      </div>
+
+                      <div class="n26-group ren-stack-sm">
+                        <h3 class="n26-group-title" id="n26-group-care">Care</h3>
+                        <ul class="n26-dest-list ren-stack-sm" aria-labelledby="n26-group-care">
+                          <li><a class="n26-dest" href="#care-one">Guides</a></li>
+                          <li><a class="n26-dest" href="#care-two">Repairs</a></li>
+                          <li><a class="n26-dest" href="#care-three">Warranty</a></li>
+                          <li><a class="n26-dest" href="#care-four">Trade-in</a></li>
+                          <li><a class="n26-dest" href="#care-five">Support</a></li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    <aside class="n26-promo" aria-labelledby="n26-promo-heading">
+                      <div class="n26-promo-media" aria-hidden="true"></div>
+                      <div class="n26-promo-body">
+                        <div class="ren-stack-sm">
+                          <h3 class="n26-promo-title" id="n26-promo-heading">Spring collection</h3>
+                          <p class="n26-promo-desc">
+                            Quiet essentials for warmer days — layered textures, soft
+                            neutrals, and pieces built to last.
+                          </p>
+                        </div>
+                        <a class="n26-promo-cta ren-btn ren-btn-sm ren-btn-outline" href="#collection">
+                          View collection
+                        </a>
+                      </div>
+                    </aside>
+                  </div>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-secondary" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="n26-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="n26-hero ren-stack">
+        <h2>Catalog that stays calm under load.</h2>
+        <p>
+          A quiet marketing surface under the navbar so full-width mega depth,
+          category columns, and the promo rail stay easy to judge while you copy
+          the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#platform">See platform</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-mega-menu-categories-promo.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Mega Menu Categories Promo Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-mega-menu-category-collections.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Mega Menu Category Collections Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local category-promo mega-menu controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic, no timers):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     */
+    const N26_CONTROLLER = Symbol.for('ren10.n26.controller');
+    /** Inclusive desktop shell; complements max-width: 48rem ren-nav mobile CSS. */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
+
+    /**
+     * @param {ParentNode} [scope=document]
+     */
+    export function initNavMegaMenuCategoryPromoPanel(scope = document) {
+      const root = scope.querySelector?.('[data-n26-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-n26-root')) {
+        const nested = document.querySelector('[data-n26-root]');
+        if (!nested) return null;
+        return initNavMegaMenuCategoryPromoPanelOn(nested);
+      }
+      return initNavMegaMenuCategoryPromoPanelOn(root);
+    }
+
+    /**
+     * @param {Element} root
+     */
+    function initNavMegaMenuCategoryPromoPanelOn(root) {
+      const disclosure = root.querySelector('.n26-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[N26_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[N26_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      /**
+       * Close the mobile shell through the public toggle control so ren-nav's
+       * internal open state stays in sync (no private _isOpen / _closeMenu).
+       */
+      function closeMobileShell() {
+        if (isDesktop() || !toggle) return false;
+        if (toggle.getAttribute('aria-expanded') === 'true') {
+          toggle.click();
+          return true;
+        }
+        // Public DOM fallback if host attribute drifted without expanded toggle.
+        if (renNavHost?.hasAttribute('data-open')) {
+          renNavHost.removeAttribute('data-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          return true;
+        }
+        return false;
+      }
+
+      /**
+       * After shell collapse, destinations/actions may become display:none.
+       * Keep a visible, stable focus target (toggle) when the prior active
+       * element is no longer a visible tab stop. Brand can keep focus because
+       * it remains visible in the top row after close.
+       */
+      function ensureVisibleFocusAfterMobileClose() {
+        if (isDesktop() || !toggle) return;
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement) || active === document.body) {
+          toggle.focus({ preventScroll: true });
+          return;
+        }
+        const style = getComputedStyle(active);
+        const rect = active.getBoundingClientRect();
+        const hidden =
+          style.display === 'none'
+          || style.visibility === 'hidden'
+          || Number(style.opacity || '1') === 0
+          || rect.width === 0
+          || rect.height === 0
+          || !root.contains(active);
+        if (hidden) {
+          toggle.focus({ preventScroll: true });
+        }
+      }
+
+      /**
+       * Mobile destination activation: close mega details + ren-nav shell and
+       * restore a visible focus target. Desktop only closes the disclosure.
+       */
+      function closeFromDestinationActivation() {
+        markIntentionalCloseWhilePointerInside();
+        const mobileShellOpen = !isDesktop() && isMobileNavOpen();
+        closeDisclosure(false);
+        if (mobileShellOpen) {
+          closeMobileShell();
+          queueMicrotask(() => {
+            ensureVisibleFocusAfterMobileClose();
+          });
+        }
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          // Keyboard-generated activation: detail === 0 — leave native toggle.
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            // First real pointer click after hover-open: pin open.
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          // Pinned or click-opened: genuine close.
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          hoverTransient = false;
+          if (!pointerPinned) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      // Destination classes that close details (+ mobile shell): category dests,
+      // promo CTA, both bar actions, and brand. Peers (ren-nav-link) already
+      // close the shell via ren-nav's public link handler.
+      const destinationClosers = root.querySelectorAll(
+        [
+          'a.n26-dest',
+          'a.n26-promo-cta',
+          '.ren-nav-actions a[href]',
+          '.ren-nav-actions .ren-btn',
+          'a.ren-nav-brand',
+          '#n26-primary-links > li > a.ren-nav-link',
+        ].join(', ')
+      );
+      destinationClosers.forEach((el) => {
+        el.addEventListener(
+          'click',
+          () => {
+            closeFromDestinationActivation();
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        // Close only when crossing the shell breakpoint either direction.
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavMegaMenuCategoryPromoPanel();
+  </script>
+</body>
+</html>

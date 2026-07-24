@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated suite tests/components/navbar18-navigation.spec.cjs was added before production HTML. Focused run with --max-failures=1 discovered 42 tests (21 titles × Desktop Light/Dark projects from components config) and failed as expected: missing [data-rn18-root] because templates/blocks/nav-logo-cta-overlay-grid.html was absent (HTTP 404). First failure: 'block page loads with ren-nav shell and navbar18 root'. Remaining tests unrun due to max-failures."
+}

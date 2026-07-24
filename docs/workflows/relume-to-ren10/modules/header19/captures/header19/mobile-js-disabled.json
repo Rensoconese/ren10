@@ -1,0 +1,17 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:61529/templates/blocks/hero-split-image-left-copy-dual-cta.html?ren10_capture=header19-mobile-js-disabled-b220e503f204",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh19-actions a[href]": 2,
+    ".rh19-media img": 1
+  },
+  "commit": "b220e503f204d4d1f7979dbdfe4df6671ed25743",
+  "capturedAt": "2026-07-15T19:00:20.559Z"
+}

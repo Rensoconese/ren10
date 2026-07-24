@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary shell and mega disclosure reach every documented state: desktop hover/click open-close with pin semantics, keyboard Enter/Space, Escape with focus return from summary or focused destination, outside/destination/CTA/mobile/breakpoint close, mobile activation-only panel, same-breakpoint resize stability",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, four top entries (3 plain + 1 disclosure), two category groups with five title-only links each (10), two whole-card collection anchors without nested interactive descendants, two actions, one named toggle, one chevron — single landmark/tree, no invented chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop full-width bar with logo-left/menu/actions-end and full-bleed under-bar mega (categories narrower than collections); mobile closed row logo+toggle only; open mobile stacks links then full-width actions; 320/340 narrow widths and 767/768/769 seams; 44px targets; no html/root overflow",
+      "automated": true
+    },
+    {
+      "id": "a11y-tokens-motion",
+      "kind": "behavior",
+      "description": "axe WCAG 2.1 AA clean on the preview root; light/dark surfaces resolve through RenDS tokens; reduced-motion zeros block-local transitions; JS-disabled mobile remains usable",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Independent Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

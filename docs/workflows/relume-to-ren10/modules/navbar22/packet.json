@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar22",
+  "blockSlug": "nav-sticky-logo-center-dropdown-fullscreen-contact",
+  "blockPath": "templates/blocks/nav-sticky-logo-center-dropdown-fullscreen-contact.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/nav-sticky-logo-center-dropdown-fullscreen-contact.html",
+    "tests/components/navbar22-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

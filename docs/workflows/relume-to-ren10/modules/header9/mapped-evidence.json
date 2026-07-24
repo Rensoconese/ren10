@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Every source part maps to a documented Ren10 layout primitive, native semantic element, or ren-button styling. Responsive ownership, cascade risks, progressive enhancement, real destinations, and rejected mismatches are explicit."
+}

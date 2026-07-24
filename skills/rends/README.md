@@ -41,5 +41,5 @@ npm run agent:skill:check
 npm run agent:skill:pack
 ```
 
-The pack command writes `dist/rends-skill-0.10.0.tgz` for the current package
+The pack command writes `dist/rends-skill-0.11.0.tgz` for the current package
 version.

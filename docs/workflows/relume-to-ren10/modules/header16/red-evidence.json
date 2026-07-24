@@ -1,0 +1,6 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "historical-phase-a-red",
+  "note": "Before production HTML existed, the focused Desktop Light Header16 suite ran 16 cases and all 16 failed against the missing block. Fifteen cases recorded the intended HTTP 404 for templates/blocks/hero-split-email-form-landscape-image.html; the JavaScript-disabled case recorded the same absent DOM after the 404 response."
+}

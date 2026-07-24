@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy-counts","kind":"structure","description":"One full-height hero, top cover image, bottom band, h1, description, labeled email, submit CTA, and legal link; zero nav/logo/video/scrim/second CTA","automated":true},
+    {"id":"vertical-composition","kind":"visual-structure","description":"Top image flexes to the remaining viewport height and meets the bottom band without gap or overlap","automated":true},
+    {"id":"responsive-band","kind":"visual-structure","description":"Band stacks narrowly and becomes heading-left/content-right; form stacks narrow and becomes a row; no overflow at 320/390/767/768/1280","automated":true},
+    {"id":"progressive-fallback","kind":"behavior","description":"JS-off keeps owned image, native form action, and real legal destination functional","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Visible label/focus, 44px targets, reduced-motion, light/dark contrast, and axe WCAG 2.1 AA","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Codex reviewed fresh desktop/mobile/light/dark/reduced-motion/JS-off captures","automated":false}
+  ]
+}

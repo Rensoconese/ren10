@@ -1,0 +1,18 @@
+{
+  "id": "desktop-dark",
+  "url": "http://127.0.0.1:55197/templates/blocks/hero-fullscreen-media-top-copy-band-dual-cta.html?ren10_capture=header9-desktop-dark-8c10f025386f",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh9-heading": 1,
+    ".rh9-description": 1,
+    ".rh9-actions a": 2
+  },
+  "commit": "8c10f025386f7533c78d5925a8c2919e9da46270",
+  "capturedAt": "2026-07-15T17:12:25.320Z"
+}

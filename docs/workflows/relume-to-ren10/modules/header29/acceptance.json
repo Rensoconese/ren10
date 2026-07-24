@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"exact-anatomy","kind":"structure","description":"One centered copy group, one email capture, and one landscape lightbox with no extra navigation or brand chrome","automated":true},
+    {"id":"css-grid-form","kind":"layout","description":"The field and submit use CSS Grid, stack below 40rem, and align as two columns from 40rem","automated":true},
+    {"id":"shared-rhythm","kind":"layout","description":"Header, preview, and pagination use the shared 32px outer rhythm with one preview frame","automated":true},
+    {"id":"responsive","kind":"responsive","description":"No horizontal overflow from 320px through 1280px and media stays landscape","automated":true},
+    {"id":"interaction","kind":"behavior","description":"Email validation and success announcement work; lightbox restores focus after close","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Semantic controls, named dialog, touch targets, focus visibility, reduced motion, and axe WCAG 2.1 AA","automated":true},
+    {"id":"progressive-enhancement","kind":"behavior","description":"Native form and readable media fallback remain available without JavaScript","automated":true}
+  ]
+}

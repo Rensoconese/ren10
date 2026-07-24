@@ -1,0 +1,6 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "historical-phase-a-red",
+  "note": "Before production HTML existed, the focused Desktop Light Header12 suite ran 15 cases and all 15 failed against the missing block; primary failures recorded HTTP 404 for templates/blocks/hero-video-email-split-band.html."
+}

@@ -1,0 +1,51 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "df8a2c6bafd9a9bfb86834ae16b46bd55eb154b8",
+  "captures": {
+    "desktop": "captures/header5/desktop-light.png",
+    "mobile": "captures/header5/mobile-light.png",
+    "dark": "captures/header5/desktop-dark.png",
+    "narrow": "captures/header5/narrow-320.png",
+    "noJavaScript": "captures/header5/mobile-js-disabled.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review inspected the complete Relume-derived anatomy, DOM, CSS cascade, all eight cache-busted render states, and computed light/dark interaction colors. The single ren-cover hero owns one decorative cover image, one double semantic-overlay scrim, one constrained left copy stack, and exactly two real destination anchors. The local light color scheme keeps heading, description, secondary text/border, and both focus rings white in both host themes; compositing the two 40% black semantic overlay layers over the worst-case white source yields approximately 6.69:1 white-text and focus-ring contrast. Primary text remains black on white, while secondary hover/active states preserve semantic contrast. Both CTA destinations return HTTP 200. Desktop, tablet, 767, 320, mobile, dark, reduced-motion, and JavaScript-disabled captures preserve full-viewport cover geometry, centered copy, clean wrapping, 44px targets, no overflow, no duplicate affordance, and no stale-pixel drift; the fresh df8a2c6 matrix is pixel-identical to the committed post-fix captures.",
+  "testResults": {
+    "header5Focused": {
+      "command": "npx playwright test tests/components/header5-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1",
+      "result": "20 passed, 0 failed across Desktop Light and Desktop Dark; axe WCAG 2.1 AA clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "agentCheck": {
+      "command": "npm run agent:check",
+      "result": "exit 0; smoke, skill, v0 adapter, doctor, evals, and knowledge checks passed"
+    },
+    "capture": {
+      "command": "npm run workflow:relume:capture -- docs/workflows/relume-to-ren10/modules/header5/render-matrix.json --module header5 --output output/playwright/header5-review-df8a2c6",
+      "result": "8 PNG and 8 JSON states captured from df8a2c6 and visually inspected; pixels match committed post-fix captures"
+    },
+    "destinations": {
+      "command": "browser HTTP verification for both CTA absolute URLs",
+      "result": "docs/index.html and templates/blocks/index.html each returned HTTP 200"
+    },
+    "packet": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/header5",
+      "result": "valid at green before review transition"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html",
+  "intentionalDifferences": [
+    "Ren10 tokens and layout primitives own dimensions, spacing, and interaction chrome",
+    "The atmospheric source image is replaced by a local decorative Ren10-owned screenshot",
+    "Two semantic overlay layers guarantee AA contrast independent of source-image luminance"
+  ]
+}

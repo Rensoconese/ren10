@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated suite tests/components/navbar17-navigation.spec.cjs was added before production. Focused run (Desktop Light, --max-failures=1) discovered 14 tests and failed immediately: HTTP 404 for /templates/blocks/nav-logo-left-fullscreen-menu-social.html with message 'navbar17 block must not 404 — implement templates/blocks/nav-logo-left-fullscreen-menu-social.html'. Remaining tests were left unrun by --max-failures=1."
+}

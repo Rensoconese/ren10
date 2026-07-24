@@ -1,0 +1,27 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header18",
+  "block": "hero-top-split-email-video-lightbox",
+  "capturedCommit": "0c5d2172bc1dc127d1d2bdbbbe83963edb6223ab",
+  "fresh": true,
+  "states": [
+    "desktop-light-closed",
+    "desktop-light-open",
+    "desktop-dark-closed",
+    "desktop-dark-open",
+    "tablet-768",
+    "seam-767",
+    "form-row-640",
+    "mobile-390-closed",
+    "mobile-390-open",
+    "narrow-320",
+    "mobile-js-disabled",
+    "desktop-reduced-motion-open"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Independently inspected all twelve newly generated cache-busted states from corrected functional commit 0c5d2172bc1dc127d1d2bdbbbe83963edb6223ab. The prior evidence referenced captures that were absent from the worktree; this matrix now contains the actual PNG and JSON artifacts. The review also replaced a portrait screenshot carrying false 1440x900 metadata with an owned 1280x900 landscape asset whose declared dimensions match its natural dimensions. The source-derived content-height composition owns one responsive copy split, one email form, and one full-width landscape lightbox trigger. Copy stacks through 767px and forms two top-aligned columns at 768px; the form stacks narrowly and becomes an aligned row at 640px. Closed and open light/dark states, mobile modal, 320px, JavaScript-disabled fallback, and reduced-motion modal are aligned, unclipped, and singular. The modal contains one close control and one aspect-video player. No extra CTA, duplicate form, duplicate trigger, navigation, logo, background video, overflow, clipping, or stale-pixel drift is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

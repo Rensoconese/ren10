@@ -1,0 +1,18 @@
+{
+  "id": "desktop-1280-light",
+  "url": "http://127.0.0.1:59329/templates/blocks/hero-split-video-lightbox-left-email-form.html?ren10_capture=header22-desktop-1280-light-12ad524a6166",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "h1.rh22-title": 1,
+    "form.rh22-form": 1,
+    ".rh22-media-trigger": 1
+  },
+  "commit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturedAt": "2026-07-15T19:36:31.589Z"
+}

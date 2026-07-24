@@ -787,7 +787,7 @@ export class RenColorPicker extends HTMLElement {
       } else {
         this.#popover.showPopover?.();
       }
-    } catch (error) {
+    } catch {
       // Native popover can throw if browser state changes mid-click.
     }
   }
@@ -895,7 +895,7 @@ export class RenColorPicker extends HTMLElement {
       this.setValue(result.sRGBHex);
       this.#updateAllViews();
       this.#emitChange();
-    } catch (err) {
+    } catch {
       // User cancelled or not supported
     }
   }

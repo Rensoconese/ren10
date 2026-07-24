@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.10.0",
+  "packageVersion": "0.11.0",
   "artifactPath": "examples/reference-app",
-  "contentHash": "sha256:48183b3a4752f5747732b98d3f5b56497ec3f2a7b8a760ba6cd4c753c1f98a65",
+  "contentHash": "sha256:9c1a5f3fd37b03c214fcd499a6149f406f3b5ffe18b2d31a9b166744f3f60062",
   "scenarios": [
     "shell-sidebar",
     "settings-form",

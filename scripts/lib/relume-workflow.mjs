@@ -3,7 +3,13 @@ import { isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { randomBytes } from 'node:crypto';
 
 export const STAGES = Object.freeze(['reference', 'mapped', 'red', 'green', 'reviewed', 'accepted']);
-export const INVENTORY_MODULE_STATUSES = Object.freeze(['queued', 'in_progress', 'accepted', 'skipped']);
+export const INVENTORY_MODULE_STATUSES = Object.freeze([
+  'queued',
+  'in_progress',
+  'reviewed',
+  'accepted',
+  'skipped',
+]);
 export const REQUIRED_PACKET_FILES = Object.freeze([
   'acceptance.json',
   'packet.json',
@@ -665,7 +671,7 @@ async function resolveInventoryBlockFile(repoRoot, ren10Block, moduleId) {
 
 /**
  * Validate family/module inventory ledger.
- * Returns deterministic sorted errors. Validates every in_progress/accepted packet with
+ * Returns deterministic sorted errors. Validates every in_progress/reviewed/accepted packet with
  * validatePacketDir (not only the stage string), then ledger↔packet identity and optional
  * ren10Block file coherence under the repository root.
  *
@@ -767,7 +773,7 @@ export async function validateInventory(inventory, modulesRoot, options = {}) {
         }
       }
 
-      if (status === 'in_progress' || status === 'accepted') {
+      if (status === 'in_progress' || status === 'reviewed' || status === 'accepted') {
         packetEntries.push({
           moduleId,
           familyId,
@@ -818,11 +824,11 @@ export async function validateInventory(inventory, modulesRoot, options = {}) {
       }
     }
 
-    if (entry.status === 'accepted') {
+    if (entry.status === 'reviewed' || entry.status === 'accepted') {
       const stage = packetResult.packet?.stage;
-      if (stage !== 'accepted') {
+      if (stage !== entry.status) {
         errors.push(
-          `Accepted module ${entry.moduleId} has packet stage ${stage ?? 'unknown'}; expected accepted`,
+          `${entry.status === 'reviewed' ? 'Reviewed' : 'Accepted'} module ${entry.moduleId} has packet stage ${stage ?? 'unknown'}; expected ${entry.status}`,
         );
       }
     }

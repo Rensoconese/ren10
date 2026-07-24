@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centered Dual-Action Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height Ren10 hero with centered copy and two responsive actions.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .rh23-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh23-content {
+      --center-width: var(--width-xl);
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh23-copy {
+      --stack-gap: var(--space-5);
+    }
+
+    .rh23-heading,
+    .rh23-description {
+      margin: 0;
+    }
+
+    .rh23-heading {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh23-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .rh23-actions {
+      --cluster-gap: var(--space-inline-loose);
+      justify-content: center;
+      width: 100%;
+    }
+
+    @media (min-width: 48rem) {
+      .rh23-hero {
+        padding-block: var(--space-section-lg);
+      }
+
+      .rh23-content {
+        --stack-gap: var(--space-8);
+        --center-padding: var(--space-8);
+      }
+
+      .rh23-copy {
+        --stack-gap: var(--space-6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Centered Dual-Action Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 23 · Hero block</p>
+      <h1 class="bb-detail-title">Centered Dual-Action Hero</h1>
+      <p class="bb-detail-description">A content-height Ren10 hero with centered copy and two responsive actions.</p>
+    </header>
+    <section class="rh23-preview bb-detail-preview" data-rh23-root aria-labelledby="rh23-heading">
+    <section class="rh23-hero">
+      <div class="rh23-content ren-center ren-stack">
+        <div class="rh23-copy ren-stack">
+          <h1 id="rh23-heading" class="rh23-heading">Build calmer interfaces without losing momentum</h1>
+          <p class="rh23-description">Give every team a shared, accessible foundation for turning product decisions into clear and consistent experiences.</p>
+        </div>
+        <div class="rh23-actions ren-cluster">
+          <a class="ren-btn" href="../../docs/getting-started.html">Start with Ren10</a>
+          <a class="ren-btn ren-btn-outline" href="index.html">Explore components</a>
+        </div>
+      </div>
+    </section>
+  </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-video-lightbox-left-email-form.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Video Lightbox and Email Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-centered-email-capture.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Centered Email Capture Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

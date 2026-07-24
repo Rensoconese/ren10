@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar27",
+  "blockSlug": "nav-mega-menu-category-collections",
+  "blockPath": "templates/blocks/nav-mega-menu-category-collections.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-category-collections.html",
+    "tests/components/navbar27-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

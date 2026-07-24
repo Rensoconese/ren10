@@ -1,0 +1,17 @@
+{
+  "id": "mobile-light",
+  "url": "http://127.0.0.1:64146/templates/blocks/hero-video-email-split-band.html?ren10_capture=header12-mobile-light-ab65fd4fc4b4",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh12-poster": 1,
+    ".rh12-submit": 1
+  },
+  "commit": "ab65fd4fc4b4493bb56645da7e5813f525ab2588",
+  "capturedAt": "2026-07-15T17:52:47.249Z"
+}

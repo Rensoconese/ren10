@@ -1,0 +1,34 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "5dd056f",
+  "captures": {
+    "desktop": "output/playwright/navbar32-final/navbar32/desktop-light-open.png",
+    "mobile": "output/playwright/navbar32-final/navbar32/mobile-light-open.png",
+    "narrow": "output/playwright/navbar32-final/navbar32/narrow-320-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review confirmed a real internal 44 by 44 close button with an accessible name and pointer-operable hit target, one visible close affordance when open, hamburger-only closed state, modal focus isolation, Escape/backdrop/destination focus restoration, clean narrow and seam states, accessible JavaScript-disabled content, and 13 final captures traced to the close-control fix.",
+  "testResults": {
+    "navbar32Focused": {
+      "command": "npx playwright test tests/components/navbar32-navigation.spec.cjs --workers=1",
+      "result": "16 passed, 0 failed; closed and open axe WCAG 2.1 AA clean"
+    },
+    "packet": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar32",
+      "result": "valid at green"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-logo-cta-left-drawer.html",
+  "intentionalDifferences": [
+    "Ren10 sheet primitive and tokens control drawer behavior",
+    "The modal contains its own semantic close affordance",
+    "One Light DOM navigation tree supports all responsive states"
+  ],
+  "aggregateValidation": "Full family regression, lint, and agent:check are deferred to the integrated batch."
+}

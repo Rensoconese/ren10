@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar14 mapped to one ren-nav tree, native details/summary, exactly three flat destination anchors, two actions owned by the collapsible shell (not permanent mobile top-row chrome), one named toggle, one chevron, floating logo-left/menu-right/actions desktop geometry, and the established 48rem interaction boundary. Rejected ren-card, ren-menu, ren-popover, ren-collapsible, nested nav, centered-menu geometry, and copied source."
+}

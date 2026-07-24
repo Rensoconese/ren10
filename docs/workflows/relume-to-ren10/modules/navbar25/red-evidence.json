@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated suite tests/components/navbar25-navigation.spec.cjs discovered 24 tests. Focused run with --max-failures=1 stopped at the first expected failure: HTTP 404 for absent templates/blocks/nav-mega-menu-categories-promo.html (assertion: navbar25 block must not 404). The remaining 23 tests were left unrun by --max-failures=1. Production HTML intentionally absent for RED proof."
+}

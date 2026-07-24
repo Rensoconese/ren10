@@ -1,0 +1,8 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "NODE_PATH=/Users/rensoconese/RenDS/rends/node_modules /Users/rensoconese/RenDS/rends/node_modules/.bin/playwright test --config tests/components/playwright.config.cjs --project='Desktop Light' --workers=1 --reporter=line tests/components/header18-header.spec.cjs",
+  "result": "16 failed, 0 passed",
+  "failure": "Production did not exist. Fifteen browser cases failed because Header18 returned HTTP 404; the source-policy case failed with ENOENT for the absent block.",
+  "recordedAt": "2026-07-15"
+}

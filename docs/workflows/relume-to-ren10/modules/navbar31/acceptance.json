@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Right-edge sheet reaches every documented state: toggle open/close at all widths, Escape with focus return to the toggle, outside/backdrop close, destination close for primary/contact/social/CTA classes, same-breakpoint resize stability, 767/768/769 seam stability, JS-disabled PE tree",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, five primary title-only destinations, one permanent top-bar action, one named toggle, one sheet close, contact title/phone/email/address, five social destinations, zero chevrons — no invented panel CTA or rich chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Full-width bar logo-left / action+toggle-right at all widths; destinations only in the right sheet (or PE stack); no permanent horizontal desktop link row; 320/340 keep 44px targets without html/root overflow",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

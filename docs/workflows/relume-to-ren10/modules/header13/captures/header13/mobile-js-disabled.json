@@ -1,0 +1,18 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:64465/templates/blocks/hero-lightbox-top-copy-band-dual-cta.html?ren10_capture=header13-mobile-js-disabled-ab5d4e90e9f2",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh13-media-trigger": 1,
+    ".rh13-cta": 2,
+    ".rh13-video-fallback": 1
+  },
+  "commit": "ab5d4e90e9f2613164437f2c2b991a866d49e8f3",
+  "capturedAt": "2026-07-15T17:53:32.351Z"
+}

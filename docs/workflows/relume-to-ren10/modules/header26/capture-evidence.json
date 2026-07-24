@@ -1,0 +1,27 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header26",
+  "block": "hero-centered-copy-dual-cta-landscape-image",
+  "capturedCommit": "d96c39b3de47c0fb9fac7f8f9cf7402663a62b2c",
+  "fresh": true,
+  "states": [
+    "desktop-light-default",
+    "desktop-dark-default",
+    "desktop-light-primary-focus",
+    "desktop-dark-secondary-focus",
+    "tablet-768",
+    "seam-640",
+    "mobile-390-light",
+    "mobile-390-dark",
+    "narrow-320",
+    "wide-1440",
+    "mobile-js-disabled",
+    "reduced-motion-primary-focus"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Inspected all twelve cache-busted states from functional commit d96c39b3de47c0fb9fac7f8f9cf7402663a62b2c. The centered content-height composition preserves one copy group, exactly two CTAs, then one full-width intrinsic 16:9 image. The controls remain aligned in a centered row where they fit and stack cleanly at 320px without clipping. Light/dark surfaces and both focus states are coherent; 390, 640, 768, 1280, and 1440 remain centered and overflow-free. No-JavaScript and reduced-motion states are complete. No form, legal copy, media duplication, alignment artifact, or unexpected interaction appears."
+  },
+  "recordedAt": "2026-07-15"
+}

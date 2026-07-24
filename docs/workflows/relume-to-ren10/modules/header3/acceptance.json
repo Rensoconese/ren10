@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One hero landmark, one product heading, one lede, exactly two CTAs, one media/play trigger, one video dialog with one iframe and one loading spinner owner, zero nav/dropdown chrome",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Media trigger opens ren-dialog lightbox; Escape and close control dismiss; focus returns to trigger; iframe loads with busy indicator then exposes a native playable video surface",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one play/media opener and one dialog close control; CTAs are not duplicated inside the dialog",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Text stacks above media when narrow; two-column side-by-side at desktop; no horizontal overflow at 320/390/767/768/1280",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled view keeps heading, lede, both CTAs, and a visible native video with controls at the media trigger destination",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Named play control, dialog title, visible focus, fully visible 44px targets, reduced motion, light/dark tokens, axe WCAG 2.1 AA",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, open lightbox, dark, and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}

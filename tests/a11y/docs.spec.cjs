@@ -31,7 +31,6 @@ for (const page of DOCS) {
         runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
       });
       if (violations.length) {
-        // eslint-disable-next-line no-console
         console.log(`[${page}]`, JSON.stringify(violations, null, 2));
       }
       expect(violations).toEqual([]);

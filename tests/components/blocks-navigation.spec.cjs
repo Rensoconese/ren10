@@ -2,7 +2,11 @@
 /**
  * Navigation blocks — catalog + Navbar Mega Menu (navbar5) + Featured Mega Menu (navbar6)
  * + Icons Mega Menu (navbar7) + Link-Rail Mega Menu (navbar8)
- * + Footer Mega Menu (navbar9) + Card-Grid Mega Menu (navbar10 RED).
+ * + Footer Mega Menu (navbar9) + Card-Grid Mega Menu (navbar10)
+ * + Logo-Left Menu-Right Dropdown (navbar11)
+ * + Logo-Left Menu-Right Grouped (navbar12)
+ * + Logo-Left Menu-Center Dropdown (navbar13)
+ * + Floating Logo-Left Menu-Right Actions (navbar14 RED).
  */
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
@@ -25,6 +29,10 @@ const MEGA_MENU_ICONS = '/templates/blocks/nav-mega-menu-icons.html';
 const MEGA_MENU_LINK_RAIL = '/templates/blocks/nav-mega-menu-link-rail.html';
 const MEGA_MENU_FOOTER = '/templates/blocks/nav-mega-menu-footer.html';
 const MEGA_MENU_CARD_GRID = '/templates/blocks/nav-mega-menu-card-grid.html';
+const LOGO_LEFT_MENU_RIGHT_DROPDOWN = '/templates/blocks/nav-logo-left-menu-right-dropdown.html';
+const LOGO_LEFT_MENU_RIGHT_GROUPED = '/templates/blocks/nav-logo-left-menu-right-grouped.html';
+const LOGO_LEFT_MENU_CENTER_DROPDOWN = '/templates/blocks/nav-logo-left-menu-center-dropdown.html';
+const FLOATING_LOGO_LEFT_MENU_RIGHT_ACTIONS = '/templates/blocks/nav-floating-logo-left-menu-right-actions.html';
 const DRAWER = '/templates/blocks/nav-drawer.html';
 
 async function startStaticServer() {
@@ -115,6 +123,34 @@ const HOVER_CORRIDOR_CASES = [
     summary: '.rmcg-disclosure > summary',
     destination: '.rmcg-card',
   },
+  {
+    id: 'navbar11',
+    path: LOGO_LEFT_MENU_RIGHT_DROPDOWN,
+    disclosure: '.rn11-disclosure',
+    summary: '.rn11-disclosure > summary',
+    destination: '.rn11-dropdown-link',
+  },
+  {
+    id: 'navbar12',
+    path: LOGO_LEFT_MENU_RIGHT_GROUPED,
+    disclosure: '.rn12-disclosure',
+    summary: '.rn12-disclosure > summary',
+    destination: '.rn12-destination',
+  },
+  {
+    id: 'navbar13',
+    path: LOGO_LEFT_MENU_CENTER_DROPDOWN,
+    disclosure: '.rn13-disclosure',
+    summary: '.rn13-disclosure > summary',
+    destination: '.rn13-destination',
+  },
+  {
+    id: 'navbar14',
+    path: FLOATING_LOGO_LEFT_MENU_RIGHT_ACTIONS,
+    disclosure: '.rn14-disclosure',
+    summary: '.rn14-disclosure > summary',
+    destination: '.rn14-destination',
+  },
 ];
 
 const MOBILE_NAV_CHROME_CASES = [
@@ -124,6 +160,9 @@ const MOBILE_NAV_CHROME_CASES = [
   { id: 'navbar8', path: MEGA_MENU_LINK_RAIL, root: '[data-rml-root]' },
   { id: 'navbar9', path: MEGA_MENU_FOOTER, root: '[data-rmnf-root]' },
   { id: 'navbar10', path: MEGA_MENU_CARD_GRID, root: '[data-rmcg-root]' },
+  { id: 'navbar11', path: LOGO_LEFT_MENU_RIGHT_DROPDOWN, root: '[data-rn11-root]' },
+  { id: 'navbar12', path: LOGO_LEFT_MENU_RIGHT_GROUPED, root: '[data-rn12-root]' },
+  { id: 'navbar14', path: FLOATING_LOGO_LEFT_MENU_RIGHT_ACTIONS, root: '[data-rn14-root]' },
 ];
 
 test.describe('Mobile mega-menu chrome', () => {
@@ -258,28 +297,82 @@ test.describe('Navigation blocks', () => {
     await staticServer?.close();
   });
 
-  test('catalog lists both navigation blocks and pages load cleanly', async ({ page }) => {
+  test('catalog lists every navigation block and every page loads cleanly', async ({ page }) => {
     const errors = await collectPageErrors(page);
 
     await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
-    await expect(page.getByRole('heading', { name: 'Navigation blocks' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Navigation', exact: true })).toBeVisible();
 
-    const drawerCard = page.locator('a.bb-card[href="nav-drawer.html"]');
-    const megaCard = page.locator('a.bb-card[href="nav-mega-menu.html"]');
-    await expect(drawerCard).toBeVisible();
-    await expect(megaCard).toBeVisible();
-    await expect(drawerCard.getByRole('heading', { name: 'Navbar Drawer' })).toBeVisible();
-    await expect(megaCard.getByRole('heading', { name: 'Navbar Mega Menu' })).toBeVisible();
+    const catalog = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) => cards.map((card) => ({
+      href: card.getAttribute('href'),
+      title: card.querySelector('.bb-card-title')?.textContent?.trim(),
+    })));
 
-    await page.goto(`${staticServer.origin}${DRAWER}`);
-    await expect(page.getByRole('heading', { name: 'Navbar Drawer', level: 1 })).toBeVisible();
+    expect(catalog).toHaveLength(29);
+    expect(new Set(catalog.map(({ href }) => href)).size).toBe(catalog.length);
 
-    await page.goto(`${staticServer.origin}${MEGA_MENU}`);
-    await expect(page.getByRole('heading', { name: 'Navbar Mega Menu', level: 1 })).toBeVisible();
-    await expect(page.locator('ren-nav')).toHaveCount(1);
-    await expect(page.locator('nav[aria-label="Example site"]')).toHaveCount(1);
+    for (const entry of catalog) {
+      expect(entry.href).toMatch(/^nav-[a-z0-9-]+\.html$/);
+      expect(entry.title).toBeTruthy();
+
+      const response = await page.goto(`${staticServer.origin}/templates/blocks/${entry.href}`);
+      expect(response?.ok(), `${entry.href} must load successfully`).toBe(true);
+      await expect(page.getByRole('heading', { name: entry.title, level: 1 })).toBeVisible();
+    }
 
     expect(errors, `console/page errors:\n${errors.join('\n')}`).toEqual([]);
+  });
+
+  test('all navigation detail pages share one contained width and reserve room for open menus', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
+    const pages = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) =>
+      cards.map((card) => card.getAttribute('href')).filter(Boolean));
+
+    for (const file of pages) {
+      await page.goto(`${staticServer.origin}/templates/blocks/${file}`);
+      const shell = page.locator('main.dx-shell');
+      const preview = page.locator('.bb-detail-preview');
+
+      await expect(shell, `${file} shell`).toHaveCount(1);
+      await expect(preview, `${file} preview`).toHaveCount(1);
+
+      const closed = await page.evaluate(() => {
+        const shellRect = document.querySelector('main.dx-shell').getBoundingClientRect();
+        const previewRect = document.querySelector('.bb-detail-preview').getBoundingClientRect();
+        return {
+          shellWidth: Math.round(shellRect.width),
+          previewInsideShell:
+            previewRect.left >= shellRect.left - 1 && previewRect.right <= shellRect.right + 1,
+          overflow: document.documentElement.scrollWidth - innerWidth,
+        };
+      });
+
+      expect(closed.shellWidth, `${file} must use the shared 1280px shell`).toBe(1280);
+      expect(closed.previewInsideShell, `${file} preview must stay inside the shell`).toBe(true);
+      expect(closed.overflow, `${file} must not overflow horizontally`).toBeLessThanOrEqual(1);
+
+      const summaries = page.locator('.bb-detail-preview details > summary');
+      for (let index = 0; index < await summaries.count(); index += 1) {
+        const summary = summaries.nth(index);
+        if (await summary.isVisible()) await summary.click();
+      }
+
+      const openPanels = await page.evaluate(() => {
+        const previewRect = document.querySelector('.bb-detail-preview').getBoundingClientRect();
+        return [...document.querySelectorAll('.bb-detail-preview details[open] > div')].map((panel) => {
+          const panelRect = panel.getBoundingClientRect();
+          return {
+            bottom: Math.round(panelRect.bottom),
+            previewBottom: Math.round(previewRect.bottom),
+          };
+        });
+      });
+
+      for (const panel of openPanels) {
+        expect(panel.bottom, `${file} open panel must fit inside its preview`).toBeLessThanOrEqual(panel.previewBottom + 1);
+      }
+    }
   });
 
   test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
@@ -4030,6 +4123,2747 @@ test.describe('Navbar Mega Menu Card Grid (navbar10)', () => {
         const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
         const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
         const nav = document.querySelector('[data-rmcg-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 11 — Logo-Left Menu-Right Dropdown (nav-logo-left-menu-right-dropdown).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoNavbar11Block(page, origin) {
+  const response = await page.goto(`${origin}${LOGO_LEFT_MENU_RIGHT_DROPDOWN}`);
+  expect(response, 'HTTP response for logo-left menu-right dropdown block').toBeTruthy();
+  expect(
+    response.status(),
+    'navbar11 block must not 404 — implement templates/blocks/nav-logo-left-menu-right-dropdown.html'
+  ).toBe(200);
+  await expect(page.locator('[data-rn11-root]'), 'missing [data-rn11-root] shell').toHaveCount(1, {
+    timeout: 2000,
+  });
+}
+
+/** @type {{ version: number, path: string, root: string, states: Array<{ id: string, viewport: { width: number, height: number }, theme: string, javaScript: boolean, reducedMotion: boolean, actions: Array<{ type: string, selector: string }>, expectedMarkers: Record<string, number> }> }} */
+const RN11_RENDER_MATRIX = JSON.parse(
+  fs.readFileSync(
+    path.join(PKG_ROOT, 'docs/workflows/relume-to-ren10/modules/navbar11/render-matrix.json'),
+    'utf8'
+  )
+);
+
+test.describe('Navbar Logo Left Menu Right Dropdown (navbar11)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 20000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and navbar11 root', async ({ page }) => {
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    await expect(
+      page.getByRole('heading', {
+        name: /Logo.?Left Menu.?Right Dropdown|Navbar 11|nav-logo-left-menu-right-dropdown/i,
+        level: 1,
+      })
+    ).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rn11-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn11-root] ul.ren-nav-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn11-root] nav')).toHaveCount(1);
+    await expect(page.locator('nav nav')).toHaveCount(0);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoNavbar11Block(page, staticServer.origin);
+    await expect(page.locator('#rn11-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn11-root] ul.ren-nav-links')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rn11-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rn11-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn11-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rn11-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: one brand, four top entries, four rich anchors, four icons, two actions, one toggle, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn11-root] .ren-nav-brand')).toHaveCount(1);
+
+    await expect(page.locator('#rn11-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rn11-primary-links > li > a.ren-nav-link');
+    const dropdownSummaries = page.locator('#rn11-primary-links > li > .rn11-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(dropdownSummaries).toHaveCount(1);
+
+    await expect(
+      page.locator('[data-rn11-root] .ren-nav-actions a, [data-rn11-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(2);
+    await expect(page.locator('[data-rn11-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(page.locator('.rn11-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rn11-panel')).toBeVisible();
+
+    await expect(page.locator('a.rn11-dropdown-link')).toHaveCount(4);
+    await expect(page.locator('.rn11-destination-icon.ren-icon')).toHaveCount(4);
+    await expect(page.locator('a.rn11-dropdown-link .ren-stack-xs')).toHaveCount(4);
+    await expect(page.locator('.rn11-dest-title')).toHaveCount(4);
+    await expect(page.locator('.rn11-dest-desc')).toHaveCount(4);
+
+    await expect(page.locator('.rmcg-card, .rmf-feature, .rmi-panel, .ren-card')).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn11-disclosure summary .rn11-chevron'],
+      'navbar11 dropdown chevron'
+    );
+    await expect(page.locator('.rn11-chevron')).toHaveCount(1);
+  });
+
+  test('rich dropdown destinations are single anchors with coherent icon/title/description rows', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await page.locator('.rn11-disclosure > summary').click();
+
+    const links = page.locator('a.rn11-dropdown-link.ren-row');
+    await expect(links).toHaveCount(4);
+
+    for (let i = 0; i < 4; i += 1) {
+      const link = links.nth(i);
+      const tagName = await link.evaluate((el) => el.tagName);
+      expect(tagName, `destination ${i} tag`).toBe('A');
+      await expect(link).toHaveAttribute('href', /.+/);
+      await expect(link.locator('.rn11-destination-icon.ren-icon')).toHaveCount(1);
+      await expect(link.locator('.ren-stack-xs')).toHaveCount(1);
+      await expect(link.locator('a[href], button, [role="button"]')).toHaveCount(0);
+    }
+
+    const firstHref = await links.nth(0).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.rn11-dropdown-link[href="${firstHref}"] .rn11-destination-icon`,
+        `a.rn11-dropdown-link[href="${firstHref}"] .rn11-dest-title`,
+      ],
+      'centerY',
+      3
+    );
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; click pins; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn11-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rn11-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('a.rn11-dropdown-link').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn11-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn11-dropdown-link').first()).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn11-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rn11-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn11-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and destination activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn11-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rn11-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rn11-dropdown-link').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes dropdown on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rn11-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rn11-disclosure');
+    const summary = disclosure.locator('summary');
+
+    // Source hamburger is unnamed — Ren10 requires an accessible name + expanded/controls wiring.
+    await expect(toggle).toHaveAttribute('aria-label', /.+/);
+    await expect(toggle).toHaveAttribute('aria-controls', 'rn11-primary-links');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn11-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn11-dropdown-link').first()).toBeVisible();
+    // Summary activation must not collapse the mobile tree.
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('breakpoint crossing closes an open dropdown and resets interaction policy', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn11-disclosure');
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn11-root] .ren-nav-toggle').click();
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    const summary = page.locator('.rn11-disclosure > summary');
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn11-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree, actions, and native disclosure usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn11-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rn11-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn11-root] .ren-nav-actions a, [data-rn11-root] .ren-nav-actions .ren-btn').first()
+    ).toBeVisible();
+
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(page.locator('.rn11-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn11-dropdown-link')).toHaveCount(4);
+    await expect(page.locator('.rn11-destination-icon')).toHaveCount(4);
+
+    await context.close();
+  });
+
+  test('viewport geometry: compact desktop panel under bar, mobile in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(page.locator('.rn11-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rn11-root] .ren-nav');
+      const panel = document.querySelector('.rn11-panel');
+      if (!nav || !panel) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+        panelWidth: Math.round(panelRect.width),
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    expect(desktop.panelWidth, 'compact desktop panel near 20rem').toBeGreaterThanOrEqual(280);
+    expect(desktop.panelWidth, 'compact desktop panel near 20rem').toBeLessThanOrEqual(360);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await page.locator('[data-rn11-root] .ren-nav-toggle').click();
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(page.locator('.rn11-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rn11-panel');
+      const links = document.querySelector('#rn11-primary-links');
+      if (!panel || !links) return null;
+      const panelRect = panel.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      return {
+        position: getComputedStyle(panel).position,
+        fullWidth: Math.abs(panelRect.width - linksRect.width) <= 8,
+      };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    expect(mobile.fullWidth, 'mobile dropdown panel spans the nav tree width').toBe(true);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet shows destination descriptions; small mobile condenses rows', async ({ page }) => {
+    // 834px is ≥48rem: desktop shell (no hamburger) with visible destination descriptions.
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await expect(page.locator('[data-rn11-root] .ren-nav-toggle')).toBeHidden();
+    await page.locator('.rn11-disclosure > summary').click();
+
+    const tabletDesc = await page.evaluate(() => {
+      const desc = Array.from(document.querySelectorAll('.rn11-dest-desc'));
+      return desc.map((el) => {
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          display: style.display,
+          visibility: style.visibility,
+          height: rect.height,
+        };
+      });
+    });
+    expect(tabletDesc.length).toBe(4);
+    for (const item of tabletDesc) {
+      expect(item.display, JSON.stringify(item)).not.toBe('none');
+      expect(item.visibility, JSON.stringify(item)).not.toBe('hidden');
+      expect(item.height, JSON.stringify(item)).toBeGreaterThan(0);
+    }
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await page.locator('[data-rn11-root] .ren-nav-toggle').click();
+    await page.locator('.rn11-disclosure > summary').click();
+
+    const mobileDesc = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.rn11-dest-desc')).map((el) => {
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          display: style.display,
+          visibility: style.visibility,
+          height: rect.height,
+        };
+      });
+    });
+    expect(mobileDesc.length).toBe(4);
+    const hiddenCount = mobileDesc.filter(
+      (item) =>
+        item.display === 'none'
+        || item.visibility === 'hidden'
+        || item.height === 0
+    ).length;
+    expect(hiddenCount, 'descriptions hidden on small mobile').toBeGreaterThanOrEqual(3);
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned top-level peers', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn11-disclosure summary .rn11-chevron'],
+      'navbar11 desktop chevron'
+    );
+
+    const peerLinks = page.locator('#rn11-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rn11-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rn11-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rn11-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rn11-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none'
+      || afterContent === ''
+      || summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+
+    const markerContent = String(summaryChrome.markerContent || 'none').replace(/['"]/g, '');
+    expect(
+      markerContent === 'none' || markerContent === '' || summaryChrome.markerDisplay === 'none',
+      'summary marker'
+    ).toBeTruthy();
+
+    await expect(page.locator('.rn11-disclosure summary .rn11-chevron')).toHaveCount(1);
+
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(page.locator('.rn11-disclosure')).toHaveAttribute('open', '');
+    const openChrome = await page.evaluate(() => {
+      const summary = document.querySelector('.rn11-disclosure > summary');
+      if (!summary) return null;
+      const ss = getComputedStyle(summary);
+      return {
+        marginBottom: ss.marginBottom,
+        borderBottomWidth: ss.borderBottomWidth,
+        borderBottomStyle: ss.borderBottomStyle,
+      };
+    });
+    expect(openChrome).toBeTruthy();
+    expect(openChrome.marginBottom).toBe('0px');
+    expect(
+      openChrome.borderBottomStyle === 'none' || openChrome.borderBottomWidth === '0px',
+      'open summary divider'
+    ).toBeTruthy();
+  });
+
+  test('mobile rows: full-width peers, one chevron, no overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await page.locator('[data-rn11-root] .ren-nav-toggle').click();
+    await page.locator('.rn11-disclosure > summary').click();
+    await expect(page.locator('.rn11-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rn11-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rn11-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rn11-disclosure > summary', '#rn11-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn11-disclosure summary .rn11-chevron'],
+      'mobile navbar11 chevron'
+    );
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    await page.locator('[data-rn11-root] .ren-nav-toggle').click();
+    await page.locator('.rn11-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn11-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, a.rn11-dropdown-link'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar11Block(page, staticServer.origin);
+    await page.locator('.rn11-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rn11-panel', '.rn11-chevron', 'a.rn11-dropdown-link', '.rn11-destination-icon'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('render-matrix marker counts hold across packet viewport states', async ({ page }) => {
+    for (const state of RN11_RENDER_MATRIX.states) {
+      if (!state.javaScript) continue;
+
+      if (state.reducedMotion) {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+      } else {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+      }
+
+      await page.setViewportSize(state.viewport);
+      await gotoNavbar11Block(page, staticServer.origin);
+
+      await page.evaluate((theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, state.theme);
+
+      for (const action of state.actions) {
+        if (action.type === 'click') {
+          await page.locator(action.selector).click();
+        } else if (action.type === 'hover') {
+          await page.locator(action.selector).hover();
+        }
+      }
+
+      for (const [selector, count] of Object.entries(state.expectedMarkers)) {
+        await expect(
+          page.locator(selector),
+          `${state.id} expects ${count}× ${selector}`
+        ).toHaveCount(count);
+      }
+    }
+  });
+
+  test('navbar11 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoNavbar11Block(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rn11-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoNavbar11Block(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rn11-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 12 — Logo-Left Menu-Right Grouped (nav-logo-left-menu-right-grouped).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoNavbar12Block(page, origin) {
+  const response = await page.goto(`${origin}${LOGO_LEFT_MENU_RIGHT_GROUPED}`);
+  expect(response, 'HTTP response for logo-left menu-right grouped block').toBeTruthy();
+  expect(
+    response.status(),
+    'navbar12 block must not 404 — implement templates/blocks/nav-logo-left-menu-right-grouped.html'
+  ).toBe(200);
+  await expect(page.locator('[data-rn12-root]'), 'missing [data-rn12-root] shell').toHaveCount(1, {
+    timeout: 2000,
+  });
+}
+
+/** @type {{ version: number, path: string, root: string, states: Array<{ id: string, viewport: { width: number, height: number }, theme: string, javaScript: boolean, reducedMotion: boolean, actions: Array<{ type: string, selector: string }>, expectedMarkers: Record<string, number> }> }} */
+const RN12_RENDER_MATRIX = JSON.parse(
+  fs.readFileSync(
+    path.join(PKG_ROOT, 'docs/workflows/relume-to-ren10/modules/navbar12/render-matrix.json'),
+    'utf8'
+  )
+);
+
+test.describe('Navbar Logo Left Menu Right Grouped (navbar12)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 5000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 30000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and navbar12 root', async ({ page }) => {
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    await expect(
+      page.getByRole('heading', {
+        name: /Logo.?Left Menu.?Right Grouped|Navbar 12|nav-logo-left-menu-right-grouped/i,
+        level: 1,
+      })
+    ).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rn12-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn12-root] ul.ren-nav-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn12-root] nav')).toHaveCount(1);
+    await expect(page.locator('nav nav')).toHaveCount(0);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoNavbar12Block(page, staticServer.origin);
+    await expect(page.locator('#rn12-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn12-root] ul.ren-nav-links')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rn12-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rn12-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn12-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rn12-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: one brand, four top entries, two groups, two labels, eight rich anchors, eight icons, two actions, one toggle, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn12-root] .ren-nav-brand')).toHaveCount(1);
+
+    await expect(page.locator('#rn12-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rn12-primary-links > li > a.ren-nav-link');
+    const dropdownSummaries = page.locator('#rn12-primary-links > li > .rn12-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(dropdownSummaries).toHaveCount(1);
+
+    await expect(
+      page.locator('[data-rn12-root] .ren-nav-actions a, [data-rn12-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(2);
+    await expect(page.locator('[data-rn12-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(page.locator('.rn12-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rn12-panel')).toBeVisible();
+
+    await expect(page.locator('.rn12-group')).toHaveCount(2);
+    await expect(page.locator('.rn12-group-label')).toHaveCount(2);
+    await expect(page.locator('a.rn12-destination.ren-row')).toHaveCount(8);
+    await expect(page.locator('.rn12-destination-icon.ren-icon')).toHaveCount(8);
+    await expect(page.locator('a.rn12-destination .ren-stack-xs')).toHaveCount(8);
+    await expect(page.locator('.rn12-dest-title')).toHaveCount(8);
+    await expect(page.locator('.rn12-dest-desc')).toHaveCount(8);
+
+    for (let g = 0; g < 2; g += 1) {
+      const group = page.locator('.rn12-group').nth(g);
+      await expect(group.locator('.rn12-group-label')).toHaveCount(1);
+      await expect(group.locator('a.rn12-destination.ren-row')).toHaveCount(4);
+    }
+
+    await expect(page.locator('.rmcg-card, .rmf-feature, .rmi-panel, .ren-card, .ren-menu, .ren-popover')).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn12-disclosure summary .rn12-chevron'],
+      'navbar12 dropdown chevron'
+    );
+    await expect(page.locator('.rn12-chevron')).toHaveCount(1);
+  });
+
+  test('rich grouped destinations are single anchors with coherent icon/title/description rows', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await page.locator('.rn12-disclosure > summary').click();
+
+    const links = page.locator('a.rn12-destination.ren-row');
+    await expect(links).toHaveCount(8);
+
+    for (let i = 0; i < 8; i += 1) {
+      const link = links.nth(i);
+      const tagName = await link.evaluate((el) => el.tagName);
+      expect(tagName, `destination ${i} tag`).toBe('A');
+      await expect(link).toHaveAttribute('href', /.+/);
+      await expect(link.locator('.rn12-destination-icon.ren-icon')).toHaveCount(1);
+      await expect(link.locator('.ren-stack-xs')).toHaveCount(1);
+      await expect(link.locator('a[href], button, [role="button"]')).toHaveCount(0);
+    }
+
+    const firstHref = await links.nth(0).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.rn12-destination[href="${firstHref}"] .rn12-destination-icon`,
+        `a.rn12-destination[href="${firstHref}"] .rn12-dest-title`,
+      ],
+      'centerY',
+      3
+    );
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; click pins; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn12-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rn12-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('a.rn12-destination').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn12-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn12-destination').first()).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn12-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rn12-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn12-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and destination activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn12-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rn12-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rn12-destination').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes dropdown on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rn12-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rn12-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await expect(toggle).toHaveAttribute('aria-label', /.+/);
+    await expect(toggle).toHaveAttribute('aria-controls', 'rn12-primary-links');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn12-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn12-destination').first()).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('breakpoint crossing closes an open dropdown and resets interaction policy', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn12-disclosure');
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn12-root] .ren-nav-toggle').click();
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    const summary = page.locator('.rn12-disclosure > summary');
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn12-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree, actions, groups, and native disclosure usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn12-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rn12-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn12-root] .ren-nav-actions a, [data-rn12-root] .ren-nav-actions .ren-btn').first()
+    ).toBeVisible();
+
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(page.locator('.rn12-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rn12-group')).toHaveCount(2);
+    await expect(page.locator('.rn12-group-label')).toHaveCount(2);
+    await expect(page.locator('a.rn12-destination')).toHaveCount(8);
+    await expect(page.locator('.rn12-destination-icon')).toHaveCount(8);
+
+    await context.close();
+  });
+
+  test('viewport geometry: right-biased two-column desktop panel under bar, mobile one-column in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(page.locator('.rn12-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rn12-root] .ren-nav');
+      const panel = document.querySelector('.rn12-panel');
+      const groups = document.querySelector('.rn12-groups');
+      if (!nav || !panel || !groups) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const groupsStyle = getComputedStyle(groups);
+      const groupEls = Array.from(document.querySelectorAll('.rn12-group'));
+      const groupRects = groupEls.map((el) => el.getBoundingClientRect());
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelLeft: panelRect.left,
+        panelRight: panelRect.right,
+        navRight: navRect.right,
+        panelPosition: getComputedStyle(panel).position,
+        panelWidth: Math.round(panelRect.width),
+        groupsDisplay: groupsStyle.display,
+        groupsColumns: groupsStyle.gridTemplateColumns,
+        groupCount: groupRects.length,
+        groupsSideBySide:
+          groupRects.length === 2
+          && Math.abs(groupRects[0].top - groupRects[1].top) <= 8
+          && groupRects[1].left > groupRects[0].right - 1,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    expect(desktop.panelRight, 'right-biased panel hugs the menu end').toBeGreaterThanOrEqual(
+      desktop.navRight - 24
+    );
+    expect(desktop.groupsDisplay, 'desktop groups use grid').toMatch(/grid/);
+    expect(desktop.groupCount).toBe(2);
+    expect(desktop.groupsSideBySide, 'desktop two equal group columns').toBe(true);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await page.locator('[data-rn12-root] .ren-nav-toggle').click();
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(page.locator('.rn12-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rn12-panel');
+      const links = document.querySelector('#rn12-primary-links');
+      const groups = document.querySelector('.rn12-groups');
+      if (!panel || !links || !groups) return null;
+      const panelRect = panel.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      const groupEls = Array.from(document.querySelectorAll('.rn12-group'));
+      const groupRects = groupEls.map((el) => el.getBoundingClientRect());
+      return {
+        position: getComputedStyle(panel).position,
+        fullWidth: Math.abs(panelRect.width - linksRect.width) <= 8,
+        oneColumn:
+          groupRects.length === 2
+          && groupRects[1].top >= groupRects[0].bottom - 1
+          && Math.abs(groupRects[0].left - groupRects[1].left) <= 8,
+      };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    expect(mobile.fullWidth, 'mobile dropdown panel spans the nav tree width').toBe(true);
+    expect(mobile.oneColumn, 'mobile groups stack as one column').toBe(true);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet shows two groups with descriptions; small mobile condenses rows', async ({ page }) => {
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await expect(page.locator('[data-rn12-root] .ren-nav-toggle')).toBeHidden();
+    await page.locator('.rn12-disclosure > summary').click();
+
+    const tablet = await page.evaluate(() => {
+      const groupEls = Array.from(document.querySelectorAll('.rn12-group'));
+      const groupRects = groupEls.map((el) => el.getBoundingClientRect());
+      const desc = Array.from(document.querySelectorAll('.rn12-dest-desc'));
+      return {
+        groupCount: groupRects.length,
+        groupsSideBySide:
+          groupRects.length === 2
+          && Math.abs(groupRects[0].top - groupRects[1].top) <= 8
+          && groupRects[1].left > groupRects[0].right - 1,
+        desc: desc.map((el) => {
+          const style = getComputedStyle(el);
+          const rect = el.getBoundingClientRect();
+          return {
+            display: style.display,
+            visibility: style.visibility,
+            height: rect.height,
+          };
+        }),
+      };
+    });
+    expect(tablet.groupCount).toBe(2);
+    expect(tablet.groupsSideBySide, 'tablet two coherent group columns').toBe(true);
+    expect(tablet.desc.length).toBe(8);
+    for (const item of tablet.desc) {
+      expect(item.display, JSON.stringify(item)).not.toBe('none');
+      expect(item.visibility, JSON.stringify(item)).not.toBe('hidden');
+      expect(item.height, JSON.stringify(item)).toBeGreaterThan(0);
+    }
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await page.locator('[data-rn12-root] .ren-nav-toggle').click();
+    await page.locator('.rn12-disclosure > summary').click();
+
+    const mobileDesc = await page.evaluate(() => {
+      return Array.from(document.querySelectorAll('.rn12-dest-desc')).map((el) => {
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          display: style.display,
+          visibility: style.visibility,
+          height: rect.height,
+        };
+      });
+    });
+    expect(mobileDesc.length).toBe(8);
+    const hiddenCount = mobileDesc.filter(
+      (item) =>
+        item.display === 'none'
+        || item.visibility === 'hidden'
+        || item.height === 0
+    ).length;
+    expect(hiddenCount, 'descriptions hidden on small mobile').toBeGreaterThanOrEqual(6);
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned top-level peers', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn12-disclosure summary .rn12-chevron'],
+      'navbar12 desktop chevron'
+    );
+
+    const peerLinks = page.locator('#rn12-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rn12-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rn12-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rn12-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rn12-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none'
+      || afterContent === ''
+      || summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+
+    const markerContent = String(summaryChrome.markerContent || 'none').replace(/['"]/g, '');
+    expect(
+      markerContent === 'none' || markerContent === '' || summaryChrome.markerDisplay === 'none',
+      'summary marker'
+    ).toBeTruthy();
+
+    await expect(page.locator('.rn12-disclosure summary .rn12-chevron')).toHaveCount(1);
+
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(page.locator('.rn12-disclosure')).toHaveAttribute('open', '');
+    const openChrome = await page.evaluate(() => {
+      const summary = document.querySelector('.rn12-disclosure > summary');
+      if (!summary) return null;
+      const ss = getComputedStyle(summary);
+      return {
+        marginBottom: ss.marginBottom,
+        borderBottomWidth: ss.borderBottomWidth,
+        borderBottomStyle: ss.borderBottomStyle,
+      };
+    });
+    expect(openChrome).toBeTruthy();
+    expect(openChrome.marginBottom).toBe('0px');
+    expect(
+      openChrome.borderBottomStyle === 'none' || openChrome.borderBottomWidth === '0px',
+      'open summary divider'
+    ).toBeTruthy();
+  });
+
+  test('mobile rows: full-width peers, one chevron, no overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await page.locator('[data-rn12-root] .ren-nav-toggle').click();
+    await page.locator('.rn12-disclosure > summary').click();
+    await expect(page.locator('.rn12-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rn12-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rn12-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rn12-disclosure > summary', '#rn12-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn12-disclosure summary .rn12-chevron'],
+      'mobile navbar12 chevron'
+    );
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    await page.locator('[data-rn12-root] .ren-nav-toggle').click();
+    await page.locator('.rn12-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn12-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, a.rn12-destination'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar12Block(page, staticServer.origin);
+    await page.locator('.rn12-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rn12-panel', '.rn12-chevron', 'a.rn12-destination', '.rn12-destination-icon'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('render-matrix marker counts hold across packet viewport states', async ({ page }) => {
+    for (const state of RN12_RENDER_MATRIX.states) {
+      if (!state.javaScript) continue;
+
+      if (state.reducedMotion) {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+      } else {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+      }
+
+      await page.setViewportSize(state.viewport);
+      await gotoNavbar12Block(page, staticServer.origin);
+
+      await page.evaluate((theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, state.theme);
+
+      for (const action of state.actions) {
+        if (action.type === 'click') {
+          await page.locator(action.selector).click();
+        } else if (action.type === 'hover') {
+          await page.locator(action.selector).hover();
+        }
+      }
+
+      for (const [selector, count] of Object.entries(state.expectedMarkers)) {
+        await expect(
+          page.locator(selector),
+          `${state.id} expects ${count}× ${selector}`
+        ).toHaveCount(count);
+      }
+    }
+  });
+
+  test('navbar12 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoNavbar12Block(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rn12-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoNavbar12Block(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rn12-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 13 — Logo-Left Menu-Center Dropdown (nav-logo-left-menu-center-dropdown).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoNavbar13Block(page, origin) {
+  const response = await page.goto(`${origin}${LOGO_LEFT_MENU_CENTER_DROPDOWN}`);
+  expect(response, 'HTTP response for logo-left menu-center dropdown block').toBeTruthy();
+  expect(
+    response.status(),
+    'navbar13 block must not 404 — implement templates/blocks/nav-logo-left-menu-center-dropdown.html'
+  ).toBe(200);
+  await expect(page.locator('[data-rn13-root]'), 'missing [data-rn13-root] shell').toHaveCount(1, {
+    timeout: 2000,
+  });
+}
+
+/** @type {{ version: number, path: string, root: string, states: Array<{ id: string, viewport: { width: number, height: number }, theme: string, javaScript: boolean, reducedMotion: boolean, actions: Array<{ type: string, selector: string }>, expectedMarkers: Record<string, number> }> }} */
+const RN13_RENDER_MATRIX = JSON.parse(
+  fs.readFileSync(
+    path.join(PKG_ROOT, 'docs/workflows/relume-to-ren10/modules/navbar13/render-matrix.json'),
+    'utf8'
+  )
+);
+
+test.describe('Navbar Logo Left Menu Center Dropdown (navbar13)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 20000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and navbar13 root', async ({ page }) => {
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    await expect(
+      page.getByRole('heading', {
+        name: /Logo.?Left Menu.?Center Dropdown|Navbar 13|nav-logo-left-menu-center-dropdown/i,
+        level: 1,
+      })
+    ).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rn13-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn13-root] ul.ren-nav-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn13-root] nav')).toHaveCount(1);
+    await expect(page.locator('nav nav')).toHaveCount(0);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoNavbar13Block(page, staticServer.origin);
+    await expect(page.locator('#rn13-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn13-root] ul.ren-nav-links')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rn13-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rn13-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn13-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rn13-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: one brand, four top entries, three title-only destinations, one action, one toggle, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn13-root] .ren-nav-brand')).toHaveCount(1);
+
+    await expect(page.locator('#rn13-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rn13-primary-links > li > a.ren-nav-link');
+    const dropdownSummaries = page.locator('#rn13-primary-links > li > .rn13-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(dropdownSummaries).toHaveCount(1);
+
+    await expect(
+      page.locator('[data-rn13-root] .ren-nav-actions a, [data-rn13-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(1);
+    await expect(page.locator('[data-rn13-root] .ren-nav-actions a.ren-btn')).toHaveCount(1);
+    await expect(page.locator('[data-rn13-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('.rn13-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rn13-panel')).toBeVisible();
+
+    await expect(page.locator('a.rn13-destination')).toHaveCount(3);
+    await expect(page.locator('.rn13-destination-icon, .rn13-dest-desc, .rn13-group, .rn13-group-label')).toHaveCount(0);
+    await expect(page.locator('a.rn13-destination .ren-icon, a.rn13-destination img, a.rn13-destination .ren-stack-xs')).toHaveCount(0);
+
+    await expect(
+      page.locator('.rmcg-card, .rmf-feature, .rmi-panel, .ren-card, .ren-menu, .ren-popover, ren-collapsible, .ren-collapsible')
+    ).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn13-disclosure summary .rn13-chevron'],
+      'navbar13 dropdown chevron'
+    );
+    await expect(page.locator('.rn13-chevron')).toHaveCount(1);
+  });
+
+  test('title-only destinations are whole anchors without icons, groups, or descriptions', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+    await page.locator('.rn13-disclosure > summary').click();
+
+    const links = page.locator('a.rn13-destination');
+    await expect(links).toHaveCount(3);
+
+    for (let i = 0; i < 3; i += 1) {
+      const link = links.nth(i);
+      const tagName = await link.evaluate((el) => el.tagName);
+      expect(tagName, `destination ${i} tag`).toBe('A');
+      await expect(link).toHaveAttribute('href', /.+/);
+      const text = (await link.innerText()).trim();
+      expect(text.length, `destination ${i} title text`).toBeGreaterThan(0);
+      await expect(link.locator('a[href], button, [role="button"], .ren-icon, img, p, small')).toHaveCount(0);
+    }
+
+    await expect(page.locator('.rn13-group, .rn13-group-label, .rn13-dest-desc, .rn13-destination-icon')).toHaveCount(0);
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; click pins; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn13-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rn13-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('a.rn13-destination').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn13-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn13-destination').first()).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn13-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rn13-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn13-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and destination activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn13-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rn13-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rn13-destination').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes dropdown on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rn13-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rn13-disclosure');
+    const summary = disclosure.locator('summary');
+
+    // Source hamburger is unnamed — Ren10 requires an accessible name + expanded/controls wiring.
+    await expect(toggle).toHaveAttribute('aria-label', /.+/);
+    await expect(toggle).toHaveAttribute('aria-controls', 'rn13-primary-links');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn13-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn13-destination').first()).toBeVisible();
+    // Summary activation must not collapse the mobile tree.
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('breakpoint crossing closes an open dropdown and resets interaction policy', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn13-disclosure');
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn13-root] .ren-nav-toggle').click();
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    const summary = page.locator('.rn13-disclosure > summary');
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn13-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree, action, and native disclosure usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn13-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rn13-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn13-root] .ren-nav-actions a, [data-rn13-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(1);
+    await expect(
+      page.locator('[data-rn13-root] .ren-nav-actions a, [data-rn13-root] .ren-nav-actions .ren-btn').first()
+    ).toBeVisible();
+
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('.rn13-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn13-destination')).toHaveCount(3);
+    await expect(page.locator('.rn13-destination-icon, .rn13-dest-desc, .rn13-group')).toHaveCount(0);
+
+    await context.close();
+  });
+
+  test('viewport geometry: centered menu, narrow absolute desktop panel under bar, mobile in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    const shell = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rn13-root] .ren-nav');
+      const links = document.querySelector('#rn13-primary-links');
+      const brand = document.querySelector('[data-rn13-root] .ren-nav-brand');
+      const actions = document.querySelector('[data-rn13-root] .ren-nav-actions');
+      if (!nav || !links || !brand || !actions) return null;
+      const navRect = nav.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      const brandRect = brand.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      const navStyle = getComputedStyle(nav);
+      const navColumns = navStyle.gridTemplateColumns
+        .split(/\s+/)
+        .map((value) => Number.parseFloat(value));
+      return {
+        navCenterX: navRect.left + navRect.width / 2,
+        linksCenterX: linksRect.left + linksRect.width / 2,
+        navDisplay: navStyle.display,
+        navColumns,
+        brandRight: brandRect.right,
+        linksLeft: linksRect.left,
+        linksRight: linksRect.right,
+        actionsLeft: actionsRect.left,
+        sideBySide:
+          Math.abs(brandRect.top - linksRect.top) <= 12
+          && Math.abs(actionsRect.top - linksRect.top) <= 12
+          && brandRect.right <= linksRect.left + 1
+          && linksRect.right <= actionsRect.left + 1,
+      };
+    });
+    expect(shell).toBeTruthy();
+    expect(shell.sideBySide, 'desktop logo / centered menu / action share one row').toBe(true);
+    expect(
+      Math.abs(shell.linksCenterX - shell.navCenterX),
+      'menu remains geometrically centered despite unequal side widths'
+    ).toBeLessThanOrEqual(16);
+    expect(shell.navDisplay, 'desktop shell uses CSS Grid').toBe('grid');
+    expect(shell.navColumns, 'desktop shell exposes three grid tracks').toHaveLength(3);
+    expect(
+      Math.abs(shell.navColumns[0] - shell.navColumns[2]),
+      'equal outer grid tracks guarantee geometric centering'
+    ).toBeLessThanOrEqual(1);
+
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('.rn13-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rn13-root] .ren-nav');
+      const panel = document.querySelector('.rn13-panel');
+      const summary = document.querySelector('.rn13-disclosure > summary');
+      if (!nav || !panel || !summary) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const summaryRect = summary.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+        panelWidth: Math.round(panelRect.width),
+        panelCenterX: panelRect.left + panelRect.width / 2,
+        summaryCenterX: summaryRect.left + summaryRect.width / 2,
+        overlapsBar: panelRect.top < navRect.bottom - 2 && panelRect.bottom > navRect.top + 2,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    expect(desktop.overlapsBar, 'narrow dropdown must not cover the bar').toBe(false);
+    expect(desktop.panelWidth, 'narrow title-only desktop panel').toBeGreaterThanOrEqual(120);
+    expect(desktop.panelWidth, 'narrow title-only desktop panel').toBeLessThanOrEqual(280);
+    expect(
+      Math.abs(desktop.panelCenterX - desktop.summaryCenterX),
+      'panel centered beneath its trigger'
+    ).toBeLessThanOrEqual(24);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar13Block(page, staticServer.origin);
+    await page.locator('[data-rn13-root] .ren-nav-toggle').click();
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('.rn13-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rn13-panel');
+      const links = document.querySelector('#rn13-primary-links');
+      if (!panel || !links) return null;
+      const panelRect = panel.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      return {
+        position: getComputedStyle(panel).position,
+        fullWidth: Math.abs(panelRect.width - linksRect.width) <= 8,
+      };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    expect(mobile.fullWidth, 'mobile dropdown panel spans the nav tree width').toBe(true);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet uses desktop shell; mobile keeps action in the top row with stacked tree', async ({ page }) => {
+    // 834px is ≥48rem: desktop shell (no hamburger), centered menu, one action.
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoNavbar13Block(page, staticServer.origin);
+    await expect(page.locator('[data-rn13-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rn13-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn13-root] .ren-nav-actions a, [data-rn13-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(1);
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('a.rn13-destination')).toHaveCount(3);
+    await expect(page.locator('.rn13-dest-desc, .rn13-destination-icon, .rn13-group')).toHaveCount(0);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    const topRow = await page.evaluate(() => {
+      const brand = document.querySelector('[data-rn13-root] .ren-nav-brand');
+      const actions = document.querySelector('[data-rn13-root] .ren-nav-actions');
+      const toggle = document.querySelector('[data-rn13-root] .ren-nav-toggle');
+      const links = document.querySelector('#rn13-primary-links');
+      if (!brand || !actions || !toggle || !links) return null;
+      const brandRect = brand.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      const toggleRect = toggle.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      const linksStyle = getComputedStyle(links);
+      return {
+        brandTop: brandRect.top,
+        actionsTop: actionsRect.top,
+        toggleTop: toggleRect.top,
+        actionVisible: actionsRect.width > 0 && actionsRect.height > 0 && getComputedStyle(actions).display !== 'none',
+        toggleVisible: toggleRect.width > 0 && toggleRect.height > 0,
+        linksBelowTopRow: linksRect.top >= Math.max(brandRect.bottom, actionsRect.bottom, toggleRect.bottom) - 4
+          || linksStyle.display === 'none'
+          || linksStyle.visibility === 'hidden',
+      };
+    });
+    expect(topRow).toBeTruthy();
+    expect(topRow.actionVisible, 'mobile action stays in the chrome row').toBe(true);
+    expect(topRow.toggleVisible, 'mobile toggle is present in the chrome row').toBe(true);
+    expect(Math.abs(topRow.brandTop - topRow.actionsTop), 'brand and action share top row').toBeLessThanOrEqual(12);
+    expect(Math.abs(topRow.brandTop - topRow.toggleTop), 'brand and toggle share top row').toBeLessThanOrEqual(12);
+    expect(topRow.linksBelowTopRow, 'navigation tree is not inlined into the top row when closed').toBe(true);
+
+    await page.locator('[data-rn13-root] .ren-nav-toggle').click();
+    await expect(page.locator('#rn13-primary-links')).toBeVisible();
+    const opened = await page.evaluate(() => {
+      const brand = document.querySelector('[data-rn13-root] .ren-nav-brand');
+      const actions = document.querySelector('[data-rn13-root] .ren-nav-actions');
+      const toggle = document.querySelector('[data-rn13-root] .ren-nav-toggle');
+      const links = document.querySelector('#rn13-primary-links');
+      if (!brand || !actions || !toggle || !links) return null;
+      const brandRect = brand.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      const toggleRect = toggle.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      return {
+        actionStillTop: Math.abs(brandRect.top - actionsRect.top) <= 12,
+        toggleStillTop: Math.abs(brandRect.top - toggleRect.top) <= 12,
+        linksBelow: linksRect.top >= Math.max(brandRect.bottom, actionsRect.bottom, toggleRect.bottom) - 4,
+      };
+    });
+    expect(opened).toBeTruthy();
+    expect(opened.actionStillTop, 'opened mobile keeps action in top row').toBe(true);
+    expect(opened.toggleStillTop, 'opened mobile keeps toggle in top row').toBe(true);
+    expect(opened.linksBelow, 'opened mobile stacks the tree under the top row').toBe(true);
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned top-level peers', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn13-disclosure summary .rn13-chevron'],
+      'navbar13 desktop chevron'
+    );
+
+    const peerLinks = page.locator('#rn13-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rn13-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rn13-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rn13-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rn13-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none'
+      || afterContent === ''
+      || summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+
+    const markerContent = String(summaryChrome.markerContent || 'none').replace(/['"]/g, '');
+    expect(
+      markerContent === 'none' || markerContent === '' || summaryChrome.markerDisplay === 'none',
+      'summary marker'
+    ).toBeTruthy();
+
+    await expect(page.locator('.rn13-disclosure summary .rn13-chevron')).toHaveCount(1);
+
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('.rn13-disclosure')).toHaveAttribute('open', '');
+    const openChrome = await page.evaluate(() => {
+      const summary = document.querySelector('.rn13-disclosure > summary');
+      if (!summary) return null;
+      const ss = getComputedStyle(summary);
+      return {
+        marginBottom: ss.marginBottom,
+        borderBottomWidth: ss.borderBottomWidth,
+        borderBottomStyle: ss.borderBottomStyle,
+      };
+    });
+    expect(openChrome).toBeTruthy();
+    expect(openChrome.marginBottom).toBe('0px');
+    expect(
+      openChrome.borderBottomStyle === 'none' || openChrome.borderBottomWidth === '0px',
+      'open summary divider'
+    ).toBeTruthy();
+  });
+
+  test('mobile rows: full-width peers, one chevron, no overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar13Block(page, staticServer.origin);
+    await page.locator('[data-rn13-root] .ren-nav-toggle').click();
+    await page.locator('.rn13-disclosure > summary').click();
+    await expect(page.locator('.rn13-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rn13-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rn13-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rn13-disclosure > summary', '#rn13-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn13-disclosure summary .rn13-chevron'],
+      'mobile navbar13 chevron'
+    );
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    await page.locator('[data-rn13-root] .ren-nav-toggle').click();
+    await page.locator('.rn13-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn13-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, a.rn13-destination'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar13Block(page, staticServer.origin);
+    await page.locator('.rn13-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rn13-panel', '.rn13-chevron', 'a.rn13-destination'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('render-matrix marker counts hold across packet viewport states', async ({ page }) => {
+    for (const state of RN13_RENDER_MATRIX.states) {
+      if (!state.javaScript) continue;
+
+      if (state.reducedMotion) {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+      } else {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+      }
+
+      await page.setViewportSize(state.viewport);
+      await gotoNavbar13Block(page, staticServer.origin);
+
+      await page.evaluate((theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, state.theme);
+
+      for (const action of state.actions) {
+        if (action.type === 'click') {
+          await page.locator(action.selector).click();
+        } else if (action.type === 'hover') {
+          await page.locator(action.selector).hover();
+        }
+      }
+
+      for (const [selector, count] of Object.entries(state.expectedMarkers)) {
+        await expect(
+          page.locator(selector),
+          `${state.id} expects ${count}× ${selector}`
+        ).toHaveCount(count);
+      }
+    }
+  });
+
+  test('navbar13 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoNavbar13Block(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rn13-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoNavbar13Block(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rn13-root] .ren-nav');
+        return {
+          surface,
+          text,
+          navBg: nav ? getComputedStyle(nav).backgroundColor : '',
+        };
+      });
+
+      expect(colors.surface, theme).toBeTruthy();
+      expect(colors.text, theme).toBeTruthy();
+      expect(colors.navBg, theme).not.toBe('');
+      expect(colors.navBg, theme).not.toMatch(/rgba\(0,\s*0,\s*0,\s*0\)/);
+    }
+  });
+});
+
+/**
+ * Navbar 14 — Floating Logo-Left Menu-Right Actions (nav-floating-logo-left-menu-right-actions).
+ * Phase A RED: implementation file is intentionally absent; these tests must fail
+ * specifically for missing anatomy / page, not for broken suite wiring.
+ *
+ * Defining differences from Navbar 13: end-aligned menu (not centered), two actions
+ * (secondary + primary) owned by the collapsible panel (not permanent top-row chrome).
+ *
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoNavbar14Block(page, origin) {
+  const response = await page.goto(`${origin}${FLOATING_LOGO_LEFT_MENU_RIGHT_ACTIONS}`);
+  expect(response, 'HTTP response for floating logo-left menu-right actions block').toBeTruthy();
+  expect(
+    response.status(),
+    'navbar14 block must not 404 — implement templates/blocks/nav-floating-logo-left-menu-right-actions.html'
+  ).toBe(200);
+  await expect(page.locator('[data-rn14-root]'), 'missing [data-rn14-root] shell').toHaveCount(1, {
+    timeout: 2000,
+  });
+}
+
+/** @type {{ version: number, path: string, root: string, states: Array<{ id: string, viewport: { width: number, height: number }, theme: string, javaScript: boolean, reducedMotion: boolean, actions: Array<{ type: string, selector: string }>, expectedMarkers: Record<string, number> }> }} */
+const RN14_RENDER_MATRIX = JSON.parse(
+  fs.readFileSync(
+    path.join(PKG_ROOT, 'docs/workflows/relume-to-ren10/modules/navbar14/render-matrix.json'),
+    'utf8'
+  )
+);
+
+test.describe('Navbar Floating Logo Left Menu Right Actions (navbar14)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 20000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer();
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and navbar14 root', async ({ page }) => {
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    await expect(
+      page.getByRole('heading', {
+        name: /Floating Logo.?Left Menu.?Right Actions|Navbar 14|nav-floating-logo-left-menu-right-actions/i,
+        level: 1,
+      })
+    ).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rn14-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn14-root] ul.ren-nav-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn14-root] nav')).toHaveCount(1);
+    await expect(page.locator('nav nav')).toHaveCount(0);
+  });
+
+  test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
+    await gotoNavbar14Block(page, staticServer.origin);
+    await expect(page.locator('#rn14-primary-links')).toHaveCount(1);
+    await expect(page.locator('[data-rn14-root] ul.ren-nav-links')).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rn14-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator('[data-rn14-root] .ren-nav-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn14-primary-links')).toBeVisible();
+    await expect(page.locator('[data-rn14-root] ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('anatomy: one brand, four top entries, three title-only destinations, two actions, one toggle, one chevron', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn14-root] .ren-nav-brand')).toHaveCount(1);
+
+    await expect(page.locator('#rn14-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rn14-primary-links > li > a.ren-nav-link');
+    const dropdownSummaries = page.locator('#rn14-primary-links > li > .rn14-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(dropdownSummaries).toHaveCount(1);
+
+    await expect(
+      page.locator('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(2);
+    await expect(page.locator('[data-rn14-root] .ren-nav-actions a.ren-btn')).toHaveCount(2);
+    await expect(page.locator('[data-rn14-root] .ren-nav-actions .ren-btn-secondary')).toHaveCount(1);
+    await expect(page.locator('[data-rn14-root] .ren-nav-actions .ren-btn-primary')).toHaveCount(1);
+    await expect(page.locator('[data-rn14-root] .ren-nav-toggle')).toHaveCount(1);
+
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('.rn14-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rn14-panel')).toBeVisible();
+
+    await expect(page.locator('a.rn14-destination')).toHaveCount(3);
+    await expect(page.locator('.rn14-destination-icon, .rn14-dest-desc, .rn14-group, .rn14-group-label')).toHaveCount(0);
+    await expect(page.locator('a.rn14-destination .ren-icon, a.rn14-destination img, a.rn14-destination .ren-stack-xs')).toHaveCount(0);
+
+    await expect(
+      page.locator('.rmcg-card, .rmf-feature, .rmi-panel, .ren-card, .ren-menu, .ren-popover, ren-collapsible, .ren-collapsible')
+    ).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn14-disclosure summary .rn14-chevron'],
+      'navbar14 dropdown chevron'
+    );
+    await expect(page.locator('.rn14-chevron')).toHaveCount(1);
+  });
+
+  test('title-only destinations are whole anchors without icons, groups, or descriptions', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+    await page.locator('.rn14-disclosure > summary').click();
+
+    const links = page.locator('a.rn14-destination');
+    await expect(links).toHaveCount(3);
+
+    for (let i = 0; i < 3; i += 1) {
+      const link = links.nth(i);
+      const tagName = await link.evaluate((el) => el.tagName);
+      expect(tagName, `destination ${i} tag`).toBe('A');
+      await expect(link).toHaveAttribute('href', /.+/);
+      const text = (await link.innerText()).trim();
+      expect(text.length, `destination ${i} title text`).toBeGreaterThan(0);
+      await expect(link.locator('a[href], button, [role="button"], .ren-icon, img, p, small')).toHaveCount(0);
+    }
+
+    await expect(page.locator('.rn14-group, .rn14-group-label, .rn14-dest-desc, .rn14-destination-icon')).toHaveCount(0);
+  });
+
+  test('summary opens by click, keyboard, and desktop pointer hover; click pins; Escape restores focus', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn14-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rn14-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('a.rn14-destination').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn14-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn14-destination').first()).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn14-root] .ren-nav-brand').hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator('[data-rn14-root] .ren-nav-brand').hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn14-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and destination activation close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn14-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.locator('[data-rn14-root] .ren-nav-brand').click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rn14-destination').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('mobile toggle exposes the same tree and closes dropdown on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    const toggle = page.locator('[data-rn14-root] .ren-nav-toggle');
+    const disclosure = page.locator('.rn14-disclosure');
+    const summary = disclosure.locator('summary');
+
+    // Source hamburger is unnamed — Ren10 requires an accessible name + expanded/controls wiring.
+    await expect(toggle).toHaveAttribute('aria-label', /.+/);
+    await expect(toggle).toHaveAttribute('aria-controls', 'rn14-primary-links');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rn14-primary-links')).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn14-destination').first()).toBeVisible();
+    // Summary activation must not collapse the mobile tree.
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('breakpoint crossing closes an open dropdown and resets interaction policy', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    const disclosure = page.locator('.rn14-disclosure');
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await page.locator('[data-rn14-root] .ren-nav-toggle').click();
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    const summary = page.locator('.rn14-disclosure > summary');
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('[data-rn14-root] .ren-nav-brand').hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree, both actions, and native disclosure usable', async ({ browser }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    await expect(page.locator('[data-rn14-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rn14-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(2);
+    await expect(
+      page.locator('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn').nth(0)
+    ).toBeVisible();
+    await expect(
+      page.locator('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn').nth(1)
+    ).toBeVisible();
+
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('.rn14-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('a.rn14-destination')).toHaveCount(3);
+    await expect(page.locator('.rn14-destination-icon, .rn14-dest-desc, .rn14-group')).toHaveCount(0);
+
+    await context.close();
+  });
+
+  test('viewport geometry: end-aligned menu + actions, narrow absolute desktop panel under bar, mobile in-flow, no horizontal overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    const shell = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rn14-root] .ren-nav');
+      const links = document.querySelector('#rn14-primary-links');
+      const brand = document.querySelector('[data-rn14-root] .ren-nav-brand');
+      const actions = document.querySelector('[data-rn14-root] .ren-nav-actions');
+      if (!nav || !links || !brand || !actions) return null;
+      const navRect = nav.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      const brandRect = brand.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      return {
+        navCenterX: navRect.left + navRect.width / 2,
+        navRight: navRect.right,
+        navLeft: navRect.left,
+        linksCenterX: linksRect.left + linksRect.width / 2,
+        brandLeft: brandRect.left,
+        brandRight: brandRect.right,
+        linksLeft: linksRect.left,
+        linksRight: linksRect.right,
+        actionsLeft: actionsRect.left,
+        actionsRight: actionsRect.right,
+        sideBySide:
+          Math.abs(brandRect.top - linksRect.top) <= 12
+          && Math.abs(actionsRect.top - linksRect.top) <= 12
+          && brandRect.right <= linksRect.left + 1
+          && linksRect.right <= actionsRect.left + 1,
+      };
+    });
+    expect(shell).toBeTruthy();
+    expect(shell.sideBySide, 'desktop logo / end-aligned menu / two actions share one row').toBe(true);
+    expect(
+      shell.linksCenterX - shell.navCenterX,
+      'menu cluster sits end-side of center (not geometrically centered like navbar13)'
+    ).toBeGreaterThan(16);
+    expect(
+      shell.navRight - shell.actionsRight,
+      'actions hug the floating shell end'
+    ).toBeLessThanOrEqual(32);
+    expect(
+      shell.brandLeft - shell.navLeft,
+      'logo stays at the floating shell start'
+    ).toBeLessThanOrEqual(32);
+    expect(
+      shell.actionsLeft - shell.linksRight,
+      'menu and actions form a contiguous end cluster'
+    ).toBeLessThanOrEqual(24);
+
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('.rn14-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rn14-root] .ren-nav');
+      const panel = document.querySelector('.rn14-panel');
+      const summary = document.querySelector('.rn14-disclosure > summary');
+      if (!nav || !panel || !summary) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      const summaryRect = summary.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+        panelWidth: Math.round(panelRect.width),
+        panelCenterX: panelRect.left + panelRect.width / 2,
+        summaryCenterX: summaryRect.left + summaryRect.width / 2,
+        overlapsBar: panelRect.top < navRect.bottom - 2 && panelRect.bottom > navRect.top + 2,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    expect(desktop.overlapsBar, 'narrow dropdown must not cover the bar').toBe(false);
+    expect(desktop.panelWidth, 'narrow title-only desktop panel').toBeGreaterThanOrEqual(120);
+    expect(desktop.panelWidth, 'narrow title-only desktop panel').toBeLessThanOrEqual(280);
+    expect(
+      Math.abs(desktop.panelCenterX - desktop.summaryCenterX),
+      'panel centered beneath its trigger'
+    ).toBeLessThanOrEqual(24);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar14Block(page, staticServer.origin);
+    await page.locator('[data-rn14-root] .ren-nav-toggle').click();
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('.rn14-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rn14-panel');
+      const links = document.querySelector('#rn14-primary-links');
+      if (!panel || !links) return null;
+      const panelRect = panel.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      return {
+        position: getComputedStyle(panel).position,
+        fullWidth: Math.abs(panelRect.width - linksRect.width) <= 8,
+      };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    expect(mobile.fullWidth, 'mobile dropdown panel spans the nav tree width').toBe(true);
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('tablet uses desktop shell; mobile top row is logo+toggle only with both actions inside the open panel', async ({ page }) => {
+    // 834px is ≥48rem: desktop shell (no hamburger), end-aligned menu, two actions.
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoNavbar14Block(page, staticServer.origin);
+    await expect(page.locator('[data-rn14-root] .ren-nav-toggle')).toBeHidden();
+    await expect(page.locator('#rn14-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(2);
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('a.rn14-destination')).toHaveCount(3);
+    await expect(page.locator('.rn14-dest-desc, .rn14-destination-icon, .rn14-group')).toHaveCount(0);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    const closed = await page.evaluate(() => {
+      const brand = document.querySelector('[data-rn14-root] .ren-nav-brand');
+      const actions = document.querySelector('[data-rn14-root] .ren-nav-actions');
+      const toggle = document.querySelector('[data-rn14-root] .ren-nav-toggle');
+      const links = document.querySelector('#rn14-primary-links');
+      if (!brand || !actions || !toggle || !links) return null;
+      const brandRect = brand.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      const toggleRect = toggle.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      const actionsStyle = getComputedStyle(actions);
+      const linksStyle = getComputedStyle(links);
+      const actionVisible =
+        actionsRect.width > 0
+        && actionsRect.height > 0
+        && actionsStyle.display !== 'none'
+        && actionsStyle.visibility !== 'hidden'
+        && Number(actionsStyle.opacity || '1') > 0;
+      return {
+        brandTop: brandRect.top,
+        toggleTop: toggleRect.top,
+        actionVisible,
+        toggleVisible: toggleRect.width > 0 && toggleRect.height > 0,
+        linksBelowTopRow:
+          linksRect.top >= Math.max(brandRect.bottom, toggleRect.bottom) - 4
+          || linksStyle.display === 'none'
+          || linksStyle.visibility === 'hidden',
+      };
+    });
+    expect(closed).toBeTruthy();
+    expect(closed.actionVisible, 'closed mobile must not show actions in the permanent top row').toBe(false);
+    expect(closed.toggleVisible, 'mobile toggle is present in the chrome row').toBe(true);
+    expect(Math.abs(closed.brandTop - closed.toggleTop), 'brand and toggle share top row').toBeLessThanOrEqual(12);
+    expect(closed.linksBelowTopRow, 'navigation tree is not inlined into the top row when closed').toBe(true);
+
+    await page.locator('[data-rn14-root] .ren-nav-toggle').click();
+    await expect(page.locator('#rn14-primary-links')).toBeVisible();
+    await expect(
+      page.locator('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn')
+    ).toHaveCount(2);
+
+    const opened = await page.evaluate(() => {
+      const brand = document.querySelector('[data-rn14-root] .ren-nav-brand');
+      const actions = document.querySelector('[data-rn14-root] .ren-nav-actions');
+      const toggle = document.querySelector('[data-rn14-root] .ren-nav-toggle');
+      const links = document.querySelector('#rn14-primary-links');
+      const actionButtons = Array.from(
+        document.querySelectorAll('[data-rn14-root] .ren-nav-actions a, [data-rn14-root] .ren-nav-actions .ren-btn')
+      );
+      if (!brand || !actions || !toggle || !links || actionButtons.length < 2) return null;
+      const brandRect = brand.getBoundingClientRect();
+      const actionsRect = actions.getBoundingClientRect();
+      const toggleRect = toggle.getBoundingClientRect();
+      const linksRect = links.getBoundingClientRect();
+      const firstRect = actionButtons[0].getBoundingClientRect();
+      const secondRect = actionButtons[1].getBoundingClientRect();
+      return {
+        toggleStillTop: Math.abs(brandRect.top - toggleRect.top) <= 12,
+        actionsNotTopRow: Math.abs(brandRect.top - actionsRect.top) > 12,
+        linksBelowToggle: linksRect.top >= Math.max(brandRect.bottom, toggleRect.bottom) - 4,
+        actionsBelowLinks: actionsRect.top >= linksRect.bottom - 4,
+        firstFullWidth: Math.abs(firstRect.width - linksRect.width) <= 8,
+        secondFullWidth: Math.abs(secondRect.width - linksRect.width) <= 8,
+        stacked: secondRect.top >= firstRect.bottom - 2,
+      };
+    });
+    expect(opened).toBeTruthy();
+    expect(opened.toggleStillTop, 'opened mobile keeps toggle in top row').toBe(true);
+    expect(opened.actionsNotTopRow, 'opened mobile keeps actions out of the permanent top row').toBe(true);
+    expect(opened.linksBelowToggle, 'opened mobile stacks the tree under logo+toggle').toBe(true);
+    expect(opened.actionsBelowLinks, 'both actions sit inside the panel below the link tree').toBe(true);
+    expect(opened.firstFullWidth, 'first action is full-width in the open panel').toBe(true);
+    expect(opened.secondFullWidth, 'second action is full-width in the open panel').toBe(true);
+    expect(opened.stacked, 'both actions stack vertically inside the open panel').toBe(true);
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned top-level peers', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn14-disclosure summary .rn14-chevron'],
+      'navbar14 desktop chevron'
+    );
+
+    const peerLinks = page.locator('#rn14-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rn14-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rn14-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rn14-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rn14-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none'
+      || afterContent === ''
+      || summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+
+    const markerContent = String(summaryChrome.markerContent || 'none').replace(/['"]/g, '');
+    expect(
+      markerContent === 'none' || markerContent === '' || summaryChrome.markerDisplay === 'none',
+      'summary marker'
+    ).toBeTruthy();
+
+    await expect(page.locator('.rn14-disclosure summary .rn14-chevron')).toHaveCount(1);
+
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('.rn14-disclosure')).toHaveAttribute('open', '');
+    const openChrome = await page.evaluate(() => {
+      const summary = document.querySelector('.rn14-disclosure > summary');
+      if (!summary) return null;
+      const ss = getComputedStyle(summary);
+      return {
+        marginBottom: ss.marginBottom,
+        borderBottomWidth: ss.borderBottomWidth,
+        borderBottomStyle: ss.borderBottomStyle,
+      };
+    });
+    expect(openChrome).toBeTruthy();
+    expect(openChrome.marginBottom).toBe('0px');
+    expect(
+      openChrome.borderBottomStyle === 'none' || openChrome.borderBottomWidth === '0px',
+      'open summary divider'
+    ).toBeTruthy();
+  });
+
+  test('mobile rows: full-width peers, one chevron, no overflow', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoNavbar14Block(page, staticServer.origin);
+    await page.locator('[data-rn14-root] .ren-nav-toggle').click();
+    await page.locator('.rn14-disclosure > summary').click();
+    await expect(page.locator('.rn14-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rn14-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rn14-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rn14-disclosure > summary', '#rn14-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rn14-disclosure summary .rn14-chevron'],
+      'mobile navbar14 chevron'
+    );
+    await expectNoOverflow(page, 'html');
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 1100 },
+    });
+    const page = await context.newPage();
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    await page.locator('[data-rn14-root] .ren-nav-toggle').click();
+    await page.locator('.rn14-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rn14-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, a.rn14-destination'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoNavbar14Block(page, staticServer.origin);
+    await page.locator('.rn14-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rn14-panel', '.rn14-chevron', 'a.rn14-destination'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('render-matrix marker counts hold across packet viewport states', async ({ page }) => {
+    for (const state of RN14_RENDER_MATRIX.states) {
+      if (!state.javaScript) continue;
+
+      if (state.reducedMotion) {
+        await page.emulateMedia({ reducedMotion: 'reduce' });
+      } else {
+        await page.emulateMedia({ reducedMotion: 'no-preference' });
+      }
+
+      await page.setViewportSize(state.viewport);
+      await gotoNavbar14Block(page, staticServer.origin);
+
+      await page.evaluate((theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, state.theme);
+
+      for (const action of state.actions) {
+        if (action.type === 'click') {
+          await page.locator(action.selector).click();
+        } else if (action.type === 'hover') {
+          await page.locator(action.selector).hover();
+        }
+      }
+
+      for (const [selector, count] of Object.entries(state.expectedMarkers)) {
+        await expect(
+          page.locator(selector),
+          `${state.id} expects ${count}× ${selector}`
+        ).toHaveCount(count);
+      }
+    }
+  });
+
+  test('navbar14 preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoNavbar14Block(page, staticServer.origin);
+    await injectAxe(page);
+    await checkA11y(page, '[data-rn14-root]', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoNavbar14Block(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+
+      const colors = await page.evaluate(() => {
+        const surface = getComputedStyle(document.documentElement).getPropertyValue('--color-surface').trim();
+        const text = getComputedStyle(document.documentElement).getPropertyValue('--color-text').trim();
+        const nav = document.querySelector('[data-rn14-root] .ren-nav');
         return {
           surface,
           text,

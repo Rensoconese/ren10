@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-cover-image-email-split-band.html",
+  "root": "[data-rh10-root]",
+  "states": [
+    {"id":"desktop-light","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh10-media":1,"h1.rh10-heading":1,".rh10-submit":1}},
+    {"id":"desktop-dark","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh10-band":1,".rh10-form":1}},
+    {"id":"tablet-light","viewport":{"width":768,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh10-band-layout":1,".rh10-email":1}},
+    {"id":"mobile-light","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh10-media img":1,".rh10-submit":1}},
+    {"id":"mobile-dark","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh10-description":1,".rh10-terms":1}},
+    {"id":"desktop-reduced-motion","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[],"expectedMarkers":{".rh10-media":1,".rh10-form":1}},
+    {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh10-media img":1,".rh10-form":1,".rh10-terms":1}}
+  ]
+}

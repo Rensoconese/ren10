@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Phase A RED was recorded before production edits. The focused Navbar 11 Playwright set listed 20 cases (18 dedicated plus the shared mobile-chrome and hover-corridor contracts). With templates/blocks/nav-logo-left-menu-right-dropdown.html absent, the first shared case failed waiting for [data-rn11-root] .ren-nav-toggle and the dedicated navigation guard resolves the missing page as HTTP 404. No production file existed when this evidence was recorded on 2026-07-14 against prep commit 9317897."
+}

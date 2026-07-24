@@ -1,0 +1,202 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "82765e64cf412feebe86413488db84b651380ed8",
+  "captures": {
+    "desktop": "captures/header6/desktop-light.png",
+    "mobile": "captures/header6/mobile-light.png",
+    "dark": "captures/header6/desktop-dark.png",
+    "narrow": "captures/header6/narrow-320.png",
+    "noJavaScript": "captures/header6/mobile-js-disabled.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review compared the authenticated complete Relume anatomy with the final DOM, CSS cascade, interactive lifecycle, and all eight cache-busted render states. One full-viewport ren-cover hero owns one local decorative cover image, a two-layer semantic scrim, one vertically centered constrained left copy stack, one visible labelled email input, one submit control, and one legal terms destination. The pristine error and empty status are hidden before custom-element upgrade and with JavaScript disabled; invalid JavaScript submission focuses and exposes the field error, valid enhanced submission clears the field and announces success, and valid no-JavaScript submission follows the real form action. The terms link remains independently usable. Desktop light/dark, 768, 767, 390, 320, reduced-motion focus, and JavaScript-disabled captures preserve the intended hierarchy, responsive column-to-row form transition, legible overlay contrast, 44px targets, clean wrapping, and viewport coverage. No extra CTA, navigation, logo, chevron, duplicate affordance, clipping, overflow, framework code, raw flex/grid skeleton, or forbidden chromatic literal remains.",
+  "checklist": {
+    "total": 36,
+    "passed": 36,
+    "controls": [
+      {
+        "id": "A1",
+        "result": "passed",
+        "description": "Authenticated complete Relume source and reference lineage verified."
+      },
+      {
+        "id": "A2",
+        "result": "passed",
+        "description": "DOM matches the full source anatomy without retaining protected source output."
+      },
+      {
+        "id": "A3",
+        "result": "passed",
+        "description": "Packet evidence, acceptance criteria, and allowed implementation scope validate."
+      },
+      {
+        "id": "A4",
+        "result": "passed",
+        "description": "RED evidence predates implementation and fails for the intended missing block."
+      },
+      {
+        "id": "A5",
+        "result": "passed",
+        "description": "Eight fresh render states trace functional commit 82765e6."
+      },
+      {
+        "id": "B1",
+        "result": "passed",
+        "description": "One labelled full-viewport hero section owns exactly one h1."
+      },
+      {
+        "id": "B2",
+        "result": "passed",
+        "description": "Copy owns one description, one labelled email input, one submit, and one legal line."
+      },
+      {
+        "id": "B3",
+        "result": "passed",
+        "description": "Media owns exactly one decorative cover image and one semantic two-layer scrim."
+      },
+      {
+        "id": "B4",
+        "result": "passed",
+        "description": "No navigation, logo, second CTA, video, dialog, chevron, or duplicate control exists."
+      },
+      {
+        "id": "B5",
+        "result": "passed",
+        "description": "The form action and independent terms destination are real and usable."
+      },
+      {
+        "id": "B6",
+        "result": "passed",
+        "description": "Native and enhanced email submission lifecycles are deterministic."
+      },
+      {
+        "id": "C1",
+        "result": "passed",
+        "description": "Vanilla HTML, CSS, JavaScript, and Light DOM only."
+      },
+      {
+        "id": "C2",
+        "result": "passed",
+        "description": "Exact field and button contracts and imports are used."
+      },
+      {
+        "id": "C3",
+        "result": "passed",
+        "description": "Ren10 cover, center, and stack primitives own the page skeleton."
+      },
+      {
+        "id": "C4",
+        "result": "passed",
+        "description": "Semantic and component tokens only; no forbidden palette tokens or chromatic literals."
+      },
+      {
+        "id": "C5",
+        "result": "passed",
+        "description": "Real semantic form, input, button, and link elements use documented public APIs."
+      },
+      {
+        "id": "C6",
+        "result": "passed",
+        "description": "Reduced motion is respected and introduces no hidden dependency."
+      },
+      {
+        "id": "D1",
+        "result": "passed",
+        "description": "Copy and form retain the intended left-aligned reading order at every width."
+      },
+      {
+        "id": "D2",
+        "result": "passed",
+        "description": "The constrained content stack remains vertically centered over the full cover image."
+      },
+      {
+        "id": "D3",
+        "result": "passed",
+        "description": "320, 390, 767, 768, and 1280 renders have no horizontal overflow or clipping."
+      },
+      {
+        "id": "D4",
+        "result": "passed",
+        "description": "The form stacks at narrow widths and changes cleanly to growing-field/intrinsic-submit row."
+      },
+      {
+        "id": "D5",
+        "result": "passed",
+        "description": "Image and scrim continuously cover the viewport without seams or detached layers."
+      },
+      {
+        "id": "E1",
+        "result": "passed",
+        "description": "Input, submit, and terms link have accessible names and visible focus."
+      },
+      {
+        "id": "E2",
+        "result": "passed",
+        "description": "Interactive targets meet the 44px touch geometry baseline."
+      },
+      {
+        "id": "E3",
+        "result": "passed",
+        "description": "Visible labelling, required state, validation error, and live status are coherent."
+      },
+      {
+        "id": "E4",
+        "result": "passed",
+        "description": "Pristine, invalid, valid, reset, and no-JavaScript states preserve focus and semantics."
+      },
+      {
+        "id": "E5",
+        "result": "passed",
+        "description": "Axe WCAG 2.1 A/AA passes in Desktop Light and Desktop Dark."
+      },
+      {
+        "id": "E6",
+        "result": "passed",
+        "description": "JavaScript-disabled fallback and reduced-motion focus remain fully usable."
+      },
+      {
+        "id": "F1",
+        "result": "passed",
+        "description": "Desktop light and dark captures are aligned, legible, and unclipped."
+      },
+      {
+        "id": "F2",
+        "result": "passed",
+        "description": "Mobile, 320, and JavaScript-disabled captures are aligned, legible, and unclipped."
+      },
+      {
+        "id": "F3",
+        "result": "passed",
+        "description": "No empty error/status, duplicate affordance, or cascade artifact is visible."
+      },
+      {
+        "id": "F4",
+        "result": "passed",
+        "description": "Ren10 styling preserves the Relume hierarchy, anatomy, and responsive behavior."
+      },
+      {
+        "id": "G1",
+        "result": "passed",
+        "description": "Focused Playwright passes 28/28 across Desktop Light and Desktop Dark."
+      },
+      {
+        "id": "G2",
+        "result": "passed",
+        "description": "Lint and token policy pass with zero errors and 29 pre-existing warnings."
+      },
+      {
+        "id": "G3",
+        "result": "passed",
+        "description": "Workflow validation, complete eval suite, doctor, and agent checks pass."
+      },
+      {
+        "id": "G4",
+        "result": "passed",
+        "description": "Contract counts, stale-reference scan, scope audit, and diff checks pass."
+      }
+    ]
+  },
+  "applicableEvalsChecklist": "All applicable RenDS self-check items pass: vanilla Light DOM, semantic structure, tokens and layout primitives, form labelling/validation/status, focus and touch geometry, reduced motion, JavaScript fallback, light/dark rendering, lint, evals, and browser verification. The single-input capture correctly does not require the multi-field ren-form composite; dialog, migration, and new-component checklist items are not applicable."
+}

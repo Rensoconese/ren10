@@ -1,0 +1,21 @@
+{
+  "kind": "final-capture-evidence",
+  "moduleId": "header7",
+  "blockSlug": "hero-fullscreen-bg-video-left-copy-dual-cta",
+  "sourceCommit": "eae1b3065e918a01abcd410d7eaa8a4596de60c7",
+  "capturesFresh": true,
+  "captureCommand": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/header7/render-matrix.json --module header7 --output docs/workflows/relume-to-ren10/modules/header7/captures --repo-root .",
+  "outputRoot": "docs/workflows/relume-to-ren10/modules/header7/captures/header7",
+  "stateCount": 8,
+  "states": [
+    "desktop-light-playing",
+    "desktop-dark-paused",
+    "tablet-light",
+    "mobile-light",
+    "narrow-320",
+    "seam-767",
+    "seam-768",
+    "mobile-js-disabled"
+  ],
+  "inspection": "Codex inspected all eight fresh PNGs from eae1b30 after the CTA contrast fix. The full-viewport video layer, scrim, vertically centered constrained copy, exactly two CTAs and separate motion control remain aligned and unclipped across desktop, tablet, mobile, 320px and both responsive seams. Primary rest/hover/active now use the documented accent/on-accent pair; secondary and motion hover/active use matching foreground/background pairs while the outlined rest state retains inverted foreground. Theme-scoped color-scheme ownership keeps every final CTA state at or above 4.5:1 in light and dark, all three backgrounds remain differentiated, normal motion tokens remain intact, and reduced motion collapses durations to zero. The light state captures autoplay, the dark state captures the paused reduced-motion fallback, and the JavaScript-disabled state exposes native video controls. No form, navigation, logo, duplicate CTA, extra chevron or overflow is visible."
+}

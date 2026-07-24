@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated category listing proved navbar11 immediately follows navbar10; complete section source and four vendored primitives were retrieved and sanitized."
+}

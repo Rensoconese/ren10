@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    { "id": "exact-anatomy", "kind": "structure", "description": "One media trigger/image/scrim/play, one dialog/spinner/iframe, one h1/description/form/email/submit/legal/terms exist without excluded extras", "automated": true },
+    { "id": "responsive", "kind": "geometry", "description": "Full-svh media-first shell; band stacks on mobile and becomes two columns at 768; form becomes a row from 640", "automated": true },
+    { "id": "dialog", "kind": "behavior", "description": "Loading/loaded states, focus trap/restore, Escape, backdrop, close, one playable iframe, and reduced motion work", "automated": true },
+    { "id": "form", "kind": "behavior", "description": "Visible label, native validation/error, polite success status, real GET fallback, and real terms destination work", "automated": true },
+    { "id": "progressive-enhancement", "kind": "behavior", "description": "No-JavaScript preserves poster, copy, form, legal terms, and a real video alternative", "automated": true },
+    { "id": "accessibility", "kind": "a11y", "description": "Semantic controls, 44px targets, focus visibility, light/dark, reduced motion, and axe AA pass", "automated": true },
+    { "id": "ren10-policy", "kind": "source", "description": "Documented Ren10 parts/tokens only; no framework, copied URL, primitive palette, hardcoded color, or raw motion patch", "automated": true },
+    { "id": "visual-review", "kind": "human-review", "description": "Fresh closed/open/loading/loaded, seam, mobile, dark, reduced-motion, and no-JS captures are inspected", "automated": false }
+  ]
+}

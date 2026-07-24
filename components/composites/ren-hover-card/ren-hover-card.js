@@ -157,7 +157,7 @@ export class RenHoverCard extends HTMLElement {
 
     try {
       this.card.hidePopover();
-    } catch (e) {
+    } catch {
       /* ═══ POPOVER API MAY NOT EXIST ═══ */
       this.card.style.display = 'none';
     }

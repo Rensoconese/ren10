@@ -1,0 +1,18 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:56603/templates/blocks/hero-centered-email-capture-landscape-lightbox.html?ren10_capture=header29-mobile-js-disabled-4e3491fb607d",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    "form[action]": 1,
+    ".rh29-video-fallback[href]": 1,
+    ".rh29-poster": 1
+  },
+  "commit": "4e3491fb607d1c51b54f5d08022a0cf5b98e2cdb",
+  "capturedAt": "2026-07-16T20:52:17.542Z"
+}

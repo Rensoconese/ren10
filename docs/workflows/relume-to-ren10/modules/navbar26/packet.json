@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar26",
+  "blockSlug": "nav-mega-menu-category-promo-panel",
+  "blockPath": "templates/blocks/nav-mega-menu-category-promo-panel.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-category-promo-panel.html",
+    "tests/components/navbar26-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

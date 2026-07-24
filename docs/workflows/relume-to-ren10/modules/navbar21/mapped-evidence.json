@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar21 mapped to one ren-nav landmark with always-visible toggle controlling an in-landmark fullscreen panel; native details/summary for the bar dropdown (3 flat destinations, one authored chevron); eight large panel links; featured rail with two media+copy articles and one view-all chevron; contact + five named socials; dual destination sets preserved without nested nav; 48rem shell boundary; progressive enhancement exposes both sets without JS. Rejected edge sheet as sole shell, ren-card/ren-menu, duplicate bar trees, and copied source."
+}

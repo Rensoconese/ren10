@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar28 mapped to one ren-nav tree, native details/summary mega, one five-link category column, three whole-card overlay collections, two actions in a single cluster, one named toggle, one chevron, full-width logo-left bar, and the established 48rem interaction boundary. Rejected nested buttons, ren-menu, ren-popover, duplicate action trees, nested nav, floating-card geometry, and copied source."
+}

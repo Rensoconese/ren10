@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dialog-open",
+  "url": "http://127.0.0.1:49979/templates/blocks/hero-centered-copy-dual-cta-landscape-lightbox.html?ren10_capture=header28-desktop-dialog-open-09b43f56c70d",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "#rh28-video[open]": 1,
+    "#rh28-video iframe": 1
+  },
+  "commit": "09b43f56c70d5c387bbb0bc9948082e6a5f270e8",
+  "capturedAt": "2026-07-15T20:02:32.860Z"
+}

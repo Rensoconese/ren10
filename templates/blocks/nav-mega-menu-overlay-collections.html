@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Mega Menu Overlay Collections Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS overlay-collections mega-menu navbar block built with ren-nav, native details disclosure, ren-with-sidebar, ren-grid, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /*
+     * Narrow viewports: constrain page chrome without clipping document scroll.
+     * overflow-x:clip on html/body forces overflow-y to non-visible (CSS overflow
+     * pairing) and breaks full-page capture / scrollIntoView for open mobile shells.
+     */
+    html,
+    body {
+      max-width: 100%;
+    }
+
+    .dx-nav-inner {
+      min-width: 0;
+      max-width: 100%;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    @media (max-width: 22.5rem) {
+      .dx-nav-actions {
+        display: none;
+      }
+
+      .dx-nav-menu {
+        display: none;
+      }
+    }
+
+    .rmoc-preview,
+    .rmoc-page-header,
+    .rmoc-panel,
+    .rmoc-card-grid {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .rmoc-preview {
+      overflow-x: clip;
+      overflow-y: visible;
+    }
+
+    .rmoc-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rmoc-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmoc-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rmoc-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rmoc-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    .rmoc-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      min-height: var(--ren-nav-height);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rmoc-preview .ren-nav-brand,
+    .rmoc-preview .ren-nav-link,
+    .rmoc-preview .ren-nav-actions .ren-btn,
+    .rmoc-preview .rmoc-mega-link,
+    .rmoc-preview a.rmoc-card {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rmoc-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Native details: neutralize classless card chrome, marker, divider, pseudo-chevron. */
+    .rmoc-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rmoc-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rmoc-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+    }
+
+    .rmoc-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rmoc-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rmoc-disclosure > summary::after,
+    .rmoc-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rmoc-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rmoc-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmoc-disclosure[open] > summary .rmoc-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rmoc-panel {
+      padding: 0;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rmoc-panel-inner {
+      --center-padding: 0;
+      max-width: var(--width-7xl);
+      margin-inline: auto;
+      padding: var(--space-5) var(--space-6);
+    }
+
+    /* Narrow category column + wide overlay-collection region. */
+    .rmoc-layout.ren-with-sidebar {
+      --sidebar-width: 15rem;
+      --sidebar-content-min: 58%;
+      --sidebar-gap: var(--space-6);
+      align-items: start;
+    }
+
+    .rmoc-link-col {
+      min-width: 0;
+      max-width: 15rem;
+    }
+
+    .rmoc-group-heading {
+      margin: 0 0 var(--space-3);
+      color: var(--color-text-muted);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .rmoc-link-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rmoc-mega-link {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmoc-mega-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rmoc-mega-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmoc-card-grid.ren-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--grid-gap, var(--space-4));
+      min-width: 0;
+      width: 100%;
+    }
+
+    /* Overlay collection cards: full-bleed media + scrim + light copy. */
+    a.rmoc-card.ren-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-width: 0;
+      min-height: calc(var(--touch-min) * 4);
+      overflow: hidden;
+      color: var(--color-text-inverted);
+      text-decoration: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      isolation: isolate;
+      transition:
+        box-shadow var(--duration-state) var(--ease-state-change),
+        border-color var(--duration-state) var(--ease-state-change),
+        transform var(--duration-state) var(--ease-state-change);
+    }
+
+    a.rmoc-card.ren-card:hover {
+      border-color: var(--color-border-strong);
+      box-shadow: var(--shadow-md);
+    }
+
+    a.rmoc-card.ren-card:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rmoc-card-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--color-text) 55%, var(--color-accent)),
+          color-mix(in srgb, var(--color-text) 70%, var(--color-surface-sunken))
+        );
+      transition: opacity var(--duration-state) var(--ease-state-change);
+    }
+
+    .rmoc-card-media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--color-text) 35%, transparent),
+          color-mix(in srgb, var(--color-text) 72%, transparent)
+        );
+    }
+
+    .rmoc-card:nth-child(2) .rmoc-card-media {
+      background:
+        linear-gradient(
+          145deg,
+          color-mix(in srgb, var(--color-info) 45%, var(--color-text)),
+          color-mix(in srgb, var(--color-text) 80%, var(--color-surface))
+        );
+    }
+
+    .rmoc-card:nth-child(3) .rmoc-card-media {
+      background:
+        linear-gradient(
+          160deg,
+          color-mix(in srgb, var(--color-success) 40%, var(--color-text)),
+          color-mix(in srgb, var(--color-text) 78%, var(--color-surface-sunken))
+        );
+    }
+
+    .rmoc-card:nth-child(4) .rmoc-card-media {
+      background:
+        linear-gradient(
+          125deg,
+          color-mix(in srgb, var(--color-warning) 38%, var(--color-text)),
+          color-mix(in srgb, var(--color-text) 76%, var(--color-surface))
+        );
+    }
+
+    .rmoc-card-media > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0.35;
+    }
+
+    .rmoc-card-body {
+      position: relative;
+      z-index: 1;
+      --stack-gap: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      min-height: calc(var(--touch-min) * 4);
+      padding: var(--space-5);
+      min-width: 0;
+      color: var(--color-text-inverted);
+    }
+
+    .rmoc-card-title {
+      margin: 0;
+      font-size: clamp(var(--text-xl), 2vw, var(--text-3xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.2;
+      color: var(--color-text-inverted);
+    }
+
+    .rmoc-card-desc {
+      margin: 0;
+      color: color-mix(in srgb, var(--color-text-inverted) 88%, transparent);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+    }
+
+    .rmoc-card-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      align-self: flex-start;
+      min-height: var(--touch-min);
+      margin-block-start: var(--space-4);
+      padding: var(--space-2) var(--space-4);
+      border: 1px solid color-mix(in srgb, var(--color-text-inverted) 70%, transparent);
+      border-radius: var(--radius-md);
+      color: var(--color-text-inverted);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      background: color-mix(in srgb, var(--color-text-inverted) 8%, transparent);
+    }
+
+    a.rmoc-card:hover .rmoc-card-cta {
+      background: color-mix(in srgb, var(--color-text-inverted) 16%, transparent);
+    }
+
+    .rmoc-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rmoc-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rmoc-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Seam-free shell boundary aligned with ren-nav: mobile chrome uses
+     * max-width: 48rem (toggle visible through 768px). Desktop mega chrome
+     * and JS DESKTOP_MQ start just above that seam.
+     */
+    @media (min-width: 48.0625rem) {
+      .rmoc-disclosure {
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rmoc-panel {
+        position: absolute;
+        inset-inline: 0;
+        top: 100%;
+        width: 100%;
+        z-index: var(--ren-z-sticky);
+        box-shadow: var(--shadow-lg);
+        animation: rmoc-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+
+      /* Seam bridge between bar and panel (lateral corridor is JS-assisted). */
+      .rmoc-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+      }
+
+      .rmoc-link-col {
+        flex-grow: 0;
+      }
+    }
+
+    /* Wide desktop: four-up overlay collection grid. */
+    @media (min-width: 64rem) {
+      .rmoc-card-grid.ren-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 48rem) {
+      .rmoc-preview .ren-nav {
+        flex-wrap: wrap;
+        gap: 0;
+      }
+
+      .rmoc-preview .ren-nav-brand {
+        order: 1;
+      }
+
+      .rmoc-preview .ren-nav-toggle {
+        order: 2;
+        margin-inline-start: auto;
+      }
+
+      .rmoc-preview .ren-nav-links {
+        order: 3;
+        position: static;
+        width: 100%;
+        border-block-end: 0;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .rmoc-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rmoc-preview .ren-nav-links .ren-nav-link,
+      .rmoc-preview .rmoc-disclosure,
+      .rmoc-preview .rmoc-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rmoc-preview .rmoc-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+
+      .rmoc-preview .ren-nav-actions {
+        order: 4;
+        display: none;
+        width: 100%;
+        margin-inline-start: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmoc-preview .ren-nav[data-open] .ren-nav-actions,
+      .rmoc-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .rmoc-preview .ren-nav-actions .ren-btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .rmoc-panel {
+        width: 100%;
+        position: static;
+        border-block-end: none;
+        background: transparent;
+      }
+
+      .rmoc-panel-inner {
+        padding: var(--space-3) var(--space-4);
+      }
+
+      .rmoc-layout.ren-with-sidebar {
+        --sidebar-width: 100%;
+        --sidebar-content-min: 100%;
+        --sidebar-gap: var(--space-4);
+      }
+
+      .rmoc-link-col {
+        max-width: none;
+        width: 100%;
+        flex-basis: 100%;
+      }
+
+      .rmoc-card-grid.ren-grid {
+        grid-template-columns: 1fr;
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+
+    /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
+    @media (max-width: 48rem) {
+      .rmoc-preview ren-nav:not(:defined) .ren-nav {
+        flex-wrap: wrap;
+      }
+
+      .rmoc-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rmoc-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        order: 3;
+        animation: none;
+      }
+
+      .rmoc-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        margin-inline-start: 0;
+        order: 4;
+        padding: var(--space-2) var(--space-4) var(--space-4);
+        border-block-start: 1px solid var(--color-border);
+      }
+
+      .rmoc-preview ren-nav:not(:defined) .ren-nav-brand {
+        order: 1;
+      }
+    }
+
+    @keyframes rmoc-panel-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rmoc-chevron,
+      .rmoc-mega-link,
+      .rmoc-panel,
+      a.rmoc-card,
+      .rmoc-card-media {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rmoc-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Mega Menu Overlay Collections</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Mega Menu Overlay Collections</h1>
+      <p class="lede">
+        A single navigation tree with a native mega-menu disclosure: a narrow
+        five-link category column beside four full-bleed overlay collection
+        cards. Built with <code>ren-nav</code>, <code>ren-with-sidebar</code>,
+        <code>ren-grid</code>, and progressive enhancement — no nested buttons,
+        second mobile tree, or framework code.
+      </p>
+    </header>
+
+    <section class="rmoc-preview bb-detail-preview" data-rmoc-root aria-label="Navbar mega menu overlay collections preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rmoc-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rmoc-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#solutions">Solutions</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#resources">Resources</a>
+            </li>
+            <li>
+              <details class="rmoc-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Collections
+                  <span class="rmoc-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rmoc-panel">
+                  <div class="rmoc-panel-inner">
+                    <div class="rmoc-layout ren-with-sidebar">
+                      <div class="rmoc-link-col">
+                        <h3 class="rmoc-group-heading" id="rmoc-group-topics">Topics</h3>
+                        <ul class="rmoc-link-list ren-stack-sm" aria-labelledby="rmoc-group-topics">
+                          <li>
+                            <a class="rmoc-mega-link ren-row" href="#topic-guides">Guides</a>
+                          </li>
+                          <li>
+                            <a class="rmoc-mega-link ren-row" href="#topic-templates">Templates</a>
+                          </li>
+                          <li>
+                            <a class="rmoc-mega-link ren-row" href="#topic-playbooks">Playbooks</a>
+                          </li>
+                          <li>
+                            <a class="rmoc-mega-link ren-row" href="#topic-releases">Releases</a>
+                          </li>
+                          <li>
+                            <a class="rmoc-mega-link ren-row" href="#topic-community">Community</a>
+                          </li>
+                        </ul>
+                      </div>
+
+                      <div class="rmoc-card-grid ren-grid">
+                        <a class="rmoc-card ren-card ren-card-interactive" href="#collection-workspace">
+                          <div class="rmoc-card-media" aria-hidden="true">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3C/svg%3E"
+                              alt=""
+                              width="4"
+                              height="5"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmoc-card-body ren-stack">
+                            <h3 class="rmoc-card-title">Workspace kits</h3>
+                            <p class="rmoc-card-desc">Compose shared boards for every team lane.</p>
+                            <span class="rmoc-card-cta">View collection</span>
+                          </div>
+                        </a>
+
+                        <a class="rmoc-card ren-card ren-card-interactive" href="#collection-signals">
+                          <div class="rmoc-card-media" aria-hidden="true">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3C/svg%3E"
+                              alt=""
+                              width="4"
+                              height="5"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmoc-card-body ren-stack">
+                            <h3 class="rmoc-card-title">Signal maps</h3>
+                            <p class="rmoc-card-desc">Route work when product signals change.</p>
+                            <span class="rmoc-card-cta">View collection</span>
+                          </div>
+                        </a>
+
+                        <a class="rmoc-card ren-card ren-card-interactive" href="#collection-handoffs">
+                          <div class="rmoc-card-media" aria-hidden="true">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3C/svg%3E"
+                              alt=""
+                              width="4"
+                              height="5"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmoc-card-body ren-stack">
+                            <h3 class="rmoc-card-title">Handoff trails</h3>
+                            <p class="rmoc-card-desc">Keep design and eng reviews in one place.</p>
+                            <span class="rmoc-card-cta">View collection</span>
+                          </div>
+                        </a>
+
+                        <a class="rmoc-card ren-card ren-card-interactive" href="#collection-launch">
+                          <div class="rmoc-card-media" aria-hidden="true">
+                            <img
+                              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3C/svg%3E"
+                              alt=""
+                              width="4"
+                              height="5"
+                              decoding="async"
+                            >
+                          </div>
+                          <div class="rmoc-card-body ren-stack">
+                            <h3 class="rmoc-card-title">Launch checklists</h3>
+                            <p class="rmoc-card-desc">Ship with staged gates and clear owners.</p>
+                            <span class="rmoc-card-cta">View collection</span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-secondary" href="#sign-in">Sign in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rmoc-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rmoc-hero ren-stack">
+        <h2>Collections under one bar.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the five-link category
+          column, four overlay collection cards, and full-width mega panel stay
+          easy to judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-mega-menu-topics-collection-cards.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Mega Menu Topic Collections Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-mega-menu-categories-products.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Mega Menu Categories Products Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local overlay-collections mega-menu controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic, no timers):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     */
+    const RMOC_CONTROLLER = Symbol.for('ren10.rmoc.controller');
+    /** Inclusive desktop shell; complements ren-nav max-width: 48rem mobile chrome. */
+    const DESKTOP_MQ = '(min-width: 48.0625rem)';
+
+    export function initNavMegaMenuOverlayCollections(scope = document) {
+      const root = scope.querySelector?.('[data-rmoc-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rmoc-root')) {
+        const nested = document.querySelector('[data-rmoc-root]');
+        if (!nested) return null;
+        return initNavMegaMenuOverlayCollectionsOn(nested);
+      }
+      return initNavMegaMenuOverlayCollectionsOn(root);
+    }
+
+    function initNavMegaMenuOverlayCollectionsOn(root) {
+      const disclosure = root.querySelector('.rmoc-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RMOC_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RMOC_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const panel = root.querySelector('.rmoc-panel');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        // Public ARIA / host contract only — never read private ren-nav fields.
+        return toggle.getAttribute('aria-expanded') === 'true'
+          || renNavHost?.hasAttribute('data-open')
+          || root.querySelector('.ren-nav')?.hasAttribute('data-open');
+      }
+
+      /**
+       * Close mobile shell through the public toggle affordance (click).
+       * ren-nav owns aria-expanded / data-open; we never set private fields.
+       */
+      function closeMobileShellViaPublicToggle() {
+        if (!toggle) return false;
+        if (toggle.getAttribute('aria-expanded') !== 'true') return false;
+        toggle.click();
+        return true;
+      }
+
+      function isElementVisiblyFocusable(el) {
+        if (!(el instanceof Element)) return false;
+        const style = getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') return false;
+        if (Number(style.opacity || '1') === 0) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      }
+
+      /**
+       * After mobile shell collapse, destinations often leave the accessibility
+       * tree. Park focus on a still-visible public control:
+       * - brand activation → brand (always visible in the top row)
+       * - every other destination → toggle (named open/close control)
+       */
+      function restoreStableVisibleFocus(preferred) {
+        const brand = root.querySelector('.ren-nav-brand');
+        const brandHit = preferred instanceof Element
+          ? preferred.closest?.('.ren-nav-brand')
+          : null;
+        const candidates = brandHit
+          ? [brandHit, brand, toggle]
+          : [toggle, brand];
+        const pick = candidates.find(isElementVisiblyFocusable);
+        if (pick && typeof pick.focus === 'function') {
+          pick.focus({ preventScroll: true });
+        }
+      }
+
+      /**
+       * Destination activation: always close nested mega; on mobile also close
+       * the shell via the public toggle and leave a stable visible focus.
+       */
+      function closeNestedAndMaybeShell(preferredFocus) {
+        markIntentionalCloseWhilePointerInside();
+        closeDisclosure(false);
+        if (isDesktop()) return;
+
+        // Let ren-nav's own peer-link bubble handlers run first, then finish
+        // with the public toggle if the shell is still expanded.
+        queueMicrotask(() => {
+          if (isMobileNavOpen()) {
+            closeMobileShellViaPublicToggle();
+          }
+          // One frame so display:none from the closed shell applies before focus.
+          requestAnimationFrame(() => {
+            restoreStableVisibleFocus(preferredFocus);
+          });
+        });
+      }
+
+      function destinationFromEventTarget(target) {
+        if (!(target instanceof Element)) return null;
+        // Summary is the mega trigger, not a navigation destination.
+        if (target.closest('summary')) return null;
+        return target.closest(
+          [
+            '.rmoc-mega-link',
+            'a.rmoc-card',
+            '.ren-nav-actions a',
+            '.ren-nav-actions .ren-btn',
+            '.ren-nav-brand',
+            '#rmoc-primary-links > li > a.ren-nav-link',
+          ].join(', '),
+        );
+      }
+
+      /**
+       * Compound hover zone for full-width overlay-collection mega menus.
+       * Keep open while the pointer is over the disclosure, the summary→panel
+       * seam, or the lateral strip from the trigger toward the panel.
+       */
+      function isPointerInHoverZone(clientX, clientY) {
+        if (!Number.isFinite(clientX) || !Number.isFinite(clientY)) return false;
+
+        const hit = document.elementFromPoint(clientX, clientY);
+        if (hit instanceof Node && disclosure.contains(hit)) return true;
+        if (!disclosure.open || !panel) return false;
+
+        const panelRect = panel.getBoundingClientRect();
+        const summaryRect = summary.getBoundingClientRect();
+        if (panelRect.width === 0 || summaryRect.width === 0) return false;
+
+        const inPanelX = clientX >= panelRect.left && clientX <= panelRect.right;
+
+        // Vertical seam between trigger and panel (full panel width).
+        const seamTop = Math.min(summaryRect.bottom, panelRect.top);
+        const seamBottom = Math.max(summaryRect.bottom, panelRect.top);
+        if (inPanelX && clientY >= seamTop - 1 && clientY <= seamBottom + 1) {
+          return true;
+        }
+
+        // Lateral corridor at trigger height: summary → collections (not brand).
+        if (
+          inPanelX &&
+          clientY >= summaryRect.top &&
+          clientY <= summaryRect.bottom &&
+          clientX >= summaryRect.left
+        ) {
+          return true;
+        }
+
+        return false;
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          // Keyboard-generated activation: detail === 0 — leave native toggle.
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            // First real pointer click after hover-open: pin open.
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          // Pinned or click-opened: genuine close.
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (!isDesktop()) return;
+          const { clientX, clientY } = event;
+          // Defer so elementFromPoint / geometry see the post-leave position.
+          requestAnimationFrame(() => {
+            if (!isDesktop()) return;
+            if (isPointerInHoverZone(clientX, clientY)) {
+              pointerInside = true;
+              return;
+            }
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            if (!pointerPinned) closeDisclosure(false);
+          });
+        },
+        { signal }
+      );
+
+      // While open, follow the pointer across the nav seam into cards.
+      document.addEventListener(
+        'pointermove',
+        (event) => {
+          if (!isDesktop() || !disclosure.open || pointerPinned) return;
+          if (isPointerInHoverZone(event.clientX, event.clientY)) {
+            pointerInside = true;
+            return;
+          }
+          if (pointerInside) {
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      // Destinations: mega links, collection cards, header actions, brand, peers.
+      // Capture phase so mobile shell close still runs when ren-nav also listens.
+      root.addEventListener(
+        'click',
+        (event) => {
+          const destination = destinationFromEventTarget(event.target);
+          if (!destination || !root.contains(destination)) return;
+          closeNestedAndMaybeShell(destination);
+        },
+        { signal }
+      );
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavMegaMenuOverlayCollections();
+  </script>
+</body>
+</html>

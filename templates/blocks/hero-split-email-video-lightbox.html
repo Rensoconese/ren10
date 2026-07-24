@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hero Split Email Video Lightbox — Ren10</title>
+  <meta name="description" content="A responsive Ren10 hero with one email CTA and an accessible video lightbox.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-link/ren-link.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-icon/ren-icon.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-spinner/ren-spinner.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-breadcrumb/ren-breadcrumb.css">
+  <link rel="stylesheet" href="../../components/composites/ren-dialog/ren-dialog.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh4-section {
+      padding-block: var(--space-section-lg);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh4-layout {
+      --grid-gap: var(--space-12);
+      align-items: center;
+    }
+
+    .rh4-copy {
+      --stack-gap: var(--space-4);
+      min-width: 0;
+    }
+
+    .rh4-title {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 5vw, var(--text-7xl));
+      line-height: var(--leading-tight);
+      text-wrap: balance;
+    }
+
+    .rh4-lede {
+      max-width: 54ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+    }
+
+    .rh4-form-wrap {
+      --stack-gap: var(--space-1);
+      max-width: var(--width-xl);
+      margin-block-start: var(--space-2);
+    }
+
+    .rh4-form-row {
+      --cluster-gap: var(--space-3);
+      align-items: end;
+    }
+
+    .rh4-form-row ren-field {
+      flex: 1 1 var(--width-sm);
+      min-width: 0;
+    }
+
+    .rh4-cta {
+      flex: 0 0 auto;
+      position: relative;
+      z-index: var(--z-raised);
+    }
+
+    .rh4-terms {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: var(--leading-normal);
+    }
+
+    .rh4-terms .ren-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+    }
+
+    .rh4-form [data-error][hidden],
+    .rh4-loader[hidden],
+    .rh4-video-stage iframe[hidden] {
+      display: none;
+    }
+
+    .rh4-media {
+      min-width: 0;
+    }
+
+    .rh4-media-trigger {
+      position: relative;
+      width: 100%;
+      min-height: var(--touch-min);
+      padding: 0;
+      overflow: hidden;
+      color: var(--color-text);
+      background: var(--color-fill);
+      border: var(--stroke-1) solid var(--color-border-interactive);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      cursor: pointer;
+    }
+
+    .rh4-media-trigger:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rh4-poster {
+      --frame-ratio: 16 / 9;
+      background: linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill-active));
+    }
+
+    .rh4-poster img {
+      object-position: top;
+    }
+
+    .rh4-scrim {
+      position: absolute;
+      inset: 0;
+      background: var(--color-overlay);
+    }
+
+    .rh4-play {
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: var(--size-2xl);
+      height: var(--size-2xl);
+      color: var(--color-text);
+      background: var(--color-surface-overlay);
+      border: var(--stroke-1) solid var(--color-border-strong);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-md);
+      transform: translate(-50%, -50%);
+    }
+
+    #rh4-video {
+      --ren-dialog-width: min(90vw, var(--width-4xl));
+    }
+
+    #rh4-video .ren-dialog-close {
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+    }
+
+    .rh4-video-stage {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh4-video-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh4-loader {
+      --cover-height: 100%;
+      position: absolute;
+      inset: 0;
+      padding: var(--space-4);
+    }
+
+    @media (max-width: 47.999rem) {
+      .rh4-section {
+        padding-block: var(--space-12);
+      }
+
+      #rh4-video {
+        --ren-dialog-width: 100%;
+      }
+
+      #rh4-video dialog[data-mobile-sheet] {
+        top: auto;
+      }
+
+      .rh4-layout {
+        --grid-gap: var(--space-8);
+        grid-template-columns: 1fr;
+      }
+
+      .rh4-form-row > * {
+        flex-basis: 100%;
+      }
+
+      .rh4-cta {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh4-section *,
+      .rh4-section *::before,
+      .rh4-section *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="ren-link-skip" href="#rh4-preview">Skip to header preview</a>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a class="dx-brand" href="../../docs/index.html" aria-label="Ren10 documentation home">
+        <span class="dx-brand-mark" aria-hidden="true">R</span>
+        <span>Ren10</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Split email signup with video lightbox</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 4 · Hero block</p>
+      <h1 class="bb-detail-title">Split email signup with video lightbox</h1>
+      <p class="bb-detail-description">A responsive signup hero that pairs one focused email action with a playable product preview and an accessible modal video experience.</p>
+    </header>
+
+    <section id="rh4-preview" class="rh4-section bb-detail-preview" data-rh4-root aria-labelledby="rh4-title">
+      <div class="rh4-layout ren-center ren-center-wide ren-grid ren-grid-2">
+        <div class="rh4-copy ren-stack">
+          <h1 class="rh4-title" id="rh4-title">Hero Split Email Video Lightbox</h1>
+          <p class="rh4-lede">
+            See how a shared design language turns product intent into interfaces teams can ship with confidence.
+          </p>
+
+          <div class="rh4-form-wrap ren-stack-xs">
+            <form class="rh4-form" action="../../docs/getting-started.html" method="get">
+              <div class="rh4-form-row ren-cluster">
+                <ren-field>
+                  <label for="rh4-email">Work email</label>
+                  <input
+                    class="ren-input"
+                    id="rh4-email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    placeholder="team@example.com"
+                    required
+                  >
+                  <span data-error hidden>Enter a valid email address.</span>
+                </ren-field>
+                <button class="rh4-cta ren-btn" type="submit">Join the preview</button>
+              </div>
+            </form>
+            <p class="rh4-terms">
+              By continuing, you agree to our <a class="ren-link" href="../../LICENSE">terms of use</a>.
+            </p>
+          </div>
+        </div>
+
+        <div class="rh4-media">
+          <button
+            class="rh4-media-trigger"
+            type="button"
+            data-dialog-trigger="rh4-video"
+            aria-label="Play the Ren10 product overview"
+          >
+            <span class="rh4-poster ren-frame ren-frame-video">
+<img
+                src="media/hero-material-studio.webp"
+                alt="Maker studio table arranged with tactile material samples"
+                width="1536"
+                height="1024"
+                decoding="async"
+              >
+            </span>
+            <span class="rh4-scrim" aria-hidden="true"></span>
+            <span class="rh4-play ren-icon ren-icon-2xl" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M8 5v14l11-7z" fill="currentColor"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-text-left-video-lightbox.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Text-left video lightbox</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-fullscreen-bg-left-copy-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen background with dual CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <ren-dialog id="rh4-video" size="xl">
+    <dialog>
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title">Ren10 product overview</h2>
+        <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">
+          <span class="ren-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+      <div class="ren-dialog-body">
+        <div class="rh4-video-stage ren-frame ren-frame-video" aria-busy="false">
+          <div class="rh4-loader ren-cover" hidden>
+            <span class="ren-spinner ren-spinner-lg ren-cover-center" role="status" aria-label="Loading video"></span>
+          </div>
+          <iframe
+            title="Ren10 product overview video"
+            allow="autoplay; encrypted-media; picture-in-picture"
+            allowfullscreen
+            hidden
+          ></iframe>
+        </div>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <script>
+    const form = document.querySelector('.rh4-form');
+    const email = form.querySelector('input[type="email"]');
+    const emailError = form.querySelector('[data-error]');
+    const lightbox = document.querySelector('#rh4-video');
+    const stage = lightbox.querySelector('.rh4-video-stage');
+    const loader = lightbox.querySelector('.rh4-loader');
+    const frame = lightbox.querySelector('iframe');
+
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      form.dataset.demoSubmitted = 'true';
+      return false;
+    };
+
+    email.addEventListener('invalid', () => {
+      emailError.hidden = false;
+      email.setAttribute('aria-invalid', 'true');
+    });
+
+    email.addEventListener('input', () => {
+      emailError.hidden = email.validity.valid;
+      if (email.validity.valid) email.removeAttribute('aria-invalid');
+    });
+
+    frame.addEventListener('load', () => {
+      loader.hidden = true;
+      frame.hidden = false;
+      stage.setAttribute('aria-busy', 'false');
+    });
+
+    lightbox.addEventListener('ren-open', () => {
+      const scheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const videoSource = 'data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAAIFEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHWTbuMU6uEElTDZ1OsggEjTbuMU6uEHFO7a1OsggHv7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsCrXsYMPQkBNgIxMYXZmNjIuMy4xMDBXQYxMYXZmNjIuMy4xMDBEiYhAj0AAAAAAABZUrmvIrgEAAAAAAAA/14EBc8WIUaapVNo4evqcgQAitZyDdW5kiIEAhoVWX1ZQOYOBASPjg4QdzWUA4JCwgaC6gVqagQJVsIRVuYEBElTDZ0B/c3OfY8CAZ8iZRaOHRU5DT0RFUkSHjExhdmY2Mi4zLjEwMHNz2mPAi2PFiFGmqVTaOHr6Z8ilRaOHRU5DT0RFUkSHmExhdmM2Mi4xMS4xMDAgbGlidnB4LXZwOWfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDEuMDAwMDAwMDAwAB9DtnXC54EAo6aBAACAgkmDQgAJ8AWWADgkHBhCAAAwYAAAZz///1mvETu4z4ZPgKOVgQH0AIYAQJKcAElAAAMgAABZ+YbgHFO7a5G7j7OBALeK94EB8YIBqPCBAw==';
+      stage.setAttribute('aria-busy', 'true');
+      loader.hidden = false;
+      frame.hidden = true;
+      frame.srcdoc = `<!doctype html>
+        <html style="color-scheme: ${scheme}">
+          <head>
+            <meta name="viewport" content="width=device-width">
+            <style>
+              html, body { height: 100%; margin: 0; }
+              body { overflow: hidden; background: Canvas; color: CanvasText; }
+              video { width: 100%; height: 100%; object-fit: contain; }
+            </style>
+          </head>
+          <body>
+            <video controls autoplay muted playsinline aria-label="Ren10 product overview preview">
+              <source src="${videoSource}" type="video/webm">
+              Your browser does not support embedded video.
+            </video>
+          </body>
+        </html>`;
+    });
+
+    lightbox.addEventListener('ren-close', () => {
+      frame.hidden = true;
+      frame.removeAttribute('src');
+      frame.removeAttribute('srcdoc');
+      loader.hidden = true;
+      stage.setAttribute('aria-busy', 'false');
+    });
+  </script>
+</body>
+</html>

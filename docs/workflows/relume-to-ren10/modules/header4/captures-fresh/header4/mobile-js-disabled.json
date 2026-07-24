@@ -1,0 +1,18 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:49264/templates/blocks/hero-split-email-video-lightbox.html?ren10_capture=header4-mobile-js-disabled-65b22e48e7ec",
+  "viewport": {
+    "width": 390,
+    "height": 1100
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh4-title": 1,
+    ".rh4-form": 1,
+    ".rh4-media-trigger": 1
+  },
+  "commit": "65b22e48e7ec10ea59d7278271626d48a4c0f279",
+  "capturedAt": "2026-07-15T16:45:26.314Z"
+}

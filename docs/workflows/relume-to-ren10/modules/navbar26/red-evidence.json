@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "Isolated suite tests/components/navbar26-navigation.spec.cjs was added before production. Focused run with --max-failures=1 discovered the suite and failed immediately: production HTML templates/blocks/nav-mega-menu-category-promo-panel.html is absent (HTTP 404; expected 200). Remaining tests were left unrun by --max-failures=1. Command: npx playwright test tests/components/navbar26-navigation.spec.cjs --config tests/components/playwright.config.cjs --max-failures=1"
+}

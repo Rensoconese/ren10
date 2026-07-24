@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo CTA Right Sheet Contact Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS full-width navbar block with permanent action, always-visible toggle, and right-edge sheet menu with contact cluster built with ren-sheet and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn31-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn31-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn31-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn31-preview {
+      --ren-z-sticky: var(--z-sticky);
+      --ren-nav-height: 4.5rem;
+      --ren-sheet-width: min(26rem, 90vw);
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow-x: clip;
+      overflow-y: visible;
+      min-height: 32rem;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    /*
+     * Full-width bar: logo start, permanent action + always-visible toggle end.
+     * Primary links live only in the right-edge sheet — never a permanent row.
+     */
+    .rn31-bar {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: calc(var(--ren-z-sticky) + 1);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding-inline: var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rn31-preview .ren-nav-brand {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin-inline-end: auto;
+      min-height: var(--touch-min);
+      max-width: 100%;
+      overflow: hidden;
+      color: var(--color-text);
+      text-decoration: none;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn31-brand-mark {
+      --row-gap: 0;
+      flex-shrink: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    .rn31-brand-word {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .rn31-preview .ren-nav-actions {
+      flex: 0 0 auto;
+      flex-shrink: 0;
+      margin-inline-start: 0;
+      display: flex;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .rn31-preview .ren-nav-actions .ren-btn {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      max-width: 100%;
+      white-space: nowrap;
+    }
+
+    /* Always-visible menu toggle (source is toggle-driven at every width). */
+    .rn31-preview .ren-nav-toggle {
+      display: flex;
+      flex: 0 0 auto;
+      flex-shrink: 0;
+      margin-inline-start: 0;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      width: var(--touch-min);
+      height: var(--touch-min);
+      padding: 0;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--color-text);
+      cursor: pointer;
+    }
+
+    .rn31-preview .ren-nav-toggle:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /* Sheet layout: primary stack top, contact + socials bottom. */
+    .rn31-preview ren-sheet {
+      --ren-sheet-width: min(26rem, 90vw);
+    }
+
+    /*
+     * Native <dialog> UA styles can pin left/right simultaneously. Force the
+     * block's right-edge anatomy so the panel anchors to inline-end.
+     */
+    .rn31-preview ren-sheet dialog.ren-sheet[data-side="right"] {
+      left: auto;
+      right: 0;
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      width: var(--ren-sheet-width, min(26rem, 90vw));
+      max-width: 90vw;
+    }
+
+    .rn31-preview .ren-sheet-header {
+      flex: 0 0 auto;
+    }
+
+    .rn31-preview .ren-sheet-close {
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+    }
+
+    .rn31-preview ren-sheet dialog.ren-sheet {
+      /* Ensure body can grow so contact/socials pin to the sheet bottom. */
+      min-height: 100dvh;
+    }
+
+    .rn31-preview .ren-sheet-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-6);
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+    }
+
+    .rn31-primary-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      width: 100%;
+      margin: 0;
+      padding: var(--space-4) 0 var(--space-6);
+      list-style: none;
+    }
+
+    .rn31-primary-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      width: 100%;
+      max-width: 100%;
+      padding: var(--space-3) var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      text-align: start;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.2;
+      white-space: normal;
+      border-radius: var(--radius-md);
+      background: transparent;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn31-primary-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn31-primary-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn31-sheet-footer {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      padding-block-end: var(--space-2);
+    }
+
+    .rn31-contact {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+      margin: 0;
+      font-style: normal;
+    }
+
+    .rn31-contact-title {
+      margin: 0 0 var(--space-1);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+    }
+
+    .rn31-contact-phone,
+    .rn31-contact-email {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      width: fit-content;
+      max-width: 100%;
+      padding: var(--space-1) 0;
+      color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 0.18em;
+      font-size: var(--text-sm);
+      border-radius: var(--radius-md);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn31-contact-phone:hover,
+    .rn31-contact-email:hover {
+      color: var(--color-accent);
+    }
+
+    .rn31-contact-phone:focus-visible,
+    .rn31-contact-email:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn31-contact-address {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+    }
+
+    .rn31-social {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: var(--space-1);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rn31-social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn31-social-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn31-social-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn31-social-link .ren-icon {
+      width: var(--size-sm);
+      height: var(--size-sm);
+    }
+
+    .rn31-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn31-hero h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn31-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Progressive enhancement: no JS / before ren-sheet upgrade — expose the
+     * five-link tree, contact cluster, and socials under the bar. Hide inert toggle.
+     */
+    .rn31-preview ren-sheet:not(:defined) {
+      display: flex;
+      flex-direction: column;
+      position: static;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      padding: var(--space-4) var(--space-5) var(--space-6);
+      background: var(--color-surface);
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    .rn31-preview:has(ren-sheet:not(:defined)) .ren-nav-toggle {
+      display: none;
+    }
+
+    .rn31-preview ren-sheet:not(:defined) .ren-sheet-header {
+      display: none;
+    }
+
+    .rn31-preview ren-sheet:not(:defined) .ren-sheet-body {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      min-height: 0;
+      overflow: visible;
+    }
+
+    .rn31-preview ren-sheet:not(:defined) .rn31-primary-link {
+      font-size: clamp(var(--text-xl), 4vw, var(--text-3xl));
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn31-bar {
+        --ren-nav-height: 4rem;
+        padding-inline: var(--space-4);
+        column-gap: var(--space-2);
+      }
+
+      .rn31-preview {
+        --ren-sheet-width: min(24rem, 90vw);
+      }
+    }
+
+    /*
+     * Narrow phones (320–360px): compact nonessential wordmark chrome so logo
+     * mark + permanent CTA + full 44px toggle fit without clipping.
+     */
+    @media (max-width: 22.5rem) {
+      .rn31-bar {
+        --ren-nav-height: 3.5rem;
+        padding-inline: var(--space-2);
+        column-gap: var(--space-1);
+      }
+
+      .rn31-brand-word {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .rn31-preview .ren-nav-brand {
+        flex: 0 0 auto;
+        width: auto;
+        max-width: none;
+        overflow: visible;
+      }
+
+      .rn31-preview .ren-nav-actions .ren-btn {
+        padding-inline: var(--space-2);
+        padding-block: var(--space-2);
+        font-size: var(--text-sm);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn31-bar,
+      .rn31-primary-link,
+      .rn31-social-link,
+      .rn31-contact-phone,
+      .rn31-contact-email {
+        transition: none;
+        animation: none;
+      }
+    }
+
+    @media (max-width: 22.5rem) {
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      .dx-nav-inner {
+        flex-wrap: wrap;
+        row-gap: var(--space-2);
+        max-width: 100%;
+        box-sizing: border-box;
+        padding-inline: var(--space-2);
+      }
+
+      .dx-nav-menu,
+      .dx-nav-actions {
+        display: none;
+      }
+
+      .dx-shell {
+        max-width: 100%;
+        box-sizing: border-box;
+        padding-inline: var(--space-2);
+        overflow-x: clip;
+      }
+
+      .rn31-page-header {
+        max-width: 100%;
+        padding-inline: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn31-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo CTA Right Sheet Contact</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo CTA Right Sheet Contact</h1>
+      <p class="lede">
+        A full-width bar with logo at the start, a permanent action and menu
+        toggle at the end, and a single five-link right-edge sheet that owns
+        contact details and social destinations. Built with
+        <code>ren-sheet</code>, layout primitives, and progressive enhancement.
+        No permanent horizontal link row, dropdowns, or second tree.
+      </p>
+    </header>
+
+    <section class="rn31-preview bb-detail-preview" data-rn31-root aria-label="Navbar logo CTA right sheet contact preview">
+      <div class="rn31-bar">
+        <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+          <span class="rn31-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+          <span class="rn31-brand-word ren10-demo-brand-label">Ren10</span>
+        </a>
+
+        <div class="ren-nav-actions ren-cluster">
+          <a class="ren-btn ren-btn-primary rn31-cta" href="#start">Start free</a>
+        </div>
+
+        <button
+          class="ren-nav-toggle"
+          type="button"
+          data-sheet-trigger="rn31-sheet"
+          aria-expanded="false"
+          aria-controls="rn31-sheet"
+          aria-label="Open menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <ren-sheet id="rn31-sheet" side="right" size="md">
+        <header class="ren-sheet-header">
+          <h2 class="ren-sheet-title">Menu</h2>
+          <button type="button" class="ren-sheet-close" data-sheet-close aria-label="Close menu">×</button>
+        </header>
+        <div class="ren-sheet-body">
+          <nav aria-label="Example site">
+            <ul id="rn31-primary-links" class="rn31-primary-list">
+              <li>
+                <a class="rn31-primary-link" href="#product" data-sheet-close>Product</a>
+              </li>
+              <li>
+                <a class="rn31-primary-link" href="#solutions" data-sheet-close>Solutions</a>
+              </li>
+              <li>
+                <a class="rn31-primary-link" href="#customers" data-sheet-close>Customers</a>
+              </li>
+              <li>
+                <a class="rn31-primary-link" href="#pricing" data-sheet-close>Pricing</a>
+              </li>
+              <li>
+                <a class="rn31-primary-link" href="#company" data-sheet-close>Company</a>
+              </li>
+            </ul>
+          </nav>
+
+          <div class="rn31-sheet-footer">
+            <address class="rn31-contact">
+              <p class="rn31-contact-title">Get in touch</p>
+              <a class="rn31-contact-phone" href="tel:+18005550199" data-sheet-close>+1 800 555 0199</a>
+              <a class="rn31-contact-email" href="mailto:hello@example.com" data-sheet-close>hello@example.com</a>
+              <p class="rn31-contact-address">100 Market Street, Suite 400</p>
+            </address>
+
+            <ul class="rn31-social" aria-label="Social destinations">
+              <li>
+                <a class="rn31-social-link" href="#social-community" data-sheet-close aria-label="Community">
+                  <span class="ren-icon ren-icon-md" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="12" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M5.5 19.2c.7-3.2 3.3-5 6.5-5s5.8 1.8 6.5 5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="rn31-social-link" href="#social-photos" data-sheet-close aria-label="Photos">
+                  <span class="ren-icon ren-icon-md" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.75"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/><path d="M7 17l3.4-3.2a1.2 1.2 0 0 1 1.6 0L16 17l1.2-1.1a1.2 1.2 0 0 1 1.5 0L20 17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="rn31-social-link" href="#social-updates" data-sheet-close aria-label="Updates">
+                  <span class="ren-icon ren-icon-md" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M5 17.5L10.2 6.8c.4-.9 1.7-.9 2.1 0L17.5 17.5" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.2 12.8h7.1" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="rn31-social-link" href="#social-network" data-sheet-close aria-label="Network">
+                  <span class="ren-icon ren-icon-md" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="5" y="5" width="6" height="6" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.75"/><rect x="13" y="13" width="6" height="6" rx="1.2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M11 8h2.5A2.5 2.5 0 0 1 16 10.5V13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a class="rn31-social-link" href="#social-video" data-sheet-close aria-label="Video">
+                  <span class="ren-icon ren-icon-md" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="4" y="7" width="11" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.75"/><path d="M15 10.2l5-2.4v8.4l-5-2.4z" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round"/></svg>
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </ren-sheet>
+
+      <div class="rn31-hero ren-stack">
+        <h2>Menu from the edge.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the full-width bar,
+          permanent action, and right-edge sheet destinations stay easy to
+          judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-mega-menu-categories-products.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Mega Menu Categories Products Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-cta-left-drawer.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo CTA Left Drawer Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/composites/ren-sheet/ren-sheet.js"></script>
+  <script type="module">
+    /**
+     * Block-local controller for toggle-driven right-edge sheet at every width.
+     * Open/close state is owned entirely via public DOM/ARIA:
+     *   - .ren-nav-toggle[aria-expanded]
+     *   - ren-sheet[open] / ren-sheet.open
+     *   - ren-open / ren-close events
+     *   - [data-sheet-close] destinations
+     *
+     * Does not read or write private ren-sheet fields (e.g. _isOpen).
+     */
+    const RN31_CONTROLLER = Symbol.for('ren10.rn31.controller');
+
+    export function initNavLogoCtaRightSheetContact(scope = document) {
+      const root = scope.querySelector?.('[data-rn31-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn31-root')) {
+        const nested = document.querySelector('[data-rn31-root]');
+        if (!nested) return null;
+        return initOn(nested);
+      }
+      return initOn(root);
+    }
+
+    function initOn(root) {
+      const previous = root[RN31_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN31_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const sheet = root.querySelector('ren-sheet#rn31-sheet') || root.querySelector('ren-sheet');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const cta = root.querySelector('.ren-nav-actions a.ren-btn-primary, .rn31-cta');
+      if (!sheet || !toggle) return null;
+
+      toggle.setAttribute('aria-controls', 'rn31-sheet');
+      if (!toggle.hasAttribute('data-sheet-trigger')) {
+        toggle.setAttribute('data-sheet-trigger', 'rn31-sheet');
+      }
+
+      const setExpanded = (open) => {
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      };
+
+      const syncFromSheet = () => {
+        const open = sheet.hasAttribute('open') || sheet.open === true;
+        setExpanded(open);
+      };
+
+      syncFromSheet();
+
+      // Capture so public ARIA updates even if a later listener stops propagation.
+      sheet.addEventListener('ren-open', () => setExpanded(true), { signal, capture: true });
+      sheet.addEventListener('ren-close', () => {
+        setExpanded(false);
+        requestAnimationFrame(() => toggle.focus({ preventScroll: true }));
+      }, { signal, capture: true });
+
+      // Permanent bar CTA is a destination class: close an open sheet.
+      if (cta) {
+        cta.addEventListener('click', () => {
+          if (sheet.open === true || sheet.hasAttribute('open')) {
+            if (typeof sheet.close === 'function') sheet.close();
+          }
+        }, { signal });
+      }
+
+      // Keep public ARIA in sync if the open attribute is toggled externally.
+      const observer = new MutationObserver(syncFromSheet);
+      observer.observe(sheet, { attributes: true, attributeFilter: ['open'] });
+      signal.addEventListener('abort', () => observer.disconnect());
+
+      return controller;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initNavLogoCtaRightSheetContact(), { once: true });
+    } else {
+      initNavLogoCtaRightSheetContact();
+    }
+  </script>
+</body>
+</html>

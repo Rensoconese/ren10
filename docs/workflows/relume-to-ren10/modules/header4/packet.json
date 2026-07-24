@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header4",
+  "blockSlug": "hero-split-email-video-lightbox",
+  "blockPath": "templates/blocks/hero-split-email-video-lightbox.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-split-email-video-lightbox.html",
+    "tests/components/header4-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

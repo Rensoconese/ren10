@@ -1,0 +1,9 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "npx playwright test tests/components/header17-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1 --grep exact copy",
+  "expectedFailure": "Header17 block returned HTTP 404 before production implementation in both Desktop Light and Desktop Dark projects.",
+  "tests": 2,
+  "failed": 2,
+  "recordedAt": "2026-07-15"
+}

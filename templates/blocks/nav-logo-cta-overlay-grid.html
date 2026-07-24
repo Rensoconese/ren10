@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo CTA Overlay Grid Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS logo-left CTA and always-overlay link-grid navbar with ren-nav, social footer row, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /* Demo shell must not force horizontal document scroll on narrow viewports. */
+    html,
+    body {
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
+    @media (max-width: 24rem) {
+      .dx-nav-menu {
+        display: none;
+      }
+
+      .dx-nav-actions .ren-btn-ghost {
+        display: none;
+      }
+
+      .dx-nav-inner {
+        column-gap: var(--space-2);
+        padding-inline: var(--space-3);
+      }
+    }
+
+    .rn18-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn18-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn18-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn18-preview {
+      --ren-z-sticky: var(--z-sticky);
+      --rn18-bar-height: 4.5rem;
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rn18-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    /*
+     * Full-width bar: brand | CTA + toggle on row 1; open menu full-bleed on row 2.
+     * No inline padding on .ren-nav — bar chrome uses item margins so .rn18-menu
+     * can match the nav box width exactly (no negative-margin strip).
+     */
+    .rn18-preview .ren-nav {
+      --ren-nav-height: var(--rn18-bar-height);
+      --rn18-bar-inline: var(--space-4);
+      --rn18-bar-gap: var(--space-2);
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-rows: auto auto;
+      align-items: center;
+      column-gap: var(--rn18-bar-gap);
+      row-gap: 0;
+      min-height: var(--ren-nav-height);
+      padding-inline: 0;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rn18-preview .ren-nav-brand {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+      align-self: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: 0;
+      max-width: 100%;
+      margin-inline: var(--rn18-bar-inline) 0;
+      overflow: hidden;
+      gap: var(--space-2);
+    }
+
+    .rn18-preview .rn18-brand-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+
+    .rn18-preview .ren-nav-actions {
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: end;
+      align-self: center;
+      margin-inline: 0;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-shrink: 0;
+    }
+
+    .rn18-preview .ren-nav-actions .ren-btn {
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      flex-shrink: 0;
+      padding-inline: var(--space-3);
+      white-space: nowrap;
+    }
+
+    /* Always-overlay anatomy: toggle visible at every width. */
+    .rn18-preview .ren-nav-toggle {
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: end;
+      align-self: center;
+      display: flex;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      margin-inline: 0 var(--rn18-bar-inline);
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn18-brand-mark {
+      --row-gap: 0;
+      flex-shrink: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /*
+     * Menu shell: full-width grid row under the bar. Width matches .ren-nav
+     * content box (no negative margins that leave a side strip).
+     */
+    .rn18-menu {
+      display: none;
+      grid-column: 1 / -1;
+      grid-row: 2;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      box-sizing: border-box;
+      flex-direction: column;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      margin-inline: 0;
+      min-height: min(28rem, 70vh);
+      max-height: min(36rem, 80vh);
+      overflow: auto;
+      padding-inline: var(--rn18-bar-inline);
+      padding-block: var(--space-4) var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* data-open is set on the <ren-nav> host; also honor aria-expanded. */
+    .rn18-preview ren-nav[data-open] .rn18-menu,
+    .rn18-preview .ren-nav[data-open] .rn18-menu,
+    .rn18-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .rn18-menu {
+      display: flex;
+    }
+
+    @media (min-width: 48rem) {
+      .rn18-menu {
+        position: absolute;
+        inset-block-start: 100%;
+        inset-inline: 0;
+      }
+    }
+
+    /*
+     * Narrow chrome (≤340px): keep 44px targets non-overlapping — drop the
+     * wordmark, tighten gaps, keep mark + CTA + toggle.
+     */
+    @media (max-width: 22rem) {
+      .rn18-preview .ren-nav {
+        --rn18-bar-inline: var(--space-3);
+        --rn18-bar-gap: var(--space-1);
+      }
+
+      .rn18-preview .rn18-brand-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .rn18-preview .ren-nav-brand {
+        min-width: var(--touch-min);
+      }
+
+      .rn18-preview .ren-nav-actions .ren-btn {
+        padding-inline: var(--space-2);
+        font-size: var(--text-sm);
+      }
+    }
+
+    /* Override ren-nav default desktop always-visible links. */
+    .rn18-preview .ren-nav-links {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2) var(--space-8);
+      list-style: none;
+      margin: 0;
+      margin-block: auto;
+      padding: var(--space-4) 0;
+      width: 100%;
+      max-width: 50rem;
+      position: static;
+      inset: auto;
+      border: none;
+      background: transparent;
+      animation: none;
+    }
+
+    .rn18-preview .rn18-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-3) var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.15;
+      border-radius: var(--radius-md);
+      white-space: normal;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn18-preview .rn18-link:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn18-preview .rn18-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn18-menu-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-block-start: auto;
+      padding-block-start: var(--space-4);
+      min-height: var(--rn18-bar-height);
+      border-block-start: 1px solid var(--color-border);
+    }
+
+    .rn18-contact {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) 0;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+    }
+
+    .rn18-social {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .rn18-social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn18-social-link:hover {
+      background: var(--color-fill);
+      color: var(--color-text);
+    }
+
+    .rn18-social-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn18-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn18-hero h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn18-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /* Two-column destination grid from the small content step upward. */
+    @media (min-width: 40rem) {
+      .rn18-preview .ren-nav-links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    /* Progressive enhancement: no upgrade / no JS → expose the single tree. */
+    .rn18-preview ren-nav:not(:defined) .ren-nav-toggle {
+      display: none;
+    }
+
+    .rn18-preview ren-nav:not(:defined) .ren-nav {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .rn18-preview ren-nav:not(:defined) .ren-nav-actions {
+      grid-column: 2;
+    }
+
+    .rn18-preview ren-nav:not(:defined) .rn18-menu {
+      display: flex;
+      grid-column: 1 / -1;
+      grid-row: 2;
+      position: relative;
+      max-height: none;
+      min-height: 0;
+      box-shadow: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn18-preview .rn18-link,
+      .rn18-social-link,
+      .rn18-preview .ren-nav-toggle span {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn18-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo CTA Overlay Grid</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo CTA Overlay Grid</h1>
+      <p class="lede">
+        A full-width bar with logo, permanent primary action, and an always-present
+        menu toggle that opens one large link grid overlay plus a contact and
+        social footer row. Built with <code>ren-nav</code>, layout primitives, and
+        progressive enhancement — no dropdowns, chevrons, or second tree.
+      </p>
+    </header>
+
+    <section class="rn18-preview bb-detail-preview" data-rn18-root aria-label="Navbar logo CTA overlay grid preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn18-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="rn18-brand-label ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn18-menu-panel"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div class="rn18-menu" id="rn18-menu-panel">
+            <ul id="rn18-primary-links" class="ren-nav-links">
+              <li>
+                <a class="ren-nav-link rn18-link" href="#product">Product</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#platform">Platform</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#solutions">Solutions</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#pricing">Pricing</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#docs">Docs</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#blog">Blog</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#careers">Careers</a>
+              </li>
+              <li>
+                <a class="ren-nav-link rn18-link" href="#about">About</a>
+              </li>
+            </ul>
+
+            <div class="rn18-menu-footer">
+              <a class="rn18-contact ren-btn ren-btn-link" href="#contact">Contact us</a>
+              <ul class="rn18-social" aria-label="Social destinations">
+                <li>
+                  <a class="rn18-social-link" href="#social-linkedin">LinkedIn</a>
+                </li>
+                <li>
+                  <a class="rn18-social-link" href="#social-instagram">Instagram</a>
+                </li>
+                <li>
+                  <a class="rn18-social-link" href="#social-x">X</a>
+                </li>
+                <li>
+                  <a class="rn18-social-link" href="#social-youtube">YouTube</a>
+                </li>
+                <li>
+                  <a class="rn18-social-link" href="#social-github">GitHub</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </ren-nav>
+
+      <div class="rn18-hero ren-stack">
+        <h2>Navigation that opens into a clear grid.</h2>
+        <p>
+          A quiet marketing surface under the bar so the permanent CTA, always-visible
+          toggle, and large overlay destinations stay easy to judge while you copy
+          the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-fullscreen-menu-social.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Fullscreen Menu Social Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-left-center-links-site-panel.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo-Left Center-Links Site-Panel Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local controller for always-overlay navbar18.
+     * Public surface only: aria-expanded on .ren-nav-toggle, data-open on <ren-nav>,
+     * and toggle clicks — never private ren-nav methods.
+     *
+     * - Escape restores focus to the toggle after close
+     * - Destination / contact / social / bar-CTA activation dismisses the shell
+     * - Resize preserves open within a band; closes only on 768px breakpoint cross
+     *   (re-opens after ren-nav's desktop auto-close when still preferred open)
+     */
+    const RN18_CONTROLLER = Symbol.for('ren10.rn18.controller');
+    /** Match ren-nav's 768px band boundary (48rem at default root font size). */
+    const RN18_BREAKPOINT = 768;
+
+    function initNavLogoCtaOverlayGrid(scope = document) {
+      const root = scope.querySelector?.('[data-rn18-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn18-root')) {
+        const nested = document.querySelector('[data-rn18-root]');
+        if (!nested) return null;
+        return initOn(nested);
+      }
+      return initOn(root);
+    }
+
+    function initOn(root) {
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const menu = root.querySelector('.rn18-menu');
+      const barCta = root.querySelector('.ren-nav-actions a, .ren-nav-actions .ren-btn');
+      if (!renNavHost || !toggle || !menu) return null;
+
+      const previous = root[RN18_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN18_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      /** @type {boolean} User-preferred open state across same-band resizes. */
+      let preferOpen = false;
+      let lastWidth = window.innerWidth;
+
+      function band(width) {
+        return width < RN18_BREAKPOINT ? 'narrow' : 'wide';
+      }
+
+      function isOpen() {
+        return toggle.getAttribute('aria-expanded') === 'true';
+      }
+
+      /** Close through the public toggle activation ren-nav already owns. */
+      function closeMenu() {
+        preferOpen = false;
+        if (isOpen()) {
+          toggle.click();
+        }
+      }
+
+      /** Re-open through public toggle when ren-nav cleared us on same-band resize. */
+      function ensureOpen() {
+        if (!isOpen()) {
+          toggle.click();
+        }
+        preferOpen = true;
+      }
+
+      toggle.addEventListener(
+        'click',
+        () => {
+          // ren-nav toggles synchronously on the same turn; read after microtask.
+          queueMicrotask(() => {
+            preferOpen = isOpen();
+          });
+        },
+        { signal },
+      );
+
+      /*
+       * Escape: ren-nav closes on the document bubble path. Capture wasOpen in
+       * capture phase (before core) so we still restore focus after core has
+       * already cleared aria-expanded — otherwise focus lands on body when Escape
+       * originates from a focused overlay link/contact/social.
+       */
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          const wasOpen = isOpen();
+          if (!wasOpen) return;
+          queueMicrotask(() => {
+            preferOpen = false;
+            // Public close only if still open (core may already have closed).
+            if (isOpen()) {
+              toggle.click();
+            }
+            toggle.focus();
+          });
+        },
+        { capture: true, signal },
+      );
+
+      menu.querySelectorAll('a.rn18-link, .rn18-contact, .rn18-social-link').forEach((link) => {
+        link.addEventListener(
+          'click',
+          () => {
+            if (isOpen()) closeMenu();
+          },
+          { signal },
+        );
+      });
+
+      if (barCta) {
+        barCta.addEventListener(
+          'click',
+          () => {
+            if (isOpen()) closeMenu();
+          },
+          { signal },
+        );
+      }
+
+      window.addEventListener(
+        'resize',
+        () => {
+          const width = window.innerWidth;
+          const previousWidth = lastWidth;
+          lastWidth = width;
+          const crossed = band(previousWidth) !== band(width);
+
+          if (crossed) {
+            preferOpen = false;
+            if (isOpen()) {
+              toggle.click();
+            }
+            return;
+          }
+
+          // Same band (including height-only resizes): restore preferred open.
+          // ren-nav auto-closes on any desktop resize; re-assert via public toggle.
+          if (preferOpen && !isOpen()) {
+            ensureOpen();
+          }
+        },
+        { signal },
+      );
+
+      return controller;
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => initNavLogoCtaOverlayGrid(), { once: true });
+    } else {
+      initNavLogoCtaOverlayGrid();
+    }
+
+    customElements.whenDefined('ren-nav').then(() => {
+      initNavLogoCtaOverlayGrid();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar16 mapped to one ren-nav tree, permanent top-bar primary action, always-visible named toggle, full-viewport overlay panel owning six large centered primary links plus contact + five named socials, progressive enhancement via ren-nav:not(:defined), and zero dropdowns/chevrons. Rejected floating shell, permanent horizontal desktop links, panel-owned action hide model, ren-card/ren-menu/ren-popover, nested nav, and copied source assets."
+}

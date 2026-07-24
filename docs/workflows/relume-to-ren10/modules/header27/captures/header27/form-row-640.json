@@ -1,0 +1,17 @@
+{
+  "id": "form-row-640",
+  "url": "http://127.0.0.1:65354/templates/blocks/hero-centered-email-capture-landscape-image.html?ren10_capture=header27-form-row-640-c9279be5a9ce",
+  "viewport": {
+    "width": 640,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh27-email": 1,
+    ".rh27-submit": 1
+  },
+  "commit": "c9279be5a9ce92fe18282e7283670063048ff61d",
+  "capturedAt": "2026-07-15T20:00:19.942Z"
+}

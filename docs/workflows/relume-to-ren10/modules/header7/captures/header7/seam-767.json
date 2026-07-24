@@ -1,0 +1,17 @@
+{
+  "id": "seam-767",
+  "url": "http://127.0.0.1:60335/templates/blocks/hero-fullscreen-bg-video-left-copy-dual-cta.html?ren10_capture=header7-seam-767-eae1b3065e91",
+  "viewport": {
+    "width": 767,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh7-video": 1,
+    ".rh7-scrim": 1
+  },
+  "commit": "eae1b3065e918a01abcd410d7eaa8a4596de60c7",
+  "capturedAt": "2026-07-15T17:33:31.209Z"
+}

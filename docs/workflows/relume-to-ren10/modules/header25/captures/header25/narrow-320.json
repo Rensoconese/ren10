@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:62537/templates/blocks/hero-centered-search.html?ren10_capture=header25-narrow-320-c8df400ef212",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh25-search": 1,
+    ".rh25-submit": 1
+  },
+  "commit": "c8df400ef2122be87867a2cf910533d3f0e42209",
+  "capturedAt": "2026-07-15T19:47:19.113Z"
+}

@@ -1,0 +1,12 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "historical-phase-a-red",
+  "note": "Phase A RED only (historical). Recorded before production HTML existed: focused suite tests/components/navbar32-navigation.spec.cjs had 15 cases; with templates/blocks/nav-logo-cta-left-drawer.html absent, Desktop Light ended 15 failed / 0 passed (404 / missing [data-rn32-root], toggle timeouts, JS-disabled tree missing, axe no-include). This file must not be treated as a visual baseline or current capture set.",
+  "supersededForVisualsBy": {
+    "sourceCommit": "6c566063f79e3ffc0e48fae32c15e10d7d25dba2",
+    "captureEvidence": "capture-evidence.json",
+    "captureSidecars": "captures/",
+    "pngRoot": "output/playwright/navbar32-final/navbar32"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:57809/templates/blocks/hero-fullscreen-bg-centered-copy-dual-cta.html?ren10_capture=header30-mobile-js-disabled-00ddd8d38cc9",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh30-actions a[href]": 2,
+    ".rh30-background img": 1
+  },
+  "commit": "00ddd8d38cc9f80baa796b6a099580fb7362d5fe",
+  "capturedAt": "2026-07-16T20:56:51.876Z"
+}

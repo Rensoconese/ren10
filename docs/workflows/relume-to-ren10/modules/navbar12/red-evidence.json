@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "note": "Phase A RED was recorded before production edits. Playwright listed 20 Navbar 12 cases (18 dedicated plus shared mobile-chrome and hover-corridor contracts). With templates/blocks/nav-logo-left-menu-right-grouped.html absent, the first shared test failed waiting for [data-rn12-root] .ren-nav-toggle and execution stopped at the requested max-failures=1. No production file existed when recorded on 2026-07-14 against prep commit 3d505fa."
+}

@@ -1,0 +1,34 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "96deb45",
+  "captures": {
+    "desktop": "output/playwright/navbar26/navbar26/desktop-light-open.png",
+    "mobile": "output/playwright/navbar26/navbar26/mobile-light-dropdown-open.png",
+    "narrow": "output/playwright/navbar26/navbar26/narrow-340-dropdown-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review confirmed every mobile destination class closes nested disclosure and navigation shell with stable visible focus, no global/private API, fresh final captures, clean 320/340 states, exact responsive seams, same-band persistence, breakpoint reset, hover corridor, click pinning, Escape, JavaScript-disabled accessibility, one tree, and one chevron.",
+  "testResults": {
+    "navbar26Focused": {
+      "command": "npx playwright test tests/components/navbar26-navigation.spec.cjs --workers=1",
+      "result": "21 passed, 0 failed; axe WCAG 2.1 AA clean"
+    },
+    "packet": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar26",
+      "result": "valid at green"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-mega-menu-category-promo-panel.html",
+  "intentionalDifferences": [
+    "Ren10 tokens and layout primitives control rhythm",
+    "One Light DOM tree supports all responsive states",
+    "Mobile destinations close both disclosure levels with explicit public state synchronization"
+  ],
+  "aggregateValidation": "Full family regression, lint, and agent:check are deferred to the integrated batch."
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centered Dual-Action Landscape Hero — Ren10 Blocks</title>
+  <meta name="description" content="A centered Ren10 hero with two actions and one intrinsic landscape image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    html {
+      color-scheme: light dark;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-surface);
+    }
+
+    .rh26-hero {
+      padding: var(--space-section-lg) var(--space-4);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh26-container {
+      --center-padding: 0;
+      --stack-gap: var(--space-12);
+    }
+
+    .rh26-content {
+      --center-padding: 0;
+      --stack-gap: var(--space-6);
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh26-heading,
+    .rh26-description {
+      margin: 0;
+    }
+
+    .rh26-heading {
+      font-size: clamp(var(--text-5xl), 7vw, var(--text-7xl));
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-tight);
+      text-wrap: balance;
+    }
+
+    .rh26-description {
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+      text-wrap: pretty;
+    }
+
+    .rh26-actions {
+      --cluster-gap: var(--space-4);
+      justify-content: center;
+      width: 100%;
+    }
+
+    .rh26-media {
+      width: 100%;
+      margin: 0;
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .rh26-image {
+      display: block;
+    }
+
+    @media (max-width: 22.5rem) {
+      .rh26-actions > .ren-btn {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh26-container {
+        --stack-gap: var(--space-16);
+      }
+
+      .rh26-description {
+        font-size: var(--text-xl);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh26-actions > .ren-btn {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Centered Dual-Action Landscape Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 26 · Hero block</p>
+      <h1 class="bb-detail-title">Centered Dual-Action Landscape Hero</h1>
+      <p class="bb-detail-description">A centered Ren10 hero with two actions and one intrinsic landscape image.</p>
+    </header>
+
+    <section class="rh26-hero bb-detail-preview" data-rh26-root aria-labelledby="rh26-heading">
+      <div class="rh26-container ren-center ren-center-wide ren-stack">
+        <div class="rh26-content ren-center ren-center-prose ren-stack">
+          <h1 class="rh26-heading" id="rh26-heading">Build a clearer system around every product decision</h1>
+          <p class="rh26-description">
+            Give teams a shared foundation for turning complex requirements into accessible,
+            consistent experiences without slowing the work down.
+          </p>
+          <div class="rh26-actions ren-cluster" aria-label="Hero actions">
+            <a class="rh26-primary ren-btn ren-btn-primary" href="../../docs/getting-started.html">Start building</a>
+            <a class="rh26-secondary ren-btn ren-btn-secondary" href="../../docs/components.html">Explore components</a>
+          </div>
+        </div>
+        <div class="rh26-media ren-frame ren-frame-video">
+          <img
+            class="rh26-image"
+            src="media/hero-botanical-conservatory.webp"
+            width="1672"
+            height="941"
+            alt="Sunlit botanical conservatory with layered tropical foliage"
+          >
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-centered-search.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Centered Search Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-centered-email-capture-landscape-image.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Centered Email and Landscape Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

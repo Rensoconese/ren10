@@ -1,0 +1,34 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "5b82140",
+  "captures": {
+    "desktop": "output/playwright/navbar30-final/navbar30/desktop-light-open.png",
+    "mobile": "output/playwright/navbar30-final/navbar30/mobile-light-nested-open.png",
+    "dark": "output/playwright/navbar30-final/navbar30/desktop-dark-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review confirmed coordinated desktop and mobile destination close with safe focus, no global/private API, clean narrow and responsive behavior, and 13 visually inspected states without duplicate affordances, misalignment, or overflow. Every capture JSON and URL traces the final functional fix.",
+  "testResults": {
+    "navbar30Focused": {
+      "command": "npx playwright test tests/components/navbar30-navigation.spec.cjs --workers=1",
+      "result": "27 passed, 0 failed; Light/Dark axe WCAG 2.1 AA clean"
+    },
+    "packet": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar30",
+      "result": "valid at green"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-mega-menu-categories-products.html",
+  "intentionalDifferences": [
+    "Ren10 tokens and primitives control visual proportions",
+    "One Light DOM navigation tree supports all responsive bands",
+    "Destination activation coordinates nested and shell state using public DOM contracts"
+  ],
+  "aggregateValidation": "Full family regression, lint, and agent:check are deferred to the integrated batch."
+}

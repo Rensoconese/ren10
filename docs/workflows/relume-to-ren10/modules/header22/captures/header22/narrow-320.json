@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:59329/templates/blocks/hero-split-video-lightbox-left-email-form.html?ren10_capture=header22-narrow-320-12ad524a6166",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh22-submit": 1,
+    ".rh22-media": 1
+  },
+  "commit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturedAt": "2026-07-15T19:36:38.265Z"
+}

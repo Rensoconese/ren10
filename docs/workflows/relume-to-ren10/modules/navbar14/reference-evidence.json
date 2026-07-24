@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume__get_component slug=navbar14 primitives=include) returned complete Navbar14 section source plus four vendored primitives (utils, use-media-query, button, card). Catalog neighbor order navbar13 -> navbar14. Exact anatomy recorded: one logo, four top entries (3 plain + 1 dropdown), three title-only destinations, two actions inside the collapsible panel, one toggle, one chevron; floating desktop logo-left/menu-right/actions row; mobile logo/toggle top row with links + stacked full-width actions below. No protected source was copied into public Ren10 output."
+}

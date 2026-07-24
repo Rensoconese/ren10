@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar17 primitives=include) returned complete Navbar17 section source plus two vendored primitives (utils/cn, button). Exact anatomy recorded: full-width bar with one logo, one primary top-bar action, one always-present toggle; full-viewport overlay under the bar with eight large end-aligned plain destinations, one footer contact action, and five social icon links; no dropdowns or chevrons; activation-only open/close. No protected source was copied into public Ren10 output."
+}

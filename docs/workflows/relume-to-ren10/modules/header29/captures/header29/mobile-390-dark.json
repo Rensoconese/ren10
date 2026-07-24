@@ -1,0 +1,17 @@
+{
+  "id": "mobile-390-dark",
+  "url": "http://127.0.0.1:56603/templates/blocks/hero-centered-email-capture-landscape-lightbox.html?ren10_capture=header29-mobile-390-dark-4e3491fb607d",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh29-poster": 1,
+    ".rh29-play": 1
+  },
+  "commit": "4e3491fb607d1c51b54f5d08022a0cf5b98e2cdb",
+  "capturedAt": "2026-07-16T20:52:14.461Z"
+}

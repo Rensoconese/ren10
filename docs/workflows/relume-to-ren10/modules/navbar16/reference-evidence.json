@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar16 primitives=include) returned complete Navbar16 section source plus two vendored primitives (utils/cn, button). Exact anatomy recorded: full-width bar with logo left and permanent action + toggle right; six title-only primary destinations only inside a full-viewport overlay; overlay footer with one contact link and five social destinations; zero dropdowns/chevrons. No protected source was copied into public Ren10 output."
+}

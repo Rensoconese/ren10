@@ -1,0 +1,17 @@
+{
+  "id": "form-row-640",
+  "url": "http://127.0.0.1:50563/templates/blocks/hero-email-copy-image-left.html?ren10_capture=header20-form-row-640-20bba216766d",
+  "viewport": {
+    "width": 640,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh20-form-row": 1,
+    ".rh20-email": 1
+  },
+  "commit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturedAt": "2026-07-15T19:17:31.953Z"
+}

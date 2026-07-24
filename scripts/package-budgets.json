@@ -1,22 +1,22 @@
 {
   "version": 1,
-  "capturedFor": "ren10@0.10.0",
-  "capturedAt": "2026-07-14",
-  "capturedFrom": "validated ren10@0.10.0 release candidate with v0 adapter and reference app",
+  "capturedFor": "ren10@0.11.0",
+  "capturedAt": "2026-07-23",
+  "capturedFrom": "validated ren10@0.11.0 catalog plus the native design-context, visual detector, review, exception, Codex hook, Contact collection, complete Blog Content collection, FAQ spacing audit, Testimonial visual audit, Footer visual audit, and Application Shell visual audit",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 19938685, "allowedDelta": 0, "target": 19938685 },
-    "tarballBytes": { "baseline": 3902688, "allowedDelta": 0, "target": 3902688 },
-    "fullCssBytes": { "baseline": 511642, "allowedDelta": 0, "target": 511642 },
-    "minCssBytes": { "baseline": 291032, "allowedDelta": 0, "target": 291032 },
-    "knowledgeJsonBytes": { "baseline": 4186057, "allowedDelta": 0, "target": 4186057 },
-    "knowledgeSqliteBytes": { "baseline": 9330688, "allowedDelta": 0, "target": 9330688 },
+    "unpackedBytes": { "baseline": 25136838, "allowedDelta": 0, "target": 25136838 },
+    "tarballBytes": { "baseline": 5952703, "allowedDelta": 0, "target": 5952703 },
+    "fullCssBytes": { "baseline": 512760, "allowedDelta": 0, "target": 512760 },
+    "minCssBytes": { "baseline": 291704, "allowedDelta": 0, "target": 291704 },
+    "knowledgeJsonBytes": { "baseline": 4190051, "allowedDelta": 0, "target": 4190051 },
+    "knowledgeSqliteBytes": { "baseline": 9342976, "allowedDelta": 0, "target": 9342976 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
     "cliRssBytes": { "baseline": 45334528, "allowedDelta": 8388608, "target": 53723136 }
   },
   "rationale": {
-    "package": "0.10.0 release-candidate npm pack measurements; zero growth allowed.",
+    "package": "0.11.0 detector-, Contact-, and twelve-block Blog Content-enabled npm pack measurements; zero growth allowed.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."

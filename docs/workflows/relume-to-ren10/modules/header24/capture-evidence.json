@@ -1,0 +1,10 @@
+{
+  "version":1,
+  "moduleId":"header24",
+  "sourceStage":"green",
+  "capturedCommit":"2a076cc6bc34cd86533653e527e07c126e7456b5",
+  "capturesFresh":true,
+  "stateCount":11,
+  "states":["desktop-1280-light","desktop-1280-dark","desktop-invalid","desktop-1024","form-row-640","form-stack-639","mobile-390-light","mobile-390-dark","narrow-320","reduced-motion-focus","mobile-js-disabled"],
+  "inspection":"All eleven cache-busted PNGs were inspected. The content-height hero remains centered and unclipped, the pristine error is absent, the invalid state contains one custom error plus the expected native browser validation bubble, the form is stacked at 639px and a field/submit row at 640px, and light/dark/mobile/no-JavaScript/reduced-motion states remain coherent without media or duplicate controls."
+}

@@ -1,0 +1,9 @@
+{
+  "stage": "red",
+  "passed": true,
+  "command": "playwright test tests/components/header26-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1 --grep exact centered",
+  "expectedFailure": "Header26 block returned HTTP 404 before production implementation in Desktop Light and Desktop Dark.",
+  "tests": 2,
+  "failed": 2,
+  "recordedAt": "2026-07-15"
+}

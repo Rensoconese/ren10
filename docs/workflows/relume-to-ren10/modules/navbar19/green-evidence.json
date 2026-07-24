@@ -1,0 +1,33 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "d2e31c2",
+  "captures": {
+    "desktop": "output/playwright/navbar19-final/navbar19/desktop-light-panel-open.png",
+    "mobile": "output/playwright/navbar19-final/navbar19/mobile-light-panel-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review confirmed one navigation landmark, one public ARIA/DOM state owner, coherent desktop and mobile panel behavior, same-band resize persistence, breakpoint-cross reset, Escape focus restoration, destination close, one chevron owner, no private ren-nav API access, no breadcrumb link-class contract violation, and no malformed alignment or duplicate affordance.",
+  "testResults": {
+    "navbar19Focused": {
+      "command": "npx playwright test tests/components/navbar19-navigation.spec.cjs --workers=1",
+      "result": "21 passed, 0 failed; axe WCAG 2.1 AA clean"
+    },
+    "packet": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar19",
+      "result": "valid at green"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-logo-left-center-links-site-panel.html",
+  "intentionalDifferences": [
+    "Ren10 tokens and layout primitives control dimensions and rhythm instead of pixel matching",
+    "One responsive Light DOM navigation tree replaces duplicated source trees",
+    "Public ARIA and DOM state ownership replaces private component internals"
+  ],
+  "aggregateValidation": "The full navbar-family regression, lint, and npm run agent:check are deferred to the integrated batch to avoid parallel Playwright contention."
+}

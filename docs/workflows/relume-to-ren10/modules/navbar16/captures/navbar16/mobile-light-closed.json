@@ -1,0 +1,17 @@
+{
+  "id": "mobile-light-closed",
+  "url": "http://127.0.0.1:63486/templates/blocks/nav-logo-left-action-overlay-menu.html?ren10_capture=navbar16-mobile-light-closed-fa4174328dd3",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".ren-nav-toggle": 1,
+    "#rn16-primary-links > li": 6
+  },
+  "commit": "fa4174328dd3d5b703000701ab82907d6a5662db",
+  "capturedAt": "2026-07-15T11:09:38.358Z"
+}

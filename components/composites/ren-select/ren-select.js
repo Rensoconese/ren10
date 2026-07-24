@@ -285,7 +285,7 @@ export class RenSelect extends HTMLElement {
    * @private
    */
   setupARIA() {
-    const triggerId = autoId(this.#trigger, 'select-trigger');
+    autoId(this.#trigger, 'select-trigger');
     const contentId = autoId(this.#content, 'select-content');
 
     // Trigger setup
@@ -550,7 +550,7 @@ export class RenSelect extends HTMLElement {
     if ('popover' in HTMLElement.prototype && this.#content.hasAttribute('popover')) {
       try {
         this.#content.showPopover();
-      } catch (e) {
+      } catch {
         // Fallback to CSS class
       }
     }
@@ -618,7 +618,7 @@ export class RenSelect extends HTMLElement {
     if ('popover' in HTMLElement.prototype && this.#content.hasAttribute('popover')) {
       try {
         this.#content.hidePopover();
-      } catch (e) {
+      } catch {
         // Fallback
       }
     }

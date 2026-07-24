@@ -23,7 +23,7 @@
  * - Adds .ren-field, .ren-field-label, .ren-input, etc. classes
  */
 
-import { autoId, wireAria } from '../../../utils/id-generator.js';
+import { autoId } from '../../../utils/id-generator.js';
 
 export class RenField extends HTMLElement {
   connectedCallback() {

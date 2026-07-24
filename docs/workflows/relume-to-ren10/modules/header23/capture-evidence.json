@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "moduleId": "header23",
+  "sourceStage": "green",
+  "capturedCommit": "65c1f903619a4f276584f887cd2b6ef43aa6cbcf",
+  "capturesFresh": true,
+  "stateCount": 10,
+  "states": ["desktop-1280-light", "desktop-1280-dark", "desktop-1024", "tablet-768", "seam-640", "mobile-390-light", "mobile-390-dark", "narrow-320", "reduced-motion-focus", "mobile-js-disabled"],
+  "inspection": "All ten cache-busted PNGs were inspected. The centered content-height composition retains one readable axis, two actions stay on one centered row where space allows and wrap into two centered rows at 320px, light and dark surfaces remain coherent, keyboard focus is visible, and no clipping, overflow, extra affordance, form, or media appears."
+}

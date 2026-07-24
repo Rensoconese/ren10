@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "The Navbar31 suite was added before production. Focused run with --max-failures=1 discovered the suite (multiple Desktop Light project cases) and stopped at the first expected failure: absent block returned HTTP 404 for templates/blocks/nav-logo-cta-right-sheet-contact.html (expect status 200). Remaining cases were left unrun by --max-failures=1."
+}

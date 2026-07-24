@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar14",
+  "blockSlug": "nav-floating-logo-left-menu-right-actions",
+  "blockPath": "templates/blocks/nav-floating-logo-left-menu-right-actions.html",
+  "stage": "accepted",
+  "allowedFiles": [
+    "templates/blocks/nav-floating-logo-left-menu-right-actions.html",
+    "tests/components/blocks-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json",
+    "reviewed": "reviewed-evidence.json"
+  }
+}

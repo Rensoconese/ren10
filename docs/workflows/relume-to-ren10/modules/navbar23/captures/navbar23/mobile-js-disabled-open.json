@@ -1,0 +1,19 @@
+{
+  "id": "mobile-js-disabled-open",
+  "url": "http://127.0.0.1:50345/templates/blocks/nav-mega-menu-product-intro.html?ren10_capture=navbar23-mobile-js-disabled-open-17829f9c7b93",
+  "viewport": {
+    "width": 390,
+    "height": 1400
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rn23-product": 3,
+    ".rn23-product-media": 3,
+    ".rn23-intro-cta": 1,
+    ".rn23-chevron": 1
+  },
+  "commit": "17829f9c7b931744e9250790d2ac52ad44e4fe68",
+  "capturedAt": "2026-07-15T11:36:11.001Z"
+}

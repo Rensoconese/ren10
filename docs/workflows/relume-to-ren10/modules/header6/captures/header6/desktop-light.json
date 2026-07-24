@@ -1,0 +1,21 @@
+{
+  "id": "desktop-light",
+  "url": "http://127.0.0.1:59513/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-desktop-light-82765e64cf41",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh6-heading": 1,
+    ".rh6-form-row input[type=email]": 1,
+    ".rh6-form-row button[type=submit]": 1,
+    ".rh6-terms a": 1,
+    ".rh6-background > img": 1,
+    ".rh6-scrim": 1
+  },
+  "commit": "82765e64cf412feebe86413488db84b651380ed8",
+  "capturedAt": "2026-07-15T17:27:10.699Z"
+}

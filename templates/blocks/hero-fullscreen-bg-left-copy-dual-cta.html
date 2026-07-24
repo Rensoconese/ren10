@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fullscreen Background Hero — Ren10 Blocks</title>
+  <meta name="description" content="A fullscreen Ren10 hero with cover media, a dark scrim, constrained copy, and two calls to action.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rh5-hero {
+      --cover-height: 100dvh;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 0;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-text);
+    }
+
+    .rh5-background,
+    .rh5-background > img,
+    .rh5-scrim {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh5-background {
+      z-index: var(--z-base);
+      margin: 0;
+    }
+
+    .rh5-background > img {
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .rh5-scrim {
+      background-color: var(--color-overlay);
+      background-image: linear-gradient(var(--color-overlay), var(--color-overlay));
+    }
+
+    .rh5-content {
+      position: relative;
+      z-index: var(--z-raised);
+      width: 100%;
+    }
+
+    .rh5-copy {
+      --stack-gap: var(--space-4);
+      max-width: var(--width-md);
+    }
+
+    .rh5-heading,
+    .rh5-description {
+      margin: 0;
+      color: var(--color-text-inverted);
+    }
+
+    .rh5-heading {
+      font-size: clamp(var(--display-md-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh5-description {
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh5-actions {
+      --cluster-gap: var(--space-inline-loose);
+      --ren-btn-ring-color: var(--color-text-inverted);
+      margin-block-start: var(--space-stack-tight);
+    }
+
+    .rh5-primary {
+      --ren-btn-bg: var(--color-surface);
+      --ren-btn-bg-hover: var(--color-fill-hover);
+      --ren-btn-bg-active: var(--color-fill-active);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-surface);
+    }
+
+    .rh5-secondary.ren-btn-outline {
+      color: var(--color-text-inverted);
+      border-color: var(--color-text-inverted);
+    }
+
+    .rh5-secondary.ren-btn-outline:hover {
+      color: var(--color-text-inverted);
+      background: var(--color-overlay);
+    }
+
+    .rh5-secondary.ren-btn-outline:active {
+      color: var(--color-text);
+      background: var(--color-surface);
+      border-color: var(--color-surface);
+    }
+
+    @media (max-width: 30rem) {
+      .rh5-actions > .ren-btn {
+        flex: 1 1 auto;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh5-content {
+        --center-padding: var(--space-section-lg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="ren-link-skip" href="#rh5-preview">Skip to header preview</a>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a class="dx-brand" href="../../docs/index.html" aria-label="Ren10 documentation home">
+        <span class="dx-brand-mark" aria-hidden="true">R</span>
+        <span>Ren10</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Fullscreen background with dual CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 5 · Hero block</p>
+      <h1 class="bb-detail-title">Fullscreen background with dual CTA</h1>
+      <p class="bb-detail-description">An immersive viewport-height hero with constrained copy, two actions, cover media, and a contrast-safe scrim that keeps the message readable.</p>
+    </header>
+
+    <div id="rh5-preview-frame" class="bb-detail-preview">
+      <section id="rh5-preview" class="rh5-hero ren-cover" data-rh5-root aria-labelledby="rh5-heading">
+        <div class="rh5-background" aria-hidden="true">
+<img
+            src="media/hero-botanical-conservatory.webp"
+            alt=""
+            width="1672"
+            height="941"
+          >
+          <div class="rh5-scrim"></div>
+        </div>
+
+        <div class="rh5-content ren-center ren-center-wide ren-cover-center">
+          <div class="rh5-copy ren-stack">
+            <h1 id="rh5-heading" class="rh5-heading">Bring clarity to the work that matters</h1>
+            <p class="rh5-description">Build thoughtful interfaces from a shared language, then adapt every detail without losing the system underneath.</p>
+            <div class="rh5-actions ren-cluster">
+              <a class="ren-btn rh5-primary" href="../../docs/index.html">Explore Ren10</a>
+              <a class="ren-btn ren-btn-outline rh5-secondary" href="index.html">Browse blocks</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-email-video-lightbox.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Split email signup with video lightbox</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-fullscreen-bg-left-email-capture.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen Email Capture Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+</body>
+</html>

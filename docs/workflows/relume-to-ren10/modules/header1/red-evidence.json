@@ -1,0 +1,6 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "historical-phase-a-red",
+  "note": "Before production HTML existed, the focused Desktop Light suite ran 12 tests and failed 12 because templates/blocks/hero-split-copy-dual-cta-media.html returned HTTP 404."
+}

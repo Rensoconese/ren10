@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo CTA Left Drawer Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS navbar block with logo, permanent CTA, and an always-available left drawer navigation tree.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn32-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn32-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn32-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn32-preview {
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rn32-bar {
+      min-height: var(--space-16);
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .rn32-brand {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      color: var(--color-text);
+      text-decoration: none;
+      font-weight: var(--weight-bold);
+      gap: var(--space-2);
+    }
+
+    .rn32-brand:focus-visible,
+    .rn32-destination:focus-visible,
+    .rn32-toggle:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset, 2px);
+    }
+
+    .rn32-brand-mark {
+      width: var(--space-8);
+      height: var(--space-8);
+      color: var(--color-on-accent);
+      background: var(--color-accent);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    .rn32-actions {
+      gap: var(--space-3);
+      flex-shrink: 0;
+    }
+
+    .rn32-cta {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn32-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: 0;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      background: var(--color-surface);
+      color: var(--color-text);
+      cursor: pointer;
+    }
+
+    .rn32-toggle:hover {
+      background: var(--color-fill-hover);
+    }
+
+    .rn32-toggle > span {
+      position: absolute;
+      left: 50%;
+      width: 1.5rem;
+      height: 2px;
+      margin-left: -0.75rem;
+      display: block;
+      background: currentColor;
+      border-radius: var(--radius-full);
+      transition:
+        translate var(--duration-state, 150ms) var(--ease-state-change, ease),
+        rotate var(--duration-state, 150ms) var(--ease-state-change, ease),
+        opacity var(--duration-state, 150ms) var(--ease-state-change, ease);
+    }
+
+    .rn32-toggle > span:nth-child(1) {
+      top: calc(50% - var(--space-2));
+      translate: 0 -50%;
+    }
+
+    .rn32-toggle > span:nth-child(2) {
+      top: 50%;
+      translate: 0 -50%;
+    }
+
+    .rn32-toggle > span:nth-child(3) {
+      top: calc(50% + var(--space-2));
+      translate: 0 -50%;
+    }
+
+    /*
+     * Open state keeps the three-bar hamburger (no X morph).
+     * The only close glyph is .ren-sheet-close inside the sheet header.
+     */
+    .rn32-toggle[aria-expanded="true"] {
+      opacity: 0.55;
+    }
+
+    .rn32-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background: linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn32-hero h2 {
+      max-width: 14ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn32-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /* Drawer body composition */
+    #rn32-drawer .ren-sheet-body,
+    ren-sheet#rn32-drawer:not(:defined) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-8);
+      min-height: 100%;
+      padding: var(--space-6) var(--space-5);
+      box-sizing: border-box;
+    }
+
+    ren-sheet#rn32-drawer:not(:defined) {
+      display: block;
+      background: var(--color-surface);
+      border-block-start: 1px solid var(--color-border);
+      color: var(--color-text);
+    }
+
+    .rn32-preview:has(ren-sheet#rn32-drawer:not(:defined)) .rn32-toggle {
+      display: none;
+    }
+
+    .rn32-nav {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: var(--space-8);
+      min-height: 100%;
+    }
+
+    .rn32-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .rn32-link {
+      display: flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-1);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-5xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.15;
+      border-radius: var(--radius-md);
+    }
+
+    .rn32-link:hover {
+      color: var(--color-accent);
+    }
+
+    .rn32-contact {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-style: normal;
+      gap: var(--space-1);
+    }
+
+    .rn32-contact-title {
+      margin: 0 0 var(--space-2);
+      color: var(--color-text);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+    }
+
+    .rn32-contact-link,
+    .rn32-contact-address {
+      display: flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      line-height: 1.4;
+    }
+
+    .rn32-contact-link:hover {
+      color: var(--color-text);
+    }
+
+    .rn32-social {
+      list-style: none;
+      margin: var(--space-4) 0 0;
+      padding: 0;
+      gap: var(--space-2);
+    }
+
+    .rn32-social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      border-radius: var(--radius-md);
+    }
+
+    .rn32-social-link:hover {
+      color: var(--color-text);
+      background: var(--color-fill-hover);
+    }
+
+    /* Sheet header: visible title + single 44px close control */
+    #rn32-drawer .ren-sheet-header,
+    ren-sheet#rn32-drawer:not(:defined) .ren-sheet-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      min-height: calc(var(--touch-min) + var(--space-4));
+      padding: var(--space-3) var(--space-5);
+      border-bottom: 1px solid var(--color-border);
+      box-sizing: border-box;
+    }
+
+    #rn32-drawer .ren-sheet-title {
+      margin: 0;
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+      line-height: 1.2;
+    }
+
+    #rn32-drawer .ren-sheet-close {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      width: var(--touch-min);
+      height: var(--touch-min);
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--color-text);
+      font-size: var(--text-2xl);
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    #rn32-drawer .ren-sheet-close:hover {
+      background: var(--color-fill-hover);
+      color: var(--color-text);
+    }
+
+    #rn32-drawer .ren-sheet-close:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset, 2px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn32-toggle > span,
+      .rn32-bar,
+      .rn32-link,
+      .rn32-destination,
+      #rn32-drawer .ren-sheet-close {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    @media (max-width: 22.5rem) {
+      .rn32-bar {
+        padding-inline: var(--space-2);
+        column-gap: var(--space-2);
+      }
+
+      .rn32-actions {
+        gap: var(--space-1);
+      }
+
+      .rn32-brand-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .rn32-cta {
+        padding-inline: var(--space-3);
+        font-size: var(--text-sm);
+      }
+
+      .rn32-social {
+        flex-wrap: wrap;
+        max-width: 100%;
+      }
+
+      .rn32-link {
+        font-size: var(--text-2xl);
+        overflow-wrap: anywhere;
+      }
+    }
+
+    /* Prevent demo page chrome from forcing root scrollbars at 320px */
+    @media (max-width: 360px) {
+      .dx-nav-menu,
+      .dx-nav-actions {
+        display: none;
+      }
+
+      .dx-nav-inner {
+        gap: var(--space-2);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn32-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo CTA Left Drawer</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo CTA Left Drawer</h1>
+      <p class="lede">
+        A full-width bar with a brand, permanent action, and always-available menu toggle
+        that opens a left edge drawer containing one primary link tree, contact details,
+        and social destinations.
+      </p>
+    </header>
+
+    <section class="rn32-preview bb-detail-preview" data-rn32-root aria-label="Logo CTA left drawer preview">
+      <div class="rn32-bar ren-row-spread">
+        <a class="rn32-brand ren-row ren10-demo-brand" href="#home">
+          <span class="rn32-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+          <span class="rn32-brand-label ren10-demo-brand-label">Ren10</span>
+        </a>
+        <div class="rn32-actions ren-cluster">
+          <a class="ren-btn ren-btn-primary ren-btn-sm rn32-destination rn32-cta" href="#cta">Start project</a>
+          <button
+            class="rn32-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn32-drawer"
+            aria-label="Open menu"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="rn32-hero ren-stack">
+        <h2>Quiet navigation for focused sites.</h2>
+        <p>
+          The primary destinations live in a left drawer so the first viewport stays
+          calm while every route, contact path, and social destination remains one
+          activation away at any width.
+        </p>
+      </div>
+
+      <ren-sheet id="rn32-drawer" side="left" size="md">
+        <header class="ren-sheet-header">
+          <h2 class="ren-sheet-title">Menu</h2>
+          <button
+            type="button"
+            class="ren-sheet-close"
+            data-sheet-close
+            aria-label="Close menu"
+          >×</button>
+        </header>
+        <div class="ren-sheet-body">
+          <nav class="rn32-nav" aria-label="Primary">
+            <ul id="rn32-primary-links" class="rn32-links">
+              <li><a class="rn32-destination rn32-link" href="#link-one" data-sheet-close>Overview</a></li>
+              <li><a class="rn32-destination rn32-link" href="#link-two" data-sheet-close>Work</a></li>
+              <li><a class="rn32-destination rn32-link" href="#link-three" data-sheet-close>Services</a></li>
+              <li><a class="rn32-destination rn32-link" href="#link-four" data-sheet-close>Insights</a></li>
+              <li><a class="rn32-destination rn32-link" href="#link-five" data-sheet-close>About</a></li>
+            </ul>
+
+            <div class="rn32-footer ren-stack">
+              <div class="rn32-contact ren-stack ren-stack-sm">
+                <p class="rn32-contact-title">Contact</p>
+                <address class="ren-stack ren-stack-sm">
+                  <a class="rn32-destination rn32-contact-link" href="tel:+10000000000" data-sheet-close>+1 (000) 000-0000</a>
+                  <a class="rn32-destination rn32-contact-link" href="mailto:hello@example.com" data-sheet-close>hello@example.com</a>
+                  <span class="rn32-contact-address">100 Sample Avenue, Suite 1</span>
+                </address>
+              </div>
+              <ul class="rn32-social ren-cluster" aria-label="Social">
+                <li><a class="rn32-destination rn32-social-link" href="#social-one" data-sheet-close>Community</a></li>
+                <li><a class="rn32-destination rn32-social-link" href="#social-two" data-sheet-close>Photos</a></li>
+                <li><a class="rn32-destination rn32-social-link" href="#social-three" data-sheet-close>Updates</a></li>
+                <li><a class="rn32-destination rn32-social-link" href="#social-four" data-sheet-close>Network</a></li>
+                <li><a class="rn32-destination rn32-social-link" href="#social-five" data-sheet-close>Video</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </ren-sheet>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-cta-right-sheet-contact.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo CTA Right Sheet Contact Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="hero-split-copy-dual-cta-media.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Hero Split Copy Dual CTA Media</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module">
+    import '../../components/composites/ren-sheet/ren-sheet.js';
+
+    const root = document.querySelector('[data-rn32-root]');
+    const sheet = document.getElementById('rn32-drawer');
+    const toggle = root?.querySelector('.rn32-toggle');
+
+    if (root && sheet && toggle) {
+      const syncToggle = () => {
+        const isOpen = Boolean(sheet.open);
+        toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        // Open affordance only — close is the in-sheet .ren-sheet-close control.
+        toggle.setAttribute('aria-label', 'Open menu');
+        toggle.toggleAttribute('data-open', isOpen);
+      };
+
+      toggle.addEventListener('click', () => {
+        if (sheet.open) return;
+        sheet.show();
+        queueMicrotask(syncToggle);
+      });
+
+      sheet.addEventListener('ren-open', syncToggle);
+      sheet.addEventListener('ren-close', () => {
+        syncToggle();
+        requestAnimationFrame(() => toggle.focus({ preventScroll: true }));
+      });
+
+      syncToggle();
+    }
+  </script>
+</body>
+</html>

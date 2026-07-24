@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "moduleId": "header4",
+  "sourceStage": "green",
+  "cacheKey": "header4-65b22e4-mobile-sheet-fix",
+  "capturedCommit": "65b22e48e7ec10ea59d7278271626d48a4c0f279",
+  "capturesFresh": true,
+  "captures": {
+    "desktopLightClosed": "captures-fresh/header4/desktop-light-closed.png",
+    "desktopLightOpen": "captures-fresh/header4/desktop-light-open.png",
+    "desktopDarkClosed": "captures-fresh/header4/desktop-dark-closed.png",
+    "desktopDarkOpen": "captures-fresh/header4/desktop-dark-open.png",
+    "tabletLightClosed": "captures-fresh/header4/tablet-light-closed.png",
+    "mobileLightClosed": "captures-fresh/header4/mobile-light-closed.png",
+    "mobileLightOpen": "captures-fresh/header4/mobile-light-open.png",
+    "narrow320Closed": "captures-fresh/header4/narrow-320-closed.png",
+    "seam767Closed": "captures-fresh/header4/seam-767-closed.png",
+    "seam768Closed": "captures-fresh/header4/seam-768-closed.png",
+    "mobileJsDisabled": "captures-fresh/header4/mobile-js-disabled.png",
+    "desktopReducedMotionOpen": "captures-fresh/header4/desktop-reduced-motion-open.png"
+  },
+  "inspection": "Fresh 12-state captures at commit 65b22e4 show one coherent hero: equal copy/media peers at desktop, copy-first stack at mobile, horizontal desktop email row and full-width mobile submit, no premature custom error with JavaScript disabled, one poster/scrim/play affordance, and one 44px close control. The mobile open state is now a full-width bottom sheet with zero left/right gap and bottom edge aligned to the viewport; desktop remains centered. Open states visibly contain native video controls backed by deterministic playable WebM media; loaded captures show the loader dismissed, and light/dark/reduced-motion surfaces remain coherent."
+}

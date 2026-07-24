@@ -1,0 +1,17 @@
+{
+  "id": "desktop-1280-light",
+  "url": "http://127.0.0.1:57831/templates/blocks/hero-centered-copy-dual-cta.html?ren10_capture=header23-desktop-1280-light-65c1f903619a",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "h1.rh23-heading": 1,
+    ".rh23-actions .ren-btn": 2
+  },
+  "commit": "65c1f903619a4f276584f887cd2b6ef43aa6cbcf",
+  "capturedAt": "2026-07-15T19:32:59.308Z"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "desktop-1280-dark",
+  "url": "http://127.0.0.1:65354/templates/blocks/hero-centered-email-capture-landscape-image.html?ren10_capture=header27-desktop-1280-dark-c9279be5a9ce",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh27-layout": 1,
+    ".rh27-media": 1
+  },
+  "commit": "c9279be5a9ce92fe18282e7283670063048ff61d",
+  "capturedAt": "2026-07-15T20:00:17.703Z"
+}

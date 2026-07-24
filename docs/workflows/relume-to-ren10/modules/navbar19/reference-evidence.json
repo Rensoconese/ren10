@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar19 primitives=include) returned complete Navbar19 section source. Anatomy recorded: logo; desktop-centered four bar entries (3 plain + 1 dropdown with 3 title-only destinations + 1 chevron); always-visible toggle; full site panel with 8 large primary links, 4 columns × 5 links, contact (phone/email/location), 5 social links; bar row hidden while panel open; mobile top row logo+toggle only. No protected source copied into public Ren10 output."
+}

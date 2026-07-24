@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar23",
+  "blockSlug": "nav-mega-menu-product-intro",
+  "blockPath": "templates/blocks/nav-mega-menu-product-intro.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/nav-mega-menu-product-intro.html",
+    "tests/components/navbar23-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

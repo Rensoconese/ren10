@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dark-open",
+  "url": "http://127.0.0.1:63486/templates/blocks/nav-logo-left-action-overlay-menu.html?ren10_capture=navbar16-desktop-dark-open-fa4174328dd3",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "#rn16-primary-links > li": 6,
+    ".rn16-social-link": 5
+  },
+  "commit": "fa4174328dd3d5b703000701ab82907d6a5662db",
+  "capturedAt": "2026-07-15T11:09:35.039Z"
+}

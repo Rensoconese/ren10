@@ -1,0 +1,12 @@
+{"version":1,"path":"/templates/blocks/hero-centered-copy-dual-cta-landscape-lightbox.html","root":"[data-rh28-root]","states":[
+  {"id":"desktop-1280-light","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh28-title":1,".rh28-actions a":2,".rh28-media-trigger":1}},
+  {"id":"desktop-1280-dark","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh28-copy":1,"#rh28-video":1}},
+  {"id":"desktop-dialog-open","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh28-media-trigger"}],"expectedMarkers":{"#rh28-video[open]":1,"#rh28-video iframe":1}},
+  {"id":"tablet-768","viewport":{"width":768,"height":1000},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh28-title":1,".rh28-media":1}},
+  {"id":"mobile-390-light","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh28-description":1,".rh28-actions":1}},
+  {"id":"mobile-390-dark","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh28-poster":1,".rh28-play":1}},
+  {"id":"narrow-320","viewport":{"width":320,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh28-actions a":2,".rh28-media-trigger":1}},
+  {"id":"reduced-motion-focus","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[{"type":"focus","selector":".rh28-media-trigger"}],"expectedMarkers":{".rh28-media-trigger:focus":1}},
+  {"id":"mobile-dialog-open","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh28-media-trigger"}],"expectedMarkers":{"#rh28-video[open]":1,".ren-dialog-close":1}},
+  {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh28-actions a":2,".rh28-video-fallback[href]":1,".rh28-poster":1}}
+]}

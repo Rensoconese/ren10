@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary shell and disclosure reach every documented state: desktop hover/click open-close, keyboard Enter/Space, Escape with focus return, outside/destination/mobile/breakpoint close, mobile activation-only panel; desktop dropdown opens upward from bottom-docked bar",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, four top entries (3 plain + 1 disclosure), three title-only destinations, one permanent action, one named toggle, one chevron — no duplicates or invented rich chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop bottom-docked floating logo/up-control left / menu / one action; mobile top row brand+action+toggle with links below when open; upward desktop dropdown",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Floating Logo-Left Menu-Right Actions Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS floating logo-left menu-right navbar block with two actions inside the collapsible panel, ren-nav, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn14-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn14-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn14-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn14-preview {
+      --ren-z-sticky: var(--z-sticky);
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      padding: var(--space-4);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rn14-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    /*
+     * Floating compact shell. Desktop keeps logo at start and clusters the
+     * four-entry menu with two actions at the end — not centered geometry.
+     */
+    .rn14-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: visible;
+    }
+
+    .rn14-preview .ren-nav-brand {
+      flex-shrink: 0;
+      margin-inline-end: auto;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn14-preview .ren-nav-links {
+      margin: 0;
+      margin-inline-start: 0;
+    }
+
+    .rn14-preview .ren-nav-actions {
+      margin-inline-start: 0;
+      flex-shrink: 0;
+    }
+
+    .rn14-preview .ren-nav-toggle {
+      flex-shrink: 0;
+      margin-inline-start: 0;
+    }
+
+    .rn14-preview .ren-nav-link,
+    .rn14-preview .ren-nav-actions .ren-btn,
+    .rn14-preview .rn14-destination {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn14-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn14-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn14-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn14-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn14-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn14-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn14-disclosure > summary::after,
+    .rn14-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn14-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn14-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn14-disclosure[open] > summary .rn14-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn14-panel {
+      padding: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn14-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rn14-destination {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn14-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn14-destination:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn14-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+      border-radius: var(--radius-lg);
+      margin-block-start: var(--space-4);
+    }
+
+    .rn14-hero h2 {
+      max-width: 18ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn14-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Seam-free shell boundary: mobile ends below 48rem; desktop compact panel
+     * and JS DESKTOP_MQ start at 48rem.
+     */
+    @media (min-width: 48rem) {
+      /*
+       * Narrow panel under the trigger. Disclosure is relative (summary-sized);
+       * top offset clears the vertically-centered nav bar so panelTop >= navBottom.
+       * Panel is horizontally centered on the summary.
+       */
+      .rn14-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn14-panel {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        left: 50%;
+        right: auto;
+        z-index: var(--ren-z-sticky);
+        width: 12rem;
+        max-width: min(12rem, calc(100vw - var(--space-8)));
+        transform: translateX(-50%);
+      }
+
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .rn14-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      /*
+       * One top row: logo | toggle only. Navigation tree and both actions live
+       * inside the opened panel — never permanent top-row chrome.
+       */
+      .rn14-preview .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto auto;
+        align-items: center;
+        column-gap: var(--space-2);
+        row-gap: 0;
+      }
+
+      .rn14-preview .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+        margin-inline-end: 0;
+      }
+
+      .rn14-preview .ren-nav-toggle {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        margin-inline-start: 0;
+      }
+
+      .rn14-preview .ren-nav-links {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        position: static;
+        width: 100%;
+        border-block-end: none;
+        align-items: stretch;
+        animation: none;
+      }
+
+      /* Actions collapse with the shell; only appear when the panel is open. */
+      .rn14-preview .ren-nav-actions {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        margin-inline-start: 0;
+        padding-block: var(--space-2) var(--space-3);
+        padding-inline: 0;
+        border-block-start: 1px solid var(--color-border);
+        gap: var(--space-2);
+      }
+
+      .rn14-preview .ren-nav[data-open] .ren-nav-actions,
+      .rn14-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-actions {
+        display: flex;
+      }
+
+      .rn14-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rn14-preview .ren-nav-links .ren-nav-link,
+      .rn14-preview .rn14-disclosure,
+      .rn14-preview .rn14-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rn14-preview .rn14-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+
+      .rn14-preview .ren-nav-actions .ren-btn {
+        display: flex;
+        width: 100%;
+        max-width: none;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+
+      .rn14-panel {
+        width: 100%;
+        max-width: none;
+        position: static;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: var(--space-1) 0 var(--space-2);
+        transform: none;
+      }
+
+      .rn14-dest-list {
+        padding: var(--space-1) var(--space-4) var(--space-2);
+      }
+
+      .rn14-destination {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    /* JS-disabled mobile: hide inert toggle; expose the one tree + both actions. */
+    @media (max-width: 47.999rem) {
+      .rn14-preview ren-nav:not(:defined) .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+      }
+
+      .rn14-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rn14-preview ren-nav:not(:defined) .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+        margin-inline-end: 0;
+      }
+
+      .rn14-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        animation: none;
+        border-block-end: none;
+      }
+
+      .rn14-preview ren-nav:not(:defined) .ren-nav-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        grid-column: 1 / -1;
+        grid-row: 3;
+        margin-inline-start: 0;
+        padding-block: var(--space-2) var(--space-3);
+        padding-inline: 0;
+        border-block-start: 1px solid var(--color-border);
+        gap: var(--space-2);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn14-chevron,
+      .rn14-destination,
+      .rn14-panel {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.11.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn14-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Floating Logo-Left Menu-Right Actions</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Floating Logo-Left Menu-Right Actions</h1>
+      <p class="lede">
+        A single navigation tree on a compact floating shell — logo at the start,
+        end-aligned menu, and two actions owned by the collapsible panel. Built
+        with <code>ren-nav</code>, native <code>details</code>/<code>summary</code>,
+        layout primitives, and progressive enhancement. No centered menu,
+        permanent mobile CTA row, second tree, or nested landmark.
+      </p>
+    </header>
+
+    <section class="rn14-preview bb-detail-preview" data-rn14-root aria-label="Navbar floating logo-left menu-right actions preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn14-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rn14-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <details class="rn14-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Solutions
+                  <span class="rn14-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rn14-panel">
+                  <ul class="rn14-dest-list ren-stack-sm" aria-label="Solutions">
+                    <li>
+                      <a class="rn14-destination" href="#teams">Teams</a>
+                    </li>
+                    <li>
+                      <a class="rn14-destination" href="#workflows">Workflows</a>
+                    </li>
+                    <li>
+                      <a class="rn14-destination" href="#insights">Insights</a>
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#resources">Resources</a>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-secondary" href="#login">Log in</a>
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn14-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rn14-hero ren-stack">
+        <h2>Actions that travel with the menu.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the floating shell,
+          end-aligned menu, and panel-owned actions stay easy to judge while you
+          copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-menu-center-dropdown.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Menu-Center Dropdown Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-floating-bottom-logo-left-menu-actions.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Floating Bottom Logo-Left Menu Actions Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local compact dropdown controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic; only hover exit has a grace timer):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     */
+    const RN14_CONTROLLER = Symbol.for('ren10.rn14.controller');
+    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavFloatingLogoLeftMenuRightActions(scope = document) {
+      const root = scope.querySelector?.('[data-rn14-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn14-root')) {
+        const nested = document.querySelector('[data-rn14-root]');
+        if (!nested) return null;
+        return initNavFloatingLogoLeftMenuRightActionsOn(nested);
+      }
+      return initNavFloatingLogoLeftMenuRightActionsOn(root);
+    }
+
+    function initNavFloatingLogoLeftMenuRightActionsOn(root) {
+      const disclosure = root.querySelector('.rn14-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RN14_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN14_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+      /** Short hover-intent grace period for engines that split the generated corridor hit region. */
+      let closeTimer = 0;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function clearScheduledClose() {
+        if (!closeTimer) return;
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      }
+
+      function resetHoverFlags() {
+        clearScheduledClose();
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        clearScheduledClose();
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        clearScheduledClose();
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          // Keyboard-generated activation: detail === 0 — leave native toggle.
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            // First real pointer click after hover-open: pin open.
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          // Pinned or click-opened: genuine close.
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        clearScheduledClose();
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          hoverTransient = false;
+          if (!pointerPinned) {
+            clearScheduledClose();
+            closeTimer = window.setTimeout(() => {
+              closeTimer = 0;
+              if (!pointerInside && !pointerPinned) closeDisclosure(false);
+            }, 250);
+          }
+        },
+        { signal }
+      );
+
+      signal.addEventListener('abort', clearScheduledClose, { once: true });
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (!disclosure.open) return;
+          event.stopImmediatePropagation();
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(true);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavFloatingLogoLeftMenuRightActions();
+    window.initNavFloatingLogoLeftMenuRightActions = initNavFloatingLogoLeftMenuRightActions;
+  </script>
+</body>
+</html>

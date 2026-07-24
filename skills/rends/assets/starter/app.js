@@ -1,6 +1,6 @@
-import 'https://cdn.jsdelivr.net/npm/ren10@0.10.0/components/patterns/ren-sidebar/ren-sidebar.js';
-import 'https://cdn.jsdelivr.net/npm/ren10@0.10.0/components/patterns/ren-form/ren-form.js';
-import 'https://cdn.jsdelivr.net/npm/ren10@0.10.0/components/primitives/ren-field/ren-field.js';
+import 'https://cdn.jsdelivr.net/npm/ren10@0.11.0/components/patterns/ren-sidebar/ren-sidebar.js';
+import 'https://cdn.jsdelivr.net/npm/ren10@0.11.0/components/patterns/ren-form/ren-form.js';
+import 'https://cdn.jsdelivr.net/npm/ren10@0.11.0/components/primitives/ren-field/ren-field.js';
 
 const root = document.documentElement;
 const themeToggle = document.querySelector('#theme-toggle');

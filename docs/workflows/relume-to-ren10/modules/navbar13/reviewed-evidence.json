@@ -1,0 +1,7 @@
+{
+  "stage": "reviewed",
+  "kind": "human-acceptance",
+  "acceptor": "product-owner",
+  "result": "accepted",
+  "notes": "The product owner explicitly approved Navbar13 in the Codex task after reviewing the live block."
+}

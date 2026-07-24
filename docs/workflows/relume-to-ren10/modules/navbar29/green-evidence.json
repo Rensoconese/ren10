@@ -1,0 +1,42 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "0a6e7c7",
+  "captures": {
+    "desktop": ".ren10-workflow/navbar29-captures/navbar29/desktop-light-open.png",
+    "tablet": ".ren10-workflow/navbar29-captures/navbar29/tablet-light-open.png",
+    "mobile": ".ren10-workflow/navbar29-captures/navbar29/mobile-light-nested-open.png",
+    "dark": ".ren10-workflow/navbar29-captures/navbar29/desktop-dark-open.png",
+    "noJavaScript": ".ren10-workflow/navbar29-captures/navbar29/mobile-js-disabled-open.png",
+    "narrow320": ".ren10-workflow/navbar29-captures/navbar29/narrow-320-nested-open.png",
+    "narrow340": ".ren10-workflow/navbar29-captures/navbar29/narrow-340-nested-open.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent review inspected all 15 regenerated PNG and JSON states. Every open desktop, tablet, mobile, reduced-motion, narrow, and 768/769 seam capture visibly paints the category links and four collection cards. Open-state reports verify opacity 1, visible display/visibility, and positive rectangles before and after each screenshot. The 768 seam shows the desktop shell and complete mega panel. Mobile destinations close the nested disclosure and shell while leaving visible focus. No duplicate navigation tree, duplicate chevron, window global, or horizontal overflow remains.",
+  "testResults": {
+    "navbar29Focused": {
+      "command": "npx playwright test tests/components/navbar29-navigation.spec.cjs --workers=1",
+      "result": "24 passed, 0 failed; axe WCAG 2.1 AA clean"
+    },
+    "capture": {
+      "command": "node docs/workflows/relume-to-ren10/modules/navbar29/capture-local.mjs",
+      "result": "15 PNG and 15 JSON states captured from cfd1be3 with settled opacity checks"
+    },
+    "packetValidate": {
+      "command": "node scripts/relume-workflow.mjs validate docs/workflows/relume-to-ren10/modules/navbar29",
+      "result": "Valid workflow packet: navbar29 (green)"
+    },
+    "diffCheck": {
+      "command": "git diff --check",
+      "result": "clean"
+    }
+  },
+  "blockPath": "templates/blocks/nav-mega-menu-overlay-collections.html",
+  "intentionalDifferences": [
+    "One responsive Light DOM navigation tree instead of duplicated desktop and mobile markup",
+    "Native details/summary plus public DOM and ARIA state for hover, click, Escape, destination close, and focus restoration",
+    "Ren10 tokens and layout primitives determine dimensions rather than pixel-matching Relume",
+    "Collection cards are whole anchors without nested interactive controls"
+  ]
+}
