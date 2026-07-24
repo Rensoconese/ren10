@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.11.0",
+  "packageVersion": "0.12.0",
   "artifactPath": "examples/reference-app",
-  "contentHash": "sha256:9c1a5f3fd37b03c214fcd499a6149f406f3b5ffe18b2d31a9b166744f3f60062",
+  "contentHash": "sha256:9ec02277400a412566220635672074778437f9b3a3e389a612cb943d06a0e6c1",
   "scenarios": [
     "shell-sidebar",
     "settings-form",
@@ -22,7 +22,7 @@
   "review": {
     "process": "independent-review",
     "reviewer": "Codex independent-review agent",
-    "reviewedAt": "2026-07-14",
+    "reviewedAt": "2026-07-24",
     "command": "node scripts/capture-starter-visuals.mjs && npx playwright test --config tests/agent-starter/playwright.config.cjs",
     "result": "approved"
   },

@@ -47,7 +47,7 @@ test('design-context writes .ren10/design.json from package contracts', async ()
     const payload = JSON.parse(result.stdout);
     const saved = JSON.parse(await readFile(path.join(cwd, '.ren10', 'design.json'), 'utf8'));
     assert.equal(payload.type, 'design-context.write');
-    assert.equal(saved.system.version, '0.11.0');
+    assert.equal(saved.system.version, '0.12.0');
     assert.equal(saved.components.counts.total, 53);
   } finally {
     await rm(cwd, { recursive: true, force: true });

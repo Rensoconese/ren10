@@ -13,6 +13,18 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+### Security
+
+## [0.12.0] — 2026-07-24
+
+### Added
+
 - Added a complete twelve-block Blog / Article Content collection covering
   featured-story hierarchy, topic discovery, chronological feeds, issue rails,
   long-form reading, archives, search, author and topic pages, reading series,
