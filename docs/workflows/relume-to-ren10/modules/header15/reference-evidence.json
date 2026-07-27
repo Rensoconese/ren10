@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Header15 complete source was retrieved through the authenticated Relume MCP during the current header-family batch before this isolated implementation. The persisted brief contains only sanitized anatomy and responsive facts; protected source, copy, classes, dependencies, and URLs are excluded."
+}

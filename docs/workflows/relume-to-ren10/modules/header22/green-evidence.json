@@ -1,0 +1,31 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturesFresh": true,
+  "captures": {
+    "desktop": "captures/header22/desktop-1280-light.png",
+    "mobile": "captures/header22/mobile-390-light.png",
+    "desktopDark": "captures/header22/desktop-1280-dark.png",
+    "dialogOpen": "captures/header22/desktop-dialog-open.png",
+    "invalid": "captures/header22/desktop-invalid.png",
+    "noJavaScript": "captures/header22/mobile-js-disabled.png"
+  },
+  "cascadeInspection": "Fresh DOM/CSS and screenshot review confirms one root-scoped content-height Ren10 split. Native element margins and hidden states are locally controlled; the play and close affordances each have one owner; enhanced invalid feedback is singular; no-JS retains native submission; dialog/video lifecycle, responsive ordering, themes and focus remain isolated without duplicate or surplus UI.",
+  "checklist": {
+    "total": 36,
+    "passed": 36,
+    "summary": {
+      "lineageAndScope": "5/5",
+      "anatomy": "6/6",
+      "ren10Contract": "6/6",
+      "responsive": "5/5",
+      "accessibility": "6/6",
+      "visual": "4/4",
+      "verification": "4/4"
+    }
+  },
+  "focusedTests": "32 passed across Desktop Light and Desktop Dark; axe clean in pristine, invalid, success and open-dialog states.",
+  "blockPath": "templates/blocks/hero-split-video-lightbox-left-email-form.html"
+}

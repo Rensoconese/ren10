@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, four primary entries (three plain + one disclosure), three title-only destinations, one always-visible toggle, one chevron, ten large overlay links, newsletter form (email + secondary submit + terms privacy link), contact phone/email/address, and five social links are authored",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Native disclosure activation, stable desktop hover transfer, click pin, Escape, outside/destination close, overlay toggle open/close with primary-row hide, and breakpoint coordination reach every state",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "The dropdown trigger, toggle, chevron, and close icon have one owner with no duplicate rendering",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop logo-start / primary-centered / toggle-end full-width bar; overlay under bar without horizontal overflow; large links grid and newsletter/contact column relationships preserved",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled experience hides the inert toggle and exposes overlay destinations, newsletter, contact, and native disclosure usability",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Visible focus, 44px targets, semantic links, reduced motion, light/dark, single primary landmark without nested nav, and WCAG 2.1 AA pass",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, dark, overlay-open, and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}

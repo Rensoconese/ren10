@@ -50,7 +50,7 @@
 }
 
 /* Links */
-.ren-breadcrumb a {
+.ren-breadcrumb > ol a {
   color: var(--ren-breadcrumb-color);
   text-decoration: none;
   padding: var(--space-1) 0;
@@ -58,13 +58,13 @@
   transition: color var(--duration-tactile) var(--ease-enter);
 }
 
-.ren-breadcrumb a:hover {
+.ren-breadcrumb > ol a:hover {
   color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
 
-.ren-breadcrumb a:focus-visible {
+.ren-breadcrumb > ol a:focus-visible {
   outline: var(--ring-width) solid var(--color-focus-ring);
   outline-offset: 2px;
 }

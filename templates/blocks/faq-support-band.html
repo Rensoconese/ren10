@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="A centered Ren10 FAQ with a dedicated support action band."
+    />
+    <title>Support Band FAQ — Ren10 Blocks</title>
+    <link rel="stylesheet" href="../../index.css" />
+    <link rel="stylesheet" href="../../site/shell.css" />
+    <link
+      rel="stylesheet"
+      href="../../components/composites/ren-accordion/ren-accordion.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../../components/primitives/ren-button/ren-button.css"
+    />
+    <link rel="stylesheet" href="faq-batch2.css" />
+  </head>
+  <body>
+    <main class="dx-shell bb-detail-page">
+      <header class="bb-detail-header ren-stack">
+        <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+          <ol>
+            <li><a href="../index.html">Templates</a></li>
+            <li><a href="index.html">Blocks</a></li>
+            <li aria-current="page">Support Band FAQ</li>
+          </ol>
+        </nav>
+        <p class="dx-kicker">FAQ 10 · Support band</p>
+        <h1 class="bb-detail-title">Support Band FAQ</h1>
+        <p class="bb-detail-description">
+          A centered FAQ resolves the common path first, then a separate support
+          band offers one calm next action.
+        </p>
+      </header>
+      <section
+        class="faq10-block bb-detail-preview"
+        aria-labelledby="faq10-title"
+      >
+        <div class="faq10-heading ren-stack">
+          <p class="dx-kicker">Implementation answers</p>
+          <h2 id="faq10-title" class="faq10-title">
+            Resolve the common questions first
+          </h2>
+          <p class="faq10-description">
+            Short, direct answers keep teams moving without turning the section
+            into a documentation wall.
+          </p>
+        </div>
+        <ren-accordion
+          class="faq10-list ren-accordion-bordered"
+          type="single"
+          collapsible
+          default-value="0"
+          ><details>
+            <summary class="ren-accordion-trigger">
+              Where are component APIs defined?
+            </summary>
+            <div class="ren-accordion-content">
+              Each component keeps its selectors, attributes, public tokens,
+              states, and accessibility requirements in a colocated contract.
+            </div>
+          </details>
+          <details>
+            <summary class="ren-accordion-trigger">
+              Can a block use custom layout CSS?
+            </summary>
+            <div class="ren-accordion-content">
+              Only when the layout primitives cannot express the required
+              anatomy. The page skeleton should still begin with Ren10 Grid,
+              Stack, or another documented primitive.
+            </div>
+          </details>
+          <details>
+            <summary class="ren-accordion-trigger">
+              How should spacing be chosen?
+            </summary>
+            <div class="ren-accordion-content">
+              Use semantic spacing tokens and parent gaps. Avoid stacking
+              unrelated child margins or introducing one-off pixel values.
+            </div>
+          </details></ren-accordion
+        >
+        <section
+          class="faq10-band ren-grid"
+          aria-labelledby="faq10-support-title"
+        >
+          <div class="faq10-band-copy ren-stack">
+            <h3 id="faq10-support-title">Need the full implementation path?</h3>
+            <p>
+              Continue with the getting-started guide and component contracts.
+            </p>
+          </div>
+          <a class="ren-btn" href="../../docs/getting-started.html"
+            >Read getting started</a
+          >
+        </section>
+      </section>
+      <nav
+        class="bb-block-pagination ren-grid ren-grid-2"
+        aria-label="Block pagination"
+      >
+        <a
+          class="bb-block-pagination-link"
+          href="faq-accent-panel.html"
+          rel="prev"
+          ><span aria-hidden="true">←</span
+          ><span
+            ><span class="bb-block-pagination-direction">Previous</span
+            ><br />Accent Panel FAQ</span
+          ></a
+        ><a
+          class="bb-block-pagination-link bb-block-pagination-link-next"
+          href="faq-multiple-open.html"
+          rel="next"
+          ><span
+            ><span class="bb-block-pagination-direction">Next</span
+            ><br />Multiple Open FAQ</span
+          ><span aria-hidden="true">→</span></a
+        >
+      </nav>
+    </main>
+    <script
+      type="module"
+      src="../../components/composites/ren-accordion/ren-accordion.js"
+    ></script>
+  </body>
+</html>

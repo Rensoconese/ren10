@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar21 primitives=include) returned complete Navbar21 section source plus two vendored primitives (utils/cn, button). Exact anatomy recorded: sticky logo-left bar; four centered bar entries (3 plain + 1 dropdown with 3 title-only destinations); always-visible menu toggle; fullscreen overlay with 8 large destinations, featured rail (heading + 2 articles + view-all), contact link, and 5 socials. Bar and panel link sets are distinct collections. No protected source was copied into public Ren10 output."
+}

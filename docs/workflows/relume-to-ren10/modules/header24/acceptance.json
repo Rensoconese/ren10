@@ -1,0 +1,13 @@
+{
+  "version":1,
+  "criteria":[
+    {"id":"anatomy","kind":"structure","description":"One content-height centered section/copy/h1/description/form/email/submit/legal/terms/status; zero media/dialog/nav/logo/extra CTA/form","automated":true},
+    {"id":"form-seam","kind":"visual-structure","description":"Form stacks through 639px and becomes growing-email/intrinsic-submit row at 640px","automated":true},
+    {"id":"centering","kind":"visual-structure","description":"Copy and form remain finite, centered, aligned and overflow-free from 320 through 1280","automated":true},
+    {"id":"form-accessibility","kind":"accessibility","description":"Visible label, native required/email rules, one hidden-then-visible error, live success, focus, 44px and axe AA","automated":true},
+    {"id":"real-fallback","kind":"behavior","description":"Real native form action and terms destination work without JavaScript; enhanced success never duplicates validation","automated":true},
+    {"id":"themes-motion","kind":"accessibility","description":"Light/dark contrast and reduced-motion transition collapse remain coherent","automated":true},
+    {"id":"policy","kind":"behavior","description":"Vanilla Light DOM, documented Ren10 primitives/tokens and one root-scoped module only","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh desktop/mobile/light/dark/noJS/reduced/error captures await Codex review","automated":false}
+  ]
+}

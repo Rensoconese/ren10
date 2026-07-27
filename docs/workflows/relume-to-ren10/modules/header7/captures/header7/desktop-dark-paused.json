@@ -1,0 +1,18 @@
+{
+  "id": "desktop-dark-paused",
+  "url": "http://127.0.0.1:60335/templates/blocks/hero-fullscreen-bg-video-left-copy-dual-cta.html?ren10_capture=header7-desktop-dark-paused-eae1b3065e91",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh7-heading": 1,
+    ".rh7-actions > .ren-btn": 2,
+    ".rh7-motion": 1
+  },
+  "commit": "eae1b3065e918a01abcd410d7eaa8a4596de60c7",
+  "capturedAt": "2026-07-15T17:33:28.632Z"
+}

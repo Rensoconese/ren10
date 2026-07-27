@@ -19,24 +19,10 @@
     .dx-vrow-items { padding: var(--space-3); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
     @media (max-width: 720px) { .dx-vrow { grid-template-columns: 1fr; gap: var(--space-2); } .dx-vrow-label { padding-top: 0; } }
 
-    /* Demo tooltip — pure CSS hover popup */
-    .demo-tip { position: relative; display: inline-flex; }
-    .demo-tip-target { padding: var(--space-2) var(--space-3); }
-    .demo-tip-content {
-      position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
-      padding: var(--space-1) var(--space-2);
-      background: var(--color-text); color: var(--color-surface);
-      border-radius: var(--radius-sm); font-size: var(--text-xs); white-space: nowrap;
-      opacity: 0; pointer-events: none;
-      transition: opacity var(--duration-state) var(--ease-enter);
-      z-index: 5;
-    }
-    .demo-tip:hover .demo-tip-content,
-    .demo-tip:focus-within .demo-tip-content { opacity: 1; }
   </style>
 </head>
 <body>
-  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
 
   <div class="dx-shell dx-shell-grid">
     <aside class="dx-sidebar" aria-label="Site navigation">
@@ -149,13 +135,14 @@
         <p>Hover or focus the buttons below.</p>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <span class="demo-tip"><button class="ren-btn ren-btn-secondary demo-tip-target" aria-describedby="t1">Save</button><span class="demo-tip-content" role="tooltip" id="t1">⌘S</span></span>
-            <span class="demo-tip"><button class="ren-btn ren-btn-secondary demo-tip-target" aria-describedby="t2" aria-label="Settings"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button><span class="demo-tip-content" role="tooltip" id="t2">Settings</span></span>
-            <span class="demo-tip"><button class="ren-btn ren-btn-ghost demo-tip-target" aria-describedby="t3">Help</button><span class="demo-tip-content" role="tooltip" id="t3">Press ? for shortcuts</span></span>
+            <button class="ren-btn ren-btn-secondary ren-tooltip-trigger" type="button">Save<ren-tooltip placement="top" show-delay="0">⌘S</ren-tooltip></button>
+            <button class="ren-btn ren-btn-secondary ren-tooltip-trigger" type="button" aria-label="Settings"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><ren-tooltip placement="top" show-delay="0">Settings</ren-tooltip></button>
+            <button class="ren-btn ren-btn-ghost ren-tooltip-trigger" type="button">Help<ren-tooltip placement="top" show-delay="0">Press ? for shortcuts</ren-tooltip></button>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-tooltip content="⌘S"&gt;
-  &lt;button class="ren-btn ren-btn-secondary"&gt;Save&lt;/button&gt;
-&lt;/ren-tooltip&gt;</code></pre>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button class="ren-btn ren-btn-secondary ren-tooltip-trigger" type="button"&gt;
+  Save
+  &lt;ren-tooltip placement="top"&gt;⌘S&lt;/ren-tooltip&gt;
+&lt;/button&gt;</code></pre>
         </div>
       </section>
 
@@ -167,7 +154,7 @@
             <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Four placements via <code>placement="top|right|bottom|left"</code> (default <code>top</code>). The component flips to the opposite side automatically when there isn't room.</p>
           </div></div>
           <div class="dx-vrow"><span class="dx-vrow-label">Delay</span><div class="dx-vrow-items">
-            <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Default hover delay is 300 ms. Override with <code>delay="500"</code> for less-interruptive contexts. Focus shows the tooltip with no delay.</p>
+            <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">Default hover delay is 500 ms. Override it with <code>show-delay="700"</code> for less-interruptive contexts.</p>
           </div></div>
         </div>
       </section>
@@ -187,9 +174,9 @@
         <table class="dx-api dx-api-cols-4">
           <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">content</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>The tooltip text. Required.</td></tr>
             <tr><td><code class="dx-api-name">placement</code></td><td><span class="dx-api-type">"top" | "right" | "bottom" | "left"</span></td><td><span class="dx-api-default">"top"</span></td><td>Preferred side. Auto-flips when there isn't room.</td></tr>
-            <tr><td><code class="dx-api-name">delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">300</span></td><td>Hover delay before showing. Focus is always instant.</td></tr>
+            <tr><td><code class="dx-api-name">show-delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">500</span></td><td>Delay before showing the tooltip.</td></tr>
+            <tr><td><code class="dx-api-name">hide-delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">0</span></td><td>Delay before hiding the tooltip.</td></tr>
           </tbody>
         </table>
       </section>
@@ -215,13 +202,15 @@
         <p class="dx-kicker">Patterns</p>
         <h2>Examples</h2>
         <h3>Icon-only button with hint</h3>
-        <div class="dx-pre" tabindex="0"><code>&lt;ren-tooltip content="Settings" placement="bottom"&gt;
-  &lt;button class="ren-btn ren-btn-ghost" aria-label="Settings"&gt;&lt;!-- gear SVG --&gt;&lt;/button&gt;
-&lt;/ren-tooltip&gt;</code></div>
+        <div class="dx-pre" tabindex="0"><code>&lt;button class="ren-btn ren-btn-ghost ren-tooltip-trigger" type="button" aria-label="Settings"&gt;
+  &lt;!-- gear SVG --&gt;
+  &lt;ren-tooltip placement="bottom"&gt;Settings&lt;/ren-tooltip&gt;
+&lt;/button&gt;</code></div>
         <h3>Keyboard shortcut hint</h3>
-        <div class="dx-pre" tabindex="0"><code>&lt;ren-tooltip content="⌘S to save"&gt;
-  &lt;button class="ren-btn ren-btn-primary"&gt;Save&lt;/button&gt;
-&lt;/ren-tooltip&gt;</code></div>
+        <div class="dx-pre" tabindex="0"><code>&lt;button class="ren-btn ren-btn-primary ren-tooltip-trigger" type="button"&gt;
+  Save
+  &lt;ren-tooltip&gt;⌘S to save&lt;/ren-tooltip&gt;
+&lt;/button&gt;</code></div>
       </section>
 
     </main>

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A responsive two-column Ren10 FAQ for independent question groups.">
+  <title>Two Column Groups FAQ — Ren10 Blocks</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/composites/ren-accordion/ren-accordion.css">
+  <link rel="stylesheet" href="faq-batch1.css">
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack"><nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Templates</a></li><li><a href="index.html">Blocks</a></li><li aria-current="page">Two Column Groups FAQ</li></ol></nav><p class="dx-kicker">FAQ 3 · Support block</p><h1 class="bb-detail-title">Two Column Groups FAQ</h1><p class="bb-detail-description">Two independent disclosure groups create a denser desktop view and return to one readable column on smaller screens.</p></header>
+    <section class="faq3-block bb-detail-preview" aria-labelledby="faq3-title">
+      <div class="faq3-heading ren-stack"><h2 id="faq3-title" class="faq3-title">Find an answer without hunting</h2><p class="faq3-description">Related questions stay close while each column manages its own open state.</p></div>
+      <div class="faq3-columns ren-grid">
+        <ren-accordion class="ren-accordion-bordered" type="single" collapsible default-value="0"><details><summary class="ren-accordion-trigger">What browsers are supported?</summary><div class="ren-accordion-content">Current Chromium, Firefox, and WebKit releases are covered by the component test matrix.</div></details><details><summary class="ren-accordion-trigger">Does JavaScript gate the visual design?</summary><div class="ren-accordion-content">No. Components paint correctly first; JavaScript adds coordinated state and interaction only where required.</div></details><details><summary class="ren-accordion-trigger">Can we use native forms?</summary><div class="ren-accordion-content">Yes. Ren10 enhances real labels, inputs, buttons, fieldsets, and validation states.</div></details></ren-accordion>
+        <ren-accordion class="ren-accordion-bordered" type="single" collapsible><details><summary class="ren-accordion-trigger">How are releases verified?</summary><div class="ren-accordion-content">Lint, agent checks, accessibility tests, render tests, package smoke, and browser coverage run before release.</div></details><details><summary class="ren-accordion-trigger">Are themes part of the package?</summary><div class="ren-accordion-content">Yes. The default system and named appearances share one semantic token contract.</div></details><details><summary class="ren-accordion-trigger">Where can agents find the API?</summary><div class="ren-accordion-content">The root design contract routes agents to colocated component and pattern contracts.</div></details></ren-accordion>
+      </div>
+    </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination"><a class="bb-block-pagination-link" href="faq-split-heading-accordion.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Split Heading Accordion FAQ</span></a><a class="bb-block-pagination-link bb-block-pagination-link-next" href="faq-category-cards.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Category Cards FAQ</span><span aria-hidden="true">→</span></a></nav>
+  </main>
+  <script type="module" src="../../components/composites/ren-accordion/ren-accordion.js"></script>
+</body>
+</html>

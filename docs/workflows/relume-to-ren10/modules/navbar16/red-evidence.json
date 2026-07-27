@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "The Navbar16 isolated suite was added before production. Focused run discovered 15 tests and stopped at the first expected failure because the absent block returned HTTP 404 for templates/blocks/nav-logo-left-action-overlay-menu.html (assertion: navbar16 block must not 404); the other 14 tests were left unrun by --max-failures=1."
+}

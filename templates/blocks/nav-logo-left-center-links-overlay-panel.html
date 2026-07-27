@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo-Left Center Links Overlay Panel Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS navbar block with a full-width bar, centered primary links, always-visible menu toggle, and a full-panel overlay menu with newsletter and contact.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn20-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn20-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn20-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn20-preview {
+      --ren-z-sticky: var(--z-sticky);
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      /* Visible so absolute dropdown is not clipped by the card shell. */
+      overflow: visible;
+      min-height: 28rem;
+    }
+
+    .rn20-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      overflow: visible;
+    }
+
+    /* Full-width bar: logo | centered primary | always-visible toggle */
+    .rn20-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: calc(var(--ren-z-sticky) + 1);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      border-radius: 0;
+      box-shadow: none;
+      overflow: visible;
+    }
+
+    .rn20-preview .ren-nav-brand {
+      grid-column: 1;
+      justify-self: start;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn20-preview .ren-nav-links {
+      grid-column: 2;
+      justify-self: center;
+      margin: 0;
+      position: static;
+      animation: none;
+    }
+
+    .rn20-preview .ren-nav-toggle {
+      display: flex;
+      grid-column: 3;
+      justify-self: end;
+      margin-inline-start: 0;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn20-preview .ren-nav-link,
+    .rn20-preview .rn20-destination,
+    .rn20-preview .rn20-menu-link,
+    .rn20-preview .rn20-social,
+    .rn20-preview .rn20-contact a {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn20-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn20-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn20-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn20-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn20-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn20-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn20-disclosure > summary::after,
+    .rn20-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn20-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn20-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn20-disclosure[open] > summary .rn20-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn20-panel {
+      padding: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn20-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rn20-destination {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn20-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn20-destination:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /*
+     * Full-panel overlay under the bar as a sibling of ren-nav (not inside the
+     * custom element). Absolute within the preview so it covers the hero, keeps
+     * full-page capture height stable, and paints above in-flow content.
+     */
+    .rn20-overlay {
+      display: none;
+      position: absolute;
+      inset-inline: 0;
+      top: var(--ren-nav-height, 4.5rem);
+      z-index: calc(var(--ren-z-sticky) + 5);
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 12rem;
+      max-height: min(70dvh, 36rem);
+      overflow: auto;
+      background: var(--color-surface);
+      border-block-end: 1px solid var(--color-border);
+      box-shadow: var(--shadow-md);
+      padding: var(--space-6) var(--space-5);
+    }
+
+    .rn20-preview ren-nav[data-open] ~ .rn20-overlay,
+    .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) .rn20-overlay {
+      display: block;
+    }
+
+    /* Keep preview card height stable; overlay paints over the hero surface. */
+    .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) .rn20-hero {
+      visibility: hidden;
+    }
+
+    .rn20-overlay-inner {
+      display: grid;
+      gap: var(--space-10);
+      align-items: start;
+    }
+
+    .rn20-menu-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+
+    .rn20-menu-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      padding-block: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.15;
+      border-radius: var(--radius-md);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn20-menu-link:hover {
+      color: var(--color-accent);
+    }
+
+    .rn20-menu-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn20-aside {
+      --stack-gap: var(--space-6);
+      max-width: 28rem;
+    }
+
+    .rn20-aside h2 {
+      margin: 0 0 var(--space-2);
+      font-size: var(--text-md);
+      font-weight: var(--weight-semibold);
+      line-height: 1.3;
+    }
+
+    .rn20-aside p {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-md);
+      line-height: 1.5;
+    }
+
+    .rn20-newsletter {
+      margin-block-start: var(--space-4);
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    @media (min-width: 40rem) {
+      .rn20-newsletter {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+      }
+
+      .rn20-newsletter .rn20-terms {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .rn20-newsletter .ren-input,
+    .rn20-newsletter .ren-btn {
+      min-height: var(--touch-min);
+    }
+
+    .rn20-terms {
+      margin: 0;
+      font-size: var(--text-xs);
+      color: var(--color-text-muted);
+      line-height: 1.45;
+    }
+
+    .rn20-terms a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text);
+      text-decoration: underline;
+    }
+
+    .rn20-terms a:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn20-contact {
+      --stack-gap: var(--space-1);
+    }
+
+    .rn20-contact a {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-text);
+      text-decoration: underline;
+      font-size: var(--text-sm);
+    }
+
+    .rn20-contact a:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn20-address {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-sm);
+      line-height: 1.5;
+    }
+
+    .rn20-social-list {
+      list-style: none;
+      margin: var(--space-4) 0 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .rn20-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      border-radius: var(--radius-md);
+    }
+
+    .rn20-social:hover {
+      color: var(--color-text);
+      background: var(--color-fill);
+    }
+
+    .rn20-social:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn20-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+    }
+
+    .rn20-hero h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn20-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Band policy (aligned with block JS DESKTOP_MQ and ren-nav JS < 768):
+     *   desktop = min-width: 48rem (includes exact 768px)
+     *   mobile  = max-width: 47.999rem (excludes 768px)
+     * ren-nav.css still uses max-width: 48rem (includes 768) for mobile collapse,
+     * so desktop overrides must beat that rule at exactly 48rem via higher
+     * specificity + !important on display/position.
+     */
+    @media (min-width: 48rem) {
+      /*
+       * Inclusive desktop primary tree: visible horizontal row even at 768px,
+       * neutralizing ren-nav's max-width:48rem display:none / absolute panel.
+       */
+      .rn20-preview .ren-nav-links,
+      .rn20-preview #rn20-primary-links.ren-nav-links {
+        display: flex !important;
+        position: static !important;
+        inset: auto;
+        top: auto;
+        inset-inline: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        max-width: none;
+        background: transparent;
+        border: none;
+        border-block-end: none;
+        padding: 0;
+        margin: 0;
+        animation: none !important;
+        z-index: auto;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .rn20-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn20-panel {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        left: 50%;
+        right: auto;
+        z-index: calc(var(--ren-z-sticky) + 4);
+        width: 12rem;
+        max-width: min(12rem, calc(100vw - var(--space-8)));
+        transform: translateX(-50%);
+        background: var(--color-surface);
+      }
+
+      .rn20-disclosure[open] > .rn20-panel {
+        display: block;
+      }
+
+      /* Hover corridor between summary and panel */
+      .rn20-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+
+      /* Hide primary row while the overlay panel is open (source relationship). */
+      .rn20-preview ren-nav[data-open] .ren-nav-links,
+      .rn20-preview ren-nav[data-open] #rn20-primary-links.ren-nav-links,
+      .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links,
+      .rn20-preview:has(.ren-nav-toggle[aria-expanded="true"]) #rn20-primary-links.ren-nav-links {
+        display: none !important;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .rn20-overlay-inner {
+        grid-template-columns: 1fr 0.75fr;
+        gap: var(--space-12);
+        align-items: center;
+      }
+
+      .rn20-menu-links {
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-8);
+        row-gap: var(--space-2);
+      }
+
+      .rn20-overlay {
+        max-height: min(75dvh, 40rem);
+        padding-block: var(--space-10);
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn20-preview .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto;
+      }
+
+      .rn20-preview .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .rn20-preview .ren-nav-toggle {
+        grid-column: 2;
+        grid-row: 1;
+        display: flex;
+      }
+
+      /*
+       * Primary bar links are desktop-only in this anatomy. Never use ren-nav's
+       * absolute mobile links panel — the overlay owns mobile destinations.
+       */
+      .rn20-preview .ren-nav-links,
+      .rn20-preview #rn20-primary-links.ren-nav-links {
+        display: none !important;
+      }
+
+      .rn20-overlay {
+        max-height: min(80dvh, 42rem);
+      }
+    }
+
+    /* JS-disabled / before upgrade: hide inert toggle; expose overlay content. */
+    .rn20-preview ren-nav:not(:defined) .ren-nav-toggle {
+      display: none !important;
+    }
+
+    .rn20-preview:has(ren-nav:not(:defined)) .rn20-overlay,
+    .rn20-preview ren-nav:not(:defined) ~ .rn20-overlay {
+      display: block;
+      position: relative;
+      top: auto;
+      max-height: none;
+    }
+
+    @media (min-width: 48rem) {
+      .rn20-preview ren-nav:not(:defined) .ren-nav-links,
+      .rn20-preview ren-nav:not(:defined) #rn20-primary-links.ren-nav-links {
+        visibility: visible;
+        pointer-events: auto;
+        display: flex !important;
+        position: static !important;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn20-preview ren-nav:not(:defined) .ren-nav {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn20-chevron,
+      .rn20-destination,
+      .rn20-panel,
+      .rn20-overlay,
+      .rn20-menu-link,
+      .rn20-preview .ren-nav-toggle span {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /*
+     * Local demo chrome: neutralize horizontal overflow of the docs header at
+     * 320–340px without editing shared shell.css.
+     */
+    @media (max-width: 21.25rem) {
+      .dx-nav {
+        overflow-x: clip;
+        max-width: 100%;
+      }
+
+      .dx-nav-inner {
+        gap: var(--space-2);
+        padding-inline: var(--space-3);
+        max-width: 100%;
+        min-width: 0;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+      }
+
+      .dx-nav-menu {
+        display: none;
+      }
+
+      .dx-nav-actions .ren-btn-sm {
+        padding-inline: var(--space-2);
+      }
+
+      .dx-shell {
+        padding-inline: var(--space-3);
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      .rn20-page-header,
+      .rn20-preview {
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 20rem) {
+      .dx-nav-inner {
+        padding-inline: var(--space-2);
+      }
+
+      .dx-brand span:not(.dx-brand-mark):not(.ren-badge) {
+        max-width: 4.5rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn20-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo-Left Center Links Overlay Panel</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo-Left Center Links Overlay Panel</h1>
+      <p class="lede">
+        A full-width bar with a centered primary tree, always-visible menu toggle,
+        and a full-panel overlay for large destinations, newsletter signup, and
+        contact. Built with <code>ren-nav</code>, native
+        <code>details</code>/<code>summary</code>, layout primitives, and progressive
+        enhancement.
+      </p>
+    </header>
+
+    <section class="rn20-preview bb-detail-preview" data-rn20-root aria-label="Navbar logo-left center links overlay panel preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn20-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rn20-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#resources">Resources</a>
+            </li>
+            <li>
+              <details class="rn20-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Company
+                  <span class="rn20-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rn20-panel">
+                  <ul class="rn20-dest-list ren-stack-sm" aria-label="Company">
+                    <li>
+                      <a class="rn20-destination" href="#about">About</a>
+                    </li>
+                    <li>
+                      <a class="rn20-destination" href="#careers">Careers</a>
+                    </li>
+                    <li>
+                      <a class="rn20-destination" href="#press">Press</a>
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn20-overlay"
+            aria-label="Open site menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div
+        id="rn20-overlay"
+        class="rn20-overlay"
+        role="region"
+        aria-label="Site menu panel"
+      >
+        <div class="rn20-overlay-inner">
+          <ul class="rn20-menu-links" aria-label="Browse">
+            <li><a class="rn20-menu-link" href="#home">Home</a></li>
+            <li><a class="rn20-menu-link" href="#product">Product</a></li>
+            <li><a class="rn20-menu-link" href="#solutions">Solutions</a></li>
+            <li><a class="rn20-menu-link" href="#pricing">Pricing</a></li>
+            <li><a class="rn20-menu-link" href="#docs">Docs</a></li>
+            <li><a class="rn20-menu-link" href="#blog">Blog</a></li>
+            <li><a class="rn20-menu-link" href="#careers">Careers</a></li>
+            <li><a class="rn20-menu-link" href="#partners">Partners</a></li>
+            <li><a class="rn20-menu-link" href="#support">Support</a></li>
+            <li><a class="rn20-menu-link" href="#contact">Contact</a></li>
+          </ul>
+
+          <div class="rn20-aside ren-stack">
+            <div>
+              <h2 id="rn20-newsletter-heading">Stay informed</h2>
+              <p>Get product notes and release updates in your inbox.</p>
+              <form class="rn20-newsletter" action="#" method="post">
+                <ren-field>
+                  <label for="rn20-email">Email</label>
+                  <input
+                    id="rn20-email"
+                    class="ren-input"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    placeholder="you@example.com"
+                    required
+                  >
+                </ren-field>
+                <button class="ren-btn ren-btn-secondary" type="submit">Subscribe</button>
+                <p class="rn20-terms">
+                  By subscribing you agree to our
+                  <a href="#privacy">Privacy Policy</a>
+                  and consent to receive occasional updates.
+                </p>
+              </form>
+            </div>
+
+            <div class="rn20-contact ren-stack-sm">
+              <h2 id="rn20-contact-heading">Get in touch</h2>
+              <a href="tel:+18005550199">+1 (800) 555-0199</a>
+              <a href="mailto:hello@harbor.example">hello@harbor.example</a>
+              <p class="rn20-address">200 Pier Avenue, Suite 4, Seaview CA 94000</p>
+            </div>
+            <ul class="rn20-social-list" aria-label="Social links">
+              <li><a class="rn20-social" href="#social-community" aria-label="Community">Community</a></li>
+              <li><a class="rn20-social" href="#social-photos" aria-label="Photos">Photos</a></li>
+              <li><a class="rn20-social" href="#social-updates" aria-label="Updates">Updates</a></li>
+              <li><a class="rn20-social" href="#social-careers" aria-label="Careers network">Network</a></li>
+              <li><a class="rn20-social" href="#social-video" aria-label="Video">Video</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="rn20-hero ren-stack">
+        <h2>Menus that open the whole map.</h2>
+        <p>
+          A quiet marketing surface under the navbar so the full-width bar,
+          centered primary links, always-visible toggle, and overlay panel stay
+          easy to judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#product">See product</a>
+          <a class="ren-btn ren-btn-ghost" href="#contact">Contact sales</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-center-links-site-panel.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Center-Links Site-Panel Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-center-links-fullscreen-featured.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo-Center Links Fullscreen Featured Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module">
+    /**
+     * Block-local controllers for Navbar 20.
+     * Overlay open state is owned here (public attributes only) so ren-nav's
+     * desktop-resize close does not fight always-visible toggle + full panel.
+     * Close only on real 48rem band crossing, not same-band width/height changes.
+     */
+    const RN20_CONTROLLER = Symbol.for('ren10.rn20.controller');
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavLogoLeftCenterLinksOverlayPanel(scope = document) {
+      const root = scope.querySelector?.('[data-rn20-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn20-root')) {
+        const nested = document.querySelector('[data-rn20-root]');
+        if (!nested) return null;
+        return initOn(nested);
+      }
+      return initOn(root);
+    }
+
+    function initOn(root) {
+      const disclosure = root.querySelector('.rn20-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const overlay = root.querySelector('#rn20-overlay');
+      const renNavHost = root.querySelector('ren-nav');
+      const form = root.querySelector('form.rn20-newsletter');
+
+      if (!disclosure || !summary || !toggle || !overlay) return null;
+
+      const previous = root[RN20_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN20_CONTROLLER] = controller;
+      const { signal } = controller;
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      let pointerInside = false;
+      let hoverTransient = false;
+      let pointerPinned = false;
+      let ignoreHoverUntilLeave = false;
+      let overlayOpen = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function isOverlayOpen() {
+        return overlayOpen;
+      }
+
+      function setOverlayOpen(open, { returnFocus = false } = {}) {
+        overlayOpen = Boolean(open);
+        toggle.setAttribute('aria-expanded', overlayOpen ? 'true' : 'false');
+        toggle.setAttribute('aria-label', overlayOpen ? 'Close site menu' : 'Open site menu');
+
+        if (renNavHost) {
+          if (overlayOpen) renNavHost.setAttribute('data-open', '');
+          else renNavHost.removeAttribute('data-open');
+        }
+
+        // After enhancement, closed panels are inert to AT. Open panels must
+        // not stay aria-hidden. Progressive (no JS) markup never sets this.
+        if (overlayOpen) overlay.removeAttribute('aria-hidden');
+        else overlay.setAttribute('aria-hidden', 'true');
+
+        if (overlayOpen) closeDisclosure(false);
+        if (!overlayOpen && returnFocus) toggle.focus();
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      // Own the toggle entirely so ren-nav does not open/close on resize while
+      // desktop (always-visible toggle + full panel at all widths).
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          setOverlayOpen(!isOverlayOpen());
+        },
+        { capture: true, signal }
+      );
+
+      // Disclosure click pin / keyboard native path
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave || isOverlayOpen()) return;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener(
+        'pointerenter',
+        () => {
+          pointerInside = true;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          if (!isDesktop()) return;
+          if (hoverTransient && !pointerPinned) {
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'pointerdown',
+        (event) => {
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+
+          if (disclosure.open && !disclosure.contains(target)) {
+            closeDisclosure(false);
+          }
+
+          if (
+            isOverlayOpen()
+            && !overlay.contains(target)
+            && !toggle.contains(target)
+          ) {
+            setOverlayOpen(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+
+          if (disclosure.open) {
+            event.preventDefault();
+            closeDisclosure(true);
+            return;
+          }
+
+          if (isOverlayOpen()) {
+            event.preventDefault();
+            setOverlayOpen(false, { returnFocus: true });
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a.rn20-destination').forEach((link) => {
+        link.addEventListener(
+          'click',
+          () => {
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      // Overlay destinations close the shell (menu, privacy, contact, social).
+      // Hash without a real in-document target must not leave focus on a now-hidden
+      // anchor — return focus to the toggle. Real destinations receive focus.
+      const closeOnActivate = overlay.querySelectorAll(
+        'a.rn20-menu-link, .rn20-terms a[href], .rn20-contact a[href], a.rn20-social'
+      );
+      closeOnActivate.forEach((link) => {
+        link.addEventListener(
+          'click',
+          () => {
+            const href = link.getAttribute('href') || '';
+            let realTarget = null;
+            if (href.startsWith('#') && href.length > 1) {
+              try {
+                const candidate = document.querySelector(href);
+                if (candidate instanceof HTMLElement) realTarget = candidate;
+              } catch {
+                realTarget = null;
+              }
+            }
+
+            if (realTarget) {
+              setOverlayOpen(false);
+              const focusable = realTarget;
+              requestAnimationFrame(() => {
+                if (!focusable.isConnected) return;
+                if (!focusable.matches('a[href], button, input, select, textarea, [tabindex]')) {
+                  focusable.setAttribute('tabindex', '-1');
+                }
+                focusable.focus({ preventScroll: true });
+              });
+              return;
+            }
+
+            setOverlayOpen(false, { returnFocus: true });
+            // Re-assert after the click default (hash/tel/mailto) so focus does not
+            // remain on the now-hidden activating anchor.
+            requestAnimationFrame(() => {
+              if (!isOverlayOpen()) toggle.focus({ preventScroll: true });
+            });
+          },
+          { signal }
+        );
+      });
+
+      // Real band crossing only (matchMedia change). Same-band width/height
+      // resizes and 769→768 (both ≥48rem) must keep the overlay open.
+      function onBreakpointChange() {
+        resetHoverFlags();
+        closeDisclosure(false);
+        if (isOverlayOpen()) setOverlayOpen(false);
+      }
+
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onBreakpointChange, { signal });
+      } else {
+        desktopQuery.addListener(onBreakpointChange);
+        signal.addEventListener('abort', () => desktopQuery.removeListener(onBreakpointChange));
+      }
+
+      if (form) {
+        form.addEventListener(
+          'submit',
+          (event) => {
+            event.preventDefault();
+          },
+          { signal }
+        );
+      }
+
+      // Enhanced closed baseline (markup has no static aria-hidden).
+      setOverlayOpen(false);
+      return controller;
+    }
+
+    initNavLogoLeftCenterLinksOverlayPanel();
+  </script>
+</body>
+</html>

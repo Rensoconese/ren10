@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Split Image Dual-Action CTA — Ren10 Blocks</title>
+  <meta name="description" content="A responsive Ren10 CTA with split copy, two actions, and a real editorial image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .cta1-block {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .cta1-layout {
+      --center-width: var(--width-7xl);
+      --grid-gap: var(--space-section-sm);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: center;
+      width: 100%;
+    }
+
+    .cta1-copy {
+      --stack-gap: var(--space-stack-loose);
+      min-width: 0;
+    }
+
+    .cta1-title,
+    .cta1-description {
+      margin: 0;
+    }
+
+    .cta1-title {
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .cta1-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .cta1-actions {
+      --grid-gap: var(--space-inline-loose);
+      grid-template-columns: repeat(2, max-content);
+      justify-content: start;
+    }
+
+    .cta1-media {
+      margin: 0;
+      min-height: calc(var(--space-16) * 3);
+      overflow: hidden;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-xl);
+    }
+
+    .cta1-media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (min-width: 48rem) {
+      .cta1-block { padding-block: var(--space-section-lg); }
+      .cta1-layout {
+        --grid-gap: var(--space-section);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 24rem) {
+      .cta1-actions { grid-template-columns: minmax(0, 1fr); }
+      .cta1-actions .ren-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Split Image Dual-Action CTA</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">CTA 1 · Conversion block</p>
+      <h1 class="bb-detail-title">Split Image Dual-Action CTA</h1>
+      <p class="bb-detail-description">A responsive Ren10 CTA pairing concise conversion copy with two destinations and a real editorial image.</p>
+    </header>
+
+    <section class="cta1-block bb-detail-preview" data-cta1-root aria-labelledby="cta1-title">
+      <div class="cta1-layout ren-center ren-grid ren-grid-2">
+        <div class="cta1-copy ren-stack">
+          <h2 id="cta1-title" class="cta1-title">Give every product decision a clearer path forward</h2>
+          <p class="cta1-description">Start with an accessible foundation, keep the reasoning visible, and move from an early idea to a confident interface.</p>
+          <div class="cta1-actions ren-grid">
+            <a class="ren-btn" href="../../docs/getting-started.html">Start building</a>
+            <a class="ren-btn ren-btn-outline" href="index.html">Explore blocks</a>
+          </div>
+        </div>
+        <figure class="cta1-media ren-frame ren-frame-photo">
+          <img src="media/hero-material-studio.webp" alt="Material samples and tools arranged across a working studio table" width="1536" height="1024">
+        </figure>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-fullscreen-bg-centered-copy-dual-cta.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Fullscreen Background Centered CTA Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-split-image-email-capture.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split Image Email Capture CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

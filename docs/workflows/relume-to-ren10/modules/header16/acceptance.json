@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy-counts","kind":"structure","description":"One content-height section/container/copy split/h1/description/form/email/submit/legal terms link/landscape image; zero extra CTA, nav, logo, video, dialog, or overlay","automated":true},
+    {"id":"responsive-copy","kind":"visual-structure","description":"Copy stacks through 767px and forms equal top-aligned columns from 768px","automated":true},
+    {"id":"responsive-form","kind":"visual-structure","description":"Email and submit stack narrowly and form one row from 640px","automated":true},
+    {"id":"form-behavior","kind":"behavior","description":"Visible label, native required/email validation, linked error, polite success status, real action, and real terms destination","automated":true},
+    {"id":"media-quality","kind":"visual-structure","description":"One owned image has meaningful alt/intrinsic dimensions, covers one rounded full-width landscape frame, and never overflows","automated":true},
+    {"id":"responsive-quality","kind":"visual-structure","description":"No overlap, clipping, or horizontal overflow at 320/390/640/767/768/1280; section remains content-height","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Visible keyboard focus, 44px controls, axe AA, light/dark contrast, reduced motion, logical order","automated":true},
+    {"id":"progressive-fallback","kind":"behavior","description":"Single DOM tree, native form/action/validation, terms destination, and image remain usable without JavaScript","automated":true},
+    {"id":"script-scope","kind":"structure","description":"Behavior is one inline type=module script scoped to the block root","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh matrix awaits independent Codex review","automated":false}
+  ]
+}

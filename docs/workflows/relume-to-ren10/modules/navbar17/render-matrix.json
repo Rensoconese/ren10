@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-logo-left-fullscreen-menu-social.html",
+  "root": "[data-rn17-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        "[data-rn17-root] .ren-nav-brand": 1,
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        "[data-rn17-root][data-rn17-open]": 0,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-chevron": 0
+      }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-menu-footer": 1,
+        ".rn17-social a .ren-icon svg": 5
+      }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "tablet-light-open",
+      "viewport": { "width": 834, "height": 1112 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        "[data-rn17-root][data-rn17-open]": 0,
+        "#rn17-primary-links > li": 8
+      }
+    },
+    {
+      "id": "mobile-light-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-contact": 1
+      }
+    },
+    {
+      "id": "mobile-dark-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-contact": 1
+      }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "narrow-320-light-open",
+      "viewport": { "width": 320, "height": 720 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-contact": 1,
+        ".rn17-brand-mark": 1
+      }
+    },
+    {
+      "id": "narrow-360-light-open",
+      "viewport": { "width": 360, "height": 800 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        ".rn17-social a": 5,
+        ".rn17-contact": 1
+      }
+    },
+    {
+      "id": "seam-767-light-open",
+      "viewport": { "width": 767, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "seam-768-light-open",
+      "viewport": { "width": 768, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        ".rn17-social a": 5
+      }
+    },
+    {
+      "id": "seam-769-light-open",
+      "viewport": { "width": 769, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": "[data-rn17-root] .ren-nav-toggle" }],
+      "expectedMarkers": {
+        "[data-rn17-root][data-rn17-open]": 1,
+        ".rn17-menu[data-rn17-open]": 1,
+        "[data-rn17-root] .ren-nav-toggle[aria-expanded=\"true\"]": 1,
+        "#rn17-primary-links > li": 8,
+        "[data-rn17-root] .ren-nav-toggle": 1,
+        ".rn17-social a": 5
+      }
+    }
+  ]
+}

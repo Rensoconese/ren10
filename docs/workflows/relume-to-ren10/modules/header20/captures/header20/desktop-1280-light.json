@@ -1,0 +1,18 @@
+{
+  "id": "desktop-1280-light",
+  "url": "http://127.0.0.1:50563/templates/blocks/hero-email-copy-image-left.html?ren10_capture=header20-desktop-1280-light-20bba216766d",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "h1.rh20-title": 1,
+    "form.rh20-form": 1,
+    ".rh20-media img": 1
+  },
+  "commit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturedAt": "2026-07-15T19:17:28.262Z"
+}

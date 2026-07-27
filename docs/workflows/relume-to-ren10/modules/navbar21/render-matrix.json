@@ -1,0 +1,144 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-logo-center-links-fullscreen-featured.html",
+  "root": "[data-rn21-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".rn21-chevron": 1,
+        ".rn21-view-all-chevron": 1,
+        "a.rn21-destination": 3,
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2,
+        "a.rn21-social": 5
+      }
+    },
+    {
+      "id": "desktop-light-dropdown-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".rn21-disclosure > summary" }],
+      "expectedMarkers": {
+        ".rn21-chevron": 1,
+        "a.rn21-destination": 3
+      }
+    },
+    {
+      "id": "desktop-light-hover-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "hover", "selector": ".rn21-disclosure > summary" }],
+      "expectedMarkers": {
+        ".rn21-chevron": 1,
+        "a.rn21-destination": 3
+      }
+    },
+    {
+      "id": "desktop-light-panel-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2,
+        "a.rn21-social": 5
+      }
+    },
+    {
+      "id": "desktop-dark-panel-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2
+      }
+    },
+    {
+      "id": "tablet-light-panel-open",
+      "viewport": { "width": 834, "height": 1112 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".ren-nav-toggle": 1
+      }
+    },
+    {
+      "id": "mobile-light-panel-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2,
+        "a.rn21-social": 5
+      }
+    },
+    {
+      "id": "mobile-dark-panel-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2
+      }
+    },
+    {
+      "id": "mobile-reduced-motion-panel-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        "a.rn21-menu-link": 8,
+        "a.rn21-article": 2,
+        "a.rn21-social": 5
+      }
+    }
+  ]
+}

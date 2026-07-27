@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header13",
+  "blockSlug": "hero-lightbox-top-copy-band-dual-cta",
+  "blockPath": "templates/blocks/hero-lightbox-top-copy-band-dual-cta.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-lightbox-top-copy-band-dual-cta.html",
+    "tests/components/header13-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

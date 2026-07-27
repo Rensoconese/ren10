@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo-Left Center-Links Site-Panel Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS navbar block with logo-left, centered bar links, always-visible site-panel toggle, ren-nav, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn19-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn19-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn19-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    .rn19-preview {
+      --ren-z-sticky: var(--z-sticky);
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rn19-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    .rn19-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      grid-template-rows: calc(var(--ren-nav-height) - var(--space-4)) auto;
+      align-content: start;
+      align-items: center;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--space-4);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+    }
+
+    .rn19-preview .ren-nav-brand {
+      grid-column: 1;
+      justify-self: start;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn19-preview .ren-nav-links {
+      grid-column: 2;
+      justify-self: center;
+      margin: 0;
+    }
+
+    /* Always-visible site-panel toggle (source function at every width). */
+    .rn19-preview .ren-nav-toggle {
+      display: flex;
+      grid-column: 3;
+      justify-self: end;
+      margin-inline-start: 0;
+    }
+
+    .rn19-preview .ren-nav-link,
+    .rn19-preview .rn19-destination,
+    .rn19-preview .rn19-primary-link,
+    .rn19-preview .rn19-column-link,
+    .rn19-preview .rn19-social,
+    .rn19-preview .rn19-contact a {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn19-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn19-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn19-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn19-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn19-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn19-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn19-disclosure > summary::after,
+    .rn19-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn19-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn19-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn19-disclosure[open] > summary .rn19-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn19-dropdown {
+      padding: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn19-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rn19-destination {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn19-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn19-destination:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /* Site panel: full-width catalog under the bar. */
+    .rn19-site-panel {
+      display: none;
+      grid-column: 1 / -1;
+      box-sizing: border-box;
+      width: 100%;
+      max-height: min(70vh, 40rem);
+      overflow: auto;
+      padding: var(--space-6) var(--space-4) var(--space-8);
+      background: var(--color-surface);
+      border-block-start: 1px solid var(--color-border);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn19-preview ren-nav[data-open] .rn19-site-panel,
+    .rn19-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .rn19-site-panel {
+      display: block;
+    }
+
+    .rn19-panel-grid {
+      --stack-gap: var(--space-8);
+      max-width: 72rem;
+      margin-inline: auto;
+    }
+
+    .rn19-primary-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2) var(--space-6);
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rn19-primary-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) 0;
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: var(--text-2xl);
+      font-weight: var(--weight-bold);
+      line-height: 1.15;
+      border-radius: var(--radius-md);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn19-primary-link:hover {
+      color: var(--color-accent);
+    }
+
+    .rn19-primary-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn19-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6) var(--space-6);
+    }
+
+    .rn19-column-title {
+      margin: 0 0 var(--space-3);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+    }
+
+    .rn19-column-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: 0;
+    }
+
+    .rn19-column-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) 0;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      line-height: 1.3;
+      border-radius: var(--radius-sm);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn19-column-link:hover {
+      color: var(--color-text);
+    }
+
+    .rn19-column-link:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn19-meta {
+      --stack-gap: var(--space-4);
+    }
+
+    .rn19-contact {
+      --stack-gap: var(--space-1);
+      font-size: var(--text-sm);
+    }
+
+    .rn19-contact a {
+      display: inline-flex;
+      align-items: center;
+      color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    .rn19-contact a:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn19-location {
+      margin: 0;
+      color: var(--color-text-muted);
+    }
+
+    .rn19-social-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .rn19-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn19-social:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn19-social:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn19-social svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      display: block;
+    }
+
+    .rn19-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 360px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+      border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+    }
+
+    .rn19-hero h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn19-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    @media (min-width: 40rem) {
+      .rn19-primary-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rn19-columns {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .rn19-panel-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+        grid-template-rows: auto auto;
+        column-gap: var(--space-12);
+        row-gap: var(--space-8);
+        align-items: start;
+      }
+
+      .rn19-primary-grid {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .rn19-columns {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+      }
+
+      .rn19-meta {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: end;
+      }
+
+      /* Hide centered bar row while the site panel is open (source function). */
+      .rn19-preview ren-nav[data-open] .ren-nav-links,
+      .rn19-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+        display: none;
+      }
+
+      .rn19-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn19-dropdown {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        left: 50%;
+        right: auto;
+        z-index: var(--ren-z-sticky);
+        width: 12rem;
+        max-width: min(12rem, calc(100vw - var(--space-8)));
+        transform: translateX(-50%);
+      }
+
+      /* Stable hover corridor across the bar-to-panel gap. */
+      .rn19-dropdown::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn19-preview .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+        align-items: center;
+        column-gap: var(--space-2);
+        row-gap: 0;
+      }
+
+      .rn19-preview .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+      }
+
+      .rn19-preview .ren-nav-toggle {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+      }
+
+      /*
+       * Mobile never uses the four-entry bar list as a second tree — the site
+       * panel owns the open catalog. Override ren-nav mobile open rules.
+       */
+      .rn19-preview .ren-nav-links,
+      .rn19-preview ren-nav[data-open] .ren-nav-links,
+      .rn19-preview .ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+        display: none !important;
+      }
+
+      .rn19-site-panel {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        max-height: min(75vh, 36rem);
+        padding-inline: var(--space-4);
+      }
+
+      .rn19-primary-link {
+        width: 100%;
+        font-size: var(--text-xl);
+      }
+    }
+
+    /* JS-disabled / pre-upgrade: hide inert toggle; expose catalog + disclosure. */
+    .rn19-preview ren-nav:not(:defined) .ren-nav-toggle {
+      display: none !important;
+    }
+
+    .rn19-preview ren-nav:not(:defined) .rn19-site-panel {
+      display: block;
+    }
+
+    @media (min-width: 48rem) {
+      .rn19-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .rn19-preview ren-nav:not(:defined) .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto;
+      }
+
+      .rn19-preview ren-nav:not(:defined) .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .rn19-preview ren-nav:not(:defined) .ren-nav-links {
+        display: none !important;
+      }
+
+      .rn19-preview ren-nav:not(:defined) .rn19-site-panel {
+        display: block;
+        grid-column: 1;
+        grid-row: 2;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn19-chevron,
+      .rn19-destination,
+      .rn19-dropdown,
+      .rn19-site-panel,
+      .rn19-primary-link,
+      .rn19-column-link,
+      .rn19-social {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn19-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Navbar Logo-Left Center-Links Site-Panel</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo-Left Center-Links Site-Panel</h1>
+      <p class="lede">
+        A full-width bar with a logo at the start, a centered desktop link row
+        with one compact title-only dropdown, and an always-visible toggle that
+        opens a large site catalog panel — primary destinations, column groups,
+        contact, and social links. Built with <code>ren-nav</code>, native
+        <code>details</code>/<code>summary</code>, layout primitives, and
+        progressive enhancement.
+      </p>
+    </header>
+
+    <section class="rn19-preview bb-detail-preview" data-rn19-root aria-label="Navbar logo-left center-links site-panel preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn19-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rn19-bar-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#customers">Customers</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <details class="rn19-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Resources
+                  <span class="rn19-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+                <div class="rn19-dropdown">
+                  <ul class="rn19-dest-list ren-stack-sm" aria-label="Resources">
+                    <li><a class="rn19-destination" href="#guides">Guides</a></li>
+                    <li><a class="rn19-destination" href="#changelog">Changelog</a></li>
+                    <li><a class="rn19-destination" href="#community">Community</a></li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn19-site-panel"
+            aria-label="Open site menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <div
+            id="rn19-site-panel"
+            class="rn19-site-panel"
+            role="region"
+            aria-label="Site menu"
+          >
+            <div class="rn19-panel-grid">
+              <ul class="rn19-primary-grid" aria-label="Primary destinations">
+                <li><a class="rn19-primary-link" href="#overview">Overview</a></li>
+                <li><a class="rn19-primary-link" href="#platform">Platform</a></li>
+                <li><a class="rn19-primary-link" href="#solutions">Solutions</a></li>
+                <li><a class="rn19-primary-link" href="#integrations">Integrations</a></li>
+                <li><a class="rn19-primary-link" href="#security">Security</a></li>
+                <li><a class="rn19-primary-link" href="#customers-panel">Customers</a></li>
+                <li><a class="rn19-primary-link" href="#company">Company</a></li>
+                <li><a class="rn19-primary-link" href="#careers">Careers</a></li>
+              </ul>
+
+              <div class="rn19-columns">
+                <div class="rn19-column">
+                  <p class="rn19-column-title">Product</p>
+                  <ul class="rn19-column-list ren-stack-xs">
+                    <li><a class="rn19-column-link" href="#features">Features</a></li>
+                    <li><a class="rn19-column-link" href="#workflows">Workflows</a></li>
+                    <li><a class="rn19-column-link" href="#templates">Templates</a></li>
+                    <li><a class="rn19-column-link" href="#api">API</a></li>
+                    <li><a class="rn19-column-link" href="#status">Status</a></li>
+                  </ul>
+                </div>
+                <div class="rn19-column">
+                  <p class="rn19-column-title">Learn</p>
+                  <ul class="rn19-column-list ren-stack-xs">
+                    <li><a class="rn19-column-link" href="#docs">Docs</a></li>
+                    <li><a class="rn19-column-link" href="#tutorials">Tutorials</a></li>
+                    <li><a class="rn19-column-link" href="#webinars">Webinars</a></li>
+                    <li><a class="rn19-column-link" href="#blog">Blog</a></li>
+                    <li><a class="rn19-column-link" href="#support">Support</a></li>
+                  </ul>
+                </div>
+                <div class="rn19-column">
+                  <p class="rn19-column-title">Company</p>
+                  <ul class="rn19-column-list ren-stack-xs">
+                    <li><a class="rn19-column-link" href="#about">About</a></li>
+                    <li><a class="rn19-column-link" href="#press">Press</a></li>
+                    <li><a class="rn19-column-link" href="#partners">Partners</a></li>
+                    <li><a class="rn19-column-link" href="#legal">Legal</a></li>
+                    <li><a class="rn19-column-link" href="#contact">Contact</a></li>
+                  </ul>
+                </div>
+                <div class="rn19-column">
+                  <p class="rn19-column-title">Account</p>
+                  <ul class="rn19-column-list ren-stack-xs">
+                    <li><a class="rn19-column-link" href="#sign-in">Sign in</a></li>
+                    <li><a class="rn19-column-link" href="#sign-up">Sign up</a></li>
+                    <li><a class="rn19-column-link" href="#billing">Billing</a></li>
+                    <li><a class="rn19-column-link" href="#preferences">Preferences</a></li>
+                    <li><a class="rn19-column-link" href="#download">Download</a></li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="rn19-meta ren-stack">
+                <div class="rn19-contact ren-stack-xs">
+                  <a href="tel:+15550100">+1 (555) 0100</a>
+                  <a href="mailto:hello@example.com">hello@example.com</a>
+                  <p class="rn19-location">200 Market Street, Suite 12</p>
+                </div>
+                <ul class="rn19-social-list" aria-label="Social">
+                  <li>
+                    <a class="rn19-social" href="#social-a" aria-label="Social network A">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn19-social" href="#social-b" aria-label="Social network B">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn19-social" href="#social-c" aria-label="Social network C">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M5 17L12 5l7 12H5z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn19-social" href="#social-d" aria-label="Social network D">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M6 8h12v8H6z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 12h6" stroke="currentColor" stroke-width="2"/></svg>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn19-social" href="#social-e" aria-label="Social network E">
+                      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><circle cx="8" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </ren-nav>
+
+      <div class="rn19-hero ren-stack">
+        <h2>A catalog under the bar.</h2>
+        <p>
+          Preview the always-visible site menu toggle, centered desktop links,
+          compact resources dropdown, and full catalog panel while you copy the
+          block into a project.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#overview">Explore product</a>
+          <a class="ren-btn ren-btn-ghost" href="#docs">Read docs</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-cta-overlay-grid.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo CTA Overlay Grid Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-left-center-links-overlay-panel.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo-Left Center Links Overlay Panel Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local controller for:
+     * - compact bar disclosure (desktop hover corridor + pin, Escape, outside)
+     * - site panel open/close owned entirely via public DOM/ARIA
+     *   (toggle aria-expanded, ren-nav data-open, panel data-open/aria-hidden)
+     * - close panel/disclosure only when the 48rem responsive band changes
+     *
+     * Does not read or write private ren-nav fields (e.g. _isOpen). Toggle
+     * clicks are captured so ren-nav's mobile-shell handler does not race.
+     */
+    const RN19_CONTROLLER = Symbol.for('ren10.rn19.controller');
+    const DESKTOP_MQ = '(min-width: 48rem)';
+
+    export function initNavLogoLeftCenterLinksSitePanel(scope = document) {
+      const root = scope.querySelector?.('[data-rn19-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn19-root')) {
+        const nested = document.querySelector('[data-rn19-root]');
+        if (!nested) return null;
+        return initOn(nested);
+      }
+      return initOn(root);
+    }
+
+    function initOn(root) {
+      const disclosure = root.querySelector('.rn19-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const sitePanel = root.querySelector('#rn19-site-panel');
+      if (!disclosure || !summary || !toggle || !sitePanel) return null;
+
+      const previous = root[RN19_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN19_CONTROLLER] = controller;
+      const { signal } = controller;
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      let pointerInside = false;
+      let hoverTransient = false;
+      let pointerPinned = false;
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      /** Public contract only: toggle aria-expanded is the source of truth. */
+      function isPanelOpen() {
+        return toggle.getAttribute('aria-expanded') === 'true';
+      }
+
+      /**
+       * Apply open/closed site-panel state through documented public attributes.
+       * - .ren-nav-toggle[aria-expanded]
+       * - ren-nav[data-open] (pattern open chrome / CSS hooks)
+       * - #rn19-site-panel data-open + aria-hidden
+       */
+      function setPanelOpen(open, returnFocus) {
+        const wasOpen = isPanelOpen();
+        if (open) {
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.setAttribute('aria-label', 'Close site menu');
+          renNavHost?.setAttribute('data-open', '');
+          sitePanel.setAttribute('data-open', '');
+          sitePanel.setAttribute('aria-hidden', 'false');
+          if (!wasOpen) closeDisclosure(false);
+        } else {
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open site menu');
+          renNavHost?.removeAttribute('data-open');
+          sitePanel.removeAttribute('data-open');
+          sitePanel.setAttribute('aria-hidden', 'true');
+        }
+        if (!open && returnFocus) toggle.focus();
+      }
+
+      function closePanel(returnFocus) {
+        if (!isPanelOpen()) return;
+        setPanelOpen(false, returnFocus);
+      }
+
+      function openPanel() {
+        setPanelOpen(true, false);
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        if (isPanelOpen()) closePanel(false);
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      // Own the toggle fully so ren-nav mobile-shell resize/click does not race.
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          if (isPanelOpen()) {
+            closePanel(false);
+          } else {
+            openPanel();
+          }
+        },
+        { capture: true, signal }
+      );
+
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave || isPanelOpen()) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave || isPanelOpen()) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          hoverTransient = false;
+          if (!pointerPinned) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+          if (disclosure.open) {
+            event.stopImmediatePropagation();
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(true);
+            return;
+          }
+          if (isPanelOpen()) {
+            event.stopImmediatePropagation();
+            closePanel(true);
+          }
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+
+          if (disclosure.open && !disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+
+          // Outside the ren-nav host closes the site panel (public ownership).
+          if (isPanelOpen() && renNavHost && !renNavHost.contains(target)) {
+            closePanel(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      sitePanel.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            closePanel(false);
+          },
+          { signal }
+        );
+      });
+
+      /**
+       * Close only when the 48rem band flips. Same-band resizes (e.g. 1280→1279)
+       * must preserve panel and disclosure state. matchMedia 'change' is the
+       * authoritative band signal; do not close on raw window resize.
+       */
+      let wasDesktop = isDesktop();
+      const onBandChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+          closePanel(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onBandChange, { signal });
+      } else if (typeof desktopQuery.addListener === 'function') {
+        const legacy = () => onBandChange();
+        desktopQuery.addListener(legacy);
+        signal.addEventListener('abort', () => desktopQuery.removeListener(legacy));
+      }
+
+      // Closed initial public state (no private ren-nav fields).
+      setPanelOpen(false, false);
+      return controller;
+    }
+
+    initNavLogoLeftCenterLinksSitePanel();
+    window.initNavLogoLeftCenterLinksSitePanel = initNavLogoLeftCenterLinksSitePanel;
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary shell and mega disclosure reach every documented state: desktop hover/click open-close, keyboard Enter/Space, Escape with focus return from summary and from focused destinations, outside/destination/mobile/breakpoint close, same-breakpoint resize stability, mobile activation-only panel",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, four top entries (3 plain + 1 disclosure), five category links, four overlay collection cards, two actions, one named toggle, one chevron — no six-card editorial chrome, nested interactive CTAs, social/footer mega rails, or invented extras",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop full-width bar with logo-left / menu / end actions and full-width absolute mega (narrow category + four-up overlay cards at wide); mobile top row logo+toggle only with shared tree, stacked actions, and in-flow mega when open; narrow 320/340 and 767/768/769 seam checks",
+      "automated": true
+    },
+    {
+      "id": "a11y-quality",
+      "kind": "accessibility",
+      "description": "Visible focus, 44px targets, reduced motion, light/dark tokens, no html overflow, axe WCAG 2.1 AA on the preview root",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "desktop-invalid",
+  "url": "http://127.0.0.1:59329/templates/blocks/hero-split-video-lightbox-left-email-form.html?ren10_capture=header22-desktop-invalid-12ad524a6166",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "ren-field[data-invalid]": 1,
+    "[data-error]": 1
+  },
+  "commit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturedAt": "2026-07-15T19:36:34.076Z"
+}

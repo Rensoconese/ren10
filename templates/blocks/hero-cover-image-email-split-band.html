@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover Image Email Hero — Ren10 Blocks</title>
+  <meta name="description" content="A full-height Ren10 hero with flexible cover media and a responsive email capture band.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh10-hero {
+      --cover-height: 100svh;
+      block-size: var(--cover-height);
+      overflow: hidden;
+      padding: 0;
+      background: var(--color-surface);
+    }
+
+    .rh10-hero > .rh10-media,
+    .rh10-hero > .rh10-band {
+      margin-block: 0;
+    }
+
+    .rh10-media {
+      position: relative;
+      flex: 1 1 auto;
+      min-block-size: calc(var(--space-16) * 2);
+      overflow: hidden;
+      margin: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh10-media > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .rh10-band {
+      flex: 0 0 auto;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    .rh10-band-inner {
+      padding-block: var(--space-section-sm);
+    }
+
+    .rh10-band-layout {
+      --grid-gap: var(--space-section);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .rh10-band-layout > * {
+      min-width: 0;
+    }
+
+    .rh10-heading,
+    .rh10-description,
+    .rh10-terms,
+    .rh10-form-status {
+      margin: 0;
+    }
+
+    .rh10-heading {
+      max-width: var(--width-md);
+      font-size: clamp(var(--display-sm-size), 5vw, var(--display-md-size));
+      font-weight: var(--display-md-weight);
+      line-height: var(--display-md-leading);
+      letter-spacing: var(--display-md-tracking);
+      text-wrap: balance;
+    }
+
+    .rh10-support {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-lg);
+    }
+
+    .rh10-description {
+      font-size: var(--body-lg-size);
+      line-height: var(--body-lg-leading);
+      color: var(--color-text-secondary);
+    }
+
+    .rh10-form {
+      --stack-gap: var(--space-stack-tight);
+    }
+
+    .rh10-form-row {
+      --grid-gap: var(--space-inline-tight);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: end;
+    }
+
+    .rh10-form-row > ren-field {
+      min-width: 0;
+    }
+
+    .rh10-form-row > .rh10-submit {
+      width: 100%;
+    }
+
+    .rh10-terms,
+    .rh10-form-status {
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+      color: var(--color-text-muted);
+    }
+
+    .rh10-terms .ren-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+    }
+
+    @media (min-width: 40rem) {
+      .rh10-form-row {
+        grid-template-columns: minmax(0, 1fr) max-content;
+      }
+
+      .rh10-form-row > .rh10-submit {
+        width: auto;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh10-band-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Cover Image Email Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 10 · Hero block</p>
+      <h1 class="bb-detail-title">Cover Image Email Hero</h1>
+      <p class="bb-detail-description">A full-height Ren10 hero with flexible cover media and a responsive email capture band.</p>
+    </header>
+
+    <section class="rh10-hero ren-cover bb-detail-preview" data-rh10-root aria-labelledby="rh10-heading">
+      <figure class="rh10-media">
+<img
+          src="media/hero-botanical-conservatory.webp"
+          alt="Sunlit botanical conservatory with layered tropical foliage"
+          width="1672"
+          height="941"
+        >
+      </figure>
+
+      <div class="rh10-band">
+        <div class="rh10-band-inner ren-center ren-center-wide">
+          <div class="rh10-band-layout ren-grid ren-grid-2">
+            <h1 id="rh10-heading" class="rh10-heading">Build the next experience from a stronger foundation</h1>
+
+            <div class="rh10-support ren-stack">
+              <p class="rh10-description">Start with a system that keeps structure, accessibility, and responsive behavior connected, then shape the details around your product.</p>
+
+              <form class="rh10-form ren-stack" action="../../docs/getting-started.html" method="get">
+                <div class="rh10-form-row ren-grid ren-grid-2">
+                  <ren-field>
+                    <label for="rh10-email">Work email</label>
+                    <input id="rh10-email" class="ren-input rh10-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+                    <span data-error></span>
+                  </ren-field>
+                  <button class="ren-btn rh10-submit" type="submit">Get started</button>
+                </div>
+                <p class="rh10-form-status" role="status" hidden></p>
+              </form>
+
+              <p class="rh10-terms">By continuing, you agree to the <a class="ren-link" href="../../LICENSE">terms of use</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-fullscreen-media-top-copy-band-dual-cta.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Fullscreen Media and Copy Band Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-fullscreen-video-top-copy-band-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen Video and Copy Band Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module">
+    const root = document.querySelector('[data-rh10-root]');
+    const form = root.querySelector('.rh10-form');
+    const email = root.querySelector('.rh10-email');
+    const emailError = root.querySelector('[data-error]');
+    const formStatus = root.querySelector('.rh10-form-status');
+
+    email.addEventListener('invalid', () => {
+      emailError.textContent = 'Enter a valid email address.';
+    });
+
+    email.addEventListener('input', () => {
+      if (email.validity.valid) emailError.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      formStatus.textContent = 'Thanks — your Ren10 starting point is ready.';
+      formStatus.hidden = false;
+    });
+  </script>
+</body>
+</html>

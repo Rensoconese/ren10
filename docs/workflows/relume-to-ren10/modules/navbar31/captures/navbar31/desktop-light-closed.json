@@ -1,0 +1,21 @@
+{
+  "id": "desktop-light-closed",
+  "url": "http://127.0.0.1:51096/templates/blocks/nav-logo-cta-right-sheet-contact.html?ren10_capture=navbar31-desktop-light-closed-25c8db6abf70",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".ren-nav-brand": 1,
+    "#rn31-primary-links > li": 5,
+    ".rn31-social-link": 5,
+    ".rn31-contact": 1,
+    ".ren-nav-toggle": 1,
+    ".rn31-chevron": 0
+  },
+  "commit": "25c8db6abf70e37530013281706892a98db842da",
+  "capturedAt": "2026-07-15T11:57:28.542Z"
+}

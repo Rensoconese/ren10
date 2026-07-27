@@ -1,0 +1,1013 @@
+// @ts-check
+/**
+ * Navbar 27 — Category + Collections Mega Menu
+ * (nav-mega-menu-category-collections)
+ *
+ * Isolated packet suite. Phase A RED: production HTML is intentionally absent
+ * until genuine failing evidence is recorded.
+ */
+const { test, expect } = require('@playwright/test');
+const path = require('node:path');
+const { injectAxe, checkA11y } = require('axe-playwright');
+const {
+  expectAligned,
+  expectNoOverflow,
+  expectSingleVisibleAffordance,
+  expectWidthRatio,
+  inspectNativeChrome,
+} = require('../utils/block-quality.cjs');
+const { startStaticServer } = require('../utils/static-server.cjs');
+
+const PKG_ROOT = path.resolve(__dirname, '../..');
+const BLOCK_PATH = '/templates/blocks/nav-mega-menu-category-collections.html';
+const ROOT = '[data-rmcc-root]';
+
+/**
+ * @param {import('@playwright/test').Page} page
+ * @param {string} origin
+ */
+async function gotoCategoryCollectionsBlock(page, origin) {
+  const response = await page.goto(`${origin}${BLOCK_PATH}`);
+  expect(response, 'HTTP response for category-collections mega block').toBeTruthy();
+  expect(
+    response.status(),
+    'block must not 404 — implement templates/blocks/nav-mega-menu-category-collections.html'
+  ).toBe(200);
+  await expect(page.locator(ROOT), 'missing [data-rmcc-root] shell').toHaveCount(1, {
+    timeout: 2000,
+  });
+}
+
+test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
+  /** @type {{ origin: string, close: () => Promise<void> }} */
+  let staticServer;
+
+  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 25000 });
+
+  test.beforeAll(async () => {
+    staticServer = await startStaticServer(PKG_ROOT);
+  });
+
+  test.afterAll(async () => {
+    await staticServer?.close();
+  });
+
+  test('block page loads with ren-nav shell and category-collections root', async ({ page }) => {
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    await expect(
+      page.getByRole('heading', {
+        name: /Navbar Mega Menu Category Collections|Category.?Collections Mega Menu/i,
+        level: 1,
+      })
+    ).toBeVisible();
+    await expect(page.locator('ren-nav')).toHaveCount(1);
+    await expect(page.locator('nav.ren-nav')).toHaveCount(1);
+    await expect(page.locator('#rmcc-primary-links')).toHaveCount(1);
+    await expect(page.locator('ul.ren-nav-links')).toHaveCount(1);
+  });
+
+  test('exactly one primary links tree and one landmark serve desktop and mobile', async ({
+    page,
+  }) => {
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await expect(page.locator('#rmcc-primary-links')).toHaveCount(1);
+    await expect(page.locator(`${ROOT} ul.ren-nav-links`)).toHaveCount(1);
+    await expect(page.locator(`${ROOT} nav`)).toHaveCount(1);
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+    await expect(page.locator(`${ROOT} ul.ren-nav-links`)).toHaveCount(1);
+    await expect(page.locator(`${ROOT} nav`)).toHaveCount(1);
+  });
+
+  test('anatomy: four top entries, ten category links, two collections, one chevron', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    await expect(page.locator('#rmcc-primary-links > li')).toHaveCount(4);
+    const topLevelLinks = page.locator('#rmcc-primary-links > li > a.ren-nav-link');
+    const megaSummaries = page.locator('#rmcc-primary-links > li > .rmcc-disclosure > summary');
+    await expect(topLevelLinks).toHaveCount(3);
+    await expect(megaSummaries).toHaveCount(1);
+
+    await expect(
+      page.locator(`${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn`)
+    ).toHaveCount(2);
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveCount(1);
+
+    await page.locator('.rmcc-disclosure > summary').click();
+    await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+
+    await expect(page.locator('.rmcc-group-heading')).toHaveCount(2);
+    await expect(page.locator('.rmcc-category-col')).toHaveCount(2);
+    await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
+    await expect(page.locator('a.rmcc-collection')).toHaveCount(2);
+    await expect(page.locator('.rmcc-collection-media')).toHaveCount(2);
+    await expect(page.locator('.rmcc-collection-title')).toHaveCount(2);
+    await expect(page.locator('.rmcc-collection-desc')).toHaveCount(2);
+    await expect(page.locator('.rmcc-collection-cta')).toHaveCount(2);
+
+    // Distinct from other mega families.
+    await expect(
+      page.locator('.rmcg-card, .rmf-feature, .rmi-dest, .rml-rail, .rn14-destination')
+    ).toHaveCount(0);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmcc-disclosure summary .rmcc-chevron'],
+      'category-collections mega-menu chevron'
+    );
+  });
+
+  test('collection cards are single anchors without nested interactive descendants', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await page.locator('.rmcc-disclosure > summary').click();
+
+    const cards = page.locator('a.rmcc-collection');
+    await expect(cards).toHaveCount(2);
+
+    for (let i = 0; i < 2; i += 1) {
+      const card = cards.nth(i);
+      const tagName = await card.evaluate((el) => el.tagName);
+      expect(tagName, `collection ${i} tag`).toBe('A');
+      await expect(card).toHaveAttribute('href', /.+/);
+      await expect(card.locator('a[href], button, [role="button"]')).toHaveCount(0);
+    }
+  });
+
+  test('summary opens by click, keyboard, and desktop hover; Escape restores focus from summary and destination', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcc-disclosure');
+    const summary = disclosure.locator('summary');
+    const panel = page.locator('.rmcc-panel');
+
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+    await expect(page.locator('.rmcc-mega-link').first()).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    await summary.focus();
+    await page.keyboard.press('Enter');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.focus();
+    await page.keyboard.press(' ');
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    // Escape from a focused mega destination must restore focus to summary.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    const dest = page.locator('.rmcc-mega-link').first();
+    await dest.focus();
+    await expect.poll(() =>
+      page.evaluate(() => document.activeElement?.classList.contains('rmcc-mega-link'))
+    ).toBe(true);
+    await page.keyboard.press('Escape');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() => page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
+
+    // Hover open + corridor hold + leave close (unpinned).
+    await page.locator(`${ROOT} .ren-nav-brand`).hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(panel).toBeVisible();
+
+    await panel.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('a.rmcc-collection').first()).toBeVisible();
+
+    // Pin on first pointer click after hover; second click closes.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator(`${ROOT} .ren-nav-brand`).hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+
+    await summary.hover();
+    await summary.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await page.locator(`${ROOT} .ren-nav-brand`).hover();
+    await summary.hover();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator(`${ROOT} .ren-nav-brand`).hover();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('outside click and every destination class close the disclosure', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcc-disclosure');
+    const summary = disclosure.locator('summary');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator(`${ROOT} .ren-nav-brand`).click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('.rmcc-mega-link').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('a.rmcc-collection').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    // CTA / global action destinations also dismiss an open mega.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator(`${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn`).first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+
+    // Top-level peer destination closes too.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await page.locator('#rmcc-primary-links > li > a.ren-nav-link').first().click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('desktop mega-link and collection close details and restore summary focus per class', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcc-disclosure');
+    const summary = disclosure.locator('summary');
+
+    /** @type {Array<{ id: string, selector: string }>} */
+    const cases = [
+      { id: 'rmcc-mega-link', selector: 'a.rmcc-mega-link' },
+      { id: 'rmcc-collection', selector: 'a.rmcc-collection' },
+    ];
+
+    for (const item of cases) {
+      await summary.click();
+      await expect(disclosure, `${item.id}: open`).toHaveAttribute('open', '');
+
+      const dest = page.locator(item.selector).first();
+      await expect(dest, `${item.id}: present`).toBeVisible();
+      await dest.click();
+
+      await expect(disclosure, `${item.id}: details closed`).not.toHaveAttribute('open', '');
+      await expect.poll(
+        () => page.evaluate(() => document.activeElement?.tagName),
+        { message: `${item.id}: focus restores to SUMMARY` }
+      ).toBe('SUMMARY');
+      await expect.poll(() =>
+        page.evaluate(() => document.activeElement?.closest?.('.rmcc-disclosure') != null)
+      ).toBe(true);
+
+      const activeIsDestination = await page.evaluate((sel) => {
+        const active = document.activeElement;
+        return Boolean(active && active.matches?.(sel));
+      }, item.selector);
+      expect(activeIsDestination, `${item.id}: active must not remain the destination`).toBe(false);
+    }
+
+    // Peer remains a visible tab stop; details close without trapping focus on summary.
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    const peer = page.locator('#rmcc-primary-links > li > a.ren-nav-link').first();
+    await peer.click();
+    await expect(disclosure).not.toHaveAttribute('open', '');
+    await expect.poll(() =>
+      page.evaluate(() => {
+        const active = document.activeElement;
+        if (!(active instanceof HTMLElement)) return false;
+        const style = getComputedStyle(active);
+        const rect = active.getBoundingClientRect();
+        return (
+          style.display !== 'none'
+          && style.visibility !== 'hidden'
+          && rect.width > 0
+          && rect.height > 0
+        );
+      })
+    ).toBe(true);
+  });
+
+  test('mobile matrix: mega-link, collection, both actions, and peer close details + shell with stable focus', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 1100 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const disclosure = page.locator('.rmcc-disclosure');
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const renNav = page.locator(`${ROOT} ren-nav`);
+    const summary = disclosure.locator('summary');
+
+    /** @type {Array<{ id: string, selector: string, openMega: boolean, expectFocus: 'toggle' | 'brand' }>} */
+    const cases = [
+      { id: 'rmcc-mega-link', selector: 'a.rmcc-mega-link', openMega: true, expectFocus: 'toggle' },
+      { id: 'rmcc-collection', selector: 'a.rmcc-collection', openMega: true, expectFocus: 'toggle' },
+      {
+        id: 'ren-nav-actions-secondary',
+        selector: `${ROOT} .ren-nav-actions a.ren-btn-secondary`,
+        openMega: false,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-actions-primary',
+        selector: `${ROOT} .ren-nav-actions a.ren-btn-primary`,
+        openMega: false,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-peer',
+        selector: '#rmcc-primary-links > li > a.ren-nav-link',
+        openMega: true,
+        expectFocus: 'toggle',
+      },
+      {
+        id: 'ren-nav-brand',
+        selector: `${ROOT} a.ren-nav-brand`,
+        openMega: true,
+        expectFocus: 'brand',
+      },
+    ];
+
+    for (const item of cases) {
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+      if (item.openMega) {
+        await summary.click();
+        await expect(disclosure, `${item.id}: mega open`).toHaveAttribute('open', '');
+      }
+
+      const target = page.locator(item.selector).first();
+      await expect(target, `${item.id}: target visible`).toBeVisible();
+      await target.click();
+
+      await expect(disclosure, `${item.id}: details closed`).not.toHaveAttribute('open', '');
+      await expect(toggle, `${item.id}: shell aria-expanded false`).toHaveAttribute(
+        'aria-expanded',
+        'false'
+      );
+      await expect(renNav, `${item.id}: ren-nav data-open removed`).not.toHaveAttribute(
+        'data-open',
+        ''
+      );
+
+      const focusState = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!(el instanceof HTMLElement)) return { missing: true };
+        const style = getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          missing: false,
+          isToggle: el.classList.contains('ren-nav-toggle'),
+          isBrand: el.classList.contains('ren-nav-brand'),
+          visible:
+            style.display !== 'none'
+            && style.visibility !== 'hidden'
+            && Number(style.opacity || '1') > 0
+            && rect.width > 0
+            && rect.height > 0,
+        };
+      });
+
+      expect(focusState.missing, `${item.id}: activeElement present`).toBe(false);
+      expect(focusState.visible, `${item.id}: post-close focus must be visible`).toBe(true);
+
+      if (item.expectFocus === 'toggle') {
+        expect(focusState.isToggle, `${item.id}: focus returns to toggle`).toBe(true);
+      } else {
+        expect(focusState.isBrand, `${item.id}: brand may keep focus (still visible)`).toBe(true);
+      }
+    }
+
+    const hasGlobal = await page.evaluate(
+      () => typeof window.initNavMegaMenuCategoryCollections === 'function'
+    );
+    expect(hasGlobal, 'window.initNavMegaMenuCategoryCollections must not be published').toBe(
+      false
+    );
+  });
+
+  test('mobile toggle exposes the same tree and closes mega on menu close', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    const disclosure = page.locator('.rmcc-disclosure');
+    const summary = disclosure.locator('summary');
+    const actions = page.locator(`${ROOT} .ren-nav-actions`);
+
+    await expect(toggle).toHaveAttribute('aria-controls', 'rmcc-primary-links');
+    // Closed mobile: actions not visible in the permanent top row.
+    await expect(actions).toBeHidden();
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+    await expect(actions).toBeVisible();
+
+    await summary.click();
+    await expect(disclosure).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcc-mega-link').first()).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await expect(disclosure).not.toHaveAttribute('open', '');
+  });
+
+  test('JS-disabled mobile keeps the nav tree, actions, and mega content usable', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({
+      javaScriptEnabled: false,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toBeHidden();
+    await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+    await expect(
+      page.locator(`${ROOT} .ren-nav-actions a, ${ROOT} .ren-nav-actions .ren-btn`).first()
+    ).toBeVisible();
+
+    await page.locator('.rmcc-disclosure > summary').click();
+    await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
+    await expect(page.locator('a.rmcc-collection')).toHaveCount(2);
+    await expect(page.locator('.rmcc-group-heading')).toHaveCount(2);
+
+    await context.close();
+  });
+
+  test('viewport geometry: desktop full-bleed under bar, mobile in-flow, no overflow at 320/340', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await page.locator('.rmcc-disclosure > summary').click();
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+
+    const desktop = await page.evaluate(() => {
+      const nav = document.querySelector('[data-rmcc-root] .ren-nav');
+      const panel = document.querySelector('.rmcc-panel');
+      if (!nav || !panel) return null;
+      const navRect = nav.getBoundingClientRect();
+      const panelRect = panel.getBoundingClientRect();
+      return {
+        navBottom: navRect.bottom,
+        panelTop: panelRect.top,
+        panelPosition: getComputedStyle(panel).position,
+        panelWidth: panelRect.width,
+        navWidth: navRect.width,
+      };
+    });
+    expect(desktop).toBeTruthy();
+    expect(desktop.panelPosition).toBe('absolute');
+    expect(desktop.panelTop).toBeGreaterThanOrEqual(desktop.navBottom - 1);
+    expect(desktop.panelWidth).toBeGreaterThanOrEqual(desktop.navWidth - 2);
+    await expectNoOverflow(page, 'html');
+    await expectNoOverflow(page, ROOT);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await page.locator('.rmcc-disclosure > summary').click();
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+
+    const mobile = await page.evaluate(() => {
+      const panel = document.querySelector('.rmcc-panel');
+      if (!panel) return null;
+      return { position: getComputedStyle(panel).position };
+    });
+    expect(mobile).toBeTruthy();
+    expect(['static', 'relative']).toContain(mobile.position);
+    await expectNoOverflow(page, 'html');
+
+    for (const width of [320, 340]) {
+      await page.setViewportSize({ width, height: 720 });
+      await gotoCategoryCollectionsBlock(page, staticServer.origin);
+      await page.locator(`${ROOT} .ren-nav-toggle`).click();
+      await page.locator('.rmcc-disclosure > summary').click();
+      await expect(page.locator('.rmcc-panel')).toBeVisible();
+      await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
+      await expect(page.locator('a.rmcc-collection')).toHaveCount(2);
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+    }
+  });
+
+  test('breakpoint seams 767/768/769 probes and same-breakpoint resize stability', async ({ page }) => {
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    /**
+     * Probe rect/display/position/MQ/state for ren-nav-JS-aligned policy:
+     * desktop inclusive at 48rem (768px), mobile at max-width 47.999rem (767).
+     * Public interaction only — never mutate aria-expanded / data-open directly.
+     * @param {number} width
+     * @param {{ openMega?: boolean, openShell?: boolean }} [opts]
+     */
+    async function probeSeam(width, opts = {}) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+
+      if (opts.openShell) {
+        const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+        await expect(toggle, `${width}: toggle visible for public shell open`).toBeVisible();
+        if ((await toggle.getAttribute('aria-expanded')) !== 'true') {
+          await toggle.click();
+        }
+        await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        await expect(page.locator('#rmcc-primary-links')).toBeVisible();
+      }
+
+      if (opts.openMega) {
+        const disclosure = page.locator('.rmcc-disclosure');
+        const summary = page.locator('.rmcc-disclosure > summary');
+        // Mobile: public toggle first so the tree is exposed.
+        const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+        if (await toggle.isVisible()) {
+          if ((await toggle.getAttribute('aria-expanded')) !== 'true') {
+            await toggle.click();
+          }
+          await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+        }
+        await expect(summary).toBeVisible();
+        if ((await disclosure.getAttribute('open')) === null) {
+          await summary.click();
+        }
+        await expect(disclosure).toHaveAttribute('open', '');
+      }
+
+      return page.evaluate(() => {
+        const toggle = document.querySelector('[data-rmcc-root] .ren-nav-toggle');
+        const links = document.querySelector('#rmcc-primary-links');
+        const panel = document.querySelector('.rmcc-panel');
+        const disclosure = document.querySelector('.rmcc-disclosure');
+        const actions = document.querySelector('[data-rmcc-root] .ren-nav-actions');
+        const tStyle = toggle ? getComputedStyle(toggle) : null;
+        const lStyle = links ? getComputedStyle(links) : null;
+        const pStyle = panel ? getComputedStyle(panel) : null;
+        const aStyle = actions ? getComputedStyle(actions) : null;
+        const tRect = toggle ? toggle.getBoundingClientRect() : null;
+        const lRect = links ? links.getBoundingClientRect() : null;
+        const pRect = panel ? panel.getBoundingClientRect() : null;
+        return {
+          innerWidth: window.innerWidth,
+          desktopMq: window.matchMedia('(min-width: 48rem)').matches,
+          mobileCssMq: window.matchMedia('(max-width: 47.999rem)').matches,
+          renNavMobileCss: window.matchMedia('(max-width: 48rem)').matches,
+          renNavJsMobile: window.innerWidth < 768,
+          toggleDisplay: tStyle?.display ?? 'missing',
+          toggleVisible: Boolean(
+            tRect && tRect.width > 0 && tRect.height > 0 && tStyle?.display !== 'none'
+          ),
+          linksDisplay: lStyle?.display ?? 'missing',
+          linksVisible: Boolean(
+            lRect && lRect.width > 0 && lRect.height > 0 && lStyle?.display !== 'none'
+          ),
+          panelPosition: pStyle?.position ?? 'missing',
+          panelDisplay: pStyle?.display ?? 'missing',
+          panelWidth: pRect ? Math.round(pRect.width) : 0,
+          actionsDisplay: aStyle?.display ?? 'missing',
+          actionsVisible: Boolean(
+            aStyle
+            && aStyle.display !== 'none'
+            && actions
+            && actions.getBoundingClientRect().width > 0
+          ),
+          disclosureOpen: Boolean(disclosure?.open),
+          toggleExpanded: toggle?.getAttribute('aria-expanded') ?? null,
+        };
+      });
+    }
+
+    // 767: pure mobile (below inclusive desktop band).
+    let probe = await probeSeam(767);
+    expect(probe.desktopMq, '767 desktopMq').toBe(false);
+    expect(probe.mobileCssMq, '767 mobileCssMq').toBe(true);
+    expect(probe.renNavJsMobile, '767 ren-nav JS mobile').toBe(true);
+    expect(probe.toggleVisible, '767 toggle visible').toBe(true);
+    expect(probe.toggleDisplay, '767 toggle display').not.toBe('none');
+    expect(probe.panelPosition, '767 closed panel not absolute').not.toBe('absolute');
+
+    // Open mobile mega in-flow via public toggle + summary.
+    probe = await probeSeam(767, { openShell: true, openMega: true });
+    expect(probe.disclosureOpen, '767 mega open').toBe(true);
+    expect(probe.panelPosition, '767 open panel in-flow').toMatch(/^(static|relative)$/);
+    expect(probe.linksVisible, '767 open links visible').toBe(true);
+
+    // 767 → 768 is a real desktop crossing (not the same band): details close.
+    probe = await probeSeam(768);
+    expect(probe.innerWidth, '768 width').toBe(768);
+    expect(probe.desktopMq, '768 desktopMq true (inclusive 48rem)').toBe(true);
+    expect(probe.mobileCssMq, '768 mobileCssMq false').toBe(false);
+    expect(probe.renNavJsMobile, '768 ren-nav JS desktop (innerWidth < 768 is false)').toBe(false);
+    expect(probe.disclosureOpen, '767→768 details closed on real crossing').toBe(false);
+    expect(probe.toggleVisible, '768 toggle hidden').toBe(false);
+    expect(probe.toggleDisplay, '768 toggle display none').toBe('none');
+    expect(probe.linksVisible, '768 primary links visible without shell').toBe(true);
+    expect(probe.actionsVisible, '768 actions visible').toBe(true);
+
+    // 768 desktop: absolute mega via public summary click (toggle stays hidden).
+    probe = await probeSeam(768, { openMega: true });
+    expect(probe.disclosureOpen, '768 mega open').toBe(true);
+    expect(probe.panelPosition, '768 open panel absolute').toBe('absolute');
+    expect(probe.panelWidth, '768 full-bleed panel').toBeGreaterThan(700);
+    expect(probe.toggleVisible, '768 open still no toggle').toBe(false);
+    expect(probe.linksVisible, '768 open links still visible').toBe(true);
+
+    // Collection cards: single column, readable min-inline-size, no break-all overflow.
+    /**
+     * @param {string} label
+     */
+    async function assertNarrowDesktopCollections(label) {
+      const cards = await page.evaluate(() => {
+        const nodes = Array.from(document.querySelectorAll('a.rmcc-collection'));
+        if (nodes.length < 2) return null;
+        const metrics = nodes.map((card) => {
+          const r = card.getBoundingClientRect();
+          const style = getComputedStyle(card);
+          const title = card.querySelector('.rmcc-collection-title');
+          const tStyle = title ? getComputedStyle(title) : null;
+          return {
+            width: Math.round(r.width),
+            height: Math.round(r.height),
+            top: Math.round(r.top),
+            bottom: Math.round(r.bottom),
+            left: Math.round(r.left),
+            minInline: style.minInlineSize || style.minWidth,
+            wordBreak: tStyle?.wordBreak || '',
+            overflowWrap: tStyle?.overflowWrap || '',
+          };
+        });
+        const stacked = metrics[1].top >= metrics[0].bottom - 8;
+        const html = document.documentElement;
+        return {
+          metrics,
+          stacked,
+          overflow: html.scrollWidth > html.clientWidth + 1,
+          gridColumns: getComputedStyle(document.querySelector('.rmcc-collections')).gridTemplateColumns,
+        };
+      });
+      expect(cards, `${label} collection metrics`).toBeTruthy();
+      expect(cards.stacked, `${label} collections stack one column`).toBe(true);
+      expect(cards.overflow, `${label} no html overflow`).toBe(false);
+      expect(cards.gridColumns.split(' ').length, `${label} single grid track`).toBe(1);
+      for (const [i, m] of cards.metrics.entries()) {
+        expect(m.width, `${label} card ${i} min readable width`).toBeGreaterThanOrEqual(160);
+        expect(m.wordBreak, `${label} card ${i} no break-all`).not.toBe('break-all');
+      }
+      await expectNoOverflow(page, 'html');
+      await expectNoOverflow(page, ROOT);
+    }
+
+    await assertNarrowDesktopCollections('768');
+
+    // 768 → 769 same desktop band: open state stays stable.
+    probe = await probeSeam(769);
+    expect(probe.desktopMq, '769 desktopMq').toBe(true);
+    expect(probe.mobileCssMq, '769 mobileCssMq false').toBe(false);
+    expect(probe.disclosureOpen, '768→769 same-band keeps open').toBe(true);
+    expect(probe.panelPosition, '769 panel absolute').toBe('absolute');
+    expect(probe.toggleVisible, '769 toggle hidden').toBe(false);
+    expect(probe.linksVisible, '769 links visible').toBe(true);
+
+    await assertNarrowDesktopCollections('769');
+
+    // Same-breakpoint resize within desktop keeps open.
+    await page.setViewportSize({ width: 900, height: 900 });
+    await expect(page.locator('.rmcc-disclosure')).toHaveAttribute('open', '');
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+    await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
+    await expectNoOverflow(page, 'html');
+    const stillDesktop = await page.evaluate(() => ({
+      desktopMq: window.matchMedia('(min-width: 48rem)').matches,
+      panelPosition: getComputedStyle(document.querySelector('.rmcc-panel')).position,
+      open: document.querySelector('.rmcc-disclosure')?.open === true,
+    }));
+    expect(stillDesktop.desktopMq).toBe(true);
+    expect(stillDesktop.panelPosition).toBe('absolute');
+    expect(stillDesktop.open).toBe(true);
+
+    // 900 → 767 real mobile crossing: close details; toggle returns.
+    probe = await probeSeam(767);
+    expect(probe.desktopMq, '900→767 desktopMq false').toBe(false);
+    expect(probe.disclosureOpen, '900→767 details closed').toBe(false);
+    expect(probe.toggleVisible, '900→767 toggle visible').toBe(true);
+    expect(probe.panelPosition, '900→767 panel not absolute').toMatch(/^(static|relative)$/);
+
+    // Re-open mobile mega via public interaction only.
+    probe = await probeSeam(767, { openShell: true, openMega: true });
+    expect(probe.disclosureOpen, '767 re-open').toBe(true);
+    expect(probe.panelPosition, '767 re-open in-flow').toMatch(/^(static|relative)$/);
+  });
+
+  test('tablet and wide desktop: category region narrower than collections', async ({ page }) => {
+    await page.setViewportSize({ width: 834, height: 1112 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    const toggle = page.locator(`${ROOT} .ren-nav-toggle`);
+    await expect(toggle).toBeHidden();
+
+    await page.locator('.rmcc-disclosure > summary').click();
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+    await expect(page.locator('.rmcc-mega-link')).toHaveCount(10);
+    await expect(page.locator('a.rmcc-collection')).toHaveCount(2);
+
+    const tablet = await page.evaluate(() => {
+      const cats = document.querySelector('.rmcc-categories');
+      const cols = document.querySelector('.rmcc-collections');
+      const cards = Array.from(document.querySelectorAll('a.rmcc-collection'));
+      if (!cats || !cols || cards.length < 2) return null;
+      const cR = cats.getBoundingClientRect();
+      const oR = cols.getBoundingClientRect();
+      const card0 = cards[0].getBoundingClientRect();
+      const card1 = cards[1].getBoundingClientRect();
+      return {
+        catsWidth: Math.round(cR.width),
+        colsWidth: Math.round(oR.width),
+        catsNarrower: cR.width < oR.width * 0.95 || cR.width <= 26 * 16 + 8,
+        sideBySide: Math.abs(cR.top - oR.top) < 64 && oR.left >= cR.right - 24,
+        stackedCards: card1.top >= card0.bottom - 8,
+        card0Width: Math.round(card0.width),
+      };
+    });
+    expect(tablet, 'tablet composition metrics').toBeTruthy();
+    expect(
+      tablet.catsNarrower || tablet.sideBySide,
+      `categories ${tablet.catsWidth} vs collections ${tablet.colsWidth}`
+    ).toBe(true);
+    expect(tablet.stackedCards, 'tablet band stacks collection cards (under 60rem)').toBe(true);
+    expect(tablet.card0Width, 'tablet collection min readable width').toBeGreaterThanOrEqual(160);
+    await expectNoOverflow(page, 'html');
+
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+    const wide = await page.evaluate(() => {
+      const cats = document.querySelector('.rmcc-categories');
+      const cols = document.querySelector('.rmcc-collections');
+      const groups = document.querySelectorAll('.rmcc-category-col');
+      const cards = document.querySelectorAll('a.rmcc-collection');
+      if (!cats || !cols || groups.length < 2 || cards.length < 2) return null;
+      const cR = cats.getBoundingClientRect();
+      const oR = cols.getBoundingClientRect();
+      const g0 = groups[0].getBoundingClientRect();
+      const g1 = groups[1].getBoundingClientRect();
+      const card0 = cards[0].getBoundingClientRect();
+      const card1 = cards[1].getBoundingClientRect();
+      return {
+        catsWidth: Math.round(cR.width),
+        colsWidth: Math.round(oR.width),
+        catsNarrower: cR.width < oR.width,
+        twoCategoryCols: Math.abs(g0.top - g1.top) < 48 && g1.left >= g0.right - 4,
+        twoCollectionCols: Math.abs(card0.top - card1.top) < 48 && card1.left >= card0.right - 4,
+      };
+    });
+    expect(wide).toBeTruthy();
+    expect(wide.catsNarrower, `cats ${wide.catsWidth} vs cols ${wide.colsWidth}`).toBe(true);
+    expect(wide.twoCategoryCols, 'two category columns on wide desktop').toBe(true);
+    expect(wide.twoCollectionCols, 'two collection cards side by side').toBe(true);
+  });
+
+  test('desktop chrome: single chevron, neutral details, aligned trigger', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmcc-disclosure summary .rmcc-chevron'],
+      'category-collections mega-menu chevron'
+    );
+
+    const peerLinks = page.locator('#rmcc-primary-links > li > a.ren-nav-link');
+    await expect(peerLinks.first()).toBeVisible();
+    await expect(page.locator('.rmcc-disclosure > summary')).toBeVisible();
+
+    const firstHref = await peerLinks.nth(0).getAttribute('href');
+    const lastHref = await peerLinks.nth(2).getAttribute('href');
+    expect(firstHref).toBeTruthy();
+    expect(lastHref).toBeTruthy();
+    await expectAligned(
+      page,
+      [
+        `a.ren-nav-link[href="${firstHref}"]`,
+        '.rmcc-disclosure > summary',
+        `a.ren-nav-link[href="${lastHref}"]`,
+      ],
+      'centerY',
+      2
+    );
+
+    const detailsChrome = await inspectNativeChrome(page, '.rmcc-disclosure');
+    expect(detailsChrome.borderTopWidth === '0px', 'details outer border').toBeTruthy();
+    expect(detailsChrome.marginTop).toBe('0px');
+    expect(detailsChrome.paddingTop).toBe('0px');
+
+    const summaryChrome = await inspectNativeChrome(page, '.rmcc-disclosure > summary');
+    const afterContent = String(summaryChrome.afterContent || 'none').replace(/['"]/g, '');
+    const afterNeutralized =
+      afterContent === 'none' || afterContent === '' || summaryChrome.afterDisplay === 'none';
+    expect(afterNeutralized, 'classless summary::after must be neutralized').toBe(true);
+  });
+
+  test('mobile rows: full width peers, stacked collections, single close icon affordance', async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await page.locator('.rmcc-disclosure > summary').click();
+    await expect(page.locator('.rmcc-panel')).toBeVisible();
+
+    const firstPeer = page.locator('#rmcc-primary-links > li > a.ren-nav-link').first();
+    await expect(firstPeer).toBeVisible();
+    const peerHref = await firstPeer.getAttribute('href');
+    expect(peerHref).toBeTruthy();
+
+    await expectWidthRatio(page, `a.ren-nav-link[href="${peerHref}"]`, '#rmcc-primary-links', 0.92, 1.05);
+    await expectWidthRatio(page, '.rmcc-disclosure > summary', '#rmcc-primary-links', 0.92, 1.05);
+    await expectSingleVisibleAffordance(
+      page,
+      ['.rmcc-disclosure summary .rmcc-chevron'],
+      'mobile category-collections mega-menu chevron'
+    );
+    // Toggle shows the close morph (three spans, one visible control).
+    await expect(page.locator(`${ROOT} .ren-nav-toggle`)).toHaveCount(1);
+    await expectNoOverflow(page, 'html');
+
+    const mobileLayout = await page.evaluate(() => {
+      const cards = Array.from(document.querySelectorAll('a.rmcc-collection'));
+      const cats = document.querySelector('.rmcc-categories');
+      const cols = document.querySelector('.rmcc-collections');
+      if (cards.length < 2 || !cats || !cols) return null;
+      const c0 = cards[0].getBoundingClientRect();
+      const c1 = cards[1].getBoundingClientRect();
+      const catsR = cats.getBoundingClientRect();
+      const colsR = cols.getBoundingClientRect();
+      const stackedCards = c1.top >= c0.bottom - 8;
+      const catsAbove = colsR.top >= catsR.bottom - 16;
+      return { stackedCards, catsAbove, cardCount: cards.length };
+    });
+    expect(mobileLayout).toBeTruthy();
+    expect(mobileLayout.stackedCards, 'mobile collections stack by default').toBe(true);
+    expect(mobileLayout.catsAbove, 'categories precede collections in flow').toBe(true);
+    expect(mobileLayout.cardCount).toBe(2);
+  });
+
+  test('visible interactive targets meet 44×44 in a touch context', async ({ browser }) => {
+    const context = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 844 },
+    });
+    const page = await context.newPage();
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    await page.locator(`${ROOT} .ren-nav-toggle`).click();
+    await page.locator('.rmcc-disclosure > summary').click();
+
+    const undersized = await page.evaluate(() => {
+      const root = document.querySelector('[data-rmcc-root]');
+      if (!root) return [{ name: 'missing-root', width: 0, height: 0 }];
+
+      const candidates = root.querySelectorAll(
+        'a[href], button, summary, .ren-nav-toggle, .rmcc-mega-link, a.rmcc-collection'
+      );
+      const bad = [];
+      for (const el of candidates) {
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+        if (rect.width < 44 || rect.height < 44) {
+          bad.push({
+            name: el.className || el.tagName,
+            text: (el.textContent || '').trim().slice(0, 40),
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+          });
+        }
+      }
+      return bad;
+    });
+
+    expect(undersized, JSON.stringify(undersized, null, 2)).toEqual([]);
+    await context.close();
+  });
+
+  test('reduced-motion disables block-local transitions and animations', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await page.locator('.rmcc-disclosure > summary').click();
+
+    const motion = await page.evaluate(() => {
+      const selectors = ['.rmcc-panel', '.rmcc-chevron', 'a.rmcc-collection', '.rmcc-collection-media'];
+      return selectors.map((selector) => {
+        const el = document.querySelector(selector);
+        if (!el) return { selector, missing: true };
+        const style = window.getComputedStyle(el);
+        return {
+          selector,
+          transitionDuration: style.transitionDuration,
+          animationName: style.animationName,
+          animationDuration: style.animationDuration,
+        };
+      });
+    });
+
+    for (const item of motion) {
+      expect(item.missing, item.selector).toBeFalsy();
+      const durations = String(item.transitionDuration || '')
+        .split(',')
+        .map((part) => part.trim());
+      for (const duration of durations) {
+        expect(duration === '0s' || duration === '0ms' || duration === '', item.selector).toBeTruthy();
+      }
+      const animName = String(item.animationName || 'none');
+      expect(animName === 'none' || animName === '', item.selector).toBeTruthy();
+    }
+  });
+
+  test('category-collections mega menu preview passes WCAG 2.1 AA axe scan', async ({ page }) => {
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.locator('.rmcc-disclosure > summary').click();
+    await injectAxe(page);
+    await checkA11y(page, ROOT, {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'],
+      },
+    });
+  });
+
+  test('light and dark surfaces resolve through RenDS tokens', async ({ page }) => {
+    await gotoCategoryCollectionsBlock(page, staticServer.origin);
+
+    for (const theme of ['light', 'dark']) {
+      await page.evaluate((nextTheme) => {
+        document.documentElement.setAttribute('data-theme', nextTheme);
+      }, theme);
+      await page.locator('.rmcc-disclosure > summary').click();
+      await expect(page.locator('.rmcc-panel')).toBeVisible();
+
+      const colors = await page.evaluate(() => {
+        const nav = document.querySelector('[data-rmcc-root] .ren-nav');
+        const panel = document.querySelector('.rmcc-panel');
+        const link = document.querySelector('.rmcc-mega-link');
+        if (!nav || !panel || !link) return null;
+        const navBg = getComputedStyle(nav).backgroundColor;
+        const panelBg = getComputedStyle(panel).backgroundColor;
+        const linkColor = getComputedStyle(link).color;
+        const isTransparent = (value) =>
+          !value || value === 'transparent' || value === 'rgba(0, 0, 0, 0)';
+        return {
+          navBg,
+          panelBg,
+          linkColor,
+          navSolid: !isTransparent(navBg),
+          panelSolid: !isTransparent(panelBg),
+          linkSolid: !isTransparent(linkColor),
+        };
+      });
+      expect(colors, theme).toBeTruthy();
+      expect(colors.navSolid, `${theme} nav bg`).toBe(true);
+      expect(colors.panelSolid, `${theme} panel bg`).toBe(true);
+      expect(colors.linkSolid, `${theme} link color`).toBe(true);
+
+      await page.keyboard.press('Escape');
+    }
+  });
+});

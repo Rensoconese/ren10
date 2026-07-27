@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy-counts","kind":"structure","description":"One content-height hero/container/copy split/h1/description/action group/landscape image and exactly two CTA anchors; zero nav/logo/form/video/overlay/dialog/third action","automated":true},
+    {"id":"responsive-copy","kind":"visual-structure","description":"Copy stacks narrowly and splits heading-left/support-right at medium; CTAs wrap; image remains full-width below","automated":true},
+    {"id":"media-quality","kind":"visual-structure","description":"Owned image has meaningful alt and intrinsic dimensions, covers one rounded landscape frame, and never overflows","automated":true},
+    {"id":"responsive-quality","kind":"visual-structure","description":"No overlap, clipping, or horizontal overflow at 320/390/767/768/1280; section remains content-height","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Distinct real destinations, visible focus, 44px targets, light/dark contrast, reduced-motion-safe states, and axe WCAG 2.1 AA","automated":true},
+    {"id":"progressive-fallback","kind":"behavior","description":"Complete single DOM tree, image, and both destinations remain usable without JavaScript","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh matrix awaits independent Codex review","automated":false}
+  ]
+}

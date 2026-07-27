@@ -1,0 +1,21 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "21b8acc736ca21877fe8ccf2e0331a1ce3dd9726",
+  "captures": {
+    "desktop": "captures/header3/desktop-light-closed.png",
+    "mobile": "captures/header3/mobile-light-closed.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Independent DOM/CSS review against the exact raw Relume Header3 MCP source confirmed one split copy/media hero, one heading and lede, exactly two real CTA anchors, one named media opener, one real native dialog and close control, one titled iframe, one busy owner, and no in-block navigation or duplicate affordances. Ren10 switcher/frame/stack/cluster/dialog/button/spinner contracts and semantic/component tokens are used; native and pseudo-element cascade adds no duplicate play or close chrome. Desktop, tablet, mobile, light, dark, open, reduced-motion, and JavaScript-disabled captures were freshly recaptured and visually inspected with no clipping, overlap, overflow, or incoherent stacking.",
+  "runtimeInspection": "Both iframe and noscript fallback expose a native video with controls, two permitted CC0 media sources, readyState 4, duration 5.059 seconds, a non-empty currentSrc, and no media error. The native dialog is modal, traps repeated Tab focus inside its sole close control, clears the iframe on close, and restores focus to the opener. Both Ren10 CTA destinations returned HTTP 200; media sources returned HTTP 206 video/webm and video/mp4.",
+  "validation": {
+    "focusedPlaywright": "22 passed",
+    "axe": "0 violations in closed/open light/dark reduced-motion states",
+    "lint": "passed with 0 errors",
+    "agentCheck": "passed including all evals and 36 starter checks",
+    "workflow": "valid at green before review advance",
+    "contracts": "19 primitives, 26 composites, 8 patterns"
+  }
+}

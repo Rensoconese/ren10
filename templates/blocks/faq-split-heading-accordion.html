@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A split Ren10 FAQ with supporting context beside an accessible accordion.">
+  <title>Split Heading Accordion FAQ — Ren10 Blocks</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/composites/ren-accordion/ren-accordion.css">
+  <link rel="stylesheet" href="faq-batch1.css">
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Templates</a></li><li><a href="index.html">Blocks</a></li><li aria-current="page">Split Heading Accordion FAQ</li></ol></nav>
+      <p class="dx-kicker">FAQ 2 · Support block</p>
+      <h1 class="bb-detail-title">Split Heading Accordion FAQ</h1>
+      <p class="bb-detail-description">A two-column Grid separates orientation copy from the questions without squeezing either region.</p>
+    </header>
+    <section class="faq2-block bb-detail-preview" aria-labelledby="faq2-title">
+      <div class="faq2-layout ren-grid">
+        <div class="faq2-copy ren-stack"><p class="dx-kicker">Working with the system</p><h2 id="faq2-title" class="faq2-title">Everything your team needs to begin</h2><p class="faq2-description">Implementation answers stay visible beside the context that explains why they matter.</p></div>
+        <ren-accordion class="faq2-list ren-accordion-bordered" type="single" collapsible default-value="0">
+          <details><summary class="ren-accordion-trigger">How do we install the package?</summary><div class="ren-accordion-content">Install ren10 from npm or load the published CSS directly, then import only the component scripts your interface uses.</div></details>
+          <details><summary class="ren-accordion-trigger">Where do layout decisions live?</summary><div class="ren-accordion-content">Use the public layout primitives first: stacks, clusters, grids, centers, frames, reels, and sidebar compositions.</div></details>
+          <details><summary class="ren-accordion-trigger">How are accessibility requirements documented?</summary><div class="ren-accordion-content">Every component contract includes required semantics, keyboard behavior, focus expectations, and test coverage.</div></details>
+          <details><summary class="ren-accordion-trigger">Can we adopt Ren10 gradually?</summary><div class="ren-accordion-content">Yes. Start with tokens and a single primitive, then add composites and patterns as the product needs them.</div></details>
+        </ren-accordion>
+      </div>
+    </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination"><a class="bb-block-pagination-link" href="faq-centered-accordion.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Centered Accordion FAQ</span></a><a class="bb-block-pagination-link bb-block-pagination-link-next" href="faq-two-column-groups.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Two Column Groups FAQ</span><span aria-hidden="true">→</span></a></nav>
+  </main>
+  <script type="module" src="../../components/composites/ren-accordion/ren-accordion.js"></script>
+</body>
+</html>

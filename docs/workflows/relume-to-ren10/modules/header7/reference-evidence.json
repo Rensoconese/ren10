@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated node /tmp/relume-fetch.mjs header7 returned the complete Header7 section and primitive names. Exact anatomy, variants, video attributes and responsive relationships are persisted in reference-brief.md; protected framework source, copy, CDN URL and classes are intentionally excluded from the public block."
+}

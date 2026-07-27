@@ -1,0 +1,17 @@
+{
+  "id": "desktop-invalid",
+  "url": "http://127.0.0.1:60457/templates/blocks/hero-centered-email-capture.html?ren10_capture=header24-desktop-invalid-2a076cc6bc34",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "ren-field[data-invalid]": 1,
+    ".rh24-error:not([hidden])": 1
+  },
+  "commit": "2a076cc6bc34cd86533653e527e07c126e7456b5",
+  "capturedAt": "2026-07-15T19:38:35.329Z"
+}

@@ -1,0 +1,16 @@
+{
+  "id": "desktop-1024",
+  "url": "http://127.0.0.1:57831/templates/blocks/hero-centered-copy-dual-cta.html?ren10_capture=header23-desktop-1024-65c1f903619a",
+  "viewport": {
+    "width": 1024,
+    "height": 800
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh23-actions": 1
+  },
+  "commit": "65c1f903619a4f276584f887cd2b6ef43aa6cbcf",
+  "capturedAt": "2026-07-15T19:33:00.758Z"
+}

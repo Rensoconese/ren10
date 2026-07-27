@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar31 primitives=include) returned complete Navbar31 section source plus three vendored primitives (utils, button, sheet). Anatomy recorded: full-width logo-left bar with permanent action + toggle; five large title-only primary links only inside a right-edge sheet; contact cluster (title, phone, email, address); five social destinations; zero dropdowns/chevrons; unused default footer button field is not rendered. No protected source was copied into public Ren10 output."
+}

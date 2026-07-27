@@ -221,31 +221,6 @@ export function scaleFromHex(hex) {
   return scale;
 }
 
-// ─────────────────────────────────────────────
-// AA-safe step selection
-// ─────────────────────────────────────────────
-
-/** Walk a scale from darkest→lightest, pick the *lightest* step that still
- *  achieves the requested ratio against `against`. Used to pick the brightest
- *  possible accent that still lets us put white text on it (light mode). */
-function pickStepAgainst(scale, against, minRatio, direction = 'light-to-dark') {
-  const keys = Object.keys(scale).map(Number);
-  keys.sort((a, b) => direction === 'light-to-dark' ? a - b : b - a);
-  // direction 'light-to-dark' → walks 50..950. We want the lightest step that
-  // passes — so iterate in reverse (dark→light) and return the FIRST that
-  // passes? No — we want the darkest step that *still* passes.
-  // Simplest: iterate from expected direction and return the first hit.
-  let best = null;
-  for (const k of keys) {
-    const r = contrast(scale[k], against);
-    if (r >= minRatio) {
-      best = k;
-      break;
-    }
-  }
-  return best;
-}
-
 /**
  * Build the semantic token set for one color scheme.
  *

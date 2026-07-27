@@ -1,0 +1,27 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header17",
+  "block": "hero-split-copy-dual-cta-landscape-lightbox",
+  "capturedCommit": "27a3fd3b373547af7cf3bec2752eeb6f76df45b6",
+  "fresh": true,
+  "states": [
+    "desktop-light-closed",
+    "desktop-light-open",
+    "desktop-dark-closed",
+    "desktop-dark-open",
+    "tablet-768",
+    "seam-767",
+    "mobile-390-closed",
+    "mobile-390-open",
+    "narrow-320",
+    "reduced-motion-open",
+    "mobile-dark-open",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Independently inspected all twelve cache-busted states from corrected functional commit 27a3fd3b373547af7cf3bec2752eeb6f76df45b6. The review replaced a portrait screenshot carrying false 1440x900 metadata with an owned 1280x900 landscape asset whose declared dimensions now match its natural dimensions. The content-height container preserves one responsive copy split above one full-width rounded landscape trigger. The single scrim and play affordance remain centered and coherent at 320, 390, 767, 768, and 1280px. Desktop and mobile dialogs preserve one labelled close affordance, one 16:9 media stage, and theme-safe surfaces; 738px medium and 940px large widths remain viewport-safe. Light, dark, reduced-motion, and no-JavaScript states remain complete and legible. The no-JavaScript fallback overlays the poster with a clear real destination. No form, nav, logo, background video, third CTA, duplicate trigger/dialog/control, clipping, overlap, or stale-pixel drift is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

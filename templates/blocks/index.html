@@ -13,7 +13,7 @@
   <style>
     .bb-hero {
       max-width: 72ch;
-      padding-block: var(--space-12) var(--space-8);
+      padding-block: var(--space-12) 0;
     }
 
     .bb-hero h1 {
@@ -29,6 +29,27 @@
       color: var(--color-text-muted);
       font-size: var(--text-xl);
       line-height: 1.55;
+    }
+
+    .bb-library {
+      --stack-gap: var(--space-section-lg);
+    }
+
+    .bb-library-section {
+      --stack-gap: var(--space-section-sm);
+    }
+
+    .bb-section-intro {
+      max-width: var(--width-prose);
+    }
+
+    .bb-section-intro p {
+      margin: 0;
+      color: var(--color-text-muted);
+    }
+
+    .bb-section-intro h2 {
+      scroll-margin-block-start: var(--space-16);
     }
 
     .bb-card {
@@ -59,7 +80,7 @@
 
     .bb-card:focus-visible {
       outline: var(--ring-width) solid var(--color-focus-ring);
-      outline-offset: var(--ring-offset);
+      outline-offset: var(--ring-offset-width);
     }
 
     .bb-card-eyebrow {
@@ -83,10 +104,6 @@
       line-height: 1.55;
     }
 
-    .bb-card-arrow {
-      color: var(--color-accent);
-      font-weight: var(--weight-bold);
-    }
   </style>
 </head>
 <body>
@@ -95,7 +112,7 @@
       <a href="../../docs/index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="../../docs/index.html">Docs</a>
@@ -110,19 +127,21 @@
     </div>
   </header>
 
-  <main class="dx-shell">
+  <main class="dx-shell ren-stack bb-library">
     <header class="bb-hero">
       <p class="dx-kicker">Blocks</p>
-      <h1>Standalone RenDS blocks</h1>
+      <h1>Page blocks</h1>
       <p class="lede">
-        Composable page sections built from RenDS primitives, patterns, layout helpers,
-        and tokens. Use one block at a time, or combine them into full templates.
+        Ready-to-use sections for composing consistent marketing and application pages.
+        Start with one block or combine several into a complete template.
       </p>
     </header>
 
-    <section aria-labelledby="navigation-blocks">
-      <p class="dx-kicker">Navigation</p>
-      <h2 id="navigation-blocks">Navigation blocks</h2>
+    <section class="ren-stack bb-library-section" aria-labelledby="navigation-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="navigation-blocks">Navigation</h2>
+        <p>Responsive navigation patterns for simple headers, drawers, and structured mega menus.</p>
+      </div>
       <div class="ren-grid">
         <a class="bb-card ren-stack-sm" href="nav-drawer.html">
           <span class="bb-card-eyebrow">Navbar</span>
@@ -131,7 +150,6 @@
             Compact brand, CTA, and drawer navigation built with a real nav landmark,
             RenDS buttons, and the sheet composite.
           </p>
-          <span class="bb-card-arrow" aria-hidden="true">-&gt;</span>
         </a>
         <a class="bb-card ren-stack-sm" href="nav-mega-menu.html">
           <span class="bb-card-eyebrow">Navbar</span>
@@ -140,7 +158,6 @@
             One navigation tree with a native mega-menu disclosure, grouped destinations,
             featured articles, and progressive enhancement on top of ren-nav.
           </p>
-          <span class="bb-card-arrow" aria-hidden="true">-&gt;</span>
         </a>
         <a class="bb-card ren-stack-sm" href="nav-mega-menu-featured.html">
           <span class="bb-card-eyebrow">Navbar</span>
@@ -149,7 +166,6 @@
             Responsive mega-menu navigation with grouped destinations, one featured
             article, desktop hover support, and keyboard-safe progressive enhancement.
           </p>
-          <span class="bb-card-arrow" aria-hidden="true">-&gt;</span>
         </a>
         <a class="bb-card ren-stack-sm" href="nav-mega-menu-icons.html">
           <span class="bb-card-eyebrow">Navbar</span>
@@ -158,8 +174,913 @@
             Four icon destination groups, a compact action footer, one responsive
             navigation tree, and accessible hover, click, and keyboard behavior.
           </p>
-          <span class="bb-card-arrow" aria-hidden="true">-&gt;</span>
         </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-link-rail.html">
+          <span class="bb-card-eyebrow">Navbar 8</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Link Rail</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-footer.html">
+          <span class="bb-card-eyebrow">Navbar 9</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Footer</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-card-grid.html">
+          <span class="bb-card-eyebrow">Navbar 10</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Card Grid</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-menu-right-dropdown.html">
+          <span class="bb-card-eyebrow">Navbar 11</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Menu-Right Dropdown</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-menu-right-grouped.html">
+          <span class="bb-card-eyebrow">Navbar 12</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Menu-Right Grouped</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-menu-center-dropdown.html">
+          <span class="bb-card-eyebrow">Navbar 13</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Menu-Center Dropdown</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-floating-logo-left-menu-right-actions.html">
+          <span class="bb-card-eyebrow">Navbar 14</span>
+          <h3 class="bb-card-title">Navbar Floating Logo-Left Menu-Right Actions</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-floating-bottom-logo-left-menu-actions.html">
+          <span class="bb-card-eyebrow">Navbar 15</span>
+          <h3 class="bb-card-title">Navbar Floating Bottom Logo-Left Menu Actions</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-action-overlay-menu.html">
+          <span class="bb-card-eyebrow">Navbar 16</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Action Overlay Menu</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-fullscreen-menu-social.html">
+          <span class="bb-card-eyebrow">Navbar 17</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Fullscreen Menu Social</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-cta-overlay-grid.html">
+          <span class="bb-card-eyebrow">Navbar 18</span>
+          <h3 class="bb-card-title">Navbar Logo CTA Overlay Grid</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-center-links-site-panel.html">
+          <span class="bb-card-eyebrow">Navbar 19</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Center-Links Site-Panel</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-left-center-links-overlay-panel.html">
+          <span class="bb-card-eyebrow">Navbar 20</span>
+          <h3 class="bb-card-title">Navbar Logo-Left Center Links Overlay Panel</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-center-links-fullscreen-featured.html">
+          <span class="bb-card-eyebrow">Navbar 21</span>
+          <h3 class="bb-card-title">Navbar Logo-Center Links Fullscreen Featured</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-sticky-logo-center-dropdown-fullscreen-contact.html">
+          <span class="bb-card-eyebrow">Navbar 22</span>
+          <h3 class="bb-card-title">Navbar Sticky Logo Center Dropdown Fullscreen Contact</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-product-intro.html">
+          <span class="bb-card-eyebrow">Navbar 23</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Product Intro</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-product-rail.html">
+          <span class="bb-card-eyebrow">Navbar 24</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Product Rail</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-categories-promo.html">
+          <span class="bb-card-eyebrow">Navbar 25</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Categories Promo</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-category-promo-panel.html">
+          <span class="bb-card-eyebrow">Navbar 26</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Category Promo Panel</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-category-collections.html">
+          <span class="bb-card-eyebrow">Navbar 27</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Category Collections</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-topics-collection-cards.html">
+          <span class="bb-card-eyebrow">Navbar 28</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Topic Collections</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-overlay-collections.html">
+          <span class="bb-card-eyebrow">Navbar 29</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Overlay Collections</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-mega-menu-categories-products.html">
+          <span class="bb-card-eyebrow">Navbar 30</span>
+          <h3 class="bb-card-title">Navbar Mega Menu Categories Products</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-cta-right-sheet-contact.html">
+          <span class="bb-card-eyebrow">Navbar 31</span>
+          <h3 class="bb-card-title">Navbar Logo CTA Right Sheet Contact</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="nav-logo-cta-left-drawer.html">
+          <span class="bb-card-eyebrow">Navbar 32</span>
+          <h3 class="bb-card-title">Navbar Logo CTA Left Drawer</h3>
+          <p class="bb-card-desc">
+            Ren10 navigation block with one responsive tree, keyboard-safe interactions,
+            accessible focus behavior, and progressive enhancement.
+          </p>
+        </a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="headers-title">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="headers-title">Headers</h2>
+        <p>Thirty responsive hero compositions for introducing products, services, and campaigns.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="hero-split-copy-dual-cta-media.html">
+          <span class="bb-card-eyebrow">Header 1</span>
+          <h3 class="bb-card-title">Split copy, dual CTA and media</h3>
+          <p class="bb-card-desc">Split copy and media hero with two clear calls to action.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-email-form-media-right.html">
+          <span class="bb-card-eyebrow">Header 2</span>
+          <h3 class="bb-card-title">Split email signup with media</h3>
+          <p class="bb-card-desc">Email capture hero with a responsive peer media column.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-text-left-video-lightbox.html">
+          <span class="bb-card-eyebrow">Header 3</span>
+          <h3 class="bb-card-title">Text-left video lightbox</h3>
+          <p class="bb-card-desc">Two-action hero with a keyboard-safe video lightbox.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-email-video-lightbox.html">
+          <span class="bb-card-eyebrow">Header 4</span>
+          <h3 class="bb-card-title">Split email signup with video lightbox</h3>
+          <p class="bb-card-desc">Email signup and accessible video disclosure in one split hero.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-bg-left-copy-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 5</span>
+          <h3 class="bb-card-title">Fullscreen background with dual CTA</h3>
+          <p class="bb-card-desc">Full-viewport background hero with two contrasting actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-bg-left-email-capture.html">
+          <span class="bb-card-eyebrow">Header 6</span>
+          <h3 class="bb-card-title">Fullscreen Email Capture Hero</h3>
+          <p class="bb-card-desc">Full-viewport background hero with an accessible email capture form.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-bg-video-left-copy-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 7</span>
+          <h3 class="bb-card-title">Fullscreen Background Video Hero</h3>
+          <p class="bb-card-desc">Full-viewport background video hero with two clear calls to action.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-video-email-form.html">
+          <span class="bb-card-eyebrow">Header 8</span>
+          <h3 class="bb-card-title">Fullscreen Video Email Hero</h3>
+          <p class="bb-card-desc">Full-viewport video hero with a progressively enhanced email form.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-media-top-copy-band-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 9</span>
+          <h3 class="bb-card-title">Fullscreen Media and Copy Band Hero</h3>
+          <p class="bb-card-desc">Flexible cover media above a responsive copy band with two actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-cover-image-email-split-band.html">
+          <span class="bb-card-eyebrow">Header 10</span>
+          <h3 class="bb-card-title">Cover Image Email Hero</h3>
+          <p class="bb-card-desc">Cover image hero with a split lower band and accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-video-top-copy-band-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 11</span>
+          <h3 class="bb-card-title">Fullscreen Video and Copy Band Hero</h3>
+          <p class="bb-card-desc">Full-viewport video hero above a responsive copy band with two actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-video-email-split-band.html">
+          <span class="bb-card-eyebrow">Header 12</span>
+          <h3 class="bb-card-title">Video Email Split Hero</h3>
+          <p class="bb-card-desc">Video hero with a split lower band and accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-lightbox-top-copy-band-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 13</span>
+          <h3 class="bb-card-title">Lightbox Media and Dual CTA Hero</h3>
+          <p class="bb-card-desc">Video lightbox above a responsive copy band with two clear actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-lightbox-top-email-split-band.html">
+          <span class="bb-card-eyebrow">Header 14</span>
+          <h3 class="bb-card-title">Lightbox and Email Split Band Hero</h3>
+          <p class="bb-card-desc">Video lightbox above a split lower band with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-copy-dual-cta-landscape-image.html">
+          <span class="bb-card-eyebrow">Header 15</span>
+          <h3 class="bb-card-title">Split Copy Landscape Hero</h3>
+          <p class="bb-card-desc">Split copy hero with two actions and a responsive landscape image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-email-form-landscape-image.html">
+          <span class="bb-card-eyebrow">Header 16</span>
+          <h3 class="bb-card-title">Split Email Landscape Hero</h3>
+          <p class="bb-card-desc">Split email-capture hero with a responsive landscape image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-copy-dual-cta-landscape-lightbox.html">
+          <span class="bb-card-eyebrow">Header 17</span>
+          <h3 class="bb-card-title">Landscape Lightbox Hero</h3>
+          <p class="bb-card-desc">Split copy hero with two actions and an accessible landscape lightbox.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-top-split-email-video-lightbox.html">
+          <span class="bb-card-eyebrow">Header 18</span>
+          <h3 class="bb-card-title">Split Email and Video Lightbox Hero</h3>
+          <p class="bb-card-desc">Split email-capture hero above an accessible landscape lightbox.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-image-left-copy-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 19</span>
+          <h3 class="bb-card-title">Image Left Copy Hero</h3>
+          <p class="bb-card-desc">Image-first split hero with supporting copy and two actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-email-copy-image-left.html">
+          <span class="bb-card-eyebrow">Header 20</span>
+          <h3 class="bb-card-title">Email Copy and Image Hero</h3>
+          <p class="bb-card-desc">Image-first split hero with email capture, legal copy, and status feedback.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-video-lightbox-left-copy-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 21</span>
+          <h3 class="bb-card-title">Split Video Lightbox and Copy Hero</h3>
+          <p class="bb-card-desc">Video-first split hero with an accessible lightbox and two clear actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-split-video-lightbox-left-email-form.html">
+          <span class="bb-card-eyebrow">Header 22</span>
+          <h3 class="bb-card-title">Video Lightbox and Email Hero</h3>
+          <p class="bb-card-desc">Video-first split hero with an accessible lightbox and email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-copy-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 23</span>
+          <h3 class="bb-card-title">Centered Dual-Action Hero</h3>
+          <p class="bb-card-desc">Centered content-height hero with two clear calls to action.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-email-capture.html">
+          <span class="bb-card-eyebrow">Header 24</span>
+          <h3 class="bb-card-title">Centered Email Capture Hero</h3>
+          <p class="bb-card-desc">Centered content-height hero with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-search.html">
+          <span class="bb-card-eyebrow">Header 25</span>
+          <h3 class="bb-card-title">Centered Search Hero</h3>
+          <p class="bb-card-desc">Centered content-height hero with native, progressively enhanced search.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-copy-dual-cta-landscape-image.html">
+          <span class="bb-card-eyebrow">Header 26</span>
+          <h3 class="bb-card-title">Centered Dual-Action Landscape Hero</h3>
+          <p class="bb-card-desc">Centered copy and dual actions followed by a responsive landscape image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-email-capture-landscape-image.html">
+          <span class="bb-card-eyebrow">Header 27</span>
+          <h3 class="bb-card-title">Centered Email and Landscape Hero</h3>
+          <p class="bb-card-desc">Centered email capture followed by a responsive landscape image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-copy-dual-cta-landscape-lightbox.html">
+          <span class="bb-card-eyebrow">Header 28</span>
+          <h3 class="bb-card-title">Centered Landscape Lightbox Hero</h3>
+          <p class="bb-card-desc">Centered copy and dual actions followed by an accessible landscape lightbox.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-centered-email-capture-landscape-lightbox.html">
+          <span class="bb-card-eyebrow">Header 29</span>
+          <h3 class="bb-card-title">Centered Email and Landscape Lightbox Hero</h3>
+          <p class="bb-card-desc">Centered email capture followed by an accessible landscape lightbox.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="hero-fullscreen-bg-centered-copy-dual-cta.html">
+          <span class="bb-card-eyebrow">Header 30</span>
+          <h3 class="bb-card-title">Fullscreen Background Centered Dual CTA Hero</h3>
+          <p class="bb-card-desc">Centered copy and dual actions over an immersive background image.</p>
+        </a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="ctas-title">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="ctas-title">Calls to action</h2>
+        <p>Sixty focused conversion sections for actions, email capture, and campaign destinations.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="cta-split-image-dual-action.html">
+          <span class="bb-card-eyebrow">CTA 1</span>
+          <h3 class="bb-card-title">Split Image Dual-Action CTA</h3>
+          <p class="bb-card-desc">Responsive split copy, two clear destinations, and a real editorial image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-image-email-capture.html">
+          <span class="bb-card-eyebrow">CTA 2</span>
+          <h3 class="bb-card-title">Split Image Email Capture CTA</h3>
+          <p class="bb-card-desc">Responsive split copy, accessible email capture, and a real editorial image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-image-dual-action.html">
+          <span class="bb-card-eyebrow">CTA 3</span>
+          <h3 class="bb-card-title">Background Image Dual-Action CTA</h3>
+          <p class="bb-card-desc">Contrast-safe conversion copy and two destinations layered over photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-image-email-capture.html">
+          <span class="bb-card-eyebrow">CTA 4</span>
+          <h3 class="bb-card-title">Background Image Email Capture CTA</h3>
+          <p class="bb-card-desc">Contrast-safe conversion copy and accessible email capture over photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-dual-action.html">
+          <span class="bb-card-eyebrow">CTA 5</span>
+          <h3 class="bb-card-title">Contrast Dual-Action CTA</h3>
+          <p class="bb-card-desc">A focused high-contrast conversion band with two responsive actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-email-capture.html">
+          <span class="bb-card-eyebrow">CTA 6</span>
+          <h3 class="bb-card-title">Contrast Email Capture CTA</h3>
+          <p class="bb-card-desc">A focused high-contrast conversion band with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-copy-email-capture.html">
+          <span class="bb-card-eyebrow">CTA 7</span>
+          <h3 class="bb-card-title">Split Copy Email Capture CTA</h3>
+          <p class="bb-card-desc">A two-column message and labelled email form with a clean conversion rhythm.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-image-split-actions.html">
+          <span class="bb-card-eyebrow">CTA 8</span>
+          <h3 class="bb-card-title">Background Image Split Actions CTA</h3>
+          <p class="bb-card-desc">Message and destinations separated across a real photographic backdrop.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-image-email-aside.html">
+          <span class="bb-card-eyebrow">CTA 9</span>
+          <h3 class="bb-card-title">Background Image Email Aside CTA</h3>
+          <p class="bb-card-desc">A photographic conversion band pairing clear copy with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-split-actions.html">
+          <span class="bb-card-eyebrow">CTA 10</span>
+          <h3 class="bb-card-title">Contrast Split Actions CTA</h3>
+          <p class="bb-card-desc">A compact high-contrast band separating its copy and two actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-email-aside.html">
+          <span class="bb-card-eyebrow">CTA 11</span>
+          <h3 class="bb-card-title">Contrast Email Aside CTA</h3>
+          <p class="bb-card-desc">A high-contrast conversion band balancing clear copy with email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-heading-copy-actions.html">
+          <span class="bb-card-eyebrow">CTA 12</span>
+          <h3 class="bb-card-title">Split Heading Copy Actions CTA</h3>
+          <p class="bb-card-desc">An oversized statement balanced by supporting copy and destinations.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-heading-email-form.html">
+          <span class="bb-card-eyebrow">CTA 13</span>
+          <h3 class="bb-card-title">Split Heading Email Form CTA</h3>
+          <p class="bb-card-desc">A large statement balanced by supporting copy and accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-image-heading-actions.html">
+          <span class="bb-card-eyebrow">CTA 14</span>
+          <h3 class="bb-card-title">Background Image Heading Actions CTA</h3>
+          <p class="bb-card-desc">A split message and two destinations layered over real photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-image-heading-email.html">
+          <span class="bb-card-eyebrow">CTA 15</span>
+          <h3 class="bb-card-title">Background Image Heading Email CTA</h3>
+          <p class="bb-card-desc">An image-led split statement with contrast-safe email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-heading-actions.html">
+          <span class="bb-card-eyebrow">CTA 16</span>
+          <h3 class="bb-card-title">Contrast Heading Actions CTA</h3>
+          <p class="bb-card-desc">A high-contrast statement paired with supporting copy and actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-heading-email.html">
+          <span class="bb-card-eyebrow">CTA 17</span>
+          <h3 class="bb-card-title">Contrast Heading Email CTA</h3>
+          <p class="bb-card-desc">A high-contrast split statement with labelled email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-editorial-stacked-actions.html">
+          <span class="bb-card-eyebrow">CTA 18</span>
+          <h3 class="bb-card-title">Editorial Stacked Actions CTA</h3>
+          <p class="bb-card-desc">A spacious one-column statement with supporting copy and destinations.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-left-actions.html">
+          <span class="bb-card-eyebrow">CTA 19</span>
+          <h3 class="bb-card-title">Left Actions CTA</h3>
+          <p class="bb-card-desc">A concise one-column message with two responsive destinations.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-left-email-capture.html">
+          <span class="bb-card-eyebrow">CTA 20</span>
+          <h3 class="bb-card-title">Left Email Capture CTA</h3>
+          <p class="bb-card-desc">A concise one-column message with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-copy-actions-landscape.html">
+          <span class="bb-card-eyebrow">CTA 21</span>
+          <h3 class="bb-card-title">Split Copy Actions Landscape CTA</h3>
+          <p class="bb-card-desc">Two-column copy and actions above a real panoramic photograph.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-copy-email-landscape.html">
+          <span class="bb-card-eyebrow">CTA 22</span>
+          <h3 class="bb-card-title">Split Copy Email Landscape CTA</h3>
+          <p class="bb-card-desc">Balanced copy and email capture above a wide real-world image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-stacked-actions-landscape.html">
+          <span class="bb-card-eyebrow">CTA 23</span>
+          <h3 class="bb-card-title">Stacked Actions Landscape CTA</h3>
+          <p class="bb-card-desc">A spacious statement and actions leading into panoramic photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-stacked-email-landscape.html">
+          <span class="bb-card-eyebrow">CTA 24</span>
+          <h3 class="bb-card-title">Stacked Email Landscape CTA</h3>
+          <p class="bb-card-desc">A long-form statement, accessible email form, and panoramic image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-actions.html">
+          <span class="bb-card-eyebrow">CTA 25</span>
+          <h3 class="bb-card-title">Centered Actions CTA</h3>
+          <p class="bb-card-desc">Centered conversion copy with a balanced pair of destinations.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-email-capture.html">
+          <span class="bb-card-eyebrow">CTA 26</span>
+          <h3 class="bb-card-title">Centered Email Capture CTA</h3>
+          <p class="bb-card-desc">Centered conversion copy with a labelled email form.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-photo-centered-actions.html">
+          <span class="bb-card-eyebrow">CTA 27</span>
+          <h3 class="bb-card-title">Background Photo Centered Actions CTA</h3>
+          <p class="bb-card-desc">Centered copy and actions layered over real botanical photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-photo-centered-email.html">
+          <span class="bb-card-eyebrow">CTA 28</span>
+          <h3 class="bb-card-title">Background Photo Centered Email CTA</h3>
+          <p class="bb-card-desc">Centered email capture layered over real coastal photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-centered-actions.html">
+          <span class="bb-card-eyebrow">CTA 29</span>
+          <h3 class="bb-card-title">Contrast Centered Actions CTA</h3>
+          <p class="bb-card-desc">A high-contrast centered message with two responsive destinations.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-centered-email.html">
+          <span class="bb-card-eyebrow">CTA 30</span>
+          <h3 class="bb-card-title">Contrast Centered Email CTA</h3>
+          <p class="bb-card-desc">A high-contrast centered message with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-actions-landscape.html">
+          <span class="bb-card-eyebrow">CTA 31</span>
+          <h3 class="bb-card-title">Centered Actions Landscape CTA</h3>
+          <p class="bb-card-desc">Centered conversion copy and actions followed by panoramic photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-email-landscape.html">
+          <span class="bb-card-eyebrow">CTA 32</span>
+          <h3 class="bb-card-title">Centered Email Landscape CTA</h3>
+          <p class="bb-card-desc">Centered email capture followed by a wide real-world image.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-actions-logo-rail.html">
+          <span class="bb-card-eyebrow">CTA 33</span>
+          <h3 class="bb-card-title">Centered Actions Logo Rail CTA</h3>
+          <p class="bb-card-desc">Centered conversion copy and actions supported by a responsive logo rail.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-email-logo-rail.html">
+          <span class="bb-card-eyebrow">CTA 34</span>
+          <h3 class="bb-card-title">Centered Email Logo Rail CTA</h3>
+          <p class="bb-card-desc">Centered email capture supported by a responsive customer-mark rail.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-dual-cards-left.html">
+          <span class="bb-card-eyebrow">CTA 35</span>
+          <h3 class="bb-card-title">Dual Cards Left CTA</h3>
+          <p class="bb-card-desc">Two equal conversion paths in a fluid, left-aligned CSS Grid.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-dual-cards-centered.html">
+          <span class="bb-card-eyebrow">CTA 36</span>
+          <h3 class="bb-card-title">Dual Cards Centered CTA</h3>
+          <p class="bb-card-desc">Two equal conversion paths in a fluid, centered CSS Grid.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-hover-link-stack-centered.html">
+          <span class="bb-card-eyebrow">CTA 37</span>
+          <h3 class="bb-card-title">Centered Hover Link Stack CTA</h3>
+          <p class="bb-card-desc">Four centered destinations reveal real photography on hover and keyboard focus.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-numbered-hover-link-list.html">
+          <span class="bb-card-eyebrow">CTA 38</span>
+          <h3 class="bb-card-title">Numbered Hover Link List CTA</h3>
+          <p class="bb-card-desc">A numbered destination list with strong dividers and real image previews.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-card-actions.html">
+          <span class="bb-card-eyebrow">CTA 39</span>
+          <h3 class="bb-card-title">Split Card Actions CTA</h3>
+          <p class="bb-card-desc">A bordered split conversion card with two actions and real photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-split-card-email.html">
+          <span class="bb-card-eyebrow">CTA 40</span>
+          <h3 class="bb-card-title">Split Card Email CTA</h3>
+          <p class="bb-card-desc">A bordered split card pairing accessible email capture with photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-banner-actions.html">
+          <span class="bb-card-eyebrow">CTA 41</span>
+          <h3 class="bb-card-title">Background Banner Actions CTA</h3>
+          <p class="bb-card-desc">A compact conversion banner with two actions over real photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-background-banner-email.html">
+          <span class="bb-card-eyebrow">CTA 42</span>
+          <h3 class="bb-card-title">Background Banner Email CTA</h3>
+          <p class="bb-card-desc">A compact email capture banner layered over real coastal photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-band-actions.html">
+          <span class="bb-card-eyebrow">CTA 43</span>
+          <h3 class="bb-card-title">Contrast Band Actions CTA</h3>
+          <p class="bb-card-desc">A compact high-contrast band with supporting copy and two clear destinations.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-band-email.html">
+          <span class="bb-card-eyebrow">CTA 44</span>
+          <h3 class="bb-card-title">Contrast Band Email CTA</h3>
+          <p class="bb-card-desc">A compact high-contrast band with accessible email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-outlined-split-band-actions.html">
+          <span class="bb-card-eyebrow">CTA 45</span>
+          <h3 class="bb-card-title">Outlined Split Band Actions CTA</h3>
+          <p class="bb-card-desc">A bordered responsive band separating conversion copy and two actions.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-outlined-split-band-email.html">
+          <span class="bb-card-eyebrow">CTA 46</span>
+          <h3 class="bb-card-title">Outlined Split Band Email CTA</h3>
+          <p class="bb-card-desc">A bordered responsive band pairing concise copy with email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-photo-split-band-actions.html">
+          <span class="bb-card-eyebrow">CTA 47</span>
+          <h3 class="bb-card-title">Photo Split Band Actions CTA</h3>
+          <p class="bb-card-desc">A compact split conversion band layered over real editorial photography.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-photo-split-band-email.html">
+          <span class="bb-card-eyebrow">CTA 48</span>
+          <h3 class="bb-card-title">Photo Split Band Email CTA</h3>
+          <p class="bb-card-desc">A compact photographic band with labeled, responsive email capture.</p>
+        </a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-inline-actions.html"><span class="bb-card-eyebrow">CTA 49</span><h3 class="bb-card-title">Contrast Inline Actions CTA</h3><p class="bb-card-desc">A high-contrast responsive band separating concise copy and two actions.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-contrast-split-email.html"><span class="bb-card-eyebrow">CTA 50</span><h3 class="bb-card-title">Contrast Split Email CTA</h3><p class="bb-card-desc">A high-contrast split band pairing focused copy with accessible email capture.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-outlined-centered-actions.html"><span class="bb-card-eyebrow">CTA 51</span><h3 class="bb-card-title">Outlined Centered Actions CTA</h3><p class="bb-card-desc">A restrained outlined container with centered copy and two clear actions.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-outlined-centered-email.html"><span class="bb-card-eyebrow">CTA 52</span><h3 class="bb-card-title">Outlined Centered Email CTA</h3><p class="bb-card-desc">A centered outlined conversion block with responsive email capture.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-photo-centered-actions.html"><span class="bb-card-eyebrow">CTA 53</span><h3 class="bb-card-title">Photo Centered Actions CTA</h3><p class="bb-card-desc">A centered action block layered over real architectural photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-photo-centered-email.html"><span class="bb-card-eyebrow">CTA 54</span><h3 class="bb-card-title">Photo Centered Email CTA</h3><p class="bb-card-desc">A centered email conversion block over real coastal photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-video-background-centered-actions.html"><span class="bb-card-eyebrow">CTA 55</span><h3 class="bb-card-title">Video Background Centered Actions CTA</h3><p class="bb-card-desc">A centered action block over real botanical motion with accessible playback control.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-video-background-centered-email.html"><span class="bb-card-eyebrow">CTA 56</span><h3 class="bb-card-title">Video Background Centered Email CTA</h3><p class="bb-card-desc">Accessible email capture layered over real botanical motion.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-focus-actions.html"><span class="bb-card-eyebrow">CTA 57</span><h3 class="bb-card-title">Centered Focus Actions CTA</h3><p class="bb-card-desc">A calm centered conversion section with two responsive destinations.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-centered-focus-email.html"><span class="bb-card-eyebrow">CTA 58</span><h3 class="bb-card-title">Centered Focus Email CTA</h3><p class="bb-card-desc">A calm centered conversion section with labeled email capture.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-split-photo-actions.html"><span class="bb-card-eyebrow">CTA 59</span><h3 class="bb-card-title">Split Photo Actions CTA</h3><p class="bb-card-desc">A two-column conversion block pairing actions with real studio photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="cta-split-photo-email.html"><span class="bb-card-eyebrow">CTA 60</span><h3 class="bb-card-title">Split Photo Email CTA</h3><p class="bb-card-desc">A two-column email conversion block paired with real coastal photography.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="features-title">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="features-title">Features</h2>
+        <p>Product-value sections combining clear hierarchy, real photography, and responsive Grid compositions.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="feature-split-copy-image.html"><span class="bb-card-eyebrow">Feature 1</span><h3 class="bb-card-title">Split Copy Image Feature</h3><p class="bb-card-desc">Structured value copy and three benefits paired with real studio photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-split-image-copy.html"><span class="bb-card-eyebrow">Feature 2</span><h3 class="bb-card-title">Split Image Copy Feature</h3><p class="bb-card-desc">A reverse split composition leading with real coastal photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-icon-grid.html"><span class="bb-card-eyebrow">Feature 3</span><h3 class="bb-card-title">Centered Icon Grid Feature</h3><p class="bb-card-desc">A centered introduction followed by three equal responsive benefit cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-split-heading-grid.html"><span class="bb-card-eyebrow">Feature 4</span><h3 class="bb-card-title">Split Heading Feature Grid</h3><p class="bb-card-desc">An editorial split heading above a structured two-by-two capability grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-media-top-columns.html"><span class="bb-card-eyebrow">Feature 5</span><h3 class="bb-card-title">Media Top Feature Columns</h3><p class="bb-card-desc">A wide real-world photograph followed by three concise product benefits.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-staggered-media-grid.html"><span class="bb-card-eyebrow">Feature 6</span><h3 class="bb-card-title">Staggered Media Feature Grid</h3><p class="bb-card-desc">A compact bento grid balancing contrast, supporting copy, and real photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-split-image-metrics.html"><span class="bb-card-eyebrow">Feature 7</span><h3 class="bb-card-title">Split Image Metrics Feature</h3><p class="bb-card-desc">Product copy and two proof points paired with real botanical photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-process-steps.html"><span class="bb-card-eyebrow">Feature 8</span><h3 class="bb-card-title">Process Steps Feature</h3><p class="bb-card-desc">A semantic four-step process that adapts from four columns to one.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-sidebar-checklist.html"><span class="bb-card-eyebrow">Feature 9</span><h3 class="bb-card-title">Sidebar Checklist Feature</h3><p class="bb-card-desc">A focused introduction beside four compact capability cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dual-media-stories.html"><span class="bb-card-eyebrow">Feature 10</span><h3 class="bb-card-title">Dual Media Stories Feature</h3><p class="bb-card-desc">Two equal product stories paired with real landscape photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-columns.html"><span class="bb-card-eyebrow">Feature 11</span><h3 class="bb-card-title">Contrast Columns Feature</h3><p class="bb-card-desc">A high-contrast statement followed by three responsive value columns.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-gallery-metrics.html"><span class="bb-card-eyebrow">Feature 12</span><h3 class="bb-card-title">Gallery Metrics Feature</h3><p class="bb-card-desc">Two real photographs and compact metrics in an editorial CSS Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-horizontal-capability-rail.html"><span class="bb-card-eyebrow">Feature 13</span><h3 class="bb-card-title">Horizontal Capability Rail Feature</h3><p class="bb-card-desc">A split heading followed by four responsive capability columns.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photo-quote.html"><span class="bb-card-eyebrow">Feature 14</span><h3 class="bb-card-title">Photo Quote Feature</h3><p class="bb-card-desc">Real architectural photography paired with a quote and proof points.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-layered-media-cards.html"><span class="bb-card-eyebrow">Feature 15</span><h3 class="bb-card-title">Layered Media Cards Feature</h3><p class="bb-card-desc">A compact bento grid balancing photographs and value cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-comparison-grid.html"><span class="bb-card-eyebrow">Feature 16</span><h3 class="bb-card-title">Comparison Grid Feature</h3><p class="bb-card-desc">A semantic comparison of ad hoc work and a shared product system.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-six-tile-grid.html"><span class="bb-card-eyebrow">Feature 17</span><h3 class="bb-card-title">Six Tile Grid Feature</h3><p class="bb-card-desc">Six compact capability tiles in a dense responsive CSS Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photo-overlay-panel.html"><span class="bb-card-eyebrow">Feature 18</span><h3 class="bb-card-title">Photo Overlay Panel Feature</h3><p class="bb-card-desc">A landscape photograph and readable surface panel layered with CSS Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-alternating-story-rows.html"><span class="bb-card-eyebrow">Feature 19</span><h3 class="bb-card-title">Alternating Story Rows Feature</h3><p class="bb-card-desc">Three editorial rows alternate real photography and focused product value.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-indexed-detail-grid.html"><span class="bb-card-eyebrow">Feature 20</span><h3 class="bb-card-title">Indexed Detail Grid Feature</h3><p class="bb-card-desc">A stable introduction paired with three structured indexed detail cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-stat-stack.html"><span class="bb-card-eyebrow">Feature 21</span><h3 class="bb-card-title">Image Stat Stack Feature</h3><p class="bb-card-desc">Coastal photography paired with concise copy and three proof points.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-metrics-band.html"><span class="bb-card-eyebrow">Feature 22</span><h3 class="bb-card-title">Contrast Metrics Band Feature</h3><p class="bb-card-desc">A high-contrast statement followed by four responsive system metrics.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-triptych.html"><span class="bb-card-eyebrow">Feature 23</span><h3 class="bb-card-title">Editorial Triptych Feature</h3><p class="bb-card-desc">Two real photographs balance a high-contrast statement in three columns.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photo-disclosure-list.html"><span class="bb-card-eyebrow">Feature 24</span><h3 class="bb-card-title">Photo Disclosure List Feature</h3><p class="bb-card-desc">Real architecture paired with accessible native feature disclosures.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-tabbed-media-showcase.html"><span class="bb-card-eyebrow">Feature 25</span><h3 class="bb-card-title">Tabbed Media Showcase Feature</h3><p class="bb-card-desc">Accessible tabs switch between three real-world product stories.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-timeline-media.html"><span class="bb-card-eyebrow">Feature 26</span><h3 class="bb-card-title">Timeline Media Feature</h3><p class="bb-card-desc">Portrait studio photography anchors a structured four-stage timeline.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-mosaic.html"><span class="bb-card-eyebrow">Feature 27</span><h3 class="bb-card-title">Capability Mosaic Feature</h3><p class="bb-card-desc">Five capability cards use deliberate one-, two-, and three-column spans.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-split-contrast-checklist.html"><span class="bb-card-eyebrow">Feature 28</span><h3 class="bb-card-title">Split Contrast Checklist Feature</h3><p class="bb-card-desc">A dark product statement and light checklist share one responsive Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-architecture-layers.html"><span class="bb-card-eyebrow">Feature 29</span><h3 class="bb-card-title">Architecture Layers Feature</h3><p class="bb-card-desc">Three semantic layers explain foundation, components, and patterns.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-gallery-quote-rail.html"><span class="bb-card-eyebrow">Feature 30</span><h3 class="bb-card-title">Gallery Quote Rail Feature</h3><p class="bb-card-desc">Two real photographs frame a compact product principle.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-panorama-capability-deck.html"><span class="bb-card-eyebrow">Feature 31</span><h3 class="bb-card-title">Panorama Capability Deck Feature</h3><p class="bb-card-desc">A broad architectural photograph introduces three concise capability cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-split-statement-metrics.html"><span class="bb-card-eyebrow">Feature 32</span><h3 class="bb-card-title">Split Statement Metrics Feature</h3><p class="bb-card-desc">An accent statement shares a balanced split composition with four metrics.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-disclosure-aside.html"><span class="bb-card-eyebrow">Feature 33</span><h3 class="bb-card-title">Image Disclosure Aside Feature</h3><p class="bb-card-desc">Portrait photography anchors three accessible native disclosures.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-product-pillars.html"><span class="bb-card-eyebrow">Feature 34</span><h3 class="bb-card-title">Product Pillars Feature</h3><p class="bb-card-desc">Three equal pillars connect system responsibilities to concrete outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-media-evidence-grid.html"><span class="bb-card-eyebrow">Feature 35</span><h3 class="bb-card-title">Media Evidence Grid Feature</h3><p class="bb-card-desc">Photography and measured proof alternate in an editorial two-column Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-adoption-sequence.html"><span class="bb-card-eyebrow">Feature 36</span><h3 class="bb-card-title">Adoption Sequence Feature</h3><p class="bb-card-desc">A photographic introduction sits beside four practical adoption stages.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-chapter-index.html"><span class="bb-card-eyebrow">Feature 37</span><h3 class="bb-card-title">Editorial Chapter Index Feature</h3><p class="bb-card-desc">A stable introduction orients three structured product chapters.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-media-story-mosaic.html"><span class="bb-card-eyebrow">Feature 38</span><h3 class="bb-card-title">Media Story Mosaic Feature</h3><p class="bb-card-desc">Two photographs and two narratives form an asymmetric twelve-column mosaic.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-outcome-comparison.html"><span class="bb-card-eyebrow">Feature 39</span><h3 class="bb-card-title">Outcome Comparison Feature</h3><p class="bb-card-desc">Four responsive rows contrast fragmented work with shared outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-delivery-steps.html"><span class="bb-card-eyebrow">Feature 40</span><h3 class="bb-card-title">Centered Delivery Steps Feature</h3><p class="bb-card-desc">A centered introduction leads into four equal product delivery stages.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-quote-proof-split.html"><span class="bb-card-eyebrow">Feature 41</span><h3 class="bb-card-title">Quote Proof Split Feature</h3><p class="bb-card-desc">A dark photographic story shares a balanced split with three proof metrics.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-media-matrix.html"><span class="bb-card-eyebrow">Feature 42</span><h3 class="bb-card-title">Centered Media Matrix Feature</h3><p class="bb-card-desc">A central portrait image separates two pairs of capability cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-metric-chapters.html"><span class="bb-card-eyebrow">Feature 43</span><h3 class="bb-card-title">Metric Chapters Feature</h3><p class="bb-card-desc">Three product narratives pair directly with prominent outcome metrics.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-twin-media-briefs.html"><span class="bb-card-eyebrow">Feature 44</span><h3 class="bb-card-title">Twin Media Briefs Feature</h3><p class="bb-card-desc">Two photographic briefs combine focused copy and practical outcome lists.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-ledger.html"><span class="bb-card-eyebrow">Feature 45</span><h3 class="bb-card-title">Capability Ledger Feature</h3><p class="bb-card-desc">Six compact rows form a dense alternative to a conventional card grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-media-bento.html"><span class="bb-card-eyebrow">Feature 46</span><h3 class="bb-card-title">Contrast Media Bento Feature</h3><p class="bb-card-desc">A tall photograph balances two contrasting product-value surfaces.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-quote-evidence-band.html"><span class="bb-card-eyebrow">Feature 47</span><h3 class="bb-card-title">Quote Evidence Band Feature</h3><p class="bb-card-desc">A centered customer quote leads into three equal proof columns.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-process-ribbon.html"><span class="bb-card-eyebrow">Feature 48</span><h3 class="bb-card-title">Image Process Ribbon Feature</h3><p class="bb-card-desc">A panoramic photograph introduces four connected delivery stages.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photographic-story-rail.html"><span class="bb-card-eyebrow">Feature 49</span><h3 class="bb-card-title">Photographic Story Rail Feature</h3><p class="bb-card-desc">Three real photographs introduce related product stories.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-checkerboard.html"><span class="bb-card-eyebrow">Feature 50</span><h3 class="bb-card-title">Capability Checkerboard Feature</h3><p class="bb-card-desc">Four high-contrast capability surfaces form a responsive checkerboard.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-metric-aside.html"><span class="bb-card-eyebrow">Feature 51</span><h3 class="bb-card-title">Image Metric Aside Feature</h3><p class="bb-card-desc">Three measured outcomes sit beside real portrait photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-indexed-story-stack.html"><span class="bb-card-eyebrow">Feature 52</span><h3 class="bb-card-title">Indexed Story Stack Feature</h3><p class="bb-card-desc">Three indexed rows connect narratives with concise proof points.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-proof-grid.html"><span class="bb-card-eyebrow">Feature 53</span><h3 class="bb-card-title">Centered Proof Grid Feature</h3><p class="bb-card-desc">Six compact proof cards follow a centered introduction.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-asymmetric-media-statement.html"><span class="bb-card-eyebrow">Feature 54</span><h3 class="bb-card-title">Asymmetric Media Statement Feature</h3><p class="bb-card-desc">A wide photograph balances a dark statement and two supporting cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-media-annotation-board.html"><span class="bb-card-eyebrow">Feature 55</span><h3 class="bb-card-title">Media Annotation Board Feature</h3><p class="bb-card-desc">A dominant photograph is explained by four compact annotations.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-alternating-story-pairs.html"><span class="bb-card-eyebrow">Feature 56</span><h3 class="bb-card-title">Alternating Story Pairs Feature</h3><p class="bb-card-desc">Three editorial rows alternate focused copy and real photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-signal-comparison-grid.html"><span class="bb-card-eyebrow">Feature 57</span><h3 class="bb-card-title">Signal Comparison Grid Feature</h3><p class="bb-card-desc">Six cards compare fragmented signals with system-level outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-quote-metric-mosaic.html"><span class="bb-card-eyebrow">Feature 58</span><h3 class="bb-card-title">Quote Metric Mosaic Feature</h3><p class="bb-card-desc">A large testimonial balances four compact outcome cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-sequence-band.html"><span class="bb-card-eyebrow">Feature 59</span><h3 class="bb-card-title">Capability Sequence Band Feature</h3><p class="bb-card-desc">Five connected capability stages form a continuous horizontal band.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dual-photo-manifesto.html"><span class="bb-card-eyebrow">Feature 60</span><h3 class="bb-card-title">Dual Photo Manifesto Feature</h3><p class="bb-card-desc">Two differently proportioned photographs frame a product manifesto.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-side-notes.html"><span class="bb-card-eyebrow">Feature 61</span><h3 class="bb-card-title">Editorial Side Notes Feature</h3><p class="bb-card-desc">A wide photograph pairs with three compact editorial notes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-metric-timeline.html"><span class="bb-card-eyebrow">Feature 62</span><h3 class="bb-card-title">Metric Timeline Feature</h3><p class="bb-card-desc">Four measured stages form a responsive maturity timeline.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-story-triptych.html"><span class="bb-card-eyebrow">Feature 63</span><h3 class="bb-card-title">Contrast Story Triptych Feature</h3><p class="bb-card-desc">A principle card, photograph, and outcome card form a triptych.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photo-quote-ledger.html"><span class="bb-card-eyebrow">Feature 64</span><h3 class="bb-card-title">Photo Quote Ledger Feature</h3><p class="bb-card-desc">Portrait photography balances a quote and evidence ledger.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-comparison-matrix.html"><span class="bb-card-eyebrow">Feature 65</span><h3 class="bb-card-title">Capability Comparison Matrix Feature</h3><p class="bb-card-desc">Three rows compare local work with shared system outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-panorama-proof-footer.html"><span class="bb-card-eyebrow">Feature 66</span><h3 class="bb-card-title">Panorama Proof Footer Feature</h3><p class="bb-card-desc">A wide landscape photograph leads into four proof cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-modular-spec-sheet.html"><span class="bb-card-eyebrow">Feature 67</span><h3 class="bb-card-title">Modular Spec Sheet Feature</h3><p class="bb-card-desc">A dark summary panel sits beside four capability rows.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-staggered-photo-notes.html"><span class="bb-card-eyebrow">Feature 68</span><h3 class="bb-card-title">Staggered Photo Notes Feature</h3><p class="bb-card-desc">Three real photographs descend across an editorial gallery.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-layered-value-stack.html"><span class="bb-card-eyebrow">Feature 69</span><h3 class="bb-card-title">Layered Value Stack Feature</h3><p class="bb-card-desc">Four increasingly prominent layers explain compounding value.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-metric-spotlight.html"><span class="bb-card-eyebrow">Feature 70</span><h3 class="bb-card-title">Contrast Metric Spotlight Feature</h3><p class="bb-card-desc">A dark primary metric balances four supporting proof cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-quote-columns.html"><span class="bb-card-eyebrow">Feature 71</span><h3 class="bb-card-title">Editorial Quote Columns Feature</h3><p class="bb-card-desc">A large testimonial sits beside two product stories.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-capability-dock.html"><span class="bb-card-eyebrow">Feature 72</span><h3 class="bb-card-title">Image Capability Dock Feature</h3><p class="bb-card-desc">A wide photograph anchors five compact capability cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-command-center-overview.html"><span class="bb-card-eyebrow">Feature 73</span><h3 class="bb-card-title">Command Center Overview Feature</h3><p class="bb-card-desc">A large operating principle balances four system health metrics.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dual-image-evidence.html"><span class="bb-card-eyebrow">Feature 74</span><h3 class="bb-card-title">Dual Image Evidence Feature</h3><p class="bb-card-desc">Two photographs balance three compact proof cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-indexed-capability-rail.html"><span class="bb-card-eyebrow">Feature 75</span><h3 class="bb-card-title">Indexed Capability Rail Feature</h3><p class="bb-card-desc">Six connected capability cards form an indexed rail.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dark-photo-manifesto.html"><span class="bb-card-eyebrow">Feature 76</span><h3 class="bb-card-title">Dark Photo Manifesto Feature</h3><p class="bb-card-desc">A dark manifesto balances photography and proof cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-process-satellites.html"><span class="bb-card-eyebrow">Feature 77</span><h3 class="bb-card-title">Centered Process Satellites Feature</h3><p class="bb-card-desc">A centered process core is surrounded by four responsibilities.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-proof-staircase.html"><span class="bb-card-eyebrow">Feature 78</span><h3 class="bb-card-title">Proof Staircase Feature</h3><p class="bb-card-desc">Four increasingly prominent proof steps form a staircase.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-evidence-photo-quadrants.html"><span class="bb-card-eyebrow">Feature 79</span><h3 class="bb-card-title">Evidence Photo Quadrants Feature</h3><p class="bb-card-desc">An editorial photograph anchors four compact proof quadrants.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-process-evidence-table.html"><span class="bb-card-eyebrow">Feature 80</span><h3 class="bb-card-title">Process Evidence Table Feature</h3><p class="bb-card-desc">Delivery stages align actions with visible evidence.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-numbered-bento.html"><span class="bb-card-eyebrow">Feature 81</span><h3 class="bb-card-title">Contrast Numbered Bento Feature</h3><p class="bb-card-desc">A high-contrast lead card defines an asymmetric numbered Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-statement-strip.html"><span class="bb-card-eyebrow">Feature 82</span><h3 class="bb-card-title">Image Statement Strip Feature</h3><p class="bb-card-desc">Panoramic media leads into a structured value strip.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-metric-constellation.html"><span class="bb-card-eyebrow">Feature 83</span><h3 class="bb-card-title">Centered Metric Constellation Feature</h3><p class="bb-card-desc">One outcome sits at the center of four supporting signals.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dual-column-capability-log.html"><span class="bb-card-eyebrow">Feature 84</span><h3 class="bb-card-title">Dual Column Capability Log Feature</h3><p class="bb-card-desc">Parallel logs compare foundations and delivery guarantees.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-capability-directory.html"><span class="bb-card-eyebrow">Feature 85</span><h3 class="bb-card-title">Editorial Capability Directory Feature</h3><p class="bb-card-desc">A strong statement leads into five indexed capability rows.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photo-metric-scoreboard.html"><span class="bb-card-eyebrow">Feature 86</span><h3 class="bb-card-title">Photo Metric Scoreboard Feature</h3><p class="bb-card-desc">Editorial photography balances a measurable product scoreboard.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-alternating-evidence-bands.html"><span class="bb-card-eyebrow">Feature 87</span><h3 class="bb-card-title">Alternating Evidence Bands Feature</h3><p class="bb-card-desc">Three bands connect practices with effects and signals.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dual-story-windows.html"><span class="bb-card-eyebrow">Feature 88</span><h3 class="bb-card-title">Dual Story Windows Feature</h3><p class="bb-card-desc">Two editorial windows separate foundation and delivery stories.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-outcome-ledger.html"><span class="bb-card-eyebrow">Feature 89</span><h3 class="bb-card-title">Contrast Outcome Ledger Feature</h3><p class="bb-card-desc">A dark spotlight anchors four supporting signals.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-disclosure-media-workshop.html"><span class="bb-card-eyebrow">Feature 90</span><h3 class="bb-card-title">Disclosure Media Workshop Feature</h3><p class="bb-card-desc">Native disclosures sit beside a tall workshop image.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-annotated-image-registry.html"><span class="bb-card-eyebrow">Feature 91</span><h3 class="bb-card-title">Annotated Image Registry Feature</h3><p class="bb-card-desc">A dominant editorial image sits beside four indexed notes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-definition-evidence-ledger.html"><span class="bb-card-eyebrow">Feature 92</span><h3 class="bb-card-title">Definition Evidence Ledger Feature</h3><p class="bb-card-desc">Capabilities connect plain-language definitions with proof.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-photo-quote.html"><span class="bb-card-eyebrow">Feature 93</span><h3 class="bb-card-title">Contrast Photo Quote Feature</h3><p class="bb-card-desc">A dark editorial quote balances photography and metrics.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-process-handoff-map.html"><span class="bb-card-eyebrow">Feature 94</span><h3 class="bb-card-title">Process Handoff Map Feature</h3><p class="bb-card-desc">Four stages expose responsibilities and exit signals.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-image-chapters.html"><span class="bb-card-eyebrow">Feature 95</span><h3 class="bb-card-title">Editorial Image Chapters Feature</h3><p class="bb-card-desc">Two alternating chapters pair real photography with product stories.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-outcome-comparison-board.html"><span class="bb-card-eyebrow">Feature 96</span><h3 class="bb-card-title">Outcome Comparison Board Feature</h3><p class="bb-card-desc">A three-column board traces friction through Ren10 to outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-focus-rail.html"><span class="bb-card-eyebrow">Feature 97</span><h3 class="bb-card-title">Editorial Focus Rail Feature</h3><p class="bb-card-desc">An indexed rail supports one larger image-led focus story.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-metric-sentence-columns.html"><span class="bb-card-eyebrow">Feature 98</span><h3 class="bb-card-title">Metric Sentence Columns Feature</h3><p class="bb-card-desc">Large measures pair with full narrative product sentences.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-architecture-layers.html"><span class="bb-card-eyebrow">Feature 99</span><h3 class="bb-card-title">Contrast Architecture Layers Feature</h3><p class="bb-card-desc">Four inset layers explain the system architecture.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-centered-operating-principle.html"><span class="bb-card-eyebrow">Feature 100</span><h3 class="bb-card-title">Centered Operating Principle Feature</h3><p class="bb-card-desc">A central principle is translated through four supporting pillars.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-panorama-evidence-ledger.html"><span class="bb-card-eyebrow">Feature 101</span><h3 class="bb-card-title">Panorama Evidence Ledger Feature</h3><p class="bb-card-desc">A wide panorama leads into four evidence rows.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-decision-tree.html"><span class="bb-card-eyebrow">Feature 102</span><h3 class="bb-card-title">Capability Decision Tree Feature</h3><p class="bb-card-desc">One product question branches into four practical outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-taxonomy-index.html"><span class="bb-card-eyebrow">Feature 103</span><h3 class="bb-card-title">Capability Taxonomy Index Feature</h3><p class="bb-card-desc">A compact taxonomy supports four fuller definitions.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-panorama-proof-rail.html"><span class="bb-card-eyebrow">Feature 104</span><h3 class="bb-card-title">Panorama Proof Rail Feature</h3><p class="bb-card-desc">A panoramic image anchors three raised proof cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-maturity-ladder.html"><span class="bb-card-eyebrow">Feature 105</span><h3 class="bb-card-title">Contrast Maturity Ladder Feature</h3><p class="bb-card-desc">Five dark stages form an ascending maturity ladder.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-split-metric-transcript.html"><span class="bb-card-eyebrow">Feature 106</span><h3 class="bb-card-title">Split Metric Transcript Feature</h3><p class="bb-card-desc">A dominant metric is explained through four transcript rows.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-twin-operating-models.html"><span class="bb-card-eyebrow">Feature 107</span><h3 class="bb-card-title">Twin Operating Models Feature</h3><p class="bb-card-desc">Foundation and delivery models share a comparable rhythm.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-operating-glossary-disclosures.html"><span class="bb-card-eyebrow">Feature 108</span><h3 class="bb-card-title">Operating Glossary Disclosures Feature</h3><p class="bb-card-desc">Four native disclosures explain the operating language.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-editorial-chapter-roster.html"><span class="bb-card-eyebrow">Feature 109</span><h3 class="bb-card-title">Editorial Chapter Roster Feature</h3><p class="bb-card-desc">Six ordered rows create a continuous editorial roster.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-photo-quote-footnotes.html"><span class="bb-card-eyebrow">Feature 110</span><h3 class="bb-card-title">Photo Quote Footnotes Feature</h3><p class="bb-card-desc">A photograph and large quote lead into three footnotes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-evidence-columns.html"><span class="bb-card-eyebrow">Feature 111</span><h3 class="bb-card-title">Contrast Evidence Columns Feature</h3><p class="bb-card-desc">Four ascending dark columns connect measures to evidence.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-delivery-compass.html"><span class="bb-card-eyebrow">Feature 112</span><h3 class="bb-card-title">Delivery Compass Feature</h3><p class="bb-card-desc">Four responsibilities orient one central delivery outcome.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-scorecard.html"><span class="bb-card-eyebrow">Feature 113</span><h3 class="bb-card-title">Capability Scorecard Feature</h3><p class="bb-card-desc">Capabilities align with observable signals and measures.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-definition-practice-pairs.html"><span class="bb-card-eyebrow">Feature 114</span><h3 class="bb-card-title">Definition Practice Pairs Feature</h3><p class="bb-card-desc">Three paired rows connect definitions with product actions.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-image-marginalia.html"><span class="bb-card-eyebrow">Feature 115</span><h3 class="bb-card-title">Image Marginalia Feature</h3><p class="bb-card-desc">A central editorial image is framed by four marginal notes.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-contrast-standards-ledger.html"><span class="bb-card-eyebrow">Feature 116</span><h3 class="bb-card-title">Contrast Standards Ledger Feature</h3><p class="bb-card-desc">Five dark rows connect standards with visible evidence.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-capability-cascade.html"><span class="bb-card-eyebrow">Feature 117</span><h3 class="bb-card-title">Capability Cascade Feature</h3><p class="bb-card-desc">Four staggered cards show compounding capabilities.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-metric-narrative-quartet.html"><span class="bb-card-eyebrow">Feature 118</span><h3 class="bb-card-title">Metric Narrative Quartet Feature</h3><p class="bb-card-desc">Four measures balance outcome narratives in a quartet.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-dual-photo-evidence-strip.html"><span class="bb-card-eyebrow">Feature 119</span><h3 class="bb-card-title">Dual Photo Evidence Strip Feature</h3><p class="bb-card-desc">Two real photographs lead into three proof cells.</p></a>
+        <a class="bb-card ren-stack-sm" href="feature-system-operating-matrix.html"><span class="bb-card-eyebrow">Feature 120</span><h3 class="bb-card-title">System Operating Matrix Feature</h3><p class="bb-card-desc">One core principle anchors five system responsibilities.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="faq-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="faq-blocks">FAQs</h2>
+        <p>Support sections using native disclosures, responsive Grid compositions, and consistent spacing.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="faq-centered-accordion.html"><span class="bb-card-eyebrow">FAQ 1</span><h3 class="bb-card-title">Centered Accordion FAQ</h3><p class="bb-card-desc">A centered introduction and focused single-open disclosure list.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-split-heading-accordion.html"><span class="bb-card-eyebrow">FAQ 2</span><h3 class="bb-card-title">Split Heading Accordion FAQ</h3><p class="bb-card-desc">Orientation copy and implementation answers share a responsive two-column Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-two-column-groups.html"><span class="bb-card-eyebrow">FAQ 3</span><h3 class="bb-card-title">Two Column Groups FAQ</h3><p class="bb-card-desc">Independent disclosure groups create a denser desktop support section.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-category-cards.html"><span class="bb-card-eyebrow">FAQ 4</span><h3 class="bb-card-title">Category Cards FAQ</h3><p class="bb-card-desc">Separate card surfaces organize product and delivery questions.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-contrast-split.html"><span class="bb-card-eyebrow">FAQ 5</span><h3 class="bb-card-title">Contrast Split FAQ</h3><p class="bb-card-desc">A high-contrast split layout gives technical answers stronger presence.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-support-aside.html"><span class="bb-card-eyebrow">FAQ 6</span><h3 class="bb-card-title">Support Aside FAQ</h3><p class="bb-card-desc">A visible support destination sits beside the accessible FAQ list.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-indexed-editorial-list.html"><span class="bb-card-eyebrow">FAQ 7</span><h3 class="bb-card-title">Indexed Editorial FAQ</h3><p class="bb-card-desc">Numbered disclosure rows create a clear reading order for longer answer sets.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-proof-split.html"><span class="bb-card-eyebrow">FAQ 8</span><h3 class="bb-card-title">Proof Split FAQ</h3><p class="bb-card-desc">Product signals and accessible answers share a balanced responsive Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-accent-panel.html"><span class="bb-card-eyebrow">FAQ 9</span><h3 class="bb-card-title">Accent Panel FAQ</h3><p class="bb-card-desc">A strong orientation panel sits beside a neutral disclosure column.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-support-band.html"><span class="bb-card-eyebrow">FAQ 10</span><h3 class="bb-card-title">Support Band FAQ</h3><p class="bb-card-desc">A focused answer list ends with one calm documentation action.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-multiple-open.html"><span class="bb-card-eyebrow">FAQ 11</span><h3 class="bb-card-title">Multiple Open FAQ</h3><p class="bb-card-desc">Related system layers remain open when readers need to compare them.</p></a>
+        <a class="bb-card ren-stack-sm" href="faq-category-directory.html"><span class="bb-card-eyebrow">FAQ 12</span><h3 class="bb-card-title">Category Directory FAQ</h3><p class="bb-card-desc">Three compact categories form a responsive support directory.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="testimonial-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="testimonial-blocks">Testimonials</h2>
+        <p>Customer proof sections combining semantic quotations, real photography, and clear attribution.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="testimonial-centered-statement.html"><span class="bb-card-eyebrow">Testimonial 1</span><h3 class="bb-card-title">Centered Statement Testimonial</h3><p class="bb-card-desc">One high-confidence quote receives a spacious centered composition.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-split-photo-story.html"><span class="bb-card-eyebrow">Testimonial 2</span><h3 class="bb-card-title">Split Photo Story Testimonial</h3><p class="bb-card-desc">A real studio photograph and customer story share a responsive Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-three-card-grid.html"><span class="bb-card-eyebrow">Testimonial 3</span><h3 class="bb-card-title">Three Card Grid Testimonial</h3><p class="bb-card-desc">Three concise customer perspectives form a balanced proof row.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-contrast-metrics.html"><span class="bb-card-eyebrow">Testimonial 4</span><h3 class="bb-card-title">Contrast Metrics Testimonial</h3><p class="bb-card-desc">A high-contrast story connects customer language with measurable outcomes.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-editorial-photo-case.html"><span class="bb-card-eyebrow">Testimonial 5</span><h3 class="bb-card-title">Editorial Photo Case Testimonial</h3><p class="bb-card-desc">A landscape photograph gives a spacious customer case real context.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-editorial-mosaic.html"><span class="bb-card-eyebrow">Testimonial 6</span><h3 class="bb-card-title">Editorial Mosaic Testimonial</h3><p class="bb-card-desc">One lead voice and two supporting perspectives create an asymmetric Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-logo-rail-statement.html"><span class="bb-card-eyebrow">Testimonial 7</span><h3 class="bb-card-title">Logo Rail Statement Testimonial</h3><p class="bb-card-desc">A customer rail establishes breadth before one centered proof story.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-dual-perspectives.html"><span class="bb-card-eyebrow">Testimonial 8</span><h3 class="bb-card-title">Dual Perspectives Testimonial</h3><p class="bb-card-desc">Design and engineering describe the same system from complementary angles.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-photo-overlay.html"><span class="bb-card-eyebrow">Testimonial 9</span><h3 class="bb-card-title">Photo Overlay Testimonial</h3><p class="bb-card-desc">A real landscape photograph supports a high-contrast customer statement.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-customer-journey.html"><span class="bb-card-eyebrow">Testimonial 10</span><h3 class="bb-card-title">Customer Journey Testimonial</h3><p class="bb-card-desc">One quote connects directly to three observable adoption stages.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-proof-aside.html"><span class="bb-card-eyebrow">Testimonial 11</span><h3 class="bb-card-title">Proof Aside Testimonial</h3><p class="bb-card-desc">A large customer voice balances four compact evidence cells.</p></a>
+        <a class="bb-card ren-stack-sm" href="testimonial-asymmetric-wall.html"><span class="bb-card-eyebrow">Testimonial 12</span><h3 class="bb-card-title">Asymmetric Wall Testimonial</h3><p class="bb-card-desc">One dominant quote and three supporting voices create a varied proof wall.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="footer-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="footer-blocks">Footers</h2>
+        <p>Responsive closing sections with clear navigation landmarks, useful hierarchy, and accessible conversion paths.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="footer-compact-brand-links.html"><span class="bb-card-eyebrow">Footer 1</span><h3 class="bb-card-title">Compact Brand Links Footer</h3><p class="bb-card-desc">A calm two-zone footer for smaller sites and essential destinations.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-multi-column-directory.html"><span class="bb-card-eyebrow">Footer 2</span><h3 class="bb-card-title">Multi Column Directory Footer</h3><p class="bb-card-desc">Brand context and three clearly labeled navigation groups.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-newsletter-directory.html"><span class="bb-card-eyebrow">Footer 3</span><h3 class="bb-card-title">Newsletter Directory Footer</h3><p class="bb-card-desc">Accessible subscription capture followed by compact utilities.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-contrast-statement.html"><span class="bb-card-eyebrow">Footer 4</span><h3 class="bb-card-title">Contrast Statement Footer</h3><p class="bb-card-desc">A high-confidence statement with two clearly contrasted actions.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-split-contact.html"><span class="bb-card-eyebrow">Footer 5</span><h3 class="bb-card-title">Split Contact Footer</h3><p class="bb-card-desc">Direct support and partnership routes beside the brand statement.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-product-sitemap.html"><span class="bb-card-eyebrow">Footer 6</span><h3 class="bb-card-title">Product Sitemap Footer</h3><p class="bb-card-desc">A complete information architecture with stable group labels.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-editorial-wordmark.html"><span class="bb-card-eyebrow">Footer 7</span><h3 class="bb-card-title">Editorial Wordmark Footer</h3><p class="bb-card-desc">An expressive identity balanced by a restrained directory.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-social-proof.html"><span class="bb-card-eyebrow">Footer 8</span><h3 class="bb-card-title">Social Proof Footer</h3><p class="bb-card-desc">A proof statement and customer rail above compact utilities.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-cta-band.html"><span class="bb-card-eyebrow">Footer 9</span><h3 class="bb-card-title">CTA Band Footer</h3><p class="bb-card-desc">A distinct conversion band and concise four-column directory.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-legal-directory.html"><span class="bb-card-eyebrow">Footer 10</span><h3 class="bb-card-title">Legal Directory Footer</h3><p class="bb-card-desc">Policies, agreements, and regional information organized clearly.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-minimal-centered.html"><span class="bb-card-eyebrow">Footer 11</span><h3 class="bb-card-title">Minimal Centered Footer</h3><p class="bb-card-desc">A focused identity and four essential destinations.</p></a>
+        <a class="bb-card ren-stack-sm" href="footer-product-ecosystem.html"><span class="bb-card-eyebrow">Footer 12</span><h3 class="bb-card-title">Product Ecosystem Footer</h3><p class="bb-card-desc">Product families and developer resources in high contrast.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="application-shell-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="application-shell-blocks">Application Shells</h2>
+        <p>Responsive product frames for dashboards, workspaces, data, planning, and focused operational tasks.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="application-shell-sidebar-dashboard.html"><span class="bb-card-eyebrow">Application shell 1</span><h3 class="bb-card-title">Sidebar Dashboard Application Shell</h3><p class="bb-card-desc">Persistent navigation and a fluid metrics workspace.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-topbar-workspace.html"><span class="bb-card-eyebrow">Application shell 2</span><h3 class="bb-card-title">Topbar Workspace Application Shell</h3><p class="bb-card-desc">A horizontal product frame with lightweight project navigation.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-compact-rail-analytics.html"><span class="bb-card-eyebrow">Application shell 3</span><h3 class="bb-card-title">Compact Rail Analytics Application Shell</h3><p class="bb-card-desc">An accessible icon rail leaves more room for reporting.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-split-pane-inbox.html"><span class="bb-card-eyebrow">Application shell 4</span><h3 class="bb-card-title">Split Pane Inbox Application Shell</h3><p class="bb-card-desc">A message index and readable detail pane without clipping.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-command-center.html"><span class="bb-card-eyebrow">Application shell 5</span><h3 class="bb-card-title">Command Center Application Shell</h3><p class="bb-card-desc">Search, navigation, and recent destinations in one focused surface.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-content-studio.html"><span class="bb-card-eyebrow">Application shell 6</span><h3 class="bb-card-title">Content Studio Application Shell</h3><p class="bb-card-desc">A document outline and centered authoring canvas.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-project-board.html"><span class="bb-card-eyebrow">Application shell 7</span><h3 class="bb-card-title">Project Board Application Shell</h3><p class="bb-card-desc">Three workflow columns with stable task alignment.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-settings.html"><span class="bb-card-eyebrow">Application shell 8</span><h3 class="bb-card-title">Settings Application Shell</h3><p class="bb-card-desc">Persistent settings navigation beside a labeled form.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-data-explorer.html"><span class="bb-card-eyebrow">Application shell 9</span><h3 class="bb-card-title">Data Explorer Application Shell</h3><p class="bb-card-desc">A semantic table contained safely on narrow screens.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-calendar-planner.html"><span class="bb-card-eyebrow">Application shell 10</span><h3 class="bb-card-title">Calendar Planner Application Shell</h3><p class="bb-card-desc">A weekly schedule that becomes a readable mobile Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-service-operations.html"><span class="bb-card-eyebrow">Application shell 11</span><h3 class="bb-card-title">Service Operations Application Shell</h3><p class="bb-card-desc">High-contrast status reporting with explicit language.</p></a>
+        <a class="bb-card ren-stack-sm" href="application-shell-team-directory.html"><span class="bb-card-eyebrow">Application shell 12</span><h3 class="bb-card-title">Team Directory Application Shell</h3><p class="bb-card-desc">Search and profile cards in a flexible directory Grid.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="contact-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="contact-blocks">Contact</h2>
+        <p>Accessible contact forms, direct support routes, and location directories composed with responsive Ren10 Grid primitives.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="contact-split-form-details.html"><span class="bb-card-eyebrow">Contact 1</span><h3 class="bb-card-title">Split Form Details Contact</h3><p class="bb-card-desc">Direct contact details remain visible beside a complete inquiry form.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-centered-form.html"><span class="bb-card-eyebrow">Contact 2</span><h3 class="bb-card-title">Centered Form Contact</h3><p class="bb-card-desc">A focused centered form keeps the complete inquiry path in one column.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-details-cards.html"><span class="bb-card-eyebrow">Contact 3</span><h3 class="bb-card-title">Details Cards Contact</h3><p class="bb-card-desc">Three clear cards route projects, support requests, and direct calls.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-photo-form.html"><span class="bb-card-eyebrow">Contact 4</span><h3 class="bb-card-title">Photo Form Contact</h3><p class="bb-card-desc">Real studio photography and an accessible form share a responsive Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-office-directory.html"><span class="bb-card-eyebrow">Contact 5</span><h3 class="bb-card-title">Office Directory Contact</h3><p class="bb-card-desc">Three regional offices preserve consistent contact hierarchy.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-support-routes.html"><span class="bb-card-eyebrow">Contact 6</span><h3 class="bb-card-title">Support Routes Contact</h3><p class="bb-card-desc">Support, sales, and documentation destinations stay explicit.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-contrast-form.html"><span class="bb-card-eyebrow">Contact 7</span><h3 class="bb-card-title">Contrast Form Contact</h3><p class="bb-card-desc">A high-contrast invitation pairs with a clear raised inquiry form.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-office-photo-details.html"><span class="bb-card-eyebrow">Contact 8</span><h3 class="bb-card-title">Office Photo Details Contact</h3><p class="bb-card-desc">Real photography anchors practical office and appointment details.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-sales-support-split.html"><span class="bb-card-eyebrow">Contact 9</span><h3 class="bb-card-title">Sales Support Split Contact</h3><p class="bb-card-desc">Sales and support routes stay distinct, explicit, and actionable.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-minimal-direct.html"><span class="bb-card-eyebrow">Contact 10</span><h3 class="bb-card-title">Minimal Direct Contact</h3><p class="bb-card-desc">A concise statement leads directly to email, phone, and availability.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-regional-directory.html"><span class="bb-card-eyebrow">Contact 11</span><h3 class="bb-card-title">Regional Directory Contact</h3><p class="bb-card-desc">Four regional teams share one consistent information hierarchy.</p></a>
+        <a class="bb-card ren-stack-sm" href="contact-hub-form-routes.html"><span class="bb-card-eyebrow">Contact 12</span><h3 class="bb-card-title">Hub Form Routes Contact</h3><p class="bb-card-desc">A complete form and direct routes create one flexible contact hub.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="pricing-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="pricing-blocks">Pricing</h2>
+        <p>Accessible plan comparisons, calculators, programs, and enterprise offers with transparent scope and terms.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="pricing-three-tier-cards.html"><span class="bb-card-eyebrow">Pricing 1</span><h3 class="bb-card-title">Three Tier Cards Pricing</h3><p class="bb-card-desc">Three comparable plans with an explicit recommendation.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-comparison-table.html"><span class="bb-card-eyebrow">Pricing 2</span><h3 class="bb-card-title">Comparison Table Pricing</h3><p class="bb-card-desc">A semantic feature table contained on narrow screens.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-featured-plan-split.html"><span class="bb-card-eyebrow">Pricing 3</span><h3 class="bb-card-title">Featured Plan Split Pricing</h3><p class="bb-card-desc">A focused promise beside one recommended plan.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-usage-calculator.html"><span class="bb-card-eyebrow">Pricing 4</span><h3 class="bb-card-title">Usage Calculator Pricing</h3><p class="bb-card-desc">Visible inputs explain how usage shapes the estimate.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-billing-period-toggle.html"><span class="bb-card-eyebrow">Pricing 5</span><h3 class="bb-card-title">Billing Period Toggle Pricing</h3><p class="bb-card-desc">Native radio controls set monthly or annual billing.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-enterprise-split.html"><span class="bb-card-eyebrow">Pricing 6</span><h3 class="bb-card-title">Enterprise Split Pricing</h3><p class="bb-card-desc">A high-contrast enterprise promise and concrete plan card.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-compact-plan-rows.html"><span class="bb-card-eyebrow">Pricing 7</span><h3 class="bb-card-title">Compact Plan Rows Pricing</h3><p class="bb-card-desc">Fast horizontal comparison without oversized cards.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-outcome-packages.html"><span class="bb-card-eyebrow">Pricing 8</span><h3 class="bb-card-title">Outcome Packages Pricing</h3><p class="bb-card-desc">Services framed by result, scope, and completion signal.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-modular-add-ons.html"><span class="bb-card-eyebrow">Pricing 9</span><h3 class="bb-card-title">Modular Add-ons Pricing</h3><p class="bb-card-desc">Optional capabilities with visible billing units.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-startup-program.html"><span class="bb-card-eyebrow">Pricing 10</span><h3 class="bb-card-title">Startup Program Pricing</h3><p class="bb-card-desc">Eligibility, discount, and duration shown before applying.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-single-plan-checklist.html"><span class="bb-card-eyebrow">Pricing 11</span><h3 class="bb-card-title">Single Plan Checklist Pricing</h3><p class="bb-card-desc">One complete plan with scope and terms together.</p></a>
+        <a class="bb-card ren-stack-sm" href="pricing-contrast-platform.html"><span class="bb-card-eyebrow">Pricing 12</span><h3 class="bb-card-title">Contrast Platform Pricing</h3><p class="bb-card-desc">A platform promise paired with a clear sales path.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="article-header-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="article-header-blocks">Blog / Article Headers</h2>
+        <p>Editorial entry points for essays, reports, series, and visual stories with consistent context, responsive Grid composition, and readable metadata.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="article-header-editorial-centered.html"><span class="bb-card-eyebrow">Article header 1</span><h3 class="bb-card-title">Editorial Centered Article Header</h3><p class="bb-card-desc">A quiet centered hierarchy for focused long-form reading.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-split-cover.html"><span class="bb-card-eyebrow">Article header 2</span><h3 class="bb-card-title">Split Cover Article Header</h3><p class="bb-card-desc">Editorial context and real photography share an equal Grid.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-panorama.html"><span class="bb-card-eyebrow">Article header 3</span><h3 class="bb-card-title">Panorama Article Header</h3><p class="bb-card-desc">A broad photograph follows a compact editorial introduction.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-author-feature.html"><span class="bb-card-eyebrow">Article header 4</span><h3 class="bb-card-title">Author Feature Article Header</h3><p class="bb-card-desc">Portrait-oriented photography makes authorship prominent.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-contrast-type.html"><span class="bb-card-eyebrow">Article header 5</span><h3 class="bb-card-title">Contrast Type Article Header</h3><p class="bb-card-desc">A high-contrast statement and compact chapter index.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-category-index.html"><span class="bb-card-eyebrow">Article header 6</span><h3 class="bb-card-title">Category Index Blog Header</h3><p class="bb-card-desc">Publication context and topic discovery share two columns.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-photo-overlay.html"><span class="bb-card-eyebrow">Article header 7</span><h3 class="bb-card-title">Photo Overlay Article Header</h3><p class="bb-card-desc">A readable story opening sits over real editorial photography.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-sidebar-summary.html"><span class="bb-card-eyebrow">Article header 8</span><h3 class="bb-card-title">Sidebar Summary Article Header</h3><p class="bb-card-desc">A reading guide complements the primary story introduction.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-numbered-series.html"><span class="bb-card-eyebrow">Article header 9</span><h3 class="bb-card-title">Numbered Series Article Header</h3><p class="bb-card-desc">Issue numbering and a series map establish sequence.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-magazine-mosaic.html"><span class="bb-card-eyebrow">Article header 10</span><h3 class="bb-card-title">Magazine Mosaic Article Header</h3><p class="bb-card-desc">A disciplined photo mosaic supports visual reporting.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-research-brief.html"><span class="bb-card-eyebrow">Article header 11</span><h3 class="bb-card-title">Research Brief Article Header</h3><p class="bb-card-desc">Study facts and authorship frame a formal report.</p></a>
+        <a class="bb-card ren-stack-sm" href="article-header-minimal-reading.html"><span class="bb-card-eyebrow">Article header 12</span><h3 class="bb-card-title">Minimal Reading Article Header</h3><p class="bb-card-desc">Type and rules alone prepare readers for long-form content.</p></a>
+      </div>
+    </section>
+    <section class="ren-stack bb-library-section" aria-labelledby="blog-content-blocks">
+      <div class="ren-stack-sm bb-section-intro">
+        <h2 id="blog-content-blocks">Blog / Article Content</h2>
+        <p>Editorial discovery, chronological feeds, issue rails, long-form reading, and archives built with semantic HTML and responsive Ren10 Grid composition.</p>
+      </div>
+      <div class="ren-grid">
+        <a class="bb-card ren-stack-sm" href="blog-featured-story-grid.html"><span class="bb-card-eyebrow">Blog content 1</span><h3 class="bb-card-title">Featured Story Grid</h3><p class="bb-card-desc">One lead report and three recent stories form a clear editorial hierarchy.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-category-card-grid.html"><span class="bb-card-eyebrow">Blog content 2</span><h3 class="bb-card-title">Category Card Grid</h3><p class="bb-card-desc">Explicit topics and aligned cards keep the complete collection discoverable.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-editorial-feed.html"><span class="bb-card-eyebrow">Blog content 3</span><h3 class="bb-card-title">Editorial Feed</h3><p class="bb-card-desc">Dates, summaries, and reading times align in a compact chronological list.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-featured-split-rail.html"><span class="bb-card-eyebrow">Blog content 4</span><h3 class="bb-card-title">Featured Split Rail</h3><p class="bb-card-desc">A photographic lead story balances a precisely indexed issue rail.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-article-toc-layout.html"><span class="bb-card-eyebrow">Blog content 5</span><h3 class="bb-card-title">Article TOC Layout</h3><p class="bb-card-desc">Readable long-form prose pairs with a stable in-page contents sidebar.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-archive-index.html"><span class="bb-card-eyebrow">Blog content 6</span><h3 class="bb-card-title">Archive Index</h3><p class="bb-card-desc">A complete year-grouped record preserves topics, titles, and dates.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-search-results.html"><span class="bb-card-eyebrow">Blog content 7</span><h3 class="bb-card-title">Editorial Search Results</h3><p class="bb-card-desc">A labeled query and structured results preserve dates, summaries, and reading time.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-author-profile-feed.html"><span class="bb-card-eyebrow">Blog content 8</span><h3 class="bb-card-title">Author Profile Feed</h3><p class="bb-card-desc">Contributor context and recent work form one coherent editorial archive.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-topic-landing.html"><span class="bb-card-eyebrow">Blog content 9</span><h3 class="bb-card-title">Topic Landing</h3><p class="bb-card-desc">A topic introduction, visual lead, and supporting stories create a useful destination.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-reading-series.html"><span class="bb-card-eyebrow">Blog content 10</span><h3 class="bb-card-title">Reading Series</h3><p class="bb-card-desc">A numbered sequence makes order, progress, and reading time explicit.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-related-stories-band.html"><span class="bb-card-eyebrow">Blog content 11</span><h3 class="bb-card-title">Related Stories Band</h3><p class="bb-card-desc">Three contextual next steps share a restrained supporting surface.</p></a>
+        <a class="bb-card ren-stack-sm" href="blog-article-closing-panel.html"><span class="bb-card-eyebrow">Blog content 12</span><h3 class="bb-card-title">Article Closing Panel</h3><p class="bb-card-desc">Conclusion, author, topics, and next story remain connected without competing.</p></a>
       </div>
     </section>
   </main>

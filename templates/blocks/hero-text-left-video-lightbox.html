@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Header Text Left Video Lightbox Block — Ren10 Templates</title>
+  <meta name="description" content="A split Ren10 hero header with two calls to action and an accessible video lightbox.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <script type="module" src="../../components/composites/ren-dialog/ren-dialog.js"></script>
+  <style>
+    .rh3-page-header {
+      padding-block: var(--space-8) var(--space-4);
+    }
+
+    .rh3-page-header h1 {
+      margin: var(--space-2) 0;
+      font-size: var(--text-3xl);
+    }
+
+    .rh3-page-header p {
+      max-width: var(--width-prose);
+      margin: 0;
+      color: var(--color-text-muted);
+    }
+
+    .rh3-preview {
+      overflow: clip;
+      background: var(--color-surface-raised);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+    }
+
+    .rh3-hero {
+      padding-block: var(--space-section-lg);
+    }
+
+    .rh3-layout {
+      --grid-gap: var(--space-10);
+      align-items: center;
+    }
+
+    .rh3-layout > * {
+      min-width: 0;
+    }
+
+    .rh3-copy {
+      --stack-gap: var(--space-4);
+    }
+
+    .rh3-copy h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 5vw, var(--text-6xl));
+      line-height: var(--leading-tight);
+      text-wrap: balance;
+    }
+
+    .rh3-lede {
+      max-width: 54ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+    }
+
+    .rh3-actions {
+      --cluster-gap: var(--space-3);
+      margin-block-start: var(--space-2);
+    }
+
+    .rh3-actions .ren-btn {
+      min-height: var(--touch-min);
+      text-decoration: none;
+    }
+
+    .rh3-media {
+      min-width: 0;
+    }
+
+    .rh3-frame {
+      position: relative;
+      background:
+        linear-gradient(135deg, var(--color-accent-subtle), var(--color-surface-sunken));
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .rh3-thumbnail {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .rh3-media-trigger {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      min-width: var(--touch-min);
+      min-height: var(--touch-min);
+      place-items: center;
+      color: var(--color-text);
+      text-decoration: none;
+      background: transparent;
+      border-radius: var(--radius-xl);
+    }
+
+    .rh3-media-trigger:hover .rh3-play {
+      transform: scale(1.06);
+    }
+
+    .rh3-media-trigger:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset-width);
+    }
+
+    .rh3-play {
+      display: grid;
+      width: var(--space-16);
+      height: var(--space-16);
+      place-items: center;
+      padding-inline-start: var(--space-1);
+      color: var(--color-text);
+      background: var(--color-surface-raised);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-lg);
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rh3-dialog {
+      --ren-dialog-width: var(--width-5xl);
+    }
+
+    .rh3-dialog .ren-dialog-header {
+      padding-block-end: var(--space-3);
+    }
+
+    .rh3-dialog .ren-dialog-close {
+      flex: 0 0 var(--touch-min);
+      width: var(--touch-min);
+      height: var(--touch-min);
+      font-size: var(--text-2xl);
+    }
+
+    .rh3-dialog .ren-dialog-body {
+      padding-block-start: var(--space-3);
+    }
+
+    .rh3-video-frame {
+      position: relative;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+    }
+
+    .rh3-video-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .rh3-video-loading {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh3-video-loading[hidden] {
+      display: none;
+    }
+
+    .rh3-fallback-video {
+      display: block;
+      width: 100%;
+      margin-block-start: var(--space-4);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border-strong);
+      border-radius: var(--radius-lg);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh3-play {
+        transition: none;
+      }
+
+      .rh3-media-trigger:hover .rh3-play {
+        transform: none;
+      }
+    }
+
+    @media (max-width: 47.999rem) {
+      .dx-nav-inner {
+        padding-inline: var(--space-4);
+      }
+
+      .dx-nav-actions {
+        display: none;
+      }
+
+      .dx-shell {
+        padding-inline: var(--space-4);
+      }
+
+      .rh3-hero {
+        padding-block: var(--space-section);
+      }
+
+      .rh3-copy h2 {
+        font-size: var(--text-4xl);
+      }
+
+      .rh3-layout {
+        --grid-gap: var(--space-8);
+        grid-template-columns: 1fr;
+      }
+
+      .rh3-actions > * {
+        flex: 1 1 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="ren-link-skip" href="#rh3-preview">Skip to header preview</a>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a class="dx-brand" href="../../docs/index.html" aria-label="Ren10 documentation home">
+        <span class="dx-brand-mark" aria-hidden="true">R</span>
+        <span>Ren10</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Text-left video lightbox</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 3 · Hero block</p>
+      <h1 class="bb-detail-title">Text-left video lightbox</h1>
+      <p class="bb-detail-description">A conversion-focused split hero with two actions and a keyboard-accessible video preview that opens in a responsive Ren10 dialog.</p>
+    </header>
+
+    <section id="rh3-preview" class="rh3-preview bb-detail-preview" data-rh3-root data-block-root aria-label="Header 3 preview">
+      <header class="rh3-hero" aria-labelledby="rh3-heading">
+        <div class="ren-center ren-center-wide">
+          <div class="rh3-layout ren-grid ren-grid-2">
+            <div class="rh3-copy ren-stack">
+              <p class="dx-kicker">Operational clarity</p>
+              <h2 id="rh3-heading">Turn every signal into confident action</h2>
+              <p class="rh3-lede">
+                Bring scattered decisions into one calm workspace, align the team around evidence,
+                and move from insight to delivery without losing context.
+              </p>
+              <div class="rh3-actions ren-cluster">
+                <a class="ren-btn ren-btn-primary" href="../../docs/getting-started.html">Start exploring</a>
+                <a class="ren-btn ren-btn-secondary" href="../../docs/components.html">View capabilities</a>
+              </div>
+            </div>
+
+            <div class="rh3-media">
+              <div class="rh3-frame ren-frame ren-frame-video">
+<img
+                  class="rh3-thumbnail"
+                  src="media/hero-coastal-pavilion.webp"
+                  alt=""
+                  width="1751"
+                  height="898"
+                  decoding="async"
+                >
+                <a
+                  class="rh3-media-trigger"
+                  href="#rh3-video-fallback"
+                  aria-label="Play the Ren10 product overview video"
+                  data-dialog-trigger="rh3-video"
+                >
+                  <span class="rh3-play" aria-hidden="true">&#9654;</span>
+                </a>
+              </div>
+              <noscript>
+                <video
+                  id="rh3-video-fallback"
+                  class="rh3-fallback-video"
+                  controls
+                  preload="metadata"
+                  aria-label="Ren10 product overview video"
+                >
+                  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm">
+                  <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+                  <a href="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Open the product overview video</a>
+                </video>
+              </noscript>
+            </div>
+          </div>
+        </div>
+      </header>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-email-form-media-right.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Split email signup with media</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-split-email-video-lightbox.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split email signup with video lightbox</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <ren-dialog id="rh3-video" class="rh3-dialog" size="xl">
+    <dialog aria-busy="false">
+      <div class="ren-dialog-header">
+        <h2 class="ren-dialog-title">Ren10 product overview</h2>
+        <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close video">&times;</button>
+      </div>
+      <div class="ren-dialog-body">
+        <div class="rh3-video-frame ren-frame ren-frame-video">
+          <iframe title="Ren10 product overview video" hidden></iframe>
+          <span class="rh3-video-loading" role="status" aria-label="Loading video" hidden>
+            <span class="ren-spinner ren-spinner-lg" aria-hidden="true"></span>
+          </span>
+        </div>
+      </div>
+    </dialog>
+  </ren-dialog>
+
+  <script type="module">
+    const videoDialog = document.querySelector('#rh3-video');
+    const nativeDialog = videoDialog?.querySelector('dialog');
+    const iframe = videoDialog?.querySelector('iframe');
+    const loading = videoDialog?.querySelector('.rh3-video-loading');
+    const videoDocument = `<!doctype html>
+      <html lang="en" style="color-scheme: light dark">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Ren10 product overview video</title>
+          <style>
+            html, body { height: 100%; margin: 0; }
+            body { background: Canvas; }
+            video { display: block; width: 100%; height: 100%; object-fit: contain; }
+          </style>
+        </head>
+        <body>
+          <video controls preload="metadata" aria-label="Ren10 product overview video">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" type="video/webm">
+            <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+            <a href="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4">Open the product overview video</a>
+          </video>
+        </body>
+      </html>`;
+
+    const resetVideo = () => {
+      iframe?.removeAttribute('srcdoc');
+      iframe?.setAttribute('hidden', '');
+      loading?.setAttribute('hidden', '');
+      nativeDialog?.setAttribute('aria-busy', 'false');
+    };
+
+    iframe?.addEventListener('load', () => {
+      loading?.setAttribute('hidden', '');
+      iframe.removeAttribute('hidden');
+      nativeDialog?.setAttribute('aria-busy', 'false');
+    });
+
+    videoDialog?.addEventListener('ren-open', () => {
+      nativeDialog?.setAttribute('aria-busy', 'true');
+      loading?.removeAttribute('hidden');
+      iframe?.setAttribute('hidden', '');
+      iframe?.setAttribute('srcdoc', videoDocument);
+    });
+
+    videoDialog?.addEventListener('ren-close', resetVideo);
+  </script>
+</body>
+</html>

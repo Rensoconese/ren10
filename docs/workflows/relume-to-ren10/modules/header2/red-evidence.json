@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "RED verified before production HTML existed: `npx playwright test tests/components/header2-header.spec.cjs --config tests/components/playwright.config.cjs --project='Desktop Light'` ran 11 focused tests and all 11 failed for the expected missing `[data-rh2-root]` / Header2 anatomy. The initial dependency-resolution error was corrected by reusing the repository node_modules, then the genuine feature-missing RED was rerun and recorded."
+}

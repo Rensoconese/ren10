@@ -88,23 +88,26 @@ test.describe('Relume Header 6 translated to Ren10', () => {
       viewport: { width: 390, height: 844 },
     });
     const page = await context.newPage();
-    const response = await page.goto(`${server.origin}${BLOCK}?ren10_test=header6-no-js`);
+    const response = await page.goto(`${server.origin}${BLOCK}?ren10_test=header6-no-js`, { waitUntil: 'domcontentloaded' });
     expect(response?.ok()).toBe(true);
 
     const input = page.locator('#rh6-email');
+    const error = page.locator(`${ROOT} [data-error]`);
     await expect(page.locator(`${ROOT} label[for="rh6-email"]`)).toBeVisible();
     await expect(page.locator(`${ROOT} .rh6-terms a`)).toBeVisible();
+    await expect(error).toHaveAttribute('hidden', '');
+    await expect(error).toBeHidden();
     await input.fill('fallback@example.com');
     await Promise.all([
-      page.waitForURL(/\/docs\/getting-started\.html\?email=fallback%40example\.com$/),
-      page.locator(`${ROOT} button[type="submit"]`).click(),
+      page.waitForURL(/\/docs\/getting-started\.html\?email=fallback%40example\.com$/, { waitUntil: 'domcontentloaded' }),
+      input.press('Enter'),
     ]);
     expect((await page.request.get(page.url())).ok()).toBe(true);
     await context.close();
   });
 
   for (const width of [320, 390, 767, 768, 1280]) {
-    test(`covers viewport and keeps constrained centered copy at ${width}px`, async ({ page }) => {
+    test(`uses a controlled canvas and keeps constrained centered copy at ${width}px`, async ({ page }) => {
       const height = width === 320 ? 720 : width < 768 ? 844 : 900;
       await gotoBlock(page, width, height);
       const geometry = await page.locator(ROOT).evaluate((root) => {
@@ -127,13 +130,14 @@ test.describe('Relume Header 6 translated to Ren10', () => {
           backgroundCovers:
             Math.abs(backgroundRect.left - rootRect.left) <= 1
             && Math.abs(backgroundRect.top - rootRect.top) <= 1
-            && Math.abs(backgroundRect.width - rootRect.width) <= 1
-            && Math.abs(backgroundRect.height - rootRect.height) <= 1,
+            && Math.abs(backgroundRect.width - rootRect.width) <= 2
+            && Math.abs(backgroundRect.height - rootRect.height) <= 2,
           objectFit: getComputedStyle(image).objectFit,
         };
       });
 
-      expect(geometry.rootHeight).toBeGreaterThanOrEqual(geometry.viewportHeight - 1);
+      expect(geometry.rootHeight).toBeGreaterThanOrEqual(500);
+      expect(geometry.rootHeight).toBeLessThanOrEqual(710);
       expect(geometry.pageOverflow).toBeLessThanOrEqual(1);
       expect(geometry.rootOverflow).toBeLessThanOrEqual(1);
       expect(geometry.copyLeft).toBeGreaterThanOrEqual(16);

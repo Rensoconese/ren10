@@ -1,0 +1,17 @@
+{
+  "id": "desktop-dark",
+  "url": "http://127.0.0.1:65390/templates/blocks/hero-split-copy-dual-cta-landscape-image.html?ren10_capture=header15-desktop-dark-34e1629c781d",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh15-copy-layout": 1,
+    ".rh15-media": 1
+  },
+  "commit": "34e1629c781d648d8d0addd0f5d492240b2f3d52",
+  "capturedAt": "2026-07-15T17:58:41.599Z"
+}

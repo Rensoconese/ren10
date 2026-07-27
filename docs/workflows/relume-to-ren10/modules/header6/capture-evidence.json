@@ -3,7 +3,7 @@
   "passed": true,
   "module": "header6",
   "block": "hero-fullscreen-bg-left-email-capture",
-  "capturedCommit": "9d2febfe1b686b680142f55fdd0e09d9ebd0bd44",
+  "capturedCommit": "82765e64cf412feebe86413488db84b651380ed8",
   "fresh": true,
   "states": [
     "desktop-light",
@@ -17,7 +17,7 @@
   ],
   "visualReview": {
     "passed": true,
-    "notes": "Inspected desktop light/dark, 768, 767, 390, and 320 renders. Copy remains vertically centered and left aligned; the image and two-layer scrim cover the viewport; the pristine validation error is hidden; the field and single CTA stack at narrow widths and align in one row from the small breakpoint; legal link remains visible; no overflow, clipping, duplicate controls, or framework artifacts were found. Reduced-motion focus and JavaScript-disabled states were also captured with their required markers."
+    "notes": "Refreshed after the no-JavaScript validation fix and inspected desktop light/dark, 768, 767, 390, and 320 renders. Copy remains vertically centered and left aligned; the image and two-layer scrim cover the viewport; the pristine validation error is hidden both before upgrade and with JavaScript disabled; the field and single CTA stack at narrow widths and align in one row from the small breakpoint; legal link remains visible; no overflow, clipping, duplicate controls, or framework artifacts were found. Reduced-motion focus and JavaScript-disabled states retain their required markers."
   },
   "recordedAt": "2026-07-15"
 }

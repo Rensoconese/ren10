@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Logo-Center Links Fullscreen Featured Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS navbar block with centered bar links, always-visible fullscreen menu toggle, featured articles rail, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    /*
+     * Shell seam shared with block JS (min-width: 768px / max-width: 767px).
+     * Matches ren-nav’s 768px interaction boundary exactly.
+     */
+    html {
+      overflow-x: clip;
+    }
+
+    body {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+
+    /* Standalone docs chrome: prevent horizontal overflow at 320/340. */
+    .dx-nav-inner {
+      flex-wrap: wrap;
+      row-gap: var(--space-2);
+      padding-inline: var(--space-4);
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .dx-nav-actions {
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .rn21-page-header {
+      max-width: min(74ch, 100%);
+      padding-block: var(--space-8);
+      overflow-wrap: anywhere;
+    }
+
+    .rn21-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+      overflow-wrap: anywhere;
+    }
+
+    .rn21-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .rn21-preview {
+      --ren-z-sticky: var(--z-sticky);
+      --rn21-bar-z: calc(var(--ren-z-sticky) + 2);
+      --rn21-panel-z: calc(var(--ren-z-sticky) + 1);
+      --ren-nav-height: var(--space-18, 4.5rem);
+      position: relative;
+      isolation: isolate;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      margin-block: var(--space-6) var(--space-10);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      max-width: 100%;
+      /* Definite min block size so absolute fullscreen panel can fill the shell. */
+      min-height: min(var(--width-sm, 24rem), 90vh);
+    }
+
+    /*
+     * Keep ren-nav/host unpositioned so the fullscreen panel’s absolute
+     * containing block is .rn21-preview (full shell), not the bar row alone.
+     * Opaque bar band sits above the panel so logo/toggle remain readable.
+     */
+    .rn21-preview::before {
+      content: "";
+      position: absolute;
+      inset-inline: 0;
+      top: 0;
+      height: var(--ren-nav-height);
+      z-index: var(--rn21-bar-z);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      pointer-events: none;
+    }
+
+    .rn21-preview ren-nav {
+      display: block;
+      position: static;
+      grid-row: 1;
+    }
+
+    .rn21-preview .ren-nav {
+      /* Must stay static/non-sticky so the fullscreen panel positions to .rn21-preview. */
+      position: static;
+      z-index: var(--ren-z-sticky);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--space-5);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: visible;
+      align-content: start;
+    }
+
+    /* Top chrome stays above the fullscreen panel. */
+    .rn21-preview .ren-nav-brand,
+    .rn21-preview .ren-nav-links,
+    .rn21-preview .ren-nav-toggle {
+      position: relative;
+      z-index: var(--rn21-bar-z);
+      grid-row: 1;
+      align-self: center;
+      min-height: var(--touch-min);
+    }
+
+    .rn21-preview .ren-nav-brand {
+      grid-column: 1;
+      justify-self: start;
+      min-width: var(--touch-min);
+    }
+
+    .rn21-preview .ren-nav-links {
+      grid-column: 2;
+      justify-self: center;
+      margin: 0;
+    }
+
+    .rn21-preview .ren-nav-toggle {
+      grid-column: 3;
+      justify-self: end;
+      display: flex;
+      margin-inline-start: 0;
+    }
+
+    .rn21-preview .ren-nav-link,
+    .rn21-preview .rn21-destination,
+    .rn21-preview .rn21-menu-link,
+    .rn21-preview .rn21-article,
+    .rn21-preview .rn21-view-all,
+    .rn21-preview .rn21-contact,
+    .rn21-preview .rn21-social {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn21-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn21-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn21-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn21-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn21-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn21-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn21-disclosure > summary::after,
+    .rn21-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn21-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn21-chevron,
+    .rn21-view-all-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn21-disclosure[open] > summary .rn21-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn21-dropdown-panel {
+      padding: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn21-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rn21-destination {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn21-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn21-destination:focus-visible,
+    .rn21-menu-link:focus-visible,
+    .rn21-article:focus-visible,
+    .rn21-view-all:focus-visible,
+    .rn21-contact:focus-visible,
+    .rn21-social:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    /* Fullscreen panel — enhanced (JS) vs progressive (no JS). */
+    #rn21-fullscreen-panel {
+      box-sizing: border-box;
+      width: 100%;
+      background: var(--color-surface);
+      color: var(--color-text);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    [data-rn21-enhanced] #rn21-fullscreen-panel {
+      position: absolute;
+      inset: 0;
+      z-index: var(--rn21-panel-z);
+      min-height: 100%;
+      height: 100%;
+      overflow: auto;
+      overscroll-behavior: contain;
+    }
+
+    [data-rn21-enhanced] #rn21-fullscreen-panel[hidden] {
+      display: none;
+    }
+
+    [data-rn21-enhanced] #rn21-fullscreen-panel:not([hidden]) {
+      display: block;
+    }
+
+    .rn21-panel-inner {
+      box-sizing: border-box;
+      min-height: 100%;
+      padding:
+        calc(var(--ren-nav-height) + var(--space-6))
+        var(--space-5)
+        var(--space-6);
+      gap: var(--space-8);
+    }
+
+    .rn21-menu-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-2) var(--space-8);
+      align-content: center;
+    }
+
+    .rn21-menu-link {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      min-height: var(--touch-min);
+      padding-block: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl));
+      font-weight: var(--weight-bold);
+      line-height: 1.15;
+      border-radius: var(--radius-md);
+      transition: color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn21-menu-link:hover {
+      color: var(--color-accent);
+    }
+
+    .rn21-featured {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: var(--width-md);
+      padding: var(--space-6);
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--color-border);
+    }
+
+    .rn21-featured-heading {
+      margin: 0 0 var(--space-4);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+    }
+
+    .rn21-article-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-3);
+    }
+
+    .rn21-article {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-3);
+      min-height: var(--touch-min);
+      padding: var(--space-2);
+      color: inherit;
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition: background-color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn21-article:hover {
+      background: var(--color-fill);
+    }
+
+    .rn21-article-media {
+      display: block;
+      width: 100%;
+      aspect-ratio: 12 / 9;
+      border-radius: var(--radius-md);
+      background:
+        linear-gradient(
+          135deg,
+          var(--color-surface),
+          color-mix(in srgb, var(--color-accent) 18%, var(--color-surface-sunken))
+        );
+    }
+
+    .rn21-article-title {
+      margin: 0 0 var(--space-1);
+      font-size: var(--text-base);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+      line-height: 1.3;
+    }
+
+    .rn21-article-desc {
+      margin: 0;
+      font-size: var(--text-sm);
+      color: var(--color-text-muted);
+      line-height: 1.45;
+    }
+
+    .rn21-article-cue {
+      margin: var(--space-2) 0 0;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    .rn21-view-all {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-block-start: var(--space-4);
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      color: var(--color-text);
+      text-decoration: none;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+    }
+
+    .rn21-view-all:hover {
+      color: var(--color-accent);
+    }
+
+    .rn21-panel-footer {
+      margin-block-start: var(--space-8);
+      padding-block: var(--space-4);
+      border-block-start: 1px solid var(--color-border);
+      gap: var(--space-4);
+    }
+
+    .rn21-contact {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      color: var(--color-text);
+      font-size: var(--text-lg);
+      font-weight: var(--weight-semibold);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    .rn21-contact:hover {
+      color: var(--color-accent);
+    }
+
+    .rn21-social-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rn21-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition: background-color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn21-social:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn21-hero {
+      position: relative;
+      z-index: 0;
+      grid-row: 2;
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: var(--width-xs, 20rem);
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+      overflow-wrap: anywhere;
+    }
+
+    .rn21-hero h2 {
+      max-width: 16ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn21-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /* Desktop shell (≥768px): absolute compact dropdown under the trigger. */
+    @media (min-width: 768px) {
+      /*
+       * ren-nav hides .ren-nav-links at max-width: 48rem (includes 768px).
+       * Force the bar list visible for the inclusive desktop band ≥768px so
+       * CSS, this block’s matchMedia, and ren-nav’s JS (<768 mobile) agree.
+       */
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav .ren-nav-links {
+        display: flex;
+        position: static;
+        inset: auto;
+        flex-direction: row;
+        align-items: center;
+        width: auto;
+        background: transparent;
+        border: none;
+        padding: 0;
+        animation: none;
+      }
+
+      .rn21-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn21-dropdown-panel {
+        position: absolute;
+        top: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        left: 50%;
+        right: auto;
+        z-index: var(--rn21-bar-z);
+        width: var(--width-3xs, 12rem);
+        max-width: min(var(--width-3xs, 12rem), calc(100vw - var(--space-8)));
+        transform: translateX(-50%);
+        animation: rn21-panel-enter var(--duration-enter) var(--ease-enter);
+      }
+
+      .rn21-dropdown-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+
+      .rn21-panel-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.75fr);
+        grid-template-rows: minmax(0, 1fr) auto;
+        gap: var(--space-8) var(--space-12);
+        align-items: center;
+        min-height: 100%;
+      }
+
+      .rn21-menu-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-column: 1;
+        grid-row: 1;
+      }
+
+      .rn21-featured {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: stretch;
+        max-width: none;
+      }
+
+      .rn21-panel-footer {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin-block-start: 0;
+      }
+
+      .rn21-article {
+        grid-template-columns: minmax(var(--size-xl, 6rem), 40%) minmax(0, 1fr);
+        align-items: center;
+        gap: var(--space-4);
+      }
+    }
+
+    /* Mobile / tablet (≤767px): bar is logo + toggle; hide center bar links. */
+    @media (max-width: 767px) {
+      .rn21-preview .ren-nav {
+        grid-template-columns: minmax(0, 1fr) auto;
+        min-height: var(--ren-nav-height);
+      }
+
+      .rn21-preview .ren-nav-brand {
+        grid-column: 1;
+      }
+
+      .rn21-preview .ren-nav-toggle {
+        grid-column: 2;
+      }
+
+      /*
+       * Beat ren-nav’s [data-open] / :has(aria-expanded) show rule without
+       * !important by adding the block + enhanced + element selectors.
+       */
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav .ren-nav-links,
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav[data-open] .ren-nav-links,
+      .rn21-preview[data-rn21-enhanced] nav.ren-nav:has(.ren-nav-toggle[aria-expanded="true"]) .ren-nav-links {
+        display: none;
+      }
+
+      .rn21-dropdown-panel {
+        width: 100%;
+        max-width: none;
+        position: static;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: var(--space-1) 0 var(--space-2);
+        transform: none;
+      }
+
+      .rn21-hero {
+        min-height: 0;
+        padding: var(--space-6) var(--space-4);
+      }
+
+      .rn21-panel-inner {
+        padding-inline: var(--space-4);
+      }
+    }
+
+    /*
+     * Progressive enhancement (no JS / ren-nav not defined):
+     * hide inert toggle; expose bar destinations + fullscreen content in flow.
+     * Specificity beats ren-nav mobile hide without !important.
+     */
+    .rn21-preview ren-nav:not(:defined) .ren-nav-toggle,
+    .rn21-preview:not([data-rn21-enhanced]) .ren-nav-toggle {
+      display: none;
+    }
+
+    .rn21-preview ren-nav:not(:defined) .ren-nav,
+    .rn21-preview:not([data-rn21-enhanced]) .ren-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      min-height: 0;
+    }
+
+    .rn21-preview ren-nav:not(:defined) .ren-nav-brand,
+    .rn21-preview:not([data-rn21-enhanced]) .ren-nav-brand {
+      align-self: flex-start;
+    }
+
+    .rn21-preview ren-nav:not(:defined) nav.ren-nav .ren-nav-links,
+    .rn21-preview:not([data-rn21-enhanced]) nav.ren-nav .ren-nav-links {
+      display: flex;
+      position: static;
+      flex-direction: column;
+      align-items: stretch;
+      width: 100%;
+      margin: 0;
+      padding: var(--space-2) 0;
+      border-block-end: 1px solid var(--color-border);
+    }
+
+    .rn21-preview ren-nav:not(:defined) #rn21-fullscreen-panel,
+    .rn21-preview:not([data-rn21-enhanced]) #rn21-fullscreen-panel,
+    .rn21-preview ren-nav:not(:defined) #rn21-fullscreen-panel[hidden],
+    .rn21-preview:not([data-rn21-enhanced]) #rn21-fullscreen-panel[hidden] {
+      position: static;
+      display: block;
+      min-height: 0;
+      overflow: visible;
+    }
+
+    @keyframes rn21-panel-enter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn21-chevron,
+      .rn21-view-all-chevron,
+      .rn21-destination,
+      .rn21-dropdown-panel,
+      #rn21-fullscreen-panel,
+      .rn21-menu-link,
+      .rn21-article,
+      .rn21-social {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn21-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Logo-Center Links Fullscreen Featured</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Logo-Center Links Fullscreen Featured</h1>
+      <p class="lede">
+        Sticky logo-left bar with a centered four-entry menu, always-visible
+        fullscreen toggle, large destination grid, and a featured articles rail.
+        Built with <code>ren-nav</code>, native <code>details</code>/<code>summary</code>,
+        layout primitives, and progressive enhancement — one landmark, no nested
+        navigation, no second close chrome.
+      </p>
+    </header>
+
+    <section class="rn21-preview bb-detail-preview" data-rn21-root aria-label="Navbar logo-center links fullscreen featured preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn21-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rn21-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#resources">Resources</a>
+            </li>
+            <li>
+              <details class="rn21-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Company
+                  <span class="rn21-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+                <div class="rn21-dropdown-panel">
+                  <ul class="rn21-dest-list ren-stack-sm" aria-label="Company">
+                    <li><a class="rn21-destination" href="#about">About</a></li>
+                    <li><a class="rn21-destination" href="#careers">Careers</a></li>
+                    <li><a class="rn21-destination" href="#press">Press</a></li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn21-fullscreen-panel"
+            aria-label="Open site menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <!--
+            Non-modal expandable overlay (not role=dialog / aria-modal):
+            the always-visible close control lives in the sticky bar outside
+            this panel, so a modal dialog tree would be incoherent. Open state
+            is exposed via the toggle’s aria-expanded + aria-controls. Focus
+            containment uses inert exterior + Tab cycling (toggle + panel).
+          -->
+          <div
+            id="rn21-fullscreen-panel"
+            aria-label="Site menu"
+            hidden
+          >
+            <div class="rn21-panel-inner">
+              <ul class="rn21-menu-list" aria-label="Primary destinations">
+                <li><a class="rn21-menu-link" href="#overview">Overview</a></li>
+                <li><a class="rn21-menu-link" href="#platform">Platform</a></li>
+                <li><a class="rn21-menu-link" href="#solutions">Solutions</a></li>
+                <li><a class="rn21-menu-link" href="#customers">Customers</a></li>
+                <li><a class="rn21-menu-link" href="#developers">Developers</a></li>
+                <li><a class="rn21-menu-link" href="#partners">Partners</a></li>
+                <li><a class="rn21-menu-link" href="#support">Support</a></li>
+                <li><a class="rn21-menu-link" href="#community">Community</a></li>
+              </ul>
+
+              <aside class="rn21-featured ren-stack" aria-label="Featured reading">
+                <h2 class="rn21-featured-heading">From the journal</h2>
+                <ul class="rn21-article-list ren-stack">
+                  <li>
+                    <a class="rn21-article" href="#article-a">
+                      <span class="rn21-article-media" aria-hidden="true"></span>
+                      <span class="ren-stack-xs">
+                        <span class="rn21-article-title">Designing quieter systems</span>
+                        <span class="rn21-article-desc">How calm interfaces help teams ship with less noise.</span>
+                        <span class="rn21-article-cue">Read article</span>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn21-article" href="#article-b">
+                      <span class="rn21-article-media" aria-hidden="true"></span>
+                      <span class="ren-stack-xs">
+                        <span class="rn21-article-title">Tokens that travel</span>
+                        <span class="rn21-article-desc">A practical path from primitives to product themes.</span>
+                        <span class="rn21-article-cue">Read article</span>
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+                <a class="rn21-view-all" href="#journal">
+                  Browse all articles
+                  <span class="rn21-view-all-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M6.2 3.2a.75.75 0 0 1 1.06 0l4.27 4.27a.75.75 0 0 1 0 1.06L7.26 12.8a.75.75 0 1 1-1.06-1.06L9.94 8 6.2 4.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </a>
+              </aside>
+
+              <div class="rn21-panel-footer ren-row-spread">
+                <a class="rn21-contact" href="#contact">Contact</a>
+                <ul class="rn21-social-list ren-cluster" aria-label="Social destinations">
+                  <li>
+                    <a class="rn21-social" href="#social-a" aria-label="Network A">
+                      <span class="ren-icon ren-icon-sm" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zm0 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm0 9.2a4.7 4.7 0 0 1-3.2-1.25c.02-1.06 2.13-1.64 3.2-1.64s3.18.58 3.2 1.64A4.7 4.7 0 0 1 8 12.7z"/></svg>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn21-social" href="#social-b" aria-label="Network B">
+                      <span class="ren-icon ren-icon-sm" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M3 3h10v10H3V3zm2 2v6h6V5H5z"/></svg>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn21-social" href="#social-c" aria-label="Network C">
+                      <span class="ren-icon ren-icon-sm" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M2 3.5h12v1.5H2V3.5zm0 3.75h12v1.5H2V7.25zm0 3.75h8V12.5H2v-1.5z"/></svg>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn21-social" href="#social-d" aria-label="Network D">
+                      <span class="ren-icon ren-icon-sm" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4 2.5h8a1.5 1.5 0 0 1 1.5 1.5v8A1.5 1.5 0 0 1 12 13.5H4A1.5 1.5 0 0 1 2.5 12V4A1.5 1.5 0 0 1 4 2.5zm1 3v5h1.5V9.2L9 10.5h1.8L8.6 8.4 10.8 5.5H9L7 7.9V5.5H5z"/></svg>
+                      </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a class="rn21-social" href="#social-e" aria-label="Network E">
+                      <span class="ren-icon ren-icon-sm" aria-hidden="true">
+                        <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M3 4.5A1.5 1.5 0 0 1 4.5 3h7A1.5 1.5 0 0 1 13 4.5v5A1.5 1.5 0 0 1 11.5 11H9l-2.2 2.2A.75.75 0 0 1 5.5 12.7V11h-1A1.5 1.5 0 0 1 3 9.5v-5z"/></svg>
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </ren-nav>
+
+      <div class="rn21-hero ren-stack">
+        <h2>Menus that open the whole page.</h2>
+        <p>
+          A quiet marketing surface under the sticky bar so the centered links,
+          always-visible toggle, and fullscreen featured composition stay easy to
+          judge while you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#overview">Explore platform</a>
+          <a class="ren-btn ren-btn-ghost" href="#contact">Talk to us</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-center-links-overlay-panel.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Center Links Overlay Panel Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-sticky-logo-center-dropdown-fullscreen-contact.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Sticky Logo Center Dropdown Fullscreen Contact</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local controllers for:
+     * 1) compact bar disclosure (hover preview + click pin)
+     * 2) non-modal fullscreen overlay (aria-expanded panel) with inert exterior
+     *    + focus trap — close control stays in the bar, so this is not a dialog
+     *
+     * Shell seam: (min-width: 768px) — shared with block CSS, matches ren-nav 768.
+     */
+    const RN21_CONTROLLER = Symbol.for('ren10.rn21.controller');
+    /** Inclusive desktop shell; complements max-width: 767px CSS. */
+    const DESKTOP_MQ = '(min-width: 768px)';
+    const FOCUSABLE_SEL = [
+      'a[href]',
+      'button:not([disabled])',
+      'summary',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+    ].join(',');
+
+    export function initNavLogoCenterLinksFullscreenFeatured(scope = document) {
+      const root = scope.querySelector?.('[data-rn21-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn21-root')) {
+        const nested = document.querySelector('[data-rn21-root]');
+        if (!nested) return null;
+        return initOn(nested);
+      }
+      return initOn(root);
+    }
+
+    function initOn(root) {
+      const previous = root[RN21_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN21_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      root.setAttribute('data-rn21-enhanced', '');
+
+      const renNavHost = root.querySelector('ren-nav');
+      const disclosure = root.querySelector('.rn21-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const panel = root.querySelector('#rn21-fullscreen-panel');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      if (!toggle || !panel) return null;
+
+      /** @type {boolean} */
+      let pointerInside = false;
+      let hoverTransient = false;
+      let pointerPinned = false;
+      let ignoreHoverUntilLeave = false;
+      /** Last media match used to detect band crossings only. */
+      let lastDesktop = desktopQuery.matches;
+      /**
+       * Exterior nodes made inert while the panel is open.
+       * @type {Array<{ el: Element, hadInert: boolean }>}
+       */
+      let inertSnapshots = [];
+      /** Overflow values restored on close. */
+      let savedHtmlOverflow = '';
+      let savedBodyOverflow = '';
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function isPanelOpen() {
+        return toggle.getAttribute('aria-expanded') === 'true';
+      }
+
+      /**
+       * Collect focusables in the overlay shell: bar close toggle + panel contents.
+       * @returns {HTMLElement[]}
+       */
+      function getShellFocusables() {
+        /** @type {HTMLElement[]} */
+        const list = [];
+        if (toggle instanceof HTMLElement) list.push(toggle);
+        panel.querySelectorAll(FOCUSABLE_SEL).forEach((node) => {
+          if (!(node instanceof HTMLElement)) return;
+          if (node.closest('[inert]')) return;
+          if (node.hasAttribute('disabled')) return;
+          const style = getComputedStyle(node);
+          if (style.display === 'none' || style.visibility === 'hidden') return;
+          if (node.getClientRects().length === 0) return;
+          list.push(node);
+        });
+        return list;
+      }
+
+      /**
+       * True when activating the anchor stays on the same document (hash / same path).
+       * @param {HTMLAnchorElement} anchor
+       */
+      function isSameDocumentNavigation(anchor) {
+        try {
+          const next = new URL(anchor.href, window.location.href);
+          return (
+            next.origin === window.location.origin
+            && next.pathname === window.location.pathname
+            && next.search === window.location.search
+          );
+        } catch {
+          return true;
+        }
+      }
+
+      /**
+       * Whether focus is stuck on a non-visible or panel-owned node after close.
+       * @param {Element | null} active
+       * @param {Element | null} [sourceAnchor]
+       */
+      function isFocusLostOrHidden(active, sourceAnchor = null) {
+        if (!(active instanceof HTMLElement)) return true;
+        if (active === document.body || active === document.documentElement) return true;
+        if (sourceAnchor && active === sourceAnchor) return true;
+        if (panel.contains(active)) return true;
+        if (active.closest('[hidden]')) return true;
+        if (active.hasAttribute('hidden')) return true;
+        const style = getComputedStyle(active);
+        if (style.display === 'none' || style.visibility === 'hidden') return true;
+        if (active.getClientRects().length === 0) return true;
+        return false;
+      }
+
+      /**
+       * After same-document destination activation, never leave focus on a
+       * now-hidden panel anchor — restore the always-visible toggle.
+       * @param {HTMLAnchorElement | null} [sourceAnchor]
+       */
+      function restoreFocusAfterDestination(sourceAnchor = null) {
+        const apply = () => {
+          if (!document.contains(toggle)) return;
+          const active = document.activeElement;
+          if (isFocusLostOrHidden(active instanceof Element ? active : null, sourceAnchor)) {
+            toggle.focus();
+          }
+        };
+        // Click focus + hash navigation can settle after the close handler.
+        queueMicrotask(apply);
+        requestAnimationFrame(apply);
+      }
+
+      function restoreExteriorInert() {
+        for (const { el, hadInert } of inertSnapshots) {
+          if (hadInert) el.setAttribute('inert', '');
+          else el.removeAttribute('inert');
+        }
+        inertSnapshots = [];
+      }
+
+      /**
+       * Inert everything outside the panel + toggle shell so Tab cannot reach
+       * hidden hero / docs chrome / bar links while the fullscreen menu is open.
+       * Uses the public `inert` attribute only. Non-modal: close lives in the bar.
+       */
+      function setExteriorInert(active) {
+        restoreExteriorInert();
+        if (!active) return;
+
+        const candidates = [
+          document.querySelector('body > header.dx-nav'),
+          document.querySelector('main > header.rn21-page-header'),
+          root.querySelector('.rn21-hero'),
+          root.querySelector('.ren-nav-brand'),
+          root.querySelector('#rn21-primary-links'),
+        ];
+
+        for (const el of candidates) {
+          if (!(el instanceof Element)) continue;
+          if (el === panel || panel.contains(el)) continue;
+          if (el === toggle || el.contains(toggle)) continue;
+          inertSnapshots.push({ el, hadInert: el.hasAttribute('inert') });
+          el.setAttribute('inert', '');
+        }
+      }
+
+      function setPanelOpen(open, { returnFocus = false, moveFocus = true } = {}) {
+        if (open) {
+          panel.hidden = false;
+          toggle.setAttribute('aria-expanded', 'true');
+          toggle.setAttribute('aria-label', 'Close site menu');
+          renNavHost?.setAttribute('data-open', '');
+          root.setAttribute('data-rn21-panel-open', '');
+
+          savedHtmlOverflow = document.documentElement.style.overflow;
+          savedBodyOverflow = document.body.style.overflow;
+          document.documentElement.style.overflow = 'hidden';
+          document.body.style.overflow = 'hidden';
+
+          setExteriorInert(true);
+
+          if (moveFocus) {
+            // Prefer first destination inside the panel; fall back to toggle.
+            const inside = getShellFocusables().filter((el) => el !== toggle);
+            const target = inside[0] || toggle;
+            queueMicrotask(() => target.focus());
+          }
+        } else {
+          panel.hidden = true;
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open site menu');
+          renNavHost?.removeAttribute('data-open');
+          root.removeAttribute('data-rn21-panel-open');
+
+          document.documentElement.style.overflow = savedHtmlOverflow;
+          document.body.style.overflow = savedBodyOverflow;
+          savedHtmlOverflow = '';
+          savedBodyOverflow = '';
+
+          setExteriorInert(false);
+
+          if (returnFocus) queueMicrotask(() => toggle.focus());
+        }
+      }
+
+      // Initial closed state for enhanced mode.
+      setPanelOpen(false, { moveFocus: false });
+
+      function closeDisclosure(returnFocusToSummary) {
+        if (!disclosure || !summary) return;
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocusToSummary) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (!disclosure) return;
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      // ---- Fullscreen panel: own the toggle so ren-nav drawer never takes over ----
+      toggle.addEventListener(
+        'click',
+        (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const next = !isPanelOpen();
+          setPanelOpen(next, { returnFocus: false, moveFocus: next });
+          if (next) closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key === 'Escape') {
+            if (isPanelOpen()) {
+              event.preventDefault();
+              event.stopImmediatePropagation();
+              closeDisclosure(false);
+              setPanelOpen(false, { returnFocus: true, moveFocus: false });
+              return;
+            }
+            if (disclosure?.open) {
+              event.stopImmediatePropagation();
+              markIntentionalCloseWhilePointerInside();
+              closeDisclosure(true);
+            }
+            return;
+          }
+
+          // Focus trap: Tab cycles toggle ↔ panel only while open.
+          if (event.key !== 'Tab' || !isPanelOpen()) return;
+
+          const focusables = getShellFocusables();
+          if (focusables.length === 0) return;
+
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          const active = document.activeElement;
+          const activeInShell = focusables.includes(/** @type {HTMLElement} */ (active));
+
+          if (event.shiftKey) {
+            if (!activeInShell || active === first) {
+              event.preventDefault();
+              last.focus();
+            }
+          } else if (!activeInShell || active === last) {
+            event.preventDefault();
+            first.focus();
+          }
+        },
+        { capture: true, signal }
+      );
+
+      // If focus somehow lands outside the shell while open, pull it back.
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!isPanelOpen()) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          const focusables = getShellFocusables();
+          if (focusables.some((el) => el === target || el.contains(/** @type {Node} */ (target)))) {
+            return;
+          }
+          const fallback = focusables[0] || toggle;
+          queueMicrotask(() => fallback.focus());
+        },
+        { signal }
+      );
+
+      // Close fullscreen when activating destinations; never leave focus on a
+      // now-hidden anchor for same-document (hash) navigations.
+      panel.querySelectorAll('a[href]').forEach((node) => {
+        if (!(node instanceof HTMLAnchorElement)) return;
+        node.addEventListener(
+          'click',
+          () => {
+            const sameDoc = isSameDocumentNavigation(node);
+            closeDisclosure(false);
+            setPanelOpen(false, {
+              returnFocus: sameDoc,
+              moveFocus: false,
+            });
+            if (sameDoc) restoreFocusAfterDestination(node);
+          },
+          { signal }
+        );
+      });
+
+      // ---- Bar disclosure (desktop hover/pin) ----
+      if (disclosure && summary) {
+        summary.addEventListener(
+          'click',
+          (event) => {
+            event.stopImmediatePropagation();
+            if (!isDesktop()) return;
+
+            if (event.detail === 0) {
+              hoverTransient = false;
+              pointerPinned = false;
+              ignoreHoverUntilLeave = false;
+              return;
+            }
+
+            event.preventDefault();
+
+            if (!disclosure.open) {
+              ignoreHoverUntilLeave = false;
+              openDisclosure('click');
+              pointerPinned = true;
+              return;
+            }
+
+            if (hoverTransient) {
+              hoverTransient = false;
+              pointerPinned = true;
+              return;
+            }
+
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { capture: true, signal }
+        );
+
+        function openFromDesktopPointer() {
+          if (!isDesktop() || ignoreHoverUntilLeave) return;
+          pointerInside = true;
+          if (!disclosure.open) openDisclosure('hover');
+        }
+
+        disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+        disclosure.addEventListener(
+          'pointermove',
+          () => {
+            if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+            openFromDesktopPointer();
+          },
+          { signal }
+        );
+
+        disclosure.addEventListener(
+          'pointerleave',
+          () => {
+            if (!isDesktop()) return;
+            pointerInside = false;
+            ignoreHoverUntilLeave = false;
+            hoverTransient = false;
+            if (!pointerPinned) closeDisclosure(false);
+          },
+          { signal }
+        );
+
+        document.addEventListener(
+          'click',
+          (event) => {
+            if (!disclosure.open) return;
+            const target = event.target;
+            if (!(target instanceof Node)) return;
+            if (!disclosure.contains(target)) {
+              markIntentionalCloseWhilePointerInside();
+              closeDisclosure(false);
+            }
+          },
+          { signal }
+        );
+
+        disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+          anchor.addEventListener(
+            'click',
+            () => {
+              markIntentionalCloseWhilePointerInside();
+              closeDisclosure(false);
+            },
+            { signal }
+          );
+        });
+      }
+
+      function onBreakpointChange() {
+        const nowDesktop = desktopQuery.matches;
+        // Only reset open state when the shell band actually crosses 768.
+        if (nowDesktop === lastDesktop) return;
+        lastDesktop = nowDesktop;
+        closeDisclosure(false);
+        if (isPanelOpen()) setPanelOpen(false, { returnFocus: false, moveFocus: false });
+        pointerInside = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+      }
+
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onBreakpointChange, { signal });
+      } else {
+        desktopQuery.addListener(onBreakpointChange);
+        signal.addEventListener('abort', () => desktopQuery.removeListener(onBreakpointChange));
+      }
+
+      signal.addEventListener('abort', () => {
+        restoreExteriorInert();
+        document.documentElement.style.overflow = savedHtmlOverflow;
+        document.body.style.overflow = savedBodyOverflow;
+      });
+
+      return {
+        abort: () => controller.abort(),
+      };
+    }
+
+    initNavLogoCenterLinksFullscreenFeatured();
+  </script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "stage": "red",
+  "passed": true,
+  "kind": "historical-phase-a-red",
+  "note": "Before production HTML existed, the focused Desktop Light Header15 suite ran 13 cases and all 13 failed against the missing block; primary failures recorded HTTP 404 for templates/blocks/hero-split-copy-dual-cta-landscape-image.html."
+}

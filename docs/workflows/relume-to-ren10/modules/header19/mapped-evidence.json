@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header19 maps to hero-split-image-left-copy-dual-cta: one content-height ren-center/ren-switcher composition, one copy-first DOM tree, two real ren-btn anchors in a wrapping cluster, and one owned rounded cover image. It stacks copy-before-image through 1023px and visually orders image-left/copy-right from 1024px. Full-svh, form, nav, logo, dialog, video, overlay, third CTA, external media, duplicate trees, and framework abstractions were rejected."
+}

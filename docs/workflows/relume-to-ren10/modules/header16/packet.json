@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header16",
+  "blockSlug": "hero-split-email-form-landscape-image",
+  "blockPath": "templates/blocks/hero-split-email-form-landscape-image.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-split-email-form-landscape-image.html",
+    "tests/components/header16-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

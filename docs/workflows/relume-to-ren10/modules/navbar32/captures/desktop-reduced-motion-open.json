@@ -1,0 +1,16 @@
+{
+  "id": "desktop-reduced-motion-open",
+  "url": "http://127.0.0.1:55100/templates/blocks/nav-logo-cta-left-drawer.html?ren10_capture=navbar32-desktop-reduced-motion-open-6c566063f79e",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rn32-link": 5
+  },
+  "commit": "6c566063f79e3ffc0e48fae32c15e10d7d25dba2",
+  "capturedAt": "2026-07-15T12:04:34.995Z"
+}

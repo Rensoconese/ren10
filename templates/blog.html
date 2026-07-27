@@ -29,12 +29,11 @@
       border-bottom: 1px solid var(--color-border);
     }
     .bl-nav-inner {
-      max-width: 1200px;
+      width: 100%;
+      max-width: var(--width-6xl);
       margin: 0 auto;
       padding: var(--space-3) var(--space-6);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      box-sizing: border-box;
       gap: var(--space-6);
     }
     .bl-brand {
@@ -70,9 +69,11 @@
 
     /* ─────────── Container ─────────── */
     .bl-container {
-      max-width: 1200px;
+      width: 100%;
+      max-width: var(--width-6xl);
       margin: 0 auto;
       padding-inline: clamp(var(--space-5), 5vw, var(--space-8));
+      box-sizing: border-box;
     }
 
     /* ─────────── Header ─────────── */
@@ -110,19 +111,22 @@
     /* ─────────── Layout ─────────── */
     .bl-main { padding-bottom: var(--space-16); }
     .bl-grid {
-      display: grid;
-      grid-template-columns: 1fr 280px;
+      grid-template-columns: minmax(0, 1fr) calc(var(--width-xs) - var(--space-10));
       gap: clamp(var(--space-6), 4vw, var(--space-10));
       align-items: start;
+      min-width: 0;
     }
     @media (max-width: 960px) { .bl-grid { grid-template-columns: 1fr; } }
 
-    .bl-articles { display: flex; flex-direction: column; gap: var(--space-10); }
+    .bl-articles {
+      --stack-gap: var(--space-10);
+      min-width: 0;
+    }
 
     /* ─────────── Featured post ─────────── */
     .bl-featured {
       display: grid;
-      grid-template-columns: 1.1fr 1fr;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
       gap: 0;
       border-radius: var(--radius-xl);
       overflow: hidden;
@@ -132,6 +136,7 @@
       color: inherit;
       transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
     }
+    .bl-featured > * { min-width: 0; }
     .bl-featured:hover {
       border-color: var(--color-border-strong);
       transform: translateY(-2px);
@@ -179,9 +184,7 @@
 
     /* ─────────── Section heading ─────────── */
     .bl-section-head {
-      display: flex;
       align-items: baseline;
-      justify-content: space-between;
       gap: var(--space-4);
       padding-bottom: var(--space-2);
       border-bottom: 1px solid var(--color-border);
@@ -196,9 +199,9 @@
 
     /* ─────────── Post card grid ─────────── */
     .bl-post-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--space-5);
+      --grid-min: calc(var(--width-xs) - var(--space-10));
+      --grid-gap: var(--space-5);
+      min-width: 0;
     }
     .bl-post {
       display: flex;
@@ -267,15 +270,22 @@
     .bl-post-meta .dot { opacity: 0.5; }
 
     /* ─────────── Pagination ─────────── */
-    .bl-paginate { display: flex; justify-content: center; }
+    .bl-paginate {
+      --reel-gap: 0;
+      max-width: 100%;
+      justify-content: center;
+    }
+    @media (max-width: 22.5rem) {
+      .bl-paginate { justify-content: flex-start; }
+    }
 
     /* ─────────── Sidebar ─────────── */
     .bl-aside {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-5);
+      --stack-gap: var(--space-5);
       position: sticky;
       top: calc(var(--space-12) + 60px);
+      width: 100%;
+      min-width: 0;
     }
     @media (max-width: 960px) { .bl-aside { position: static; } }
 
@@ -330,19 +340,20 @@
     }
     .bl-newsletter input {
       width: 100%;
-      background: color-mix(in srgb, var(--color-on-accent) 15%, transparent);
-      border: 1px solid color-mix(in srgb, var(--color-on-accent) 25%, transparent);
-      color: var(--color-on-accent);
+      max-width: 100%;
+      box-sizing: border-box;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-interactive);
+      color: var(--color-text);
       padding: var(--space-2) var(--space-3);
       border-radius: var(--radius-sm);
       font-size: var(--text-sm);
       margin-bottom: var(--space-2);
     }
-    .bl-newsletter input::placeholder { color: color-mix(in srgb, var(--color-on-accent) 60%, transparent); }
-    .bl-newsletter input:focus {
-      outline: none;
-      border-color: var(--color-on-accent);
-      background: color-mix(in srgb, var(--color-on-accent) 22%, transparent);
+    .bl-newsletter input::placeholder { color: var(--color-text-muted); }
+    .bl-newsletter input:focus-visible {
+      outline: var(--ring-width) solid var(--color-on-accent);
+      outline-offset: var(--ring-offset);
     }
     .bl-newsletter button {
       width: 100%;
@@ -393,9 +404,7 @@
       color: var(--color-text-secondary);
     }
     .bl-footer-row {
-      display: flex;
       align-items: center;
-      justify-content: space-between;
       flex-wrap: wrap;
       gap: var(--space-3);
     }
@@ -414,7 +423,7 @@
 
   <!-- ═══ TOP NAV ═══ -->
   <header class="bl-nav">
-    <div class="bl-nav-inner">
+    <div class="bl-nav-inner ren-row-spread">
       <a href="./landing.html" class="bl-brand">
         <span class="bl-brand-mark" aria-hidden="true">R</span>
         <span>RenDS</span>
@@ -444,10 +453,10 @@
   <!-- ═══ MAIN ═══ -->
   <main class="bl-main">
     <div class="bl-container">
-      <div class="bl-grid">
+      <div class="bl-grid ren-grid">
 
         <!-- ═══ ARTICLES ═══ -->
-        <div class="bl-articles">
+        <div class="bl-articles ren-stack">
 
           <!-- Featured -->
           <a href="./blog-post.html" class="bl-featured" aria-labelledby="feat-title">
@@ -479,12 +488,12 @@
           </a>
 
           <!-- Latest section -->
-          <header class="bl-section-head">
+          <header class="bl-section-head ren-row-spread">
             <h3>Latest posts</h3>
             <a href="#" class="ren-link">View all →</a>
           </header>
 
-          <div class="bl-post-grid">
+          <div class="bl-post-grid ren-grid">
 
             <a href="./blog-post.html" class="bl-post">
               <div class="bl-post-cover v-a11y" role="img" aria-label="Accessibility icon">
@@ -585,7 +594,7 @@
           </div>
 
           <!-- Pagination -->
-          <nav aria-label="Pagination" class="bl-paginate">
+          <nav aria-label="Pagination" class="bl-paginate ren-reel">
             <div class="ren-pagination">
               <a href="#" aria-disabled="true" tabindex="-1" class="ren-pagination-item">←</a>
               <a href="#" class="ren-pagination-item" aria-current="page">1</a>
@@ -600,7 +609,7 @@
         </div>
 
         <!-- ═══ SIDEBAR ═══ -->
-        <aside class="bl-aside" aria-label="Blog sidebar">
+        <aside class="bl-aside ren-stack" aria-label="Blog sidebar">
 
           <!-- Search -->
           <div class="ren-field">
@@ -652,7 +661,7 @@
   <!-- ═══ FOOTER ═══ -->
   <footer class="bl-footer">
     <div class="bl-container">
-      <div class="bl-footer-row">
+      <div class="bl-footer-row ren-row-spread">
         <span>© 2026 RenDS · MIT License</span>
         <div class="bl-footer-links">
           <a href="./landing.html">Home</a>

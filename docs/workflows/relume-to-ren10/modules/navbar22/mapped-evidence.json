@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar22 mapped to one ren-nav sticky primary landmark, native details/summary for the centered bar dropdown (3 destinations, 1 chevron), always-visible named toggle controlling a full-viewport dialog overlay with 8 large destinations + ren-field contact form + details + 5 named socials, 48rem boundary, progressive enhancement that exposes overlay content without JS. Rejected ren-card, ren-menu, ren-popover, ren-sheet, nested nav landmarks, under-bar mobile tree for bar links, and copied source."
+}

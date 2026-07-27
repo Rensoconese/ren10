@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar27 primitives=include) returned complete Navbar27 section source plus three vendored primitives (utils/cn, use-media-query, button). Sanitized anatomy recorded: full-width logo-left/menu/end-actions shell; four top entries (3 plain + 1 mega); two category groups × five title-only links (10); two collection promos with media/title/description/action; two global actions; one toggle; one chevron; desktop full-bleed under-bar mega; mobile shell with in-flow mega and shell-owned actions. No protected source was copied into public Ren10 output."
+}

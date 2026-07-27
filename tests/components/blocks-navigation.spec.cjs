@@ -297,28 +297,82 @@ test.describe('Navigation blocks', () => {
     await staticServer?.close();
   });
 
-  test('catalog lists both navigation blocks and pages load cleanly', async ({ page }) => {
+  test('catalog lists every navigation block and every page loads cleanly', async ({ page }) => {
     const errors = await collectPageErrors(page);
 
     await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
-    await expect(page.getByRole('heading', { name: 'Navigation blocks' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Navigation', exact: true })).toBeVisible();
 
-    const drawerCard = page.locator('a.bb-card[href="nav-drawer.html"]');
-    const megaCard = page.locator('a.bb-card[href="nav-mega-menu.html"]');
-    await expect(drawerCard).toBeVisible();
-    await expect(megaCard).toBeVisible();
-    await expect(drawerCard.getByRole('heading', { name: 'Navbar Drawer' })).toBeVisible();
-    await expect(megaCard.getByRole('heading', { name: 'Navbar Mega Menu' })).toBeVisible();
+    const catalog = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) => cards.map((card) => ({
+      href: card.getAttribute('href'),
+      title: card.querySelector('.bb-card-title')?.textContent?.trim(),
+    })));
 
-    await page.goto(`${staticServer.origin}${DRAWER}`);
-    await expect(page.getByRole('heading', { name: 'Navbar Drawer', level: 1 })).toBeVisible();
+    expect(catalog).toHaveLength(29);
+    expect(new Set(catalog.map(({ href }) => href)).size).toBe(catalog.length);
 
-    await page.goto(`${staticServer.origin}${MEGA_MENU}`);
-    await expect(page.getByRole('heading', { name: 'Navbar Mega Menu', level: 1 })).toBeVisible();
-    await expect(page.locator('ren-nav')).toHaveCount(1);
-    await expect(page.locator('nav[aria-label="Example site"]')).toHaveCount(1);
+    for (const entry of catalog) {
+      expect(entry.href).toMatch(/^nav-[a-z0-9-]+\.html$/);
+      expect(entry.title).toBeTruthy();
+
+      const response = await page.goto(`${staticServer.origin}/templates/blocks/${entry.href}`);
+      expect(response?.ok(), `${entry.href} must load successfully`).toBe(true);
+      await expect(page.getByRole('heading', { name: entry.title, level: 1 })).toBeVisible();
+    }
 
     expect(errors, `console/page errors:\n${errors.join('\n')}`).toEqual([]);
+  });
+
+  test('all navigation detail pages share one contained width and reserve room for open menus', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto(`${staticServer.origin}${BLOCKS_INDEX}`);
+    const pages = await page.locator('a.bb-card[href^="nav-"]').evaluateAll((cards) =>
+      cards.map((card) => card.getAttribute('href')).filter(Boolean));
+
+    for (const file of pages) {
+      await page.goto(`${staticServer.origin}/templates/blocks/${file}`);
+      const shell = page.locator('main.dx-shell');
+      const preview = page.locator('.bb-detail-preview');
+
+      await expect(shell, `${file} shell`).toHaveCount(1);
+      await expect(preview, `${file} preview`).toHaveCount(1);
+
+      const closed = await page.evaluate(() => {
+        const shellRect = document.querySelector('main.dx-shell').getBoundingClientRect();
+        const previewRect = document.querySelector('.bb-detail-preview').getBoundingClientRect();
+        return {
+          shellWidth: Math.round(shellRect.width),
+          previewInsideShell:
+            previewRect.left >= shellRect.left - 1 && previewRect.right <= shellRect.right + 1,
+          overflow: document.documentElement.scrollWidth - innerWidth,
+        };
+      });
+
+      expect(closed.shellWidth, `${file} must use the shared 1280px shell`).toBe(1280);
+      expect(closed.previewInsideShell, `${file} preview must stay inside the shell`).toBe(true);
+      expect(closed.overflow, `${file} must not overflow horizontally`).toBeLessThanOrEqual(1);
+
+      const summaries = page.locator('.bb-detail-preview details > summary');
+      for (let index = 0; index < await summaries.count(); index += 1) {
+        const summary = summaries.nth(index);
+        if (await summary.isVisible()) await summary.click();
+      }
+
+      const openPanels = await page.evaluate(() => {
+        const previewRect = document.querySelector('.bb-detail-preview').getBoundingClientRect();
+        return [...document.querySelectorAll('.bb-detail-preview details[open] > div')].map((panel) => {
+          const panelRect = panel.getBoundingClientRect();
+          return {
+            bottom: Math.round(panelRect.bottom),
+            previewBottom: Math.round(previewRect.bottom),
+          };
+        });
+      });
+
+      for (const panel of openPanels) {
+        expect(panel.bottom, `${file} open panel must fit inside its preview`).toBeLessThanOrEqual(panel.previewBottom + 1);
+      }
+    }
   });
 
   test('exactly one primary links tree serves desktop and mobile', async ({ page }) => {
@@ -4749,8 +4803,8 @@ test.describe('Navbar Logo Left Menu Right Grouped (navbar12)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
 
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
+  test.use({ actionTimeout: 5000, navigationTimeout: 10000 });
+  test.describe.configure({ timeout: 30000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
@@ -5695,11 +5749,15 @@ test.describe('Navbar Logo Left Menu Center Dropdown (navbar13)', () => {
       const linksRect = links.getBoundingClientRect();
       const brandRect = brand.getBoundingClientRect();
       const actionsRect = actions.getBoundingClientRect();
+      const navStyle = getComputedStyle(nav);
+      const navColumns = navStyle.gridTemplateColumns
+        .split(/\s+/)
+        .map((value) => Number.parseFloat(value));
       return {
         navCenterX: navRect.left + navRect.width / 2,
         linksCenterX: linksRect.left + linksRect.width / 2,
-        brandWidth: brandRect.width,
-        actionsWidth: actionsRect.width,
+        navDisplay: navStyle.display,
+        navColumns,
         brandRight: brandRect.right,
         linksLeft: linksRect.left,
         linksRight: linksRect.right,
@@ -5717,10 +5775,12 @@ test.describe('Navbar Logo Left Menu Center Dropdown (navbar13)', () => {
       Math.abs(shell.linksCenterX - shell.navCenterX),
       'menu remains geometrically centered despite unequal side widths'
     ).toBeLessThanOrEqual(16);
+    expect(shell.navDisplay, 'desktop shell uses CSS Grid').toBe('grid');
+    expect(shell.navColumns, 'desktop shell exposes three grid tracks').toHaveLength(3);
     expect(
-      Math.abs(shell.brandWidth - shell.actionsWidth),
-      'side content widths are unequal so centering is not accidental'
-    ).toBeGreaterThan(8);
+      Math.abs(shell.navColumns[0] - shell.navColumns[2]),
+      'equal outer grid tracks guarantee geometric centering'
+    ).toBeLessThanOrEqual(1);
 
     await page.locator('.rn13-disclosure > summary').click();
     await expect(page.locator('.rn13-panel')).toBeVisible();

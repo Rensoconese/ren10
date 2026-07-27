@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Rendered detector fixture</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      .edge-copy { margin: 0; color: rgb(180, 180, 180); background: rgb(255, 255, 255); }
+      .overflow { width: 140vw; }
+      .tight { width: 20rem; font-size: 16px; line-height: 16px; }
+      .long { width: 90rem; font-size: 16px; }
+      .cramped { border: 1px solid rgb(0, 0, 0); padding: 2px; }
+      .monotonous { display: grid; gap: 24px; padding: 24px; }
+      .monotonous > * { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <p class="edge-copy">Readable information must not touch the viewport edge.</p>
+    <div class="overflow">Overflowing region</div>
+    <p class="tight">This multiline paragraph has deliberately tight leading so the rendered detector can measure it accurately.</p>
+    <p class="long">This paragraph is deliberately rendered at a measure far wider than a comfortable reading line.</p>
+    <section class="cramped">Cramped content</section>
+    <section class="monotonous">
+      <h2>Same spacing</h2>
+      <p>Every relationship in this stack receives exactly the same visual distance.</p>
+      <button type="button">Continue</button>
+    </section>
+  </body>
+</html>

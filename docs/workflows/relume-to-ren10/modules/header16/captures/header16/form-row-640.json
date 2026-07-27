@@ -1,0 +1,17 @@
+{
+  "id": "form-row-640",
+  "url": "http://127.0.0.1:59531/templates/blocks/hero-split-email-form-landscape-image.html?ren10_capture=header16-form-row-640-353a3432ce59",
+  "viewport": {
+    "width": 640,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh16-form-row": 1,
+    ".rh16-submit": 1
+  },
+  "commit": "353a3432ce598bf53edf334cce0da6035e607745",
+  "capturedAt": "2026-07-15T18:54:10.499Z"
+}

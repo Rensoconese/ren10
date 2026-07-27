@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"exact-anatomy","kind":"structure","description":"One content-height centered container owns one h1, one description, and one search form/input/decorative icon/submit/status without legal or media extras","automated":true},
+    {"id":"responsive-form","kind":"geometry","description":"Form stacks safely at 320/390 and forms an aligned flexible-input/max-content-submit row from 640","automated":true},
+    {"id":"native-search","kind":"behavior","description":"Required native validation and a real GET action/query work with JavaScript disabled","automated":true},
+    {"id":"enhanced-status","kind":"behavior","description":"Valid enhanced submit exposes one polite non-action status without navigation or duplicate affordance","automated":true},
+    {"id":"icon-semantics","kind":"accessibility","description":"Visible label names the search input; one decorative left icon is hidden from accessibility APIs and does not duplicate the name","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"44px targets, visible focus, light/dark, reduced motion, native validation, and axe AA pass","automated":true},
+    {"id":"composition-safety","kind":"source","description":"Vanilla root-scoped module behavior and documented Ren10 tokens/layouts/components only","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh responsive light/dark/noJS/focus/validation/status captures await inspection","automated":false}
+  ]
+}

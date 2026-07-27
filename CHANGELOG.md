@@ -21,7 +21,96 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Security
 
+## [0.12.0] — 2026-07-24
+
+### Added
+
+- Added a complete twelve-block Blog / Article Content collection covering
+  featured-story hierarchy, topic discovery, chronological feeds, issue rails,
+  long-form reading, archives, search, author and topic pages, reading series,
+  related stories, and deliberate article endings.
+- Added responsive Grid, navigation-chain, visual hierarchy, source-policy,
+  light/dark, and scoped accessibility coverage for the editorial content set.
+- Added a complete twelve-block Contact collection with accessible RenForm
+  variants, direct support routes, office and regional directories, real
+  photography, responsive CSS Grid composition, and continuous block
+  navigation into Pricing.
+- Added automated Contact anatomy, form-contract, responsive overflow,
+  catalog-order, navigation, light/dark, and scoped accessibility coverage.
+- Added `ren10 detect`, a deterministic visual-quality detector for files,
+  directories, and URLs with static and browser rules, text/JSON output,
+  CI-ready exit codes, generic/Codex/strict profiles, review artifacts, and
+  narrowly scoped auditable exceptions.
+- Added a generated Ren10 design manifest, Codex post-edit hook integration,
+  deduplicated pending-finding state, detector documentation, fixtures, and
+  automated coverage across the CLI, installed package, and CI workflows.
+
+### Changed
+
+- Rebalanced all twelve Article Header examples with a deliberate editorial
+  spacing hierarchy between kicker, title, deck, metadata, and author.
+- Extended agent guidance, package smoke tests, release policy, and package
+  budgets to treat visual-quality detection and design-context freshness as
+  first-class Ren10 contracts.
+
+### Fixed
+
+- Corrected Application Shell contrast surfaces in dark mode, normalized 44px
+  navigation targets, exposed the planner as a named calendar group, and made
+  the split Inbox selection update its pressed state and message detail.
+- Corrected Footer contrast surfaces in dark mode, restored deliberate
+  separation before utility metadata, normalized 44px link targets, kept the
+  editorial wordmark on its own Grid row, and exposed customer proof as a
+  semantic list.
+- Corrected testimonial content grouping, dark-theme contrast surfaces,
+  accent-card kicker visibility, and duplicate quotation rules across the
+  twelve-block Testimonial collection.
+- Restored deliberate inline spacing for contained FAQ disclosures so indexed,
+  split, contrast, and category variants no longer crowd text against borders.
+- Fixed theme-dependent black-on-black text in the Contrast Type and Photo
+  Overlay Article Headers with a stable semantic contrast-surface token pair.
+
+### Removed
+
+### Security
+
 ### Accessibility milestones
+
+- Preserved WCAG 2.1 AA contrast, visible labels and focus treatment, native
+  form and address semantics, fluid narrow-screen layouts, and explicit
+  mail/phone destinations across all Contact blocks.
+
+## [0.11.0] — 2026-07-19
+
+### Added
+
+- Added complete twelve-block collections for FAQs, testimonials, footers,
+  application shells, pricing, and Blog / Article Headers, each with semantic
+  markup, responsive CSS Grid composition, explanatory detail pages, and
+  previous/next navigation.
+- Added automated anatomy, responsive overflow, source-policy, catalog-order,
+  and scoped accessibility coverage for every new block family.
+
+### Changed
+
+- Normalized block catalog spacing, preview containment, heading rhythm, real
+  editorial photography, and responsive behavior across navigation, hero,
+  CTA, feature, and blog surfaces.
+- Refined accordion disclosure motion and several feature compositions so
+  hierarchy, numbering, borders, and multi-column alignment remain coherent.
+
+### Fixed
+
+- Fixed contrast and form alignment regressions in photographic and contrast
+  CTA variants, including compact subscription legal copy.
+- Fixed clipped mega menus, irregular header padding, blog aside overflow,
+  documentation card gaps, layout examples, Alert Dialog behavior, and
+  overlapping tooltip and popover interactions.
+
+### Accessibility milestones
+
+- Preserved WCAG 2.1 AA contrast, keyboard focus, native semantics, reduced
+  motion, touch targets, and overflow safety throughout the expanded catalog.
 
 ## [0.10.0] — 2026-07-14
 
@@ -1217,7 +1306,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.10.0...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.11.0...HEAD
+[0.11.0]: https://github.com/Rensoconese/ren10/compare/v0.10.0...v0.11.0
 [0.10.0]: https://github.com/Rensoconese/ren10/compare/v0.9.3...v0.10.0
 [0.9.3]: https://github.com/Rensoconese/ren10/compare/v0.9.2...v0.9.3
 [0.9.2]: https://github.com/Rensoconese/ren10/compare/v0.9.1...v0.9.2

@@ -1,0 +1,17 @@
+{
+  "id": "reduced-motion",
+  "url": "http://127.0.0.1:49287/templates/blocks/hero-fullscreen-video-top-copy-band-dual-cta.html?ren10_capture=header11-reduced-motion-8a0392bce9da",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh11-motion": 1,
+    ".rh11-video": 1
+  },
+  "commit": "8a0392bce9da510defcd238128ad9440fd35c433",
+  "capturedAt": "2026-07-15T17:59:14.249Z"
+}

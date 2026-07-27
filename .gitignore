@@ -10,6 +10,7 @@ dist/
 build/
 .cache/
 .ren-knowledge/
+.ren10/cache/
 
 # Environment
 .env

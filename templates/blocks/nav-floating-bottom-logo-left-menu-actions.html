@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navbar Floating Bottom Logo-Left Menu Actions Block — RenDS Templates</title>
+  <meta name="description" content="A standalone RenDS bottom-docked floating navbar block with one permanent action, upward desktop dropdown, ren-nav, and progressive enhancement.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rn15-page-header {
+      max-width: 74ch;
+      padding-block: var(--space-8);
+    }
+
+    .rn15-page-header h1 {
+      margin: var(--space-2) 0 var(--space-3);
+      font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl));
+      line-height: 1.1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn15-page-header .lede {
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+
+    /*
+     * Preview owns docking geometry: mobile/top-near on small viewports,
+     * bottom-near on large viewports. Overflow stays visible so the upward
+     * desktop disclosure is not clipped.
+     */
+    .rn15-preview {
+      --ren-z-sticky: var(--z-sticky);
+      position: relative;
+      isolation: isolate;
+      margin-block: var(--space-6) var(--space-10);
+      min-height: min(32rem, 70vh);
+      padding: var(--space-4);
+      background: var(--color-surface-sunken);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      overflow: visible;
+    }
+
+    .rn15-preview ren-nav {
+      display: block;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+    }
+
+    .rn15-preview .ren-nav {
+      --ren-nav-height: 4.5rem;
+      position: relative;
+      z-index: var(--ren-z-sticky);
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      column-gap: var(--space-3);
+      min-height: var(--ren-nav-height);
+      padding-inline: var(--space-4);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: visible;
+    }
+
+    .rn15-preview .ren-nav-brand {
+      flex-shrink: 0;
+      margin-inline-end: auto;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      align-items: center;
+      gap: var(--space-2);
+      text-decoration: none;
+      color: var(--color-text);
+    }
+
+    .rn15-preview .ren-nav-links {
+      margin: 0;
+      margin-inline-start: 0;
+    }
+
+    .rn15-preview .ren-nav-actions {
+      margin-inline-start: 0;
+      flex-shrink: 0;
+    }
+
+    .rn15-preview .ren-nav-toggle {
+      flex-shrink: 0;
+      margin-inline-start: 0;
+    }
+
+    .rn15-preview .ren-nav-link,
+    .rn15-preview .ren-nav-actions .ren-btn,
+    .rn15-preview .rn15-destination {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+    }
+
+    .rn15-brand-mark {
+      --row-gap: 0;
+      width: var(--size-sm);
+      height: var(--size-sm);
+      justify-content: center;
+      color: var(--color-surface);
+      background: var(--color-text);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-bold);
+    }
+
+    .rn15-brand-label {
+      font-weight: var(--weight-semibold);
+    }
+
+    /* Neutralize Primitive Zero details chrome; one authored chevron only. */
+    .rn15-disclosure {
+      position: static;
+      border: none;
+      border-radius: 0;
+      padding: 0;
+      margin: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .rn15-disclosure[open] {
+      padding-block-end: 0;
+    }
+
+    .rn15-disclosure > summary {
+      list-style: none;
+      cursor: pointer;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      --row-gap: var(--space-1);
+      justify-content: flex-start;
+      margin: 0;
+      padding: var(--space-2) var(--space-3);
+      font-weight: inherit;
+      color: inherit;
+      border: none;
+      border-radius: var(--radius-md);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+    }
+
+    .rn15-disclosure > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .rn15-disclosure > summary::marker {
+      content: "";
+    }
+
+    .rn15-disclosure > summary::after,
+    .rn15-disclosure[open] > summary::after {
+      content: none;
+      display: none;
+      width: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      border: none;
+      transform: none;
+      flex-shrink: 0;
+    }
+
+    .rn15-disclosure[open] > summary {
+      margin-block-end: 0;
+      padding-block-end: var(--space-2);
+      border-block-end: none;
+    }
+
+    .rn15-chevron {
+      display: inline-flex;
+      flex-shrink: 0;
+      transition: transform var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn15-disclosure[open] > summary .rn15-chevron {
+      transform: rotate(180deg);
+    }
+
+    .rn15-panel {
+      padding: var(--space-2);
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      transition:
+        opacity var(--duration-enter) var(--ease-enter),
+        visibility var(--duration-enter) var(--ease-enter);
+    }
+
+    .rn15-dest-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      --stack-gap: var(--space-1);
+    }
+
+    .rn15-destination {
+      display: flex;
+      align-items: center;
+      box-sizing: border-box;
+      width: 100%;
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: var(--space-2) var(--space-3);
+      color: var(--color-text);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      line-height: 1.25;
+      transition:
+        background-color var(--duration-state) var(--ease-state-change),
+        color var(--duration-state) var(--ease-state-change);
+    }
+
+    .rn15-destination:hover {
+      background: var(--color-fill);
+      color: var(--color-accent);
+    }
+
+    .rn15-destination:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset);
+    }
+
+    .rn15-hero {
+      padding: clamp(var(--space-8), 8vw, var(--space-16));
+      min-height: 280px;
+      align-content: center;
+      background:
+        linear-gradient(135deg, var(--color-surface), var(--color-surface-sunken));
+      border-radius: var(--radius-lg);
+      margin-block-start: var(--space-4);
+    }
+
+    .rn15-hero h2 {
+      max-width: 20ch;
+      margin: 0;
+      font-size: clamp(var(--text-4xl), 7vw, var(--text-7xl));
+      line-height: 1;
+      font-weight: var(--weight-bold);
+    }
+
+    .rn15-hero p {
+      max-width: 56ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: 1.6;
+    }
+
+    /*
+     * Seam-free shell boundary aligned with ren-nav base:
+     * - ren-nav CSS mobile: max-width: 48rem (includes 768px)
+     * - this block mobile: max-width: 48rem
+     * - this block + JS desktop: min-width: 48.01rem (769px class and up)
+     * Using min-width: 48rem here would fight ren-nav at exactly 768px
+     * (toggle flex + links hidden while local logic thought "desktop").
+     */
+    @media (min-width: 48.01rem) {
+      /* Bottom-dock the floating shell inside the preview surface. */
+      .rn15-preview {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+
+      .rn15-preview ren-nav {
+        order: 2;
+      }
+
+      .rn15-hero {
+        order: 1;
+        margin-block-start: 0;
+        margin-block-end: var(--space-4);
+        flex: 1 1 auto;
+      }
+
+      .rn15-preview .ren-nav-brand {
+        margin-inline-end: auto;
+        justify-content: flex-start;
+        width: auto;
+        min-width: var(--touch-min);
+      }
+
+      /*
+       * Narrow panel ABOVE the trigger (bottom-docked bar). Disclosure is
+       * relative; bottom offset clears the vertically-centered nav bar so
+       * panelBottom <= navTop. Corridor fills the gap for hover stability.
+       */
+      .rn15-disclosure {
+        position: relative;
+        height: auto;
+        align-self: center;
+        overflow: visible;
+      }
+
+      .rn15-panel {
+        position: absolute;
+        bottom: calc(100% + ((var(--ren-nav-height) - var(--touch-min)) / 2));
+        top: auto;
+        left: 50%;
+        right: auto;
+        z-index: var(--ren-z-sticky);
+        width: 12rem;
+        max-width: min(12rem, calc(100vw - var(--space-8)));
+        transform: translateX(-50%);
+      }
+
+      /* Keep the disclosure hoverable while the pointer crosses the bar-to-panel gap. */
+      .rn15-panel::before {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 100%;
+        block-size: calc((var(--ren-nav-height) - var(--touch-min)) / 2);
+        pointer-events: auto;
+      }
+    }
+
+    @media (max-width: 48rem) {
+      /*
+       * One top row: brand | permanent action + toggle. Navigation tree lives
+       * inside the opened panel — action stays permanent chrome (unlike
+       * Navbar 14 panel-owned dual actions). Matches ren-nav base mobile
+       * boundary (max-width: 48rem), including the 768px seam.
+       */
+      .rn15-preview .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-rows: auto auto;
+        align-items: center;
+        column-gap: var(--space-2);
+        row-gap: 0;
+      }
+
+      .rn15-preview .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+        justify-self: start;
+        margin-inline-end: 0;
+      }
+
+      .rn15-preview .ren-nav-actions {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+        margin-inline-start: 0;
+      }
+
+      .rn15-preview .ren-nav-toggle {
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        margin-inline-start: 0;
+      }
+
+      .rn15-preview .ren-nav-links {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        position: static;
+        width: 100%;
+        border-block-end: none;
+        align-items: stretch;
+        animation: none;
+      }
+
+      .rn15-preview .ren-nav-links > li {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rn15-preview .ren-nav-links .ren-nav-link,
+      .rn15-preview .rn15-disclosure,
+      .rn15-preview .rn15-disclosure > summary {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+        justify-content: flex-start;
+        text-align: start;
+        align-self: stretch;
+      }
+
+      .rn15-preview .rn15-disclosure > summary {
+        border-radius: 0;
+        padding-inline: var(--space-4);
+      }
+
+      .rn15-panel {
+        width: 100%;
+        max-width: none;
+        position: static;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        padding: var(--space-1) 0 var(--space-2);
+        transform: none;
+      }
+
+      .rn15-dest-list {
+        padding: var(--space-1) var(--space-4) var(--space-2);
+      }
+
+      .rn15-destination {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
+    /* JS-disabled mobile: hide inert toggle; expose the one tree + permanent action. */
+    @media (max-width: 48rem) {
+      .rn15-preview ren-nav:not(:defined) .ren-nav {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-rows: auto auto;
+      }
+
+      .rn15-preview ren-nav:not(:defined) .ren-nav-toggle {
+        display: none;
+      }
+
+      .rn15-preview ren-nav:not(:defined) .ren-nav-brand {
+        grid-column: 1;
+        grid-row: 1;
+        margin-inline-end: 0;
+      }
+
+      .rn15-preview ren-nav:not(:defined) .ren-nav-actions {
+        grid-column: 2;
+        grid-row: 1;
+        margin-inline-start: 0;
+      }
+
+      .rn15-preview ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        grid-column: 1 / -1;
+        grid-row: 2;
+        animation: none;
+        border-block-end: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rn15-chevron,
+      .rn15-destination,
+      .rn15-panel {
+        transition: none;
+        animation: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a href="../../docs/index.html" class="dx-brand">
+        <span class="dx-brand-mark">R</span>
+        <span>RenDS</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="../index.html" aria-current="page">Templates</a>
+        <a href="../../create/index.html">Theme Builder</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a>
+        <a href="../../docs/getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="rn15-page-header bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
+        <ol>
+          <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
+          <li><a href="index.html" class="ren-link-plain">Blocks</a></li>
+          <li aria-current="page">Navbar Floating Bottom Logo-Left Menu Actions</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Navbar block</p>
+      <h1>Navbar Floating Bottom Logo-Left Menu Actions</h1>
+      <p class="lede">
+        A single navigation tree on a compact floating shell that docks near the
+        bottom on large viewports and near the top on small ones. One permanent
+        action stays in chrome; the desktop disclosure opens upward. Built with
+        <code>ren-nav</code>, native <code>details</code>/<code>summary</code>,
+        layout primitives, and progressive enhancement. No dual panel-owned
+        actions, second tree, or nested landmark.
+      </p>
+    </header>
+
+    <section class="rn15-preview bb-detail-preview" data-rn15-root aria-label="Navbar floating bottom logo-left menu actions preview">
+      <ren-nav>
+        <nav class="ren-nav" aria-label="Example site">
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home" aria-label="Ren10 home">
+            <span class="rn15-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="rn15-brand-label ren10-demo-brand-label">Ren10</span>
+          </a>
+
+          <ul id="rn15-primary-links" class="ren-nav-links">
+            <li>
+              <a class="ren-nav-link ren-row" href="#product">Product</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#pricing">Pricing</a>
+            </li>
+            <li>
+              <a class="ren-nav-link ren-row" href="#resources">Resources</a>
+            </li>
+            <li>
+              <details class="rn15-disclosure">
+                <summary class="ren-nav-link ren-row">
+                  Solutions
+                  <span class="rn15-chevron ren-icon ren-icon-sm" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path fill="currentColor" d="M4.2 6.2a.75.75 0 0 1 1.06 0L8 8.94l2.74-2.74a.75.75 0 1 1 1.06 1.06l-3.27 3.27a.75.75 0 0 1-1.06 0L4.2 7.26a.75.75 0 0 1 0-1.06z"/></svg>
+                  </span>
+                </summary>
+
+                <div class="rn15-panel">
+                  <ul class="rn15-dest-list ren-stack-sm" aria-label="Solutions">
+                    <li>
+                      <a class="rn15-destination" href="#teams">Teams</a>
+                    </li>
+                    <li>
+                      <a class="rn15-destination" href="#workflows">Workflows</a>
+                    </li>
+                    <li>
+                      <a class="rn15-destination" href="#insights">Insights</a>
+                    </li>
+                  </ul>
+                </div>
+              </details>
+            </li>
+          </ul>
+
+          <div class="ren-nav-actions ren-cluster">
+            <a class="ren-btn ren-btn-primary" href="#start">Start free</a>
+          </div>
+
+          <button
+            class="ren-nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="rn15-primary-links"
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </nav>
+      </ren-nav>
+
+      <div class="rn15-hero ren-stack">
+        <h2>Navigation that docks with the content.</h2>
+        <p>
+          A quiet marketing surface above the bottom-docked bar so the floating
+          shell, permanent action, and upward disclosure stay easy to judge while
+          you copy the block.
+        </p>
+        <p class="ren-cluster">
+          <a class="ren-btn" href="#start">Start free</a>
+          <a class="ren-btn ren-btn-ghost" href="#product">See product</a>
+        </p>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-floating-logo-left-menu-right-actions.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Floating Logo-Left Menu-Right Actions Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-logo-left-action-overlay-menu.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Logo-Left Action Overlay Menu Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module">
+    /**
+     * Block-local compact dropdown controller.
+     * Native details owns open/close via click, Enter, and Space on mobile and
+     * for keyboard activation on desktop. Desktop pointer hover-open is additive.
+     *
+     * Desktop pointer click state machine (deterministic, no timers):
+     *   - hover opens transiently
+     *   - first pointer click while hover-open pins the disclosure open
+     *   - second pointer click closes and suppresses hover re-open until leave
+     *   - click while closed opens (pinned)
+     * Keyboard Enter/Space: native details toggle (event.detail === 0).
+     */
+    const RN15_CONTROLLER = Symbol.for('ren10.rn15.controller');
+    /**
+     * Desktop shell starts just above ren-nav's max-width: 48rem mobile band.
+     * Complements block CSS min-width: 48.01rem / max-width: 48rem so 768px is
+     * mobile for both ren-nav base and this controller (no hover-desktop on a
+     * hidden tree / visible toggle).
+     */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
+
+    export function initNavFloatingBottomLogoLeftMenuActions(scope = document) {
+      const root = scope.querySelector?.('[data-rn15-root]') ?? scope;
+      if (!(root instanceof Element) || !root.hasAttribute('data-rn15-root')) {
+        const nested = document.querySelector('[data-rn15-root]');
+        if (!nested) return null;
+        return initNavFloatingBottomLogoLeftMenuActionsOn(nested);
+      }
+      return initNavFloatingBottomLogoLeftMenuActionsOn(root);
+    }
+
+    function initNavFloatingBottomLogoLeftMenuActionsOn(root) {
+      const disclosure = root.querySelector('.rn15-disclosure');
+      const summary = disclosure?.querySelector('summary');
+      if (!disclosure || !summary) return null;
+
+      const previous = root[RN15_CONTROLLER];
+      if (previous?.abort) previous.abort();
+
+      const controller = new AbortController();
+      root[RN15_CONTROLLER] = controller;
+      const { signal } = controller;
+
+      const renNavHost = root.querySelector('ren-nav');
+      const toggle = root.querySelector('.ren-nav-toggle');
+      const desktopQuery = window.matchMedia(DESKTOP_MQ);
+
+      /** Pointer is inside disclosure + panel hit region on desktop. */
+      let pointerInside = false;
+      /** True after hover-only open; first pointer click pins (clears this). */
+      let hoverTransient = false;
+      /** Desktop pointer click pinned open — survives pointerleave until second click. */
+      let pointerPinned = false;
+      /** After intentional close while pointer still inside — no hover re-open until leave. */
+      let ignoreHoverUntilLeave = false;
+
+      function isDesktop() {
+        return desktopQuery.matches;
+      }
+
+      function resetHoverFlags() {
+        hoverTransient = false;
+        pointerPinned = false;
+        ignoreHoverUntilLeave = false;
+        pointerInside = false;
+      }
+
+      function closeDisclosure(returnFocus) {
+        if (!disclosure.open) return;
+        disclosure.open = false;
+        hoverTransient = false;
+        pointerPinned = false;
+        if (returnFocus) summary.focus();
+      }
+
+      function openDisclosure(source = 'programmatic') {
+        if (disclosure.open) return;
+        disclosure.open = true;
+        hoverTransient = source === 'hover';
+        pointerPinned = source === 'click' || source === 'programmatic';
+      }
+
+      function markIntentionalCloseWhilePointerInside() {
+        if (isDesktop() && pointerInside) ignoreHoverUntilLeave = true;
+      }
+
+      function isMobileNavOpen() {
+        if (!toggle) return false;
+        return toggle.getAttribute('aria-expanded') === 'true' || renNavHost?.hasAttribute('data-open');
+      }
+
+      // stopImmediatePropagation keeps ren-nav from treating summary activation
+      // as an outside dismiss. Desktop pointer clicks are owned here; keyboard
+      // and mobile keep native details toggle (no preventDefault).
+      summary.addEventListener(
+        'click',
+        (event) => {
+          event.stopImmediatePropagation();
+          if (!isDesktop()) return;
+
+          // Keyboard-generated activation: detail === 0 — leave native toggle.
+          if (event.detail === 0) {
+            hoverTransient = false;
+            pointerPinned = false;
+            ignoreHoverUntilLeave = false;
+            return;
+          }
+
+          event.preventDefault();
+
+          if (!disclosure.open) {
+            ignoreHoverUntilLeave = false;
+            openDisclosure('click');
+            pointerPinned = true;
+            return;
+          }
+
+          if (hoverTransient) {
+            // First real pointer click after hover-open: pin open.
+            hoverTransient = false;
+            pointerPinned = true;
+            return;
+          }
+
+          // Pinned or click-opened: genuine close.
+          markIntentionalCloseWhilePointerInside();
+          closeDisclosure(false);
+        },
+        { capture: true, signal }
+      );
+
+      function openFromDesktopPointer() {
+        if (!isDesktop() || ignoreHoverUntilLeave) return;
+        pointerInside = true;
+        if (!disclosure.open) openDisclosure('hover');
+      }
+
+      disclosure.addEventListener('pointerenter', openFromDesktopPointer, { signal });
+      disclosure.addEventListener(
+        'pointermove',
+        () => {
+          if (!isDesktop() || disclosure.open || ignoreHoverUntilLeave) return;
+          openFromDesktopPointer();
+        },
+        { signal }
+      );
+
+      disclosure.addEventListener(
+        'pointerleave',
+        () => {
+          if (!isDesktop()) return;
+          pointerInside = false;
+          ignoreHoverUntilLeave = false;
+          hoverTransient = false;
+          if (!pointerPinned) closeDisclosure(false);
+        },
+        { signal }
+      );
+
+      /**
+       * Hierarchical Escape (capture, before ren-nav's bubble handler):
+       * 1) open disclosure → close it and return focus to summary
+       * 2) else mobile shell open → close shell via toggle (keeps ren-nav
+       *    _isOpen in sync) and restore focus to the toggle so focus does not
+       *    remain on a now-hidden tree link
+       */
+      document.addEventListener(
+        'keydown',
+        (event) => {
+          if (event.key !== 'Escape') return;
+
+          if (disclosure.open) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(true);
+            return;
+          }
+
+          if (!isDesktop() && isMobileNavOpen() && toggle) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            // Activate the real toggle so ren-nav's internal open state stays
+            // consistent; then restore focus to the permanent chrome control.
+            toggle.click();
+            toggle.focus();
+          }
+        },
+        { capture: true, signal }
+      );
+
+      document.addEventListener(
+        'click',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      document.addEventListener(
+        'focusin',
+        (event) => {
+          if (!disclosure.open) return;
+          const target = event.target;
+          if (!(target instanceof Node)) return;
+          if (!disclosure.contains(target)) {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          }
+        },
+        { signal }
+      );
+
+      disclosure.querySelectorAll('a[href]').forEach((anchor) => {
+        anchor.addEventListener(
+          'click',
+          () => {
+            markIntentionalCloseWhilePointerInside();
+            closeDisclosure(false);
+          },
+          { signal }
+        );
+      });
+
+      if (toggle) {
+        const observer = new MutationObserver(() => {
+          if (!isMobileNavOpen()) closeDisclosure(false);
+        });
+        observer.observe(toggle, { attributes: true, attributeFilter: ['aria-expanded'] });
+        if (renNavHost) {
+          observer.observe(renNavHost, { attributes: true, attributeFilter: ['data-open'] });
+        }
+        signal.addEventListener('abort', () => observer.disconnect());
+      }
+
+      let wasDesktop = isDesktop();
+      const onViewportChange = () => {
+        const nowDesktop = isDesktop();
+        if (wasDesktop !== nowDesktop) {
+          resetHoverFlags();
+          closeDisclosure(false);
+        }
+        wasDesktop = nowDesktop;
+      };
+      if (typeof desktopQuery.addEventListener === 'function') {
+        desktopQuery.addEventListener('change', onViewportChange, { signal });
+      } else {
+        window.addEventListener('resize', onViewportChange, { signal });
+      }
+
+      return controller;
+    }
+
+    initNavFloatingBottomLogoLeftMenuActions();
+    window.initNavFloatingBottomLogoLeftMenuActions = initNavFloatingBottomLogoLeftMenuActions;
+  </script>
+</body>
+</html>

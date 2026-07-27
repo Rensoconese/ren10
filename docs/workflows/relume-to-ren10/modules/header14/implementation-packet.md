@@ -1,0 +1,3 @@
+# Implementation Packet — Header14
+
+Build only `templates/blocks/hero-lightbox-top-email-split-band.html` and `tests/components/header14-header.spec.cjs`. Preserve the exact media-trigger/dialog/iframe and email-form band anatomy from the authenticated brief. Add only required Ren10 accessibility: visible label, native validation/error, polite status, real terms/form/video-alternative destinations, dialog focus semantics, and reduced-motion compliance. Prove RED from the absent block before production. Validate 320/390/640/767/768/1280, light/dark, dialog loading/loaded/close, no-JS, axe, lint, and workflow. Capture fresh states. Finish at green, never reviewed; do not edit inventory/catalog.

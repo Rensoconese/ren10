@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"exact-anatomy","kind":"structure","description":"One centered content-height hero owns one h1, description, exactly two CTA anchors, then exactly one landscape image without extras","automated":true},
+    {"id":"responsive-order","kind":"geometry","description":"Copy-actions-image order remains invariant and overflow-free while CTA controls wrap safely at 320px","automated":true},
+    {"id":"real-destinations","kind":"behavior","description":"Both CTA anchors use distinct resolvable local destinations with and without JavaScript","automated":true},
+    {"id":"owned-image","kind":"media","description":"The full-width 16:9 image is an owned intrinsic asset with truthful non-empty alternative text","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"44px targets, visible focus, light/dark, reduced motion, semantic order, and axe AA pass","automated":true},
+    {"id":"ren10-policy","kind":"source","description":"Vanilla HTML/CSS and documented Ren10 primitives only; no script, framework, raw layout skeleton, or forbidden token","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh responsive light/dark/focus/noJS/reduced-motion captures await Codex inspection","automated":false}
+  ]
+}

@@ -102,6 +102,21 @@ try {
 
   const packageRoot = path.join(packageHost, 'node_modules', 'ren10');
   const cli = path.join(packageRoot, 'cli', 'index.js');
+  const installedDesign = JSON.parse(run(process.execPath, [cli, 'design-context', '--json'], packageHost));
+  if (installedDesign.type !== 'design-context.detail' || installedDesign.data.components.counts.total !== 53) {
+    throw new Error('installed package design-context command is incomplete');
+  }
+  const detectorConsumer = path.join(tmp, 'detector-consumer');
+  fs.mkdirSync(detectorConsumer);
+  fs.writeFileSync(path.join(detectorConsumer, 'index.html'), '<!doctype html><html lang="en"><title>Clean</title><main><h1>Clean</h1><button type="button">OK</button></main></html>');
+  const installedDetector = JSON.parse(run(process.execPath, [cli, 'detect', 'index.html', '--json'], detectorConsumer));
+  if (installedDetector.type !== 'detector.report' || installedDetector.data.summary.total !== 0) {
+    throw new Error('installed package detector failed its clean smoke');
+  }
+  run(process.execPath, [cli, 'hooks', 'install', '--json'], detectorConsumer);
+  if (!fs.existsSync(path.join(detectorConsumer, '.codex', 'hooks.json'))) {
+    throw new Error('installed package hooks command did not write a Codex manifest');
+  }
   const requiredSkillFiles = [
     'v0.json',
     'sources.json',

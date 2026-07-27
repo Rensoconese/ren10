@@ -1,0 +1,149 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/nav-logo-left-action-overlay-menu.html",
+  "root": "[data-rn16-root]",
+  "states": [
+    {
+      "id": "desktop-light-closed",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".ren-nav-brand": 1,
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5,
+        ".rn16-contact": 1,
+        ".ren-nav-toggle": 1,
+        ".rn16-chevron": 0
+      }
+    },
+    {
+      "id": "desktop-light-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5,
+        ".rn16-contact": 1
+      }
+    },
+    {
+      "id": "desktop-dark-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5
+      }
+    },
+    {
+      "id": "tablet-light-open",
+      "viewport": { "width": 834, "height": 1112 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5
+      }
+    },
+    {
+      "id": "mobile-light-closed",
+      "viewport": { "width": 390, "height": 844 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".ren-nav-toggle": 1,
+        "#rn16-primary-links > li": 6
+      }
+    },
+    {
+      "id": "mobile-light-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5,
+        ".rn16-contact": 1
+      }
+    },
+    {
+      "id": "mobile-dark-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "dark",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5
+      }
+    },
+    {
+      "id": "mobile-js-disabled-open",
+      "viewport": { "width": 390, "height": 1100 },
+      "theme": "light",
+      "javaScript": false,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6,
+        ".rn16-social-link": 5,
+        ".rn16-contact": 1
+      }
+    },
+    {
+      "id": "desktop-reduced-motion-open",
+      "viewport": { "width": 1280, "height": 900 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": true,
+      "actions": [{ "type": "click", "selector": ".ren-nav-toggle" }],
+      "expectedMarkers": {
+        "#rn16-primary-links > li": 6
+      }
+    },
+    {
+      "id": "narrow-320-closed",
+      "viewport": { "width": 320, "height": 640 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".ren-nav-toggle": 1,
+        ".ren-nav-brand": 1,
+        ".ren-nav-actions .ren-btn-primary": 1,
+        "#rn16-primary-links > li": 6
+      }
+    },
+    {
+      "id": "narrow-340-closed",
+      "viewport": { "width": 340, "height": 640 },
+      "theme": "light",
+      "javaScript": true,
+      "reducedMotion": false,
+      "actions": [],
+      "expectedMarkers": {
+        ".ren-nav-toggle": 1,
+        ".ren-nav-brand": 1,
+        ".ren-nav-actions .ren-btn-primary": 1,
+        "#rn16-primary-links > li": 6
+      }
+    }
+  ]
+}

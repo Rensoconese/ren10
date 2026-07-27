@@ -1,0 +1,52 @@
+{
+  "stage": "green",
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "b220e503f204d4d1f7979dbdfe4df6671ed25743",
+  "capturesFresh": true,
+  "captures": {
+    "desktop": "captures/header19/desktop-light.png",
+    "mobile": "captures/header19/mobile-390.png",
+    "desktopLight": "captures/header19/desktop-light.png",
+    "desktopDark": "captures/header19/desktop-dark.png",
+    "large1024": "captures/header19/large-1024.png",
+    "seam1023": "captures/header19/seam-1023.png",
+    "tablet767": "captures/header19/tablet-767.png",
+    "mobile390": "captures/header19/mobile-390.png",
+    "narrow320": "captures/header19/narrow-320.png",
+    "reducedMotionFocus": "captures/header19/desktop-reduced-motion-focus.png",
+    "mobileDark": "captures/header19/mobile-dark.png",
+    "noJavaScript": "captures/header19/mobile-js-disabled.png"
+  },
+  "cascadeInspection": "The final DOM, cascade, source-derived anatomy, destinations, owned image, and all ten fresh captures were independently checked. One content-height section owns one constrained ren-switcher with one copy region and one image region. The copy contains exactly one h1, one description, and exactly two real CTA anchors in a wrapping ren-cluster. A single DOM tree preserves copy-first reading/focus order through 1023px; from 1024px only visual order changes to image-left/copy-right while equal peers remain vertically centered. The image is local, meaningful, intrinsically sized, rounded, and cover-fitted. No raw flex/grid skeleton, viewport forcing, form, nav, logo, video, dialog, overlay, third CTA, duplicate tree, forbidden palette token, hardcoded chromatic color, framework code, or script remains.",
+  "independentReview": {
+    "result": "passed",
+    "severityFindings": {
+      "p1": 0,
+      "p2": 0
+    },
+    "reviewedCaptures": 10,
+    "captureCommitVerified": true,
+    "notes": "Independent Codex review rechecked reference lineage, acceptance criteria, HTML, focused tests and all ten PNGs. Mobile and tablet retain copy then image; the 1023/1024 seam switches exactly once to image-left/copy-right; both real CTA destinations resolve; touch, focus, no-JavaScript, reduced-motion and theme states remain coherent. The 1280 by 900 local screenshot is a truthful landscape image with matching intrinsic metadata. No correction or recapture was necessary."
+  },
+  "checklist": {
+    "total": 36,
+    "passed": 36,
+    "summary": {
+      "lineageAndScope": "5/5 passed: authenticated reference, source-derived map, isolated scope, genuine RED and fresh capture provenance.",
+      "anatomy": "6/6 passed: one content-height section, copy, h1, description, two CTAs and one image; no extras or duplicate tree.",
+      "ren10Contract": "6/6 passed: vanilla Light DOM, documented switcher/stack/cluster/center/frame/button APIs, semantic tokens and no raw flex/grid skeleton.",
+      "responsive": "5/5 passed: copy-first through 1023px, equal centered image-left split from 1024px, wrapping CTAs and no overflow at every required width.",
+      "accessibility": "6/6 passed: real distinct destinations, logical order, visible focus, 44px targets, meaningful image alternative, no-JS and reduced-motion safety, Axe AA.",
+      "visual": "4/4 passed: all ten light/dark/mobile/desktop/seam/focus captures are aligned, unclipped, coherent and commit-traceable.",
+      "verification": "4/4 passed: focused Playwright 28/28, lint/token policy, agent/evals/doctor, workflow and repository integrity checks."
+    }
+  },
+  "validation": {
+    "focusedPlaywright": "28/28 passed across Desktop Light and Desktop Dark",
+    "axe": "WCAG 2.1 A/AA passed in light and dark",
+    "responsiveWidths": [320, 390, 767, 1023, 1024, 1280],
+    "workflowStage": "green"
+  },
+  "applicableEvalsChecklist": "All applicable RenDS self-check items pass for semantic vanilla Light DOM, tokens/layout primitives, real distinct link destinations, focus/touch geometry, intrinsic image metadata, responsive ordering, reduced motion, JavaScript fallback, light/dark rendering, and browser verification. Form, dialog, navigation, table, and new-component checklist items are not applicable."
+}

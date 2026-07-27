@@ -50,7 +50,7 @@ export function initContextMenu(menuOrId) {
     if ('hidePopover' in menu && menu.matches(':popover-open')) {
       try {
         menu.hidePopover();
-      } catch (e) {
+      } catch {
         // Popover may have already been closed by the browser.
       }
     } else {
@@ -73,7 +73,7 @@ export function initContextMenu(menuOrId) {
     if ('showPopover' in menu) {
       try {
         menu.showPopover();
-      } catch (e) {
+      } catch {
         // Popover may already be open during rapid repeated contextmenu events.
       }
     } else {

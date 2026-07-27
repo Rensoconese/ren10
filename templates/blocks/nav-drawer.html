@@ -75,6 +75,11 @@
       border-radius: var(--radius-full);
     }
 
+    .rb-nav-drawer-close {
+      min-inline-size: var(--touch-min);
+      min-block-size: var(--touch-min);
+    }
+
     .rb-hero {
       padding: clamp(var(--space-8), 8vw, var(--space-16));
       min-height: 360px;
@@ -187,7 +192,7 @@
       <a href="../../docs/index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="../../docs/index.html">Docs</a>
@@ -202,8 +207,8 @@
     </div>
   </header>
 
-  <main class="dx-shell">
-    <header class="rb-page-header">
+  <main class="dx-shell bb-detail-page">
+    <header class="rb-page-header bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
         <ol>
           <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
@@ -219,16 +224,16 @@
       </p>
     </header>
 
-    <section class="rb-preview" aria-label="Navbar drawer preview">
+    <section class="rb-preview bb-detail-preview" aria-label="Navbar drawer preview">
       <nav class="rb-nav ren-row-spread" aria-label="Example site">
-        <a class="rb-brand ren-row" href="#">
-          <span class="rb-brand-mark ren-center" aria-hidden="true">A</span>
-          <span>Atlas Studio</span>
+        <a class="rb-brand ren-row ren10-demo-brand" href="#">
+          <span class="rb-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+          <span class="ren10-demo-brand-label">Ren10</span>
         </a>
         <div class="rb-nav-actions ren-cluster">
           <a class="ren-btn ren-btn-secondary" href="#">Book a call</a>
-          <button class="ren-btn ren-btn-icon" type="button" data-sheet-trigger="rb-nav-drawer" aria-label="Open navigation menu">
-            <span class="rb-menu-icon ren-stack-sm" aria-hidden="true">
+          <button class="ren-btn ren-btn-icon" type="button" data-sheet-trigger="rb-nav-drawer" aria-controls="rb-nav-drawer" aria-expanded="false" aria-haspopup="dialog" aria-label="Open navigation menu">
+            <span class="rb-menu-icon ren-stack ren-stack-sm" aria-hidden="true">
               <span></span>
               <span></span>
               <span></span>
@@ -253,10 +258,10 @@
     <ren-sheet side="right" size="md" id="rb-nav-drawer">
       <header class="ren-sheet-header">
         <h2 class="ren-sheet-title">Navigation</h2>
-        <button type="button" class="ren-sheet-close" data-sheet-close aria-label="Close navigation menu">×</button>
+        <button type="button" class="ren-sheet-close rb-nav-drawer-close" data-sheet-close aria-label="Close navigation menu">×</button>
       </header>
       <div class="ren-sheet-body">
-        <ul class="rb-drawer-links ren-stack-sm">
+        <ul class="rb-drawer-links ren-stack ren-stack-sm">
           <li><a class="ren-row" href="#" data-sheet-close>Work</a></li>
           <li><a class="ren-row" href="#" data-sheet-close>Services</a></li>
           <li><a class="ren-row" href="#" data-sheet-close>Process</a></li>
@@ -280,8 +285,30 @@
         <a class="ren-btn ren-btn-full" href="#" data-sheet-close>Book a call</a>
       </footer>
     </ren-sheet>
-  </main>
 
-  <script type="module" src="../../components/composites/ren-sheet/ren-sheet.js"></script>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="index.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>All blocks</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-mega-menu.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Mega Menu Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+
+  <script type="module">
+    import '../../components/composites/ren-sheet/ren-sheet.js';
+
+    const drawer = document.getElementById('rb-nav-drawer');
+    const trigger = document.querySelector('[data-sheet-trigger="rb-nav-drawer"]');
+    const syncTrigger = (isOpen) => {
+      trigger?.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+
+    drawer?.addEventListener('ren-open', () => syncTrigger(true));
+    drawer?.addEventListener('ren-close', () => syncTrigger(false));
+  </script>
 </body>
 </html>

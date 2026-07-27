@@ -16,7 +16,7 @@
   </style>
 </head>
 <body>
-  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
+  <header class="dx-nav"><div class="dx-nav-inner"><a href="../index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span></a><nav class="dx-nav-menu" aria-label="Primary"><a href="../index.html">Docs</a><a href="../components.html" aria-current="page">Components</a><a href="../../templates/index.html">Templates</a><a href="../../create/index.html">Theme Builder</a></nav><div class="dx-nav-actions"><a href="https://github.com/Rensoconese/ren10" class="ren-btn ren-btn-ghost ren-btn-sm">GitHub</a><a href="../getting-started.html" class="ren-btn ren-btn-primary ren-btn-sm">Get started</a></div></div></header>
 
   <div class="dx-shell dx-shell-grid">
     <aside class="dx-sidebar" aria-label="Site navigation">
@@ -110,7 +110,7 @@
       <header class="dx-header">
         <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Alert Dialog</li></ol></nav>
         <p class="dx-kicker">Composite</p>
-        <h1>Alert Dialog <span class="dx-api-badge dx-api-badge-hybrid" title="Renders without JS; JS adds enhancements">Hybrid</span></h1>
+        <h1>Alert Dialog <span class="dx-api-badge dx-api-badge-css" title="Styled with CSS; opened with the native dialog API">CSS-only</span></h1>
         <p class="lede">A confirmation dialog for destructive or irreversible actions. Same shell as <a href="ren-dialog.html" class="ren-link">Dialog</a>, but the user must press a button to close — backdrop click and Escape are suppressed.</p>
       </header>
 
@@ -128,48 +128,46 @@
         <h2>Demo</h2>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <button class="ren-btn ren-btn-danger" type="button" data-trigger="alert-demo">Delete account</button>
+            <button class="ren-btn ren-btn-danger" type="button" data-trigger="alert-demo" aria-haspopup="dialog" aria-controls="alert-demo">Delete account</button>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button data-dialog-trigger="confirm-delete"&gt;Delete account&lt;/button&gt;
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button type="button" onclick="confirmDelete.showModal()"&gt;Delete account&lt;/button&gt;
 
-&lt;ren-alert-dialog id="confirm-delete" aria-labelledby="cd-title"&gt;
-  &lt;dialog class="ren-dialog ren-alert-dialog"&gt;
-    &lt;div class="ren-dialog-header"&gt;
-      &lt;h2 class="ren-dialog-title" id="cd-title"&gt;Delete this account?&lt;/h2&gt;
-    &lt;/div&gt;
-    &lt;div class="ren-dialog-body"&gt;
-      All projects, files, and history will be permanently removed.
-    &lt;/div&gt;
-    &lt;div class="ren-dialog-footer"&gt;
-      &lt;button class="ren-btn ren-btn-secondary" data-dialog-close&gt;Keep account&lt;/button&gt;
-      &lt;button class="ren-btn ren-btn-danger" data-dialog-close&gt;Delete account&lt;/button&gt;
-    &lt;/div&gt;
-  &lt;/dialog&gt;
-&lt;/ren-alert-dialog&gt;</code></pre>
+&lt;dialog id="confirmDelete" class="ren-alert-dialog"
+  aria-labelledby="cd-title" aria-describedby="cd-description" closedby="none"&gt;
+  &lt;h2 id="cd-title" class="ren-alert-dialog-title"&gt;Delete this account?&lt;/h2&gt;
+  &lt;p id="cd-description" class="ren-alert-dialog-description"&gt;
+    All projects, files, and history will be permanently removed.
+  &lt;/p&gt;
+  &lt;form method="dialog" class="ren-alert-dialog-actions"&gt;
+    &lt;button value="cancel" class="ren-btn ren-btn-secondary"&gt;Keep account&lt;/button&gt;
+    &lt;button value="delete" class="ren-btn ren-btn-danger"&gt;Delete account&lt;/button&gt;
+  &lt;/form&gt;
+&lt;/dialog&gt;</code></pre>
         </div>
       </section>
 
       <section class="dx-section" id="api">
         <p class="dx-kicker">Reference</p>
         <h2>API</h2>
-        <p>Inherits everything from <a href="ren-dialog.html" class="ren-link">Dialog</a>. The differences:</p>
+        <p>Alert Dialog uses the native <code>&lt;dialog&gt;</code> API directly. The component supplies the decision-focused visual treatment; the browser owns modality, focus, and form return values.</p>
         <table class="dx-api">
           <thead><tr><th>Class / element</th><th>Effect</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">&lt;ren-alert-dialog&gt;</code></td><td>Wrapper. Disables backdrop click. Sets <code>role="alertdialog"</code> on the inner dialog.</td></tr>
-            <tr><td><code class="dx-api-name">.ren-alert-dialog</code></td><td>Class on the inner <code>&lt;dialog&gt;</code>. Visual is identical to <code>.ren-dialog</code>; the difference is behavioral.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-alert-dialog</code></td><td>Class applied directly to a native <code>&lt;dialog&gt;</code>.</td></tr>
+            <tr><td><code class="dx-api-name">closedby="none"</code></td><td>Requires an explicit action instead of Escape or backdrop dismissal.</td></tr>
+            <tr><td><code class="dx-api-name">showModal()</code></td><td>Opens the alert in the top layer and makes background content inert.</td></tr>
           </tbody>
         </table>
-        <p>For full attribute / event documentation, see the <a href="ren-dialog.html#api" class="ren-link">Dialog API</a>.</p>
+        <p>Read the selected action from the native dialog's <code>returnValue</code> after its <code>close</code> event.</p>
       </section>
 
       <section class="dx-section" id="a11y">
         <p class="dx-kicker">Inclusive by default</p>
         <h2>Accessibility</h2>
         <ul>
-          <li>Inner <code>&lt;dialog&gt;</code> uses <code>role="alertdialog"</code> — assistive tech treats it as a forced confirmation.</li>
+          <li>A real <code>&lt;dialog&gt;</code> exposes modal semantics through the platform and is labelled by its decision heading.</li>
           <li>Focus is trapped inside until a button is clicked.</li>
-          <li><kbd>Esc</kbd> is suppressed by default. Override with <code>allow-escape</code> attribute if your scenario allows it.</li>
+          <li><kbd>Esc</kbd> and light dismissal are suppressed with <code>closedby="none"</code>.</li>
           <li>Backdrop click does nothing — the user must commit to a choice.</li>
         </ul>
         <div class="dx-callout">
@@ -179,7 +177,24 @@
 
     </main>
   </div>
-  <script type="module" src="../../components/composites/ren-alert-dialog/ren-alert-dialog.js"></script>
+  <dialog id="alert-demo" class="ren-alert-dialog" aria-labelledby="alert-demo-title" aria-describedby="alert-demo-description" closedby="none">
+    <div class="ren-alert-dialog-icon ren-alert-dialog-icon-danger" aria-hidden="true">!</div>
+    <h2 id="alert-demo-title" class="ren-alert-dialog-title">Delete this account?</h2>
+    <p id="alert-demo-description" class="ren-alert-dialog-description">All projects, files, and history will be permanently removed. This cannot be undone.</p>
+    <form method="dialog" class="ren-alert-dialog-actions">
+      <button value="cancel" class="ren-btn ren-btn-secondary">Keep account</button>
+      <button value="delete" class="ren-btn ren-btn-danger">Delete account</button>
+    </form>
+  </dialog>
+  <script>
+    const alertDemo = document.getElementById('alert-demo');
+    const alertDemoTrigger = document.querySelector('[data-trigger="alert-demo"]');
+    alertDemoTrigger.addEventListener('click', () => alertDemo.showModal());
+    // `closedby="none"` is not implemented consistently by every engine yet.
+    // Keep the destructive confirmation explicit in WebKit as well.
+    alertDemo.addEventListener('cancel', (event) => event.preventDefault());
+    alertDemo.addEventListener('close', () => alertDemoTrigger.focus());
+  </script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Complete authenticated Header14 MCP extraction from the parallel reference-review agent in this same batch was reused after the local OAuth callback port conflicted. Exact anatomy and behavior were relayed without copied source; no hash is invented because raw source was not persisted."
+}

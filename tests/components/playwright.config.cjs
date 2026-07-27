@@ -22,6 +22,7 @@ const desktopDevice = {
   firefox: devices['Desktop Firefox'],
   webkit: devices['Desktop Safari'],
 }[browserName];
+const ciWorkers = browserName === 'firefox' ? 2 : 1;
 
 module.exports = defineConfig({
   testDir: path.join(__dirname, '..'),
@@ -29,7 +30,7 @@ module.exports = defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? ciWorkers : undefined,
   reporter: [['list']],
   use: {
     baseURL: 'file://',

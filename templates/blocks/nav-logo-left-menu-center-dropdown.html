@@ -455,7 +455,7 @@
       <a href="../../docs/index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="../../docs/index.html">Docs</a>
@@ -470,8 +470,8 @@
     </div>
   </header>
 
-  <main class="dx-shell">
-    <header class="rn13-page-header">
+  <main class="dx-shell bb-detail-page">
+    <header class="rn13-page-header bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
         <ol>
           <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
@@ -490,12 +490,12 @@
       </p>
     </header>
 
-    <section class="rn13-preview" data-rn13-root aria-label="Navbar logo-left menu-center dropdown preview">
+    <section class="rn13-preview bb-detail-preview" data-rn13-root aria-label="Navbar logo-left menu-center dropdown preview">
       <ren-nav>
         <nav class="ren-nav" aria-label="Example site">
-          <a class="ren-nav-brand ren-row" href="#home">
-            <span class="rn13-brand-mark ren-row" aria-hidden="true">N</span>
-            <span>Northline Labs</span>
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rn13-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
           </a>
 
           <ul id="rn13-primary-links" class="ren-nav-links">
@@ -565,7 +565,18 @@
         </p>
       </div>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-left-menu-right-grouped.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo-Left Menu-Right Grouped Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-floating-logo-left-menu-right-actions.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Floating Logo-Left Menu-Right Actions Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 
   <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
   <script type="module">
@@ -574,7 +585,7 @@
      * Native details owns open/close via click, Enter, and Space on mobile and
      * for keyboard activation on desktop. Desktop pointer hover-open is additive.
      *
-     * Desktop pointer click state machine (deterministic, no timers):
+     * Desktop pointer click state machine (deterministic; only hover exit has a grace timer):
      *   - hover opens transiently
      *   - first pointer click while hover-open pins the disclosure open
      *   - second pointer click closes and suppresses hover re-open until leave
@@ -619,12 +630,21 @@
       let pointerPinned = false;
       /** After intentional close while pointer still inside — no hover re-open until leave. */
       let ignoreHoverUntilLeave = false;
+      /** Short hover-intent grace period for engines that split the generated corridor hit region. */
+      let closeTimer = 0;
 
       function isDesktop() {
         return desktopQuery.matches;
       }
 
+      function clearScheduledClose() {
+        if (!closeTimer) return;
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      }
+
       function resetHoverFlags() {
+        clearScheduledClose();
         hoverTransient = false;
         pointerPinned = false;
         ignoreHoverUntilLeave = false;
@@ -632,6 +652,7 @@
       }
 
       function closeDisclosure(returnFocus) {
+        clearScheduledClose();
         if (!disclosure.open) return;
         disclosure.open = false;
         hoverTransient = false;
@@ -640,6 +661,7 @@
       }
 
       function openDisclosure(source = 'programmatic') {
+        clearScheduledClose();
         if (disclosure.open) return;
         disclosure.open = true;
         hoverTransient = source === 'hover';
@@ -697,6 +719,7 @@
 
       function openFromDesktopPointer() {
         if (!isDesktop() || ignoreHoverUntilLeave) return;
+        clearScheduledClose();
         pointerInside = true;
         if (!disclosure.open) openDisclosure('hover');
       }
@@ -718,10 +741,18 @@
           pointerInside = false;
           ignoreHoverUntilLeave = false;
           hoverTransient = false;
-          if (!pointerPinned) closeDisclosure(false);
+          if (!pointerPinned) {
+            clearScheduledClose();
+            closeTimer = window.setTimeout(() => {
+              closeTimer = 0;
+              if (!pointerInside && !pointerPinned) closeDisclosure(false);
+            }, 250);
+          }
         },
         { signal }
       );
+
+      signal.addEventListener('abort', clearScheduledClose, { once: true });
 
       document.addEventListener(
         'keydown',

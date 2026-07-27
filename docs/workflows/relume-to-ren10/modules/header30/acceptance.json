@@ -1,0 +1,7 @@
+{"version":1,"criteria":[
+  {"id":"exact-anatomy","kind":"structure","description":"One background, one scrim, centered copy, and exactly two destinations","automated":true},
+  {"id":"controlled-cover","kind":"layout","description":"Cover height stays between 32rem and 44rem without arbitrary viewport whitespace","automated":true},
+  {"id":"css-grid-actions","kind":"layout","description":"Actions use CSS Grid and stack on narrow screens","automated":true},
+  {"id":"responsive","kind":"responsive","description":"No overflow from 320px through 1280px","automated":true},
+  {"id":"accessibility","kind":"accessibility","description":"Contrast scrim, semantic links, touch targets, focus visibility, reduced motion, and axe WCAG 2.1 AA","automated":true}
+]}

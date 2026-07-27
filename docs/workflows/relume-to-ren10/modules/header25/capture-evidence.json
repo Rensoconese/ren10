@@ -1,0 +1,27 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header25",
+  "block": "hero-centered-search",
+  "capturedCommit": "c8df400ef2122be87867a2cf910533d3f0e42209",
+  "fresh": true,
+  "states": [
+    "desktop-light-default",
+    "desktop-dark-default",
+    "desktop-light-focus",
+    "desktop-dark-focus",
+    "tablet-768",
+    "form-row-640",
+    "mobile-390-default",
+    "mobile-390-status",
+    "mobile-dark-default",
+    "narrow-320",
+    "mobile-js-disabled",
+    "reduced-motion-default"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Inspected all twelve cache-busted states from functional commit c8df400ef2122be87867a2cf910533d3f0e42209. The content-height column remains centered and width-constrained with one heading, one description, and one search form. The visible label, decorative left icon, input, and single submit remain aligned in a row where space permits and stack without overflow at 320/390px. Light/dark default and focus, 640/768, enhanced status, no-JavaScript, and reduced-motion states are complete and unclipped. The icon is visibly rendered once and does not duplicate the accessible name. No legal copy, media, link CTA, duplicate form/control, overflow, clipping, or cascade artifact is visible."
+  },
+  "recordedAt": "2026-07-15"
+}

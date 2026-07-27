@@ -9,6 +9,8 @@ const CASCADE_FIXTURE_URL =
   'file://' + path.resolve(__dirname, 'fixtures/cascade-contract.html');
 const PROGRESSIVE_FIXTURE_URL =
   'file://' + path.resolve(__dirname, 'fixtures/theme-progressive-contract.html');
+const ACCORDION_BLOCK_URL =
+  'file://' + path.resolve(__dirname, '../../templates/blocks/faq-centered-accordion.html');
 
 test.describe('Primitive Appearance API contract', () => {
   test.beforeEach(async ({ page }) => {
@@ -99,6 +101,22 @@ test.describe('Theme progressive enhancement contract', () => {
       expect(ratio.accent).toBeGreaterThanOrEqual(7);
     });
   }
+});
+
+test.describe('Accordion disclosure visibility contract', () => {
+  test('closed items keep their summaries visible after enhancement', async ({ page }) => {
+    await page.goto(ACCORDION_BLOCK_URL);
+    const summaries = page.locator('ren-accordion > details > summary');
+    await expect(summaries).toHaveCount(4);
+
+    for (const summary of await summaries.all()) {
+      await expect(summary).toBeVisible();
+    }
+
+    await summaries.nth(1).click();
+    await expect(page.locator('ren-accordion > details').nth(0)).not.toHaveAttribute('open', '');
+    await expect(page.locator('ren-accordion > details').nth(1)).toHaveAttribute('open', '');
+  });
 });
 
 test.describe('Cascade and semantic token contract', () => {

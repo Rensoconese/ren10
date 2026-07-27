@@ -1119,6 +1119,31 @@ test('accepted inventory entry requires an accepted packet', async () => {
   assert.deepEqual(result.errors, ['Accepted module navbar5 has packet stage green; expected accepted']);
 });
 
+test('reviewed inventory entry requires a reviewed packet', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-reviewed-'));
+  roots.push(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', { stage: 'green' });
+  const inventory = {
+    version: 1,
+    families: [{ id: 'navbars', modules: [{ id: 'navbar5', status: 'reviewed', packet: 'navbar5' }] }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.deepEqual(result.errors, ['Reviewed module navbar5 has packet stage green; expected reviewed']);
+});
+
+test('reviewed inventory entry validates a reviewed packet', async () => {
+  const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-reviewed-valid-'));
+  roots.push(modulesRoot);
+  await seedPacketUnder(modulesRoot, 'navbar5', { stage: 'reviewed' });
+  const inventory = {
+    version: 1,
+    families: [{ id: 'navbars', modules: [{ id: 'navbar5', status: 'reviewed', packet: 'navbar5' }] }],
+  };
+  const result = await validateInventory(inventory, modulesRoot);
+  assert.deepEqual(result.errors, []);
+  assert.equal(result.valid, true);
+});
+
 test('inventory rejects nonexistent packet paths for in_progress modules', async () => {
   const modulesRoot = await mkdtemp(join(tmpdir(), 'ren10-inventory-missing-'));
   roots.push(modulesRoot);

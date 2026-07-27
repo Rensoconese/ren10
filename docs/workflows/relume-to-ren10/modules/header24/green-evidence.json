@@ -1,0 +1,12 @@
+{
+  "stage":"green",
+  "passed":true,
+  "result":"passed",
+  "reviewer":"Codex",
+  "reviewedCommit":"2a076cc6bc34cd86533653e527e07c126e7456b5",
+  "capturesFresh":true,
+  "captures":{"desktop":"captures/header24/desktop-1280-light.png","mobile":"captures/header24/mobile-390-light.png","dark":"captures/header24/desktop-1280-dark.png","invalid":"captures/header24/desktop-invalid.png","noJavaScript":"captures/header24/mobile-js-disabled.png"},
+  "cascadeInspection":"One centred content-height section owns one h1, description, labelled email form, submit, legal/terms and polite status. Ren10 center/stack/switcher/field/button primitives own layout and controls. The block-local error selector restores native hidden semantics against ren-field's authored display rule, so the message appears only after invalid interaction and never duplicates success feedback. The single root-scoped module enhances valid submission while the real native action remains intact without JavaScript. No media, extra CTA/form, framework, raw skeleton, forbidden token, clipping or overflow remains.",
+  "checklist":{"total":36,"passed":36,"summary":"Lineage, anatomy, contracts, responsive 639/640 seam, accessibility, visual states and repository verification pass."},
+  "validation":{"focusedPlaywright":"32/32 passed across Desktop Light and Desktop Dark","axe":"clean in pristine, invalid and success states","responsiveWidths":[320,390,639,640,767,1024,1280]}
+}

@@ -1,0 +1,16 @@
+{
+  "id": "reduced-motion-focus",
+  "url": "http://127.0.0.1:50563/templates/blocks/hero-email-copy-image-left.html?ren10_capture=header20-reduced-motion-focus-20bba216766d",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh20-email:focus": 1
+  },
+  "commit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturedAt": "2026-07-15T19:17:34.790Z"
+}

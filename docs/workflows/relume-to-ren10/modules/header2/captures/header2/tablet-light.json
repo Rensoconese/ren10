@@ -1,0 +1,18 @@
+{
+  "id": "tablet-light",
+  "url": "http://127.0.0.1:63870/templates/blocks/hero-split-email-form-media-right.html?ren10_capture=header2-tablet-light-e16c9f5c1d73",
+  "viewport": {
+    "width": 768,
+    "height": 1024
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh2-heading": 1,
+    ".rh2-cta": 1,
+    ".rh2-media": 1
+  },
+  "commit": "e16c9f5c1d7362593c843dbb12a9af873fdeadcd",
+  "capturedAt": "2026-07-15T16:37:38.480Z"
+}

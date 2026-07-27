@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "moduleId": "header1",
+  "sourceStage": "green",
+  "reviewedCommit": "4fb88f3a153343b6b7a406e44c64ed761a38d432",
+  "cacheKey": "header1-*-4fb88f3a1533",
+  "capturesFresh": true,
+  "captures": {
+    "desktopLight": "captures/desktop-light.png",
+    "desktopDark": "captures/desktop-dark.png",
+    "desktopReducedMotion": "captures/desktop-reduced-motion.png",
+    "mobileLight": "captures/mobile-light.png",
+    "mobileDark": "captures/mobile-dark.png",
+    "mobileJavaScriptDisabled": "captures/mobile-js-disabled.png"
+  },
+  "inspection": "Codex independently regenerated and visually inspected all six states after the CTA destination fix. Desktop peers remain equal and vertically centered; mobile order remains copy then media; both actions remain aligned and unobstructed; the single image surface stays rounded and clipped; light and dark themes are coherent; reduced-motion and JavaScript-disabled renders preserve complete anatomy. No duplicate affordance, overflow, overlap, clipping, or unexpected pseudo-element was found."
+}

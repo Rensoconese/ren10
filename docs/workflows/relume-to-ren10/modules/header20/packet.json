@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header20",
+  "blockSlug": "hero-email-copy-image-left",
+  "blockPath": "templates/blocks/hero-email-copy-image-left.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-email-copy-image-left.html",
+    "tests/components/header20-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

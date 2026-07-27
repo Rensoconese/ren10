@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fullscreen Video Email Hero — Ren10 Blocks</title>
+  <meta name="description" content="A full-viewport Ren10 hero with accessible background motion and a focused email form.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh8-hero {
+      --cover-height: 100dvh;
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 0;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-text);
+    }
+
+    .rh8-background,
+    .rh8-poster,
+    .rh8-video,
+    .rh8-scrim {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh8-background {
+      z-index: var(--z-base);
+      overflow: hidden;
+    }
+
+    .rh8-poster,
+    .rh8-video {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .rh8-video {
+      z-index: var(--z-raised);
+    }
+
+    .rh8-scrim {
+      z-index: var(--z-overlay);
+      background-color: var(--color-overlay);
+      background-image: linear-gradient(var(--color-overlay), var(--color-overlay));
+    }
+
+    .rh8-content {
+      position: relative;
+      z-index: var(--z-modal);
+      width: 100%;
+    }
+
+    .rh8-copy {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-lg);
+    }
+
+    .rh8-heading,
+    .rh8-description,
+    .rh8-terms,
+    .rh8-form-status {
+      margin: 0;
+      color: var(--color-text-inverted);
+    }
+
+    .rh8-heading {
+      font-size: clamp(var(--display-md-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh8-description {
+      max-width: var(--width-md);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh8-form {
+      --stack-gap: var(--space-stack-tight);
+      max-width: var(--width-md);
+    }
+
+    .rh8-form-row {
+      --switcher-gap: var(--space-inline-tight);
+      --switcher-threshold: var(--width-sm);
+      align-items: end;
+    }
+
+    .rh8-form-row > ren-field {
+      min-width: 0;
+    }
+
+    .rh8-form-row > .rh8-submit {
+      flex-basis: auto;
+      flex-grow: 0;
+    }
+
+    .rh8-form label,
+    .rh8-terms,
+    .rh8-form-status {
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    .rh8-form label {
+      color: var(--color-text-inverted);
+    }
+
+    .rh8-submit {
+      --ren-btn-bg: var(--color-surface);
+      --ren-btn-bg-hover: var(--color-fill-hover);
+      --ren-btn-bg-active: var(--color-fill-active);
+      --ren-btn-color: var(--color-text);
+      --ren-btn-border-color: var(--color-surface);
+      --ren-btn-ring-color: var(--color-text-inverted);
+    }
+
+    .rh8-terms .ren-link {
+      --ren-link-color: var(--color-text-inverted);
+      --ren-link-hover-color: var(--color-text-inverted);
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-inverted);
+    }
+
+    .rh8-motion-toggle {
+      --ren-btn-ring-color: var(--color-text-inverted);
+      position: absolute;
+      z-index: var(--z-popover);
+      inset-inline-end: var(--space-inline-loose);
+      inset-block-end: var(--space-inline-loose);
+      color: var(--color-text-inverted);
+      border-color: var(--color-text-inverted);
+      background: var(--color-overlay);
+    }
+
+    .rh8-motion-toggle:hover {
+      color: var(--color-text);
+      background: var(--color-surface);
+      border-color: var(--color-surface);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh8-video {
+        visibility: hidden;
+      }
+    }
+  </style>
+  <noscript><style>.rh8-video, .rh8-motion-toggle { visibility: hidden; }</style></noscript>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Fullscreen Video Email Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 8 · Hero block</p>
+      <h1 class="bb-detail-title">Fullscreen Video Email Hero</h1>
+      <p class="bb-detail-description">A full-viewport Ren10 hero with accessible background motion and a focused email form.</p>
+    </header>
+
+    <section class="rh8-hero ren-cover bb-detail-preview" data-rh8-root aria-labelledby="rh8-heading">
+      <div class="rh8-background" aria-hidden="true">
+        <img
+          class="rh8-poster"
+          src="media/hero-botanical-conservatory.webp"
+          alt=""
+          width="1440"
+          height="900"
+        >
+        <video
+          class="rh8-video"
+          autoplay
+          loop
+          muted
+          playsinline
+          preload="metadata"
+          poster="media/hero-botanical-conservatory.webp"
+        >
+          <source src="data:video/webm;base64,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" type="video/webm">
+        </video>
+        <div class="rh8-scrim"></div>
+      </div>
+
+      <div class="rh8-content ren-center ren-center-wide ren-cover-center">
+        <div class="rh8-copy ren-stack">
+          <h1 id="rh8-heading" class="rh8-heading">Make a strong first impression without losing focus</h1>
+          <p class="rh8-description">Pair a clear message with one useful next step, while Ren10 keeps motion, contrast, and responsive behavior under control.</p>
+
+          <form class="rh8-form ren-stack" action="../../docs/getting-started.html" method="get">
+            <div class="rh8-form-row ren-switcher">
+              <ren-field>
+                <label for="rh8-email">Work email</label>
+                <input id="rh8-email" class="ren-input rh8-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+                <span data-error></span>
+              </ren-field>
+              <button class="ren-btn rh8-submit" type="submit">Start building</button>
+            </div>
+            <p class="rh8-form-status" role="status" hidden></p>
+          </form>
+
+          <p class="rh8-terms">By continuing, you agree to the <a class="ren-link" href="../../LICENSE">terms of use</a>.</p>
+        </div>
+      </div>
+
+      <button class="ren-btn ren-btn-outline rh8-motion-toggle" type="button" aria-pressed="false">
+        Pause background
+      </button>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-fullscreen-bg-video-left-copy-dual-cta.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Fullscreen Background Video Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-fullscreen-media-top-copy-band-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Fullscreen Media and Copy Band Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module">
+    const root = document.querySelector('[data-rh8-root]');
+    const video = root.querySelector('.rh8-video');
+    const toggle = root.querySelector('.rh8-motion-toggle');
+    const form = root.querySelector('.rh8-form');
+    const email = root.querySelector('.rh8-email');
+    const emailError = root.querySelector('[data-error]');
+    const formStatus = root.querySelector('.rh8-form-status');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let userPaused = false;
+
+    const setPausedState = (paused, reduced = motionQuery.matches) => {
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.textContent = reduced ? 'Motion paused' : paused ? 'Play background' : 'Pause background';
+      toggle.disabled = reduced;
+    };
+
+    const syncMotionPreference = () => {
+      if (motionQuery.matches) {
+        video.pause();
+        setPausedState(true, true);
+        return;
+      }
+
+      setPausedState(userPaused, false);
+      if (userPaused) {
+        video.pause();
+      } else {
+        video.play().catch(() => setPausedState(true, false));
+      }
+    };
+
+    toggle.addEventListener('click', () => {
+      userPaused = !video.paused;
+      if (userPaused) {
+        video.pause();
+        setPausedState(true, false);
+      } else {
+        video.play().then(() => setPausedState(false, false)).catch(() => setPausedState(true, false));
+      }
+    });
+
+    motionQuery.addEventListener('change', syncMotionPreference);
+    syncMotionPreference();
+
+    email.addEventListener('invalid', () => {
+      emailError.textContent = 'Enter a valid email address.';
+    });
+
+    email.addEventListener('input', () => {
+      if (email.validity.valid) emailError.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      formStatus.textContent = 'Thanks — your Ren10 starting point is ready.';
+      formStatus.hidden = false;
+    });
+  </script>
+</body>
+</html>

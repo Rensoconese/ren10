@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "The isolated Navbar15 suite (tests/components/navbar15-navigation.spec.cjs) was added before production. The focused run discovered 19 tests and stopped at the first expected failure because the absent block returned HTTP 404 (no [data-rn15-root]); the other 18 tests were left unrun by --max-failures=1. Failure message: navbar15 block must not 404 — implement templates/blocks/nav-floating-bottom-logo-left-menu-actions.html."
+}

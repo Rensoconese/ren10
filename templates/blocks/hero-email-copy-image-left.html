@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email Copy and Image Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height Ren10 email hero with responsive copy-first mobile flow and image-left desktop composition.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .rh20-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh20-container {
+      width: 100%;
+    }
+
+    .rh20-layout {
+      --grid-gap: var(--space-10);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: center;
+    }
+
+    .rh20-layout > * {
+      min-width: 0;
+    }
+
+    .rh20-copy {
+      --stack-gap: var(--space-stack-loose);
+    }
+
+    .rh20-title,
+    .rh20-description,
+    .rh20-legal,
+    .rh20-status,
+    .rh20-media {
+      margin: 0;
+    }
+
+    .rh20-title {
+      max-width: var(--width-lg);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh20-description {
+      max-width: var(--width-prose);
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh20-form-wrap,
+    .rh20-form {
+      --stack-gap: var(--space-stack-tight);
+      width: 100%;
+    }
+
+    .rh20-form-row {
+      --switcher-gap: var(--space-inline-tight);
+      --switcher-threshold: var(--width-7xl);
+      align-items: end;
+    }
+
+    .rh20-form-row > * {
+      flex-basis: 100%;
+      min-width: 0;
+    }
+
+    .rh20-form-row label {
+      color: var(--color-text);
+      font-size: var(--label-size);
+      font-weight: var(--label-weight);
+    }
+
+    .rh20-email,
+    .rh20-submit {
+      min-height: var(--touch-min);
+    }
+
+    .rh20-legal {
+      color: var(--color-text-muted);
+      font-size: var(--caption-size);
+      line-height: var(--caption-leading);
+    }
+
+    .rh20-terms-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    .rh20-status {
+      color: var(--color-success-strong);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    .rh20-error[hidden] {
+      display: none;
+    }
+
+    .rh20-media {
+      width: 100%;
+      background: var(--color-surface-sunken);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-md);
+    }
+
+    .rh20-media img {
+      object-position: center;
+    }
+
+    @media (min-width: 40rem) {
+      .rh20-form-row {
+        flex-wrap: nowrap;
+      }
+
+      .rh20-form-row > ren-field {
+        flex: 1 1 auto;
+        width: 0;
+      }
+
+      .rh20-form-row > .rh20-submit {
+        flex: 0 0 auto;
+        width: auto;
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh20-hero {
+        padding-block: var(--space-section-lg);
+      }
+
+      .rh20-container {
+        --center-padding: var(--space-8);
+      }
+
+      .rh20-layout {
+        --grid-gap: var(--space-20);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .rh20-media {
+        order: -1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh20-hero *,
+      .rh20-hero *::before,
+      .rh20-hero *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Email Copy and Image Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 20 · Hero block</p>
+      <h1 class="bb-detail-title">Email Copy and Image Hero</h1>
+      <p class="bb-detail-description">A content-height Ren10 email hero with responsive copy-first mobile flow and image-left desktop composition.</p>
+    </header>
+
+    <section class="rh20-hero bb-detail-preview" data-rh20-root aria-labelledby="rh20-title">
+      <div class="rh20-container ren-center ren-center-wide">
+        <div class="rh20-layout ren-grid">
+          <div class="rh20-copy ren-stack">
+            <h1 id="rh20-title" class="rh20-title">Make every important product decision easier to carry forward</h1>
+            <p class="rh20-description">Bring accessible foundations and adaptable interface patterns into one shared workflow your team can understand and extend.</p>
+
+            <div class="rh20-form-wrap ren-stack">
+              <form class="rh20-form ren-stack" action="../../docs/getting-started.html" method="get">
+                <div class="rh20-form-row ren-switcher">
+                  <ren-field>
+                    <label for="rh20-email">Work email</label>
+                    <input
+                      id="rh20-email"
+                      class="rh20-email ren-input"
+                      name="email"
+                      type="email"
+                      autocomplete="email"
+                      placeholder="team@example.com"
+                      required
+                    >
+                    <span class="rh20-error" data-error hidden>Enter a valid email address.</span>
+                  </ren-field>
+                  <button class="rh20-submit ren-btn" type="submit">Join the preview</button>
+                </div>
+                <p class="rh20-legal">By continuing, you agree to our <a class="rh20-terms-link" href="../../LICENSE">terms of use</a>.</p>
+                <p class="rh20-status" role="status" aria-live="polite" hidden></p>
+              </form>
+            </div>
+          </div>
+
+          <figure class="rh20-media ren-frame ren-frame-photo">
+<img
+              src="media/hero-material-studio.webp"
+              alt="Maker studio table arranged with tactile material samples"
+              width="1536"
+              height="1024"
+            >
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-image-left-copy-dual-cta.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Image Left Copy Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-split-video-lightbox-left-copy-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split Video Lightbox and Copy Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh20-root]');
+    const form = root.querySelector('.rh20-form');
+    const field = root.querySelector('ren-field');
+    const email = root.querySelector('.rh20-email');
+    const status = root.querySelector('.rh20-status');
+
+    form.noValidate = true;
+
+    email.addEventListener('input', () => {
+      status.hidden = true;
+      status.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!email.validity.valid) {
+        field.setError('Enter a valid email address.');
+        email.focus();
+        return;
+      }
+      status.textContent = 'Thanks — check your inbox for the next step.';
+      status.hidden = false;
+      form.reset();
+    });
+  </script>
+</body>
+</html>

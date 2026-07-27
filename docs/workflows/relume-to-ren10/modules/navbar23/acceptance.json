@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary shell and product-intro mega reach every documented state: desktop hover/click open-close, keyboard Enter/Space, Escape with focus return from summary and from focused destinations, outside/destination/intro-CTA/mobile/breakpoint close, mobile activation-only panel, same-breakpoint resize stability",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, four top entries (3 plain + 1 disclosure), one intro CTA, three product cards with media/name/variant/price/badge, two header actions, one named toggle, one chevron — no duplicates or invented social/footer chrome",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop full-width bar with logo-left / links / end actions and full-band absolute mega (intro + three products); mobile top row logo+toggle only with links and stacked full-width actions when open; 320/340 and 767/768/769 seams hold",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

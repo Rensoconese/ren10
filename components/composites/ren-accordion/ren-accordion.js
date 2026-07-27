@@ -111,6 +111,10 @@ export class RenAccordion extends HTMLElement {
    */
   _applyNativeExclusive() {
     this.items.forEach((detail) => {
+      // Closed accordion items must keep their summary visible. The global
+      // data-state helper hides closed surfaces unless they explicitly opt out.
+      detail.setAttribute('data-keep', '');
+
       if (this._useNativeExclusive) {
         detail.setAttribute('name', this._groupName);
       } else {

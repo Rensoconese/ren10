@@ -1,0 +1,18 @@
+{
+  "id": "mobile-390",
+  "url": "http://127.0.0.1:49287/templates/blocks/hero-fullscreen-video-top-copy-band-dual-cta.html?ren10_capture=header11-mobile-390-8a0392bce9da",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh11-heading": 1,
+    ".rh11-description": 1,
+    ".rh11-motion": 1
+  },
+  "commit": "8a0392bce9da510defcd238128ad9440fd35c433",
+  "capturedAt": "2026-07-15T17:59:12.952Z"
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Sticky bar, always-visible toggle, fullscreen panel open/close, desktop bar disclosure hover/click/keyboard/Escape/outside/destination close, breakpoint reset, and JS-disabled dual destination exposure all reach documented states",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand; four bar entries (3 plain + 1 disclosure); three title-only bar destinations; eight large panel links; one featured heading; two article cards; one view-all control; one contact link; five socials; one named toggle; one dropdown chevron; one view-all chevron — no duplicate close icons or invented rails",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop: logo-left, centered four bar entries, end toggle, absolute dropdown; mobile: logo+toggle only until fullscreen opens with stacked large links, featured rail, and footer strip; single landmark without nested nav",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

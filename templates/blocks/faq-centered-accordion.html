@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A centered Ren10 FAQ section with a focused single-open accordion.">
+  <title>Centered Accordion FAQ — Ren10 Blocks</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/composites/ren-accordion/ren-accordion.css">
+  <link rel="stylesheet" href="faq-batch1.css">
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Templates</a></li><li><a href="index.html">Blocks</a></li><li aria-current="page">Centered Accordion FAQ</li></ol></nav>
+      <p class="dx-kicker">FAQ 1 · Support block</p>
+      <h1 class="bb-detail-title">Centered Accordion FAQ</h1>
+      <p class="bb-detail-description">A balanced introduction and single-open disclosure list keep common product questions easy to scan.</p>
+    </header>
+    <section class="faq1-block bb-detail-preview" aria-labelledby="faq1-title">
+      <div class="faq1-heading ren-stack">
+        <h2 id="faq1-title" class="faq1-title">Questions, answered clearly</h2>
+        <p class="faq1-description">Start with the essentials, then open only the detail you need.</p>
+      </div>
+      <ren-accordion class="faq1-list ren-accordion-bordered" type="single" collapsible default-value="0">
+        <details><summary class="ren-accordion-trigger">What is included in Ren10?</summary><div class="ren-accordion-content">Tokens, responsive layouts, accessible components, patterns, examples, and agent-readable contracts ship together.</div></details>
+        <details><summary class="ren-accordion-trigger">Do I need a framework?</summary><div class="ren-accordion-content">No. Ren10 is built for vanilla HTML, CSS, and JavaScript, with progressive custom elements where behavior is useful.</div></details>
+        <details><summary class="ren-accordion-trigger">Does it support dark mode?</summary><div class="ren-accordion-content">Yes. Semantic color tokens adapt through color-scheme and can also be controlled with a theme attribute.</div></details>
+        <details><summary class="ren-accordion-trigger">Can components be themed?</summary><div class="ren-accordion-content">Yes. Override documented semantic or component tokens without rewriting internal selectors.</div></details>
+      </ren-accordion>
+    </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="feature-system-operating-matrix.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>System Operating Matrix Feature</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="faq-split-heading-accordion.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Split Heading Accordion FAQ</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+  <script type="module" src="../../components/composites/ren-accordion/ren-accordion.js"></script>
+</body>
+</html>

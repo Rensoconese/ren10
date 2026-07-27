@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "criteria": [
+    { "id": "exact-anatomy", "kind": "structure", "description": "One content-height section owns one h1, description, email form, legal/terms, landscape trigger/image/scrim/play, and dialog/spinner/iframe without excluded extras", "automated": true },
+    { "id": "responsive-copy", "kind": "geometry", "description": "Copy stacks below 768 and forms equal top-aligned columns from 768", "automated": true },
+    { "id": "responsive-form", "kind": "geometry", "description": "Form stacks narrowly and becomes an input-submit row from 640", "automated": true },
+    { "id": "landscape-media", "kind": "geometry", "description": "One full-width landscape trigger follows copy and remains aligned without overflow at 320, 390, 640, 767, 768, and 1280", "automated": true },
+    { "id": "dialog", "kind": "behavior", "description": "Loading/loaded states, playable owned media, close, Escape, backdrop, focus trap/restore, unload, and reduced motion work", "automated": true },
+    { "id": "form", "kind": "behavior", "description": "Visible label, native validation/error, polite success, real GET fallback, and terms destination work", "automated": true },
+    { "id": "progressive-enhancement", "kind": "behavior", "description": "No-JavaScript preserves copy, image, native form, terms, and a real video alternative", "automated": true },
+    { "id": "accessibility", "kind": "a11y", "description": "Semantic controls, 44px targets, visible focus, light/dark, reduced motion, and axe WCAG 2.1 AA pass", "automated": true },
+    { "id": "ren10-policy", "kind": "source", "description": "Documented Ren10 parts/tokens only; module-scoped JS and root-scoped queries; no framework, Shadow DOM, copied URL, palette token, hardcoded chroma, or duplicate imports", "automated": true },
+    { "id": "visual-review", "kind": "human-review", "description": "Fresh desktop/mobile closed/open, dark, seam, no-JavaScript, and reduced-motion captures are inspected", "automated": false }
+  ]
+}

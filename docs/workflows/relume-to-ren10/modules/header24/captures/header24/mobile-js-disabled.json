@@ -1,0 +1,17 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:60457/templates/blocks/hero-centered-email-capture.html?ren10_capture=header24-mobile-js-disabled-2a076cc6bc34",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    "form[action]": 1,
+    ".rh24-terms-link[href]": 1
+  },
+  "commit": "2a076cc6bc34cd86533653e527e07c126e7456b5",
+  "capturedAt": "2026-07-15T19:38:40.654Z"
+}

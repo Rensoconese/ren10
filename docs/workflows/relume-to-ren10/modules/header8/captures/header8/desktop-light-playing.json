@@ -1,0 +1,18 @@
+{
+  "id": "desktop-light-playing",
+  "url": "http://127.0.0.1:57990/templates/blocks/hero-fullscreen-video-email-form.html?ren10_capture=header8-desktop-light-playing-47fe5dc1aabe",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "h1.rh8-heading": 1,
+    "video.rh8-video": 1,
+    ".rh8-submit": 1
+  },
+  "commit": "47fe5dc1aabe98a8b8bfd5c8357dd169456229fd",
+  "capturedAt": "2026-07-15T17:20:42.519Z"
+}

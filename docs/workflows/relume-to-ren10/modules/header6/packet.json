@@ -4,7 +4,7 @@
   "moduleId": "header6",
   "blockSlug": "hero-fullscreen-bg-left-email-capture",
   "blockPath": "templates/blocks/hero-fullscreen-bg-left-email-capture.html",
-  "stage": "green",
+  "stage": "reviewed",
   "allowedFiles": [
     "templates/blocks/hero-fullscreen-bg-left-email-capture.html",
     "tests/components/header6-header.spec.cjs"
@@ -12,6 +12,7 @@
   "evidence": {
     "reference": "reference-evidence.json",
     "mapped": "mapped-evidence.json",
-    "red": "red-evidence.json"
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
   }
 }

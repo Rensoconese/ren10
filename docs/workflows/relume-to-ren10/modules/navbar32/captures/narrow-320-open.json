@@ -1,0 +1,16 @@
+{
+  "id": "narrow-320-open",
+  "url": "http://127.0.0.1:55100/templates/blocks/nav-logo-cta-left-drawer.html?ren10_capture=navbar32-narrow-320-open-6c566063f79e",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rn32-link": 5
+  },
+  "commit": "6c566063f79e3ffc0e48fae32c15e10d7d25dba2",
+  "capturedAt": "2026-07-15T12:04:29.336Z"
+}

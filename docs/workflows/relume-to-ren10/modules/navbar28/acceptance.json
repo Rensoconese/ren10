@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One brand, four top-level entries (three links + one mega), one five-link category column, three whole-card collections, two actions, one toggle, and one chevron are authored",
+      "automated": true
+    },
+    {
+      "id": "one-tree-landmark",
+      "kind": "structure",
+      "description": "Exactly one ren-nav landmark and one primary links tree serve desktop and mobile",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Native activation, stable desktop hover corridor, click pin, Escape with focus restoration from focused destinations, outside close, every destination class closes (category links, collection cards, CTA-style spans do not nest interactives), and mobile nested disclosure work",
+      "automated": true
+    },
+    {
+      "id": "geometry-breakpoints",
+      "kind": "visual-structure",
+      "description": "Desktop/tablet/mobile geometry including 320px and 340px narrow widths plus 767/768/769 seams, same-breakpoint resize stability, no root overflow, full-width desktop mega under bar, in-flow mobile mega, narrow category column beside three collections",
+      "automated": true
+    },
+    {
+      "id": "interactive-collection-semantics",
+      "kind": "accessibility",
+      "description": "Each collection is exactly one anchor with no nested interactive descendant and has visible focus",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled mobile exposes the one tree, actions, and usable native disclosure",
+      "automated": true
+    },
+    {
+      "id": "a11y-tokens-motion",
+      "kind": "accessibility",
+      "description": "Visible 44px targets, single chevron/close icon, light/dark tokens, reduced motion, and axe WCAG 2.1 AA pass",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

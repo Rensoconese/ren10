@@ -1,0 +1,10 @@
+{"version":1,"criteria":[
+  {"id":"anatomy","kind":"structure","description":"Exactly one centered h1/description, two CTA, one poster trigger/scrim/play and one dialog/loader/iframe; zero forms","automated":true},
+  {"id":"responsive","kind":"visual-structure","description":"Centered copy/actions above one landscape media at mobile and desktop without overflow","automated":true},
+  {"id":"lightbox","kind":"behavior","description":"Named trigger/title/busy semantics, loading/loaded states and one playable video","automated":true},
+  {"id":"dismissal","kind":"accessibility","description":"Escape, close and backdrop dismiss with trap and focus restoration","automated":true},
+  {"id":"repeatability","kind":"behavior","description":"Repeated open clears iframe and never duplicates video","automated":true},
+  {"id":"fallback","kind":"behavior","description":"No-JS preserves copy, CTAs, poster and real media alternative","automated":true},
+  {"id":"quality","kind":"accessibility","description":"Light/dark, reduced motion, focus, 44px and axe WCAG 2.1 AA","automated":true},
+  {"id":"visual-review","kind":"human-review","description":"Codex inspects fresh desktop/mobile/open/noJS captures","automated":false}
+]}

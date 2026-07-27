@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy-counts","kind":"structure","description":"One full-height hero, one flexible video region, one video/source/poster/scrim/motion control, bottom band, h1, description, labeled email, submit, and legal link; zero nav/logo/second CTA","automated":true},
+    {"id":"vertical-composition","kind":"visual-structure","description":"Top video region flexes to the remaining viewport height and meets the bottom band without gap or overlap","automated":true},
+    {"id":"responsive-band","kind":"visual-structure","description":"Band stacks narrowly and splits heading-left/support-right; form stacks narrow and becomes a row; no overflow at 320/390/767/768/1280","automated":true},
+    {"id":"motion","kind":"behavior","description":"Pause/play exposes state; reduced motion starts paused on the poster; JS-off keeps a complete poster fallback","automated":true},
+    {"id":"progressive-form","kind":"behavior","description":"Visible label, native validation, corrective error, polite success, native no-JS action, and real terms destination","automated":true},
+    {"id":"accessibility","kind":"accessibility","description":"Visible focus, 44px targets, light/dark contrast, and axe WCAG 2.1 AA","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh desktop/mobile/light/dark/reduced-motion/JS-off captures await independent review","automated":false}
+  ]
+}

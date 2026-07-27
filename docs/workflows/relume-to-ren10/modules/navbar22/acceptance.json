@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Sticky shell, bar disclosure, and fullscreen overlay reach every documented state: desktop disclosure hover/click open-close, keyboard Enter/Space, Escape with focus return, outside/destination close, always-visible toggle open/close for overlay, mobile activation-only overlay, breakpoint close, JS-disabled usability",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, four desktop bar entries (3 plain + 1 disclosure), three title-only destinations, one named always-visible toggle, one chevron, eight large overlay destinations, contact form (name/email/message/terms/submit), phone+email+address details, five named socials — no duplicate chevrons or nested nav landmarks",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Desktop sticky logo-left / centered bar menu / end toggle; mobile top row logo+toggle only; open overlay is full-viewport with large links then contact rail; no under-bar mobile tree for the four bar links",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

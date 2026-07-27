@@ -555,7 +555,7 @@
       <a href="../../docs/index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.10.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.12.0</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="../../docs/index.html">Docs</a>
@@ -570,8 +570,8 @@
     </div>
   </header>
 
-  <main class="dx-shell">
-    <header class="rml-page-header">
+  <main class="dx-shell bb-detail-page">
+    <header class="rml-page-header bb-detail-header ren-stack">
       <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);">
         <ol>
           <li><a href="../index.html" class="ren-link-plain">Templates</a></li>
@@ -588,12 +588,12 @@
       </p>
     </header>
 
-    <section class="rml-preview" data-rml-root aria-label="Navbar mega menu link rail preview">
+    <section class="rml-preview bb-detail-preview" data-rml-root aria-label="Navbar mega menu link rail preview">
       <ren-nav>
         <nav class="ren-nav" aria-label="Example site">
-          <a class="ren-nav-brand ren-row" href="#home">
-            <span class="rml-brand-mark ren-center" aria-hidden="true">N</span>
-            <span>Northline</span>
+          <a class="ren-nav-brand ren-row ren10-demo-brand" href="#home">
+            <span class="rml-brand-mark ren10-demo-brand-mark" aria-hidden="true"><span class="ren10-demo-brand-glyph">R</span></span>
+            <span class="ren10-demo-brand-label">Ren10</span>
           </a>
 
           <ul id="rml-primary-links" class="ren-nav-links">
@@ -864,7 +864,18 @@
         </p>
       </div>
     </section>
-  </main>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-mega-menu-icons.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Mega Menu Icons Block</span>
+      </a>
+      <a class="bb-block-pagination-link" href="nav-mega-menu-footer.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Navbar Mega Menu Footer Block</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
 
   <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
   <script type="module">

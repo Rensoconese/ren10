@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "Exactly one h1, one description, two marketing CTA links, one full-cover media trigger with one image/scrim/play icon, and one ren-dialog with one loader and one iframe; no form/nav/logo/background-video/third CTA",
+      "automated": true
+    },
+    {
+      "id": "viewport-composition",
+      "kind": "visual-structure",
+      "description": "Full-svh vertical shell with a flexible upper media region and content-sized lower band; no root overflow at 320/390/767/768/1280",
+      "automated": true
+    },
+    {
+      "id": "responsive-band",
+      "kind": "visual-structure",
+      "description": "Lower band stacks h1 before copy/actions on mobile and becomes two top-aligned columns at medium widths; CTA cluster wraps",
+      "automated": true
+    },
+    {
+      "id": "lightbox-lifecycle",
+      "kind": "behavior",
+      "description": "Trigger opens one native Ren10 modal; loader precedes deterministic playable iframe; close button, Escape, and backdrop dismiss; focus restores and media unloads",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "Without JavaScript, image/copy/two CTA destinations remain usable and a real owned video-alternative link is visible",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Accessible names, visible focus, 44px targets, reduced motion, light/dark, native dialog semantics, and axe WCAG 2.1 AA pass",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Fresh desktop, tablet, seam, mobile, dark, reduced-motion, open-lightbox, and JavaScript-disabled captures are inspected against the complete reference brief",
+      "automated": false
+    }
+  ]
+}

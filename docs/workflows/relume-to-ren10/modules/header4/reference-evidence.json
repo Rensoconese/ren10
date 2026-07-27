@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated relume_oauth search_components query Header4 and get_component slug header4 with primitives names-only returned one complete hero-header section (Header4) plus four primitive names (utils, button, dialog, input). Anatomy sanitized into reference-brief.md without persisting protected source, copy, class names, or asset URLs."
+}

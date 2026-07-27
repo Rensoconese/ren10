@@ -1,0 +1,17 @@
+{
+  "id": "mobile-390-dark",
+  "url": "http://127.0.0.1:50563/templates/blocks/hero-email-copy-image-left.html?ren10_capture=header20-mobile-390-dark-20bba216766d",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh20-title": 1,
+    ".rh20-legal": 1
+  },
+  "commit": "20bba216766d72e27699664651fe9367fa710a01",
+  "capturedAt": "2026-07-15T19:17:33.428Z"
+}

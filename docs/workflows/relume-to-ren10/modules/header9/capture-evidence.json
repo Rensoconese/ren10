@@ -1,0 +1,23 @@
+{
+  "stage": "green",
+  "passed": true,
+  "module": "header9",
+  "block": "hero-fullscreen-media-top-copy-band-dual-cta",
+  "capturedCommit": "8c10f025386f7533c78d5925a8c2919e9da46270",
+  "fresh": true,
+  "states": [
+    "desktop-light",
+    "desktop-dark",
+    "tablet-768",
+    "seam-767",
+    "mobile-390",
+    "narrow-320",
+    "reduced-focus",
+    "mobile-js-disabled"
+  ],
+  "visualReview": {
+    "passed": true,
+    "notes": "Inspected all responsive boundaries and both themes. The cover image owns the flexible top region without a scrim; the copy band is distinct and flush to the viewport bottom; 768px forms two balanced top-aligned columns while 767px and narrower preserve heading, description, and CTA order. Exactly two actions remain visible, wrap safely at 320px, and no clipping, overflow, duplicate trees, or excluded navigation/form/logo artifacts appear. Reduced-focus and JavaScript-disabled captures retained their expected markers."
+  },
+  "recordedAt": "2026-07-15"
+}

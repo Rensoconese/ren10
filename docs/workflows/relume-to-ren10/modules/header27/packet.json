@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header27",
+  "blockSlug": "hero-centered-email-capture-landscape-image",
+  "blockPath": "templates/blocks/hero-centered-email-capture-landscape-image.html",
+  "stage": "green",
+  "allowedFiles": [
+    "templates/blocks/hero-centered-email-capture-landscape-image.html",
+    "tests/components/header27-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json"
+  }
+}

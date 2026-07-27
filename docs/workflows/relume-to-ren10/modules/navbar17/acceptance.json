@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Primary fullscreen overlay reaches every documented state: toggle open/close at desktop/tablet/mobile, Escape with focus return, outside dismiss, destination and footer activation close, JS-disabled tree visibility",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, eight primary destinations, one top-bar primary action, one footer contact, five social links, one named toggle, zero chevrons — no duplicate close chrome or invented dropdowns",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Full-width bar logo-left / action+toggle-right; open overlay full-viewport under bar with end-aligned large links and footer contact+social row",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

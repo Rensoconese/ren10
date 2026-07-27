@@ -1,0 +1,283 @@
+.article1-block,
+.article2-block,
+.article3-block,
+.article4-block,
+.article5-block,
+.article6-block {
+  padding: clamp(var(--space-8), 5vw, var(--space-16));
+}
+
+:is(.article1-block, .article2-block, .article3-block, .article4-block, .article5-block, .article6-block) :is(h2, h3, p, ul, ol, figure) {
+  margin: 0;
+}
+
+:is(.article1-block, .article2-block, .article3-block, .article4-block, .article5-block, .article6-block) :is(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+
+.article-kicker {
+  color: var(--color-accent-strong);
+  font-size: var(--label-size);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+}
+
+.article-title {
+  font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+  font-weight: var(--display-lg-weight);
+  line-height: var(--display-lg-leading);
+  letter-spacing: var(--display-lg-tracking);
+  text-wrap: balance;
+}
+
+.article-deck {
+  max-width: var(--width-prose);
+  color: var(--color-text-secondary);
+  font-size: var(--lead-size);
+  line-height: var(--lead-leading);
+  text-wrap: pretty;
+}
+
+.article-meta {
+  --grid-gap: var(--space-2);
+  grid-template-columns: repeat(2, max-content);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.article-author {
+  --grid-gap: var(--space-3);
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+}
+
+.article-author-copy {
+  --grid-gap: var(--space-1);
+  grid-template-columns: minmax(0, 1fr);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.article-author-copy strong {
+  color: var(--color-text);
+}
+
+.article1-header {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--width-4xl);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.article1-header .article-deck {
+  margin-inline: auto;
+}
+
+.article1-meta,
+.article1-author {
+  justify-content: center;
+}
+
+.article2-layout,
+.article4-layout,
+.article6-layout {
+  --grid-gap: clamp(var(--space-8), 6vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+.article2-copy,
+.article4-copy,
+.article6-copy {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.article-media {
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+.article-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.article2-media {
+  aspect-ratio: 4 / 3;
+}
+
+.article3-header {
+  --grid-gap: var(--space-6);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.article3-copy {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  max-width: var(--width-4xl);
+}
+
+.article3-media {
+  aspect-ratio: 16 / 7;
+}
+
+.article3-footer {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
+.article4-block {
+  background: var(--color-surface-sunken);
+}
+
+.article4-byline {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--color-border);
+}
+
+.article4-media {
+  aspect-ratio: 3 / 4;
+}
+
+.article5-block.bb-detail-preview {
+  color: var(--color-on-surface-contrast);
+  background: var(--color-surface-contrast);
+}
+
+.article5-header {
+  --grid-gap: clamp(var(--space-8), 6vw, var(--space-16));
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+}
+
+.article5-copy {
+  --grid-gap: var(--space-5);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.article5-block :is(.article-title, .article-deck, .article-kicker, .article-meta, .article-author-copy, .article-author-copy strong) {
+  color: var(--color-on-surface-contrast);
+}
+
+.article5-index {
+  --grid-gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr);
+  padding: var(--space-6);
+  color: var(--color-on-surface-contrast);
+  border: 1px solid var(--color-on-surface-contrast);
+  border-radius: var(--radius-lg);
+}
+
+.article5-index li {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--space-3);
+  padding-block: var(--space-3);
+  color: var(--color-on-surface-contrast);
+  border-block-end: 1px solid var(--color-on-surface-contrast);
+}
+
+.article5-index span {
+  color: inherit;
+}
+
+.article5-index li:last-child {
+  border-block-end: 0;
+}
+
+.article6-categories {
+  --grid-gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.article6-categories a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+  background: var(--color-fill);
+  border-radius: var(--radius-md);
+}
+
+.article6-categories a:hover {
+  background: var(--color-fill-hover);
+}
+
+.article6-categories a:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset-width);
+}
+
+@media (min-width: 48rem) {
+  .article2-layout,
+  .article4-layout,
+  .article6-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .article3-footer {
+    grid-template-columns: minmax(0, 1fr) max-content;
+  }
+
+  .article4-layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+
+  .article5-header {
+    grid-template-columns: minmax(0, 1.3fr) minmax(16rem, 0.7fr);
+  }
+}
+
+@media (max-width: 24rem) {
+  .article-meta,
+  .article6-categories {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Editorial rhythm: tight label/title, readable title/deck, open provenance. */
+:is(
+  .article1-header,
+  .article2-copy,
+  .article3-copy,
+  .article4-copy,
+  .article5-copy,
+  .article6-copy
+) {
+  --grid-gap: 0;
+}
+
+.article-kicker + :is(.article-title, .article12-title) {
+  margin-block-start: var(--space-2);
+}
+
+:is(.article-title, .article12-title) + .article-deck {
+  margin-block-start: var(--space-4);
+}
+
+.article-deck + :is(
+  .article-meta,
+  .article-author,
+  .article3-footer,
+  .article4-byline,
+  .article9-series,
+  .article12-footer
+) {
+  margin-block-start: var(--space-6);
+}
+
+.article-meta + :is(.article-author, .article9-series) {
+  margin-block-start: var(--space-4);
+}

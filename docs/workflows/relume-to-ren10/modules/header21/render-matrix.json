@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-split-video-lightbox-left-copy-dual-cta.html",
+  "root": "[data-rh21-root]",
+  "states": [
+    {"id":"desktop-light-closed","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh21-title":1,".rh21-actions a":2,".rh21-media-trigger":1}},
+    {"id":"desktop-light-open","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh21-media-trigger"}],"expectedMarkers":{"#rh21-video dialog[open]":1,"#rh21-video iframe":1}},
+    {"id":"desktop-dark-closed","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh21-split":1,".rh21-media-trigger":1}},
+    {"id":"desktop-dark-open","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh21-media-trigger"}],"expectedMarkers":{"#rh21-video dialog[open]":1,".rh21-video-stage":1}},
+    {"id":"tablet-768","viewport":{"width":768,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh21-copy":1,".rh21-media":1}},
+    {"id":"seam-767","viewport":{"width":767,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh21-split":1,".rh21-description":1}},
+    {"id":"mobile-390-closed","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh21-actions a":2,".rh21-media-trigger":1}},
+    {"id":"mobile-390-open","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh21-media-trigger"}],"expectedMarkers":{"#rh21-video dialog[open]":1,"#rh21-video iframe":1}},
+    {"id":"narrow-320","viewport":{"width":320,"height":720},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh21-title":1,".rh21-media":1}},
+    {"id":"reduced-motion-open","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[{"type":"click","selector":".rh21-media-trigger"}],"expectedMarkers":{"#rh21-video dialog[open]":1,".rh21-loader":1}},
+    {"id":"mobile-dark-open","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh21-media-trigger"}],"expectedMarkers":{"#rh21-video dialog[open]":1,".ren-dialog-close":1}},
+    {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh21-video-fallback":1,".rh21-actions a[href]":2,".rh21-poster":1}}
+  ]
+}

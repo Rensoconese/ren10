@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header14",
+  "blockSlug": "hero-lightbox-top-email-split-band",
+  "blockPath": "templates/blocks/hero-lightbox-top-email-split-band.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-lightbox-top-email-split-band.html",
+    "tests/components/header14-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

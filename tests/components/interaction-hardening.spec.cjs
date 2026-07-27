@@ -1,5 +1,6 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
+const { injectAxe, checkA11y } = require('axe-playwright');
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
@@ -267,5 +268,58 @@ test.describe('Interaction hardening regressions', () => {
     await expect.poll(() => page.evaluate(() => {
       return document.activeElement?.classList.contains('ren-command-input') || false;
     })).toBe(true);
+  });
+
+  test('tooltip docs demo uses the component and never overlaps adjacent hints', async ({ page }) => {
+    await page.goto(`${staticServer.origin}/docs/components/ren-tooltip.html`);
+    await page.evaluate(() => customElements.whenDefined('ren-tooltip'));
+
+    const demo = page.locator('#demo .dx-demo-preview');
+    const triggers = demo.locator('button');
+    const tooltips = demo.locator('ren-tooltip');
+
+    await expect(triggers).toHaveCount(3);
+    await expect(tooltips).toHaveCount(3);
+
+    await triggers.nth(0).click();
+    await triggers.nth(1).hover();
+
+    await expect.poll(() => tooltips.evaluateAll((items) => {
+      return items.filter((item) => item.matches(':popover-open') || item.classList.contains('ren-open')).length;
+    })).toBe(1);
+    await expect(tooltips.nth(1)).toHaveAttribute('data-state', 'open');
+    await expect.poll(() => tooltips.nth(1).evaluate((item) => getComputedStyle(item).opacity)).toBe('1');
+
+    await injectAxe(page);
+    await checkA11y(page, '#demo', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+      },
+    });
+  });
+
+  test('popover filters keep a readable gap between options', async ({ page }) => {
+    await page.goto(`${staticServer.origin}/docs/components/ren-popover.html`);
+
+    await page.locator('#popover-demo > button').click();
+
+    const options = page.locator('#popover-demo-content .ren-checkbox');
+    await expect(options).toHaveCount(2);
+    await expect.poll(() => options.evaluateAll((items) => {
+      const first = items[0].getBoundingClientRect();
+      const second = items[1].getBoundingClientRect();
+      return second.top - first.bottom;
+    })).toBeGreaterThanOrEqual(12);
+
+    await injectAxe(page);
+    await checkA11y(page, '#demo', {
+      detailedReport: true,
+      detailedReportOptions: { html: true },
+      axeOptions: {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+      },
+    });
   });
 });

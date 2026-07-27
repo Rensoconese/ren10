@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A responsive split contact form and direct-contact block built with Ren10.">
+  <title>Split Form Details Contact — Ren10 Blocks</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="contact-batch1.css">
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Templates</a></li><li><a href="index.html">Blocks</a></li><li aria-current="page">Split Form Details Contact</li></ol></nav>
+      <p class="dx-kicker">Contact 1 · Form and details</p>
+      <h1 class="bb-detail-title">Split Form Details Contact</h1>
+      <p class="bb-detail-description">Direct contact routes remain visible beside a complete inquiry form in one balanced responsive composition.</p>
+    </header>
+    <section class="contact1-block bb-detail-preview" aria-labelledby="contact1-title">
+      <div class="contact1-layout ren-grid">
+        <div class="contact1-copy ren-stack">
+          <p class="dx-kicker">Start a conversation</p>
+          <h2 id="contact1-title" class="contact1-title">Tell us what your team needs to make clearer.</h2>
+          <p class="contact1-description">Share the context, constraint, or delivery goal. We will route your note to the person best equipped to help.</p>
+          <div class="contact-direct-list ren-grid">
+            <div class="contact-direct-item ren-stack ren-stack-sm"><span class="contact-direct-label">Email</span><a href="mailto:hello@northstar.example">hello@northstar.example</a></div>
+            <div class="contact-direct-item ren-stack ren-stack-sm"><span class="contact-direct-label">Phone</span><a href="tel:+541155550140">+54 11 5555 0140</a></div>
+            <div class="contact-direct-item ren-stack ren-stack-sm"><span class="contact-direct-label">Response time</span><span>Within one business day</span></div>
+          </div>
+        </div>
+        <ren-form data-validate="onTouched">
+          <form class="contact-form-surface ren-form ren-stack" action="#contact1-sent" method="post" novalidate>
+            <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden><strong>Please review the highlighted fields.</strong><ul></ul></div>
+            <div class="contact2-row ren-grid">
+              <ren-field data-rules="required"><label>First name</label><input class="ren-input" type="text" name="first_name" autocomplete="given-name" required><span data-error></span></ren-field>
+              <ren-field data-rules="required"><label>Last name</label><input class="ren-input" type="text" name="last_name" autocomplete="family-name" required><span data-error></span></ren-field>
+            </div>
+            <ren-field data-rules="required|email"><label>Work email</label><input class="ren-input" type="email" name="email" autocomplete="email" required><span data-error></span></ren-field>
+            <ren-field><label>Organization</label><input class="ren-input" type="text" name="organization" autocomplete="organization"></ren-field>
+            <ren-field data-rules="required|min:20"><label>How can we help?</label><textarea class="ren-input" name="message" rows="5" minlength="20" required></textarea><span data-description>Include the outcome you want and any timing constraints.</span><span data-error></span></ren-field>
+            <div class="ren-form-actions"><button class="ren-btn" type="submit">Send inquiry</button></div>
+          </form>
+        </ren-form>
+      </div>
+    </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="application-shell-team-directory.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Team Directory Application Shell</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="contact-centered-form.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Centered Form Contact</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/patterns/ren-form/ren-form.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "criteria": [
+    { "id": "exact-anatomy", "kind": "structure", "description": "One flexible top media region, one cover image, one bottom band, one h1, one description, and exactly two CTA destinations exist with no excluded parts", "automated": true },
+    { "id": "responsive-order", "kind": "visual-structure", "description": "Mobile stacks heading then description/actions; desktop uses two top-aligned columns", "automated": true },
+    { "id": "viewport-ownership", "kind": "geometry", "description": "Section fills the viewport, top media consumes remaining height, image covers it, and the page does not overflow", "automated": true },
+    { "id": "real-destinations", "kind": "behavior", "description": "Both CTA anchors resolve and remain usable with JavaScript disabled", "automated": true },
+    { "id": "accessibility", "kind": "a11y", "description": "Semantic order, visible focus, 44px targets, reduced motion, themes, and axe WCAG 2.1 AA pass", "automated": true },
+    { "id": "ren10-policy", "kind": "source", "description": "Uses documented layouts/tokens with no framework, placeholder URL, primitive palette, or hardcoded color leakage", "automated": true },
+    { "id": "visual-review", "kind": "human-review", "description": "Codex reviewed fresh desktop, seam, mobile, dark, reduced-motion, and JS-disabled captures", "automated": false }
+  ]
+}

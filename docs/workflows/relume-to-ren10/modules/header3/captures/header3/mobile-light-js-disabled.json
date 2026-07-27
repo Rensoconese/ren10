@@ -1,0 +1,18 @@
+{
+  "id": "mobile-light-js-disabled",
+  "url": "http://127.0.0.1:64582/templates/blocks/hero-text-left-video-lightbox.html?ren10_capture=header3-mobile-light-js-disabled-21b8acc736ca",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh3-actions .ren-btn": 2,
+    ".rh3-media-trigger[href]": 1,
+    "#rh3-video[open]": 0
+  },
+  "commit": "21b8acc736ca21877fe8ccf2e0331a1ce3dd9726",
+  "capturedAt": "2026-07-15T16:41:08.652Z"
+}

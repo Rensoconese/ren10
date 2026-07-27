@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Overlay shell reaches every documented state: toggle open/close at desktop tablet and mobile, Escape close, outside close, destination close, JS-disabled exposure of the tree; no hover-open menu and no dropdown interactions",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Exactly one brand, one permanent bar CTA, one named toggle, eight title-only destinations, one contact footer action, five social destinations, zero chevrons, one landmark tree",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "All widths: permanent bar logo-left / CTA+toggle-right; open overlay full-width below bar with large link grid and footer row; closed bar does not show the eight destinations",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop and mobile captures against the reference brief",
+      "automated": false
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "mobile-390-light",
+  "url": "http://127.0.0.1:57809/templates/blocks/hero-fullscreen-bg-centered-copy-dual-cta.html?ren10_capture=header30-mobile-390-light-00ddd8d38cc9",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh30-description": 1,
+    ".rh30-actions": 1
+  },
+  "commit": "00ddd8d38cc9f80baa796b6a099580fb7362d5fe",
+  "capturedAt": "2026-07-16T20:56:49.077Z"
+}

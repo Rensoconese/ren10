@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar31 mapped to a full-width logo-left / permanent-action+toggle-right bar and one ren-sheet side=right panel owning five large primary destinations, a contact cluster with real tel/mailto anchors, and five named social destinations. Rejected under-bar overlay (Navbar16), permanent desktop link row, ren-card/menu/popover, invented panel CTA from unused source field, nested nav, duplicate close hamburger, and copied source."
+}

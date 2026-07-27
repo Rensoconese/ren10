@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header30",
+  "blockSlug": "hero-fullscreen-bg-centered-copy-dual-cta",
+  "blockPath": "templates/blocks/hero-fullscreen-bg-centered-copy-dual-cta.html",
+  "stage": "reference",
+  "allowedFiles": [
+    "templates/blocks/hero-fullscreen-bg-centered-copy-dual-cta.html",
+    "tests/components/header30-header.spec.cjs"
+  ],
+  "evidence": {}
+}

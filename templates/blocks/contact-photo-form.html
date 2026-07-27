@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A real photographic contact block paired with an accessible Ren10 form.">
+  <title>Photo Form Contact — Ren10 Blocks</title>
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="contact-batch1.css">
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb"><ol><li><a href="../index.html">Templates</a></li><li><a href="index.html">Blocks</a></li><li aria-current="page">Photo Form Contact</li></ol></nav>
+      <p class="dx-kicker">Contact 4 · Photo and form</p>
+      <h1 class="bb-detail-title">Photo Form Contact</h1>
+      <p class="bb-detail-description">Real studio photography gives the contact experience context while the adjacent form keeps the task direct.</p>
+    </header>
+    <section class="contact4-block bb-detail-preview" aria-labelledby="contact4-title">
+      <div class="contact4-layout ren-grid">
+        <figure class="contact4-media ren-frame ren-frame-photo"><img src="media/hero-material-studio.webp" width="1440" height="960" alt="Sunlit material samples arranged on a design studio table"></figure>
+        <div class="ren-stack">
+          <div class="contact4-copy ren-stack">
+            <p class="dx-kicker">Work with the studio</p>
+            <h2 id="contact4-title" class="contact4-title">Start with the context behind the interface.</h2>
+            <p class="contact4-description">Tell us where the system is creating friction. Prefer a direct note? Email <a href="mailto:studio@northstar.example">studio@northstar.example</a>.</p>
+          </div>
+          <ren-form data-validate="onTouched">
+            <form class="contact-form-surface ren-form ren-stack" action="#contact4-sent" method="post" novalidate>
+              <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden><strong>Please review the highlighted fields.</strong><ul></ul></div>
+              <ren-field data-rules="required"><label>Name</label><input class="ren-input" type="text" name="name" autocomplete="name" required><span data-error></span></ren-field>
+              <ren-field data-rules="required|email"><label>Email</label><input class="ren-input" type="email" name="email" autocomplete="email" required><span data-error></span></ren-field>
+              <ren-field><label>Phone</label><input class="ren-input" type="tel" name="phone" autocomplete="tel"></ren-field>
+              <ren-field data-rules="required|min:20"><label>Project context</label><textarea class="ren-input" name="message" rows="5" minlength="20" required></textarea><span data-error></span></ren-field>
+              <div class="ren-form-actions"><button class="ren-btn" type="submit">Request a conversation</button></div>
+            </form>
+          </ren-form>
+        </div>
+      </div>
+    </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="contact-details-cards.html" rel="prev"><span aria-hidden="true">←</span><span><span class="bb-block-pagination-direction">Previous</span><br>Details Cards Contact</span></a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="contact-office-directory.html" rel="next"><span><span class="bb-block-pagination-direction">Next</span><br>Office Directory Contact</span><span aria-hidden="true">→</span></a>
+    </nav>
+  </main>
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../../components/patterns/ren-form/ren-form.js"></script>
+</body>
+</html>

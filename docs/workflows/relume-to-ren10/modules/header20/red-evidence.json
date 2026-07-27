@@ -1,0 +1,1 @@
+{"stage":"red","passed":true,"command":"npx playwright test tests/components/header20-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1 --grep exact copy","expectedFailure":"Header20 returned HTTP 404 before production implementation in both theme projects.","tests":2,"failed":2,"recordedAt":"2026-07-15"}

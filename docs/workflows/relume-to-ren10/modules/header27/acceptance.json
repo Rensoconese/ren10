@@ -1,0 +1,10 @@
+{"version":1,"criteria":[
+  {"id":"anatomy","kind":"structure","description":"Exactly one centered h1/description/form/email/submit/legal/terms/status followed by one landscape image; no extras","automated":true},
+  {"id":"form-seam","kind":"visual-structure","description":"Form stacks through 639px and becomes field/submit row from 640px","automated":true},
+  {"id":"media","kind":"visual-structure","description":"One owned meaningful intrinsic rounded cover landscape image remains after copy and full container width","automated":true},
+  {"id":"responsive","kind":"visual-structure","description":"Centered content-height composition has no clipping or overflow from 320 through 1280","automated":true},
+  {"id":"form-a11y","kind":"accessibility","description":"Visible label, native validity, one error, live success, real action/terms, focus, 44px and axe AA","automated":true},
+  {"id":"fallback","kind":"behavior","description":"Form, terms and image work without JavaScript; reduced motion and themes remain coherent","automated":true},
+  {"id":"policy","kind":"behavior","description":"Vanilla Light DOM and documented Ren10 primitives/tokens only","automated":true},
+  {"id":"visual-review","kind":"human-review","description":"Fresh matrix awaits Codex inspection","automated":false}
+]}

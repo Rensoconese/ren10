@@ -1,0 +1,18 @@
+{
+  "id": "mobile-js-disabled",
+  "url": "http://127.0.0.1:60335/templates/blocks/hero-fullscreen-bg-video-left-copy-dual-cta.html?ren10_capture=header7-mobile-js-disabled-eae1b3065e91",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": false,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh7-heading": 1,
+    ".rh7-actions > .ren-btn": 2,
+    ".rh7-video": 1
+  },
+  "commit": "eae1b3065e918a01abcd410d7eaa8a4596de60c7",
+  "capturedAt": "2026-07-15T17:33:32.482Z"
+}

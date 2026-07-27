@@ -233,7 +233,7 @@ function detectLocale() {
 if (typeof document !== 'undefined') {
   try {
     activeLocale = detectLocale();
-  } catch (e) {
+  } catch {
     // Fall back to 'en' if document is not available
     activeLocale = 'en';
   }

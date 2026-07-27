@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header23",
+  "blockSlug": "hero-centered-copy-dual-cta",
+  "blockPath": "templates/blocks/hero-centered-copy-dual-cta.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-centered-copy-dual-cta.html",
+    "tests/components/header23-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

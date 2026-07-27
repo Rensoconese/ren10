@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "criteria": [
+    {
+      "id": "anatomy-counts",
+      "kind": "structure",
+      "description": "One h1, one description, one email field, one submit CTA, one terms link, one media trigger, one dialog with spinner + iframe; zero nav/dropdown/second CTA",
+      "automated": true
+    },
+    {
+      "id": "function-primary",
+      "kind": "behavior",
+      "description": "Media trigger opens ren-dialog lightbox with deterministic playable video; Escape and backdrop close; spinner until iframe load; form submit prevented for the enhanced demo",
+      "automated": true
+    },
+    {
+      "id": "affordance-count",
+      "kind": "structure",
+      "description": "Single media open control and single dialog close; no duplicate interactive play controls",
+      "automated": true
+    },
+    {
+      "id": "alignment-primary",
+      "kind": "visual-structure",
+      "description": "Copy left / media right at 1280; stacked copy-above-media at 390; no root overflow at 320/390/767/768/1280",
+      "automated": true
+    },
+    {
+      "id": "progressive-fallback",
+      "kind": "behavior",
+      "description": "JavaScript-disabled view keeps heading, form, terms, and poster visible; no premature custom error; legal link and valid form fallback resolve to owned local documents",
+      "automated": true
+    },
+    {
+      "id": "accessibility",
+      "kind": "accessibility",
+      "description": "Visible focus, fully visible 44px targets, reduced motion, light/dark tokens, public DOM/ARIA only, axe WCAG 2.1 AA",
+      "automated": true
+    },
+    {
+      "id": "visual-review",
+      "kind": "human-review",
+      "description": "Codex reviewed fresh desktop, tablet, mobile, dark, open lightbox, and JavaScript-disabled captures",
+      "automated": false
+    }
+  ]
+}

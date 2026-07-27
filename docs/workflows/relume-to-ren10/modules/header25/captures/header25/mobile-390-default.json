@@ -1,0 +1,17 @@
+{
+  "id": "mobile-390-default",
+  "url": "http://127.0.0.1:62537/templates/blocks/hero-centered-search.html?ren10_capture=header25-mobile-390-default-c8df400ef212",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh25-title": 1,
+    ".rh25-submit": 1
+  },
+  "commit": "c8df400ef2122be87867a2cf910533d3f0e42209",
+  "capturedAt": "2026-07-15T19:47:16.784Z"
+}

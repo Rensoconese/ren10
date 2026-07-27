@@ -1,0 +1,17 @@
+{
+  "id": "mobile-390-open",
+  "url": "http://127.0.0.1:58890/templates/blocks/hero-split-video-lightbox-left-copy-dual-cta.html?ren10_capture=header21-mobile-390-open-4f8dca2250ac",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    "#rh21-video dialog[open]": 1,
+    "#rh21-video iframe": 1
+  },
+  "commit": "4f8dca2250ac5defefeb6f762ba6eaf60132e5d7",
+  "capturedAt": "2026-07-15T19:35:08.264Z"
+}

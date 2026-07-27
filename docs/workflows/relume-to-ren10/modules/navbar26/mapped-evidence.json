@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Navbar26 mapped to one ren-nav tree, native details/summary, three groups × five title-only destinations (15), one media-backed promo with a single CTA, two actions owned by the collapsible shell on mobile and end cluster on desktop, one named toggle, one chevron, full-width bar + full-width absolute mega geometry, and the established 48rem interaction boundary. Rejected ren-card, ren-menu, ren-popover, ren-collapsible, nested nav, icon/description destination rows, blog-style 16:9 feature+view-all (navbar6), floating compact shell, and copied source."
+}

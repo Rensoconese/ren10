@@ -69,6 +69,8 @@
   --color-surface-raised: light-dark(var(--white), var(--gray-1000));
   --color-surface-sunken: light-dark(var(--gray-100), var(--black));
   --color-surface-overlay:light-dark(var(--white), var(--gray-1000));
+  --color-surface-contrast: var(--black);
+  --color-on-surface-contrast: var(--white);
 
   /* ─── Borders ─── */
   /* --color-border: decorative separator between regions (fails 3:1, por diseño).

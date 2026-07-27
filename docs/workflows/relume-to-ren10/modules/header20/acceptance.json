@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "criteria": [
+    {"id":"anatomy","kind":"structure","description":"One content-height container/grid/copy/h1/description/form/email/submit/legal/terms/image; zero extra CTA/form/dialog/video/overlay/nav/logo","automated":true},
+    {"id":"responsive-layout","kind":"visual-structure","description":"Copy precedes image in one column through 1023px; at 1024px image is left and copy right in equal centered columns","automated":true},
+    {"id":"responsive-form","kind":"visual-structure","description":"Form stacks below 640px and becomes growing-email/intrinsic-submit row at 640px","automated":true},
+    {"id":"form-accessibility","kind":"accessibility","description":"Visible label, native email rules, visible error/invalid state, live success, real action/terms, focus, 44px, axe AA","automated":true},
+    {"id":"media-quality","kind":"visual-structure","description":"One owned meaningful intrinsic rounded cover image remains unclipped","automated":true},
+    {"id":"progressive-fallback","kind":"behavior","description":"Native no-JavaScript submission and terms work; reduced motion collapses transitions","automated":true},
+    {"id":"composition-safety","kind":"behavior","description":"Inline script is an ES module with root-scoped descendant queries","automated":true},
+    {"id":"visual-review","kind":"human-review","description":"Fresh 320/390/640/1023/1024/1280 light/dark/noJS/reduced matrix awaits review","automated":false}
+  ]
+}

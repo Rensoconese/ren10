@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fullscreen Background Centered Dual CTA Hero — Ren10 Blocks</title>
+  <meta name="description" content="A controlled fullscreen-style Ren10 cover hero with centered copy and two clear destinations.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <style>
+    .rh30-hero {
+      --cover-height: clamp(32rem, 55vw, 44rem);
+      position: relative;
+      padding: 0;
+      color-scheme: light;
+      color: var(--color-text-inverted);
+      background: var(--color-text);
+    }
+
+    .rh30-background,
+    .rh30-scrim {
+      position: absolute;
+      inset: 0;
+    }
+
+    .rh30-background img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .rh30-scrim {
+      background-color: var(--color-overlay);
+      background-image:
+        linear-gradient(var(--color-overlay), var(--color-overlay)),
+        linear-gradient(var(--color-overlay), var(--color-overlay));
+    }
+
+    .rh30-copy {
+      --center-width: var(--width-3xl);
+      --center-padding: var(--space-6);
+      --stack-gap: var(--space-stack-loose);
+      position: relative;
+      z-index: var(--z-raised);
+      align-items: center;
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh30-title,
+    .rh30-description {
+      margin: 0;
+    }
+
+    .rh30-title {
+      width: 100%;
+      max-width: 16ch;
+      margin-inline: auto;
+      color: var(--color-text-inverted);
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh30-description {
+      width: 100%;
+      max-width: var(--width-prose);
+      margin-inline: auto;
+      color: var(--color-text-inverted);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .rh30-actions {
+      --grid-gap: var(--space-inline-loose);
+      grid-template-columns: minmax(0, 1fr);
+      width: min(100%, var(--width-lg));
+    }
+
+    .rh30-actions .ren-btn {
+      width: 100%;
+      min-height: var(--touch-min);
+    }
+
+    .rh30-actions .ren-btn-outline {
+      color: var(--color-text);
+      border-color: var(--color-border-interactive);
+      background: var(--color-surface-raised);
+    }
+
+    @media (min-width: 40rem) {
+      .rh30-copy {
+        --center-padding: var(--space-8);
+        --stack-gap: var(--space-8);
+      }
+
+      .rh30-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh30-hero *,
+      .rh30-hero *::before,
+      .rh30-hero *::after {
+        animation: none;
+        transition-duration: 0s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Fullscreen Background Centered Dual CTA Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 30 · Hero block</p>
+      <h1 class="bb-detail-title">Fullscreen Background Centered Dual CTA Hero</h1>
+      <p class="bb-detail-description">A controlled fullscreen-style Ren10 cover hero with centered copy and two clear destinations.</p>
+    </header>
+
+    <section class="rh30-hero ren-cover bb-detail-preview" data-rh30-root aria-labelledby="rh30-title">
+      <div class="rh30-background" aria-hidden="true">
+<img src="media/hero-coastal-pavilion.webp" alt="" width="1751" height="898">
+      </div>
+      <div class="rh30-scrim" aria-hidden="true"></div>
+
+      <div class="rh30-copy ren-center ren-stack ren-cover-center">
+        <h1 id="rh30-title" class="rh30-title">Move from shared direction to confident delivery</h1>
+        <p class="rh30-description">Build accessible product foundations your whole team can understand, adapt, and ship without losing the system underneath.</p>
+        <div class="rh30-actions ren-grid">
+          <a class="ren-btn" href="../../docs/getting-started.html">Start building</a>
+          <a class="ren-btn ren-btn-outline" href="index.html">Explore the system</a>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-centered-email-capture-landscape-lightbox.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Centered Email and Landscape Lightbox Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="cta-split-image-dual-action.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split Image Dual-Action CTA</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+</body>
+</html>

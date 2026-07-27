@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Split Email Landscape Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height Ren10 hero with responsive split copy, accessible email capture, and one landscape image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh16-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh16-shell {
+      --stack-gap: var(--space-10);
+      width: 100%;
+    }
+
+    .rh16-copy-layout {
+      --grid-gap: var(--space-8);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .rh16-copy-layout > * {
+      min-width: 0;
+    }
+
+    .rh16-heading,
+    .rh16-description,
+    .rh16-form,
+    .rh16-legal,
+    .rh16-status,
+    .rh16-media {
+      margin: 0;
+    }
+
+    .rh16-heading {
+      max-width: var(--width-lg);
+      font-size: clamp(var(--display-sm-size), 6vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh16-support {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-lg);
+    }
+
+    .rh16-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+    }
+
+    .rh16-form {
+      --stack-gap: var(--space-stack-tight);
+    }
+
+    .rh16-form-row {
+      --switcher-gap: var(--space-3);
+      --switcher-threshold: 36rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .rh16-form-row > * { flex-basis: 100%; }
+    .rh16-form-row ren-field { min-width: 0; }
+    .rh16-submit { width: 100%; }
+
+    .rh16-email:focus-visible {
+      outline: var(--ring-width) solid var(--color-focus-ring);
+      outline-offset: var(--ring-offset-width);
+    }
+
+    .rh16-form ren-field:not([data-invalid]) [data-error] { display: none; }
+
+    .rh16-legal,
+    .rh16-status {
+      color: var(--color-text-muted);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    .rh16-terms {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    .rh16-status { color: var(--color-success-strong); }
+    .rh16-status[hidden] { display: none; }
+
+    .rh16-media {
+      width: 100%;
+      border-radius: var(--radius-xl);
+      background: var(--color-surface-sunken);
+    }
+
+    .rh16-media > img { object-position: center; }
+
+    @media (min-width: 40rem) {
+      .rh16-form-row { flex-wrap: nowrap; }
+      .rh16-form-row ren-field { flex: 1 1 auto; }
+      .rh16-form-row .rh16-submit { flex: 0 0 auto; width: auto; }
+    }
+
+    @media (min-width: 48rem) {
+      .rh16-hero { padding-block: var(--space-section); }
+
+      .rh16-shell {
+        --center-padding: var(--space-8);
+        --stack-gap: var(--space-16);
+      }
+
+      .rh16-copy-layout {
+        --grid-gap: var(--space-12);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 64rem) {
+      .rh16-hero { padding-block: var(--space-section-lg); }
+      .rh16-shell { --stack-gap: var(--space-20); }
+      .rh16-copy-layout { --grid-gap: var(--space-20); }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Split Email Landscape Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 16 · Hero block</p>
+      <h1 class="bb-detail-title">Split Email Landscape Hero</h1>
+      <p class="bb-detail-description">A content-height Ren10 hero with responsive split copy, accessible email capture, and one landscape image.</p>
+    </header>
+    <section class="rh16-preview bb-detail-preview" data-rh16-root>
+    <section class="rh16-hero" aria-labelledby="rh16-heading">
+      <div class="rh16-shell ren-center ren-center-wide ren-stack">
+        <div class="rh16-copy-layout ren-grid ren-grid-2">
+          <h1 id="rh16-heading" class="rh16-heading">Turn a clear direction into a confident product</h1>
+
+          <div class="rh16-support ren-stack">
+            <p class="rh16-description">Bring structure, accessibility, and responsive decisions together so every team can move from shared intent to a coherent experience.</p>
+
+            <form class="rh16-form ren-stack" action="../../docs/getting-started.html" method="get">
+              <div class="rh16-form-row ren-switcher">
+                <ren-field>
+                  <label for="rh16-email">Work email</label>
+                  <input class="rh16-email ren-input" id="rh16-email" name="email" type="email" autocomplete="email" placeholder="team@example.com" required>
+                  <span data-error>Enter a valid email address.</span>
+                </ren-field>
+                <button class="rh16-submit ren-btn" type="submit">Join the preview</button>
+              </div>
+              <p class="rh16-status" role="status" aria-live="polite" hidden></p>
+              <p class="rh16-legal">By continuing, you agree to our <a class="rh16-terms" href="../../LICENSE">terms of use</a>.</p>
+            </form>
+          </div>
+        </div>
+
+        <figure class="rh16-media ren-frame">
+<img
+            src="media/hero-coastal-pavilion.webp"
+            alt="Sculptural concrete pavilion on a windswept coastline"
+            width="1751"
+            height="898"
+          >
+        </figure>
+      </div>
+    </section>
+  </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-split-copy-dual-cta-landscape-image.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Split Copy Landscape Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-split-copy-dual-cta-landscape-lightbox.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Landscape Lightbox Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module">
+    import '../../components/primitives/ren-field/ren-field.js';
+
+    const root = document.querySelector('[data-rh16-root]');
+    const form = root.querySelector('.rh16-form');
+    const status = root.querySelector('.rh16-status');
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      status.textContent = 'Thanks — your email is ready for the Ren10 preview.';
+      status.hidden = false;
+    });
+  </script>
+</body>
+</html>

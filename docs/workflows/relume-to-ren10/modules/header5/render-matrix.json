@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html",
+  "root": "[data-rh5-root]",
+  "states": [
+    { "id": "desktop-light", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-heading": 1, ".rh5-description": 1, ".rh5-actions > .ren-btn": 2, ".rh5-background > img": 1, ".rh5-scrim": 1 } },
+    { "id": "desktop-dark", "viewport": { "width": 1280, "height": 900 }, "theme": "dark", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-heading": 1, ".rh5-actions > .ren-btn": 2 } },
+    { "id": "tablet-light", "viewport": { "width": 768, "height": 1024 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-copy": 1, ".rh5-actions > .ren-btn": 2 } },
+    { "id": "mobile-light", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-heading": 1, ".rh5-actions > .ren-btn": 2 } },
+    { "id": "narrow-320", "viewport": { "width": 320, "height": 720 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-heading": 1, ".rh5-actions > .ren-btn": 2 } },
+    { "id": "seam-767", "viewport": { "width": 767, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-background": 1, ".rh5-scrim": 1 } },
+    { "id": "desktop-reduced-motion", "viewport": { "width": 1280, "height": 900 }, "theme": "light", "javaScript": true, "reducedMotion": true, "actions": [], "expectedMarkers": { ".rh5-actions > .ren-btn": 2 } },
+    { "id": "mobile-js-disabled", "viewport": { "width": 390, "height": 844 }, "theme": "light", "javaScript": false, "reducedMotion": false, "actions": [], "expectedMarkers": { ".rh5-heading": 1, ".rh5-actions > .ren-btn": 2, ".rh5-background > img": 1 } }
+  ]
+}

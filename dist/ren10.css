@@ -804,6 +804,8 @@
   --color-surface-raised: light-dark(var(--white), var(--gray-1000));
   --color-surface-sunken: light-dark(var(--gray-100), var(--black));
   --color-surface-overlay:light-dark(var(--white), var(--gray-1000));
+  --color-surface-contrast: var(--black);
+  --color-on-surface-contrast: var(--white);
 
   /* ─── Borders ─── */
   /* --color-border: decorative separator between regions (fails 3:1, por diseño).
@@ -7547,7 +7549,7 @@ select.ren-input {
 }
 
 /* Links */
-.ren-breadcrumb a {
+.ren-breadcrumb > ol a {
   color: var(--ren-breadcrumb-color);
   text-decoration: none;
   padding: var(--space-1) 0;
@@ -7555,13 +7557,13 @@ select.ren-input {
   transition: color var(--duration-tactile) var(--ease-enter);
 }
 
-.ren-breadcrumb a:hover {
+.ren-breadcrumb > ol a:hover {
   color: var(--color-text);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
 
-.ren-breadcrumb a:focus-visible {
+.ren-breadcrumb > ol a:focus-visible {
   outline: var(--ring-width) solid var(--color-focus-ring);
   outline-offset: 2px;
 }
@@ -8685,6 +8687,7 @@ ren-dialog {
   line-height: 1.4;
   margin: 0;
   inset: auto;
+  overflow: visible;
 
   /* Anchor positioning (modern browsers) */
   position-anchor: --tooltip-anchor;
@@ -9206,6 +9209,28 @@ ren-dialog {
   transform: rotate(180deg);
 }
 
+/* Animate the native details content box. The global reset enables
+   keyword-size interpolation, so block-size can transition to and from auto. */
+@supports selector(details::details-content) {
+  .ren-accordion > details::details-content {
+    block-size: 0;
+    overflow: clip;
+    opacity: 0;
+    transition:
+      block-size var(--duration-exit) var(--ease-exit),
+      opacity var(--duration-exit) var(--ease-exit),
+      content-visibility var(--duration-exit) var(--ease-exit);
+    transition-behavior: allow-discrete;
+  }
+
+  .ren-accordion > details[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+    transition-duration: var(--duration-enter);
+    transition-timing-function: var(--ease-enter);
+  }
+}
+
 /* ═══════════════════════════════════════════════════════════════════ */
 /* CONTENT ANIMATION — MODERN APPROACH */
 /* ═══════════════════════════════════════════════════════════════════ */
@@ -9350,6 +9375,10 @@ ren-dialog {
   }
 
   .ren-accordion > details > .ren-accordion-content {
+    transition: none;
+  }
+
+  .ren-accordion > details::details-content {
     transition: none;
   }
 }
@@ -11191,6 +11220,12 @@ ren-dialog {
     transform: rotate(360deg);
   }
 }
+/* The custom-element host is structural only. Keeping it out of layout prevents
+   an empty grid/flex item around the real dialog generated in light DOM. */
+ren-sheet {
+  display: contents;
+}
+
 /* Hide the dialog when it isn't open. The browser default for
    `<dialog>` without `open` is `display: none`, but the rule below
    sets `display: flex` for layout, so without this explicit reset

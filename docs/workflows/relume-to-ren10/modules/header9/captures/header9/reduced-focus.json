@@ -1,0 +1,16 @@
+{
+  "id": "reduced-focus",
+  "url": "http://127.0.0.1:55197/templates/blocks/hero-fullscreen-media-top-copy-band-dual-cta.html?ren10_capture=header9-reduced-focus-8c10f025386f",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh9-actions a": 2
+  },
+  "commit": "8c10f025386f7533c78d5925a8c2919e9da46270",
+  "capturedAt": "2026-07-15T17:12:28.624Z"
+}

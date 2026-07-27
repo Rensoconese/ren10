@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hero Split Copy Dual CTA Media — Ren10</title>
+  <meta name="description" content="A responsive Ren10 split hero with two calls to action and one cover image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-link/ren-link.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-breadcrumb/ren-breadcrumb.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <style>
+    .rh1-hero {
+      padding-block: var(--space-section, var(--space-16));
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh1-layout {
+      --grid-gap: var(--space-12);
+      align-items: center;
+    }
+
+    .rh1-copy {
+      --stack-gap: var(--space-4);
+    }
+
+    .rh1-copy h1 {
+      margin: 0;
+      max-width: 18ch;
+      font-size: clamp(var(--text-4xl), 5vw, var(--text-7xl));
+      line-height: var(--leading-tight);
+      text-wrap: balance;
+    }
+
+    .rh1-description {
+      max-width: 54ch;
+      margin: 0;
+      color: var(--color-text-muted);
+      font-size: var(--text-lg);
+      line-height: var(--leading-relaxed);
+    }
+
+    .rh1-actions {
+      --cluster-gap: var(--space-4);
+      margin-block-start: var(--space-2);
+    }
+
+    .rh1-media {
+      --frame-ratio: 4 / 3;
+      min-width: 0;
+      background:
+        linear-gradient(135deg, var(--color-accent-subtle), var(--color-fill));
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .rh1-media img {
+      object-position: top;
+    }
+
+    @media (max-width: 47.999rem) {
+      .rh1-hero {
+        padding-block: var(--space-12);
+      }
+
+      .rh1-layout {
+        --grid-gap: var(--space-8);
+        grid-template-columns: 1fr;
+      }
+
+      .rh1-actions > .ren-btn {
+        flex: 1 1 9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh1-hero *,
+      .rh1-hero *::before,
+      .rh1-hero *::after {
+        animation: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="ren-link-skip" href="#rh1-preview">Skip to header preview</a>
+  <header class="dx-nav">
+    <div class="dx-nav-inner">
+      <a class="dx-brand" href="../../docs/index.html" aria-label="Ren10 documentation home">
+        <span class="dx-brand-mark" aria-hidden="true">R</span>
+        <span>Ren10</span>
+      </a>
+      <nav class="dx-nav-menu" aria-label="Primary">
+        <a href="../../docs/index.html">Docs</a>
+        <a href="../../docs/components.html">Components</a>
+        <a href="index.html" aria-current="page">Blocks</a>
+      </nav>
+      <div class="dx-nav-actions">
+        <a class="ren-btn ren-btn-secondary" href="index.html">All blocks</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Split copy, dual CTA and media</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 1 · Hero block</p>
+      <h1 class="bb-detail-title">Split copy, dual CTA and media</h1>
+      <p class="bb-detail-description">A balanced two-column hero with focused copy, two clear actions, and a responsive product image that stacks cleanly on smaller screens.</p>
+    </header>
+
+    <section id="rh1-preview" class="rh1-hero bb-detail-preview" data-rh1-root aria-labelledby="rh1-title">
+      <div class="rh1-layout ren-center ren-center-wide ren-grid ren-grid-2">
+        <div class="rh1-copy ren-stack">
+          <h1 id="rh1-title">Hero Split Copy Dual CTA Media</h1>
+          <p class="rh1-description">
+            Turn scattered product decisions into a shared system your team can understand,
+            adapt, and ship with confidence.
+          </p>
+          <div class="rh1-actions ren-cluster" aria-label="Hero actions">
+            <a class="ren-btn" href="../../docs/getting-started.html">Start building</a>
+            <a class="ren-btn ren-btn-secondary" href="../../docs/components.html">Explore the system</a>
+          </div>
+        </div>
+
+        <figure class="rh1-media ren-frame ren-frame-photo">
+<img
+            src="media/hero-material-studio.webp"
+            alt="Maker studio table arranged with tactile material samples"
+            width="1536"
+            height="1024"
+            decoding="async"
+          >
+        </figure>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="nav-logo-cta-left-drawer.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Navbar Logo CTA Left Drawer</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-split-email-form-media-right.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Split email signup with media</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+</main>
+</body>
+</html>

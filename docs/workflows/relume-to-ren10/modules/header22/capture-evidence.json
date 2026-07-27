@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "moduleId": "header22",
+  "sourceStage": "green",
+  "capturedCommit": "12ad524a616607853823807d8dd184de183b9662",
+  "capturesFresh": true,
+  "captureCommand": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/header22/render-matrix.json --module header22 --output docs/workflows/relume-to-ren10/modules/header22/captures --repo-root .",
+  "stateCount": 12,
+  "outputRoot": "captures/header22",
+  "inspection": "Codex inspected all 12 fresh cache-busted PNGs. Mobile preserves copy/form/legal before media; desktop places the lightbox left and copy right in equal centered columns. The 640 form seam and 1023/1024 layout seam are deliberate and overflow-free. Invalid feedback is singular with no native bubble, the dialog is aligned with one video surface, no-JavaScript retains native form/terms/media alternative, and light/dark/focus/reduced-motion states are coherent."
+}

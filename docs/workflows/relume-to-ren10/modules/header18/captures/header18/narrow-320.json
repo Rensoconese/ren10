@@ -1,0 +1,17 @@
+{
+  "id": "narrow-320",
+  "url": "http://127.0.0.1:65314/templates/blocks/hero-top-split-email-video-lightbox.html?ren10_capture=header18-narrow-320-0c5d2172bc1d",
+  "viewport": {
+    "width": 320,
+    "height": 720
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh18-title": 1,
+    ".rh18-terms": 1
+  },
+  "commit": "0c5d2172bc1dc127d1d2bdbbbe83963edb6223ab",
+  "capturedAt": "2026-07-15T19:10:48.898Z"
+}

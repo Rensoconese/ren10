@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "navbars",
+  "moduleId": "navbar31",
+  "blockSlug": "nav-logo-cta-right-sheet-contact",
+  "blockPath": "templates/blocks/nav-logo-cta-right-sheet-contact.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/nav-logo-cta-right-sheet-contact.html",
+    "tests/components/navbar31-navigation.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

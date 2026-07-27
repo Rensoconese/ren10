@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centered Email and Landscape Hero — Ren10 Blocks</title>
+  <meta name="description" content="A content-height centered Ren10 email hero followed by an owned landscape image.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../components/primitives/ren-field/ren-field.css">
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <style>
+    .rh27-hero {
+      padding-block: var(--space-section-sm);
+      color: var(--color-text);
+      background: var(--color-surface);
+    }
+
+    .rh27-layout {
+      --stack-gap: var(--space-12);
+      width: 100%;
+      text-align: center;
+    }
+
+    .rh27-copy {
+      --center-width: var(--width-2xl);
+      --stack-gap: var(--space-stack-loose);
+      width: 100%;
+    }
+
+    .rh27-copy-text {
+      --stack-gap: var(--space-5);
+    }
+
+    .rh27-heading,
+    .rh27-description,
+    .rh27-legal,
+    .rh27-status {
+      margin: 0;
+    }
+
+    .rh27-media {
+      width: 100%;
+      margin: 0;
+      border-radius: var(--radius-xl);
+      background: var(--color-surface-sunken);
+      box-shadow: var(--shadow-md);
+    }
+
+    .rh27-media img {
+      object-position: center;
+    }
+
+    .rh27-heading {
+      font-size: clamp(var(--display-sm-size), 7vw, var(--display-lg-size));
+      font-weight: var(--display-lg-weight);
+      line-height: var(--display-lg-leading);
+      letter-spacing: var(--display-lg-tracking);
+      text-wrap: balance;
+    }
+
+    .rh27-description {
+      color: var(--color-text-secondary);
+      font-size: var(--lead-size);
+      font-weight: var(--lead-weight);
+      line-height: var(--lead-leading);
+      text-wrap: pretty;
+    }
+
+    .rh27-form {
+      --stack-gap: var(--space-stack-tight);
+      width: 100%;
+    }
+
+    .rh27-form-row {
+      --switcher-gap: var(--space-inline-tight);
+      --switcher-threshold: var(--width-7xl);
+      align-items: end;
+      width: 100%;
+      text-align: start;
+    }
+
+    .rh27-form-row > * {
+      flex-basis: 100%;
+      min-width: 0;
+    }
+
+    .rh27-email,
+    .rh27-submit {
+      min-height: var(--touch-min);
+    }
+
+    .rh27-error[hidden] {
+      display: none;
+    }
+
+    .rh27-legal {
+      color: var(--color-text-muted);
+      font-size: var(--caption-size);
+      line-height: var(--caption-leading);
+    }
+
+    .rh27-terms-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+      color: var(--color-text-link);
+    }
+
+    .rh27-status {
+      color: var(--color-success-strong);
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+    }
+
+    @media (min-width: 40rem) {
+      .rh27-form-row {
+        flex-wrap: nowrap;
+      }
+
+      .rh27-form-row > ren-field {
+        flex: 1 1 auto;
+        width: 0;
+      }
+
+      .rh27-form-row > .rh27-submit {
+        flex: 0 0 auto;
+        width: auto;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh27-hero {
+        padding-block: var(--space-section-lg);
+      }
+
+      .rh27-layout {
+        --stack-gap: var(--space-20);
+        --center-padding: var(--space-8);
+      }
+
+      .rh27-copy {
+        --stack-gap: var(--space-8);
+        --center-padding: var(--space-8);
+      }
+
+      .rh27-copy-text {
+        --stack-gap: var(--space-6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Centered Email and Landscape Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 27 · Hero block</p>
+      <h1 class="bb-detail-title">Centered Email and Landscape Hero</h1>
+      <p class="bb-detail-description">A content-height centered Ren10 email hero followed by an owned landscape image.</p>
+    </header>
+    <section class="rh27-preview bb-detail-preview" data-rh27-root aria-labelledby="rh27-heading">
+    <section class="rh27-hero">
+      <div class="rh27-layout ren-center ren-center-wide ren-stack">
+        <div class="rh27-copy ren-center ren-stack">
+          <div class="rh27-copy-text ren-stack">
+            <h1 id="rh27-heading" class="rh27-heading">Turn shared standards into steady product momentum</h1>
+            <p class="rh27-description">Get practical guidance for building accessible interfaces that stay coherent as your product and team evolve.</p>
+          </div>
+
+          <form class="rh27-form ren-stack" action="../../docs/getting-started.html" method="get">
+            <div class="rh27-form-row ren-switcher">
+              <ren-field>
+                <label for="rh27-email">Work email</label>
+                <input id="rh27-email" class="rh27-email ren-input" name="email" type="email" autocomplete="email" placeholder="team@example.com" required>
+                <span class="rh27-error" data-error hidden>Enter a valid email address.</span>
+              </ren-field>
+              <button class="rh27-submit ren-btn" type="submit">Join the preview</button>
+            </div>
+            <p class="rh27-legal">By continuing, you agree to our <a class="rh27-terms-link" href="../../LICENSE">terms of use</a>.</p>
+            <p class="rh27-status" role="status" aria-live="polite" hidden></p>
+          </form>
+        </div>
+
+        <figure class="rh27-media ren-frame">
+<img src="media/hero-coastal-pavilion.webp" alt="Sculptural concrete pavilion on a windswept coastline" width="1751" height="898">
+        </figure>
+      </div>
+    </section>
+  </section>
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-centered-copy-dual-cta-landscape-image.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Centered Dual-Action Landscape Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-centered-copy-dual-cta-landscape-lightbox.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Centered Landscape Lightbox Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module">
+    const root = document.querySelector('[data-rh27-root]');
+    const form = root.querySelector('.rh27-form');
+    const email = root.querySelector('.rh27-email');
+    const status = root.querySelector('.rh27-status');
+
+    email.addEventListener('input', () => {
+      status.hidden = true;
+      status.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      status.textContent = 'Thanks — check your inbox for the next step.';
+      status.hidden = false;
+      form.reset();
+    });
+  </script>
+</body>
+</html>

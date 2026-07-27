@@ -1,0 +1,16 @@
+{
+  "id": "reduced-motion-focus",
+  "url": "http://127.0.0.1:57831/templates/blocks/hero-centered-copy-dual-cta.html?ren10_capture=header23-reduced-motion-focus-65c1f903619a",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "theme": "light",
+  "javaScript": true,
+  "reducedMotion": true,
+  "markerCounts": {
+    ".rh23-actions a:focus": 1
+  },
+  "commit": "65c1f903619a4f276584f887cd2b6ef43aa6cbcf",
+  "capturedAt": "2026-07-15T19:33:04.883Z"
+}

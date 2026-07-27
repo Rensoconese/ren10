@@ -1,0 +1,7 @@
+{
+  "stage": "reference",
+  "passed": true,
+  "source": "relume-mcp",
+  "completeSource": true,
+  "notes": "Authenticated Relume MCP (relume_oauth__get_component slug=navbar22 primitives=include) returned complete Navbar22 section source plus vendored primitives (utils, button, checkbox, input, label, textarea). Exact anatomy recorded: sticky logo-left / centered four-entry desktop bar (3 plain + 1 dropdown with 3 title-only destinations + 1 chevron) / always-visible menu toggle; full-viewport overlay with 8 large destinations, contact form (name/email/message/terms/submit), phone+email+address, and 5 social links. Dual surfaces (bar tree vs overlay destinations) are intentional source anatomy, not a duplicated responsive copy. No protected source was copied into public Ren10 output."
+}

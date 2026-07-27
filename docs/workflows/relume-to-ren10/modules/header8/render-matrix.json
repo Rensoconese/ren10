@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "path": "/templates/blocks/hero-fullscreen-video-email-form.html",
+  "root": "[data-rh8-root]",
+  "states": [
+    {"id":"desktop-light-playing","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{"h1.rh8-heading":1,"video.rh8-video":1,".rh8-submit":1}},
+    {"id":"desktop-dark-playing","viewport":{"width":1280,"height":900},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh8-form":1,".rh8-motion-toggle":1}},
+    {"id":"mobile-light-playing","viewport":{"width":390,"height":844},"theme":"light","javaScript":true,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh8-email":1,".rh8-submit":1}},
+    {"id":"mobile-dark-paused","viewport":{"width":390,"height":844},"theme":"dark","javaScript":true,"reducedMotion":false,"actions":[{"type":"click","selector":".rh8-motion-toggle"}],"expectedMarkers":{".rh8-motion-toggle":1,".rh8-poster":1}},
+    {"id":"desktop-reduced-motion","viewport":{"width":1280,"height":900},"theme":"light","javaScript":true,"reducedMotion":true,"actions":[],"expectedMarkers":{"video.rh8-video":1,".rh8-poster":1}},
+    {"id":"mobile-js-disabled","viewport":{"width":390,"height":844},"theme":"light","javaScript":false,"reducedMotion":false,"actions":[],"expectedMarkers":{".rh8-form":1,".rh8-terms":1,".rh8-poster":1}}
+  ]
+}

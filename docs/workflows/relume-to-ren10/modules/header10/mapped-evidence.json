@@ -1,0 +1,5 @@
+{
+  "stage": "mapped",
+  "passed": true,
+  "notes": "Header10 maps to hero-cover-image-email-split-band: ren-cover vertical shell, owned local cover image, surface band with ren-center and ren-switcher, one ren-field email + one submit ren-btn, and one real ren-link terms destination. Navigation, logo, CTA pair, scrim, video, external assets, injected legal HTML, and framework abstractions were rejected."
+}

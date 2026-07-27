@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Email Split Hero — Ren10 Blocks</title>
+  <meta name="description" content="A full-height Ren10 hero with flexible video media and an accessible email capture band.">
+  <link rel="stylesheet" href="../../index.css">
+  <link rel="stylesheet" href="../../site/shell.css">
+  <link rel="stylesheet" href="../../components/index.css">
+  <link rel="stylesheet" href="../../themes/appearance.css">
+  <link rel="stylesheet" href="../../tokens/component/tokens.css">
+  <style>
+    .rh12-hero {
+      --cover-height: 100svh;
+      block-size: var(--cover-height);
+      overflow: hidden;
+      padding: 0;
+      background: var(--color-surface);
+    }
+
+    .rh12-hero > .rh12-media,
+    .rh12-hero > .rh12-band {
+      margin-block: 0;
+    }
+
+    .rh12-media {
+      color-scheme: light;
+      position: relative;
+      flex: 1 1 auto;
+      min-block-size: calc(var(--space-16) * 2);
+      overflow: hidden;
+      margin: 0;
+      background: var(--color-surface-sunken);
+    }
+
+    .rh12-background,
+    .rh12-poster,
+    .rh12-video,
+    .rh12-scrim {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .rh12-poster,
+    .rh12-video {
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .rh12-video {
+      z-index: var(--z-raised);
+    }
+
+    .rh12-scrim {
+      z-index: var(--z-overlay);
+      background-color: var(--color-overlay);
+      background-image: linear-gradient(var(--color-overlay), var(--color-overlay));
+    }
+
+    .rh12-motion-toggle {
+      --ren-btn-ring-color: var(--color-text-inverted);
+      --ren-btn-bg: var(--color-accent);
+      --ren-btn-bg-hover: var(--color-accent-hover);
+      --ren-btn-bg-active: var(--color-accent-active);
+      --ren-btn-color: var(--color-on-accent);
+      --ren-btn-border-color: var(--color-accent);
+      position: absolute;
+      z-index: var(--z-popover);
+      inset-inline-end: var(--space-inline-loose);
+      inset-block-end: var(--space-inline-loose);
+    }
+
+    .rh12-band {
+      flex: 0 0 auto;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+
+    .rh12-band-inner {
+      padding-block: var(--space-section-sm);
+    }
+
+    .rh12-band-layout {
+      --grid-gap: var(--space-section);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: start;
+    }
+
+    .rh12-band-layout > * {
+      min-width: 0;
+    }
+
+    .rh12-heading,
+    .rh12-description,
+    .rh12-terms,
+    .rh12-form-status {
+      margin: 0;
+    }
+
+    .rh12-heading {
+      max-width: var(--width-md);
+      font-size: clamp(var(--display-sm-size), 5vw, var(--display-md-size));
+      font-weight: var(--display-md-weight);
+      line-height: var(--display-md-leading);
+      letter-spacing: var(--display-md-tracking);
+      text-wrap: balance;
+    }
+
+    .rh12-support {
+      --stack-gap: var(--space-stack-loose);
+      max-width: var(--width-lg);
+    }
+
+    .rh12-description {
+      font-size: var(--body-lg-size);
+      line-height: var(--body-lg-leading);
+      color: var(--color-text-secondary);
+    }
+
+    .rh12-form {
+      --stack-gap: var(--space-stack-tight);
+    }
+
+    .rh12-form-row {
+      --grid-gap: var(--space-inline-tight);
+      grid-template-columns: minmax(0, 1fr);
+      align-items: end;
+    }
+
+    .rh12-form-row > ren-field {
+      min-width: 0;
+    }
+
+    .rh12-form-row > .rh12-submit {
+      width: 100%;
+    }
+
+    .rh12-terms,
+    .rh12-form-status {
+      font-size: var(--body-sm-size);
+      line-height: var(--body-sm-leading);
+      color: var(--color-text-muted);
+    }
+
+    .rh12-terms .ren-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--touch-min);
+    }
+
+    @media (min-width: 40rem) {
+      .rh12-form-row {
+        grid-template-columns: minmax(0, 1fr) max-content;
+      }
+
+      .rh12-form-row > .rh12-submit {
+        width: auto;
+      }
+    }
+
+    @media (min-width: 48rem) {
+      .rh12-band-layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .rh12-video {
+        visibility: hidden;
+      }
+    }
+  </style>
+  <noscript><style>.rh12-video, .rh12-motion-toggle { visibility: hidden; }</style></noscript>
+</head>
+<body>
+  <main class="dx-shell bb-detail-page">
+    <header class="bb-detail-header ren-stack">
+      <nav class="ren-breadcrumb" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="../index.html">Templates</a></li>
+          <li><a href="index.html">Blocks</a></li>
+          <li aria-current="page">Video Email Split Hero</li>
+        </ol>
+      </nav>
+      <p class="dx-kicker">Header 12 · Hero block</p>
+      <h1 class="bb-detail-title">Video Email Split Hero</h1>
+      <p class="bb-detail-description">A full-height Ren10 hero with flexible video media and an accessible email capture band.</p>
+    </header>
+
+    <section class="rh12-hero ren-cover bb-detail-preview" data-rh12-root aria-labelledby="rh12-heading">
+      <figure class="rh12-media">
+        <div class="rh12-background" aria-hidden="true">
+<img
+            class="rh12-poster"
+            src="media/hero-material-studio.webp"
+            alt=""
+            width="1536"
+            height="1024"
+          >
+          <video
+            class="rh12-video"
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="metadata"
+            poster="media/hero-material-studio.webp"
+          >
+            <source
+              src="data:video/webm;base64,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"
+              type="video/webm"
+            >
+          </video>
+          <div class="rh12-scrim"></div>
+        </div>
+
+        <button class="ren-btn rh12-motion-toggle" type="button" aria-pressed="false">
+          Pause video
+        </button>
+      </figure>
+
+      <div class="rh12-band">
+        <div class="rh12-band-inner ren-center ren-center-wide">
+          <div class="rh12-band-layout ren-grid ren-grid-2">
+            <h1 id="rh12-heading" class="rh12-heading">Shape a clearer path from idea to interface</h1>
+
+            <div class="rh12-support ren-stack">
+              <p class="rh12-description">Bring structure, accessibility, and adaptable behavior into the same foundation, then keep every next decision connected.</p>
+
+              <form class="rh12-form ren-stack" action="../../docs/getting-started.html" method="get">
+                <div class="rh12-form-row ren-grid ren-grid-2">
+                  <ren-field>
+                    <label for="rh12-email">Work email</label>
+                    <input id="rh12-email" class="ren-input rh12-email" type="email" name="email" autocomplete="email" placeholder="you@company.com" required>
+                    <span data-error></span>
+                  </ren-field>
+                  <button class="ren-btn rh12-submit" type="submit">Get updates</button>
+                </div>
+                <p class="rh12-form-status" role="status" aria-live="polite" hidden></p>
+              </form>
+
+              <p class="rh12-terms">By continuing, you agree to the <a class="ren-link" href="../../LICENSE">terms of use</a>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="bb-block-pagination ren-grid ren-grid-2" aria-label="Block pagination">
+      <a class="bb-block-pagination-link" href="hero-fullscreen-video-top-copy-band-dual-cta.html" rel="prev">
+        <span aria-hidden="true">←</span>
+        <span><span class="bb-block-pagination-direction">Previous</span><br>Fullscreen Video and Copy Band Hero</span>
+      </a>
+      <a class="bb-block-pagination-link bb-block-pagination-link-next" href="hero-lightbox-top-copy-band-dual-cta.html" rel="next">
+        <span><span class="bb-block-pagination-direction">Next</span><br>Lightbox Top Copy Band Hero</span>
+        <span aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </main>
+
+  <script type="module" src="../../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module">
+    const root = document.querySelector('[data-rh12-root]');
+    const video = root.querySelector('.rh12-video');
+    const toggle = root.querySelector('.rh12-motion-toggle');
+    const form = root.querySelector('.rh12-form');
+    const field = root.querySelector('ren-field');
+    const email = root.querySelector('.rh12-email');
+    const emailError = root.querySelector('[data-error]');
+    const formStatus = root.querySelector('.rh12-form-status');
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let userPaused = false;
+
+    const setMotionState = (paused, reduced = motionQuery.matches) => {
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.textContent = reduced ? 'Motion paused' : paused ? 'Play video' : 'Pause video';
+      toggle.disabled = reduced;
+    };
+
+    const playVideo = () => video.play()
+      .then(() => setMotionState(false, false))
+      .catch(() => setMotionState(true, false));
+
+    const syncMotionPreference = () => {
+      if (motionQuery.matches) {
+        video.pause();
+        setMotionState(true, true);
+        return;
+      }
+
+      toggle.disabled = false;
+      if (userPaused) {
+        video.pause();
+        setMotionState(true, false);
+      } else {
+        playVideo();
+      }
+    };
+
+    toggle.addEventListener('click', () => {
+      userPaused = !video.paused;
+      if (userPaused) {
+        video.pause();
+        setMotionState(true, false);
+      } else {
+        playVideo();
+      }
+    });
+
+    motionQuery.addEventListener('change', syncMotionPreference);
+    syncMotionPreference();
+
+    email.addEventListener('invalid', () => {
+      emailError.textContent = 'Enter a valid email address.';
+    });
+
+    email.addEventListener('input', () => {
+      if (email.validity.valid) {
+        field.clearError();
+        emailError.textContent = '';
+      }
+      formStatus.hidden = true;
+      formStatus.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      formStatus.textContent = 'Thanks — your Ren10 update path is ready.';
+      formStatus.hidden = false;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{
+  "stage": "green",
+  "passed": true,
+  "result": "passed",
+  "reviewer": "Codex",
+  "reviewedCommit": "e16c9f5c1d7362593c843dbb12a9af873fdeadcd",
+  "captures": {
+    "desktop": "docs/workflows/relume-to-ren10/modules/header2/captures/header2/desktop-light.png",
+    "tablet": "docs/workflows/relume-to-ren10/modules/header2/captures/header2/tablet-light.png",
+    "mobile": "docs/workflows/relume-to-ren10/modules/header2/captures/header2/mobile-light.png",
+    "dark": "docs/workflows/relume-to-ren10/modules/header2/captures/header2/desktop-dark.png",
+    "noJavaScript": "docs/workflows/relume-to-ren10/modules/header2/captures/header2/mobile-js-disabled.png"
+  },
+  "capturesFresh": true,
+  "cascadeInspection": "Codex independently inspected the source, CSS cascade, controller, Relume MCP source and eight cache-busted captures. The source anatomy is preserved with one page-level h1, description, labeled email form, one CTA, a real terms destination and peer media. The Ren10 wide center owns the outer width, the switcher owns wide two-column and narrow copy-first stacking, the form remains aligned at every seam, and no duplicate or extra affordance exists. Light, dark, reduced-motion and JavaScript-disabled states are legible, usable and overflow-free.",
+  "checklist": {
+    "total": 36,
+    "passed": 36,
+    "controls": [
+      { "id": "A1", "result": "passed", "evidence": "Reference evidence comes from the exact Relume MCP header2 response." },
+      { "id": "A2", "result": "passed", "evidence": "Relume source explicitly renders the primary heading as h1." },
+      { "id": "A3", "result": "passed", "evidence": "Reference brief records the one-column to two-column source anatomy." },
+      { "id": "A4", "result": "passed", "evidence": "Translation map documents each source region and intentional Ren10 adaptation." },
+      { "id": "A5", "result": "passed", "evidence": "Capture JSON lineage points to reviewed commit e16c9f5." },
+      { "id": "B1", "result": "passed", "evidence": "Exactly one hero h1 and no competing page heading." },
+      { "id": "B2", "result": "passed", "evidence": "Exactly one description paragraph." },
+      { "id": "B3", "result": "passed", "evidence": "Exactly one labeled email input and native form." },
+      { "id": "B4", "result": "passed", "evidence": "Exactly one submit CTA." },
+      { "id": "B5", "result": "passed", "evidence": "Exactly one terms link resolving to ../../LICENSE with MIT License content." },
+      { "id": "B6", "result": "passed", "evidence": "Exactly one peer media figure and no nav/drawer/extra CTA." },
+      { "id": "C1", "result": "passed", "evidence": "Vanilla HTML, CSS and JavaScript only." },
+      { "id": "C2", "result": "passed", "evidence": "Light DOM only; no Shadow DOM." },
+      { "id": "C3", "result": "passed", "evidence": "Ren10 layout primitives own center, switcher, stack, frame and form skeleton." },
+      { "id": "C4", "result": "passed", "evidence": "Semantic and component tokens own visual values; token lint passed." },
+      { "id": "C5", "result": "passed", "evidence": "Real form, label, input, button, anchor and figure elements are used." },
+      { "id": "C6", "result": "passed", "evidence": "Loaded contracts and aiHints were followed without invented APIs." },
+      { "id": "D1", "result": "passed", "evidence": "320px geometry is stacked, readable and overflow-free." },
+      { "id": "D2", "result": "passed", "evidence": "390px geometry is stacked, readable and overflow-free." },
+      { "id": "D3", "result": "passed", "evidence": "767px seam remains intentionally stacked and overflow-free." },
+      { "id": "D4", "result": "passed", "evidence": "768px state switches to aligned equal-width peers." },
+      { "id": "D5", "result": "passed", "evidence": "1280px centered wide container and peer columns remain balanced." },
+      { "id": "E1", "result": "passed", "evidence": "All interactive elements have accessible names." },
+      { "id": "E2", "result": "passed", "evidence": "Email input has a visible real label and native validation." },
+      { "id": "E3", "result": "passed", "evidence": "Visible focus and 44px field and CTA targets verified." },
+      { "id": "E4", "result": "passed", "evidence": "Valid submit is handled in place without navigation." },
+      { "id": "E5", "result": "passed", "evidence": "Reduced-motion and no-JavaScript states remain usable." },
+      { "id": "E6", "result": "passed", "evidence": "axe WCAG 2.1 AA passed in light and dark projects." },
+      { "id": "F1", "result": "passed", "evidence": "Desktop light and dark captures are aligned and unclipped." },
+      { "id": "F2", "result": "passed", "evidence": "Tablet capture preserves clear hierarchy and peer alignment." },
+      { "id": "F3", "result": "passed", "evidence": "Mobile and 320px captures have coherent rhythm and no extra elements." },
+      { "id": "F4", "result": "passed", "evidence": "All eight captures were independently inspected by Codex." },
+      { "id": "G1", "result": "passed", "evidence": "Focused Playwright suite: 24 passed, 0 failed." },
+      { "id": "G2", "result": "passed", "evidence": "npm run lint exited 0; only 29 pre-existing warnings." },
+      { "id": "G3", "result": "passed", "evidence": "npm run agent:check and all eval regressions passed." },
+      { "id": "G4", "result": "passed", "evidence": "Contract counts 19/26/8, stale-reference scan and git diff check passed." }
+    ]
+  },
+  "testResults": {
+    "header2Focused": {
+      "command": "npx playwright test tests/components/header2-header.spec.cjs --config tests/components/playwright.config.cjs --workers=1",
+      "result": "24 passed, 0 failed across light and dark; axe WCAG 2.1 AA clean"
+    },
+    "lint": {
+      "command": "npm run lint",
+      "result": "exit 0; 0 errors and 29 pre-existing warnings"
+    },
+    "agentCheck": {
+      "command": "npm run agent:check",
+      "result": "exit 0; doctor, evals, knowledge and agent checks passed"
+    },
+    "capture": {
+      "command": "node scripts/capture-block-matrix.mjs docs/workflows/relume-to-ren10/modules/header2/render-matrix.json --module header2 --output docs/workflows/relume-to-ren10/modules/header2/captures --repo-root .",
+      "result": "8 PNG and 8 JSON states captured and visually reviewed"
+    }
+  },
+  "blockPath": "templates/blocks/hero-split-email-form-media-right.html",
+  "intentionalDifferences": [
+    "Ren10 tokens and primitives determine visual proportions instead of pixel-matching Relume",
+    "The real repository LICENSE document replaces the source placeholder terms href",
+    "The native form and small in-place status preserve progressive enhancement without framework state"
+  ]
+}

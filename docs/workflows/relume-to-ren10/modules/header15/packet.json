@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header15",
+  "blockSlug": "hero-split-copy-dual-cta-landscape-image",
+  "blockPath": "templates/blocks/hero-split-copy-dual-cta-landscape-image.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-split-copy-dual-cta-landscape-image.html",
+    "tests/components/header15-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}

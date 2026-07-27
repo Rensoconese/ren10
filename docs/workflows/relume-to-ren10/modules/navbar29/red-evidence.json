@@ -1,0 +1,5 @@
+{
+  "stage": "red",
+  "passed": true,
+  "notes": "The Navbar29 isolated suite (tests/components/navbar29-navigation.spec.cjs) was added before production. Focused run discovered 21 tests and stopped at the first expected failure with --max-failures=1: HTTP 404 for templates/blocks/nav-mega-menu-overlay-collections.html (message: navbar29 block must not 404). The other 20 tests were left unrun by the failure cap."
+}

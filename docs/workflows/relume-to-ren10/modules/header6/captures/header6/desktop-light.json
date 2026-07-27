@@ -1,6 +1,6 @@
 {
   "id": "desktop-light",
-  "url": "http://127.0.0.1:53659/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-desktop-light-9d2febfe1b68",
+  "url": "http://127.0.0.1:59513/templates/blocks/hero-fullscreen-bg-left-email-capture.html?ren10_capture=header6-desktop-light-82765e64cf41",
   "viewport": {
     "width": 1280,
     "height": 900
@@ -16,6 +16,6 @@
     ".rh6-background > img": 1,
     ".rh6-scrim": 1
   },
-  "commit": "9d2febfe1b686b680142f55fdd0e09d9ebd0bd44",
-  "capturedAt": "2026-07-15T17:06:22.661Z"
+  "commit": "82765e64cf412feebe86413488db84b651380ed8",
+  "capturedAt": "2026-07-15T17:27:10.699Z"
 }

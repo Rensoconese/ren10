@@ -1,0 +1,17 @@
+{
+  "id": "desktop-1280-dark",
+  "url": "http://127.0.0.1:56603/templates/blocks/hero-centered-email-capture-landscape-lightbox.html?ren10_capture=header29-desktop-1280-dark-4e3491fb607d",
+  "viewport": {
+    "width": 1280,
+    "height": 1000
+  },
+  "theme": "dark",
+  "javaScript": true,
+  "reducedMotion": false,
+  "markerCounts": {
+    ".rh29-copy": 1,
+    ".rh29-poster": 1
+  },
+  "commit": "4e3491fb607d1c51b54f5d08022a0cf5b98e2cdb",
+  "capturedAt": "2026-07-16T20:52:12.075Z"
+}

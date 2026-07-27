@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "family": "headers",
+  "moduleId": "header5",
+  "blockSlug": "hero-fullscreen-bg-left-copy-dual-cta",
+  "blockPath": "templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html",
+  "stage": "reviewed",
+  "allowedFiles": [
+    "templates/blocks/hero-fullscreen-bg-left-copy-dual-cta.html",
+    "tests/components/header5-header.spec.cjs"
+  ],
+  "evidence": {
+    "reference": "reference-evidence.json",
+    "mapped": "mapped-evidence.json",
+    "red": "red-evidence.json",
+    "green": "green-evidence.json"
+  }
+}
