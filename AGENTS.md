@@ -54,9 +54,11 @@ states, and the public token surface live in the colocated contract files.
 
 ## Hard Rules (apply to every UI task)
 
-- **Vanilla only.** RenDS targets vanilla HTML, CSS, and JavaScript with
-  optional custom elements. Do not output React, Vue, Svelte, JSX, TSX,
-  shadcn/ui, Tailwind utility classes, or any framework abstraction.
+- **Vanilla output only.** RenDS targets vanilla HTML, CSS, and JavaScript with
+  optional custom elements. Official `@ren10/astro` build-time wrappers are
+  allowed in `.astro` files because they emit the same native Light DOM. Do
+  not output React, Vue, Svelte, JSX, TSX, framework islands, shadcn/ui, or
+  Tailwind utility classes.
 - **Layout primitives over custom CSS.** Before writing
   `display: flex` / `display: grid`, find the equivalent layout primitive
   in `base/layouts.md`.
@@ -109,10 +111,19 @@ npx ren10 build "settings form with sidebar" --json
 npx ren10 component button --dense
 npx ren10 docs layouts --dense
 npx ren10 search "dialog workflow" --json
+npx ren10 docs astro --dense
+npx ren10 theme visual-reference.json --out src/styles/theme.css --json
 npx ren10 design-context --write
 npx ren10 detect templates/ --profile codex
 npx ren10 doctor
 ```
+
+## Astro Projects
+
+Use `@ren10/astro/components/<ExportName>` direct imports. The full catalog is
+at `@ren10/astro/catalog.json`; its `contract` field routes to authoritative
+component documentation. Do not recreate adapters or add hydration directives
+for canonical RenDS behavior. See `docs/astro.md` and `starters/astro/`.
 
 ## Relume-to-Ren10 Blocks
 
@@ -165,7 +176,7 @@ file, the CLI manifest, and the colocated contracts; it must not become a
 second source of truth.
 
 <!-- RENDS:START -->
-RenDS v0.12.0 · vanilla HTML/CSS/JS · Light DOM · 53 components
+RenDS v0.13.0 · vanilla HTML/CSS/JS · Light DOM · 53 components
 
 WORKFLOW — discover before writing UI:
 1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.

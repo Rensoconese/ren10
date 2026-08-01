@@ -76,6 +76,9 @@ function componentClosure(registry, componentName, result = new Set()) {
   for (const dependency of registry[componentName].components) {
     componentClosure(registry, dependency, result);
   }
+  for (const dependency of registry[componentName].styles ?? []) {
+    componentClosure(registry, dependency, result);
+  }
   return result;
 }
 
@@ -153,10 +156,14 @@ try {
   for (const [name, meta] of Object.entries(REGISTRY)) {
     if (!Array.isArray(meta.utils)) metadataErrors.push(`${name}: missing explicit utils array`);
     if (!Array.isArray(meta.components)) metadataErrors.push(`${name}: missing explicit components array`);
+    if (meta.styles !== undefined && !Array.isArray(meta.styles)) metadataErrors.push(`${name}: styles must be an array when present`);
     if (!Array.isArray(meta.utils) || !Array.isArray(meta.components)) continue;
 
     for (const dependency of meta.components) {
       if (!REGISTRY[dependency]) metadataErrors.push(`${name}: unknown component dependency ${dependency}`);
+    }
+    for (const dependency of meta.styles ?? []) {
+      if (!REGISTRY[dependency]) metadataErrors.push(`${name}: unknown style dependency ${dependency}`);
     }
     for (const dependency of meta.utils) {
       if (!fs.existsSync(path.join(packageRoot, 'utils', dependency))) {

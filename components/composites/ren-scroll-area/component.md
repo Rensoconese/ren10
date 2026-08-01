@@ -41,7 +41,6 @@ selectionCriteria:
 canonicalImports:
   css:
     - "rends/components/composites/ren-scroll-area/ren-scroll-area.css"
-  js: []
   notes:
     - "CSS-only component: no JavaScript file is colocated. Do not introduce JS unless the source component grows that responsibility."
     - "If the page already imports rends/components/index.css, do not import the CSS again."

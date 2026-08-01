@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-kbd/ren-kbd.css';
+
+/**
+ * Kbd — generated from RenDS primitives/ren-kbd.
+ * Contract: ren10/components/primitives/ren-kbd/component.md
+ * Registry key: kbd
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<kbd class:list={['ren-kbd', className]} {...rest}><slot /></kbd>

@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-card/ren-card.css';
+
+/**
+ * Card — generated from RenDS primitives/ren-card.
+ * Contract: ren10/components/primitives/ren-card/component.md
+ * Registry key: card
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<article class:list={['ren-card', className]} {...rest}><slot /></article>

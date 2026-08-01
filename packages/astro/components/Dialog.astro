@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-dialog/ren-dialog.css';
+
+/**
+ * Dialog — generated from RenDS composites/ren-dialog.
+ * Contract: ren10/components/composites/ren-dialog/component.md
+ * Registry key: dialog
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-dialog class:list={className} {...rest}><slot /></ren-dialog>
+
+<script>
+  import 'ren10/components/composites/ren-dialog/ren-dialog.js';
+</script>

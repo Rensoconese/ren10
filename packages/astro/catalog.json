@@ -1,0 +1,868 @@
+{
+  "schemaVersion": 1,
+  "components": [
+    {
+      "key": "button",
+      "name": "Button",
+      "exportName": "Button",
+      "import": "@ren10/astro/components/Button",
+      "rootTag": "ren-button",
+      "defaultClasses": [],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-button/component.md",
+      "css": [
+        "ren10/components/primitives/ren-button/ren-button.css"
+      ],
+      "js": [
+        "ren10/components/primitives/ren-button/ren-button.js"
+      ]
+    },
+    {
+      "key": "field",
+      "name": "Field",
+      "exportName": "Field",
+      "import": "@ren10/astro/components/Field",
+      "rootTag": "ren-field",
+      "defaultClasses": [],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-field/component.md",
+      "css": [
+        "ren10/components/primitives/ren-field/ren-field.css"
+      ],
+      "js": [
+        "ren10/components/primitives/ren-field/ren-field.js"
+      ]
+    },
+    {
+      "key": "checkbox",
+      "name": "Checkbox",
+      "exportName": "Checkbox",
+      "import": "@ren10/astro/components/Checkbox",
+      "rootTag": "label",
+      "defaultClasses": [
+        "ren-checkbox"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-checkbox/component.md",
+      "css": [
+        "ren10/components/primitives/ren-checkbox/ren-checkbox.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "switch",
+      "name": "Switch",
+      "exportName": "Switch",
+      "import": "@ren10/astro/components/Switch",
+      "rootTag": "label",
+      "defaultClasses": [
+        "ren-switch"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-switch/component.md",
+      "css": [
+        "ren10/components/primitives/ren-switch/ren-switch.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "badge",
+      "name": "Badge",
+      "exportName": "Badge",
+      "import": "@ren10/astro/components/Badge",
+      "rootTag": "span",
+      "defaultClasses": [
+        "ren-badge"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-badge/component.md",
+      "css": [
+        "ren10/components/primitives/ren-badge/ren-badge.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "radio",
+      "name": "Radio",
+      "exportName": "Radio",
+      "import": "@ren10/astro/components/Radio",
+      "rootTag": "ren-radio",
+      "defaultClasses": [],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-radio/component.md",
+      "css": [
+        "ren10/components/primitives/ren-radio/ren-radio.css"
+      ],
+      "js": [
+        "ren10/components/primitives/ren-radio/ren-radio.js"
+      ]
+    },
+    {
+      "key": "progress",
+      "name": "Progress",
+      "exportName": "Progress",
+      "import": "@ren10/astro/components/Progress",
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-progress"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-progress/component.md",
+      "css": [
+        "ren10/components/primitives/ren-progress/ren-progress.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "icon",
+      "name": "Icon",
+      "exportName": "Icon",
+      "import": "@ren10/astro/components/Icon",
+      "rootTag": "ren-icon",
+      "defaultClasses": [
+        "ren-icon-sm"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-icon/component.md",
+      "css": [
+        "ren10/components/primitives/ren-icon/ren-icon.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "avatar",
+      "name": "Avatar",
+      "exportName": "Avatar",
+      "import": "@ren10/astro/components/Avatar",
+      "rootTag": "span",
+      "defaultClasses": [
+        "ren-avatar"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-avatar/component.md",
+      "css": [
+        "ren10/components/primitives/ren-avatar/ren-avatar.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "banner",
+      "name": "Banner",
+      "exportName": "Banner",
+      "import": "@ren10/astro/components/Banner",
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-banner",
+        "ren-banner-info"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-banner/component.md",
+      "css": [
+        "ren10/components/primitives/ren-banner/ren-banner.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "breadcrumb",
+      "name": "Breadcrumb",
+      "exportName": "Breadcrumb",
+      "import": "@ren10/astro/components/Breadcrumb",
+      "rootTag": "nav",
+      "defaultClasses": [
+        "ren-breadcrumb"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-breadcrumb/component.md",
+      "css": [
+        "ren10/components/primitives/ren-breadcrumb/ren-breadcrumb.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "card",
+      "name": "Card",
+      "exportName": "Card",
+      "import": "@ren10/astro/components/Card",
+      "rootTag": "article",
+      "defaultClasses": [
+        "ren-card"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-card/component.md",
+      "css": [
+        "ren10/components/primitives/ren-card/ren-card.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "kbd",
+      "name": "Kbd",
+      "exportName": "Kbd",
+      "import": "@ren10/astro/components/Kbd",
+      "rootTag": "kbd",
+      "defaultClasses": [
+        "ren-kbd"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-kbd/component.md",
+      "css": [
+        "ren10/components/primitives/ren-kbd/ren-kbd.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "link",
+      "name": "Link",
+      "exportName": "Link",
+      "import": "@ren10/astro/components/Link",
+      "rootTag": "a",
+      "defaultClasses": [
+        "ren-link"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-link/component.md",
+      "css": [
+        "ren10/components/primitives/ren-link/ren-link.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "pagination",
+      "name": "Pagination",
+      "exportName": "Pagination",
+      "import": "@ren10/astro/components/Pagination",
+      "rootTag": "nav",
+      "defaultClasses": [
+        "ren-pagination"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-pagination/component.md",
+      "css": [
+        "ren10/components/primitives/ren-pagination/ren-pagination.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "separator",
+      "name": "Separator",
+      "exportName": "Separator",
+      "import": "@ren10/astro/components/Separator",
+      "rootTag": "hr",
+      "defaultClasses": [
+        "ren-separator"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-separator/component.md",
+      "css": [
+        "ren10/components/primitives/ren-separator/ren-separator.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "skeleton",
+      "name": "Skeleton",
+      "exportName": "Skeleton",
+      "import": "@ren10/astro/components/Skeleton",
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-skeleton",
+        "ren-skeleton-text"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-skeleton/component.md",
+      "css": [
+        "ren10/components/primitives/ren-skeleton/ren-skeleton.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "spinner",
+      "name": "Spinner",
+      "exportName": "Spinner",
+      "import": "@ren10/astro/components/Spinner",
+      "rootTag": "span",
+      "defaultClasses": [
+        "ren-spinner"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-spinner/component.md",
+      "css": [
+        "ren10/components/primitives/ren-spinner/ren-spinner.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "tag",
+      "name": "Tag",
+      "exportName": "Tag",
+      "import": "@ren10/astro/components/Tag",
+      "rootTag": "span",
+      "defaultClasses": [
+        "ren-tag"
+      ],
+      "layer": "primitives",
+      "contract": "ren10/components/primitives/ren-tag/component.md",
+      "css": [
+        "ren10/components/primitives/ren-tag/ren-tag.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "dialog",
+      "name": "Dialog",
+      "exportName": "Dialog",
+      "import": "@ren10/astro/components/Dialog",
+      "rootTag": "ren-dialog",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-dialog/component.md",
+      "css": [
+        "ren10/components/composites/ren-dialog/ren-dialog.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-dialog/ren-dialog.js"
+      ]
+    },
+    {
+      "key": "popover",
+      "name": "Popover",
+      "exportName": "Popover",
+      "import": "@ren10/astro/components/Popover",
+      "rootTag": "ren-popover",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-popover/component.md",
+      "css": [
+        "ren10/components/composites/ren-popover/ren-popover.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-popover/ren-popover.js"
+      ]
+    },
+    {
+      "key": "tooltip",
+      "name": "Tooltip",
+      "exportName": "Tooltip",
+      "import": "@ren10/astro/components/Tooltip",
+      "rootTag": "ren-tooltip",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-tooltip/component.md",
+      "css": [
+        "ren10/components/composites/ren-tooltip/ren-tooltip.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-tooltip/ren-tooltip.js"
+      ]
+    },
+    {
+      "key": "tabs",
+      "name": "Tabs",
+      "exportName": "Tabs",
+      "import": "@ren10/astro/components/Tabs",
+      "rootTag": "ren-tabs",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-tabs/component.md",
+      "css": [
+        "ren10/components/composites/ren-tabs/ren-tabs.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-tabs/ren-tabs.js"
+      ]
+    },
+    {
+      "key": "accordion",
+      "name": "Accordion",
+      "exportName": "Accordion",
+      "import": "@ren10/astro/components/Accordion",
+      "rootTag": "ren-accordion",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-accordion/component.md",
+      "css": [
+        "ren10/components/composites/ren-accordion/ren-accordion.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-accordion/ren-accordion.js"
+      ]
+    },
+    {
+      "key": "menu",
+      "name": "Menu",
+      "exportName": "Menu",
+      "import": "@ren10/astro/components/Menu",
+      "rootTag": "ren-menu",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-menu/component.md",
+      "css": [
+        "ren10/components/composites/ren-menu/ren-menu.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-menu/ren-menu.js"
+      ]
+    },
+    {
+      "key": "select",
+      "name": "Select",
+      "exportName": "Select",
+      "import": "@ren10/astro/components/Select",
+      "rootTag": "ren-select",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-select/component.md",
+      "css": [
+        "ren10/components/composites/ren-select/ren-select.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-select/ren-select.js"
+      ]
+    },
+    {
+      "key": "toast",
+      "name": "Toast",
+      "exportName": "Toast",
+      "import": "@ren10/astro/components/Toast",
+      "rootTag": "ren-toast",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-toast/component.md",
+      "css": [
+        "ren10/components/composites/ren-toast/ren-toast.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-toast/ren-toast.js"
+      ]
+    },
+    {
+      "key": "slider",
+      "name": "Slider",
+      "exportName": "Slider",
+      "import": "@ren10/astro/components/Slider",
+      "rootTag": "ren-slider",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-slider/component.md",
+      "css": [
+        "ren10/components/composites/ren-slider/ren-slider.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-slider/ren-slider.js"
+      ]
+    },
+    {
+      "key": "toggle-group",
+      "name": "Toggle Group",
+      "exportName": "ToggleGroup",
+      "import": "@ren10/astro/components/ToggleGroup",
+      "rootTag": "ren-toggle-group",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-toggle-group/component.md",
+      "css": [
+        "ren10/components/composites/ren-toggle-group/ren-toggle-group.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-toggle-group/ren-toggle-group.js"
+      ]
+    },
+    {
+      "key": "combobox",
+      "name": "Combobox",
+      "exportName": "Combobox",
+      "import": "@ren10/astro/components/Combobox",
+      "rootTag": "ren-combobox",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-combobox/component.md",
+      "css": [
+        "ren10/components/composites/ren-combobox/ren-combobox.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-combobox/ren-combobox.js"
+      ]
+    },
+    {
+      "key": "sheet",
+      "name": "Sheet",
+      "exportName": "Sheet",
+      "import": "@ren10/astro/components/Sheet",
+      "rootTag": "ren-sheet",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-sheet/component.md",
+      "css": [
+        "ren10/components/composites/ren-sheet/ren-sheet.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-sheet/ren-sheet.js"
+      ]
+    },
+    {
+      "key": "hover-card",
+      "name": "Hover Card",
+      "exportName": "HoverCard",
+      "import": "@ren10/astro/components/HoverCard",
+      "rootTag": "ren-hover-card",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-hover-card/component.md",
+      "css": [
+        "ren10/components/composites/ren-hover-card/ren-hover-card.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-hover-card/ren-hover-card.js"
+      ]
+    },
+    {
+      "key": "scroll-area",
+      "name": "Scroll Area",
+      "exportName": "ScrollArea",
+      "import": "@ren10/astro/components/ScrollArea",
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-scroll-area"
+      ],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-scroll-area/component.md",
+      "css": [
+        "ren10/components/composites/ren-scroll-area/ren-scroll-area.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "number-field",
+      "name": "Number Field",
+      "exportName": "NumberField",
+      "import": "@ren10/astro/components/NumberField",
+      "rootTag": "ren-number-field",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-number-field/component.md",
+      "css": [
+        "ren10/components/composites/ren-number-field/ren-number-field.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-number-field/ren-number-field.js"
+      ]
+    },
+    {
+      "key": "otp",
+      "name": "OTP",
+      "exportName": "OTP",
+      "import": "@ren10/astro/components/OTP",
+      "rootTag": "ren-otp",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-otp/component.md",
+      "css": [
+        "ren10/components/composites/ren-otp/ren-otp.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-otp/ren-otp.js"
+      ]
+    },
+    {
+      "key": "calendar",
+      "name": "Calendar",
+      "exportName": "Calendar",
+      "import": "@ren10/astro/components/Calendar",
+      "rootTag": "ren-calendar",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-calendar/component.md",
+      "css": [
+        "ren10/components/composites/ren-calendar/ren-calendar.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-calendar/ren-calendar.js"
+      ]
+    },
+    {
+      "key": "date-picker",
+      "name": "Date Picker",
+      "exportName": "DatePicker",
+      "import": "@ren10/astro/components/DatePicker",
+      "rootTag": "ren-date-picker",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-date-picker/component.md",
+      "css": [
+        "ren10/components/composites/ren-date-picker/ren-date-picker.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-date-picker/ren-date-picker.js"
+      ]
+    },
+    {
+      "key": "carousel",
+      "name": "Carousel",
+      "exportName": "Carousel",
+      "import": "@ren10/astro/components/Carousel",
+      "rootTag": "ren-carousel",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-carousel/component.md",
+      "css": [
+        "ren10/components/composites/ren-carousel/ren-carousel.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-carousel/ren-carousel.js"
+      ]
+    },
+    {
+      "key": "alert-dialog",
+      "name": "Alert Dialog",
+      "exportName": "AlertDialog",
+      "import": "@ren10/astro/components/AlertDialog",
+      "rootTag": "dialog",
+      "defaultClasses": [
+        "ren-alert-dialog"
+      ],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-alert-dialog/component.md",
+      "css": [
+        "ren10/components/composites/ren-alert-dialog/ren-alert-dialog.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "collapsible",
+      "name": "Collapsible",
+      "exportName": "Collapsible",
+      "import": "@ren10/astro/components/Collapsible",
+      "rootTag": "details",
+      "defaultClasses": [
+        "ren-collapsible"
+      ],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-collapsible/component.md",
+      "css": [
+        "ren10/components/composites/ren-collapsible/ren-collapsible.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "color-picker",
+      "name": "Color Picker",
+      "exportName": "ColorPicker",
+      "import": "@ren10/astro/components/ColorPicker",
+      "rootTag": "ren-color-picker",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-color-picker/component.md",
+      "css": [
+        "ren10/components/composites/ren-color-picker/ren-color-picker.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-color-picker/ren-color-picker.js"
+      ]
+    },
+    {
+      "key": "context-menu",
+      "name": "Context Menu",
+      "exportName": "ContextMenu",
+      "import": "@ren10/astro/components/ContextMenu",
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-context-menu-trigger"
+      ],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-context-menu/component.md",
+      "css": [
+        "ren10/components/composites/ren-context-menu/ren-context-menu.css",
+        "ren10/components/composites/ren-menu/ren-menu.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-context-menu/ren-context-menu.js"
+      ]
+    },
+    {
+      "key": "date-range-picker",
+      "name": "Date Range Picker",
+      "exportName": "DateRangePicker",
+      "import": "@ren10/astro/components/DateRangePicker",
+      "rootTag": "ren-date-range-picker",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-date-range-picker/component.md",
+      "css": [
+        "ren10/components/composites/ren-date-range-picker/ren-date-range-picker.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-date-range-picker/ren-date-range-picker.js"
+      ]
+    },
+    {
+      "key": "dropzone",
+      "name": "Dropzone",
+      "exportName": "Dropzone",
+      "import": "@ren10/astro/components/Dropzone",
+      "rootTag": "ren-dropzone",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-dropzone/component.md",
+      "css": [
+        "ren10/components/composites/ren-dropzone/ren-dropzone.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-dropzone/ren-dropzone.js"
+      ]
+    },
+    {
+      "key": "toolbar",
+      "name": "Toolbar",
+      "exportName": "Toolbar",
+      "import": "@ren10/astro/components/Toolbar",
+      "rootTag": "ren-toolbar",
+      "defaultClasses": [],
+      "layer": "composites",
+      "contract": "ren10/components/composites/ren-toolbar/component.md",
+      "css": [
+        "ren10/components/composites/ren-toolbar/ren-toolbar.css"
+      ],
+      "js": [
+        "ren10/components/composites/ren-toolbar/ren-toolbar.js"
+      ]
+    },
+    {
+      "key": "nav",
+      "name": "Navigation",
+      "exportName": "Navigation",
+      "import": "@ren10/astro/components/Navigation",
+      "rootTag": "ren-nav",
+      "defaultClasses": [
+        "ren-nav"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-nav/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-nav/ren-nav.css"
+      ],
+      "js": [
+        "ren10/components/patterns/ren-nav/ren-nav.js"
+      ]
+    },
+    {
+      "key": "sidebar",
+      "name": "Sidebar",
+      "exportName": "Sidebar",
+      "import": "@ren10/astro/components/Sidebar",
+      "rootTag": "ren-sidebar",
+      "defaultClasses": [
+        "ren-sidebar"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-sidebar/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-sidebar/ren-sidebar.css"
+      ],
+      "js": [
+        "ren10/components/patterns/ren-sidebar/ren-sidebar.js"
+      ]
+    },
+    {
+      "key": "command",
+      "name": "Command",
+      "exportName": "Command",
+      "import": "@ren10/astro/components/Command",
+      "rootTag": "ren-command",
+      "defaultClasses": [],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-command/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-command/ren-command.css"
+      ],
+      "js": [
+        "ren10/components/patterns/ren-command/ren-command.js"
+      ]
+    },
+    {
+      "key": "table",
+      "name": "Table",
+      "exportName": "Table",
+      "import": "@ren10/astro/components/Table",
+      "rootTag": "ren-table",
+      "defaultClasses": [
+        "ren-table"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-table/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-table/ren-table.css"
+      ],
+      "js": [
+        "ren10/components/patterns/ren-table/ren-table.js"
+      ]
+    },
+    {
+      "key": "form",
+      "name": "Form",
+      "exportName": "Form",
+      "import": "@ren10/astro/components/Form",
+      "rootTag": "ren-form",
+      "defaultClasses": [
+        "ren-form"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-form/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-form/ren-form.css"
+      ],
+      "js": [
+        "ren10/components/patterns/ren-form/ren-form.js"
+      ]
+    },
+    {
+      "key": "menubar",
+      "name": "Menubar",
+      "exportName": "Menubar",
+      "import": "@ren10/astro/components/Menubar",
+      "rootTag": "ren-menubar",
+      "defaultClasses": [
+        "ren-menubar"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-menubar/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-menubar/ren-menubar.css"
+      ],
+      "js": [
+        "ren10/components/patterns/ren-menubar/ren-menubar.js"
+      ]
+    },
+    {
+      "key": "ai",
+      "name": "AI",
+      "exportName": "AI",
+      "import": "@ren10/astro/components/AI",
+      "rootTag": "section",
+      "defaultClasses": [
+        "ren-ai"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-ai/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-ai/ren-ai.css"
+      ],
+      "js": []
+    },
+    {
+      "key": "empty-state",
+      "name": "Empty State",
+      "exportName": "EmptyState",
+      "import": "@ren10/astro/components/EmptyState",
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-empty-state"
+      ],
+      "layer": "patterns",
+      "contract": "ren10/components/patterns/ren-empty-state/pattern.md",
+      "css": [
+        "ren10/components/patterns/ren-empty-state/ren-empty-state.css"
+      ],
+      "js": []
+    }
+  ]
+}

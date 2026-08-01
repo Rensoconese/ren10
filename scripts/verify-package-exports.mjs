@@ -6,6 +6,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const checks = [
   ['ren10', 'index.css'],
+  ['ren10/foundation.css', 'foundation.css'],
   ['ren10/components/index.css', 'components/index.css'],
   ['ren10/components/primitives/ren-button/ren-button.css', 'components/primitives/ren-button/ren-button.css'],
   ['ren10/components/composites/ren-dialog/ren-dialog.js', 'components/composites/ren-dialog/ren-dialog.js'],
@@ -15,6 +16,7 @@ const checks = [
   ['ren10/tokens/index.css', 'tokens/index.css'],
   ['ren10/themes/appearance.css', 'themes/appearance.css'],
   ['ren10/themes/theme-generator.js', 'themes/theme-generator.js'],
+  ['ren10/themes/reference-theme.js', 'themes/reference-theme.js'],
   ['ren10/utils', 'utils/index.js'],
 ];
 

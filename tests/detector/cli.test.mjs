@@ -24,6 +24,29 @@ test('CLI manifest advertises the detector and design-context commands', () => {
   assert.ok(names.includes('design-context'));
   assert.ok(names.includes('ignores'));
   assert.ok(names.includes('hooks'));
+  assert.ok(names.includes('theme'));
+  assert.equal(payload.data.schemas.aiHints.version, 1);
+  assert.equal(payload.data.schemas.aiHints.path, 'knowledge/schemas/ai-hints.schema.json');
+  assert.equal(payload.data.schemas.visualReferenceTheme.version, 1);
+  assert.equal(payload.data.integrations.astro.components, 53);
+  assert.equal(payload.data.integrations.astro.catalog, '@ren10/astro/catalog.json');
+});
+
+test('theme command maps a visual-reference spec to audited semantic CSS', async () => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), 'ren10-theme-'));
+  try {
+    const result = run(['theme', path.join(fixtures, 'reference-theme.json'), '--out', 'src/styles/reference.css', '--json'], cwd);
+    assert.equal(result.status, 0, result.stderr);
+    const payload = JSON.parse(result.stdout);
+    const css = await readFile(path.join(cwd, 'src', 'styles', 'reference.css'), 'utf8');
+    assert.equal(payload.type, 'theme.reference');
+    assert.equal(payload.data.attributes['data-density'], 'compact');
+    assert.equal(payload.data.report.warnings.length, 0);
+    assert.match(css, /\[data-theme='fixture-reference'\]/);
+    assert.match(css, /--color-accent:/);
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
 });
 
 test('detect emits a typed JSON report and a blocking exit code only for errors', () => {
@@ -47,7 +70,7 @@ test('design-context writes .ren10/design.json from package contracts', async ()
     const payload = JSON.parse(result.stdout);
     const saved = JSON.parse(await readFile(path.join(cwd, '.ren10', 'design.json'), 'utf8'));
     assert.equal(payload.type, 'design-context.write');
-    assert.equal(saved.system.version, '0.12.0');
+    assert.equal(saved.system.version, '0.13.0');
     assert.equal(saved.components.counts.total, 53);
   } finally {
     await rm(cwd, { recursive: true, force: true });

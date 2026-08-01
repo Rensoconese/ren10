@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ren10.dev/schemas/ai-hints.v1.schema.json",
+  "title": "RenDS aiHints",
+  "description": "Machine-readable selection, import, markup, token, and accessibility guidance colocated with every RenDS component contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "selectionCriteria",
+    "canonicalImports",
+    "requiredMarkup",
+    "forbiddenPatterns",
+    "tokenPolicy",
+    "accessibility"
+  ],
+  "properties": {
+    "selectionCriteria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["useWhen", "avoidWhen"],
+      "properties": {
+        "useWhen": { "$ref": "#/$defs/nonEmptyStrings" },
+        "avoidWhen": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    },
+    "canonicalImports": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["css", "notes"],
+      "properties": {
+        "css": { "$ref": "#/$defs/nonEmptyStrings" },
+        "js": { "$ref": "#/$defs/nonEmptyStrings" },
+        "notes": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    },
+    "requiredMarkup": { "$ref": "#/$defs/nonEmptyStrings" },
+    "forbiddenPatterns": { "$ref": "#/$defs/nonEmptyStrings" },
+    "tokenPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allowed", "forbidden"],
+      "properties": {
+        "allowed": { "$ref": "#/$defs/nonEmptyStrings" },
+        "forbidden": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    },
+    "accessibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required"],
+      "properties": {
+        "required": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

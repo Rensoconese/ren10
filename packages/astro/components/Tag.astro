@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-tag/ren-tag.css';
+
+/**
+ * Tag — generated from RenDS primitives/ren-tag.
+ * Contract: ren10/components/primitives/ren-tag/component.md
+ * Registry key: tag
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['ren-tag', className]} {...rest}><slot /></span>

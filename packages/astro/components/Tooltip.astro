@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-tooltip/ren-tooltip.css';
+
+/**
+ * Tooltip — generated from RenDS composites/ren-tooltip.
+ * Contract: ren10/components/composites/ren-tooltip/component.md
+ * Registry key: tooltip
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-tooltip class:list={className} {...rest}><slot /></ren-tooltip>
+
+<script>
+  import 'ren10/components/composites/ren-tooltip/ren-tooltip.js';
+</script>

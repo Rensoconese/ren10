@@ -1,0 +1,22 @@
+---
+import 'ren10/components/composites/ren-context-menu/ren-context-menu.css';
+import 'ren10/components/composites/ren-menu/ren-menu.css';
+
+/**
+ * ContextMenu — generated from RenDS composites/ren-context-menu.
+ * Contract: ren10/components/composites/ren-context-menu/component.md
+ * Registry key: context-menu
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['ren-context-menu-trigger', className]} {...rest}><slot /></div>
+
+<script>
+  import 'ren10/components/composites/ren-context-menu/ren-context-menu.js';
+</script>

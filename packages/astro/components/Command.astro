@@ -1,0 +1,21 @@
+---
+import 'ren10/components/patterns/ren-command/ren-command.css';
+
+/**
+ * Command — generated from RenDS patterns/ren-command.
+ * Contract: ren10/components/patterns/ren-command/pattern.md
+ * Registry key: command
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-command class:list={className} {...rest}><slot /></ren-command>
+
+<script>
+  import 'ren10/components/patterns/ren-command/ren-command.js';
+</script>

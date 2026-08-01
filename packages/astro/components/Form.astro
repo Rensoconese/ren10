@@ -1,0 +1,21 @@
+---
+import 'ren10/components/patterns/ren-form/ren-form.css';
+
+/**
+ * Form — generated from RenDS patterns/ren-form.
+ * Contract: ren10/components/patterns/ren-form/pattern.md
+ * Registry key: form
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-form class:list={['ren-form', className]} {...rest}><slot /></ren-form>
+
+<script>
+  import 'ren10/components/patterns/ren-form/ren-form.js';
+</script>

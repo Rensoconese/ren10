@@ -163,23 +163,24 @@
     animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
-  @keyframes ren-tooltip-fallback-open {
-    from {
-      opacity: 0;
-      transform: translateY(4px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ren-tooltip {
       animation: none;
     }
   }
 }
+
+@keyframes ren-tooltip-fallback-open {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Appearance API bridge */
 .ren-tooltip {
   background: var(--ren-tooltip-bg, var(--color-text));

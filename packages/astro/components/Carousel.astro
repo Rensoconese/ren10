@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-carousel/ren-carousel.css';
+
+/**
+ * Carousel — generated from RenDS composites/ren-carousel.
+ * Contract: ren10/components/composites/ren-carousel/component.md
+ * Registry key: carousel
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-carousel class:list={className} {...rest}><slot /></ren-carousel>
+
+<script>
+  import 'ren10/components/composites/ren-carousel/ren-carousel.js';
+</script>

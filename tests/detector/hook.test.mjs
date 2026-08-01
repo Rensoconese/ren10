@@ -77,3 +77,21 @@ test('installCodexHook preserves existing hooks and adds one canonical Ren10 com
     await rm(cwd, { recursive: true, force: true });
   }
 });
+
+test('hook treats Astro component edits as UI targets', async () => {
+  const cwd = await mkdtemp(path.join(os.tmpdir(), 'ren10-hook-astro-'));
+  const target = path.join(cwd, 'Card.astro');
+  try {
+    await copyFile(path.join(fixtures, 'bad.astro'), target);
+    const result = await processHookEvent({
+      tool_name: 'apply_patch',
+      tool_input: { file_path: target },
+    }, { cwd, packageRoot });
+
+    assert.equal(result.status, 'findings');
+    assert.deepEqual(result.files, ['Card.astro']);
+    assert.ok(result.findings.some((finding) => finding.rule === 'button-type'));
+  } finally {
+    await rm(cwd, { recursive: true, force: true });
+  }
+});

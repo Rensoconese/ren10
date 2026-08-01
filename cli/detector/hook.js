@@ -4,7 +4,7 @@ import path from 'node:path';
 import { buildDesignManifest, detectTargets } from './index.js';
 import { defaultConfig, loadConfig } from './config.js';
 
-const UI_EXTENSIONS = new Set(['.html', '.htm', '.css', '.js', '.mjs']);
+const UI_EXTENSIONS = new Set(['.html', '.htm', '.astro', '.css', '.js', '.mjs']);
 const GENERATED_SEGMENTS = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', 'generated']);
 
 async function processHookEvent(event, options = {}) {

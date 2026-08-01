@@ -1,0 +1,21 @@
+---
+import 'ren10/components/patterns/ren-sidebar/ren-sidebar.css';
+
+/**
+ * Sidebar — generated from RenDS patterns/ren-sidebar.
+ * Contract: ren10/components/patterns/ren-sidebar/pattern.md
+ * Registry key: sidebar
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-sidebar class:list={['ren-sidebar', className]} {...rest}><slot /></ren-sidebar>
+
+<script>
+  import 'ren10/components/patterns/ren-sidebar/ren-sidebar.js';
+</script>

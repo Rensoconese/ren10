@@ -21,6 +21,35 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Security
 
+## [0.13.0] — 2026-08-01
+
+### Added
+
+- Added the official `@ren10/astro` integration with 53 generated Light DOM
+  Astro components, a machine-readable catalog, global style modes, package
+  exports, and installable starter support.
+- Added Astro-aware agent guidance, discovery metadata, reference-theme tools,
+  detector support for `.astro` files, AI hints, and end-to-end package,
+  integration, starter, and fixture checks.
+- Added the public `ren10/foundation.css` entry point so Astro projects can load
+  the design-system foundation independently from the complete component set.
+
+### Changed
+
+- Updated release automation to validate and publish both `ren10` and
+  `@ren10/astro` from the same versioned release.
+- Updated CI and release jobs to Node.js 22 for Astro 7 compatibility.
+
+### Fixed
+
+- Corrected scoped-package repository metadata and aligned the Astro package's
+  `ren10` peer dependency with the files introduced in this release.
+
+### Security
+
+- Updated the transitive `brace-expansion` dependency to `1.1.18`, eliminating
+  the reported audit vulnerability.
+
 ## [0.12.0] — 2026-07-24
 
 ### Added

@@ -1,0 +1,17 @@
+---
+import 'ren10/components/patterns/ren-ai/ren-ai.css';
+
+/**
+ * AI — generated from RenDS patterns/ren-ai.
+ * Contract: ren10/components/patterns/ren-ai/pattern.md
+ * Registry key: ai
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<section class:list={['ren-ai', className]} {...rest}><slot /></section>

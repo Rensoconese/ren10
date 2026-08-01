@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-slider/ren-slider.css';
+
+/**
+ * Slider — generated from RenDS composites/ren-slider.
+ * Contract: ren10/components/composites/ren-slider/component.md
+ * Registry key: slider
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-slider class:list={className} {...rest}><slot /></ren-slider>
+
+<script>
+  import 'ren10/components/composites/ren-slider/ren-slider.js';
+</script>

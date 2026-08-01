@@ -41,13 +41,18 @@ Status: implemented in the CLI.
 
 ## Phase 2: Contract Normalization
 
-Planned.
+Status: implemented for aiHints schema v1.
 
 - Define a small schema for `aiHints` so every component can expose the same
   fields: canonical imports, required markup, forbidden patterns, accessibility
   rules, related components, and examples.
-- Add validation that every documented selector, attribute, event, CSS file,
-  JS file, and example referenced by a contract exists in the graph.
+- Validate all 53 `aiHints` blocks against
+  `knowledge/schemas/ai-hints.schema.json`; canonical CSS/JS imports must exist
+  and be declared by the registry or an explicit style dependency.
+- Track runtime dependencies (`components`) separately from CSS-only
+  dependencies (`styles`) so generators can load the minimum required code.
+- Remaining: validate every documented selector, attribute, event, and example
+  referenced by prose outside the normalized `aiHints` block.
 - Normalize component names, tags, directories, and docs pages into a single
   generated index consumed by the CLI and release checks.
 - Keep generated data deterministic so diffs reveal real contract changes.
@@ -126,3 +131,19 @@ Status: implemented for the v0 release path.
 - Stale uppercase contract references are absent.
 - Component contract counts remain 19 primitives, 26 composites, and 8
   patterns.
+
+## Phase 7: Official Astro Delivery
+
+Status: implemented for Astro 7.
+
+- Publish `@ren10/astro` as a separate workspace package with an integration,
+  53 generated Light DOM adapters, and a machine-readable catalog.
+- Generate adapters only from the canonical registry plus schema-v1
+  `aiHints`; reject catalog drift in tests and release checks.
+- Ship an Astro starter with direct imports and project-local agent routing.
+- Scan `.astro` templates and scoped CSS without treating frontmatter,
+  scripts, or capitalized Astro components as native markup.
+- Convert structured image/URL/description observations into accessible
+  semantic themes via `ren10 theme`, preserving component contracts.
+- Verify Astro 7 production builds, full CSS compatibility, client behavior,
+  starter output, and packed npm contents before release.

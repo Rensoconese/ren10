@@ -20,6 +20,8 @@ item is binary: pass / fail. Failures must be fixed, not noted-and-shipped.
 - [ ] No Shadow DOM (`attachShadow`); web components render light DOM.
 - [ ] Every interactive element is the real semantic element
       (`<button>`, `<a>`, `<input>`, `<dialog>`, `<form>`, …).
+- [ ] In Astro, I used official direct `@ren10/astro/components/*` imports,
+      did not add framework hydration, and verified the rendered Light DOM.
 
 ## Tokens
 
@@ -29,6 +31,8 @@ item is binary: pass / fail. Failures must be fixed, not noted-and-shipped.
 - [ ] No hardcoded hex / non-grayscale `rgba()` / `hsl()` colors.
 - [ ] All overrides theme through `--ren-*` component tokens or semantic
       `--color-*` tokens.
+- [ ] A visual-reference adaptation was generated/audited through
+      `npx ren10 theme`; component and layout contracts were not rewritten.
 
 ## Layout
 

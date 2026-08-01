@@ -16,22 +16,11 @@
   flex-direction: column;
   z-index: var(--ren-z-modal, 1000);
   margin: auto;
-  animation: commandIn var(--duration-enter) var(--ease-enter);
+  animation: ren-command-in var(--duration-enter) var(--ease-enter);
 
   @starting-style {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.98);
-  }
-
-  @keyframes commandIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
   }
 
   @media (max-width: 32rem) {
@@ -46,27 +35,40 @@
   &::backdrop {
     background-color: rgb(0 0 0 / 0.5);
     backdrop-filter: blur(4px);
-    animation: backdropIn var(--duration-overlay) var(--ease-enter);
+    animation: ren-command-backdrop-in var(--duration-overlay) var(--ease-enter);
 
     @starting-style {
       background-color: rgb(0 0 0 / 0);
       backdrop-filter: blur(0);
     }
 
-    @keyframes backdropIn {
-      from {
-        background-color: rgb(0 0 0 / 0);
-        backdrop-filter: blur(0);
-      }
-      to {
-        background-color: rgb(0 0 0 / 0.5);
-        backdrop-filter: blur(4px);
-      }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       animation: none;
     }
+  }
+}
+
+@keyframes ren-command-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes ren-command-backdrop-in {
+  from {
+    background-color: rgb(0 0 0 / 0);
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    background-color: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(4px);
   }
 }
 

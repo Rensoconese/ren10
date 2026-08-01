@@ -283,16 +283,17 @@
     }
   }
 
-  @keyframes ren-date-picker-mobile-in {
-    from {
-      translate: 0 100%;
-      opacity: 0;
-    }
+}
 
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
+@keyframes ren-date-picker-mobile-in {
+  from {
+    translate: 0 100%;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
   }
 }
 

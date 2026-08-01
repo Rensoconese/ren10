@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-select/ren-select.css';
+
+/**
+ * Select — generated from RenDS composites/ren-select.
+ * Contract: ren10/components/composites/ren-select/component.md
+ * Registry key: select
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-select class:list={className} {...rest}><slot /></ren-select>
+
+<script>
+  import 'ren10/components/composites/ren-select/ren-select.js';
+</script>

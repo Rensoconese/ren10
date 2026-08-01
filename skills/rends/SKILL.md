@@ -77,6 +77,21 @@ or from this skill.
   keyboard support, reduced-motion respect, and WCAG 2.1 AA baseline.
 - Read each component's `aiHints` before selecting or composing it.
 
+## Astro Delivery
+
+In a project with `@ren10/astro`, `.astro` files are an allowed build-time
+delivery format; their output must still obey every vanilla and Light DOM rule
+above. Discover adapters through `@ren10/astro/catalog.json` or the CLI
+manifest, then use direct imports such as
+`@ren10/astro/components/Button`. Do not use the full barrel in production and
+do not add framework hydration for RenDS behavior.
+
+For a visual reference, extract observations into the packaged
+`visual-reference-theme.schema.json`, then run
+`npx ren10 theme <spec.json> --out src/styles/theme.css --json`. Keep layout
+and component composition unchanged; apply the reference through semantic
+tokens and the returned theme/density/shape attributes.
+
 ## Useful Commands
 
 ```bash
@@ -84,6 +99,8 @@ npx ren10 component --list
 npx ren10 component button --dense
 npx ren10 docs tokens --dense
 npx ren10 docs primitive-zero --dense
+npx ren10 docs astro --dense
+npx ren10 theme visual-reference.json --out src/styles/theme.css --json
 npx ren10 search "dialog workflow" --json
 npx ren10 build "settings form with sidebar" --json
 npx ren10 knowledge query "ren-toast status" --json

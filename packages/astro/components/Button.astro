@@ -1,0 +1,21 @@
+---
+import 'ren10/components/primitives/ren-button/ren-button.css';
+
+/**
+ * Button — generated from RenDS primitives/ren-button.
+ * Contract: ren10/components/primitives/ren-button/component.md
+ * Registry key: button
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-button class:list={className} {...rest}><slot /></ren-button>
+
+<script>
+  import 'ren10/components/primitives/ren-button/ren-button.js';
+</script>

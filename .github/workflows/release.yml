@@ -19,7 +19,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
 
@@ -79,9 +79,14 @@ jobs:
       - name: Verify tag matches package.json version
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
+          ASTRO_VERSION=$(node -p "require('./packages/astro/package.json').version")
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
             echo "::error::Tag $GITHUB_REF_NAME (=$TAG_VERSION) does not match package.json version $PKG_VERSION"
+            exit 1
+          fi
+          if [ "$ASTRO_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME (=$TAG_VERSION) does not match @ren10/astro version $ASTRO_VERSION"
             exit 1
           fi
 
@@ -97,17 +102,25 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
 
       - run: npm ci
 
-      - name: Dry-run publish (sanity check tarball contents)
+      - name: Dry-run publish ren10
         run: npm publish --dry-run
 
-      - name: Publish
+      - name: Dry-run publish @ren10/astro
+        run: npm publish --workspace @ren10/astro --dry-run
+
+      - name: Publish ren10
         run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish @ren10/astro
+        run: npm publish --workspace @ren10/astro --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

@@ -1,0 +1,21 @@
+---
+import 'ren10/components/primitives/ren-field/ren-field.css';
+
+/**
+ * Field — generated from RenDS primitives/ren-field.
+ * Contract: ren10/components/primitives/ren-field/component.md
+ * Registry key: field
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-field class:list={className} {...rest}><slot /></ren-field>
+
+<script>
+  import 'ren10/components/primitives/ren-field/ren-field.js';
+</script>

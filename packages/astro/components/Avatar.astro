@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-avatar/ren-avatar.css';
+
+/**
+ * Avatar — generated from RenDS primitives/ren-avatar.
+ * Contract: ren10/components/primitives/ren-avatar/component.md
+ * Registry key: avatar
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['ren-avatar', className]} {...rest}><slot /></span>

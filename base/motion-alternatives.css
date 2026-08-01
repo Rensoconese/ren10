@@ -27,6 +27,32 @@
    component itself, as usual.
    ============================================ */
 
+@keyframes ren-dissolve-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ren-highlight-flash {
+  0%   { background-color: var(--color-highlight, var(--color-accent-subtle)); }
+  100% { background-color: transparent; }
+}
+
+@keyframes ren-pulse-gentle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+@keyframes ren-color-shift {
+  from { color: var(--color-text-muted); }
+  to   { color: var(--color-accent); }
+}
+
+@keyframes ren-focus-glow {
+  0%   { box-shadow: 0 0 0 0 var(--color-focus-ring); }
+  40%  { box-shadow: 0 0 0 4px var(--color-focus-ring); }
+  100% { box-shadow: 0 0 0 0 var(--color-focus-ring); }
+}
+
 /* ═══════════════════════════════════════════════
    DISSOLVE — opacity fade over 250ms
    Alternative to slide / scale entries.
@@ -37,10 +63,6 @@
     animation: ren-dissolve-in 250ms linear both !important;
   }
 
-  @keyframes ren-dissolve-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -53,10 +75,6 @@
     animation: ren-highlight-flash 500ms ease-out both !important;
   }
 
-  @keyframes ren-highlight-flash {
-    0%   { background-color: var(--color-highlight, var(--color-accent-subtle)); }
-    100% { background-color: transparent; }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -69,10 +87,6 @@
     animation: ren-pulse-gentle 2s ease-in-out infinite !important;
   }
 
-  @keyframes ren-pulse-gentle {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.55; }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -85,10 +99,6 @@
     animation: ren-color-shift 300ms ease-out both !important;
   }
 
-  @keyframes ren-color-shift {
-    from { color: var(--color-text-muted); }
-    to   { color: var(--color-accent); }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -101,9 +111,4 @@
     animation: ren-focus-glow 800ms ease-in-out both !important;
   }
 
-  @keyframes ren-focus-glow {
-    0%   { box-shadow: 0 0 0 0 var(--color-focus-ring); }
-    40%  { box-shadow: 0 0 0 4px var(--color-focus-ring); }
-    100% { box-shadow: 0 0 0 0 var(--color-focus-ring); }
-  }
 }

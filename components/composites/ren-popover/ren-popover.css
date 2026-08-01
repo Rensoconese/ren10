@@ -185,23 +185,24 @@
     animation: ren-popover-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
-  @keyframes ren-popover-fallback-open {
-    from {
-      opacity: 0;
-      transform: translateY(-4px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ren-popover {
       animation: none;
     }
   }
 }
+
+@keyframes ren-popover-fallback-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Appearance API bridge */
 .ren-popover {
   width: var(--ren-popover-width, 280px);

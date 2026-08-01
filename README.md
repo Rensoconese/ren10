@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.12.0**
+Current version: **0.13.0**
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
@@ -74,6 +74,32 @@ If you'd rather not use the CLI, clone the repo and copy the `rends/` folder int
 git clone https://github.com/Rensoconese/ren10.git
 cp -r ren10/rends ./my-project/
 ```
+
+### Astro
+
+Astro 7 projects can use the official adapter and generated component catalog:
+
+```bash
+npm install astro ren10 @ren10/astro
+```
+
+```js
+import { defineConfig } from 'astro/config';
+import ren10 from '@ren10/astro';
+
+export default defineConfig({ integrations: [ren10()] });
+```
+
+```astro
+---
+import Button from '@ren10/astro/components/Button';
+---
+
+<Button variant="primary">Save</Button>
+```
+
+See [`docs/astro.md`](./docs/astro.md) for all 53 adapters, the starter,
+agent discovery, and theme generation from visual references.
 
 ---
 

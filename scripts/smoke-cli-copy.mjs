@@ -26,7 +26,7 @@ for (const [name, meta] of Object.entries(REGISTRY)) {
     }
   }
 
-  for (const dependency of meta.components || []) {
+  for (const dependency of [...(meta.components || []), ...(meta.styles || [])]) {
     if (!REGISTRY[dependency]) {
       throw new Error(`registry entry "${name}" declares unknown component dependency ${dependency}`);
     }

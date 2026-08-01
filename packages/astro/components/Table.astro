@@ -1,0 +1,21 @@
+---
+import 'ren10/components/patterns/ren-table/ren-table.css';
+
+/**
+ * Table — generated from RenDS patterns/ren-table.
+ * Contract: ren10/components/patterns/ren-table/pattern.md
+ * Registry key: table
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-table class:list={['ren-table', className]} {...rest}><slot /></ren-table>
+
+<script>
+  import 'ren10/components/patterns/ren-table/ren-table.js';
+</script>

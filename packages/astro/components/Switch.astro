@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-switch/ren-switch.css';
+
+/**
+ * Switch — generated from RenDS primitives/ren-switch.
+ * Contract: ren10/components/primitives/ren-switch/component.md
+ * Registry key: switch
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<label class:list={['ren-switch', className]} {...rest}><slot /></label>

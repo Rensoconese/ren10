@@ -2,7 +2,7 @@
 # ────────────────────────────────────────────────────────────
 # RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.12.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.13.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
@@ -17,7 +17,7 @@
 
 system:
   name: RenDS
-  version: 0.12.0
+  version: 0.13.0
   package: ren10
   license: MIT
   repo: https://github.com/Rensoconese/ren10
@@ -2261,3 +2261,16 @@ CSS; don't tuck interaction-critical structure inside Shadow DOM.
 **Don't** require JS for presentation. Every RenDS component works
 visually with JS disabled — behaviors layer on top, they don't gate the
 paint.
+
+### Astro integration
+
+**Do** use `@ren10/astro` for Astro 7 projects. Import production components
+from direct subpaths such as `@ren10/astro/components/Button`; the generated
+wrappers preserve canonical Light DOM markup, CSS, and vanilla behavior.
+
+**Do** use `@ren10/astro/catalog.json` or `npx ren10 manifest --json` for
+machine discovery. Read the catalog's colocated contract before composing a
+component.
+
+**Don't** recreate RenDS components as framework islands. Astro is a build-time
+delivery layer here, not a replacement component API. See `docs/astro.md`.

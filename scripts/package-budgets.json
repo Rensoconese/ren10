@@ -1,22 +1,22 @@
 {
   "version": 1,
-  "capturedFor": "ren10@0.12.0",
-  "capturedAt": "2026-07-24",
-  "capturedFrom": "validated ren10@0.12.0 catalog plus the native design-context, visual detector, review, exception, Codex hook, Contact collection, complete Blog Content collection, FAQ spacing audit, Testimonial visual audit, Footer visual audit, and Application Shell visual audit",
+  "capturedFor": "ren10@0.13.0",
+  "capturedAt": "2026-08-01",
+  "capturedFrom": "validated ren10@0.13.0 catalog plus the official Astro integration, 53 generated Astro components, Astro starter, AI hints, reference-theme tools, detector support, and release metadata",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 25145120, "allowedDelta": 0, "target": 25145120 },
-    "tarballBytes": { "baseline": 5953318, "allowedDelta": 0, "target": 5953318 },
-    "fullCssBytes": { "baseline": 512760, "allowedDelta": 0, "target": 512760 },
-    "minCssBytes": { "baseline": 291704, "allowedDelta": 0, "target": 291704 },
-    "knowledgeJsonBytes": { "baseline": 4190051, "allowedDelta": 0, "target": 4190051 },
-    "knowledgeSqliteBytes": { "baseline": 9351168, "allowedDelta": 0, "target": 9351168 },
+    "unpackedBytes": { "baseline": 25175823, "allowedDelta": 0, "target": 25175823 },
+    "tarballBytes": { "baseline": 5968722, "allowedDelta": 0, "target": 5968722 },
+    "fullCssBytes": { "baseline": 512555, "allowedDelta": 0, "target": 512555 },
+    "minCssBytes": { "baseline": 291758, "allowedDelta": 0, "target": 291758 },
+    "knowledgeJsonBytes": { "baseline": 4189971, "allowedDelta": 0, "target": 4189971 },
+    "knowledgeSqliteBytes": { "baseline": 9347072, "allowedDelta": 0, "target": 9347072 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
-    "cliRssBytes": { "baseline": 45334528, "allowedDelta": 8388608, "target": 53723136 }
+    "cliRssBytes": { "baseline": 46153728, "allowedDelta": 8388608, "target": 54542336 }
   },
   "rationale": {
-    "package": "0.12.0 detector-, Contact-, and twelve-block Blog Content-enabled npm pack measurements; zero growth allowed.",
+    "package": "0.13.0 Astro-enabled npm pack measurements; zero growth allowed.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."

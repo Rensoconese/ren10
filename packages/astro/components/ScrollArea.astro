@@ -1,0 +1,17 @@
+---
+import 'ren10/components/composites/ren-scroll-area/ren-scroll-area.css';
+
+/**
+ * ScrollArea — generated from RenDS composites/ren-scroll-area.
+ * Contract: ren10/components/composites/ren-scroll-area/component.md
+ * Registry key: scroll-area
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['ren-scroll-area', className]} {...rest}><slot /></div>

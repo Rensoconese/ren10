@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-toast/ren-toast.css';
+
+/**
+ * Toast — generated from RenDS composites/ren-toast.
+ * Contract: ren10/components/composites/ren-toast/component.md
+ * Registry key: toast
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-toast class:list={className} {...rest}><slot /></ren-toast>
+
+<script>
+  import 'ren10/components/composites/ren-toast/ren-toast.js';
+</script>

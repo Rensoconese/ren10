@@ -1,0 +1,17 @@
+---
+import 'ren10/components/composites/ren-alert-dialog/ren-alert-dialog.css';
+
+/**
+ * AlertDialog — generated from RenDS composites/ren-alert-dialog.
+ * Contract: ren10/components/composites/ren-alert-dialog/component.md
+ * Registry key: alert-dialog
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<dialog class:list={['ren-alert-dialog', className]} {...rest}><slot /></dialog>

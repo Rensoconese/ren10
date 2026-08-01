@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "name": "fixture-reference",
+  "source": { "kind": "image", "label": "Fixture screenshot" },
+  "mode": "dark",
+  "colors": {
+    "accent": "#7c5cff",
+    "background": "#111217",
+    "surface": "#191b22",
+    "text": "#f7f7f8",
+    "mutedText": "#aeb2bd"
+  },
+  "density": "compact",
+  "shape": "rounded",
+  "elevation": "layered",
+  "motion": "quiet"
+}

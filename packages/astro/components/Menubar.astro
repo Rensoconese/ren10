@@ -1,0 +1,21 @@
+---
+import 'ren10/components/patterns/ren-menubar/ren-menubar.css';
+
+/**
+ * Menubar — generated from RenDS patterns/ren-menubar.
+ * Contract: ren10/components/patterns/ren-menubar/pattern.md
+ * Registry key: menubar
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-menubar class:list={['ren-menubar', className]} {...rest}><slot /></ren-menubar>
+
+<script>
+  import 'ren10/components/patterns/ren-menubar/ren-menubar.js';
+</script>

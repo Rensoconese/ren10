@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-pagination/ren-pagination.css';
+
+/**
+ * Pagination — generated from RenDS primitives/ren-pagination.
+ * Contract: ren10/components/primitives/ren-pagination/component.md
+ * Registry key: pagination
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<nav class:list={['ren-pagination', className]} {...rest}><slot /></nav>

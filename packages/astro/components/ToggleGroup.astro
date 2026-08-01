@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-toggle-group/ren-toggle-group.css';
+
+/**
+ * ToggleGroup — generated from RenDS composites/ren-toggle-group.
+ * Contract: ren10/components/composites/ren-toggle-group/component.md
+ * Registry key: toggle-group
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-toggle-group class:list={className} {...rest}><slot /></ren-toggle-group>
+
+<script>
+  import 'ren10/components/composites/ren-toggle-group/ren-toggle-group.js';
+</script>

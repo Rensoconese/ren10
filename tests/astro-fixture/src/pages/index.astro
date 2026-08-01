@@ -1,0 +1,54 @@
+---
+import Badge from '@ren10/astro/components/Badge';
+import Button from '@ren10/astro/components/Button';
+import Card from '@ren10/astro/components/Card';
+import Dialog from '@ren10/astro/components/Dialog';
+import Dropzone from '@ren10/astro/components/Dropzone';
+import Toolbar from '@ren10/astro/components/Toolbar';
+---
+
+<!doctype html>
+<html lang="en" data-theme="minimal-mono">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>RenDS Astro compatibility fixture</title>
+  </head>
+  <body>
+    <main class="ren-center-narrow ren-stack-lg">
+      <h1>RenDS on Astro</h1>
+
+      <Card data-fixture="card">
+        <div class="ren-card-body ren-stack">
+          <Badge class="ren-badge-success">Astro 7 compatible</Badge>
+          <Button variant="primary">Enhanced button</Button>
+          <button class="ren-btn ren-btn-secondary" type="button" data-dialog-trigger="astro-dialog">
+            Open dialog
+          </button>
+        </div>
+      </Card>
+
+      <Dialog id="astro-dialog">
+        <dialog>
+          <div class="ren-dialog-header">
+            <h2 class="ren-dialog-title">Astro dialog</h2>
+          </div>
+          <div class="ren-dialog-body">
+            <p>This content is rendered by Astro and enhanced by RenDS.</p>
+          </div>
+          <div class="ren-dialog-footer">
+            <button class="ren-btn" type="button" data-dialog-close>Close</button>
+          </div>
+        </dialog>
+      </Dialog>
+
+      <Toolbar role="toolbar" aria-label="Fixture toolbar">
+        <button class="ren-toolbar-item" type="button">Bold</button>
+      </Toolbar>
+
+      <Dropzone aria-label="Fixture dropzone">
+        <input class="ren-dropzone-input" type="file" />
+      </Dropzone>
+    </main>
+  </body>
+</html>

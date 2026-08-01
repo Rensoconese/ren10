@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-breadcrumb/ren-breadcrumb.css';
+
+/**
+ * Breadcrumb — generated from RenDS primitives/ren-breadcrumb.
+ * Contract: ren10/components/primitives/ren-breadcrumb/component.md
+ * Registry key: breadcrumb
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<nav class:list={['ren-breadcrumb', className]} {...rest}><slot /></nav>

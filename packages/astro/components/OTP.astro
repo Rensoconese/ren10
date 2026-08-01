@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-otp/ren-otp.css';
+
+/**
+ * OTP — generated from RenDS composites/ren-otp.
+ * Contract: ren10/components/composites/ren-otp/component.md
+ * Registry key: otp
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-otp class:list={className} {...rest}><slot /></ren-otp>
+
+<script>
+  import 'ren10/components/composites/ren-otp/ren-otp.js';
+</script>

@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-sheet/ren-sheet.css';
+
+/**
+ * Sheet — generated from RenDS composites/ren-sheet.
+ * Contract: ren10/components/composites/ren-sheet/component.md
+ * Registry key: sheet
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-sheet class:list={className} {...rest}><slot /></ren-sheet>
+
+<script>
+  import 'ren10/components/composites/ren-sheet/ren-sheet.js';
+</script>

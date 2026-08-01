@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-banner/ren-banner.css';
+
+/**
+ * Banner — generated from RenDS primitives/ren-banner.
+ * Contract: ren10/components/primitives/ren-banner/component.md
+ * Registry key: banner
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class:list={['ren-banner ren-banner-info', className]} {...rest}><slot /></div>

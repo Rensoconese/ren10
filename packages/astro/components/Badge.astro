@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-badge/ren-badge.css';
+
+/**
+ * Badge — generated from RenDS primitives/ren-badge.
+ * Contract: ren10/components/primitives/ren-badge/component.md
+ * Registry key: badge
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['ren-badge', className]} {...rest}><slot /></span>

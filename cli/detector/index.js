@@ -10,7 +10,7 @@ import path from 'node:path';
 import { REGISTRY } from '../registry.js';
 
 const COLOR_PRIMITIVES = ['blue', 'gray', 'red', 'green', 'orange', 'yellow', 'teal', 'purple', 'pink'];
-const SOURCE_EXTENSIONS = new Set(['.html', '.htm', '.css', '.js', '.mjs']);
+const SOURCE_EXTENSIONS = new Set(['.html', '.htm', '.astro', '.css', '.js', '.mjs']);
 const SKIP_DIRECTORIES = new Set(['.git', 'node_modules', 'dist', 'build', 'coverage', '.ren10']);
 
 const PROFILES = Object.freeze({
@@ -175,13 +175,28 @@ function scanStaticSource(source, file, manifest, profileName) {
       'A clipping container and positioned overlay coexist in this file.', 'overflow-overlay', profileName);
   }
 
-  if (/\.html?$/.test(file)) scanHtml(source, file, findings, profileName);
+  if (/\.(?:html?|astro)$/.test(file)) {
+    const isAstro = file.endsWith('.astro');
+    scanHtml(isAstro ? astroTemplateSource(source) : source, file, findings, profileName, isAstro);
+  }
   return findings;
 }
 
-function scanHtml(source, file, findings, profileName) {
+function astroTemplateSource(source) {
+  let template = source;
+  template = template.replace(/^---\s*\r?\n[\s\S]*?\r?\n---(?=\s|$)/, maskNonTemplate);
+  template = template.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, maskNonTemplate);
+  return template;
+}
+
+function maskNonTemplate(value) {
+  return value.replace(/[^\r\n]/g, ' ');
+}
+
+function scanHtml(source, file, findings, profileName, astroComponents = false) {
   let previousLevel = 0;
   for (const match of source.matchAll(/<h([1-6])\b[^>]*>/gi)) {
+    if (astroComponents && isCapitalizedComponent(match[0])) continue;
     const level = Number(match[1]);
     if (previousLevel && level > previousLevel + 1) {
       addFinding(findings, 'heading-order', file, lineOf(source, match.index),
@@ -191,6 +206,7 @@ function scanHtml(source, file, findings, profileName) {
   }
 
   for (const match of source.matchAll(/<img\b[^>]*>/gi)) {
+    if (astroComponents && isCapitalizedComponent(match[0])) continue;
     const src = match[0].match(/\bsrc\s*=\s*["']([^"']*)["']/i)?.[1] ?? '';
     if (!src || /(?:placeholder|example|todo|dummy)/i.test(src)) {
       addFinding(findings, 'broken-image', file, lineOf(source, match.index),
@@ -199,11 +215,16 @@ function scanHtml(source, file, findings, profileName) {
   }
 
   for (const match of source.matchAll(/<button\b[^>]*>/gi)) {
+    if (astroComponents && isCapitalizedComponent(match[0])) continue;
     if (!/\btype\s*=/.test(match[0])) {
       addFinding(findings, 'button-type', file, lineOf(source, match.index),
         'Button has no explicit type and may submit an ancestor form unexpectedly.', '<button>', profileName);
     }
   }
+}
+
+function isCapitalizedComponent(openingTag) {
+  return /<[A-Z]/.test(openingTag);
 }
 
 function addFinding(findings, ruleId, file, line, message, value, profileName) {

@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-menu/ren-menu.css';
+
+/**
+ * Menu — generated from RenDS composites/ren-menu.
+ * Contract: ren10/components/composites/ren-menu/component.md
+ * Registry key: menu
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-menu class:list={className} {...rest}><slot /></ren-menu>
+
+<script>
+  import 'ren10/components/composites/ren-menu/ren-menu.js';
+</script>

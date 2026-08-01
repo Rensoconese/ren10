@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-tabs/ren-tabs.css';
+
+/**
+ * Tabs — generated from RenDS composites/ren-tabs.
+ * Contract: ren10/components/composites/ren-tabs/component.md
+ * Registry key: tabs
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-tabs class:list={className} {...rest}><slot /></ren-tabs>
+
+<script>
+  import 'ren10/components/composites/ren-tabs/ren-tabs.js';
+</script>

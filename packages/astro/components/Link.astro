@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-link/ren-link.css';
+
+/**
+ * Link — generated from RenDS primitives/ren-link.
+ * Contract: ren10/components/primitives/ren-link/component.md
+ * Registry key: link
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<a class:list={['ren-link', className]} {...rest}><slot /></a>

@@ -1,0 +1,21 @@
+---
+import 'ren10/components/primitives/ren-radio/ren-radio.css';
+
+/**
+ * Radio — generated from RenDS primitives/ren-radio.
+ * Contract: ren10/components/primitives/ren-radio/component.md
+ * Registry key: radio
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-radio class:list={className} {...rest}><slot /></ren-radio>
+
+<script>
+  import 'ren10/components/primitives/ren-radio/ren-radio.js';
+</script>

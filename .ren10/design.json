@@ -4,7 +4,7 @@
   "system": {
     "name": "Ren10",
     "package": "ren10",
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "sources": [
     "ren-design.md",

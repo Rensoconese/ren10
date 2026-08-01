@@ -24,6 +24,7 @@ import {
   writeConfig,
 } from './detector/config.js';
 import { installCodexHook, processHookEvent } from './detector/hook.js';
+import { generateThemeFromReference } from '../themes/reference-theme.js';
 import {
   formatKnowledgeRows,
   loadJsonGraph,
@@ -53,6 +54,7 @@ const args = process.argv.slice(2);
 const command = args[0];
 const RENDS_MARKER_START = '<!-- RENDS:START -->';
 const RENDS_MARKER_END = '<!-- RENDS:END -->';
+const AI_HINTS_SCHEMA_VERSION = 1;
 
 const RESPONSE_TYPES = {
   manifest: ['manifest'],
@@ -66,6 +68,7 @@ const RESPONSE_TYPES = {
   ignores: ['detector.ignores'],
   hooks: ['detector.hooks'],
   'agent-docs': ['agent-docs.write', 'agent-docs.remove'],
+  theme: ['theme.reference'],
   knowledge: ['knowledge.path', 'knowledge.check', 'knowledge.query'],
 };
 
@@ -109,6 +112,16 @@ const DOC_TOPICS = {
     title: 'Ren10 visual quality detector',
     path: 'docs/detector.md',
     aliases: ['detect', 'quality', 'visual-quality'],
+  },
+  'ai-hints': {
+    title: 'aiHints schema',
+    path: 'knowledge/schemas/ai-hints.schema.json',
+    aliases: ['aihints', 'component-schema'],
+  },
+  astro: {
+    title: 'Official Astro integration',
+    path: 'docs/astro.md',
+    aliases: ['astro-integration', '@ren10/astro'],
   },
   'agent-ready-roadmap': {
     title: 'Agent-ready roadmap',
@@ -272,6 +285,16 @@ const COMMAND_SPECS = [
       { flag: '--json', type: 'boolean', description: 'Emit typed JSON for query results' },
       { flag: '--limit <n>', type: 'number', description: 'Maximum query results' },
       { flag: '--source-json', type: 'boolean', description: 'Force JSON graph source instead of SQLite' },
+    ],
+    json: true,
+  },
+  {
+    name: 'theme',
+    description: 'Generate an accessible semantic theme from a visual-reference JSON spec',
+    arguments: [{ name: 'reference.json', required: true }],
+    options: [
+      { flag: '--out <path>', type: 'string', description: 'Write generated CSS to a project-relative path' },
+      { flag: '--json', type: 'boolean', description: 'Emit theme, attributes, audit, and CSS as typed JSON' },
     ],
     json: true,
   },
@@ -455,12 +478,14 @@ function buildComponentDetail(key, meta, { dense = false } = {}) {
     files: meta.files.map((file) => `components/${meta.layer}/${meta.dir}/${file}`),
     utils: meta.utils ?? [],
     components: meta.components ?? [],
-    deps: [...(meta.utils ?? []), ...(meta.components ?? [])],
+    styles: meta.styles ?? [],
+    deps: [...(meta.utils ?? []), ...(meta.components ?? []), ...(meta.styles ?? [])],
     usage: meta.usage,
     contractPath: `components/${meta.layer}/${meta.dir}/${contractNameFor(meta)}`,
     cssPath: fs.existsSync(cssPath) ? relFromRoot(cssPath) : null,
     jsPath: fs.existsSync(jsPath) ? relFromRoot(jsPath) : null,
     aiHints: extractAiHints(contract),
+    aiHintsSchemaVersion: AI_HINTS_SCHEMA_VERSION,
     useWhen: extractBullets(contract, 'Use When'),
     avoidWhen: extractBullets(contract, 'Do Not Use When'),
   };
@@ -469,7 +494,7 @@ function buildComponentDetail(key, meta, { dense = false } = {}) {
     detail.dense = [
       `${meta.dir}|${meta.layer}|${meta.description}`,
       `contract=${detail.contractPath}`,
-      `imports=${detail.files.join(',')}${detail.utils.length ? `; utils=${detail.utils.join(',')}` : ''}${detail.components.length ? `; components=${detail.components.join(',')}` : ''}`,
+      `imports=${detail.files.join(',')}${detail.utils.length ? `; utils=${detail.utils.join(',')}` : ''}${detail.components.length ? `; components=${detail.components.join(',')}` : ''}${detail.styles.length ? `; styles=${detail.styles.join(',')}` : ''}`,
       detail.useWhen.length ? `use=${detail.useWhen.join('; ')}` : null,
       detail.avoidWhen.length ? `avoid=${detail.avoidWhen.join('; ')}` : null,
       `usage=${String(meta.usage).replace(/\s+/g, ' ').trim()}`,
@@ -537,6 +562,26 @@ function buildManifest() {
     commands: COMMAND_SPECS,
     jsonSupported: COMMAND_SPECS.filter((cmd) => cmd.json).map((cmd) => cmd.name).sort(),
     responseTypes: RESPONSE_TYPES,
+    schemas: {
+      aiHints: {
+        version: AI_HINTS_SCHEMA_VERSION,
+        path: 'knowledge/schemas/ai-hints.schema.json',
+      },
+      visualReferenceTheme: {
+        version: 1,
+        path: 'knowledge/schemas/visual-reference-theme.schema.json',
+      },
+    },
+    integrations: {
+      astro: {
+        package: '@ren10/astro',
+        peer: 'astro >=7 <8',
+        components: Object.keys(REGISTRY).length,
+        catalog: '@ren10/astro/catalog.json',
+        starter: 'starters/astro',
+        productionImport: '@ren10/astro/components/<ExportName>',
+      },
+    },
     docs: Object.fromEntries(
       Object.entries(DOC_TOPICS).map(([key, doc]) => [key, { title: doc.title, path: doc.path, aliases: doc.aliases ?? [] }]),
     ),
@@ -1030,6 +1075,7 @@ function resolveComponentGraph(componentNames) {
 
     visiting.add(name);
     for (const dependency of meta.components || []) visit(dependency);
+    for (const dependency of meta.styles || []) visit(dependency);
     visiting.delete(name);
     visited.add(name);
     resolved.push(name);
@@ -2177,6 +2223,38 @@ async function loadPromptModule() {
   return fn;
 }
 
+async function cmdTheme() {
+  const inputArg = args[1];
+  if (!inputArg || inputArg.startsWith('-')) error('Usage: npx ren10 theme <reference.json> [--out theme.css] [--json]');
+  const inputPath = path.resolve(process.cwd(), inputArg);
+  if (!fs.existsSync(inputPath)) error(`Visual reference spec not found: ${inputArg}`);
+
+  let spec;
+  try {
+    spec = JSON.parse(fs.readFileSync(inputPath, 'utf8'));
+  } catch (cause) {
+    error(`Could not parse visual reference JSON: ${cause.message}`);
+  }
+  const theme = generateThemeFromReference(spec);
+  const outputArg = optionValue('--out');
+  let outputPath = null;
+  if (outputArg) {
+    outputPath = path.resolve(process.cwd(), outputArg);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    fs.writeFileSync(outputPath, `${theme.css}\n`);
+  }
+
+  const data = { ...theme, outputPath: outputPath ? path.relative(process.cwd(), outputPath).split(path.sep).join('/') : null };
+  if (hasFlag('--json')) {
+    jsonOut('theme.reference', data);
+    return;
+  }
+  if (outputPath) success(`Generated ${data.outputPath}`);
+  console.log(`${theme.css}\n`);
+  console.log(`${c.dim}Apply attributes: ${Object.entries(theme.attributes).map(([key, value]) => `${key}="${value}"`).join(' ')}${c.reset}`);
+  if (theme.report.repairs.length > 0) info(`${theme.report.repairs.length} inaccessible reference value(s) were mapped to safe semantic tokens.`);
+}
+
 /**
  * Main CLI router
  */
@@ -2189,6 +2267,9 @@ async function main() {
     switch (command) {
       case 'init':
         await cmdInit();
+        break;
+      case 'theme':
+        await cmdTheme();
         break;
       case 'add':
         await cmdAdd();
@@ -2299,6 +2380,7 @@ ${c.bold}Commands:${c.reset}
   ignores           Manage narrow detector exceptions with reasons
   hooks             Install or toggle the Codex post-edit detector
   agent-docs        Install/update generated RenDS context in agent docs
+  theme <file>      Generate a semantic theme from visual-reference JSON
   scales            List available type scale ratios
   knowledge         Show packaged graph paths
   knowledge query   Query the packaged knowledge graph (SQLite, JSON fallback)
@@ -2325,6 +2407,7 @@ ${c.bold}Examples:${c.reset}
   npx ren10 init --scale perfect-fourth
   npx ren10 init --scale minor-third --base 18 --fluid
   npx ren10 init --density compact --shape sharp
+  npx ren10 theme visual-reference.json --out src/styles/theme.css
   npx ren10 add button
   npx ren10 add dialog
   npx ren10 add --all

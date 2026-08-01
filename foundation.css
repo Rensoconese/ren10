@@ -1,0 +1,14 @@
+/* ============================================
+   RenDS — Foundation only
+   ============================================
+   Tokens, reset, classless HTML, layouts, motion,
+   and utilities without component CSS.
+
+   Component-aware integrations should import this
+   entrypoint once, then import component CSS as used.
+   ============================================ */
+
+@layer reset, tokens, base, components, utilities;
+
+@import './tokens/index.css' layer(tokens);
+@import './base/index.css';

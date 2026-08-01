@@ -610,6 +610,7 @@ export const REGISTRY = {
     files: ['ren-context-menu.css', 'ren-context-menu.js'],
     utils: [],
     components: [],
+    styles: ['menu'],
     usage: `<div class="ren-context-menu-trigger" data-context="editor-actions" tabindex="0">Right-click me</div>
 <ren-context-menu id="editor-actions">
   <button class="ren-menu-item" role="menuitem">Copy</button>

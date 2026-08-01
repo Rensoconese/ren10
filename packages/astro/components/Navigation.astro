@@ -1,0 +1,21 @@
+---
+import 'ren10/components/patterns/ren-nav/ren-nav.css';
+
+/**
+ * Navigation — generated from RenDS patterns/ren-nav.
+ * Contract: ren10/components/patterns/ren-nav/pattern.md
+ * Registry key: nav
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-nav class:list={['ren-nav', className]} {...rest}><slot /></ren-nav>
+
+<script>
+  import 'ren10/components/patterns/ren-nav/ren-nav.js';
+</script>

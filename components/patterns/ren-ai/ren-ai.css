@@ -136,13 +136,14 @@
   40%           { transform: translateY(-4px); opacity: 1; }
 }
 
+@keyframes ren-ai-dot-fade {
+  0%, 80%, 100% { opacity: 0.3; }
+  40%           { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ren-ai-typing-dots span {
     animation: ren-ai-dot-fade 1.4s ease-in-out infinite;
-  }
-  @keyframes ren-ai-dot-fade {
-    0%, 80%, 100% { opacity: 0.3; }
-    40%           { opacity: 1; }
   }
 }
 

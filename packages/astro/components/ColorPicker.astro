@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-color-picker/ren-color-picker.css';
+
+/**
+ * ColorPicker — generated from RenDS composites/ren-color-picker.
+ * Contract: ren10/components/composites/ren-color-picker/component.md
+ * Registry key: color-picker
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-color-picker class:list={className} {...rest}><slot /></ren-color-picker>
+
+<script>
+  import 'ren10/components/composites/ren-color-picker/ren-color-picker.js';
+</script>

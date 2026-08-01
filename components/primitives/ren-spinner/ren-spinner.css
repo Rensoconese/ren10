@@ -42,14 +42,14 @@
   to { transform: rotate(360deg); }
 }
 
+@keyframes ren-spin-gentle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
 /* Reduced motion: pulse opacity instead of rotating */
 @media (prefers-reduced-motion: reduce) {
   .ren-spinner {
     animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
-  }
-
-  @keyframes ren-spin-gentle {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.4; }
   }
 }

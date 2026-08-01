@@ -5055,6 +5055,32 @@ sup, sub {
    component itself, as usual.
    ============================================ */
 
+@keyframes ren-dissolve-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes ren-highlight-flash {
+  0%   { background-color: var(--color-highlight, var(--color-accent-subtle)); }
+  100% { background-color: transparent; }
+}
+
+@keyframes ren-pulse-gentle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+@keyframes ren-color-shift {
+  from { color: var(--color-text-muted); }
+  to   { color: var(--color-accent); }
+}
+
+@keyframes ren-focus-glow {
+  0%   { box-shadow: 0 0 0 0 var(--color-focus-ring); }
+  40%  { box-shadow: 0 0 0 4px var(--color-focus-ring); }
+  100% { box-shadow: 0 0 0 0 var(--color-focus-ring); }
+}
+
 /* ═══════════════════════════════════════════════
    DISSOLVE — opacity fade over 250ms
    Alternative to slide / scale entries.
@@ -5065,10 +5091,6 @@ sup, sub {
     animation: ren-dissolve-in 250ms linear both !important;
   }
 
-  @keyframes ren-dissolve-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -5081,10 +5103,6 @@ sup, sub {
     animation: ren-highlight-flash 500ms ease-out both !important;
   }
 
-  @keyframes ren-highlight-flash {
-    0%   { background-color: var(--color-highlight, var(--color-accent-subtle)); }
-    100% { background-color: transparent; }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -5097,10 +5115,6 @@ sup, sub {
     animation: ren-pulse-gentle 2s ease-in-out infinite !important;
   }
 
-  @keyframes ren-pulse-gentle {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.55; }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -5113,10 +5127,6 @@ sup, sub {
     animation: ren-color-shift 300ms ease-out both !important;
   }
 
-  @keyframes ren-color-shift {
-    from { color: var(--color-text-muted); }
-    to   { color: var(--color-accent); }
-  }
 }
 
 /* ═══════════════════════════════════════════════
@@ -5129,11 +5139,6 @@ sup, sub {
     animation: ren-focus-glow 800ms ease-in-out both !important;
   }
 
-  @keyframes ren-focus-glow {
-    0%   { box-shadow: 0 0 0 0 var(--color-focus-ring); }
-    40%  { box-shadow: 0 0 0 4px var(--color-focus-ring); }
-    100% { box-shadow: 0 0 0 0 var(--color-focus-ring); }
-  }
 }
 /* ============================================
    RenDS — Motion Presets
@@ -5446,6 +5451,27 @@ sup, sub {
    Utility classes for scroll-linked animations without JavaScript.
    ─────────────────────────────────────────────────────────────────────── */
 
+@keyframes ren-scale-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes ren-scroll-reveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ren-parallax {
+  from { transform: translateY(calc(var(--space-8, 2rem) * -1)); }
+  to { transform: translateY(var(--space-8, 2rem)); }
+}
+
+@keyframes ren-scroll-fade-in {
+  to { opacity: 1; }
+}
+
 @supports (animation-timeline: scroll()) {
   /* Scroll progress indicator — a thin bar at the top of the page */
   .ren-scroll-progress {
@@ -5460,11 +5486,6 @@ sup, sub {
     animation-timeline: scroll(root);
   }
 
-  @keyframes ren-scale-x {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
-  }
-
   /* Reveal on scroll — fade + slide up when element enters viewport */
   .ren-scroll-reveal {
     opacity: 0;
@@ -5474,22 +5495,10 @@ sup, sub {
     animation-range: entry 0% entry 100%;
   }
 
-  @keyframes ren-scroll-reveal {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
   /* Parallax effect — subtle vertical shift on scroll */
   .ren-scroll-parallax {
     animation: ren-parallax linear both;
     animation-timeline: view();
-  }
-
-  @keyframes ren-parallax {
-    from { transform: translateY(calc(var(--space-8, 2rem) * -1)); }
-    to { transform: translateY(var(--space-8, 2rem)); }
   }
 
   /* Fade in on scroll — simple opacity reveal */
@@ -5498,10 +5507,6 @@ sup, sub {
     animation: ren-scroll-fade-in linear both;
     animation-timeline: view();
     animation-range: entry 0% entry 60%;
-  }
-
-  @keyframes ren-scroll-fade-in {
-    to { opacity: 1; }
   }
 
   /* Respect reduced motion for all scroll animations */
@@ -8053,15 +8058,15 @@ select.ren-input {
   to { transform: rotate(360deg); }
 }
 
+@keyframes ren-spin-gentle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
 /* Reduced motion: pulse opacity instead of rotating */
 @media (prefers-reduced-motion: reduce) {
   .ren-spinner {
     animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
-  }
-
-  @keyframes ren-spin-gentle {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.4; }
   }
 }
 /* ============================================
@@ -8642,23 +8647,24 @@ ren-dialog {
     animation: ren-popover-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
-  @keyframes ren-popover-fallback-open {
-    from {
-      opacity: 0;
-      transform: translateY(-4px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ren-popover {
       animation: none;
     }
   }
 }
+
+@keyframes ren-popover-fallback-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Appearance API bridge */
 .ren-popover {
   width: var(--ren-popover-width, 280px);
@@ -8836,23 +8842,24 @@ ren-dialog {
     animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
-  @keyframes ren-tooltip-fallback-open {
-    from {
-      opacity: 0;
-      transform: translateY(4px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ren-tooltip {
       animation: none;
     }
   }
 }
+
+@keyframes ren-tooltip-fallback-open {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Appearance API bridge */
 .ren-tooltip {
   background: var(--ren-tooltip-bg, var(--color-text));
@@ -13076,16 +13083,17 @@ ren-sheet {
     }
   }
 
-  @keyframes ren-date-picker-mobile-in {
-    from {
-      translate: 0 100%;
-      opacity: 0;
-    }
+}
 
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
+@keyframes ren-date-picker-mobile-in {
+  from {
+    translate: 0 100%;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
   }
 }
 
@@ -13554,16 +13562,17 @@ ren-sheet {
     }
   }
 
-  @keyframes ren-date-range-mobile-in {
-    from {
-      translate: 0 100%;
-      opacity: 0;
-    }
+}
 
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
+@keyframes ren-date-range-mobile-in {
+  from {
+    translate: 0 100%;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
   }
 }
 
@@ -15411,23 +15420,24 @@ ren-sheet {
     background-color: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     padding: var(--ren-space-2, 0.5rem) 0;
-    animation: slideDown var(--duration-enter) var(--ease-enter);
+    animation: ren-nav-slide-down var(--duration-enter) var(--ease-enter);
     z-index: 1000;
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-0.5rem);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
     @media (prefers-reduced-motion: reduce) {
       animation: none;
     }
+  }
+}
+
+@keyframes ren-nav-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -15894,22 +15904,11 @@ ren-sheet {
   flex-direction: column;
   z-index: var(--ren-z-modal, 1000);
   margin: auto;
-  animation: commandIn var(--duration-enter) var(--ease-enter);
+  animation: ren-command-in var(--duration-enter) var(--ease-enter);
 
   @starting-style {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.98);
-  }
-
-  @keyframes commandIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
   }
 
   @media (max-width: 32rem) {
@@ -15924,27 +15923,40 @@ ren-sheet {
   &::backdrop {
     background-color: rgb(0 0 0 / 0.5);
     backdrop-filter: blur(4px);
-    animation: backdropIn var(--duration-overlay) var(--ease-enter);
+    animation: ren-command-backdrop-in var(--duration-overlay) var(--ease-enter);
 
     @starting-style {
       background-color: rgb(0 0 0 / 0);
       backdrop-filter: blur(0);
     }
 
-    @keyframes backdropIn {
-      from {
-        background-color: rgb(0 0 0 / 0);
-        backdrop-filter: blur(0);
-      }
-      to {
-        background-color: rgb(0 0 0 / 0.5);
-        backdrop-filter: blur(4px);
-      }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       animation: none;
     }
+  }
+}
+
+@keyframes ren-command-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes ren-command-backdrop-in {
+  from {
+    background-color: rgb(0 0 0 / 0);
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    background-color: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(4px);
   }
 }
 
@@ -17661,13 +17673,14 @@ ren-table[data-loading] {
   40%           { transform: translateY(-4px); opacity: 1; }
 }
 
+@keyframes ren-ai-dot-fade {
+  0%, 80%, 100% { opacity: 0.3; }
+  40%           { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ren-ai-typing-dots span {
     animation: ren-ai-dot-fade 1.4s ease-in-out infinite;
-  }
-  @keyframes ren-ai-dot-fade {
-    0%, 80%, 100% { opacity: 0.3; }
-    40%           { opacity: 1; }
   }
 }
 

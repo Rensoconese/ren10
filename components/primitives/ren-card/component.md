@@ -51,7 +51,6 @@ selectionCriteria:
 canonicalImports:
   css:
     - "rends/components/primitives/ren-card/ren-card.css"
-  js: []
   notes:
     - "Card is CSS-only. There is no <ren-card> custom element."
     - "If the page already imports rends/components/index.css, do not import the CSS again."

@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-hover-card/ren-hover-card.css';
+
+/**
+ * HoverCard — generated from RenDS composites/ren-hover-card.
+ * Contract: ren10/components/composites/ren-hover-card/component.md
+ * Registry key: hover-card
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-hover-card class:list={className} {...rest}><slot /></ren-hover-card>
+
+<script>
+  import 'ren10/components/composites/ren-hover-card/ren-hover-card.js';
+</script>

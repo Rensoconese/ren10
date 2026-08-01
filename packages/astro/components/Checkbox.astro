@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-checkbox/ren-checkbox.css';
+
+/**
+ * Checkbox — generated from RenDS primitives/ren-checkbox.
+ * Contract: ren10/components/primitives/ren-checkbox/component.md
+ * Registry key: checkbox
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<label class:list={['ren-checkbox', className]} {...rest}><slot /></label>

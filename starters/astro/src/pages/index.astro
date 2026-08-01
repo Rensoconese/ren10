@@ -1,0 +1,40 @@
+---
+import Badge from '@ren10/astro/components/Badge';
+import Button from '@ren10/astro/components/Button';
+import Card from '@ren10/astro/components/Card';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Ren10 + Astro">
+  <main id="main-content" class="ren-center-narrow ren-stack-xl">
+    <header class="ren-stack">
+      <Badge class="ren-badge-primary">Astro starter</Badge>
+      <h1>Build from a strong foundation.</h1>
+      <p>
+        Native HTML, modern CSS, Light DOM behavior, and accessible RenDS
+        contracts—ready for people and coding agents.
+      </p>
+    </header>
+
+    <section class="ren-grid ren-grid-fit" aria-label="Starter principles">
+      <Card>
+        <div class="ren-card-body ren-stack-sm">
+          <h2>Composable</h2>
+          <p>Import each Astro adapter from its direct component subpath.</p>
+        </div>
+      </Card>
+
+      <Card>
+        <div class="ren-card-body ren-stack-sm">
+          <h2>Themeable</h2>
+          <p>Change semantic tokens in one theme file without replacing components.</p>
+        </div>
+      </Card>
+    </section>
+
+    <div class="ren-cluster">
+      <Button variant="primary">Start building</Button>
+      <a class="ren-btn ren-btn-secondary" href="https://github.com/Rensoconese/ren10">Read the docs</a>
+    </div>
+  </main>
+</BaseLayout>

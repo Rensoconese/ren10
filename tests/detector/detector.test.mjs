@@ -23,7 +23,7 @@ test('buildDesignManifest derives machine-readable design context from canonical
 
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.system.name, 'Ren10');
-  assert.equal(manifest.system.version, '0.12.0');
+  assert.equal(manifest.system.version, '0.13.0');
   assert.ok(manifest.sources.includes('ren-design.md'));
   assert.ok(manifest.tokens.semantic.includes('--color-accent'));
   assert.ok(manifest.tokens.type.includes('--text-base'));
@@ -83,6 +83,28 @@ test('generic profile leaves provider-specific aesthetics disabled and clean mar
   assert.deepEqual(result.findings, []);
   assert.equal(result.exitCode, 0);
   assert.equal(result.summary.errors, 0);
+});
+
+test('Astro files scan template HTML and scoped styles without scanning frontmatter or scripts', async () => {
+  const manifest = await buildDesignManifest(packageRoot);
+  const result = await detectTargets([path.join(fixtures, 'bad.astro')], {
+    cwd: packageRoot,
+    manifest,
+    profile: 'codex',
+  });
+  const ids = new Set(result.findings.map((finding) => finding.rule));
+  const values = new Set(result.findings.map((finding) => finding.value));
+
+  assert.ok(ids.has('heading-order'));
+  assert.ok(ids.has('button-type'));
+  assert.ok(ids.has('hardcoded-color'));
+  assert.ok(ids.has('bespoke-layout'));
+  assert.equal(result.findings.filter((finding) => finding.rule === 'button-type').length, 1);
+  assert.ok(values.has('#123456'));
+  assert.ok(!values.has('#abcdef'));
+  assert.ok(!values.has('#fedcba'));
+  assert.ok(result.findings.every((finding) => finding.file.endsWith('bad.astro')));
+  assert.ok(result.findings.every((finding) => finding.line > 0));
 });
 
 test('filterFindings applies narrow rule, value, and file exceptions without mutating input', () => {

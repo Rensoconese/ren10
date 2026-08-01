@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ren10.dev/schemas/visual-reference-theme.schema.json",
+  "title": "RenDS visual reference theme",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "name", "source", "mode", "colors"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label"],
+      "properties": {
+        "kind": { "enum": ["image", "url", "description"] },
+        "label": { "type": "string", "minLength": 1 },
+        "uri": { "type": "string" }
+      }
+    },
+    "mode": { "enum": ["light", "dark"] },
+    "level": { "enum": ["AA", "AAA"] },
+    "colors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accent"],
+      "properties": {
+        "accent": { "$ref": "#/$defs/hex" },
+        "background": { "$ref": "#/$defs/hex" },
+        "surface": { "$ref": "#/$defs/hex" },
+        "text": { "$ref": "#/$defs/hex" },
+        "mutedText": { "$ref": "#/$defs/hex" }
+      }
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fontSans": { "type": "string", "minLength": 1 },
+        "fontDisplay": { "type": "string", "minLength": 1 }
+      }
+    },
+    "density": { "enum": ["comfortable", "compact", "spacious"] },
+    "shape": { "enum": ["rounded", "sharp", "pill"] },
+    "elevation": { "enum": ["flat", "subtle", "layered"] },
+    "motion": { "enum": ["quiet", "standard", "expressive"] }
+  },
+  "$defs": {
+    "hex": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" }
+  }
+}

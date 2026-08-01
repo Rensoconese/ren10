@@ -1,0 +1,13 @@
+/* Theme boundary: visual references should change these semantic values,
+   while page and component markup continue to use RenDS contracts. */
+[data-theme='starter'] {
+  --color-bg: oklch(98% 0.01 255deg);
+  --color-surface: oklch(100% 0 0deg);
+  --color-text: oklch(22% 0.025 255deg);
+  --color-text-muted: oklch(48% 0.025 255deg);
+  --color-border: oklch(88% 0.025 255deg);
+  --color-accent: oklch(55% 0.19 265deg);
+  --color-accent-hover: oklch(48% 0.2 265deg);
+  --color-accent-subtle: oklch(94% 0.035 265deg);
+  --color-on-accent: oklch(100% 0 0deg);
+}

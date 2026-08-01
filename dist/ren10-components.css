@@ -2497,15 +2497,15 @@ select.ren-input {
   to { transform: rotate(360deg); }
 }
 
+@keyframes ren-spin-gentle {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
 /* Reduced motion: pulse opacity instead of rotating */
 @media (prefers-reduced-motion: reduce) {
   .ren-spinner {
     animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
-  }
-
-  @keyframes ren-spin-gentle {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.4; }
   }
 }
 /* ============================================
@@ -3086,23 +3086,24 @@ ren-dialog {
     animation: ren-popover-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
-  @keyframes ren-popover-fallback-open {
-    from {
-      opacity: 0;
-      transform: translateY(-4px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ren-popover {
       animation: none;
     }
   }
 }
+
+@keyframes ren-popover-fallback-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Appearance API bridge */
 .ren-popover {
   width: var(--ren-popover-width, 280px);
@@ -3280,23 +3281,24 @@ ren-dialog {
     animation: ren-tooltip-fallback-open var(--duration-enter) var(--ease-enter);
   }
 
-  @keyframes ren-tooltip-fallback-open {
-    from {
-      opacity: 0;
-      transform: translateY(4px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .ren-tooltip {
       animation: none;
     }
   }
 }
+
+@keyframes ren-tooltip-fallback-open {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 /* Appearance API bridge */
 .ren-tooltip {
   background: var(--ren-tooltip-bg, var(--color-text));
@@ -7520,16 +7522,17 @@ ren-sheet {
     }
   }
 
-  @keyframes ren-date-picker-mobile-in {
-    from {
-      translate: 0 100%;
-      opacity: 0;
-    }
+}
 
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
+@keyframes ren-date-picker-mobile-in {
+  from {
+    translate: 0 100%;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
   }
 }
 
@@ -7998,16 +8001,17 @@ ren-sheet {
     }
   }
 
-  @keyframes ren-date-range-mobile-in {
-    from {
-      translate: 0 100%;
-      opacity: 0;
-    }
+}
 
-    to {
-      translate: 0 0;
-      opacity: 1;
-    }
+@keyframes ren-date-range-mobile-in {
+  from {
+    translate: 0 100%;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1;
   }
 }
 
@@ -9855,23 +9859,24 @@ ren-sheet {
     background-color: var(--color-surface);
     border-bottom: 1px solid var(--color-border);
     padding: var(--ren-space-2, 0.5rem) 0;
-    animation: slideDown var(--duration-enter) var(--ease-enter);
+    animation: ren-nav-slide-down var(--duration-enter) var(--ease-enter);
     z-index: 1000;
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-0.5rem);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
     @media (prefers-reduced-motion: reduce) {
       animation: none;
     }
+  }
+}
+
+@keyframes ren-nav-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -10338,22 +10343,11 @@ ren-sheet {
   flex-direction: column;
   z-index: var(--ren-z-modal, 1000);
   margin: auto;
-  animation: commandIn var(--duration-enter) var(--ease-enter);
+  animation: ren-command-in var(--duration-enter) var(--ease-enter);
 
   @starting-style {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.98);
-  }
-
-  @keyframes commandIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.98);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
   }
 
   @media (max-width: 32rem) {
@@ -10368,27 +10362,40 @@ ren-sheet {
   &::backdrop {
     background-color: rgb(0 0 0 / 0.5);
     backdrop-filter: blur(4px);
-    animation: backdropIn var(--duration-overlay) var(--ease-enter);
+    animation: ren-command-backdrop-in var(--duration-overlay) var(--ease-enter);
 
     @starting-style {
       background-color: rgb(0 0 0 / 0);
       backdrop-filter: blur(0);
     }
 
-    @keyframes backdropIn {
-      from {
-        background-color: rgb(0 0 0 / 0);
-        backdrop-filter: blur(0);
-      }
-      to {
-        background-color: rgb(0 0 0 / 0.5);
-        backdrop-filter: blur(4px);
-      }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       animation: none;
     }
+  }
+}
+
+@keyframes ren-command-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes ren-command-backdrop-in {
+  from {
+    background-color: rgb(0 0 0 / 0);
+    backdrop-filter: blur(0);
+  }
+
+  to {
+    background-color: rgb(0 0 0 / 0.5);
+    backdrop-filter: blur(4px);
   }
 }
 
@@ -12105,13 +12112,14 @@ ren-table[data-loading] {
   40%           { transform: translateY(-4px); opacity: 1; }
 }
 
+@keyframes ren-ai-dot-fade {
+  0%, 80%, 100% { opacity: 0.3; }
+  40%           { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ren-ai-typing-dots span {
     animation: ren-ai-dot-fade 1.4s ease-in-out infinite;
-  }
-  @keyframes ren-ai-dot-fade {
-    0%, 80%, 100% { opacity: 0.3; }
-    40%           { opacity: 1; }
   }
 }
 

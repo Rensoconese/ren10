@@ -114,6 +114,22 @@ const workflows = Object.fromEntries(
   ['ci.yml', 'release.yml', 'audit.yml'].map((file) => [file, yaml.load(read(`.github/workflows/${file}`))])
 );
 for (const error of validateWorkflowPolicy(workflows, requiredPackageCommands)) requirePolicy(false, error);
+for (const [filename, workflow] of Object.entries(workflows)) {
+  const nodeVersions = Object.values(workflow.jobs).flatMap((job) => job.steps || [])
+    .filter((step) => step.uses?.startsWith('actions/setup-node@'))
+    .map((step) => String(step.with?.['node-version']));
+  requirePolicy(nodeVersions.length > 0, `${filename} must configure Node.js`);
+  requirePolicy(nodeVersions.every((version) => version === '22'), `${filename} must use Node.js 22`);
+}
+const releaseRuns = workflows['release.yml'].jobs.publish.steps.map((step) => step.run).filter(Boolean);
+for (const command of [
+  'npm publish --dry-run',
+  'npm publish --workspace @ren10/astro --dry-run',
+  'npm publish --provenance --access public',
+  'npm publish --workspace @ren10/astro --provenance --access public',
+]) {
+  requirePolicy(releaseRuns.includes(command), `release workflow must run: ${command}`);
+}
 const conditionalFixture = structuredClone(workflows);
 conditionalFixture['ci.yml'].jobs.package.steps
   .find((step) => step.run === 'npm run check:budgets').if = 'false';

@@ -2,7 +2,7 @@
 
 This is the version-pinned vanilla starter selected by `../../v0.json`.
 It composes a dashboard shell and an accessible settings form with Ren10
-`0.12.0` from the public package CDN. The package dependency is pinned to the
+`0.13.0` from the public package CDN. The package dependency is pinned to the
 same release so v0 can install and inspect the canonical package source.
 
 Run `npm install`, then serve this directory with any static HTTP server and

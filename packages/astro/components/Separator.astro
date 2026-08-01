@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-separator/ren-separator.css';
+
+/**
+ * Separator — generated from RenDS primitives/ren-separator.
+ * Contract: ren10/components/primitives/ren-separator/component.md
+ * Registry key: separator
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<hr class:list={['ren-separator', className]} {...rest} />

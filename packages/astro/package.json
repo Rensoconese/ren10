@@ -1,0 +1,58 @@
+{
+  "name": "@ren10/astro",
+  "version": "0.13.0",
+  "description": "Official Astro integration and generated Light DOM components for RenDS.",
+  "license": "MIT",
+  "author": "Ren",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rensoconese/ren10.git",
+    "directory": "packages/astro"
+  },
+  "homepage": "https://github.com/Rensoconese/ren10#readme",
+  "bugs": "https://github.com/Rensoconese/ren10/issues",
+  "type": "module",
+  "exports": {
+    ".": "./integration.js",
+    "./components": "./components/index.js",
+    "./components/*": "./components/*.astro",
+    "./catalog.json": "./catalog.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "components/",
+    "catalog.json",
+    "integration.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "astro",
+    "astro-integration",
+    "astro-component",
+    "withastro",
+    "design-system",
+    "css",
+    "ui",
+    "a11y",
+    "accessibility",
+    "web-components"
+  ],
+  "peerDependencies": {
+    "astro": ">=7.0.0 <8.0.0",
+    "ren10": "^0.13.0"
+  },
+  "devDependencies": {
+    "ren10": "file:../.."
+  },
+  "sideEffects": [
+    "./components/**/*.astro"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

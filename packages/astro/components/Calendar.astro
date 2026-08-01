@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-calendar/ren-calendar.css';
+
+/**
+ * Calendar — generated from RenDS composites/ren-calendar.
+ * Contract: ren10/components/composites/ren-calendar/component.md
+ * Registry key: calendar
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-calendar class:list={className} {...rest}><slot /></ren-calendar>
+
+<script>
+  import 'ren10/components/composites/ren-calendar/ren-calendar.js';
+</script>

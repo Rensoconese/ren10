@@ -1,0 +1,17 @@
+---
+import 'ren10/components/primitives/ren-spinner/ren-spinner.css';
+
+/**
+ * Spinner — generated from RenDS primitives/ren-spinner.
+ * Contract: ren10/components/primitives/ren-spinner/component.md
+ * Registry key: spinner
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<span class:list={['ren-spinner', className]} {...rest}><slot /></span>

@@ -1,0 +1,21 @@
+---
+import 'ren10/components/composites/ren-popover/ren-popover.css';
+
+/**
+ * Popover — generated from RenDS composites/ren-popover.
+ * Contract: ren10/components/composites/ren-popover/component.md
+ * Registry key: popover
+ */
+export interface Props {
+  class?: string;
+  [attribute: string]: unknown;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<ren-popover class:list={className} {...rest}><slot /></ren-popover>
+
+<script>
+  import 'ren10/components/composites/ren-popover/ren-popover.js';
+</script>
