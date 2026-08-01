@@ -128,7 +128,13 @@ for (const command of [
   'npm publish --provenance --access public',
   'npm publish --workspace @ren10/astro --provenance --access public',
 ]) {
-  requirePolicy(releaseRuns.includes(command), `release workflow must run: ${command}`);
+  requirePolicy(releaseRuns.some((run) => run.includes(command)), `release workflow must run: ${command}`);
+}
+for (const packageSpec of ['ren10@$VERSION', '@ren10/astro@$VERSION']) {
+  requirePolicy(
+    releaseRuns.some((run) => run.includes(`npm view "${packageSpec}" version`)),
+    `release workflow must skip an already-published ${packageSpec}`,
+  );
 }
 const conditionalFixture = structuredClone(workflows);
 conditionalFixture['ci.yml'].jobs.package.steps

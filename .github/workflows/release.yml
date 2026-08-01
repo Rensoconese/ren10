@@ -115,12 +115,24 @@ jobs:
         run: npm publish --workspace @ren10/astro --dry-run
 
       - name: Publish ren10
-        run: npm publish --provenance --access public
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if npm view "ren10@$VERSION" version >/dev/null 2>&1; then
+            echo "ren10@$VERSION is already published; skipping."
+          else
+            npm publish --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @ren10/astro
-        run: npm publish --workspace @ren10/astro --provenance --access public
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          if npm view "@ren10/astro@$VERSION" version >/dev/null 2>&1; then
+            echo "@ren10/astro@$VERSION is already published; skipping."
+          else
+            npm publish --workspace @ren10/astro --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
