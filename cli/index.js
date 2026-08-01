@@ -1066,16 +1066,23 @@ function resolveComponentGraph(componentNames) {
   const visited = new Set();
   const visiting = new Set();
 
-  const visit = (componentName) => {
+  const visit = (componentName, stylePath = false) => {
     const name = componentName.toLowerCase();
     if (visited.has(name)) return;
-    if (visiting.has(name)) error(`Circular component dependency detected at "${name}".`);
+    // A component may execute another component that, in turn, reuses its CSS
+    // (menu -> context-menu -> menu styles). That strongly connected graph is
+    // installable as long as at least one edge is style-only. Pure runtime
+    // component cycles remain an error.
+    if (visiting.has(name)) {
+      if (stylePath) return;
+      error(`Circular component dependency detected at "${name}".`);
+    }
     const meta = getComponent(name);
     if (!meta) error(`Unknown component dependency "${name}".`);
 
     visiting.add(name);
-    for (const dependency of meta.components || []) visit(dependency);
-    for (const dependency of meta.styles || []) visit(dependency);
+    for (const dependency of meta.components || []) visit(dependency, stylePath);
+    for (const dependency of meta.styles || []) visit(dependency, true);
     visiting.delete(name);
     visited.add(name);
     resolved.push(name);
