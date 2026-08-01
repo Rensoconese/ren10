@@ -1,0 +1,82 @@
+name: Publish retry
+
+on:
+  push:
+    tags:
+      - "publish-v*.*.*"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish-astro:
+    name: Publish @ren10/astro (verified release retry)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm ci
+
+      - name: Confirm the release was already verified
+        run: |
+          VERSION=$(node -p "require('./packages/astro/package.json').version")
+          VERIFIED_SHA=$(git rev-list -n 1 "v$VERSION")
+          git merge-base --is-ancestor "$VERIFIED_SHA" HEAD
+          npm view "ren10@$VERSION" version
+
+      - name: Dry-run publish @ren10/astro
+        run: npm publish --workspace @ren10/astro --dry-run
+
+      - name: Publish @ren10/astro with public diagnostics
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./packages/astro/package.json').version")
+          if npm view "@ren10/astro@$VERSION" version >/dev/null 2>&1; then
+            echo "@ren10/astro@$VERSION is already published; skipping."
+            exit 0
+          fi
+
+          LOG_FILE=$(mktemp)
+          if npm publish --workspace @ren10/astro --provenance --access public >"$LOG_FILE" 2>&1; then
+            cat "$LOG_FILE"
+            exit 0
+          fi
+
+          ERROR_OUTPUT=$(grep -E '^npm (error|ERR!)' "$LOG_FILE" | tail -n 20 || true)
+          if [ -z "$ERROR_OUTPUT" ]; then
+            ERROR_OUTPUT=$(tail -n 20 "$LOG_FILE")
+          fi
+          while IFS= read -r line; do
+            echo "::error::$line"
+          done <<< "$ERROR_OUTPUT"
+          exit 1
+
+      - name: Extract release notes
+        id: release
+        run: |
+          VERSION=$(node -p "require('./packages/astro/package.json').version")
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          awk -v ver="$VERSION" '
+            $0 ~ "^## \\[" ver "\\]" { found=1; next }
+            found && /^## \\[/ { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.release.outputs.tag }}
+          name: ${{ steps.release.outputs.tag }}
+          body_path: release-notes.md
+          draft: false
+          prerelease: false
