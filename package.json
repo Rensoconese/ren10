@@ -180,7 +180,7 @@
     "astro": "^7.1.6",
     "axe-core": "^4.11.3",
     "axe-playwright": "^2.2.2",
-    "eslint": "^9.39.4",
+    "eslint": "^10.8.0",
     "globals": "^15.15.0",
     "js-yaml": "^4.1.2",
     "stylelint": "^17.11.0",
