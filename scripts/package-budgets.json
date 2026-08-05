@@ -5,8 +5,8 @@
   "capturedFrom": "validated ren10@0.13.0 catalog plus the official Astro integration, 53 generated Astro components, Astro starter, AI hints, reference-theme tools, detector support, and release metadata",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 19608309, "allowedDelta": 0, "target": 19608309 },
-    "tarballBytes": { "baseline": 5393836, "allowedDelta": 0, "target": 5393836 },
+    "unpackedBytes": { "baseline": 19610034, "allowedDelta": 0, "target": 19610034 },
+    "tarballBytes": { "baseline": 5394032, "allowedDelta": 0, "target": 5394032 },
     "fullCssBytes": { "baseline": 515264, "allowedDelta": 0, "target": 515264 },
     "minCssBytes": { "baseline": 291512, "allowedDelta": 0, "target": 291512 },
     "knowledgeJsonBytes": { "baseline": 1989844, "allowedDelta": 0, "target": 1989844 },
