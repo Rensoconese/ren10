@@ -484,7 +484,7 @@ export const REGISTRY = {
     dir: 'ren-hover-card',
     description: 'Card that appears on hover/focus',
     files: ['ren-hover-card.css', 'ren-hover-card.js'],
-    utils: ['anchor.js', 'debug.js'],
+    utils: ['anchor.js', 'debug.js', 'id-generator.js'],
     components: [],
     usage: `<ren-hover-card>
   <button>Hover me</button>
@@ -536,7 +536,7 @@ export const REGISTRY = {
     dir: 'ren-calendar',
     description: 'Date picker calendar interface',
     files: ['ren-calendar.css', 'ren-calendar.js'],
-    utils: ['local-date.js', 'i18n.js', 'debug.js'],
+    utils: ['local-date.js', 'i18n.js', 'debug.js', 'id-generator.js'],
     components: [],
     usage: `<ren-calendar value="2026-03-15" aria-label="Choose a date"></ren-calendar>`,
   },
