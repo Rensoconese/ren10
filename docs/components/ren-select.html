@@ -241,31 +241,31 @@
         <p>Click the trigger to open. Use Up/Down to navigate, Enter to select, Escape to close.</p>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <div class="demo-select" id="select-demo">
-              <button type="button" class="demo-select-trigger" aria-haspopup="listbox" aria-expanded="false" aria-controls="select-demo-list">
-                <span data-value-display>Select a country</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            <ren-select id="select-demo" name="country" placeholder="Select a country" style="width: 240px;">
+              <button type="button" class="ren-select-trigger" data-select-trigger aria-label="Country">
+                <span class="ren-select-placeholder">Select a country</span>
+                <span class="ren-select-icon" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span>
               </button>
-              <ul class="demo-select-list" id="select-demo-list" role="listbox" hidden>
-                <li class="demo-select-item" role="option" data-value="ar">Argentina</li>
-                <li class="demo-select-item" role="option" data-value="br">Brazil</li>
-                <li class="demo-select-item" role="option" data-value="cl">Chile</li>
-                <li class="demo-select-item" role="option" data-value="mx">Mexico</li>
-                <li class="demo-select-item" role="option" data-value="us">United States</li>
-              </ul>
-            </div>
+              <div class="ren-select-content" data-select-content role="listbox" popover>
+                <div class="ren-select-item" data-select-item data-value="ar">Argentina</div>
+                <div class="ren-select-item" data-select-item data-value="br">Brazil</div>
+                <div class="ren-select-item" data-select-item data-value="cl">Chile</div>
+                <div class="ren-select-item" data-select-item data-value="mx">Mexico</div>
+                <div class="ren-select-item" data-select-item data-value="us">United States</div>
+              </div>
+            </ren-select>
           </div>
           <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-select name="country" placeholder="Select a country"&gt;
-  &lt;button class="ren-select-trigger"&gt;
-    &lt;span class="ren-select-value"&gt;&lt;/span&gt;
-    &lt;span class="ren-select-icon"&gt;…&lt;/span&gt;
+  &lt;button type="button" class="ren-select-trigger" data-select-trigger aria-label="Country"&gt;
+    &lt;span class="ren-select-placeholder"&gt;Select a country&lt;/span&gt;
+    &lt;span class="ren-select-icon" aria-hidden="true"&gt;&lt;!-- chevron SVG --&gt;&lt;/span&gt;
   &lt;/button&gt;
-  &lt;div class="ren-select-content" popover&gt;
-    &lt;div class="ren-select-item" data-value="ar"&gt;Argentina&lt;/div&gt;
-    &lt;div class="ren-select-item" data-value="br"&gt;Brazil&lt;/div&gt;
-    &lt;div class="ren-select-item" data-value="cl"&gt;Chile&lt;/div&gt;
-    &lt;div class="ren-select-item" data-value="mx"&gt;Mexico&lt;/div&gt;
-    &lt;div class="ren-select-item" data-value="us"&gt;United States&lt;/div&gt;
+  &lt;div class="ren-select-content" data-select-content role="listbox" popover&gt;
+    &lt;div class="ren-select-item" data-select-item data-value="ar"&gt;Argentina&lt;/div&gt;
+    &lt;div class="ren-select-item" data-select-item data-value="br"&gt;Brazil&lt;/div&gt;
+    &lt;div class="ren-select-item" data-select-item data-value="cl"&gt;Chile&lt;/div&gt;
+    &lt;div class="ren-select-item" data-select-item data-value="mx"&gt;Mexico&lt;/div&gt;
+    &lt;div class="ren-select-item" data-select-item data-value="us"&gt;United States&lt;/div&gt;
   &lt;/div&gt;
 &lt;/ren-select&gt;</code></pre>
         </div>
@@ -368,7 +368,7 @@
           <div class="dx-keyrow"><span class="keys"><kbd>Esc</kbd></span><span>Closes the listbox without changing the selection. Focus returns to the trigger.</span></div>
         </div>
         <h3>Labelling</h3>
-        <p>Wrap the Select inside a <a href="ren-field.html" class="ren-link">Form Field</a> so the label, description and error get auto-wired. Or set <code>aria-label</code> directly on the trigger if there's no visible label.</p>
+        <p>The component gives the trigger <code>role="combobox"</code>, and a combobox takes its name from the author, not from its contents — the placeholder text inside the button is <strong>not</strong> an accessible name. Always set <code>aria-label</code> on the trigger, or point <code>aria-labelledby</code> at your own visible label. The demo above uses <code>aria-label="Country"</code>.</p>
         <div class="dx-callout">
           <p><strong>Avoid putting too many items in one Select.</strong> Past ~15, switch to a <a href="ren-combobox.html" class="ren-link">Combobox</a> with search. Typeahead helps but doesn't scale to hundreds.</p>
         </div>
@@ -382,13 +382,13 @@
         <div class="dx-pre" tabindex="0"><code>&lt;ren-field&gt;
   &lt;label&gt;Country&lt;/label&gt;
   &lt;ren-select name="country" placeholder="Select your country"&gt;
-    &lt;button class="ren-select-trigger"&gt;
-      &lt;span class="ren-select-value"&gt;&lt;/span&gt;
-      &lt;span class="ren-select-icon"&gt;…&lt;/span&gt;
+    &lt;button type="button" class="ren-select-trigger" data-select-trigger aria-label="Country"&gt;
+      &lt;span class="ren-select-placeholder"&gt;Select your country&lt;/span&gt;
+      &lt;span class="ren-select-icon" aria-hidden="true"&gt;&lt;!-- chevron SVG --&gt;&lt;/span&gt;
     &lt;/button&gt;
-    &lt;div class="ren-select-content" popover&gt;
-      &lt;div class="ren-select-item" data-value="ar"&gt;Argentina&lt;/div&gt;
-      &lt;div class="ren-select-item" data-value="br"&gt;Brazil&lt;/div&gt;
+    &lt;div class="ren-select-content" data-select-content role="listbox" popover&gt;
+      &lt;div class="ren-select-item" data-select-item data-value="ar"&gt;Argentina&lt;/div&gt;
+      &lt;div class="ren-select-item" data-select-item data-value="br"&gt;Brazil&lt;/div&gt;
     &lt;/div&gt;
   &lt;/ren-select&gt;
 &lt;/ren-field&gt;</code></pre>
@@ -414,69 +414,6 @@
   </div>
 
   <script type="module" src="../../components/composites/ren-select/ren-select.js"></script>
-  <script>
-    // Demo wiring — vanilla, works without the Web Component.
-    document.querySelectorAll('.demo-select').forEach(root => {
-      const trigger = root.querySelector('.demo-select-trigger');
-      const list = root.querySelector('.demo-select-list');
-      const display = root.querySelector('[data-value-display]');
-      if (!trigger || !list) return;
-
-      const items = list.querySelectorAll('.demo-select-item');
-      let highlightIdx = -1;
-
-      const open = () => {
-        list.hidden = false;
-        trigger.setAttribute('aria-expanded', 'true');
-        const selected = list.querySelector('[aria-selected="true"]');
-        highlightIdx = selected ? Array.from(items).indexOf(selected) : 0;
-        highlight(highlightIdx);
-      };
-      const close = () => {
-        list.hidden = true;
-        trigger.setAttribute('aria-expanded', 'false');
-        items.forEach(i => i.removeAttribute('data-highlighted'));
-      };
-      const highlight = (i) => {
-        items.forEach((it, idx) => it.toggleAttribute('data-highlighted', idx === i));
-      };
-      const select = (item) => {
-        items.forEach(i => i.removeAttribute('aria-selected'));
-        item.setAttribute('aria-selected', 'true');
-        if (display) display.textContent = item.textContent.trim();
-        close();
-        trigger.focus();
-      };
-
-      trigger.addEventListener('click', () => list.hidden ? open() : close());
-      items.forEach(item => item.addEventListener('click', () => select(item)));
-
-      trigger.addEventListener('keydown', (e) => {
-        if ((e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') && list.hidden) {
-          e.preventDefault();
-          open();
-        }
-      });
-      list.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { e.preventDefault(); close(); trigger.focus(); }
-        else if (e.key === 'ArrowDown') { e.preventDefault(); highlightIdx = (highlightIdx + 1) % items.length; highlight(highlightIdx); }
-        else if (e.key === 'ArrowUp')   { e.preventDefault(); highlightIdx = (highlightIdx - 1 + items.length) % items.length; highlight(highlightIdx); }
-        else if (e.key === 'Home')      { e.preventDefault(); highlightIdx = 0; highlight(highlightIdx); }
-        else if (e.key === 'End')       { e.preventDefault(); highlightIdx = items.length - 1; highlight(highlightIdx); }
-        else if (e.key === 'Enter')     { e.preventDefault(); if (highlightIdx >= 0) select(items[highlightIdx]); }
-      });
-      list.tabIndex = -1;
-
-      // Click outside closes
-      document.addEventListener('click', (e) => {
-        if (!root.contains(e.target) && !list.hidden) close();
-      });
-
-      // Make sure the list is keyboard reachable when open
-      const observer = new MutationObserver(() => { if (!list.hidden) list.focus(); });
-      observer.observe(list, { attributes: true, attributeFilter: ['hidden'] });
-    });
-  </script>
 
   <script src="../../site/shell.js" defer></script>
 </body>

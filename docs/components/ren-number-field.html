@@ -114,13 +114,20 @@
         <p class="lede">Numeric input with stepper buttons, min / max / step, and clamping. Native <code>&lt;input type=&quot;number&quot;&gt;</code> on steroids.</p>
       </header>
       <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Use Number Field for quantities, prices, ages, durations — anywhere a precise number matters. Renders bigger increment / decrement buttons than the native browser controls and clamps to your min / max.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch;"><label class="ren-field"><span class="ren-field-label">Quantity</span><div style="display: flex; gap: var(--space-1); align-items: center;"><button type="button" class="ren-btn ren-btn-secondary ren-btn-sm" style="width: 32px; height: 32px;">−</button><input class="ren-input" type="number" value="3" min="0" max="99" style="text-align: center; width: 80px;"><button type="button" class="ren-btn ren-btn-secondary ren-btn-sm" style="width: 32px; height: 32px;">+</button></div></label></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-number-field name="qty" value="3" min="0" max="99" step="1"&gt;
-  &lt;label slot="label"&gt;Quantity&lt;/label&gt;
+      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="flex-direction: column; align-items: stretch;"><div class="ren-field" style="max-width: 240px;"><label class="ren-field-label" for="demo-qty">Quantity</label><ren-number-field class="ren-number-field" min="0" max="99" step="1" value="3"><button type="button" class="ren-number-field-decrement" aria-label="Decrease"></button><input class="ren-number-field-input" type="number" id="demo-qty"><button type="button" class="ren-number-field-increment" aria-label="Increase"></button></ren-number-field></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;label class="ren-field-label" for="qty"&gt;Quantity&lt;/label&gt;
+&lt;ren-number-field class="ren-number-field" min="0" max="99" step="1" value="3"&gt;
+  &lt;button type="button" class="ren-number-field-decrement" aria-label="Decrease"&gt;&lt;/button&gt;
+  &lt;input class="ren-number-field-input" type="number" id="qty"&gt;
+  &lt;button type="button" class="ren-number-field-increment" aria-label="Increase"&gt;&lt;/button&gt;
 &lt;/ren-number-field&gt;</code></pre></div></section>
       <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api dx-api-cols-4"><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead><tbody><tr><td><code class="dx-api-name">value</code></td><td><span class="dx-api-type">number</span></td><td><span class="dx-api-default">—</span></td><td>Current value. Submitted with the form.</td></tr><tr><td><code class="dx-api-name">min</code> / <code class="dx-api-name">max</code></td><td><span class="dx-api-type">number</span></td><td><span class="dx-api-default">—</span></td><td>Clamped on input and on stepper press.</td></tr><tr><td><code class="dx-api-name">step</code></td><td><span class="dx-api-type">number</span></td><td><span class="dx-api-default">1</span></td><td>Stepper increment / decrement size.</td></tr></tbody></table></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>The actual control is a real <code>&lt;input type="number"&gt;</code> with native validation and form participation.</li><li>Stepper buttons have <code>aria-label="Increment"</code> / <code>"Decrement"</code> and stay keyboard-reachable.</li><li>Arrow Up / Down on the input also steps by <code>step</code>.</li></ul></section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>The actual control is a real <code>&lt;input type="number"&gt;</code> with native validation and form participation.</li><li>Stepper buttons have <code>aria-label="Increase"</code> / <code>"Decrease"</code> and stay keyboard-reachable. The component fills them in from <code>utils/i18n.js</code> if you leave them off.</li><li>Arrow Up / Down on the input also steps by <code>step</code>.</li></ul></section>
     </main>
   </div>
+
+  <!-- Web Component registration — the demo above is the real component -->
+  <script type="module" src="../../components/composites/ren-number-field/ren-number-field.js"></script>
+
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

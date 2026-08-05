@@ -131,30 +131,27 @@
         <div class="dx-demo">
           <div class="dx-demo-preview" style="position: relative;">
             <div class="demo-target" id="demo-cm-target" data-context="demo-cm-menu" tabindex="0">Right-click anywhere in this box</div>
-            <div class="ren-context-menu" id="demo-cm-menu" popover="manual">
-              <button role="menuitem" class="ren-menu-item">Cut <span class="ren-menu-item-shortcut">⌘X</span></button>
-              <button role="menuitem" class="ren-menu-item">Copy <span class="ren-menu-item-shortcut">⌘C</span></button>
-              <button role="menuitem" class="ren-menu-item">Paste <span class="ren-menu-item-shortcut">⌘V</span></button>
+            <ren-context-menu id="demo-cm-menu">
+              <button type="button" role="menuitem" class="ren-menu-item">Cut <span class="ren-menu-item-shortcut">⌘X</span></button>
+              <button type="button" role="menuitem" class="ren-menu-item">Copy <span class="ren-menu-item-shortcut">⌘C</span></button>
+              <button type="button" role="menuitem" class="ren-menu-item">Paste <span class="ren-menu-item-shortcut">⌘V</span></button>
               <hr class="ren-menu-separator">
-              <button role="menuitem" class="ren-menu-item ren-menu-item-danger">Delete</button>
-            </div>
+              <button type="button" role="menuitem" class="ren-menu-item ren-menu-item-danger">Delete</button>
+            </ren-context-menu>
           </div>
           <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div id="editor-canvas" data-context="editor-menu" tabindex="0"&gt;
   Right-click this area
 &lt;/div&gt;
 
-&lt;div id="editor-menu" class="ren-context-menu" popover="manual"&gt;
-  &lt;button class="ren-menu-item"&gt;Cut&lt;span class="ren-menu-item-shortcut"&gt;⌘X&lt;/span&gt;&lt;/button&gt;
-  &lt;button class="ren-menu-item"&gt;Copy&lt;span class="ren-menu-item-shortcut"&gt;⌘C&lt;/span&gt;&lt;/button&gt;
-  &lt;button class="ren-menu-item"&gt;Paste&lt;span class="ren-menu-item-shortcut"&gt;⌘V&lt;/span&gt;&lt;/button&gt;
+&lt;ren-context-menu id="editor-menu"&gt;
+  &lt;button class="ren-menu-item" role="menuitem"&gt;Cut&lt;span class="ren-menu-item-shortcut"&gt;⌘X&lt;/span&gt;&lt;/button&gt;
+  &lt;button class="ren-menu-item" role="menuitem"&gt;Copy&lt;span class="ren-menu-item-shortcut"&gt;⌘C&lt;/span&gt;&lt;/button&gt;
+  &lt;button class="ren-menu-item" role="menuitem"&gt;Paste&lt;span class="ren-menu-item-shortcut"&gt;⌘V&lt;/span&gt;&lt;/button&gt;
   &lt;hr class="ren-menu-separator"&gt;
-  &lt;button class="ren-menu-item ren-menu-item-danger"&gt;Delete&lt;/button&gt;
-&lt;/div&gt;
+  &lt;button class="ren-menu-item ren-menu-item-danger" role="menuitem"&gt;Delete&lt;/button&gt;
+&lt;/ren-context-menu&gt;
 
-&lt;script type="module"&gt;
-  import { initContextMenu } from './ren-context-menu.js';
-  initContextMenu('editor-menu');
-&lt;/script&gt;</code></pre>
+&lt;script type="module" src="rends/components/composites/ren-context-menu/ren-context-menu.js"&gt;&lt;/script&gt;</code></pre>
         </div>
       </section>
 
@@ -162,13 +159,14 @@
         <p class="dx-kicker">Reference</p>
         <h2>API</h2>
         <p>Visual classes are inherited from <a href="ren-menu.html" class="ren-link">Menu</a> — <code>.ren-menu</code>, <code>.ren-menu-item</code>, <code>.ren-menu-separator</code>, <code>.ren-menu-item-icon</code>, <code>.ren-menu-item-shortcut</code>, <code>.ren-menu-item-danger</code>.</p>
-        <h3>Initializer contract</h3>
+        <h3>Element contract</h3>
+        <p>Loading the module registers <code>&lt;ren-context-menu&gt;</code>, which wires itself up on connect. The imperative entry points <code>initContextMenu(id)</code> / <code>initAllContextMenus()</code> are still exported for menus you build outside the custom element; both share one controller, so never use both on the same menu.</p>
         <table class="dx-api dx-api-cols-4">
           <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
           <tbody>
             <tr><td><code class="dx-api-name">data-context</code></td><td><span class="dx-api-type">string (menu id)</span></td><td><span class="dx-api-default">required</span></td><td>Add to each element that should trigger the context menu.</td></tr>
-            <tr><td><code class="dx-api-name">id</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">required</span></td><td>The popover element id passed to <code>initContextMenu(id)</code>.</td></tr>
-            <tr><td><code class="dx-api-name">popover</code></td><td><span class="dx-api-type">manual</span></td><td><span class="dx-api-default">manual</span></td><td>Uses manual popover mode so the menu stays open after the right-click gesture completes.</td></tr>
+            <tr><td><code class="dx-api-name">id</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">auto</span></td><td>On the <code>&lt;ren-context-menu&gt;</code>. Must match the <code>data-context</code> value of its triggers; generated if omitted.</td></tr>
+            <tr><td><code class="dx-api-name">popover</code></td><td><span class="dx-api-type">manual</span></td><td><span class="dx-api-default">manual</span></td><td>Set by the component, not by you. Manual mode keeps the menu open after the right-click gesture completes.</td></tr>
           </tbody>
         </table>
         <p>For full event and item documentation see the <a href="ren-menu.html#api" class="ren-link">Menu API</a>.</p>
@@ -187,11 +185,9 @@
 
     </main>
   </div>
-  <script type="module">
-    import { initContextMenu } from '../../components/composites/ren-context-menu/ren-context-menu.js';
-
-    initContextMenu('demo-cm-menu');
-  </script>
+  <!-- Web Component registration: importing the module defines
+       <ren-context-menu>, which self-initialises the demo above on connect. -->
+  <script type="module" src="../../components/composites/ren-context-menu/ren-context-menu.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

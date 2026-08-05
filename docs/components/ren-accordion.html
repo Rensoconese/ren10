@@ -13,27 +13,10 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
-    .demo-acc { background: var(--color-surface); border-radius: var(--radius-md); overflow: hidden; }
-    .demo-acc details { border-bottom: 1px solid var(--color-border); }
-    .demo-acc details:last-child { border-bottom: 0; }
-    .demo-acc summary { list-style: none; padding: var(--space-3) var(--space-4); cursor: pointer; font-weight: var(--weight-medium); display: flex; justify-content: space-between; align-items: center; }
-    .demo-acc summary::-webkit-details-marker { display: none; }
-    .demo-acc summary::marker { display: none; content: ''; }
-    .demo-acc summary::after {
-      content: '';
-      width: 16px; height: 16px;
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: contain;
-      border: none;             /* override classless.css base chevron drawn with borders */
-      transform: rotate(0deg);  /* override classless.css base rotate(-45deg) */
-      transition: transform 150ms;
-      flex-shrink: 0;
-    }
-    .demo-acc details[open] summary::after { transform: rotate(180deg); }
-    .demo-acc summary:hover { background: var(--color-fill); }
-    .demo-acc-body { padding: 0 var(--space-4) var(--space-4); color: var(--color-text-secondary); font-size: var(--text-sm); line-height: 1.6; }
+    /* The demo below is a real <ren-accordion>, so its chrome (dividers,
+       chevron, hover fill, expand animation) comes from ren-accordion.css.
+       Only the demo frame width is set here. */
+    .demo-acc-frame { max-width: 520px; }
   </style>
 </head>
 <body>
@@ -149,20 +132,20 @@
         <h2>Demo</h2>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <div class="demo-acc" style="max-width: 520px;">
-              <details open><summary>How does pricing work?</summary><div class="demo-acc-body">We charge per user, per month. The Basic plan is $9; Pro is $29 and removes seat caps. Annual billing saves 20%.</div></details>
-              <details><summary>Can I cancel anytime?</summary><div class="demo-acc-body">Yes — cancel from your billing settings. Your plan stays active until the end of the current period; we don't pro-rate refunds.</div></details>
-              <details><summary>Do you offer a free trial?</summary><div class="demo-acc-body">14 days, no credit card. After the trial you'll be downgraded to the free tier unless you pick a plan.</div></details>
-            </div>
+            <ren-accordion class="demo-acc-frame" type="single">
+              <details open><summary class="ren-accordion-trigger">How does pricing work?</summary><div class="ren-accordion-content">We charge per user, per month. The Basic plan is $9; Pro is $29 and removes seat caps. Annual billing saves 20%.</div></details>
+              <details><summary class="ren-accordion-trigger">Can I cancel anytime?</summary><div class="ren-accordion-content">Yes — cancel from your billing settings. Your plan stays active until the end of the current period; we don't pro-rate refunds.</div></details>
+              <details><summary class="ren-accordion-trigger">Do you offer a free trial?</summary><div class="ren-accordion-content">14 days, no credit card. After the trial you'll be downgraded to the free tier unless you pick a plan.</div></details>
+            </ren-accordion>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-accordion&gt;
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-accordion type="single"&gt;
   &lt;details open&gt;
-    &lt;summary&gt;How does pricing work?&lt;/summary&gt;
-    &lt;p&gt;We charge per user, per month…&lt;/p&gt;
+    &lt;summary class="ren-accordion-trigger"&gt;How does pricing work?&lt;/summary&gt;
+    &lt;div class="ren-accordion-content"&gt;We charge per user, per month…&lt;/div&gt;
   &lt;/details&gt;
   &lt;details&gt;
-    &lt;summary&gt;Can I cancel anytime?&lt;/summary&gt;
-    &lt;p&gt;Yes — cancel from your billing settings…&lt;/p&gt;
+    &lt;summary class="ren-accordion-trigger"&gt;Can I cancel anytime?&lt;/summary&gt;
+    &lt;div class="ren-accordion-content"&gt;Yes — cancel from your billing settings…&lt;/div&gt;
   &lt;/details&gt;
 &lt;/ren-accordion&gt;</code></pre>
         </div>
@@ -176,13 +159,24 @@
           <tbody>
             <tr><td><code class="dx-api-name">.ren-accordion</code></td><td>Stack container. Borders the group; visually links the items.</td></tr>
             <tr><td><code class="dx-api-name">.ren-accordion-item</code></td><td>Optional class on each <code>&lt;details&gt;</code>. Useful when accordions live without the wrapper.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-accordion-trigger</code></td><td>On the <code>&lt;summary&gt;</code>. Draws the row, the chevron, and the focus ring.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-accordion-content</code></td><td>On the panel <code>&lt;div&gt;</code> inside each <code>&lt;details&gt;</code>. Owns the expand / collapse animation.</td></tr>
           </tbody>
         </table>
         <h3>Web Component attributes</h3>
         <table class="dx-api dx-api-cols-4">
           <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">single</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>If present, opening one item closes the others (mutually exclusive mode).</td></tr>
+            <tr><td><code class="dx-api-name">type</code></td><td><span class="dx-api-type">"single" | "multiple"</span></td><td><span class="dx-api-default">"single"</span></td><td>In <code>single</code> mode opening one item closes the others (mutually exclusive). <code>multiple</code> lets any number stay open.</td></tr>
+            <tr><td><code class="dx-api-name">collapsible</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">absent</span></td><td>Single mode only. If present, the open item can be closed, leaving all items collapsed.</td></tr>
+            <tr><td><code class="dx-api-name">default-value</code></td><td><span class="dx-api-type">string (indices)</span></td><td><span class="dx-api-default">—</span></td><td>Comma-separated item indices to open on init, e.g. <code>"0,2"</code>.</td></tr>
+          </tbody>
+        </table>
+        <h3>Events</h3>
+        <table class="dx-api">
+          <thead><tr><th>Event</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">ren-accordion-change</code></td><td>An item opened or closed. <code>{ item, isOpen, index }</code>.</td></tr>
           </tbody>
         </table>
       </section>
@@ -200,6 +194,9 @@
 
     </main>
   </div>
+  <!-- Web Component registration: the demo above is a real <ren-accordion>,
+       so exclusive mode and ren-accordion-change come from the component. -->
+  <script type="module" src="../../components/composites/ren-accordion/ren-accordion.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

@@ -114,19 +114,105 @@
         <p class="lede">Searchable command launcher (⌘K). Fuzzy matching, keyboard-first, grouped by category. The fastest way for power users to do anything in the app.</p>
       </header>
       <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Command palettes turn your app into a keyboard-first surface. Bind <kbd>⌘</kbd>+<kbd>K</kbd> globally and let users type to find any action — navigation, settings, recently-used items.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview"><button class="ren-btn ren-btn-secondary" type="button">Press <kbd>⌘</kbd>+<kbd>K</kbd> to open</button></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-command id="cmd"&gt;
-  &lt;input slot="input" placeholder="Type a command…"&gt;
-  &lt;ren-command-group label="Recent"&gt;
-    &lt;ren-command-item value="open-project"&gt;Open project…&lt;/ren-command-item&gt;
-  &lt;/ren-command-group&gt;
-  &lt;ren-command-group label="Settings"&gt;
-    &lt;ren-command-item value="theme"&gt;Toggle theme&lt;/ren-command-item&gt;
-  &lt;/ren-command-group&gt;
-&lt;/ren-command&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-command</code></td><td>The dialog wrapper. Opens centered, dimmed backdrop.</td></tr><tr><td><code class="dx-api-name">.ren-command-input</code></td><td>The search input.</td></tr><tr><td><code class="dx-api-name">.ren-command-list</code></td><td>The filtered results.</td></tr><tr><td><code class="dx-api-name">.ren-command-group</code> / <code class="dx-api-name">-group-label</code></td><td>Optional grouping of commands.</td></tr><tr><td><code class="dx-api-name">.ren-command-item</code></td><td>One command. <code>data-value</code> identifies it; <code>data-keywords</code> adds extra matching terms.</td></tr></tbody></table></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Implements the WAI-ARIA Combobox + Listbox pattern.</li><li>Up / Down navigate, Enter runs the command, Esc closes.</li><li>Always include keyboard fallbacks for users who can't reach the ⌘K shortcut — every command should also be reachable from a menu.</li></ul></section>
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Press <kbd>Ctrl</kbd>+<kbd>K</kbd> — the palette's default global shortcut — or use the button, then type to filter.</p>
+        <div class="dx-demo">
+          <div class="dx-demo-preview">
+            <button class="ren-btn ren-btn-secondary" type="button" id="demo-command-open">Open command palette</button>
+            <ren-command id="demo-command">
+              <dialog class="ren-command" aria-label="Command palette">
+                <div class="ren-command-input-wrapper">
+                  <input class="ren-command-input" type="text" placeholder="Type a command…" aria-label="Search commands">
+                  <kbd class="ren-command-kbd">esc</kbd>
+                </div>
+                <div class="ren-command-list">
+                  <div class="ren-command-group">
+                    <div class="ren-command-group-heading">Navigation</div>
+                    <button class="ren-command-item" type="button" data-value="go-projects" data-keywords="projects workspace">
+                      <span class="ren-command-item-content"><span class="ren-command-item-title">Go to projects</span><span class="ren-command-item-description">Every project you can access</span></span>
+                      <span class="ren-command-item-shortcut"><kbd>G</kbd> <kbd>P</kbd></span>
+                    </button>
+                    <button class="ren-command-item" type="button" data-value="go-settings" data-keywords="settings preferences">
+                      <span class="ren-command-item-content"><span class="ren-command-item-title">Go to settings</span><span class="ren-command-item-description">Account, billing, and members</span></span>
+                      <span class="ren-command-item-shortcut"><kbd>G</kbd> <kbd>S</kbd></span>
+                    </button>
+                  </div>
+                  <div class="ren-command-group">
+                    <div class="ren-command-group-heading">Actions</div>
+                    <button class="ren-command-item" type="button" data-value="new-project" data-keywords="create add">
+                      <span class="ren-command-item-content"><span class="ren-command-item-title">New project</span><span class="ren-command-item-description">Start from a blank workspace</span></span>
+                      <span class="ren-command-item-shortcut"><kbd>⌘</kbd> <kbd>N</kbd></span>
+                    </button>
+                    <button class="ren-command-item" type="button" data-value="toggle-theme" data-keywords="dark light appearance">
+                      <span class="ren-command-item-content"><span class="ren-command-item-title">Toggle theme</span><span class="ren-command-item-description">Switch between light and dark</span></span>
+                    </button>
+                  </div>
+                </div>
+                <div class="ren-command-empty" hidden>No commands found</div>
+                <div class="ren-command-footer">
+                  <span class="ren-command-footer-hint"><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+                  <span class="ren-command-footer-hint"><kbd>↵</kbd> run</span>
+                  <span class="ren-command-footer-hint"><kbd>esc</kbd> close</span>
+                </div>
+              </dialog>
+            </ren-command>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-command id="cmd"&gt;
+  &lt;dialog class="ren-command" aria-label="Command palette"&gt;
+    &lt;div class="ren-command-input-wrapper"&gt;
+      &lt;input class="ren-command-input" type="text" placeholder="Type a command…" aria-label="Search commands"&gt;
+      &lt;kbd class="ren-command-kbd"&gt;esc&lt;/kbd&gt;
+    &lt;/div&gt;
+
+    &lt;div class="ren-command-list"&gt;
+      &lt;div class="ren-command-group"&gt;
+        &lt;div class="ren-command-group-heading"&gt;Navigation&lt;/div&gt;
+        &lt;button class="ren-command-item" type="button" data-value="go-projects" data-keywords="projects workspace"&gt;
+          &lt;span class="ren-command-item-content"&gt;
+            &lt;span class="ren-command-item-title"&gt;Go to projects&lt;/span&gt;
+            &lt;span class="ren-command-item-description"&gt;Every project you can access&lt;/span&gt;
+          &lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div class="ren-command-empty" hidden&gt;No commands found&lt;/div&gt;
+  &lt;/dialog&gt;
+&lt;/ren-command&gt;
+
+&lt;script type="module" src="rends/components/patterns/ren-command/ren-command.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  // ⌘K / Ctrl+K is built in; a visible trigger is your job.
+  openBtn.addEventListener('click', () =&gt; document.getElementById('cmd').open());
+&lt;/script&gt;</code></pre>
+        </div>
+      </section>
+      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-command</code></td><td>On the <code>&lt;dialog&gt;</code> inside <code>&lt;ren-command&gt;</code>. Opens centered via <code>showModal()</code>, with a dimmed backdrop.</td></tr><tr><td><code class="dx-api-name">.ren-command-input</code></td><td>The search input. A real <code>&lt;input type="text"&gt;</code> with an accessible name.</td></tr><tr><td><code class="dx-api-name">.ren-command-list</code></td><td>The scrolling results container.</td></tr><tr><td><code class="dx-api-name">.ren-command-group</code> / <code class="dx-api-name">-group-heading</code></td><td>Optional grouping. The component sets <code>data-empty</code> on a group whose items are all filtered out.</td></tr><tr><td><code class="dx-api-name">.ren-command-item</code></td><td>One command, as a <code>&lt;button&gt;</code>. <code>data-value</code> identifies it; <code>data-keywords</code> adds extra matching terms; <code>data-action</code> names a handler registered with <code>registerAction()</code>.</td></tr><tr><td><code class="dx-api-name">.ren-command-empty</code></td><td>Shown when the filter matches nothing. Start it <code>hidden</code>.</td></tr></tbody></table>
+        <h3>Attributes, methods and events</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Name</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">data-shortcut</code></td><td><span class="dx-api-type">"ctrl+k" | "meta+k" | …</span></td><td><span class="dx-api-default">"ctrl+k"</span></td><td>Global key combo that opens the palette. Bind only one.</td></tr>
+            <tr><td><code class="dx-api-name">open()</code> / <code class="dx-api-name">close()</code></td><td><span class="dx-api-type">method</span></td><td><span class="dx-api-default">—</span></td><td>Open or close the palette from your own trigger.</td></tr>
+            <tr><td><code class="dx-api-name">registerAction(id, fn)</code></td><td><span class="dx-api-type">method</span></td><td><span class="dx-api-default">—</span></td><td>Runs <code>fn</code> when an item with a matching <code>data-action</code> is selected.</td></tr>
+            <tr><td><code class="dx-api-name">ren-command-select</code></td><td><span class="dx-api-type">event</span></td><td><span class="dx-api-default">—</span></td><td>An item was chosen. <code>{ item, value, action }</code>.</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Rendered as a real <code>&lt;dialog&gt;</code> opened with <code>showModal()</code>, so the focus trap, <kbd>Esc</kbd>, and the inert background all come from the browser.</li><li>Up / Down navigate, Enter runs the command, Esc closes. The component injects a <code>role="status"</code> live region that announces the result count on every keystroke.</li><li>Always include keyboard fallbacks for users who can't reach the ⌘K shortcut — every command should also be reachable from a visible trigger or a menu.</li></ul></section>
     </main>
   </div>
+  <!-- Web Component registration: the demo above is a real <ren-command>, so
+       the ⌘K/Ctrl+K listener, filtering and highlight come from the component. -->
+  <script type="module" src="../../components/patterns/ren-command/ren-command.js"></script>
+  <script>
+    // The global shortcut is built in; a visible trigger is the consumer's job.
+    document.getElementById('demo-command-open')?.addEventListener('click', () => {
+      document.getElementById('demo-command')?.open();
+    });
+  </script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

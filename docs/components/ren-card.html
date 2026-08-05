@@ -274,7 +274,7 @@
                   <p class="ren-card-description">Description below</p>
                 </div>
                 <div class="ren-card-body">
-                  <p style="margin: 0; opacity: 0.35; font-size: var(--text-sm);">…body…</p>
+                  <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">…body…</p>
                 </div>
               </div>
             </div>
@@ -289,7 +289,7 @@
             <div class="dx-anatomy-part-spec" aria-hidden="true">
               <div class="ren-card" style="width: 100%;">
                 <div class="ren-card-header">
-                  <p class="ren-card-description" style="opacity: 0.35;">…header…</p>
+                  <p class="ren-card-description">…header…</p>
                 </div>
                 <div class="ren-card-body">
                   <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">Main content goes here.</p>
@@ -307,7 +307,7 @@
             <div class="dx-anatomy-part-spec" aria-hidden="true">
               <div class="ren-card" style="width: 100%;">
                 <div class="ren-card-body">
-                  <p style="margin: 0; opacity: 0.35; font-size: var(--text-sm);">…body…</p>
+                  <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-muted);">…body…</p>
                 </div>
                 <div class="ren-card-footer">
                   <button type="button" class="ren-btn ren-btn-secondary ren-btn-sm" tabindex="-1">Cancel</button>
@@ -398,9 +398,12 @@
               <div class="ren-card-body"><strong>Interactive</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Hover lifts, click feedback</p></div>
             </div>
             <div class="ren-card ren-card-selectable" tabindex="0">
-              <div class="ren-card-body"><strong>Selectable</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Click to set <code>aria-selected</code></p></div>
+              <div class="ren-card-body"><strong>Selectable</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Unselected surface</p></div>
             </div>
-            <div class="ren-card ren-card-selectable" tabindex="0" aria-selected="true">
+            <!-- These two swatches are visual samples, not controls: the state
+                 hook is data-selected. aria-selected would be a prohibited
+                 attribute on a role-less <div>. -->
+            <div class="ren-card ren-card-selectable" tabindex="0" data-selected>
               <div class="ren-card-body"><strong>Selectable (selected)</strong><p style="margin: var(--space-1) 0 0; font-size: var(--text-xs); color: var(--color-text-muted);">Accent border + ring</p></div>
             </div>
           </div>
@@ -464,7 +467,7 @@
         <thead><tr><th>Class / attribute</th><th>Effect</th></tr></thead>
         <tbody>
           <tr><td><code class="dx-api-name">.ren-card-interactive</code></td><td>Hover lift + shadow + border emphasis. Adds <code>cursor: pointer</code>, focus ring on <code>:focus-visible</code>. Wrap in or apply to a focusable element (<code>&lt;a&gt;</code>, <code>&lt;button&gt;</code>, or <code>tabindex="0"</code>).</td></tr>
-          <tr><td><code class="dx-api-name">.ren-card-selectable</code></td><td>Hover swaps border to accent. Combine with <code>aria-selected="true"</code> or <code>data-selected</code> for the chosen state.</td></tr>
+          <tr><td><code class="dx-api-name">.ren-card-selectable</code></td><td>Hover swaps border to accent. The chosen state comes from whichever hook the card's role allows: <code>aria-pressed="true"</code>, <code>aria-checked="true"</code>, <code>aria-selected="true"</code>, a checked <code>&lt;input&gt;</code> inside it, or <code>data-selected</code>.</td></tr>
           <tr><td><code class="dx-api-name">[data-status="success|warning|danger|info"]</code></td><td>Adds a 3px accent border on top in the matching status color. Stacks with any visual variant.</td></tr>
         </tbody>
       </table>
@@ -508,7 +511,8 @@
       <ul>
         <li>For exclusive choice (one of N), wrap each card in a <code>&lt;label&gt;</code> with a hidden <code>&lt;input type="radio"&gt;</code>, or use <code>role="radio"</code> + <code>aria-checked</code>.</li>
         <li>For multi-select, use <code>role="checkbox"</code> + <code>aria-checked</code>, or a hidden <code>&lt;input type="checkbox"&gt;</code> in a label.</li>
-        <li>Set <code>aria-selected="true"</code> on the chosen card so screen readers announce "selected". The CSS targets both <code>aria-selected</code> and <code>data-selected</code> for the accent ring.</li>
+        <li>Announce the state with the attribute the card's role actually allows: <code>aria-checked</code> with <code>role="radio"</code> / <code>role="checkbox"</code>, <code>aria-pressed</code> on a <code>&lt;button&gt;</code>, or nothing at all when a real <code>&lt;input&gt;</code> inside the <code>&lt;label&gt;</code> already carries it. <code>aria-selected</code> is only legal on <code>option</code>, <code>tab</code>, <code>row</code>, <code>gridcell</code>, and <code>treeitem</code> — on a bare <code>&lt;div&gt;</code> or <code>&lt;label&gt;</code> it is a prohibited attribute and fails <code>aria-allowed-attr</code>.</li>
+        <li>The accent ring styles off any of them: <code>[aria-selected="true"]</code>, <code>[aria-pressed="true"]</code>, <code>[aria-checked="true"]</code>, <code>:has(:checked)</code>, or the purely decorative <code>[data-selected]</code>.</li>
       </ul>
 
       <h3>Reduced motion</h3>
@@ -553,7 +557,7 @@
               <p style="margin: var(--space-1) 0 0; font-size: var(--text-sm); color: var(--color-text-muted);">$0/mo · 3 projects</p>
             </div>
           </label>
-          <label class="ren-card ren-card-selectable" style="cursor: pointer; display: block;" aria-selected="true">
+          <label class="ren-card ren-card-selectable" style="cursor: pointer; display: block;">
             <input type="radio" name="plan-demo" style="position: absolute; opacity: 0; pointer-events: none;" checked>
             <div class="ren-card-body">
               <strong>Pro</strong>

@@ -13,7 +13,7 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
-    input[type="range"].ren-slider { width: 100%; }
+    .dx-demo-preview > .ren-slider { width: 100%; }
   </style>
 </head>
 <body>
@@ -126,19 +126,25 @@
         <h2>Demo</h2>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <label style="display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-sm);">
-              <span style="display: flex; justify-content: space-between;"><span>Volume</span><output id="vol-out">60</output></span>
-              <input type="range" class="ren-slider" min="0" max="100" value="60" oninput="document.getElementById('vol-out').value = this.value">
-            </label>
-            <label style="display: flex; flex-direction: column; gap: var(--space-1); font-size: var(--text-sm);">
-              <span style="display: flex; justify-content: space-between;"><span>Brightness</span><output id="br-out">80%</output></span>
-              <input type="range" class="ren-slider" min="0" max="100" value="80" oninput="document.getElementById('br-out').value = this.value + '%'">
-            </label>
+            <ren-slider class="ren-slider" show-value>
+              <label class="ren-slider-label" for="slider-demo-volume">Volume</label>
+              <div class="ren-slider-track">
+                <input id="slider-demo-volume" type="range" min="0" max="100" step="1" value="60">
+              </div>
+            </ren-slider>
+            <ren-slider class="ren-slider" show-value unit="%">
+              <label class="ren-slider-label" for="slider-demo-brightness">Brightness</label>
+              <div class="ren-slider-track">
+                <input id="slider-demo-brightness" type="range" min="0" max="100" step="1" value="80">
+              </div>
+            </ren-slider>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;label&gt;
-  &lt;span&gt;Volume&lt;/span&gt;
-  &lt;input type="range" class="ren-slider" min="0" max="100" value="60"&gt;
-&lt;/label&gt;</code></pre>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-slider class="ren-slider" show-value&gt;
+  &lt;label class="ren-slider-label" for="volume"&gt;Volume&lt;/label&gt;
+  &lt;div class="ren-slider-track"&gt;
+    &lt;input id="volume" type="range" min="0" max="100" step="1" value="60"&gt;
+  &lt;/div&gt;
+&lt;/ren-slider&gt;</code></pre>
         </div>
       </section>
 
@@ -148,13 +154,22 @@
         <table class="dx-api">
           <thead><tr><th>Class / attribute</th><th>Effect</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">.ren-slider</code></td><td>Apply on a native <code>&lt;input type="range"&gt;</code>. Styles the track and thumb consistently across browsers.</td></tr>
-            <tr><td><code class="dx-api-name">min</code> / <code class="dx-api-name">max</code> / <code class="dx-api-name">step</code></td><td>Native attributes. <code>step</code> lets you snap to discrete values (e.g. <code>step="5"</code>).</td></tr>
-            <tr><td><code class="dx-api-name">value</code></td><td>Current value. Read it via <code>input.valueAsNumber</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-slider</code></td><td>The stacked wrapper (label, track, marks). Goes on the <code>&lt;ren-slider&gt;</code> host — never on the input.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-slider-track</code></td><td>The element wrapping the native <code>&lt;input type="range"&gt;</code>. This is what styles the rail, the fill and the thumb.</td></tr>
+            <tr><td><code class="dx-api-name">show-value</code> / <code class="dx-api-name">unit</code></td><td>Host attributes. <code>show-value</code> renders the <code>.ren-slider-value</code> readout the component keeps in sync; <code>unit</code> suffixes it (<code>unit="%"</code>).</td></tr>
+            <tr><td><code class="dx-api-name">min</code> / <code class="dx-api-name">max</code> / <code class="dx-api-name">step</code></td><td>Native attributes on the input. <code>step</code> lets you snap to discrete values (e.g. <code>step="5"</code>).</td></tr>
+            <tr><td><code class="dx-api-name">value</code></td><td>Current value. Read it from the host (<code>slider.value</code>) or the input (<code>input.valueAsNumber</code>); the host fires <code>ren-slider-input</code> and <code>ren-slider-change</code>.</td></tr>
           </tbody>
         </table>
         <h3>Dual-handle (range)</h3>
-        <p>For "from–to" ranges, use <code>&lt;ren-slider type="range"&gt;</code> — the Web Component renders two thumbs and exposes <code>value</code> as a tuple.</p>
+        <p>For "from–to" ranges, put two real inputs inside a <code>.ren-slider-range</code> rail. The host keeps them from crossing and exposes <code>value</code> as a two-number tuple, in input order.</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-slider class="ren-slider" show-value&gt;
+  &lt;div class="ren-slider-range"&gt;
+    &lt;div class="ren-slider-track-input"&gt;&lt;/div&gt;
+    &lt;input type="range" min="0" max="100" step="5" value="20" aria-label="Minimum price"&gt;
+    &lt;input type="range" min="0" max="100" step="5" value="80" aria-label="Maximum price"&gt;
+  &lt;/div&gt;
+&lt;/ren-slider&gt;</code></div>
       </section>
 
       <section class="dx-section" id="a11y">
@@ -164,7 +179,7 @@
           <li>Native <code>&lt;input type="range"&gt;</code> already announces "slider, value 60 of 100".</li>
           <li>Keyboard works out of the box: arrow keys step ±1, Page Up / Page Down step ±10, Home / End jump to min / max.</li>
           <li>Always pair with a <code>&lt;label&gt;</code> describing what's being adjusted.</li>
-          <li>Show the current value visibly (<code>&lt;output&gt;</code> bound to the slider's <code>id</code>) — sliders without a numeric readout are hard to use precisely.</li>
+          <li>Show the current value visibly — add <code>show-value</code> on the host and the component keeps the readout in sync. Sliders without a numeric readout are hard to use precisely.</li>
         </ul>
       </section>
 

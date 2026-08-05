@@ -13,6 +13,9 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: visible; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-8) var(--space-5); display: flex; gap: var(--space-3); align-items: center; justify-content: center; }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+    /* Until the module upgrades the host, the card has no popover attribute and
+       would paint over the demo for a frame. */
+    ren-hover-card:not(:defined) { display: none; }
   </style>
 </head>
 <body>
@@ -126,20 +129,47 @@
       <section class="dx-section" id="demo">
         <p class="dx-kicker">Live</p>
         <h2>Demo</h2>
-        <p>The component activates after a 700 ms hover delay (longer than Tooltip's 300 ms — gives the user a beat to keep moving past the trigger if they don't actually want the preview).</p>
+        <p>The component waits 200 ms of hover before showing, and keeps the card up for 300 ms after the cursor leaves so it can travel into the card. Two mentions share the sentence on purpose: each card must open against its own link, never against the last trigger on the page.</p>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <p style="font-size: var(--text-sm); margin: 0;">Hover the link to see the user preview: <a href="#" class="ren-link" data-hover="@ren">@ren</a> shipped this design system.</p>
+            <p style="font-size: var(--text-sm); margin: 0;">Hover either mention: <a href="#" class="ren-link" id="hover-card-demo-ren-trigger">@ren</a> and <a href="#" class="ren-link" id="hover-card-demo-lu-trigger">@lu</a> shipped this design system.</p>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-hover-card&gt;
-  &lt;a slot="trigger" href="/users/ren"&gt;@ren&lt;/a&gt;
-  &lt;div slot="content"&gt;
-    &lt;img src="/avatars/ren.jpg" class="ren-avatar"&gt;
-    &lt;h3&gt;Ren Soconese&lt;/h3&gt;
-    &lt;p&gt;Designer · Buenos Aires&lt;/p&gt;
-    &lt;p class="muted"&gt;Joined March 2024 · 142 projects&lt;/p&gt;
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;p&gt;… &lt;a href="/users/ren" id="ren-mention"&gt;@ren&lt;/a&gt; shipped this.&lt;/p&gt;
+
+&lt;ren-hover-card data-hover-trigger="#ren-mention"&gt;
+  &lt;div class="ren-hover-card" role="tooltip"&gt;
+    &lt;div class="ren-hover-card-header"&gt;
+      &lt;h3&gt;Ren Soconese&lt;/h3&gt;
+      &lt;p&gt;Designer · Buenos Aires&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div class="ren-hover-card-body"&gt;Joined March 2024 · 142 projects&lt;/div&gt;
   &lt;/div&gt;
 &lt;/ren-hover-card&gt;</code></pre>
+
+          <!-- Live demo cards. They sit outside the paragraph because a
+               block-level card inside <p> would be re-parented by the HTML
+               parser; data-hover-trigger points each card at its own link. -->
+          <ren-hover-card data-hover-trigger="#hover-card-demo-ren-trigger">
+            <div class="ren-hover-card" role="tooltip" id="hover-card-demo-ren">
+              <div class="ren-hover-card-header">
+                <span class="ren-avatar ren-avatar-md">RS</span>
+                <h3>Ren Soconese</h3>
+                <p>Designer · Buenos Aires</p>
+              </div>
+              <div class="ren-hover-card-body">Joined March 2024 · 142 projects</div>
+            </div>
+          </ren-hover-card>
+
+          <ren-hover-card data-hover-trigger="#hover-card-demo-lu-trigger">
+            <div class="ren-hover-card" role="tooltip" id="hover-card-demo-lu">
+              <div class="ren-hover-card-header">
+                <span class="ren-avatar ren-avatar-md">LM</span>
+                <h3>Lu Martín</h3>
+                <p>Engineer · Rosario</p>
+              </div>
+              <div class="ren-hover-card-body">Joined July 2024 · 38 projects</div>
+            </div>
+          </ren-hover-card>
         </div>
       </section>
 
@@ -149,18 +179,21 @@
         <table class="dx-api">
           <thead><tr><th>Class</th><th>Effect</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">.ren-hover-card</code></td><td>The floating panel. Card-like surface with shadow and padding.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-hover-card</code></td><td>The floating panel, written as a real element inside <code>&lt;ren-hover-card&gt;</code>. Card-like surface with shadow and padding.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-hover-card-header</code> / <code class="dx-api-name">-body</code> / <code class="dx-api-name">-footer</code></td><td>The three content slots. The header holds the accessible heading (<code>&lt;h3&gt;</code> or <code>&lt;h4&gt;</code>).</td></tr>
+            <tr><td><code class="dx-api-name">.ren-hover-card-sm</code> / <code class="dx-api-name">-lg</code></td><td>Narrower / wider panel.</td></tr>
           </tbody>
         </table>
         <h3>Web Component attributes</h3>
         <table class="dx-api dx-api-cols-4">
           <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">700</span></td><td>Hover dwell before showing.</td></tr>
-            <tr><td><code class="dx-api-name">close-delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">300</span></td><td>Time after the cursor leaves both trigger and card before closing — gives the user a moment to move into the card.</td></tr>
-            <tr><td><code class="dx-api-name">placement</code></td><td><span class="dx-api-type">"top" | "right" | "bottom" | "left"</span></td><td><span class="dx-api-default">"bottom"</span></td><td>Side relative to the trigger.</td></tr>
+            <tr><td><code class="dx-api-name">show-delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">200</span></td><td>Hover dwell before showing. Keyboard focus shows the card immediately.</td></tr>
+            <tr><td><code class="dx-api-name">hide-delay</code></td><td><span class="dx-api-type">number (ms)</span></td><td><span class="dx-api-default">300</span></td><td>Time after the cursor leaves both trigger and card before closing — gives the user a moment to move into the card.</td></tr>
+            <tr><td><code class="dx-api-name">data-hover-trigger</code></td><td><span class="dx-api-type">CSS selector</span></td><td><span class="dx-api-default">previous sibling</span></td><td>Points the card at a remote trigger. Without it the component uses the element immediately before the host.</td></tr>
           </tbody>
         </table>
+        <p>Placement comes from CSS anchor positioning (<code>position-area: bottom span-all</code> with a flip fallback), not from an attribute. The anchor name is generated per instance, so several cards on one page each track their own trigger.</p>
       </section>
 
       <section class="dx-section" id="a11y">
@@ -168,9 +201,10 @@
         <h2>Accessibility</h2>
         <ul>
           <li>Trigger must be a real link or button. Focusing it via Tab also opens the card (not just hover).</li>
+          <li>The component wires <code>aria-describedby</code> from the trigger to the <code>role="tooltip"</code> card (generating an id if the card has none), so the preview is announced on focus even for users who never see it painted. It deliberately does <em>not</em> set <code>aria-haspopup</code>: the allowed values are <code>false | true | menu | listbox | tree | grid | dialog</code>, and a hover card is none of them.</li>
           <li>Card content is supplementary — never put critical information here. Touch users won't see it.</li>
           <li>If the card contains links or actions, those should ALSO live somewhere reachable — on the linked profile page, in a menu.</li>
-          <li><kbd>Esc</kbd> closes the card while focus stays on the trigger.</li>
+          <li>The card is a <code>popover="manual"</code> surface, so it is not light-dismissed by <kbd>Esc</kbd>: moving focus off the trigger (<kbd>Tab</kbd>) or the pointer away from both trigger and card is what closes it.</li>
         </ul>
       </section>
 

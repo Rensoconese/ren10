@@ -667,16 +667,16 @@ if (dialog.isOpen) { /* still open */ }</code></div>
         </ul>
 
         <h3>Labelling</h3>
-        <p>Always pair the dialog with an accessible name. The simplest path is to give the title an <code>id</code> and reference it via <code>aria-labelledby</code>:</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;ren-dialog id="dlg-labelling" aria-labelledby="dlg-labelling-title"&gt;
-  &lt;dialog class="ren-dialog"&gt;
+        <p>Always pair the dialog with an accessible name. The simplest path is to give the title an <code>id</code> and reference it via <code>aria-labelledby</code> <strong>on the inner <code>&lt;dialog&gt;</code></strong> — that is the element with <code>role="dialog"</code>. <code>&lt;ren-dialog&gt;</code> is a custom element with no role, so a label written there is a prohibited attribute that assistive tech ignores. The component moves a host-level one onto the <code>&lt;dialog&gt;</code> so older markup still names the dialog correctly, but write it in the right place to begin with:</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;ren-dialog id="dlg-labelling"&gt;
+  &lt;dialog class="ren-dialog" aria-labelledby="dlg-labelling-title"&gt;
     &lt;div class="ren-dialog-header"&gt;
       &lt;h2 class="ren-dialog-title" id="dlg-labelling-title"&gt;Delete file&lt;/h2&gt;
     &lt;/div&gt;
     ...
   &lt;/dialog&gt;
 &lt;/ren-dialog&gt;</code></div>
-        <p>If you also have descriptive prose under the title, link it with <code>aria-describedby</code>.</p>
+        <p>If you also have descriptive prose under the title, link it with <code>aria-describedby</code> — again on the <code>&lt;dialog&gt;</code>. When the <code>&lt;dialog&gt;</code> already carries <code>aria-labelledby</code>, the component skips its own <code>aria-label</code> fallback, so the heading you referenced stays the name.</p>
 
         <h3>Motion</h3>
         <p>Entry and exit animations use the <code>--duration-enter</code> motion token. Under <code>prefers-reduced-motion: reduce</code> the transitions are disabled — the dialog appears and disappears instantly.</p>
@@ -697,8 +697,8 @@ if (dialog.isOpen) { /* still open */ }</code></div>
         <p>The classic: a dialog asks the user to confirm a non-trivial action.</p>
         <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="dlg-save"&gt;Save&lt;/button&gt;
 
-&lt;ren-dialog id="dlg-save" aria-labelledby="save-title"&gt;
-  &lt;dialog class="ren-dialog"&gt;
+&lt;ren-dialog id="dlg-save"&gt;
+  &lt;dialog class="ren-dialog" aria-labelledby="save-title"&gt;
     &lt;div class="ren-dialog-header"&gt;
       &lt;h2 class="ren-dialog-title" id="save-title"&gt;Save changes?&lt;/h2&gt;
     &lt;/div&gt;
@@ -716,8 +716,8 @@ if (dialog.isOpen) { /* still open */ }</code></div>
         <p>Backdrop click is suppressed; the user must press one of the two buttons.</p>
         <div class="dx-pre" tabindex="0"><code>&lt;button class="ren-btn ren-btn-danger" data-dialog-trigger="dlg-delete"&gt;Delete account&lt;/button&gt;
 
-&lt;ren-alert-dialog id="dlg-delete" aria-labelledby="delete-title"&gt;
-  &lt;dialog class="ren-dialog ren-alert-dialog"&gt;
+&lt;ren-alert-dialog id="dlg-delete"&gt;
+  &lt;dialog class="ren-dialog ren-alert-dialog" aria-labelledby="delete-title"&gt;
     &lt;div class="ren-dialog-header"&gt;
       &lt;h2 class="ren-dialog-title" id="delete-title"&gt;Delete this account?&lt;/h2&gt;
     &lt;/div&gt;
@@ -735,8 +735,8 @@ if (dialog.isOpen) { /* still open */ }</code></div>
         <p>Using a dialog to collect a small piece of input. Submit the form to close.</p>
         <div class="dx-pre" tabindex="0"><code>&lt;button data-dialog-trigger="dlg-rename"&gt;Rename project&lt;/button&gt;
 
-&lt;ren-dialog id="dlg-rename" aria-labelledby="dlg-rename-title"&gt;
-  &lt;dialog class="ren-dialog ren-dialog-sm"&gt;
+&lt;ren-dialog id="dlg-rename"&gt;
+  &lt;dialog class="ren-dialog ren-dialog-sm" aria-labelledby="dlg-rename-title"&gt;
     &lt;form method="dialog"&gt;
       &lt;div class="ren-dialog-header"&gt;
         &lt;h2 class="ren-dialog-title" id="dlg-rename-title"&gt;Rename project&lt;/h2&gt;
@@ -780,8 +780,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
        no matter where in the DOM the dialog lives).
        ═══════════════════════════════════════════════════════════ -->
 
-  <ren-dialog id="demo-confirm" aria-labelledby="demo-confirm-title">
-    <dialog class="ren-dialog">
+  <ren-dialog id="demo-confirm">
+    <dialog class="ren-dialog" aria-labelledby="demo-confirm-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-confirm-title">Confirm changes</h2>
         <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
@@ -796,8 +796,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-dialog>
 
-  <ren-alert-dialog id="demo-alert" aria-labelledby="demo-alert-title">
-    <dialog class="ren-dialog ren-alert-dialog">
+  <ren-alert-dialog id="demo-alert">
+    <dialog class="ren-dialog ren-alert-dialog" aria-labelledby="demo-alert-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-alert-title">Delete this account?</h2>
       </div>
@@ -811,8 +811,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-alert-dialog>
 
-  <ren-dialog id="demo-size-sm" size="sm" aria-labelledby="demo-size-sm-title">
-    <dialog class="ren-dialog ren-dialog-sm">
+  <ren-dialog id="demo-size-sm" size="sm">
+    <dialog class="ren-dialog ren-dialog-sm" aria-labelledby="demo-size-sm-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-size-sm-title">Small dialog</h2>
         <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
@@ -824,8 +824,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-dialog>
 
-  <ren-dialog id="demo-size-md" size="md" aria-labelledby="demo-size-md-title">
-    <dialog class="ren-dialog ren-dialog-md">
+  <ren-dialog id="demo-size-md" size="md">
+    <dialog class="ren-dialog ren-dialog-md" aria-labelledby="demo-size-md-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-size-md-title">Medium dialog (default)</h2>
         <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
@@ -837,8 +837,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-dialog>
 
-  <ren-dialog id="demo-size-lg" size="lg" aria-labelledby="demo-size-lg-title">
-    <dialog class="ren-dialog ren-dialog-lg">
+  <ren-dialog id="demo-size-lg" size="lg">
+    <dialog class="ren-dialog ren-dialog-lg" aria-labelledby="demo-size-lg-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-size-lg-title">Large dialog</h2>
         <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
@@ -850,8 +850,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-dialog>
 
-  <ren-dialog id="demo-size-xl" size="xl" aria-labelledby="demo-size-xl-title">
-    <dialog class="ren-dialog ren-dialog-xl">
+  <ren-dialog id="demo-size-xl" size="xl">
+    <dialog class="ren-dialog ren-dialog-xl" aria-labelledby="demo-size-xl-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-size-xl-title">Extra-large dialog</h2>
         <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
@@ -863,8 +863,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-dialog>
 
-  <ren-dialog id="demo-size-full" size="full" aria-labelledby="demo-size-full-title">
-    <dialog class="ren-dialog ren-dialog-full">
+  <ren-dialog id="demo-size-full" size="full">
+    <dialog class="ren-dialog ren-dialog-full" aria-labelledby="demo-size-full-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-size-full-title">Full-bleed dialog</h2>
         <button class="ren-dialog-close" data-dialog-close aria-label="Close">×</button>
@@ -876,8 +876,8 @@ dialog.addEventListener('ren-close', (e) =&gt; {
     </dialog>
   </ren-dialog>
 
-  <ren-dialog id="demo-no-escape" no-escape aria-labelledby="demo-no-escape-title">
-    <dialog class="ren-dialog">
+  <ren-dialog id="demo-no-escape" no-escape>
+    <dialog class="ren-dialog" aria-labelledby="demo-no-escape-title">
       <div class="ren-dialog-header">
         <h2 class="ren-dialog-title" id="demo-no-escape-title">Critical step</h2>
       </div>
