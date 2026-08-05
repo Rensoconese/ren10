@@ -25,10 +25,20 @@ export {
 
 // Keyboard navigation (roving tabindex)
 export { createKeyboardNav } from './keyboard-nav.js';
-export { configureRenDebug, renDebug, isRenDebugEnabled } from './debug.js';
+// Diagnostics (opt-in traces) + integration warnings (on by default)
+export {
+  configureRenDebug,
+  renDebug,
+  renWarn,
+  isRenDebugEnabled,
+  areRenWarningsEnabled,
+} from './debug.js';
 
 // CSS anchor positioning (support detection + per-instance anchor wiring)
 export { createAnchorLink, supportsAnchorPositioning } from './anchor.js';
+
+// Overlay positioning fallback (flip + clamp for non-anchor browsers)
+export { computeOverlayPosition } from './positioning.js';
 
 // Dismissable layers (click outside + Escape)
 export {

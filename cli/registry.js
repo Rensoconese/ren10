@@ -293,7 +293,7 @@ export const REGISTRY = {
     dir: 'ren-popover',
     description: 'Floating popover with anchor positioning',
     files: ['ren-popover.css', 'ren-popover.js'],
-    utils: ['anchor.js', 'dismissable.js', 'focus-trap.js'],
+    utils: ['anchor.js', 'dismissable.js', 'focus-trap.js', 'positioning.js'],
     components: [],
     usage: `<ren-popover>
   <button slot="trigger">Open</button>
@@ -307,7 +307,7 @@ export const REGISTRY = {
     dir: 'ren-tooltip',
     description: 'Accessible tooltip with positioning and delay',
     files: ['ren-tooltip.css', 'ren-tooltip.js'],
-    utils: ['anchor.js'],
+    utils: ['anchor.js', 'positioning.js'],
     components: [],
     usage: `<ren-tooltip content="Help text">
   <button>Hover me</button>
@@ -320,7 +320,7 @@ export const REGISTRY = {
     dir: 'ren-tabs',
     description: 'Tab interface with keyboard navigation',
     files: ['ren-tabs.css', 'ren-tabs.js'],
-    utils: ['keyboard-nav.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js', 'id-generator.js', 'debug.js'],
     components: [],
     usage: `<ren-tabs>
   <button role="tab">Tab 1</button>
@@ -373,7 +373,7 @@ export const REGISTRY = {
     dir: 'ren-select',
     description: 'Custom select dropdown with search support',
     files: ['ren-select.css', 'ren-select.js'],
-    utils: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js', 'i18n.js'],
+    utils: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js', 'i18n.js', 'positioning.js'],
     components: [],
     usage: `<ren-select name="choice">
   <option>Select...</option>
@@ -402,7 +402,7 @@ export const REGISTRY = {
     dir: 'ren-slider',
     description: 'Range slider with keyboard support',
     files: ['ren-slider.css', 'ren-slider.js'],
-    utils: [],
+    utils: ['debug.js'],
     components: [],
     usage: `<ren-slider min="0" max="100" value="50">
   <input type="range">
@@ -416,7 +416,7 @@ export const REGISTRY = {
     dir: 'ren-toggle-group',
     description: 'Grouped toggle buttons with selection',
     files: ['ren-toggle-group.css', 'ren-toggle-group.js'],
-    utils: [],
+    utils: ['debug.js'],
     components: [],
     usage: `<ren-toggle-group>
   <button>Left</button>
@@ -463,7 +463,7 @@ export const REGISTRY = {
     dir: 'ren-hover-card',
     description: 'Card that appears on hover/focus',
     files: ['ren-hover-card.css', 'ren-hover-card.js'],
-    utils: ['anchor.js'],
+    utils: ['anchor.js', 'debug.js'],
     components: [],
     usage: `<ren-hover-card>
   <button>Hover me</button>
@@ -519,7 +519,7 @@ export const REGISTRY = {
     dir: 'ren-calendar',
     description: 'Date picker calendar interface',
     files: ['ren-calendar.css', 'ren-calendar.js'],
-    utils: ['local-date.js', 'i18n.js'],
+    utils: ['local-date.js', 'i18n.js', 'debug.js'],
     components: [],
     usage: `<ren-calendar selected="2025-03-15">
   <table role="grid">...</table>
@@ -546,7 +546,7 @@ export const REGISTRY = {
     dir: 'ren-carousel',
     description: 'Slide carousel with pagination',
     files: ['ren-carousel.css', 'ren-carousel.js'],
-    utils: ['i18n.js'],
+    utils: ['i18n.js', 'debug.js'],
     components: [],
     usage: `<ren-carousel auto-play interval="5000">
   <div class="ren-carousel-slide">Slide 1</div>
@@ -720,7 +720,7 @@ export const REGISTRY = {
     dir: 'ren-table',
     description: 'Sortable, responsive data table',
     files: ['ren-table.css', 'ren-table.js'],
-    utils: [],
+    utils: ['debug.js'],
     components: [],
     usage: `<ren-table class="ren-table">
   <thead>
