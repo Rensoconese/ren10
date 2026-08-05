@@ -22,9 +22,11 @@ concurrency:
 #       * The playwright configs detect PLAYWRIGHT_BROWSER and skip
 #         Mobile/Tablet projects for Firefox (Firefox doesn't support
 #         isMobile: true; Chromium and WebKit do).
-#   - visual runs Chromium-only. Baselines are committed for chromium/linux;
-#     running visual against Firefox or WebKit without those baselines
-#     would fail every screenshot test, so we don't try.
+#   - visual runs Chromium-only, inside the pinned Playwright container.
+#     Baselines are pixel-exact for that image, so anyone can reproduce the
+#     gate with `npm run test:visual:linux`; on the bare runner the same
+#     suite failed 20/47 on font rendering alone. Firefox/WebKit have no
+#     baselines and would diff on every screenshot, so we don't try.
 #   - package runs once and blocks release-shape regressions: theme/evals,
 #     agent CLI/skill checks, package exports, CLI copy smoke, and npm pack dry-run.
 
@@ -205,31 +207,20 @@ jobs:
     name: Visual regression (chromium)
     runs-on: ubuntu-latest
     needs: lint
+    # Baselines are pixel-exact for ONE rendering environment. Captured on the
+    # bare runner they were unreproducible anywhere else — the same suite in
+    # the official Playwright image failed 20/47 on font rendering alone. The
+    # container makes the gate reproducible on any machine with Docker via
+    # `npm run test:visual:linux`. Keep this tag in sync with the installed
+    # @playwright/test version; check:performance fails if it drifts.
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
       - run: npm ci
 
-      - name: Cache Playwright browsers
-        id: playwright-cache
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-chromium-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Playwright (chromium)
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
-
-      - name: Install Playwright deps (cache hit)
-        if: steps.playwright-cache.outputs.cache-hit == 'true'
-        run: npx playwright install-deps chromium
-
+      # Browsers and system deps ship in the image, so no install/cache step.
       - name: Run visual suite (chromium Desktop Light)
         run: npm run test:visual:linux
 

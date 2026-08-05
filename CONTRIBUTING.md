@@ -27,15 +27,17 @@ You don't need to install RenDS itself — every demo file references the source
 npm test                  # portable local suite (same as test:portable)
 npm run test:portable     # a11y/components/theme/evals/package; no snapshots
 npm run test:a11y         # axe-core accessibility audit (required before merging)
-npm run test:visual:linux # authoritative Chromium/Linux snapshot gate (CI/release)
+npm run test:visual:linux # authoritative snapshot gate (auto-runs in the pinned container)
 npm run test:components   # per-component scoped a11y + render
 npm run lint              # stylelint + eslint
 ```
 
-Visual baselines are Linux-specific. Run `npm run test:visual:linux` in the
-Linux CI/container, never from a non-Linux environment (macOS, Windows, or
-another platform). If the Linux gate reports intended
-diffs, regenerate baselines there with:
+Visual baselines are pixel-exact for the pinned Playwright container, which
+is what CI renders in. `npm run test:visual:linux` runs there automatically:
+directly when already inside the image, otherwise via Docker. That makes the
+gate reproducible on any machine with Docker — macOS included — so run it
+locally before changing CSS. If it reports intended diffs, regenerate the
+baselines with the same command:
 
 ```bash
 npm run test:visual -- --project="Desktop Light" --update-snapshots
