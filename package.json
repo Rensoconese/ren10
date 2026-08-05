@@ -112,7 +112,7 @@
     "lint:aihints": "node scripts/check-ai-hints.mjs",
     "check:release": "node scripts/check-release.mjs",
     "test": "npm run test:portable",
-    "test:portable": "npm run test:debug && npm run test:ai-hints && npm run test:form-fuzz && npm run check:performance && npm run check:public-contracts && npm run test:detector && npm run test:astro-integration && npm run test:a11y && npm run test:components && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
+    "test:portable": "npm run test:debug && npm run test:ai-hints && npm run test:form-fuzz && npm run check:performance && npm run check:public-contracts && npm run test:detector && npm run test:astro-integration && npm run test:a11y && npm run test:components && npm run test:runtime-smoke && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
     "test:all": "npm run test:portable && npm run test:visual:linux",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
@@ -161,7 +161,8 @@
     "workflow:relume": "node scripts/relume-workflow.mjs",
     "workflow:relume:check": "node scripts/relume-workflow.mjs validate-all docs/workflows/relume-to-ren10/inventory.json",
     "workflow:relume:capture": "node scripts/capture-block-matrix.mjs",
-    "test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs"
+    "test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
+    "test:runtime-smoke": "playwright test --config tests/components/playwright.config.cjs runtime-smoke"
   },
   "keywords": [
     "design-system",
