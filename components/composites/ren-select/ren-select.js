@@ -34,9 +34,15 @@ import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
 import { t } from '../../../utils/i18n.js';
 import { createDismissable } from '../../../utils/dismissable.js';
 import { autoId } from '../../../utils/id-generator.js';
+import { computeOverlayPosition } from '../../../utils/positioning.js';
 
 const SELECT_SIDES = new Set(['top', 'right', 'bottom', 'left']);
 const SELECT_ALIGNS = new Set(['start', 'end']);
+
+/** Distance between the trigger and the dropdown. */
+const SELECT_GAP = 8;
+/** Viewport inset the dropdown keeps — it never sits flush against an edge. */
+const SELECT_MARGIN = 16;
 
 function normalizeSelectPlacement(value) {
   const [sideValue, alignValue] = String(value || 'bottom')
@@ -46,100 +52,6 @@ function normalizeSelectPlacement(value) {
   const align = SELECT_ALIGNS.has(alignValue) ? alignValue : 'start';
 
   return { side, align };
-}
-
-/**
- * Compute dropdown position relative to trigger element.
- * Falls back above if not enough space below.
- *
- * @private
- * @param {HTMLElement} trigger - Trigger button element
- * @param {HTMLElement} content - Dropdown content element
- * @param {Object} placement - Normalized placement object
- * @returns {Object} Position with top, left, flipped, side, and align properties
- */
-function computePosition(trigger, content, placement = normalizeSelectPlacement()) {
-  const triggerRect = trigger.getBoundingClientRect();
-  const contentRect = content.getBoundingClientRect();
-  const viewport = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-  const gap = 8;
-  const margin = 16;
-
-  let finalSide = placement.side;
-  let flipped = false;
-  let top = triggerRect.bottom + gap;
-  let left = triggerRect.left;
-
-  if (placement.align === 'end') {
-    left = triggerRect.right - contentRect.width;
-  }
-
-  if (placement.side === 'top') {
-    top = triggerRect.top - contentRect.height - gap;
-  } else if (placement.side === 'right') {
-    top = placement.align === 'end'
-      ? triggerRect.bottom - contentRect.height
-      : triggerRect.top;
-    left = triggerRect.right + gap;
-  } else if (placement.side === 'left') {
-    top = placement.align === 'end'
-      ? triggerRect.bottom - contentRect.height
-      : triggerRect.top;
-    left = triggerRect.left - contentRect.width - gap;
-  }
-
-  if (
-    placement.side === 'bottom' &&
-    top + contentRect.height > viewport.height - margin &&
-    triggerRect.top - contentRect.height - gap >= margin
-  ) {
-    top = triggerRect.top - contentRect.height - gap;
-    finalSide = 'top';
-    flipped = true;
-  } else if (
-    placement.side === 'top' &&
-    top < margin &&
-    triggerRect.bottom + contentRect.height + gap <= viewport.height - margin
-  ) {
-    top = triggerRect.bottom + gap;
-    finalSide = 'bottom';
-    flipped = true;
-  } else if (
-    placement.side === 'right' &&
-    left + contentRect.width > viewport.width - margin &&
-    triggerRect.left - contentRect.width - gap >= margin
-  ) {
-    left = triggerRect.left - contentRect.width - gap;
-    finalSide = 'left';
-    flipped = true;
-  } else if (
-    placement.side === 'left' &&
-    left < margin &&
-    triggerRect.right + contentRect.width + gap <= viewport.width - margin
-  ) {
-    left = triggerRect.right + gap;
-    finalSide = 'right';
-    flipped = true;
-  }
-
-  if (left + contentRect.width > viewport.width - margin) {
-    left = viewport.width - contentRect.width - margin;
-  }
-  if (left < margin) {
-    left = margin;
-  }
-
-  if (top + contentRect.height > viewport.height - margin) {
-    top = viewport.height - contentRect.height - margin;
-  }
-  if (top < margin) {
-    top = margin;
-  }
-
-  return { top, left, flipped, side: finalSide, align: placement.align };
 }
 
 /**
@@ -650,7 +562,21 @@ export class RenSelect extends HTMLElement {
    */
   positionContent() {
     const placement = normalizeSelectPlacement(this.getAttribute('placement'));
-    const { top, left, flipped, side, align } = computePosition(this.#trigger, this.#content, placement);
+    // Unlike popover/tooltip the dropdown aligns to a trigger edge instead of
+    // centring, keeps a margin from every viewport edge, and clamps on both
+    // axes — a listbox pushed off-screen is unusable, not just clipped.
+    const { x: left, y: top, side, align, flipped } = computeOverlayPosition(
+      this.#trigger,
+      this.#content,
+      {
+        side: placement.side,
+        align: placement.align,
+        offset: SELECT_GAP,
+        overflowPadding: SELECT_MARGIN,
+        clampPadding: SELECT_MARGIN,
+        clampAxis: 'both',
+      }
+    );
 
     this.#content.style.position = 'fixed';
     this.#content.style.top = `${top}px`;
