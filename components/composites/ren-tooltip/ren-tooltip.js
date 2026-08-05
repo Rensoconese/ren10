@@ -1,14 +1,6 @@
-const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
+import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
 
-function supportsAnchorPositioning() {
-  return (
-    typeof CSS !== 'undefined' &&
-    typeof CSS.supports === 'function' &&
-    CSS.supports('anchor-name', '--ren-anchor') &&
-    CSS.supports('position-anchor', '--ren-anchor') &&
-    CSS.supports('position-area', 'top span-all')
-  );
-}
+const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
 
 function normalizePlacement(value, fallback = 'top') {
   return PLACEMENTS.has(value) ? value : fallback;
@@ -105,6 +97,7 @@ export class RenTooltip extends HTMLElement {
   #hideTimeout = null;
   #touchTimer = null;
   #listenerController = null;
+  #anchorLink = null;
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
@@ -163,9 +156,14 @@ export class RenTooltip extends HTMLElement {
       describedBy.add(this.id);
       this.#trigger.setAttribute('aria-describedby', [...describedBy].join(' '));
 
-      // Set up anchor relationship if CSS anchors are supported
+      // Set up anchor relationship if CSS anchors are supported.
+      // Unique per instance — a shared `anchor-name` resolves to the last
+      // matching element in tree order, so every tooltip on the page would
+      // render against the final trigger.
+      this.#anchorLink?.release();
+      this.#anchorLink = null;
       if (RenTooltip.supportsAnchor) {
-        this.#trigger.style.anchorName = '--tooltip-anchor';
+        this.#anchorLink = createAnchorLink(this.#trigger, this, 'ren-tooltip');
       } else {
         // Fallback: ensure trigger can be positioned relative to
         if (getComputedStyle(this.#trigger).position === 'static') {
@@ -370,6 +368,8 @@ export class RenTooltip extends HTMLElement {
     this.clearTimeouts();
     this.#listenerController?.abort();
     this.#listenerController = null;
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
     if (this.#trigger) {
       const describedBy = (this.#trigger.getAttribute('aria-describedby') || '')
         .split(/\s+/)

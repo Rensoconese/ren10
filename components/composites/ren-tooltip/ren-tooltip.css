@@ -8,7 +8,7 @@
   font-size: var(--size-caption, 0.75rem);
   max-width: 15rem;
   pointer-events: none;
-  z-index: var(--z-tooltip, 2000);
+  z-index: var(--z-tooltip);
   overflow-wrap: break-word;
   white-space: normal;
   line-height: 1.4;
@@ -16,8 +16,10 @@
   inset: auto;
   overflow: visible;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --tooltip-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-tooltip.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every tooltip but the last one. */
 
   /* Default: above the trigger with automatic fallback */
   position-area: top span-all;

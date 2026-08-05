@@ -13,8 +13,10 @@
   inset: auto;
   border-top: none;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --popover-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-popover.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every popover but the last one. */
 
   /* Default: below the trigger with automatic fallback */
   position-area: bottom span-all;

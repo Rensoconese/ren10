@@ -14,6 +14,9 @@
    <ren-date-picker placeholder="Select date" format="long" mode="single"></ren-date-picker>
   ══════════════════════════════════════════════════════════════════ */
 
+import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { t } from '../../../utils/i18n.js';
+
 const DATE_PICKER_SIDES = new Set(['top', 'right', 'bottom', 'left']);
 
 function normalizeDatePickerSide(value) {
@@ -24,6 +27,9 @@ function normalizeDatePickerSide(value) {
 
 export class RenDatePicker extends HTMLElement {
   static observedAttributes = ['placement'];
+  static supportsAnchor = supportsAnchorPositioning();
+
+  #anchorLink = null;
 
   constructor() {
     super();
@@ -40,7 +46,7 @@ export class RenDatePicker extends HTMLElement {
     this.format = 'short'; // short, medium, long
     this.locale = 'en-US';
     this.mode = 'single'; // single, range
-    this.placeholder = 'Select date';
+    this.placeholder = t('datePicker.placeholder');
 
     /* ═══ BIND METHODS ═══ */
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
@@ -91,6 +97,9 @@ export class RenDatePicker extends HTMLElement {
 
     this.syncPlacement();
 
+    /* ═══ ANCHOR THE DROPDOWN TO THIS INSTANCE'S TRIGGER ═══ */
+    this.linkAnchor();
+
     /* ═══ LISTEN TO CALENDAR EVENTS ═══ */
     this.calendar.addEventListener('ren-date-select', this.handleCalendarSelect);
 
@@ -118,12 +127,30 @@ export class RenDatePicker extends HTMLElement {
     }
 
     document.removeEventListener('click', this.handleDocumentClick);
+
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
       this.syncPlacement();
     }
+  }
+
+  /* ═══ WIRE TRIGGER ↔ DROPDOWN WITH A PER-INSTANCE ANCHOR NAME ═══
+     `anchor-name` is a document-wide identifier: if every date picker
+     declared the same name in CSS, the spec would resolve it to the last
+     matching trigger in tree order and every dropdown but the last one
+     would open next to the wrong input. The name is therefore generated
+     per instance and applied inline. */
+  linkAnchor() {
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
+
+    if (!RenDatePicker.supportsAnchor) return;
+
+    this.#anchorLink = createAnchorLink(this.trigger, this.dropdown, 'ren-date-picker');
   }
 
   /* ═══ RENDER COMPONENT STRUCTURE ═══ */

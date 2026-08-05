@@ -63,7 +63,7 @@ forbiddenPatterns:
 
 tokenPolicy:
   allowed:
-    - "Component-level positioning anchor token: --ren-hover-card-anchor (and the internal --ren-hover-card-anchor anchor-name)."
+    - "Positioning anchor: ren-hover-card.js injects a unique anchor-name / position-anchor pair inline per instance. To take control, set your own anchor-name on the trigger — an author-supplied value is respected and never overwritten. Never hardcode a shared anchor identifier: it resolves to the last matching trigger in tree order and collides across instances."
     - "Semantic tokens that style the card chrome and content: --color-surface, --color-border, --color-text, --color-text-muted, --color-accent, --color-accent-strong, --shadow-xl, --radius-lg, --radius-md."
     - "Layout / type / motion tokens: --space-* (0-25, 0-5, 1, 2, 3, 4, 5), --font-size-body, --font-size-body-sm, --font-size-xs, --duration-enter, --ease-enter, --transition-tactile."
   forbidden:
@@ -118,9 +118,13 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## Public Token API
 
-- `--ren-hover-card-anchor`
+This component exposes no `--ren-*` token. The anchor name is generated per
+instance by `ren-hover-card.js` and is not a themeable value — a shared name
+would resolve to the last matching trigger in tree order and mis-place every
+card but the last one.
 
-If no `--ren-*` token is detected here, theme through semantic tokens from `tokens/tokens.md` and avoid selector overrides.
+Theme through semantic tokens from `tokens/tokens.md` and avoid selector
+overrides.
 
 ## Accessibility Contract
 

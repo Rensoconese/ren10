@@ -1,13 +1,12 @@
 /* ═══ REN HOVER CARD COMPONENT ═══ */
 
-/* ═══ TRIGGER ELEMENT ═══ */
-.ren-hover-card-trigger {
-  anchor-name: --ren-hover-card-anchor;
-}
+/* ═══ TRIGGER ELEMENT ═══
+   `anchor-name` / `position-anchor` are injected inline per instance by
+   ren-hover-card.js — a single shared anchor name would resolve to the last
+   matching trigger in tree order and mis-place every card but the last one. */
 
 /* ═══ BASE CARD ═══ */
 .ren-hover-card {
-  position-anchor: --ren-hover-card-anchor;
   position: absolute;
   position-area: bottom span-all;
   inset: auto;
@@ -19,7 +18,7 @@
   padding: var(--space-4);
   max-width: 20rem;
   min-width: 15rem;
-  z-index: 1000;
+  z-index: var(--z-popover);
 
   /* ═══ POPOVER API ═══
      Semantic tokens keep hover-card in sync with tooltip + popover. */

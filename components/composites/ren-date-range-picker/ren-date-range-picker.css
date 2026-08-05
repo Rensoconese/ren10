@@ -21,9 +21,15 @@
   position: relative;
 }
 
-/* ═══ TRIGGER BUTTON ═══ */
+/* ═══ TRIGGER BUTTON ═══
+   No `anchor-name` here on purpose. Anchor names are document-wide
+   identifiers, so a single shared name would resolve to the last trigger in
+   tree order and every dropdown on the page would render against that one.
+   ren-date-range-picker.js generates a unique name per instance and applies
+   it inline to this trigger, pairing it with the matching `position-anchor`
+   on that instance's dropdown. An `anchor-name` you set inline yourself is
+   respected and reused. */
 .ren-date-range-trigger {
-  anchor-name: --ren-date-range-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -102,9 +108,10 @@
   }
 }
 
-/* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
+/* ═══ DROPDOWN CONTAINER (POPOVER) ═══
+   `position-anchor` is injected inline by the component, pointing at the
+   per-instance name on its own trigger (see the trigger block above). */
 .ren-date-range-dropdown {
-  position-anchor: --ren-date-range-anchor;
   position: absolute;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -114,7 +121,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
 
   /* ═══ POPOVER API ═══ */
   &[popover] {

@@ -47,6 +47,7 @@ canonicalImports:
     - "If the page already imports rends/components/index.css, do not import the CSS again."
     - "JS is required: HSV ↔ HEX / RGB / HSL conversion, canvas painting, drag handles, and the popover open/close are all implemented in JS."
     - "The dropdown uses the native Popover API plus CSS anchor positioning via position-area; older browsers fall back to local absolute positioning."
+    - "JS pairs each trigger with its own dropdown by generating a unique anchor name per instance and applying it inline; the stylesheet declares no shared name, so several pickers can coexist on one page without stealing each other's position."
 
 requiredMarkup:
   - "Root <ren-color-picker> is the consumer-authored host; its JS generates the trigger button and .ren-color-picker-dropdown popover."
@@ -57,6 +58,7 @@ requiredMarkup:
   - "Use placement=\"bottom\" by default; the host and .ren-color-picker-dropdown mirror the preferred side to data-side."
 
 forbiddenPatterns:
+  - "Declaring a single shared CSS anchor name for .ren-color-picker-trigger in consumer overrides — a document-wide name resolves to the last trigger in tree order and misplaces every other dropdown."
   - "Replacing the canvas with a CSS gradient div — drag math relies on canvas pixel sampling."
   - "Hardcoded hue rainbow gradients in consumer overrides; the rainbow's six hex stops are intentional and locked to HSL pure hues."
   - "Setting box-shadow / outline overrides that hide the focus ring on .ren-color-picker-trigger or .ren-color-picker-swatch."
@@ -91,6 +93,8 @@ accessibility:
 ```
 
 If the page already imports `rends/components/index.css`, do not import the CSS twice.
+
+UI strings and `aria-label`s resolve through `utils/i18n.js` at DOM-build time, so call `setLocale()` **before** importing/mounting `ren-color-picker` — a later locale change does not relabel already-rendered instances.
 
 ## Canonical Markup
 

@@ -32,10 +32,17 @@
    - ren-date-range-close
    ══════════════════════════════════════════════════════════════════ */
 
-/* ═══ PRESET DEFINITIONS ═══ */
+import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { t } from '../../../utils/i18n.js';
+
+/* ═══ PRESET DEFINITIONS ═══
+   Labels are stored as i18n keys, not literals: the module is evaluated once
+   at import time, so a resolved string would freeze the locale before the
+   consumer ever gets a chance to call setLocale(). The key is resolved with
+   t() while the preset button is being built. */
 const PRESETS = {
   today: {
-    label: 'Today',
+    labelKey: 'dateRangePicker.today',
     getRange: () => {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -43,7 +50,7 @@ const PRESETS = {
     },
   },
   yesterday: {
-    label: 'Yesterday',
+    labelKey: 'dateRangePicker.yesterday',
     getRange: () => {
       const now = new Date();
       const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
@@ -51,7 +58,7 @@ const PRESETS = {
     },
   },
   last7: {
-    label: 'Last 7 days',
+    labelKey: 'dateRangePicker.last7',
     getRange: () => {
       const now = new Date();
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -61,7 +68,7 @@ const PRESETS = {
     },
   },
   last14: {
-    label: 'Last 14 days',
+    labelKey: 'dateRangePicker.last14',
     getRange: () => {
       const now = new Date();
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -71,7 +78,7 @@ const PRESETS = {
     },
   },
   last30: {
-    label: 'Last 30 days',
+    labelKey: 'dateRangePicker.last30',
     getRange: () => {
       const now = new Date();
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -81,7 +88,7 @@ const PRESETS = {
     },
   },
   last90: {
-    label: 'Last 90 days',
+    labelKey: 'dateRangePicker.last90',
     getRange: () => {
       const now = new Date();
       const end = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -91,7 +98,7 @@ const PRESETS = {
     },
   },
   thisWeek: {
-    label: 'This week',
+    labelKey: 'dateRangePicker.thisWeek',
     getRange: () => {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -104,7 +111,7 @@ const PRESETS = {
     },
   },
   lastWeek: {
-    label: 'Last week',
+    labelKey: 'dateRangePicker.lastWeek',
     getRange: () => {
       const now = new Date();
       const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -117,7 +124,7 @@ const PRESETS = {
     },
   },
   thisMonth: {
-    label: 'This month',
+    labelKey: 'dateRangePicker.thisMonth',
     getRange: () => {
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -126,7 +133,7 @@ const PRESETS = {
     },
   },
   lastMonth: {
-    label: 'Last month',
+    labelKey: 'dateRangePicker.lastMonth',
     getRange: () => {
       const now = new Date();
       const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -135,7 +142,7 @@ const PRESETS = {
     },
   },
   thisQuarter: {
-    label: 'This quarter',
+    labelKey: 'dateRangePicker.thisQuarter',
     getRange: () => {
       const now = new Date();
       const quarterStart = Math.floor(now.getMonth() / 3) * 3;
@@ -145,7 +152,7 @@ const PRESETS = {
     },
   },
   thisYear: {
-    label: 'This year',
+    labelKey: 'dateRangePicker.thisYear',
     getRange: () => {
       const now = new Date();
       const start = new Date(now.getFullYear(), 0, 1);
@@ -154,7 +161,7 @@ const PRESETS = {
     },
   },
   lastYear: {
-    label: 'Last year',
+    labelKey: 'dateRangePicker.lastYear',
     getRange: () => {
       const now = new Date();
       const start = new Date(now.getFullYear() - 1, 0, 1);
@@ -174,6 +181,10 @@ function normalizeDateRangeSide(value) {
 
 export class RenDateRangePicker extends HTMLElement {
   static observedAttributes = ['placement'];
+  static supportsAnchor = supportsAnchorPositioning();
+
+  /* ═══ PER-INSTANCE ANCHOR LINK (trigger ↔ dropdown) ═══ */
+  #anchorLink = null;
 
   constructor() {
     super();
@@ -197,7 +208,7 @@ export class RenDateRangePicker extends HTMLElement {
     /* ═══ CONFIGURATION ═══ */
     this.format = 'short';
     this.locale = 'en-US';
-    this.placeholder = 'Select date range';
+    this.placeholder = t('dateRangePicker.placeholder');
     this.presetKeys = ['last7', 'last30', 'thisMonth', 'lastMonth'];
     this.minDate = null;
     this.maxDate = null;
@@ -222,7 +233,7 @@ export class RenDateRangePicker extends HTMLElement {
     /* ═══ READ ATTRIBUTES ═══ */
     this.format = this.getAttribute('format') || 'short';
     this.locale = this.getAttribute('locale') || 'en-US';
-    this.placeholder = this.getAttribute('placeholder') || 'Select date range';
+    this.placeholder = this.getAttribute('placeholder') || t('dateRangePicker.placeholder');
 
     const presetsAttr = this.getAttribute('presets');
     if (presetsAttr) {
@@ -261,6 +272,13 @@ export class RenDateRangePicker extends HTMLElement {
     }
 
     document.removeEventListener('click', this.handleDocumentClick);
+    this.#releaseAnchor();
+  }
+
+  /* ═══ RELEASE THE INJECTED ANCHOR NAME ═══ */
+  #releaseAnchor() {
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -271,6 +289,8 @@ export class RenDateRangePicker extends HTMLElement {
 
   /* ═══ RENDER FULL COMPONENT ═══ */
   render() {
+    /* ═══ DROP THE PREVIOUS ANCHOR LINK — THE OLD NODES ARE ABOUT TO GO ═══ */
+    this.#releaseAnchor();
     this.innerHTML = '';
     this.classList.add('ren-date-range-picker');
 
@@ -307,7 +327,7 @@ export class RenDateRangePicker extends HTMLElement {
     dropdown.className = 'ren-date-range-dropdown';
     dropdown.setAttribute('popover', 'manual');
     dropdown.setAttribute('role', 'dialog');
-    dropdown.setAttribute('aria-label', 'Date range selection');
+    dropdown.setAttribute('aria-label', t('dateRangePicker.label'));
 
     const inner = document.createElement('div');
     inner.className = 'ren-date-range-inner';
@@ -317,7 +337,7 @@ export class RenDateRangePicker extends HTMLElement {
       const presetsEl = document.createElement('div');
       presetsEl.className = 'ren-date-range-presets';
       presetsEl.setAttribute('role', 'listbox');
-      presetsEl.setAttribute('aria-label', 'Date range presets');
+      presetsEl.setAttribute('aria-label', t('dateRangePicker.presets'));
 
       this.presetKeys.forEach((key) => {
         const preset = PRESETS[key];
@@ -328,7 +348,7 @@ export class RenDateRangePicker extends HTMLElement {
         btn.setAttribute('type', 'button');
         btn.setAttribute('role', 'option');
         btn.setAttribute('data-preset', key);
-        btn.textContent = preset.label;
+        btn.textContent = t(preset.labelKey);
 
         btn.addEventListener('click', () => this.applyPreset(key));
         presetsEl.appendChild(btn);
@@ -376,12 +396,12 @@ export class RenDateRangePicker extends HTMLElement {
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'ren-date-range-cancel';
     cancelBtn.setAttribute('type', 'button');
-    cancelBtn.textContent = 'Cancel';
+    cancelBtn.textContent = t('dateRangePicker.cancel');
 
     const applyBtn = document.createElement('button');
     applyBtn.className = 'ren-date-range-apply';
     applyBtn.setAttribute('type', 'button');
-    applyBtn.textContent = 'Apply';
+    applyBtn.textContent = t('dateRangePicker.apply');
     applyBtn.disabled = true;
 
     actions.appendChild(cancelBtn);
@@ -400,6 +420,16 @@ export class RenDateRangePicker extends HTMLElement {
     this.summaryEl = summary;
     this.applyBtn = applyBtn;
     this.cancelBtn = cancelBtn;
+
+    /* ═══ ANCHOR THE DROPDOWN TO *THIS* TRIGGER ═══
+       `anchor-name` is a document-wide identifier: if every picker declared
+       the same name in CSS, the spec would resolve it to the last matching
+       trigger in tree order and every dropdown on the page would render
+       against that one. The name is therefore generated per instance and
+       applied inline. */
+    if (RenDateRangePicker.supportsAnchor) {
+      this.#anchorLink = createAnchorLink(trigger, dropdown, 'ren-date-range-picker');
+    }
 
     this.syncPlacement();
   }
@@ -607,11 +637,12 @@ export class RenDateRangePicker extends HTMLElement {
       const start = this.formatDate(this.draftStart);
       const end = this.formatDate(this.draftEnd);
       const days = this.daysBetween(this.draftStart, this.draftEnd);
-      this.summaryEl.innerHTML = `<strong>${start}</strong> → <strong>${end}</strong> (${days} day${days !== 1 ? 's' : ''})`;
+      const dayCount = t('dateRangePicker.daysSelected', { count: days });
+      this.summaryEl.innerHTML = `<strong>${start}</strong> → <strong>${end}</strong> (${dayCount})`;
     } else if (this.draftStart) {
       this.summaryEl.innerHTML = `<strong>${this.formatDate(this.draftStart)}</strong> → ...`;
     } else {
-      this.summaryEl.textContent = 'Select a start date';
+      this.summaryEl.textContent = t('dateRangePicker.selectStart');
     }
   }
 

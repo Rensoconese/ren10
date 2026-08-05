@@ -1,23 +1,9 @@
-let nextPopoverId = 0;
-const FOCUSABLE_SELECTOR = [
-  'a[href]',
-  'button:not([disabled])',
-  'input:not([disabled]):not([type="hidden"])',
-  'select:not([disabled])',
-  'textarea:not([disabled])',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
+import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { createDismissable } from '../../../utils/dismissable.js';
+import { FOCUSABLE_SELECTOR } from '../../../utils/focus-trap.js';
 
-function supportsAnchorPositioning() {
-  return (
-    typeof CSS !== 'undefined' &&
-    typeof CSS.supports === 'function' &&
-    CSS.supports('anchor-name', '--ren-anchor') &&
-    CSS.supports('position-anchor', '--ren-anchor') &&
-    CSS.supports('position-area', 'bottom span-all')
-  );
-}
+let nextPopoverId = 0;
+const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
 
 function normalizePlacement(value, fallback = 'bottom') {
   return PLACEMENTS.has(value) ? value : fallback;
@@ -113,7 +99,8 @@ export class RenPopover extends HTMLElement {
 
   #trigger = null;
   #triggerController = null;
-  #dismissController = null;
+  #anchorLink = null;
+  #dismissLayer = null;
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
@@ -192,9 +179,14 @@ export class RenPopover extends HTMLElement {
     this.#triggerController?.abort();
     this.#triggerController = new AbortController();
 
-    // Set up anchor relationship if CSS anchors are supported
+    // Set up anchor relationship if CSS anchors are supported.
+    // The name is unique per instance: a shared `anchor-name` resolves to the
+    // last matching element in tree order, which would position every popover
+    // on the page against the final trigger.
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
     if (RenPopover.supportsAnchor) {
-      this.#trigger.style.anchorName = '--popover-anchor';
+      this.#anchorLink = createAnchorLink(this.#trigger, this, 'ren-popover');
     } else {
       // Fallback: ensure trigger can be positioned relative to
       if (getComputedStyle(this.#trigger.parentElement).position === 'static') {
@@ -221,35 +213,14 @@ export class RenPopover extends HTMLElement {
       { signal: this.#triggerController.signal }
     );
 
-    // Setup dismiss behavior (click outside, Escape key)
-    this.#dismissController?.abort();
-    this.#dismissController = new AbortController();
-
-    document.addEventListener(
-      'click',
-      (e) => {
-        if (
-          this.isOpen() &&
-          e.target !== this &&
-          !this.contains(e.target) &&
-          e.target !== this.#trigger &&
-          !this.#trigger?.contains(e.target)
-        ) {
-          this.close();
-        }
-      },
-      { signal: this.#dismissController.signal }
-    );
-
-    document.addEventListener(
-      'keydown',
-      (e) => {
-        if (e.key === 'Escape' && this.isOpen()) {
-          this.close();
-        }
-      },
-      { signal: this.#dismissController.signal }
-    );
+    // Dismiss behavior (click outside, Escape) runs through the shared layer
+    // stack so nested/sibling overlays dismiss innermost-first instead of all
+    // reacting to the same document-level event.
+    this.#dismissLayer?.deactivate();
+    this.#dismissLayer = createDismissable(this, {
+      triggerElement: this.#trigger,
+      onDismiss: () => this.close(),
+    });
   }
 
   /**
@@ -302,6 +273,7 @@ export class RenPopover extends HTMLElement {
     // No aria-modal or focus trap — those are for ren-dialog / ren-sheet.
     this.setAttribute('aria-modal', 'false');
     this.#trigger?.setAttribute('aria-expanded', 'true');
+    this.#dismissLayer?.activate();
     // Note: no focus trap for non-modal popover.
     requestAnimationFrame(() => this.#focusInitialElement());
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
@@ -333,6 +305,7 @@ export class RenPopover extends HTMLElement {
 
     this.setAttribute('aria-modal', 'false');
     this.#trigger?.setAttribute('aria-expanded', 'false');
+    this.#dismissLayer?.deactivate();
     if (shouldRestoreFocus) {
       this.#trigger.focus({ preventScroll: true });
     }
@@ -368,8 +341,10 @@ export class RenPopover extends HTMLElement {
   cleanup() {
     this.#triggerController?.abort();
     this.#triggerController = null;
-    this.#dismissController?.abort();
-    this.#dismissController = null;
+    this.#dismissLayer?.deactivate();
+    this.#dismissLayer = null;
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
   }
 
   #focusInitialElement() {

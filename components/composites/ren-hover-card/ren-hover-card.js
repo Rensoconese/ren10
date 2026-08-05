@@ -1,10 +1,13 @@
 /* ═══ REN HOVER CARD WEB COMPONENT ═══ */
 
+import { createAnchorLink } from '../../../utils/anchor.js';
+
 export class RenHoverCard extends HTMLElement {
   constructor() {
     super();
     this.card = null;
     this.trigger = null;
+    this.anchorLink = null;
     this.showDelay = 200;
     this.hideDelay = 300;
     this.showTimeout = null;
@@ -61,15 +64,11 @@ export class RenHoverCard extends HTMLElement {
     if (showDelayAttr) this.showDelay = parseInt(showDelayAttr, 10);
     if (hideDelayAttr) this.hideDelay = parseInt(hideDelayAttr, 10);
 
-    /* ═══ SET ANCHOR NAME ON TRIGGER ═══ */
-    if (!this.trigger.style.anchorName) {
-      this.trigger.style.anchorName = '--ren-hover-card-anchor';
-    }
-
-    /* ═══ SET POSITION ANCHOR ON CARD ═══ */
-    if (!this.card.style.positionAnchor) {
-      this.card.style.positionAnchor = '--ren-hover-card-anchor';
-    }
+    /* ═══ LINK TRIGGER AND CARD WITH A PER-INSTANCE ANCHOR NAME ═══
+       A shared `anchor-name` resolves to the last matching element in tree
+       order, which would render every hover card against the final trigger. */
+    this.anchorLink?.release();
+    this.anchorLink = createAnchorLink(this.trigger, this.card, 'ren-hover-card');
 
     /* ═══ ATTACH EVENT LISTENERS ═══ */
     this.trigger.addEventListener('mouseenter', this.handleTriggerMouseEnter);
@@ -93,6 +92,9 @@ export class RenHoverCard extends HTMLElement {
       this.card.removeEventListener('mouseenter', this.handleCardMouseEnter);
       this.card.removeEventListener('mouseleave', this.handleCardMouseLeave);
     }
+
+    this.anchorLink?.release();
+    this.anchorLink = null;
 
     this.clearTimeouts();
   }
