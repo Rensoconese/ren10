@@ -31,6 +31,7 @@
  */
 
 import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
+import { t } from '../../../utils/i18n.js';
 import { createDismissable } from '../../../utils/dismissable.js';
 import { autoId } from '../../../utils/id-generator.js';
 
@@ -594,7 +595,7 @@ export class RenSelect extends HTMLElement {
     announcement.setAttribute('role', 'status');
     announcement.setAttribute('aria-live', 'polite');
     announcement.className = 'ren-sr-only';
-    announcement.textContent = `${resultCount} option${resultCount !== 1 ? 's' : ''} available`;
+    announcement.textContent = t('select.optionsAvailable', { count: resultCount });
     this.appendChild(announcement);
     setTimeout(() => announcement.remove(), 1000);
 
@@ -796,7 +797,7 @@ export class RenSelect extends HTMLElement {
         remove.type = 'button';
         remove.className = 'ren-select-chip-remove';
         remove.dataset.value = value;
-        remove.setAttribute('aria-label', `Remove ${label.textContent}`);
+        remove.setAttribute('aria-label', t('select.removeOption', { label: label.textContent }));
         remove.textContent = '×';
         remove.addEventListener('click', (event) => {
           event.preventDefault();

@@ -1,4 +1,5 @@
 import { createFocusTrap } from '../../../utils/focus-trap.js';
+import { t } from '../../../utils/i18n.js';
 
 /**
  * RenDialog - Modal/Dialog Web Component
@@ -170,13 +171,15 @@ export class RenDialog extends HTMLElement {
       this.#dialogElement.setAttribute('role', 'alertdialog');
     }
 
-    // Add aria-label fallback if no title found
+    // Add aria-label fallback if no title found.
+    // The localized fallback is resolved here, at connect time — calling
+    // setLocale() after the element is connected does not relabel it.
     if (!this.#dialogElement.getAttribute('aria-label')) {
       const title = this.#dialogElement.querySelector('.ren-dialog-title, [role="heading"]');
       if (title) {
-        this.#dialogElement.setAttribute('aria-label', title.textContent?.trim() || 'Dialog');
+        this.#dialogElement.setAttribute('aria-label', title.textContent?.trim() || t('dialog.label'));
       } else {
-        this.#dialogElement.setAttribute('aria-label', 'Dialog');
+        this.#dialogElement.setAttribute('aria-label', t('dialog.label'));
       }
     }
 

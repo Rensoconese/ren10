@@ -195,6 +195,7 @@ dlg.addEventListener('ren-close', (e) => console.log(e.detail.returnValue));
 - Escape closes the dialog unless `no-escape` is set.
 - Backdrop click closes the dialog unless `alert` is set.
 - After close, focus returns to the original trigger.
+- The `aria-label` fallback comes from `utils/i18n.js` (`dialog.label`) and is resolved once, when the element connects — call `setLocale()` before the dialog is inserted, because a later locale change does not relabel an already-connected dialog.
 
 ## Anti-Patterns
 

@@ -1,4 +1,5 @@
 import { formatLocalDate, parseLocalDate } from '../../../utils/local-date.js';
+import { t } from '../../../utils/i18n.js';
 
 /* ═══ REN CALENDAR WEB COMPONENT ═══
    A fully accessible, keyboard-navigable calendar for date selection.
@@ -87,12 +88,12 @@ export class RenCalendar extends HTMLElement {
 
     const prevBtn = document.createElement('button');
     prevBtn.className = 'ren-calendar-prev';
-    prevBtn.setAttribute('aria-label', `Previous month (${this.formatPrevMonth()})`);
+    prevBtn.setAttribute('aria-label', t('calendar.previousMonth', { month: this.formatPrevMonth() }));
     prevBtn.addEventListener('click', this.handlePrevMonth);
 
     const nextBtn = document.createElement('button');
     nextBtn.className = 'ren-calendar-next';
-    nextBtn.setAttribute('aria-label', `Next month (${this.formatNextMonth()})`);
+    nextBtn.setAttribute('aria-label', t('calendar.nextMonth', { month: this.formatNextMonth() }));
     nextBtn.addEventListener('click', this.handleNextMonth);
 
     navDiv.appendChild(prevBtn);

@@ -1,3 +1,4 @@
+import { t } from '../../../utils/i18n.js';
 /* ═══════════════════════════════════════════════════════════════
    REN OTP (ONE-TIME PASSWORD) INPUT WEB COMPONENT
    ═══════════════════════════════════════════════════════════════
@@ -73,7 +74,7 @@ export class RenOtp extends HTMLElement {
       slot.setAttribute('placeholder', '•');
       slot.setAttribute('autocomplete', 'off');
       slot.setAttribute('data-index', i.toString());
-      slot.setAttribute('aria-label', `Code digit ${i + 1} of ${this.length}`);
+      slot.setAttribute('aria-label', t('otp.digitLabel', { current: i + 1, total: this.length }));
 
       if (disabled) {
         slot.disabled = true;

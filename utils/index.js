@@ -27,6 +27,9 @@ export {
 export { createKeyboardNav } from './keyboard-nav.js';
 export { configureRenDebug, renDebug, isRenDebugEnabled } from './debug.js';
 
+// CSS anchor positioning (support detection + per-instance anchor wiring)
+export { createAnchorLink, supportsAnchorPositioning } from './anchor.js';
+
 // Dismissable layers (click outside + Escape)
 export {
   createDismissable,

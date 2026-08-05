@@ -22,6 +22,8 @@
    - setValue(val): Set value and clamp to bounds
    ═══════════════════════════════════════════════════════════════ */
 
+import { t } from '../../../utils/i18n.js';
+
 export class RenNumberField extends HTMLElement {
   constructor() {
     super();
@@ -75,14 +77,14 @@ export class RenNumberField extends HTMLElement {
     if (!this.decrementBtn) {
       this.decrementBtn = document.createElement('button');
       this.decrementBtn.className = 'ren-number-field-decrement';
-      this.decrementBtn.setAttribute('aria-label', 'Decrease');
+      this.decrementBtn.setAttribute('aria-label', t('numberField.decrease'));
       this.insertBefore(this.decrementBtn, this.input);
     }
 
     if (!this.incrementBtn) {
       this.incrementBtn = document.createElement('button');
       this.incrementBtn.className = 'ren-number-field-increment';
-      this.incrementBtn.setAttribute('aria-label', 'Increase');
+      this.incrementBtn.setAttribute('aria-label', t('numberField.increase'));
       this.appendChild(this.incrementBtn);
     }
 

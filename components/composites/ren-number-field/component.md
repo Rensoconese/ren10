@@ -130,6 +130,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- The auto-generated stepper `aria-label`s come from `utils/i18n.js` and are resolved once while the DOM is built, so call `setLocale()` before the component upgrades — a locale change after mount does not relabel existing steppers.
 
 ## Related Files
 
