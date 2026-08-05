@@ -26,6 +26,10 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Documented `base/grid.css` in `base/layouts.md`: routing tables for its 29
   public classes and the 17 configuration properties. The file was reachable in
   the bundle but absent from every discovery path agents are told to follow.
+- Added `utils/positioning.js`, the shared JS placement fallback for browsers
+  without CSS anchor positioning, replacing three divergent copies.
+- Added `renWarn()` so integration warnings can be routed to an application's
+  own logger or silenced, instead of going to `console.warn` unconditionally.
 
 ### Changed
 
@@ -42,6 +46,17 @@ consolidates them and starts formal version tracking with 0.7.0.
   recaptured its baselines there, making the gate reproducible on any machine
   with Docker instead of only on the CI runner.
 - Replaced the open `dist/` glob in `files` with the six tracked stylesheets.
+- Cut the published package from 25.4 MB to 19.6 MB by removing text the
+  knowledge graph duplicated: the JSON no longer stores a node body that is
+  byte-identical to the file the node points at, and the SQLite `nodes` table
+  no longer keeps a copy the FTS index already holds. Search output is
+  identical on both the SQLite and JSON-fallback paths.
+- `test:portable` now runs `test:debug`, `test:ai-hints`, `test:form-fuzz`,
+  `check:performance` and `check:public-contracts`, which existed but were
+  wired into neither the suite nor CI.
+- Archived `STATUS.md` and `ROADMAP.md`. Both claimed 0.9.0 against a 0.13.0
+  package; `docs/agent-ready-roadmap.md` is the maintained roadmap and is
+  gated, so the root pair was redundant as well as wrong.
 
 ### Fixed
 
@@ -58,6 +73,18 @@ consolidates them and starts formal version tracking with 0.7.0.
   and a stale mobile guard that left `data-open` set when returning to desktop.
 - Fixed `cli/registry.js` omitting the `utils/` dependencies of 15 components,
   which made `ren10 add` emit components whose imports resolved to nothing.
+- Fixed mutual recursion in the JS positioning fallback: when an overlay fit
+  neither above nor below its trigger, `top()` and `bottom()` called each other
+  until the stack overflowed, so the overlay never opened. It affected 18% of
+  sampled geometries at 1280x1024 and 23% at 360x640 — a tall dropdown on a
+  phone is the ordinary case.
+- Fixed the same fallback clamping horizontally with `if/else if`, which could
+  leave an overlay wider than the viewport at a negative offset.
+- Fixed a bare `<ren-table>` throwing after warning about its missing markup:
+  `connectedCallback` continued into setup that assumed the structure existed.
+- Fixed issue-template links to `docs/` and `CHANGELOG.md`, which pointed at a
+  `rends/` path prefix this repository does not have, and CHANGELOG compare
+  links that jumped from v0.11.0 straight to HEAD.
 
 ### Removed
 
