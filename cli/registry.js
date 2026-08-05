@@ -120,8 +120,19 @@ export const REGISTRY = {
     files: ['ren-icon.css'],
     utils: [],
     components: [],
-    usage: `<ren-icon class="ren-icon-sm"><svg>...</svg></ren-icon>
-<ren-icon class="ren-icon-lg">🎨</ren-icon>`,
+    usage: `<span class="ren-icon ren-icon-sm">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+</span>
+
+<button class="ren-btn" aria-label="Confirm">
+  <span class="ren-icon ren-icon-lg">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  </span>
+</button>`,
   },
 
   avatar: {
@@ -381,10 +392,12 @@ export const REGISTRY = {
     files: ['ren-select.css', 'ren-select.js'],
     utils: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js', 'i18n.js', 'positioning.js'],
     components: [],
-    usage: `<ren-select name="choice">
-  <option>Select...</option>
-  <option value="a">Option A</option>
-  <option value="b">Option B</option>
+    usage: `<ren-select name="choice" placeholder="Choose an option" aria-label="Choice">
+  <button type="button" data-select-trigger></button>
+  <div data-select-content role="listbox">
+    <div data-select-item data-value="a" role="option">Option A</div>
+    <div data-select-item data-value="b" role="option">Option B</div>
+  </div>
 </ren-select>`,
   },
 
@@ -442,11 +455,10 @@ export const REGISTRY = {
     files: ['ren-combobox.css', 'ren-combobox.js'],
     utils: ['id-generator.js', 'dismissable.js', 'i18n.js'],
     components: [],
-    usage: `<ren-combobox autocomplete="list">
-  <input type="text" placeholder="Search...">
-  <ul role="listbox" class="ren-combobox-list">
-    <li role="option">Option 1</li>
-  </ul>
+    usage: `<ren-combobox placeholder="Search a country">
+  <div class="ren-combobox-item" role="option" data-value="ar">Argentina</div>
+  <div class="ren-combobox-item" role="option" data-value="br">Brazil</div>
+  <div class="ren-combobox-empty" hidden>No results</div>
 </ren-combobox>`,
   },
 
@@ -515,11 +527,7 @@ export const REGISTRY = {
     files: ['ren-otp.css', 'ren-otp.js'],
     utils: ['i18n.js'],
     components: [],
-    usage: `<ren-otp length="6">
-  <input type="text" maxlength="1">
-  <input type="text" maxlength="1">
-  ...
-</ren-otp>`,
+    usage: `<ren-otp length="6" type="numeric" aria-label="One-time code"></ren-otp>`,
   },
 
   calendar: {
@@ -530,9 +538,7 @@ export const REGISTRY = {
     files: ['ren-calendar.css', 'ren-calendar.js'],
     utils: ['local-date.js', 'i18n.js', 'debug.js'],
     components: [],
-    usage: `<ren-calendar selected="2025-03-15">
-  <table role="grid">...</table>
-</ren-calendar>`,
+    usage: `<ren-calendar value="2026-03-15" aria-label="Choose a date"></ren-calendar>`,
   },
 
   'date-picker': {
@@ -727,12 +733,17 @@ export const REGISTRY = {
     files: ['ren-command.css', 'ren-command.js'],
     utils: ['i18n.js'],
     components: [],
-    usage: `<ren-command open>
-  <input class="ren-command-input" placeholder="Type a command...">
-  <ul class="ren-command-list">
-    <li data-value="save">Save</li>
-    <li data-value="copy">Copy</li>
-  </ul>
+    usage: `<ren-command>
+  <dialog class="ren-command">
+    <div class="ren-command-input-wrapper">
+      <input class="ren-command-input" type="text" placeholder="Type a command…">
+    </div>
+    <ul class="ren-command-list">
+      <li><button type="button" class="ren-command-item" data-value="save">Save</button></li>
+      <li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>
+    </ul>
+    <div class="ren-command-empty" hidden>No results found</div>
+  </dialog>
 </ren-command>`,
   },
 

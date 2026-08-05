@@ -118,8 +118,9 @@
       "name": "Icon",
       "exportName": "Icon",
       "import": "@ren10/astro/components/Icon",
-      "rootTag": "ren-icon",
+      "rootTag": "span",
       "defaultClasses": [
+        "ren-icon",
         "ren-icon-sm"
       ],
       "layer": "primitives",
