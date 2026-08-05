@@ -13,6 +13,8 @@
      initAllContextMenus();
    ============================================ */
 
+import { createDismissable } from '../../../utils/dismissable.js';
+
 /**
  * @param {string|HTMLElement} menuOrId - The popover element or its ID
  */
@@ -44,8 +46,24 @@ export function initContextMenu(menuOrId) {
 
   const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
 
+  // Dismiss behavior (click outside, Escape) runs through the shared layer
+  // stack so nested/sibling overlays dismiss innermost-first instead of every
+  // open overlay reacting to the same document-level event. `excludeElements`
+  // keeps every registered trigger out of "outside"; `triggerElement` is
+  // refreshed per open so the layer knows which trigger owns the current
+  // instance.
+  const dismissLayer = createDismissable(menu, {
+    onDismiss: () => close(),
+    excludeElements: triggers,
+    escapeKey: true,
+    clickOutside: true,
+  });
+  controller.signal.addEventListener('abort', () => dismissLayer.deactivate());
+
   const close = () => {
     if (!isOpen()) return;
+
+    dismissLayer.deactivate();
 
     if ('hidePopover' in menu && menu.matches(':popover-open')) {
       try {
@@ -81,6 +99,12 @@ export function initContextMenu(menuOrId) {
     }
 
     menu.setAttribute('data-state', 'open');
+
+    // Safe to activate synchronously: `contextmenu` (and the Shift+F10 /
+    // ContextMenu keydown path) always fires after the `pointerdown` of the
+    // same gesture, so the layer never sees the pointer event that opened it.
+    dismissLayer.updateOptions({ triggerElement: returnTrigger });
+    dismissLayer.activate();
 
     // Adjust if overflows viewport
     const rect = menu.getBoundingClientRect();
@@ -138,8 +162,6 @@ export function initContextMenu(menuOrId) {
     } else if (e.key === 'End') {
       e.preventDefault();
       items.at(-1)?.focus();
-    } else if (e.key === 'Escape') {
-      close();
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       document.activeElement?.click();
@@ -154,29 +176,9 @@ export function initContextMenu(menuOrId) {
     }
   }, { signal: controller.signal });
 
-  const isMenuOrTrigger = (target) =>
-    target instanceof Node &&
-    (menu.contains(target) || triggers.some((trigger) => trigger.contains(target)));
-
-  document.addEventListener(
-    'pointerdown',
-    (e) => {
-      if (isOpen() && !isMenuOrTrigger(e.target)) {
-        close();
-      }
-    },
-    { capture: true, signal: controller.signal }
-  );
-
-  document.addEventListener(
-    'contextmenu',
-    (e) => {
-      if (isOpen() && !isMenuOrTrigger(e.target)) {
-        close();
-      }
-    },
-    { capture: true, signal: controller.signal }
-  );
+  // Outside pointer interactions (including a right-click elsewhere, which is
+  // always preceded by a pointerdown) and Escape are owned by the shared
+  // dismissable layer above — no component-local document listeners.
 }
 
 export function destroyContextMenu(menuOrId) {

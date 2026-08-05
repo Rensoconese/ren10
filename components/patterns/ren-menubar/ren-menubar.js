@@ -10,12 +10,25 @@
  * - Submenu support with nested navigation
  * - Full accessibility compliance with ARIA roles and attributes
  *
+ * Dismissal model:
+ *   Click-outside and Escape run through the shared dismissable layer stack
+ *   (`utils/dismissable.js`) instead of component-owned document listeners.
+ *   Every open panel is its own layer: the top-level menu pushes one layer and
+ *   each open submenu pushes another on top of it. Escape therefore pops a
+ *   single level (submenu first, parent menu second) and never collapses
+ *   sibling overlays that happen to be open elsewhere on the page.
+ *
  * Usage:
  * <ren-menubar>
  *   <div class="ren-menubar" role="menubar">
  *     <button class="ren-menubar-trigger">File</button>
- *     <div class="ren-menubar-menu" role="menu">
+ *     <div class="ren-menubar-menu" role="menu" hidden>
  *       <button class="ren-menubar-item" role="menuitem">New</button>
+ *       <div class="ren-menubar-item ren-menubar-submenu" role="menuitem">More
+ *         <div class="ren-menubar-menu" role="menu" hidden>
+ *           <button class="ren-menubar-item" role="menuitem">Nested</button>
+ *         </div>
+ *       </div>
  *     </div>
  *   </div>
  * </ren-menubar>
@@ -25,11 +38,26 @@
  *   detail: { item: Element, value: string, checked?: boolean }
  *
  * Public Methods:
- * - closeAll(): Close all open menus
+ * - closeAll(): Close all open menus and submenus
  * - openMenu(triggerIndex): Open menu at specified trigger index
  */
 
+import { createDismissable } from '../../../utils/dismissable.js';
+
+const ITEM_SELECTOR =
+  '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
+const MENU_SELECTOR = '.ren-menubar-menu';
+
 export class RenMenubar extends HTMLElement {
+  /** @type {AbortController|null} */
+  #listeners = null;
+
+  /** Dismissable layer for the open top-level menu. */
+  #menuLayer = null;
+
+  /** Open submenus, innermost last. Each entry owns its own layer. */
+  #submenuStack = [];
+
   constructor() {
     super();
     this.triggers = [];
@@ -49,6 +77,18 @@ export class RenMenubar extends HTMLElement {
     this.initialize();
   }
 
+  disconnectedCallback() {
+    this.closeAll({ focusTrigger: false });
+    this.#listeners?.abort();
+    this.#listeners = null;
+
+    if (this.typeaheadTimeout) {
+      clearTimeout(this.typeaheadTimeout);
+      this.typeaheadTimeout = null;
+    }
+    this.typeaheadBuffer = '';
+  }
+
   /* ===================================================================
      INITIALIZATION
      =================================================================== */
@@ -57,51 +97,130 @@ export class RenMenubar extends HTMLElement {
    * Initialize the menubar:
    * - Cache triggers and menus
    * - Set up ARIA attributes
-   * - Attach event listeners
+   * - Attach event listeners (all bound to a single AbortController so a
+   *   disconnect/reconnect cycle never installs duplicates)
    */
   initialize() {
     const menubarEl = this.querySelector('[role="menubar"]');
     if (!menubarEl) return;
 
-    // Find all triggers and their associated menus
+    this.#listeners?.abort();
+    this.#listeners = new AbortController();
+    const { signal } = this.#listeners;
+
+    // Find all triggers and their associated menus.
+    // Index alignment between `triggers` and `menus` is load bearing, so a
+    // trigger without a panel keeps a null slot instead of shifting the rest.
     this.triggers = Array.from(menubarEl.querySelectorAll('.ren-menubar-trigger'));
     this.menus = this.triggers.map((trigger) => {
-      // Menu is the next sibling after the trigger
       const menu = trigger.nextElementSibling;
       if (menu && menu.classList.contains('ren-menubar-menu')) {
         return menu;
       }
       return null;
-    }).filter(Boolean);
+    });
 
     // Ensure triggers and menus have proper ARIA attributes
     this.triggers.forEach((trigger, index) => {
       trigger.setAttribute('aria-haspopup', 'true');
       trigger.setAttribute('aria-expanded', 'false');
       trigger.setAttribute('role', 'button');
-      trigger.addEventListener('click', () => this.toggleMenu(index));
-      trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e, index));
-      trigger.addEventListener('mouseenter', () => this.handleTriggerMouseenter(index));
+      trigger.addEventListener('click', () => this.toggleMenu(index), { signal });
+      trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e, index), { signal });
+      trigger.addEventListener('mouseenter', () => this.handleTriggerMouseenter(index), { signal });
     });
 
-    // Set up menu items
-    this.menus.forEach((menu, menuIndex) => {
-      if (menu) {
-        const items = this.getMenuItems(menu);
-        items.forEach((item, itemIndex) => {
-          item.addEventListener('click', (e) => this.handleItemClick(e, menuIndex, itemIndex));
-          item.addEventListener('keydown', (e) => this.handleItemKeydown(e, menuIndex, itemIndex));
-          item.addEventListener('mouseenter', () => this.handleItemMouseenter(menuIndex, itemIndex));
-        });
+    // Set up menu items at every depth (top-level panels and nested submenus).
+    // Handlers resolve their own menu context from the DOM, so nesting never
+    // depends on a stale index captured at init time.
+    menubarEl.querySelectorAll(ITEM_SELECTOR).forEach((item) => {
+      if (!item.hasAttribute('tabindex')) {
+        item.setAttribute('tabindex', '-1');
       }
+      item.addEventListener('click', (e) => this.handleItemClick(e, item), { signal });
+      item.addEventListener('keydown', (e) => this.handleItemKeydown(e, item), { signal });
+      item.addEventListener('mouseenter', () => this.handleItemMouseenter(item), { signal });
     });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!this.contains(e.target)) {
-        this.closeAll();
-      }
+    // Submenu parents advertise their popup and start collapsed.
+    menubarEl.querySelectorAll('.ren-menubar-submenu').forEach((parentItem) => {
+      const panel = this.#submenuPanel(parentItem);
+      if (!panel) return;
+      parentItem.setAttribute('aria-haspopup', 'menu');
+      parentItem.setAttribute('aria-expanded', 'false');
+      panel.setAttribute('hidden', '');
     });
+  }
+
+  /* ===================================================================
+     DISMISSABLE LAYERS (click outside / Escape)
+     =================================================================== */
+
+  /**
+   * Push the open top-level menu onto the shared layer stack.
+   * @private
+   */
+  #activateMenuLayer(index) {
+    const menu = this.menus[index];
+    if (!menu) return;
+
+    this.#menuLayer?.deactivate();
+    this.#menuLayer = createDismissable(menu, {
+      // The panel is the layer container; triggers are never "outside" so a
+      // pointerdown on them reaches the click handler and toggles normally.
+      triggerElement: this.triggers[index],
+      excludeElements: this.triggers,
+      escapeKey: true,
+      clickOutside: true,
+      onDismiss: (reason) => {
+        this.closeMenu(index, { focusTrigger: reason === 'escape' });
+      },
+    });
+    this.#menuLayer.activate();
+  }
+
+  /**
+   * Resolve the panel owned by a submenu parent item.
+   * @private
+   */
+  #submenuPanel(parentItem) {
+    return parentItem?.querySelector(MENU_SELECTOR) || null;
+  }
+
+  /**
+   * True when the item owns a submenu panel.
+   * @private
+   */
+  #isSubmenuParent(item) {
+    return Boolean(
+      item &&
+        item.classList.contains('ren-menubar-submenu') &&
+        this.#submenuPanel(item)
+    );
+  }
+
+  /**
+   * Index of the top-level menu that owns a node (walks out of submenus).
+   * @private
+   */
+  #ownerMenuIndex(node) {
+    let panel = node?.closest(MENU_SELECTOR) || null;
+    while (panel) {
+      const index = this.menus.indexOf(panel);
+      if (index !== -1) return index;
+      panel = panel.parentElement?.closest(MENU_SELECTOR) || null;
+    }
+    return this.activeMenuIndex;
+  }
+
+  /**
+   * The item that fired an event, so a nested panel does not double-handle it
+   * while the event bubbles through its parent item.
+   * @private
+   */
+  #eventItem(event) {
+    const target = event.target instanceof Element ? event.target : null;
+    return target?.closest(ITEM_SELECTOR) || null;
   }
 
   /* ===================================================================
@@ -121,60 +240,186 @@ export class RenMenubar extends HTMLElement {
 
   /**
    * Open menu at specified trigger index and focus first item
+   * @param {number} index - Index of the trigger to open
+   * @public
    */
   openMenu(index) {
-    if (index < 0 || index >= this.triggers.length) return;
-
-    // Close any currently open menu
-    if (this.activeMenuIndex !== -1) {
-      this.closeMenu(this.activeMenuIndex);
+    if (!Number.isInteger(index) || index < 0 || index >= this.triggers.length) {
+      throw new RangeError(`Invalid trigger index: ${index}`);
     }
 
-    this.activeMenuIndex = index;
+    // Close any other open menu without bouncing focus back to its trigger.
+    if (this.activeMenuIndex !== -1 && this.activeMenuIndex !== index) {
+      this.closeMenu(this.activeMenuIndex, { focusTrigger: false });
+    }
+
     const trigger = this.triggers[index];
     const menu = this.menus[index];
 
-    if (menu) {
-      menu.removeAttribute('hidden');
-      trigger.setAttribute('aria-expanded', 'true');
-      this.currentMenu = menu;
+    if (!menu) {
+      // Trigger without a panel: keep roving focus consistent.
+      trigger.focus();
+      return;
+    }
 
-      // Focus first focusable item in menu
-      const items = this.getMenuItems(menu);
-      if (items.length > 0) {
-        this.focusItem(items[0]);
-      }
+    // Re-entering the same menu collapses whatever submenu was open.
+    this.#closeAllSubmenus();
+
+    menu.removeAttribute('hidden');
+    trigger.setAttribute('aria-expanded', 'true');
+    this.activeMenuIndex = index;
+    this.currentMenu = menu;
+    this.#activateMenuLayer(index);
+
+    const items = this.getMenuItems(menu);
+    if (items.length > 0) {
+      this.focusItem(items[0]);
     }
   }
 
   /**
    * Close menu at specified index
+   * @param {number} index
+   * @param {Object} [options]
+   * @param {boolean} [options.focusTrigger] - Return focus to the trigger when
+   *   focus currently lives inside the menubar (keyboard dismissal). Pointer
+   *   dismissal passes false so an outside click keeps its own target focused.
    */
-  closeMenu(index) {
+  closeMenu(index, { focusTrigger = true } = {}) {
     if (index < 0 || index >= this.triggers.length) return;
 
     const trigger = this.triggers[index];
     const menu = this.menus[index];
+    const restoreFocus = focusTrigger && this.contains(document.activeElement);
 
     if (menu) {
+      this.#closeAllSubmenus();
       menu.setAttribute('hidden', '');
       trigger.setAttribute('aria-expanded', 'false');
     }
 
     if (this.activeMenuIndex === index) {
+      this.#menuLayer?.deactivate();
+      this.#menuLayer = null;
       this.activeMenuIndex = -1;
       this.currentMenu = null;
+      this.focusedItem?.classList.remove('is-focused');
       this.focusedItem = null;
-      trigger.focus();
+      if (restoreFocus) trigger.focus();
     }
   }
 
   /**
-   * Close all open menus and return focus to the last active trigger
+   * Close all open menus and submenus
+   * @param {Object} [options]
+   * @param {boolean} [options.focusTrigger]
+   * @public
    */
-  closeAll() {
+  closeAll({ focusTrigger = true } = {}) {
+    this.#closeAllSubmenus();
     if (this.activeMenuIndex !== -1) {
-      this.closeMenu(this.activeMenuIndex);
+      this.closeMenu(this.activeMenuIndex, { focusTrigger });
+    }
+  }
+
+  /* ===================================================================
+     SUBMENUS
+     =================================================================== */
+
+  /**
+   * Open the submenu owned by `parentItem` and push its own dismissable layer.
+   * @param {HTMLElement} parentItem
+   * @param {Object} [options]
+   * @param {boolean} [options.focusFirst] - Move focus into the submenu
+   *   (keyboard opening). Hover opening leaves focus where it is.
+   * @returns {HTMLElement|null} the submenu panel
+   */
+  openSubmenu(parentItem, { focusFirst = true } = {}) {
+    const panel = this.#submenuPanel(parentItem);
+    if (!panel) return null;
+
+    const alreadyOpen = this.#submenuStack.some((entry) => entry.panel === panel);
+    if (!alreadyOpen) {
+      // Collapse sibling branches before opening this one.
+      this.#closeSubmenusOutside(parentItem);
+
+      panel.removeAttribute('hidden');
+      parentItem.setAttribute('aria-expanded', 'true');
+
+      const layer = createDismissable(panel, {
+        triggerElement: parentItem,
+        escapeKey: true,
+        clickOutside: true,
+        onDismiss: (reason, event) => {
+          if (reason === 'escape') {
+            // ARIA menubar: Escape closes only this submenu and returns focus
+            // to the parent item; the parent menu stays open.
+            this.closeSubmenu(panel, { focusParent: true });
+            return;
+          }
+          // A pointer landing anywhere outside the whole menubar tears the
+          // tree down; one that stays inside only pops this level.
+          if (event && this.contains(event.target)) {
+            this.closeSubmenu(panel, { focusParent: false });
+          } else {
+            this.closeAll({ focusTrigger: false });
+          }
+        },
+      });
+      layer.activate();
+      this.#submenuStack.push({ panel, parentItem, layer });
+    }
+
+    if (focusFirst) {
+      const items = this.getMenuItems(panel);
+      if (items.length > 0) this.focusItem(items[0]);
+    }
+
+    return panel;
+  }
+
+  /**
+   * Close a submenu panel and everything nested inside it.
+   * @param {HTMLElement} panel
+   * @param {Object} [options]
+   * @param {boolean} [options.focusParent]
+   */
+  closeSubmenu(panel, { focusParent = false } = {}) {
+    const index = this.#submenuStack.findIndex((entry) => entry.panel === panel);
+    if (index === -1) return;
+
+    const removed = this.#submenuStack.splice(index);
+    for (let i = removed.length - 1; i >= 0; i -= 1) {
+      const entry = removed[i];
+      entry.layer.deactivate();
+      entry.panel.setAttribute('hidden', '');
+      entry.parentItem.setAttribute('aria-expanded', 'false');
+    }
+
+    if (focusParent) {
+      this.focusItem(removed[0].parentItem);
+    }
+  }
+
+  /**
+   * Close every open submenu that does not contain (or own) `node`.
+   * @private
+   */
+  #closeSubmenusOutside(node) {
+    for (let i = this.#submenuStack.length - 1; i >= 0; i -= 1) {
+      const entry = this.#submenuStack[i];
+      if (entry.panel.contains(node) || entry.parentItem === node) break;
+      this.closeSubmenu(entry.panel);
+    }
+  }
+
+  /**
+   * Close every open submenu, innermost first.
+   * @private
+   */
+  #closeAllSubmenus() {
+    while (this.#submenuStack.length > 0) {
+      this.closeSubmenu(this.#submenuStack[this.#submenuStack.length - 1].panel);
     }
   }
 
@@ -183,13 +428,17 @@ export class RenMenubar extends HTMLElement {
      =================================================================== */
 
   /**
-   * Get focusable menu items (excluding separators and labels)
+   * Get focusable menu items owned directly by a panel.
+   * Items living inside a nested submenu belong to that submenu, not here.
    */
   getMenuItems(menu) {
-    const items = Array.from(menu.querySelectorAll(
-      '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]'
-    ));
-    return items.filter(item => !item.hasAttribute('data-disabled'));
+    if (!menu) return [];
+
+    const items = Array.from(menu.querySelectorAll(ITEM_SELECTOR));
+    return items.filter(
+      (item) =>
+        item.closest(MENU_SELECTOR) === menu && !item.hasAttribute('data-disabled')
+    );
   }
 
   /**
@@ -279,28 +528,41 @@ export class RenMenubar extends HTMLElement {
 
   /**
    * Handle click on menu item
+   * @param {MouseEvent} event
+   * @param {HTMLElement} item - the item this listener is bound to
    */
-  handleItemClick(event, menuIndex, itemIndex) {
-    event.preventDefault();
-    const menu = this.menus[menuIndex];
-    const items = this.getMenuItems(menu);
-    const item = items[itemIndex];
+  handleItemClick(event, item) {
+    if (this.#eventItem(event) !== item) return;
 
-    if (!item || item.hasAttribute('data-disabled')) return;
+    event.preventDefault();
+    if (item.hasAttribute('data-disabled')) return;
+
+    // A submenu parent is a gateway, not a command: it never emits select and
+    // never closes on click (hover already opened it, so a toggle would read
+    // as the panel flickering shut under the pointer).
+    if (this.#isSubmenuParent(item)) {
+      this.openSubmenu(item, { focusFirst: true });
+      return;
+    }
 
     this.activateItem(item);
   }
 
   /**
    * Handle keyboard events within menu
+   * @param {KeyboardEvent} event
+   * @param {HTMLElement} item - the item this listener is bound to
    */
-  handleItemKeydown(event, menuIndex, itemIndex) {
-    const { key } = event;
-    const menu = this.menus[menuIndex];
-    const items = this.getMenuItems(menu);
-    const item = items[itemIndex];
+  handleItemKeydown(event, item) {
+    if (this.#eventItem(event) !== item) return;
 
-    if (!item) return;
+    const { key } = event;
+    const menu = item.closest(MENU_SELECTOR);
+    if (!menu) return;
+
+    const items = this.getMenuItems(menu);
+    const ownerIndex = this.#ownerMenuIndex(item);
+    const inSubmenu = this.menus.indexOf(menu) === -1;
 
     // ArrowDown: next item
     if (key === 'ArrowDown') {
@@ -316,47 +578,41 @@ export class RenMenubar extends HTMLElement {
       if (prevItem) this.focusItem(prevItem);
     }
 
-    // ArrowRight: open submenu or move to next trigger
+    // ArrowRight: open submenu, else move to the next menubar menu
     if (key === 'ArrowRight') {
       event.preventDefault();
-      const submenu = item.querySelector('.ren-menubar-menu');
-      if (submenu && item.classList.contains('ren-menubar-submenu')) {
-        submenu.removeAttribute('hidden');
-        const subItems = this.getMenuItems(submenu);
-        if (subItems.length > 0) this.focusItem(subItems[0]);
-      } else {
-        // Move to next trigger
-        const nextIndex = (menuIndex + 1) % this.triggers.length;
+      if (this.#isSubmenuParent(item)) {
+        this.openSubmenu(item, { focusFirst: true });
+      } else if (this.triggers.length > 0) {
+        const nextIndex = (ownerIndex + 1) % this.triggers.length;
         this.openMenu(nextIndex);
       }
     }
 
-    // ArrowLeft: close submenu or go back to previous menu
+    // ArrowLeft: close submenu (focus the parent item), else previous menu
     if (key === 'ArrowLeft') {
       event.preventDefault();
-      const parentMenu = item.closest('.ren-menubar-menu');
-      const parentTrigger = parentMenu?.previousElementSibling;
-      if (parentTrigger && parentTrigger.classList.contains('ren-menubar-submenu')) {
-        const submenu = parentTrigger.querySelector('.ren-menubar-menu');
-        if (submenu) submenu.setAttribute('hidden', '');
-        this.focusItem(parentTrigger);
-      } else {
-        const prevIndex = (menuIndex - 1 + this.triggers.length) % this.triggers.length;
+      if (inSubmenu) {
+        this.closeSubmenu(menu, { focusParent: true });
+      } else if (this.triggers.length > 0) {
+        const prevIndex = (ownerIndex - 1 + this.triggers.length) % this.triggers.length;
         this.openMenu(prevIndex);
       }
     }
 
-    // Enter or Space: activate item
+    // Enter or Space: open submenu or activate item
     if (key === 'Enter' || key === ' ') {
       event.preventDefault();
-      this.activateItem(item);
+      if (this.#isSubmenuParent(item)) {
+        this.openSubmenu(item, { focusFirst: true });
+      } else {
+        this.activateItem(item);
+      }
     }
 
-    // Escape: close menu
-    if (key === 'Escape') {
-      event.preventDefault();
-      this.closeMenu(menuIndex);
-    }
+    // Escape is owned by the shared dismissable layer stack: the capture-phase
+    // handler in utils/dismissable.js pops exactly one layer (this submenu, or
+    // the top-level menu) and stops propagation before it reaches this point.
 
     // Home: first item
     if (key === 'Home') {
@@ -378,15 +634,20 @@ export class RenMenubar extends HTMLElement {
   }
 
   /**
-   * Handle mouse enter on item (focus and close typeahead)
+   * Handle mouse enter on item (focus, submenu glide, clear typeahead)
+   * @param {HTMLElement} item
    */
-  handleItemMouseenter(menuIndex, itemIndex) {
-    const menu = this.menus[menuIndex];
-    const items = this.getMenuItems(menu);
-    const item = items[itemIndex];
+  handleItemMouseenter(item) {
+    // Leaving a branch collapses it so panels never overlap.
+    this.#closeSubmenusOutside(item);
 
     if (item) {
       this.focusItem(item);
+    }
+
+    // Hover opens a submenu but keeps focus on the parent item.
+    if (this.#isSubmenuParent(item)) {
+      this.openSubmenu(item, { focusFirst: false });
     }
 
     // Clear typeahead buffer on mouse movement
@@ -417,9 +678,11 @@ export class RenMenubar extends HTMLElement {
     // Handle radio items
     else if (role === 'menuitemradio') {
       const name = item.getAttribute('name');
-      const menu = item.closest('[role="menu"]');
-      const radioGroup = menu.querySelectorAll(`[role="menuitemradio"][name="${name}"]`);
-      radioGroup.forEach(radio => radio.setAttribute('aria-checked', 'false'));
+      const menu = item.closest('[role="menu"]') || item.closest(MENU_SELECTOR);
+      const radioGroup = menu
+        ? menu.querySelectorAll(`[role="menuitemradio"][name="${name}"]`)
+        : [];
+      radioGroup.forEach((radio) => radio.setAttribute('aria-checked', 'false'));
       item.setAttribute('aria-checked', 'true');
       this.emitSelectEvent(item, true);
     }
@@ -472,6 +735,8 @@ export class RenMenubar extends HTMLElement {
 
     // Find item matching buffer
     const items = this.getMenuItems(menu);
+    if (items.length === 0) return;
+
     const currentIndex = items.indexOf(this.focusedItem);
     const startIndex = (currentIndex + 1) % items.length;
 
@@ -494,32 +759,6 @@ export class RenMenubar extends HTMLElement {
     this.typeaheadTimeout = setTimeout(() => {
       this.typeaheadBuffer = '';
     }, 500);
-  }
-
-  /* ===================================================================
-     PUBLIC API
-     =================================================================== */
-
-  /**
-   * Close all open menus
-   * @public
-   */
-  closeAll() {
-    if (this.activeMenuIndex !== -1) {
-      this.closeMenu(this.activeMenuIndex);
-    }
-  }
-
-  /**
-   * Open menu at specified trigger index
-   * @param {number} triggerIndex - Index of the trigger to open
-   * @public
-   */
-  openMenu(triggerIndex) {
-    if (triggerIndex < 0 || triggerIndex >= this.triggers.length) {
-      throw new RangeError(`Invalid trigger index: ${triggerIndex}`);
-    }
-    this.openMenu(triggerIndex);
   }
 }
 

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Menubar behavior fixture</title>
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/components/patterns/ren-menubar/ren-menubar.css" />
+  </head>
+  <body class="ren-stack">
+    <h1>Menubar behavior fixture</h1>
+
+    <ren-menubar>
+      <div class="ren-menubar" role="menubar" aria-label="Main">
+        <button type="button" class="ren-menubar-trigger" id="trigger-file">File</button>
+        <div class="ren-menubar-menu" role="menu" aria-label="File" hidden>
+          <button type="button" class="ren-menubar-item" role="menuitem" id="item-new">New</button>
+          <!-- Submenu parents own their panel: the panel is a CHILD of the item,
+               which is what both ren-menubar.css and ren-menubar.js assume. -->
+          <div class="ren-menubar-item ren-menubar-submenu" role="menuitem" id="item-recent">
+            Open Recent
+            <div class="ren-menubar-menu" role="menu" aria-label="Open Recent" hidden>
+              <button type="button" class="ren-menubar-item" role="menuitem" id="item-doc-one">
+                Doc One
+              </button>
+              <button type="button" class="ren-menubar-item" role="menuitem" id="item-doc-two">
+                Doc Two
+              </button>
+            </div>
+          </div>
+          <button type="button" class="ren-menubar-item" role="menuitem" id="item-save">Save</button>
+        </div>
+
+        <button type="button" class="ren-menubar-trigger" id="trigger-edit">Edit</button>
+        <div class="ren-menubar-menu" role="menu" aria-label="Edit" hidden>
+          <button type="button" class="ren-menubar-item" role="menuitem" id="item-undo">Undo</button>
+        </div>
+      </div>
+    </ren-menubar>
+
+    <button type="button" id="outside">Outside</button>
+
+    <script type="module" src="/components/patterns/ren-menubar/ren-menubar.js"></script>
+  </body>
+</html>
