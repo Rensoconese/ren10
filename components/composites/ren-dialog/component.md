@@ -59,6 +59,7 @@ requiredMarkup:
   - "<ren-dialog> wraps a real <dialog> element. Do not replace the inner <dialog> with a <div>."
   - "Provide a unique id on <ren-dialog> when triggers reference it via data-dialog-trigger."
   - "Always include .ren-dialog-title (rendered as a real heading) for the accessible name."
+  - "Write aria-label / aria-labelledby on the inner <dialog>, never on <ren-dialog>: the host has no role, so those attributes are prohibited there. The component forwards a host-level one onto the <dialog> and clears it from the host, but authored markup should not rely on that."
   - "Close affordances use [data-dialog-close]; do not call dialog.close() directly from arbitrary handlers."
 
 forbiddenPatterns:
@@ -78,7 +79,8 @@ tokenPolicy:
 accessibility:
   required:
     - "Use a real <dialog> inside <ren-dialog> so the user agent provides modality semantics."
-    - ".ren-dialog-title supplies the accessible label when no aria-label is set."
+    - ".ren-dialog-title supplies the accessible label when the <dialog> carries neither aria-label nor aria-labelledby."
+    - "The accessible name lives on the inner <dialog> (role=dialog). <ren-dialog> is a roleless custom element, so aria-label / aria-labelledby there are prohibited attributes and are ignored by AT."
     - "Modal dialogs trap focus and inert the rest of the page automatically; do not break the trap."
     - "Escape closes the dialog unless no-escape is set."
     - "Backdrop click closes the dialog unless alert is set."
@@ -190,7 +192,14 @@ dlg.addEventListener('ren-close', (e) => console.log(e.detail.returnValue));
 - A real `<dialog>` element supplies modality semantics; never substitute a
   `<div role="dialog">`.
 - `.ren-dialog-title` provides the accessible name; if you omit it, set
-  `aria-label` on `<ren-dialog>`.
+  `aria-label` — or `aria-labelledby` pointing at your own heading — **on the
+  inner `<dialog>`**, not on `<ren-dialog>`. The host is a custom element with
+  no role, so both attributes are prohibited there (axe:
+  `aria-prohibited-attr`). A host-level one is forwarded to the `<dialog>` and
+  removed from the host at connect time, so old markup keeps working, but new
+  markup should put it where it belongs.
+- When the `<dialog>` already has `aria-labelledby`, the component does not add
+  its `aria-label` fallback on top: the referenced heading is the name.
 - The component traps focus inside the dialog and inerts background content.
 - Escape closes the dialog unless `no-escape` is set.
 - Backdrop click closes the dialog unless `alert` is set.
@@ -206,6 +215,8 @@ dlg.addEventListener('ren-close', (e) => console.log(e.detail.returnValue));
 - ❌ Custom backdrops via `position: fixed; background: rgba(0,0,0,.5)` —
   use `--ren-dialog-backdrop`.
 - ❌ Skipping `.ren-dialog-title` and not providing `aria-label`.
+- ❌ `<ren-dialog aria-labelledby="…">` — the label belongs on the inner
+  `<dialog>`; on the roleless host it is a prohibited attribute.
 
 ## Related Files
 

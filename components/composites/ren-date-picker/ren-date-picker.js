@@ -169,6 +169,11 @@ export class RenDatePicker extends HTMLElement {
       trigger.setAttribute('aria-haspopup', 'dialog');
       trigger.setAttribute('aria-expanded', 'false');
       trigger.setAttribute('data-placeholder', this.placeholder);
+      // The empty trigger shows its placeholder through
+      // `::before { content: attr(data-placeholder) }`, which is CSS-generated
+      // content: axe reports button-name (critical), and with the stylesheet
+      // missing the control has no name at all. Name it for real.
+      trigger.setAttribute('aria-label', this.placeholder);
 
       const valueSpan = document.createElement('span');
       valueSpan.className = 'ren-date-picker-value';
@@ -342,6 +347,9 @@ export class RenDatePicker extends HTMLElement {
       valueSpan.textContent = formattedValue;
     }
 
+    // Once a date is chosen the visible text is real, so the placeholder
+    // label would fight it: drop it and let the value name the control.
+    this.trigger.removeAttribute('aria-label');
     this.trigger.classList.remove('ren-date-picker-empty');
 
     /* ═══ UPDATE HIDDEN INPUT ═══ */

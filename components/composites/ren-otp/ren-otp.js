@@ -43,6 +43,24 @@ export class RenOtp extends HTMLElement {
   }
 
   connectedCallback() {
+    /* ═══ HOST CLASS ═══ */
+    /* The wrapper styling (flex row, gap, container query) lives on .ren-otp.
+       Without this the canonical <ren-otp length="6"> rendered as an inline
+       box with six stacked slots, and every consumer had to hand-write the
+       class the component is named after. */
+    this.classList.add('ren-otp');
+
+    /* ═══ HOST ROLE ═══ */
+    /* A name on a role-less host is exposed to no one (and axe flags it as a
+       prohibited attribute). The slots form one control, so when the consumer
+       names the host, expose it as a group. */
+    if (
+      !this.hasAttribute('role') &&
+      (this.hasAttribute('aria-label') || this.hasAttribute('aria-labelledby'))
+    ) {
+      this.setAttribute('role', 'group');
+    }
+
     /* ═══ READ ATTRIBUTES ═══ */
     const lengthAttr = this.getAttribute('length');
     const typeAttr = this.getAttribute('type');

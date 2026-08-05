@@ -51,15 +51,16 @@ export class RenDialog extends HTMLElement {
 
   static observedAttributes = ['open', 'alert', 'size'];
 
-  constructor() {
-    super();
-    this.#setupDialogElement();
-  }
-
   connectedCallback() {
     if (!this.#abortController || this.#abortController.signal.aborted) {
       this.#abortController = new AbortController();
     }
+    // Deliberately not in the constructor: #setupDialogElement() appends a
+    // <dialog> and sets attributes, and the Custom Elements spec forbids an
+    // element gaining attributes or children while constructing. Chromium
+    // enforces it for parser-driven upgrades, where the element exists with
+    // no children yet — the throw leaves the element permanently unupgraded.
+    this.#setupDialogElement();
     this.#initializeDialogElement();
     this.#wireupTriggers();
   }
@@ -171,10 +172,17 @@ export class RenDialog extends HTMLElement {
       this.#dialogElement.setAttribute('role', 'alertdialog');
     }
 
-    // Add aria-label fallback if no title found.
+    this.#adoptHostLabel();
+
+    // Add aria-label fallback if the dialog has no name yet.
+    // aria-labelledby already names it, so synthesising an aria-label on top
+    // would be dead weight that can disagree with the referenced text.
     // The localized fallback is resolved here, at connect time — calling
     // setLocale() after the element is connected does not relabel it.
-    if (!this.#dialogElement.getAttribute('aria-label')) {
+    if (
+      !this.#dialogElement.getAttribute('aria-label') &&
+      !this.#dialogElement.getAttribute('aria-labelledby')
+    ) {
       const title = this.#dialogElement.querySelector('.ren-dialog-title, [role="heading"]');
       if (title) {
         this.#dialogElement.setAttribute('aria-label', title.textContent?.trim() || t('dialog.label'));
@@ -227,6 +235,29 @@ export class RenDialog extends HTMLElement {
       } else {
         this.#dialogElement.closedBy = 'any';
       }
+    }
+  }
+
+  /**
+   * Move an author's accessible name from the host onto the real <dialog>.
+   *
+   * `<ren-dialog>` is a custom element with no role, so aria-label /
+   * aria-labelledby are prohibited there: validators flag them and AT ignores
+   * them. Worse, the name was silently lost — the fallback below reads the
+   * inner <dialog>, so a host-level aria-label ended up replaced by the
+   * generic i18n label. Forwarding makes the attribute do what its author
+   * meant, and clearing it from the host removes the prohibited attribute.
+   * An attribute already on the <dialog> wins; the host never overrides it.
+   * @private
+   */
+  #adoptHostLabel() {
+    for (const attribute of ['aria-label', 'aria-labelledby']) {
+      const value = this.getAttribute(attribute);
+      if (value === null) continue;
+      if (!this.#dialogElement.hasAttribute(attribute)) {
+        this.#dialogElement.setAttribute(attribute, value);
+      }
+      this.removeAttribute(attribute);
     }
   }
 

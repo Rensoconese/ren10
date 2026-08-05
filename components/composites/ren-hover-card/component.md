@@ -51,7 +51,8 @@ requiredMarkup:
   - "Place the trigger element immediately before <ren-hover-card>, OR set data-hover-trigger=\"<selector>\" on the host to point at a remote trigger."
   - "Inside <ren-hover-card> include a real element with class=\"ren-hover-card\" (the JS will add popover=\"manual\" and the .ren-hover-card class if missing)."
   - "Use .ren-hover-card-header / -body / -footer as the three layout slots; headers should contain a real <h3> or <h4> for the accessible heading."
-  - "The trigger receives aria-haspopup=\"tooltip\" and aria-expanded automatically — do not override these in markup."
+  - "The trigger receives aria-expanded and aria-describedby (pointing at the card) automatically — do not write either in markup, and never add aria-haspopup=\"tooltip\": \"tooltip\" is not an allowed aria-haspopup value."
+  - "Give the card an id if you want a stable aria-describedby reference; without one the component generates a unique id on the card."
   - "Show/hide delays come from show-delay / hide-delay attributes (milliseconds) on the host; do not throttle via inline scripts."
 
 forbiddenPatterns:
@@ -74,7 +75,8 @@ tokenPolicy:
 accessibility:
   required:
     - "Trigger must be a focusable element so focusin/focusout reveal the card via keyboard, not only hover."
-    - "Trigger carries aria-haspopup=\"tooltip\" and aria-expanded that flips true/false in sync with show()/hide()."
+    - "Trigger carries aria-expanded that flips true/false in sync with show()/hide(), plus aria-describedby pointing at the role=\"tooltip\" card so the preview is announced on focus even when it is not painted."
+    - "Never put aria-haspopup on the trigger: its allowed values are false | true | menu | listbox | tree | grid | dialog, so \"tooltip\" is an invalid value and a hover card is not any of the others."
     - "The card uses the native Popover API (popover=\"manual\") so it inerts other content correctly when shown."
     - "Reduced motion disables the entrance animation and hides the decorative arrow; do not override the @media (prefers-reduced-motion: reduce) rules."
     - "On viewports under 640px the card stretches to viewport width — do not lock min-width that breaks this responsive behavior."
@@ -115,6 +117,10 @@ Use the docs page and source files listed below for full examples before adding 
 
 - `:focus-visible`
 - `:hover`
+- `[aria-expanded]` on the trigger — written by the component, `true` while open.
+- `[aria-describedby]` on the trigger — written by the component, points at the
+  card's id. An author-written `aria-describedby` is preserved: the card's id is
+  appended, and only that id is removed on disconnect.
 
 ## Public Token API
 

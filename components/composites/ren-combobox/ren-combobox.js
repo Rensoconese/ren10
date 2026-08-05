@@ -111,12 +111,15 @@ export class RenCombobox extends HTMLElement {
       fragment.appendChild(this.firstChild);
     }
 
-    // Input. type="search" + an unguessable autocomplete value defeats the
-    // Chromium heuristic that autofills "country"-flavored fields.
+    // Input. type="search" already suppresses most autofill; `autocomplete`
+    // must stay a valid token — an invented one ("ren-combobox-no-autofill")
+    // failed axe's autocomplete-valid (WCAG 1.3.5, Identify Input Purpose).
+    // The Chromium heuristic this guarded against keys off a semantic `name`,
+    // and this generated input never has one.
     this.#input = document.createElement('input');
     this.#input.type = 'search';
     this.#input.className = 'ren-combobox-input';
-    this.#input.setAttribute('autocomplete', 'ren-combobox-no-autofill');
+    this.#input.setAttribute('autocomplete', 'off');
     this.#input.setAttribute('autocorrect', 'off');
     this.#input.setAttribute('autocapitalize', 'off');
     this.#input.setAttribute('data-1p-ignore', '');

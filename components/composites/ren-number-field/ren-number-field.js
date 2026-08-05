@@ -49,6 +49,13 @@ export class RenNumberField extends HTMLElement {
   }
 
   connectedCallback() {
+    /* ═══ HOST CLASS ═══ */
+    /* The group styling (inline-flex, border, focus ring via :has()) lives on
+       .ren-number-field. Without this the canonical <ren-number-field> mounted
+       unstyled — no border, no focus ring, the steppers and the input simply
+       laid out inline. */
+    this.classList.add('ren-number-field');
+
     /* ═══ READ ATTRIBUTES ═══ */
     const minAttr = this.getAttribute('min');
     const maxAttr = this.getAttribute('max');
@@ -72,6 +79,18 @@ export class RenNumberField extends HTMLElement {
       this.input.type = 'number';
       this.input.className = 'ren-number-field-input';
       this.appendChild(this.input);
+    }
+
+    // Move a host-level name onto the input. The host is a custom element with
+    // no role, so aria-label on it is both ignored by assistive tech and
+    // flagged as aria-prohibited-attr; meanwhile a generated input with no
+    // <label> fails the `label` rule outright. Same adoption ren-select and
+    // ren-otp do.
+    for (const attribute of ['aria-label', 'aria-labelledby']) {
+      if (this.hasAttribute(attribute) && !this.input.hasAttribute(attribute)) {
+        this.input.setAttribute(attribute, this.getAttribute(attribute));
+        this.removeAttribute(attribute);
+      }
     }
 
     if (!this.decrementBtn) {

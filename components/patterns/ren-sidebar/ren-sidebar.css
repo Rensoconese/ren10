@@ -152,7 +152,11 @@
   padding: var(--ren-space-1, 0.25rem) var(--ren-space-3, 0.75rem);
   font-size: var(--ren-caption-size, 0.75rem);
   font-weight: 600;
-  color: var(--color-text-faint);
+  /* --color-text-faint is 1.5:1 against the sidebar surface: it is a hairline
+     token for dividers and disabled glyphs, not for reading. These labels are
+     the section headings a user navigates by, at 12px uppercase — the hardest
+     case for legibility, not the easiest. */
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: opacity var(--duration-enter) var(--ease-state-change);

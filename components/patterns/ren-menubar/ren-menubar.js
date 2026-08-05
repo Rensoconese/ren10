@@ -44,8 +44,13 @@
 
 import { createDismissable } from '../../../utils/dismissable.js';
 
+// Triggers are excluded: ARIA requires them to be menuitems too (they live
+// inside role="menubar"), but they own a different handler set — treating a
+// trigger as an item made every menu refuse to open.
 const ITEM_SELECTOR =
-  '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
+  '[role="menuitem"]:not(.ren-menubar-trigger), ' +
+  '[role="menuitemcheckbox"]:not(.ren-menubar-trigger), ' +
+  '[role="menuitemradio"]:not(.ren-menubar-trigger)';
 const MENU_SELECTOR = '.ren-menubar-menu';
 
 export class RenMenubar extends HTMLElement {
@@ -122,9 +127,13 @@ export class RenMenubar extends HTMLElement {
 
     // Ensure triggers and menus have proper ARIA attributes
     this.triggers.forEach((trigger, index) => {
-      trigger.setAttribute('aria-haspopup', 'true');
+      // menuitem, not button: these live inside role="menubar", whose only
+      // allowed children are menuitem / menuitemcheckbox / menuitemradio.
+      // role="button" made axe report aria-required-children (critical) and
+      // contradicted this pattern's own contract.
+      trigger.setAttribute('aria-haspopup', 'menu');
       trigger.setAttribute('aria-expanded', 'false');
-      trigger.setAttribute('role', 'button');
+      trigger.setAttribute('role', 'menuitem');
       trigger.addEventListener('click', () => this.toggleMenu(index), { signal });
       trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e, index), { signal });
       trigger.addEventListener('mouseenter', () => this.handleTriggerMouseenter(index), { signal });

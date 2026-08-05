@@ -301,6 +301,11 @@ export class RenDateRangePicker extends HTMLElement {
     trigger.setAttribute('aria-haspopup', 'dialog');
     trigger.setAttribute('aria-expanded', 'false');
     trigger.setAttribute('data-placeholder', this.placeholder);
+    // The empty trigger shows its placeholder through
+    // `::before { content: attr(data-placeholder) }`, which is CSS-generated
+    // content: axe reports button-name (critical), and without the stylesheet
+    // the control has no name at all. Name it for real.
+    trigger.setAttribute('aria-label', this.placeholder);
 
     const valueEl = document.createElement('span');
     valueEl.className = 'ren-date-range-value';
@@ -765,8 +770,11 @@ export class RenDateRangePicker extends HTMLElement {
       if (startEl) startEl.textContent = this.formatDate(this.confirmedStart);
       if (endEl) endEl.textContent = this.formatDate(this.confirmedEnd);
 
+      // Real text now names the control; the placeholder label would fight it.
+      this.trigger.removeAttribute('aria-label');
       this.trigger.classList.remove('ren-date-range-empty');
     } else {
+      this.trigger.setAttribute('aria-label', this.placeholder);
       this.trigger.classList.add('ren-date-range-empty');
     }
   }

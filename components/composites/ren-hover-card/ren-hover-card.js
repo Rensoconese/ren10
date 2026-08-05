@@ -2,6 +2,7 @@
 
 import { createAnchorLink } from '../../../utils/anchor.js';
 import { renWarn } from '../../../utils/debug.js';
+import { autoId } from '../../../utils/id-generator.js';
 
 export class RenHoverCard extends HTMLElement {
   constructor() {
@@ -9,6 +10,7 @@ export class RenHoverCard extends HTMLElement {
     this.card = null;
     this.trigger = null;
     this.anchorLink = null;
+    this.describedById = null;
     this.showDelay = 200;
     this.hideDelay = 300;
     this.showTimeout = null;
@@ -54,10 +56,17 @@ export class RenHoverCard extends HTMLElement {
       return;
     }
 
-    /* ═══ SET UP TRIGGER ARIA ATTRIBUTES ═══ */
+    /* ═══ SET UP TRIGGER ARIA ATTRIBUTES ═══
+       No aria-haspopup: "tooltip" is not one of its allowed values
+       (false | true | menu | listbox | tree | grid | dialog), so it read as an
+       invalid attribute value to every validator and to AT. The card is a
+       role="tooltip" surface, so the correct wiring — the same one
+       ren-tooltip uses — is aria-describedby from the trigger to the card,
+       which also makes the preview reachable for screen readers that never
+       see a hover. */
     this.trigger.classList.add('ren-hover-card-trigger');
-    this.trigger.setAttribute('aria-haspopup', 'tooltip');
     this.trigger.setAttribute('aria-expanded', 'false');
+    this.linkDescription();
 
     /* ═══ READ DELAY ATTRIBUTES ═══ */
     const showDelayAttr = this.getAttribute('show-delay');
@@ -97,7 +106,39 @@ export class RenHoverCard extends HTMLElement {
     this.anchorLink?.release();
     this.anchorLink = null;
 
+    this.unlinkDescription();
+
     this.clearTimeouts();
+  }
+
+  /* ═══ DESCRIBE THE TRIGGER WITH THE CARD ═══
+     Only the id this instance contributed is removed on disconnect, so an
+     author-written aria-describedby survives connect/disconnect intact. */
+  linkDescription() {
+    if (!this.trigger || !this.card) return;
+
+    this.describedById = autoId(this.card, 'hover-card');
+    const ids = new Set(
+      (this.trigger.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)
+    );
+    ids.add(this.describedById);
+    this.trigger.setAttribute('aria-describedby', [...ids].join(' '));
+  }
+
+  unlinkDescription() {
+    if (!this.trigger || !this.describedById) return;
+
+    const ids = (this.trigger.getAttribute('aria-describedby') || '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .filter((id) => id !== this.describedById);
+
+    if (ids.length > 0) {
+      this.trigger.setAttribute('aria-describedby', ids.join(' '));
+    } else {
+      this.trigger.removeAttribute('aria-describedby');
+    }
+    this.describedById = null;
   }
 
   /* ═══ TRIGGER MOUSE ENTER ═══ */

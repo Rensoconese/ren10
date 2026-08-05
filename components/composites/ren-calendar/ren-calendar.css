@@ -115,6 +115,27 @@
   gap: var(--space-1);
 }
 
+/* ═══ ARIA ROWS ═══
+   role="grid" only accepts rows, so the component wraps the weekday strip and
+   each week in a role="row" element. `display: contents` keeps those rows out
+   of layout: the columnheaders and gridcells stay direct grid items of the
+   7-column track above, so the visual grid is unchanged.
+
+   Scoped to `.ren-calendar-grid >` on purpose — legacy static markup renders
+   .ren-calendar-weekdays as a SIBLING of the grid, and that copy must keep its
+   own `display: grid`. */
+.ren-calendar-grid > .ren-calendar-weekdays,
+.ren-calendar-grid > .ren-calendar-week {
+  display: contents;
+}
+
+/* The header row's box (and its margin-bottom) is gone under `display:
+   contents`, so the separation moves onto the cells: --space-1 here plus the
+   grid's --space-1 row gap reproduces the previous --space-2. */
+.ren-calendar-grid > .ren-calendar-weekdays > .ren-calendar-weekday {
+  margin-block-end: var(--space-1);
+}
+
 /* ═══ INDIVIDUAL DAY BUTTON ═══ */
 .ren-calendar-day {
   display: flex;
@@ -308,6 +329,12 @@
 
   .ren-calendar-weekdays {
     margin-bottom: var(--space-4);
+  }
+
+  /* Header row is `display: contents` inside the grid — --space-2 on the cells
+     plus the --space-2 row gap below reproduces the --space-4 above. */
+  .ren-calendar-grid > .ren-calendar-weekdays > .ren-calendar-weekday {
+    margin-block-end: var(--space-2);
   }
 
   .ren-calendar-grid {

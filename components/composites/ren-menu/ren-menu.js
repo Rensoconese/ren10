@@ -174,6 +174,12 @@ export class RenMenu extends HTMLElement {
     if (this.#trigger) {
       this.#trigger.setAttribute('aria-haspopup', 'menu');
       this.#trigger.setAttribute('aria-controls', this.id);
+      // Set the collapsed state up front: it was only written on first
+      // open/close, so until a user clicked, assistive tech read a trigger
+      // that advertised a popup but never said whether it was expanded.
+      if (!this.#trigger.hasAttribute('aria-expanded')) {
+        this.#trigger.setAttribute('aria-expanded', 'false');
+      }
     }
   }
 

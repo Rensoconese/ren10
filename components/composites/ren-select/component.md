@@ -52,7 +52,9 @@ canonicalImports:
 requiredMarkup:
   - "<ren-select> wraps a real <button data-select-trigger> and a [data-select-content] listbox container."
   - "Each option is a <div data-select-item data-value=\"...\"> inside .ren-select-content; rely on data-select-item, not arbitrary children."
-  - "The trigger displays .ren-select-value when something is chosen and .ren-select-placeholder when empty — do not collapse them into one node."
+  - "Leave the trigger empty and set placeholder on the host: the component renders .ren-select-placeholder (or .ren-select-value once something is chosen) plus .ren-select-icon into it on connect, and hand-written children are replaced on the first selection."
+  - "Name the trigger: role=\"combobox\" is name-from-author, so its text is not its name. Provide aria-label / aria-labelledby on <ren-select> (the component moves it onto the trigger) or a <label for=\"{select id}\"> — otherwise the placeholder is used as the fallback name."
+  - "The host, the trigger, and the content carry .ren-select, .ren-select-trigger, and .ren-select-content; the component adds any that are missing on connect."
   - "Set name on <ren-select> when the value must submit with a form; the component injects the hidden input automatically."
   - "With multiple, value is an ordered array and the component injects one same-name hidden input per selected value so FormData preserves repeated entries. Removable chips render as a sibling of the button trigger so interactive controls are never nested."
   - "Use .ren-select-group + .ren-select-label for grouped options and .ren-select-separator between groups; do not invent dividers."
@@ -77,6 +79,7 @@ tokenPolicy:
 
 accessibility:
   required:
+    - "Trigger carries an author-supplied accessible name (aria-label, aria-labelledby, or an associated <label>); the placeholder is only the fallback, because role=\"combobox\" ignores the button's own text."
     - "Trigger exposes aria-expanded on open/close and aria-disabled when inert; native <button> Enter/Space activation must be preserved."
     - "Listbox container carries role=\"listbox\"; each option carries role=\"option\" and aria-selected reflects the selected value."
     - "Roving highlight on options uses [data-highlighted]; only one option may be highlighted at a time."
@@ -97,9 +100,17 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<ren-select name="country"><button type="button" data-select-trigger><span class="ren-select-value"></span><span class="ren-select-placeholder">Choose a country</span></button><div class="ren-select-content" data-select-content role="listbox"><div data-select-item data-value="ar">Argentina</div><div data-select-item data-value="uy">Uruguay</div></div></ren-select>
+<ren-select name="country" placeholder="Choose a country"><button class="ren-select-trigger" type="button" data-select-trigger></button><div class="ren-select-content" data-select-content role="listbox"><div class="ren-select-item" data-select-item data-value="ar">Argentina</div><div class="ren-select-item" data-select-item data-value="uy">Uruguay</div></div></ren-select>
 
 ```
+
+The trigger is left empty on purpose: on connect the component renders
+`.ren-select-placeholder` (or `.ren-select-value` once something is chosen)
+plus the chevron into it. `placeholder` is what those nodes read, and — because
+`role="combobox"` takes its name from the author, never from its text — it is
+also the trigger's fallback accessible name. Give the select a real
+`<label for>`, `aria-labelledby`, or `aria-label` whenever the field has a
+visible label.
 
 Use the docs page and source files listed below for full examples before adding production markup.
 
@@ -142,13 +153,30 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## JavaScript API
 
-- `value` / `setValue(value)` use a string (or `null`) in single-select mode.
-- `value` / `setValue(values)` use an ordered array in `multiple` mode.
+- `value` (getter / setter) and `selectValue(value)` take a string (or `null`)
+  in single-select mode.
+- `value` and `selectValue(values)` take an ordered array in `multiple` mode.
+- `open()`, `close()`, `isOpen`, `options`, `selectedOption`, and `refresh()`
+  round out the surface; `refresh()` re-reads the options after you add or
+  remove them.
 - Multiple selection accumulates and removes values without closing the
   listbox, renders `.ren-select-chip` entries, and submits repeated same-name
   hidden inputs.
 - `aria-disabled="false"` remains operable; only native `disabled` or
   `aria-disabled="true"` disables an option.
+
+## Events
+
+Names match `scripts/public-events.mjs`, the gated manifest of public events —
+the component prefixes every event with its own tag, so there is no bare
+`ren-change` / `ren-open` / `ren-close` here.
+
+| Event | Bubbles | Composed | Detail |
+| --- | --- | --- | --- |
+| `ren-select-change` | yes | no | `{ value, label, item }` |
+| `ren-select-open` | yes | no | none |
+| `ren-select-close` | yes | no | none |
+| `change` | yes | yes | none — the native event, for form integration |
 
 ## Public Token API
 
@@ -158,6 +186,11 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 
 ## Accessibility Contract
 
+- The trigger's accessible name is resolved once, on connect, in this order:
+  `aria-label` / `aria-labelledby` on the trigger, then the same attributes on
+  `<ren-select>` (moved onto the trigger), then an associated `<label>`, then
+  the `placeholder` text. Changing those attributes after mount does not
+  relabel an upgraded trigger — set them in the markup.
 - Preserve native semantics first; add ARIA only when semantic HTML is insufficient.
 - Keep visible keyboard focus via RenDS focus tokens and `:focus-visible`.
 - Keep interactive hit areas at 44px minimum unless this file's source clearly defines a smaller non-touch target.

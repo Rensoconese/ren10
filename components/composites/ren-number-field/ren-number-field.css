@@ -5,11 +5,12 @@
    Supports keyboard navigation, long-press acceleration, and
    min/max bounds. Follows RenDS design token system.
 
-   Usage:
+   Usage — the stepper buttons stay empty, the − and + below are drawn with
+   ::before; writing them as button text renders −− / ++:
    <ren-number-field min="0" max="100" step="1" value="5">
-     <button class="ren-number-field-decrement" aria-label="Decrease">−</button>
+     <button class="ren-number-field-decrement" type="button" aria-label="Decrease"></button>
      <input class="ren-number-field-input" type="number" value="5">
-     <button class="ren-number-field-increment" aria-label="Increase">+</button>
+     <button class="ren-number-field-increment" type="button" aria-label="Increase"></button>
    </ren-number-field>
    ═══════════════════════════════════════════════════════════════ */
 
