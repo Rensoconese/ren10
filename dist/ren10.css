@@ -3926,8 +3926,10 @@ sup, sub {
   --auto-grid-gap: var(--grid-gutter);
   --auto-grid-placement: auto-fill;
 
-  /* Ease function for animations */
-  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Motion curves come from tokens/primitives/motion.css. This file lives in
+     @layer base, which outranks @layer tokens, so declaring --ease-out here
+     silently overrode the system token for every consumer on the page — not
+     just for grid. Grid transitions below use the token like everyone else. */
 }
 
 /* ============================================================================
@@ -5481,7 +5483,7 @@ sup, sub {
     height: 3px;
     background: var(--color-accent);
     transform-origin: left;
-    z-index: 9999;
+    z-index: var(--z-max);
     animation: ren-scale-x linear both;
     animation-timeline: scroll(root);
   }
@@ -7311,7 +7313,8 @@ select.ren-input {
   border-radius: var(--radius-md);
   font-weight: var(--weight-semibold);
   text-decoration: none;
-  z-index: 9999;
+  /* Skip link must clear every overlay — this is the documented escape hatch. */
+  z-index: var(--z-max);
   transition: top var(--duration-tactile) var(--ease-enter);
 }
 
@@ -8475,8 +8478,10 @@ ren-dialog {
   inset: auto;
   border-top: none;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --popover-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-popover.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every popover but the last one. */
 
   /* Default: below the trigger with automatic fallback */
   position-area: bottom span-all;
@@ -8687,7 +8692,7 @@ ren-dialog {
   font-size: var(--size-caption, 0.75rem);
   max-width: 15rem;
   pointer-events: none;
-  z-index: var(--z-tooltip, 2000);
+  z-index: var(--z-tooltip);
   overflow-wrap: break-word;
   white-space: normal;
   line-height: 1.4;
@@ -8695,8 +8700,10 @@ ren-dialog {
   inset: auto;
   overflow: visible;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --tooltip-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-tooltip.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every tooltip but the last one. */
 
   /* Default: above the trigger with automatic fallback */
   position-area: top span-all;
@@ -11035,7 +11042,7 @@ ren-dialog {
     position: absolute;
     inset-inline: 0;
     top: calc(100% + var(--space-1));
-    z-index: 50;
+    z-index: var(--z-popover);
 
     max-height: 15rem;
     padding-block: var(--space-1);
@@ -11255,7 +11262,7 @@ ren-sheet {
   display: flex;
   flex-direction: column;
 
-  z-index: 50;
+  z-index: var(--z-modal);
   max-width: 100%;
   max-height: 100%;
   touch-action: none; /* Prevent scroll chaining; swipe-to-dismiss handled by JS */
@@ -11545,14 +11552,13 @@ ren-sheet {
 .ren-sheet::backdrop { background: var(--ren-sheet-backdrop, var(--color-overlay)); }
 /* ═══ REN HOVER CARD COMPONENT ═══ */
 
-/* ═══ TRIGGER ELEMENT ═══ */
-.ren-hover-card-trigger {
-  anchor-name: --ren-hover-card-anchor;
-}
+/* ═══ TRIGGER ELEMENT ═══
+   `anchor-name` / `position-anchor` are injected inline per instance by
+   ren-hover-card.js — a single shared anchor name would resolve to the last
+   matching trigger in tree order and mis-place every card but the last one. */
 
 /* ═══ BASE CARD ═══ */
 .ren-hover-card {
-  position-anchor: --ren-hover-card-anchor;
   position: absolute;
   position-area: bottom span-all;
   inset: auto;
@@ -11564,7 +11570,7 @@ ren-sheet {
   padding: var(--space-4);
   max-width: 20rem;
   min-width: 15rem;
-  z-index: 1000;
+  z-index: var(--z-popover);
 
   /* ═══ POPOVER API ═══
      Semantic tokens keep hover-card in sync with tooltip + popover. */
@@ -12815,7 +12821,10 @@ ren-sheet {
 
 /* ═══ TRIGGER INPUT ═══ */
 .ren-date-picker-trigger {
-  anchor-name: --ren-date-picker-anchor;
+  /* `anchor-name` is injected inline per instance by ren-date-picker.js —
+     a single shared anchor name is a document-wide identifier and would
+     resolve to the last matching trigger in tree order, so every dropdown
+     but the last one would open next to the wrong input. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12887,7 +12896,8 @@ ren-sheet {
 
 /* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
 .ren-date-picker-dropdown {
-  position-anchor: --ren-date-picker-anchor;
+  /* `position-anchor` is injected inline per instance by ren-date-picker.js,
+     paired with the matching `anchor-name` on that instance's trigger. */
   position: absolute;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -12897,7 +12907,7 @@ ren-sheet {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
   max-width: 400px;
 
   /* ═══ POPOVER API ═══ */
@@ -13152,9 +13162,15 @@ ren-sheet {
   position: relative;
 }
 
-/* ═══ TRIGGER BUTTON ═══ */
+/* ═══ TRIGGER BUTTON ═══
+   No `anchor-name` here on purpose. Anchor names are document-wide
+   identifiers, so a single shared name would resolve to the last trigger in
+   tree order and every dropdown on the page would render against that one.
+   ren-date-range-picker.js generates a unique name per instance and applies
+   it inline to this trigger, pairing it with the matching `position-anchor`
+   on that instance's dropdown. An `anchor-name` you set inline yourself is
+   respected and reused. */
 .ren-date-range-trigger {
-  anchor-name: --ren-date-range-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13233,9 +13249,10 @@ ren-sheet {
   }
 }
 
-/* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
+/* ═══ DROPDOWN CONTAINER (POPOVER) ═══
+   `position-anchor` is injected inline by the component, pointing at the
+   per-instance name on its own trigger (see the trigger block above). */
 .ren-date-range-dropdown {
-  position-anchor: --ren-date-range-anchor;
   position: absolute;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -13245,7 +13262,7 @@ ren-sheet {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
 
   /* ═══ POPOVER API ═══ */
   &[popover] {
@@ -14138,8 +14155,13 @@ ren-sheet {
 }
 
 /* ═══ TRIGGER BUTTON (Shows Current Color) ═══ */
+/* The anchor name is NOT declared here on purpose. `anchor-name` is a
+   document-wide identifier: a single shared name would resolve to the last
+   matching element in tree order, so with two or more pickers on a page every
+   dropdown would position itself against the final trigger. ren-color-picker.js
+   generates one name per instance and injects it inline on the trigger
+   (anchor name) and on the dropdown (position anchor). */
 .ren-color-picker-trigger {
-  anchor-name: --ren-color-picker-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14202,9 +14224,11 @@ ren-sheet {
 }
 
 /* ═══ DROPDOWN CONTAINER (Popover) ═══ */
+/* The positioning anchor is injected inline per instance by
+   ren-color-picker.js — see the note on .ren-color-picker-trigger. Only the
+   placement geometry lives here. */
 .ren-color-picker-dropdown {
   position: absolute;
-  position-anchor: --ren-color-picker-anchor;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   inset: auto;
@@ -14219,7 +14243,7 @@ ren-sheet {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 50;
+  z-index: var(--z-popover);
 
   /* Popover API defaults */
   &:popover-open {
@@ -15374,7 +15398,7 @@ ren-sheet {
   &.ren-nav-sticky {
     position: sticky;
     top: 0;
-    z-index: var(--ren-z-sticky, 100);
+    z-index: var(--ren-z-sticky, var(--z-sticky));
     backdrop-filter: blur(8px);
     background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
   }
@@ -15421,7 +15445,7 @@ ren-sheet {
     border-bottom: 1px solid var(--color-border);
     padding: var(--ren-space-2, 0.5rem) 0;
     animation: ren-nav-slide-down var(--duration-enter) var(--ease-enter);
-    z-index: 1000;
+    z-index: var(--z-dropdown);
 
     @media (prefers-reduced-motion: reduce) {
       animation: none;
@@ -15584,7 +15608,10 @@ ren-sheet {
   flex-direction: column;
   transition: width var(--duration-enter) var(--ease-state-change), transform var(--duration-enter) var(--ease-state-change);
   overflow: hidden;
-  z-index: 50;
+  /* Must outrank its own backdrop (--z-overlay), which covers the page while
+     the mobile drawer is open — otherwise the scrim swallows every click
+     meant for the sidebar. Keep this above --z-overlay if either moves. */
+  z-index: var(--z-modal);
 
   &[data-collapsed] {
     width: var(--sidebar-collapsed-width);
@@ -15620,7 +15647,8 @@ ren-sheet {
         border-radius: 0.375rem;
         font-size: var(--ren-caption-size, 0.75rem);
         white-space: nowrap;
-        z-index: 1000;
+        /* Flyout label for collapsed items — behaves as a tooltip. */
+        z-index: var(--z-tooltip);
         pointer-events: none;
       }
     }
@@ -15856,7 +15884,7 @@ ren-sheet {
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--duration-enter) var(--ease-state-change);
-  z-index: 40;
+  z-index: var(--z-overlay);
 
   @media (max-width: 48rem) {
     .ren-sidebar[data-open] ~ & {
@@ -15902,7 +15930,7 @@ ren-sheet {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  z-index: var(--ren-z-modal, 1000);
+  z-index: var(--ren-z-modal, var(--z-modal));
   margin: auto;
   animation: ren-command-in var(--duration-enter) var(--ease-enter);
 
@@ -17167,7 +17195,7 @@ ren-table[data-loading] {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -17316,7 +17344,7 @@ ren-table[data-loading] {
   top: 0;
   inset-inline-start: calc(100% + var(--space-1));
   margin-top: 0;
-  z-index: 1100;
+  z-index: calc(var(--z-popover) + 1);
 }
 
 /* =================================================================

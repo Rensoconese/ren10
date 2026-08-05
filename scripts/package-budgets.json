@@ -1,22 +1,22 @@
 {
   "version": 1,
   "capturedFor": "ren10@0.13.0",
-  "capturedAt": "2026-08-01",
+  "capturedAt": "2026-08-04",
   "capturedFrom": "validated ren10@0.13.0 catalog plus the official Astro integration, 53 generated Astro components, Astro starter, AI hints, reference-theme tools, detector support, and release metadata",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 25176177, "allowedDelta": 0, "target": 25176177 },
-    "tarballBytes": { "baseline": 5968903, "allowedDelta": 0, "target": 5968903 },
-    "fullCssBytes": { "baseline": 512555, "allowedDelta": 0, "target": 512555 },
-    "minCssBytes": { "baseline": 291758, "allowedDelta": 0, "target": 291758 },
-    "knowledgeJsonBytes": { "baseline": 4189971, "allowedDelta": 0, "target": 4189971 },
-    "knowledgeSqliteBytes": { "baseline": 9347072, "allowedDelta": 0, "target": 9347072 },
+    "unpackedBytes": { "baseline": 25440951, "allowedDelta": 0, "target": 25440951 },
+    "tarballBytes": { "baseline": 6073272, "allowedDelta": 0, "target": 6073272 },
+    "fullCssBytes": { "baseline": 515264, "allowedDelta": 0, "target": 515264 },
+    "minCssBytes": { "baseline": 291512, "allowedDelta": 0, "target": 291512 },
+    "knowledgeJsonBytes": { "baseline": 4254438, "allowedDelta": 0, "target": 4254438 },
+    "knowledgeSqliteBytes": { "baseline": 9502720, "allowedDelta": 0, "target": 9502720 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
-    "cliRssBytes": { "baseline": 46153728, "allowedDelta": 8388608, "target": 54542336 }
+    "cliRssBytes": { "baseline": 46219264, "allowedDelta": 8388608, "target": 54607872 }
   },
   "rationale": {
-    "package": "0.13.0 Astro-enabled npm pack measurements; zero growth allowed.",
+    "package": "Re-baselined after the overlay-anchoring / dismissable / i18n / z-index pass. Growth is deliberate and accounted for: utils/anchor.js (new shared module), per-instance anchor and layer-stack wiring across 9 components, i18n adoption in 12 components against an 82-key catalogue, base/layouts.md growing from 62 to 148 lines to document base/grid.css, and the component contracts those changes touched — the knowledge graph embeds contract bodies verbatim, which is why both graph metrics move with the docs. Net: unpacked +0.25 MB (+1.0%), tarball +0.10 MB (+1.7%), full CSS +2.5 kB (+0.5%). Minified CSS went DOWN 245 bytes: the shared anchor names replaced duplicated declarations. Zero growth allowed from here.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."

@@ -133,6 +133,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- The generated placeholder, empty row, and loading row come from `utils/i18n.js` (`combobox.placeholder` / `noResults` / `loading`) and are resolved once, when the element connects — call `setLocale()` before the combobox is inserted, because a later locale change does not relabel already-generated nodes.
 
 ## Related Files
 

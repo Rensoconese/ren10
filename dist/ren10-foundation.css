@@ -3926,8 +3926,10 @@ sup, sub {
   --auto-grid-gap: var(--grid-gutter);
   --auto-grid-placement: auto-fill;
 
-  /* Ease function for animations */
-  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Motion curves come from tokens/primitives/motion.css. This file lives in
+     @layer base, which outranks @layer tokens, so declaring --ease-out here
+     silently overrode the system token for every consumer on the page — not
+     just for grid. Grid transitions below use the token like everyone else. */
 }
 
 /* ============================================================================
@@ -5481,7 +5483,7 @@ sup, sub {
     height: 3px;
     background: var(--color-accent);
     transform-origin: left;
-    z-index: 9999;
+    z-index: var(--z-max);
     animation: ren-scale-x linear both;
     animation-timeline: scroll(root);
   }
