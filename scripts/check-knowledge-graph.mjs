@@ -4,6 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { loadJsonGraph } from '../cli/knowledge-search.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const knowledgeDir = path.join(root, 'knowledge');
@@ -240,7 +241,10 @@ const main = () => {
     compareFiles(jsonPath, path.join(tempDir, 'ren10-graph.json'), messages);
 
     if (existsSync(jsonPath)) {
-      const graph = readJson(jsonPath);
+      // loadJsonGraph rehydrates node bodies from the package files they point
+      // at; the published graph no longer carries a second copy of that text.
+      // Shape checks read those bodies, so they need the hydrating loader.
+      const graph = loadJsonGraph(jsonPath);
       checkGraphShape(graph, messages);
 
       if (!sqliteAvailable()) {
