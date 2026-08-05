@@ -30,6 +30,9 @@ consolidates them and starts formal version tracking with 0.7.0.
   without CSS anchor positioning, replacing three divergent copies.
 - Added `renWarn()` so integration warnings can be routed to an application's
   own logger or silenced, instead of going to `console.warn` unconditionally.
+- Added a runtime smoke that mounts all 32 JS components from the CLI registry
+  and drives them: lifecycle calls, reconnect, activating the first control,
+  and mounting with no markup. Every gate before this measured structure.
 
 ### Changed
 
@@ -85,6 +88,13 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Fixed issue-template links to `docs/` and `CHANGELOG.md`, which pointed at a
   `rends/` path prefix this repository does not have, and CHANGELOG compare
   links that jumped from v0.11.0 straight to HEAD.
+- Fixed four `@ren10/astro` wrappers rendering custom elements that nothing
+  defines — `<Radio>`, `<Toast>`, `<Dropzone>` and `<Toolbar>` emitted inert
+  markup in 0.13.0. The generator reads the registry's usage snippets, and
+  `check-public-contracts` was requiring the tag to be `ren-<registry key>`,
+  which is wrong for `ren-radio-group` and `ren-toast-viewport` — so the check
+  enforced the broken documentation. Valid tags now come from the components'
+  own `customElements.define()` calls.
 
 ### Removed
 
