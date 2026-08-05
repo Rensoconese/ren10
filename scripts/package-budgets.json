@@ -5,12 +5,12 @@
   "capturedFrom": "validated ren10@0.13.0 catalog plus the official Astro integration, 53 generated Astro components, Astro starter, AI hints, reference-theme tools, detector support, and release metadata",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 19610769, "allowedDelta": 0, "target": 19610769 },
-    "tarballBytes": { "baseline": 5394197, "allowedDelta": 0, "target": 5394197 },
-    "fullCssBytes": { "baseline": 515264, "allowedDelta": 0, "target": 515264 },
-    "minCssBytes": { "baseline": 291512, "allowedDelta": 0, "target": 291512 },
-    "knowledgeJsonBytes": { "baseline": 1989844, "allowedDelta": 0, "target": 1989844 },
-    "knowledgeSqliteBytes": { "baseline": 5922816, "allowedDelta": 0, "target": 5922816 },
+    "unpackedBytes": { "baseline": 19848132, "allowedDelta": 0, "target": 19848132 },
+    "tarballBytes": { "baseline": 5482012, "allowedDelta": 0, "target": 5482012 },
+    "fullCssBytes": { "baseline": 520098, "allowedDelta": 0, "target": 520098 },
+    "minCssBytes": { "baseline": 292076, "allowedDelta": 0, "target": 292076 },
+    "knowledgeJsonBytes": { "baseline": 2020458, "allowedDelta": 0, "target": 2020458 },
+    "knowledgeSqliteBytes": { "baseline": 6062080, "allowedDelta": 0, "target": 6062080 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
     "cliRssBytes": { "baseline": 46153728, "allowedDelta": 8388608, "target": 54542336 }
