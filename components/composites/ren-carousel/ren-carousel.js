@@ -50,6 +50,7 @@
  */
 
 import { t } from '../../../utils/i18n.js';
+import { renWarn } from '../../../utils/debug.js';
 
 let nextId = 0;
 
@@ -195,7 +196,7 @@ export class RenCarousel extends HTMLElement {
     // Find viewport
     this._viewport = this.querySelector('.ren-carousel-viewport');
     if (!this._viewport) {
-      console.warn('RenCarousel: No viewport found');
+      renWarn('RenCarousel', 'No viewport found');
       return;
     }
 
@@ -217,7 +218,7 @@ export class RenCarousel extends HTMLElement {
       this._prevButton = null;
       this._nextButton = null;
       this._counterElement = null;
-      console.warn('RenCarousel: No slides found');
+      renWarn('RenCarousel', 'No slides found');
       return;
     }
 

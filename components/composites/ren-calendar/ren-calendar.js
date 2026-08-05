@@ -1,5 +1,6 @@
 import { formatLocalDate, parseLocalDate } from '../../../utils/local-date.js';
 import { t } from '../../../utils/i18n.js';
+import { renWarn } from '../../../utils/debug.js';
 
 /* ═══ REN CALENDAR WEB COMPONENT ═══
    A fully accessible, keyboard-navigable calendar for date selection.
@@ -428,7 +429,7 @@ export class RenCalendar extends HTMLElement {
   /* ═══ SET RANGE ═══ */
   setRange(start, end) {
     if (this.mode !== 'range') {
-      console.warn('RenCalendar: setRange() only works in range mode');
+      renWarn('RenCalendar', 'setRange() only works in range mode');
       return;
     }
 

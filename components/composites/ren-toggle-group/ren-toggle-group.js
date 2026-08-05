@@ -1,5 +1,7 @@
 /* ═══ REN TOGGLE GROUP WEB COMPONENT ═══ */
 
+import { renWarn } from '../../../utils/debug.js';
+
 export class RenToggleGroup extends HTMLElement {
   constructor() {
     super();
@@ -21,7 +23,7 @@ export class RenToggleGroup extends HTMLElement {
     );
 
     if (this.items.length === 0) {
-      console.warn('RenToggleGroup: No items found');
+      renWarn('RenToggleGroup', 'No items found');
       return;
     }
 
@@ -98,7 +100,7 @@ export class RenToggleGroup extends HTMLElement {
   /* ═══ SET SINGLE VALUE ═══ */
   setValue(value) {
     if (this.type !== 'single') {
-      console.warn('RenToggleGroup: setValue only works in single mode');
+      renWarn('RenToggleGroup', 'setValue only works in single mode');
       return;
     }
 

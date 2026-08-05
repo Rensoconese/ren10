@@ -1,6 +1,7 @@
 /* ═══ REN HOVER CARD WEB COMPONENT ═══ */
 
 import { createAnchorLink } from '../../../utils/anchor.js';
+import { renWarn } from '../../../utils/debug.js';
 
 export class RenHoverCard extends HTMLElement {
   constructor() {
@@ -28,7 +29,7 @@ export class RenHoverCard extends HTMLElement {
     this.card = this.querySelector('[role="tooltip"]') || this.querySelector('.ren-hover-card');
 
     if (!this.card) {
-      console.warn('RenHoverCard: No card element found');
+      renWarn('RenHoverCard', 'No card element found');
       return;
     }
 
@@ -49,7 +50,7 @@ export class RenHoverCard extends HTMLElement {
     }
 
     if (!this.trigger) {
-      console.warn('RenHoverCard: No trigger element found');
+      renWarn('RenHoverCard', 'No trigger element found');
       return;
     }
 
