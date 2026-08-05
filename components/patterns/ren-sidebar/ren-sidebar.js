@@ -21,9 +21,11 @@ class RenSidebar extends HTMLElement {
 
   connectedCallback() {
     this._initElements();
+    // Mobile state must be known before restoring: _restoreState() consults
+    // _isMobile to decide whether the stored preference applies.
+    this._updateMobileState();
     this._restoreState();
     this._attachEventListeners();
-    this._updateMobileState();
   }
 
   disconnectedCallback() {
@@ -81,20 +83,6 @@ class RenSidebar extends HTMLElement {
         }
       }
     }, { signal });
-
-    // Expose toggle menu for mobile
-    this._setupMobileToggle();
-  }
-
-  _setupMobileToggle() {
-    // Allow external control via method
-    this.toggleMenu = () => {
-      if (this._isOpen) {
-        this._closeMenu();
-      } else {
-        this._openMenu();
-      }
-    };
   }
 
   _removeEventListeners() {
@@ -102,33 +90,27 @@ class RenSidebar extends HTMLElement {
     this._listenerController = null;
   }
 
+  /** User-initiated collapse toggle — the only path that persists a preference. */
   _toggleCollapse() {
-    if (this._isCollapsed) {
-      this._expand();
-    } else {
-      this._collapse();
+    this._applyCollapsed(!this._isCollapsed, { persist: true });
+  }
+
+  /**
+   * Applies the visual collapsed state. Persistence is opt-in so that
+   * layout-driven transitions (mobile overlay, viewport resize) never
+   * overwrite the user's stored desktop preference.
+   */
+  _applyCollapsed(isCollapsed, { persist = false } = {}) {
+    const changed = this._isCollapsed !== isCollapsed;
+    this._isCollapsed = isCollapsed;
+    this.toggleAttribute('data-collapsed', isCollapsed);
+
+    if (persist) {
+      this._writeCollapsedState(isCollapsed);
     }
-  }
 
-  _collapse() {
-    this._isCollapsed = true;
-    this.setAttribute('data-collapsed', '');
-    this._writeCollapsedState(true);
-    this._dispatchToggleEvent();
-  }
-
-  _expand() {
-    this._isCollapsed = false;
-    this.removeAttribute('data-collapsed');
-    this._writeCollapsedState(false);
-    this._dispatchToggleEvent();
-  }
-
-  _toggleMenu() {
-    if (this._isOpen) {
-      this._closeMenu();
-    } else {
-      this._openMenu();
+    if (changed) {
+      this._dispatchToggleEvent();
     }
   }
 
@@ -139,7 +121,6 @@ class RenSidebar extends HTMLElement {
   }
 
   _closeMenu() {
-    if (!this._isMobile) return;
     this._isOpen = false;
     this.removeAttribute('data-open');
   }
@@ -148,22 +129,27 @@ class RenSidebar extends HTMLElement {
     const wasMobile = this._isMobile;
     this._isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 
-    // Close menu when transitioning to desktop
-    if (wasMobile && !this._isMobile && this._isOpen) {
+    if (this._isMobile) {
+      // The mobile overlay always renders expanded. That is a layout
+      // constraint, not a user choice, so it must not be persisted.
+      this._applyCollapsed(false, { persist: false });
+      return;
+    }
+
+    // Back on desktop: drop the overlay and re-apply the stored preference.
+    if (this._isOpen) {
       this._closeMenu();
     }
 
-    // Reset collapse on mobile
-    if (this._isMobile && this._isCollapsed) {
-      this._expand();
+    if (wasMobile) {
+      this._applyCollapsed(this._readCollapsedState(), { persist: false });
     }
   }
 
   _restoreState() {
-    const isCollapsed = this._readCollapsedState();
-    if (isCollapsed && !this._isMobile) {
-      this._collapse();
-    }
+    // On mobile the stored preference is ignored but deliberately preserved.
+    if (this._isMobile) return;
+    this._applyCollapsed(this._readCollapsedState(), { persist: false });
   }
 
   _readCollapsedState() {
@@ -208,6 +194,14 @@ class RenSidebar extends HTMLElement {
 
   get isMobileOpen() {
     return this._isOpen;
+  }
+
+  toggleMenu() {
+    if (this._isOpen) {
+      this._closeMenu();
+    } else {
+      this._openMenu();
+    }
   }
 
   setActiveItem(href) {
