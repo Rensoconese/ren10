@@ -13,13 +13,63 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+- Added `utils/anchor.js`, a shared helper that mints a unique CSS anchor name
+  per trigger/overlay pairing, defers to an author-supplied `anchor-name`, and
+  restores what it injected on disconnect.
+- Added multi-instance regression coverage for overlays, menubar behavior,
+  sidebar persistence, and i18n adoption — 22 cases across four specs, each
+  verified to fail against the previous implementation.
+- Added a token-policy check that fails when a `:root` custom property in
+  `base/` shadows a design token, since `@layer base` outranks `@layer tokens`.
+- Added a performance-contract check that fails when the CI visual container
+  and the installed `@playwright/test` version disagree on an image tag.
+- Documented `base/grid.css` in `base/layouts.md`: routing tables for its 29
+  public classes and the 17 configuration properties. The file was reachable in
+  the bundle but absent from every discovery path agents are told to follow.
+
 ### Changed
+
+- Adopted the packaged i18n catalogue across 12 components. UI strings and
+  `aria-label`s now resolve through `t()`; every English string is unchanged.
+  The catalogue gained 14 keys, and `calendar`, `otp` and `datePicker` finally
+  use the keys that had been written for them but never wired up.
+- Moved cross-component overlays onto the semantic z-index scale. Purely local
+  stacking contexts (table cells, slider thumb, carousel controls, scroll-area
+  scrollbars) are unchanged.
+- Routed `ren-context-menu`, `ren-combobox` and `ren-menubar` through the shared
+  dismissable layer stack, so Escape dismisses the topmost layer only.
+- Pinned the visual regression gate to the Playwright container image and
+  recaptured its baselines there, making the gate reproducible on any machine
+  with Docker instead of only on the CI runner.
+- Replaced the open `dist/` glob in `files` with the six tracked stylesheets.
 
 ### Fixed
 
+- Fixed anchored overlays sharing one document-wide `anchor-name`: with two or
+  more instances on a page, every popover, tooltip, hover card, date picker,
+  date range picker and color picker but the last rendered against the wrong
+  trigger.
+- Fixed `ren-menubar` being unable to open any menu. `openMenu` and `closeAll`
+  were each defined twice and the winning `openMenu` called itself, so every
+  trigger click threw `Maximum call stack size exceeded`.
+- Fixed `base/grid.css` declaring `--ease-out` on `:root`, which silently
+  overrode the motion token for all 43 usages across the system.
+- Fixed a mobile visit erasing the stored `ren-sidebar` collapse preference,
+  and a stale mobile guard that left `data-open` set when returning to desktop.
+- Fixed `cli/registry.js` omitting the `utils/` dependencies of 15 components,
+  which made `ren10 add` emit components whose imports resolved to nothing.
+
 ### Removed
 
+- Removed `dist/rends-skill-0.9.0.tgz` from the published tarball; it was
+  untracked, stale, and swept in by the `dist/` glob.
+
 ### Security
+
+- Updated `fast-uri` to 3.1.5 (GHSA-7p8r-x3mc-p8w7, high) via the lockfile,
+  which unblocks the `audit:full` release gate. Dropped a stray `"dev": true`
+  from the lockfile root that was pruning the whole tree, so `audit:runtime`
+  had been reporting a clean result without auditing anything.
 
 ## [0.13.0] — 2026-08-01
 
