@@ -14,7 +14,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  z-index: var(--ren-z-modal, 1000);
+  z-index: var(--ren-z-modal, var(--z-modal));
   margin: auto;
   animation: ren-command-in var(--duration-enter) var(--ease-enter);
 

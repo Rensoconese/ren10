@@ -26,7 +26,7 @@ ren-sheet {
   display: flex;
   flex-direction: column;
 
-  z-index: 50;
+  z-index: var(--z-modal);
   max-width: 100%;
   max-height: 100%;
   touch-action: none; /* Prevent scroll chaining; swipe-to-dismiss handled by JS */

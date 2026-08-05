@@ -16,7 +16,10 @@
   flex-direction: column;
   transition: width var(--duration-enter) var(--ease-state-change), transform var(--duration-enter) var(--ease-state-change);
   overflow: hidden;
-  z-index: 50;
+  /* Must outrank its own backdrop (--z-overlay), which covers the page while
+     the mobile drawer is open — otherwise the scrim swallows every click
+     meant for the sidebar. Keep this above --z-overlay if either moves. */
+  z-index: var(--z-modal);
 
   &[data-collapsed] {
     width: var(--sidebar-collapsed-width);
@@ -52,7 +55,8 @@
         border-radius: 0.375rem;
         font-size: var(--ren-caption-size, 0.75rem);
         white-space: nowrap;
-        z-index: 1000;
+        /* Flyout label for collapsed items — behaves as a tooltip. */
+        z-index: var(--z-tooltip);
         pointer-events: none;
       }
     }
@@ -288,7 +292,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--duration-enter) var(--ease-state-change);
-  z-index: 40;
+  z-index: var(--z-overlay);
 
   @media (max-width: 48rem) {
     .ren-sidebar[data-open] ~ & {

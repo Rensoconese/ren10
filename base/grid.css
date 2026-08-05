@@ -87,8 +87,10 @@
   --auto-grid-gap: var(--grid-gutter);
   --auto-grid-placement: auto-fill;
 
-  /* Ease function for animations */
-  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Motion curves come from tokens/primitives/motion.css. This file lives in
+     @layer base, which outranks @layer tokens, so declaring --ease-out here
+     silently overrode the system token for every consumer on the page — not
+     just for grid. Grid transitions below use the token like everyone else. */
 }
 
 /* ============================================================================
