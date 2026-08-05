@@ -23,7 +23,12 @@
   "files": [
     "index.css",
     "foundation.css",
-    "dist/",
+    "dist/ren10.css",
+    "dist/ren10.min.css",
+    "dist/ren10-components.css",
+    "dist/ren10-components.min.css",
+    "dist/ren10-foundation.css",
+    "dist/ren10-foundation.min.css",
     "ren-design.md",
     "AGENTS.md",
     "CLAUDE.md",
