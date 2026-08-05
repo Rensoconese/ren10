@@ -1,4 +1,84 @@
-# RenDS — Roadmap
+# RenDS — Roadmap (documento archivado)
+
+> **Histórico. Ya no se mantiene.**
+> El contenido de abajo quedó congelado el **2026-05-18** sobre la versión
+> **0.9.0**. Se archivó el **2026-08-05**, cuando `package.json` ya estaba en
+> 0.13.0 — cuatro minors de deriva. Nada de lo que sigue describe el plan
+> actual.
+>
+> **El roadmap vivo es [`docs/agent-ready-roadmap.md`](./docs/agent-ready-roadmap.md).**
+
+## Dónde está el plan real
+
+| Pregunta | Fuente viva |
+| --- | --- |
+| ¿Qué viene después? | [`docs/agent-ready-roadmap.md`](./docs/agent-ready-roadmap.md) — fases 1 a 7 con su estado, más "Current Definition of Done" |
+| ¿Qué cambió, y en qué release? | [`CHANGELOG.md`](./CHANGELOG.md) |
+| ¿En qué versión está el paquete? | `package.json` → `version` |
+| ¿Cómo se publica una release? | [`SHIPPING.md`](./SHIPPING.md) |
+| ¿Cuál es el contrato para agentes? | [`AGENTS.md`](./AGENTS.md) |
+
+`docs/agent-ready-roadmap.md` es el roadmap que el repo realmente sostiene: se
+publica dentro del paquete npm, se expone en la CLI
+(`npx ren10 docs agent-ready-roadmap`, registrado en `cli/index.js`) y está
+cubierto por gates — `scripts/smoke-agent-cli.mjs` falla si desaparece del
+manifest, y `scripts/check-knowledge-graph.mjs` lo exige en el grafo. Su Phase 7
+cubre la entrega de Astro que salió en 0.13.0.
+
+## Por qué se archivó en vez de actualizarse
+
+- **Es el segundo roadmap.** El de `docs/` está shippeado y bajo test; este no
+  lo está, y fue el que se desactualizó.
+- **Nada lo consume.** `AGENTS.md` —el contrato canónico según `CLAUDE.md`— no
+  lo menciona ni una vez. `package.json` → `files` no lo publica en npm.
+  `skills/rends/sources.json` lo lista en `excludedRoots`, así que tampoco
+  entra al knowledge graph ni al adaptador v0.
+- **Nada lo verifica.** El gate de deriva de versión
+  (`scripts/release-policy.mjs` → `findPublicVersionSurfaces`) enumera dónde la
+  versión no puede quedar vieja: los badges HTML de `docs/`, `create/`,
+  `templates/` y `site/`, más `AGENTS.md`, `CLAUDE.md`, `.cursorrules`,
+  `.windsurfrules`, `ren-design.md` y `README.md`. `ROADMAP.md` no está en esa
+  lista.
+- **Es el segundo ciclo.** [`AUDIT-2026-05-11.md`](./AUDIT-2026-05-11.md) §2.2
+  ya lo había marcado como desactualizado y ordenó reescribirlo (ítem A2). Se
+  reescribió, y volvió a quedar obsoleto en menos de tres meses.
+
+> **Nota de mantenimiento:** `.github/ISSUE_TEMPLATE/config.yml` todavía enlaza
+> este archivo como "Roadmap — what's planned for the next releases". Conviene
+> repuntarlo a `docs/agent-ready-roadmap.md`. El archivo se conserva acá, con
+> este nombre, justamente para que ese enlace no quede roto mientras tanto.
+
+## Correcciones: lo que este doc afirmaba → lo que era cierto al archivarlo
+
+| Afirmación congelada | Estado al 2026-08-05 |
+| --- | --- |
+| "Versión actual en disco: `0.9.0`" | `package.json` en **0.13.0**. |
+| "Fecha del roadmap: 2026-05-18" | El último commit que tocó el archivo es `b146e0b` (2026-07-09); el encabezado nunca se actualizó. |
+| "Última fase cerrada: 0.9.0 + hardening post-auditoría" | La última release cortada es **0.13.0** (2026-08-01). El roadmap vivo va por Phase 7. |
+| "The roadmap explicitly excludes optional plugin integrations for now." | Contradicho por los hechos: 0.13.0 shippeó `@ren10/astro` como integración **oficial**, con 53 adapters Light DOM generados, catálogo machine-readable, exports y starter. |
+| "WCAG 2.1 AA — 224/224 pass en 8 proyectos Chromium" | **Sin verificar**: requiere correr `npm run test:a11y`. El `STATUS.md` congelado decía 368/368 para la misma métrica, así que los dos documentos ya se contradecían entre sí. |
+| Tabla: "`ci.yml` — lint + a11y + components + visual, **solo Chromium**" vs. fila siguiente "cross-browser activo" | El doc se contradecía a sí mismo. Estado real: matriz `[chromium, firefox, webkit]` con `continue-on-error` en los no-Chromium (`.github/workflows/ci.yml`). |
+| "312 PNGs de baselines visuales" | **345** PNGs en `tests/visual/visual.spec.cjs-snapshots/`, recapturados dentro del contenedor Playwright fijado (`169f391`). |
+| Hito 1.8: "fix badge `v0.7` → `v0.8` en `docs/cli.html` línea 109" | Cerrado. Hoy `docs/cli.html:85` expone `v0.13.0`, y `findPublicVersionSurfaces` obliga a que coincida con `package.json`. |
+| Hito 4.3: "faltan tags `v0.7.0`, `v0.8.0`, `v0.8.2`" | Sigue siendo cierto — verificado sobre tags **locales**; sin red no se puede comparar contra el remoto. |
+| Hito 4.4: "push del branch `codex/fix-visual-ci-baselines`" | Obsoleto; esa rama ya no es la de trabajo. |
+| Hito 5.4: "publicar la versión actual (`0.9.0`)" | Obsoleto: hay tags hasta `v0.13.0`, más `publish-v0.13.0-1` que dispara `.github/workflows/publish-retry.yml`. **Si el paquete está efectivamente publicado en el registry no es verificable desde el repo (sin red).** |
+| Hito 5.6 / 2.3: "activar Pages" | `.github/workflows/pages.yml` sigue presente. **El toggle de Settings → Pages no es verificable desde el repo (sin red).** |
+| Hito 6.1: "cortar `[Unreleased]` como `0.8.3`" | Obsoleto: desde entonces se cortaron 0.9.0 → 0.13.0. |
+| Hito 6.5: "actualizar `_sidebar.html`, `docs/components.html`, command palette y enlaces internos" | Efectivamente cerrado: no quedan referencias a los nombres viejos en `docs/components/_sidebar.html` ni en `site/shell.js`. El único `ren-data-table` restante (`docs/components.html:1111`) es una etiqueta `<code>` con el nombre de la clase CSS; su `href` ya apunta a `components/ren-table.html`. |
+| Hito 8.3: "sitio público con changelog renderizado" | Sigue sin existir: no hay página de changelog en `docs/` ni en `site/`. |
+| Hito 8.1 / 8.2: Storybook, Lighthouse CI | Siguen sin existir en el repo (ni directorio de Storybook ni referencias a Lighthouse). |
+| Referencias: "`PHASE-7-27-COMPLETE.md` en `outer/`", "`outer/PHASE-7-7-COMPLETE.md`" | Apuntan fuera del repo git: el workspace `outer` no forma parte de `Rensoconese/ren10` (ver la nota de layout en `SHIPPING.md`). |
+| "`[Unreleased]` listo para cortar: `CHANGELOG.md:12-232`" | Los rangos de línea ya no aplican; hoy `[Unreleased]` es `CHANGELOG.md:12-73`. |
+
+Para recuperar la versión viva de este documento tal como estaba antes del
+archivado: `git show b146e0b:ROADMAP.md`.
+
+---
+
+# Contenido congelado (2026-05-18 · v0.9.0)
+
+*Conservado como registro histórico. No editar y no leer como plan actual.*
 
 ## 1.0 direction
 
