@@ -14,9 +14,9 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-toolbar class:list={className} {...rest}><slot /></ren-toolbar>
+<div class:list={['ren-toolbar', className]} {...rest}><slot /></div>
 
 <script>
   import { initToolbar } from 'ren10/components/composites/ren-toolbar/ren-toolbar.js';
-  document.querySelectorAll('ren-toolbar').forEach((element) => initToolbar(element));
+  document.querySelectorAll('div').forEach((element) => initToolbar(element));
 </script>

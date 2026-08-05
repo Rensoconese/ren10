@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-toast class:list={className} {...rest}><slot /></ren-toast>
+<ren-toast-viewport class:list={className} {...rest}><slot /></ren-toast-viewport>
 
 <script>
   import 'ren10/components/composites/ren-toast/ren-toast.js';

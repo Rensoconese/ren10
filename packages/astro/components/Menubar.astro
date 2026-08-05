@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-menubar class:list={['ren-menubar', className]} {...rest}><slot /></ren-menubar>
+<ren-menubar class:list={className} {...rest}><slot /></ren-menubar>
 
 <script>
   import 'ren10/components/patterns/ren-menubar/ren-menubar.js';

@@ -84,12 +84,18 @@ export const REGISTRY = {
     files: ['ren-radio.css', 'ren-radio.js'],
     utils: ['keyboard-nav.js'],
     components: [],
-    usage: `<ren-radio name="option">
-  <input type="radio" id="opt1" value="a">
-  <label for="opt1">Option A</label>
-  <input type="radio" id="opt2" value="b">
-  <label for="opt2">Option B</label>
-</ren-radio>`,
+    usage: `<ren-radio-group>
+  <label class="ren-radio">
+    <input type="radio" name="option" value="a">
+    <span class="ren-radio-control"></span>
+    <span>Option A</span>
+  </label>
+  <label class="ren-radio">
+    <input type="radio" name="option" value="b">
+    <span class="ren-radio-control"></span>
+    <span>Option B</span>
+  </label>
+</ren-radio-group>`,
   },
 
   progress: {
@@ -390,10 +396,13 @@ export const REGISTRY = {
     files: ['ren-toast.css', 'ren-toast.js'],
     utils: ['live-region.js', 'i18n.js'],
     components: [],
-    usage: `<ren-toast role="status" aria-live="polite">
-  Message sent successfully
-  <button aria-label="Dismiss">×</button>
-</ren-toast>`,
+    usage: `<ren-toast-viewport data-position="bottom-right"></ren-toast-viewport>
+
+<script type="module">
+  import { toast } from 'ren10/components/composites/ren-toast/ren-toast.js';
+  toast('Message sent successfully');
+  toast({ title: 'Upload failed', description: 'Try again', status: 'error' });
+</script>`,
   },
 
   slider: {
@@ -640,12 +649,19 @@ export const REGISTRY = {
     files: ['ren-dropzone.css', 'ren-dropzone.js'],
     utils: [],
     components: [],
-    usage: `<ren-dropzone accept="image/*" multiple>
-  <label>
-    <input type="file" multiple>
-    <span>Drop files here or click to browse</span>
-  </label>
-</ren-dropzone>`,
+    usage: `<div class="ren-dropzone">
+  <input type="file" class="ren-dropzone-input" accept="image/*" multiple>
+  <div class="ren-dropzone-content">
+    <div class="ren-dropzone-title">Drop files here</div>
+    <div class="ren-dropzone-description">or click to browse</div>
+  </div>
+</div>
+
+<script type="module">
+  import { initDropZone } from 'ren10/components/composites/ren-dropzone/ren-dropzone.js';
+  const zone = initDropZone(document.querySelector('.ren-dropzone'));
+  zone.addEventListener('ren-files-added', (event) => console.log(event.detail.files));
+</script>`,
   },
 
   toolbar: {
@@ -656,11 +672,17 @@ export const REGISTRY = {
     files: ['ren-toolbar.css', 'ren-toolbar.js'],
     utils: [],
     components: [],
-    usage: `<ren-toolbar role="toolbar" aria-label="Formatting">
-  <button>Bold</button>
-  <button>Italic</button>
-  <button>Underline</button>
-</ren-toolbar>`,
+    usage: `<div class="ren-toolbar" role="toolbar" aria-label="Formatting">
+  <button class="ren-toolbar-item" tabindex="0">Bold</button>
+  <button class="ren-toolbar-item" tabindex="-1">Italic</button>
+  <div class="ren-toolbar-separator" role="separator"></div>
+  <button class="ren-toolbar-item" tabindex="-1">Underline</button>
+</div>
+
+<script type="module">
+  import { initAllToolbars } from 'ren10/components/composites/ren-toolbar/ren-toolbar.js';
+  initAllToolbars();
+</script>`,
   },
 
   // PATTERNS
@@ -757,10 +779,17 @@ export const REGISTRY = {
     files: ['ren-menubar.css', 'ren-menubar.js'],
     utils: ['dismissable.js'],
     components: [],
-    usage: `<ren-menubar class="ren-menubar">
-  <div role="menubar">
-    <button role="menuitem">File</button>
-    <button role="menuitem">Edit</button>
+    usage: `<ren-menubar>
+  <div class="ren-menubar" role="menubar" aria-label="Main">
+    <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">File</button>
+    <div class="ren-menubar-menu" role="menu" hidden>
+      <button type="button" class="ren-menubar-item" role="menuitem">New</button>
+      <button type="button" class="ren-menubar-item" role="menuitem">Open</button>
+    </div>
+    <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">Edit</button>
+    <div class="ren-menubar-menu" role="menu" hidden>
+      <button type="button" class="ren-menubar-item" role="menuitem">Undo</button>
+    </div>
   </div>
 </ren-menubar>`,
   },

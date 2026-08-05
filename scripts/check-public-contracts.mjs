@@ -332,7 +332,23 @@ if (eventsFixtureIndex !== -1) {
 }
 
 const errors = [];
+// Known custom element tags, read from the customElements.define() calls the
+// components actually make — not assumed to be `ren-<registry key>`. That
+// assumption was wrong for two components and, because this check enforced it,
+// it kept their documented usage wrong: ren-radio-group was documented as
+// <ren-radio> and ren-toast-viewport as <ren-toast>, so the snippet `ren10 add`
+// prints never upgraded.
 const tags = new Set(Object.keys(REGISTRY).map((name) => `ren-${name}`));
+for (const meta of Object.values(REGISTRY)) {
+  for (const file of meta.files ?? []) {
+    if (!file.endsWith('.js')) continue;
+    const source = path.join(root, 'components', meta.layer, meta.dir, file);
+    if (!fs.existsSync(source)) continue;
+    for (const match of fs.readFileSync(source, 'utf8').matchAll(/customElements\.define\(\s*['"]([a-z][a-z0-9-]*)['"]/g)) {
+      tags.add(match[1]);
+    }
+  }
+}
 for (const [name, meta] of Object.entries(REGISTRY)) {
   const dir = path.join(root, 'components', meta.layer, meta.dir);
   const contract = path.join(dir, meta.layer === 'patterns' ? 'pattern.md' : 'component.md');
