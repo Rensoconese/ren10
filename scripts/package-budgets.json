@@ -5,15 +5,15 @@
   "capturedFrom": "validated ren10@0.13.0 catalog plus the official Astro integration, 53 generated Astro components, Astro starter, AI hints, reference-theme tools, detector support, and release metadata",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 19848132, "allowedDelta": 0, "target": 19848132 },
-    "tarballBytes": { "baseline": 5482012, "allowedDelta": 0, "target": 5482012 },
+    "unpackedBytes": { "baseline": 19849370, "allowedDelta": 0, "target": 19849370 },
+    "tarballBytes": { "baseline": 5482326, "allowedDelta": 0, "target": 5482326 },
     "fullCssBytes": { "baseline": 520098, "allowedDelta": 0, "target": 520098 },
     "minCssBytes": { "baseline": 292076, "allowedDelta": 0, "target": 292076 },
     "knowledgeJsonBytes": { "baseline": 2020458, "allowedDelta": 0, "target": 2020458 },
     "knowledgeSqliteBytes": { "baseline": 6062080, "allowedDelta": 0, "target": 6062080 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
-    "cliRssBytes": { "baseline": 46153728, "allowedDelta": 8388608, "target": 54542336 }
+    "cliRssBytes": { "baseline": 46170112, "allowedDelta": 8388608, "target": 54558720 }
   },
   "rationale": {
     "package": "Re-baselined DOWN after de-duplicating the knowledge graph: the JSON dropped every node body that was byte-identical to the file the node already points at (the package ships that text once), and the SQLite nodes table dropped its body column (the FTS index already stores what MATCH and snippet() need). Graph went 13.75 MB -> 7.9 MB and the unpacked package 25.4 MB -> 19.6 MB, a 23% cut, with search output byte-identical on both the SQLite and JSON-fallback paths. Earlier growth in this branch (utils/anchor.js and utils/positioning.js, per-instance anchor and layer-stack wiring across nine components, i18n adoption in twelve against an 82-key catalogue, base/layouts.md 62 -> 148 lines) is included in these numbers. Zero growth allowed from here.",

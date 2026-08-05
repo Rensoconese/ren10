@@ -33,6 +33,10 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Added a runtime smoke that mounts all 32 JS components from the CLI registry
   and drives them: lifecycle calls, reconnect, activating the first control,
   and mounting with no markup. Every gate before this measured structure.
+- The accessibility gate now scans all 65 documentation pages instead of nine,
+  over HTTP so their components actually run. It previously used `file://`,
+  where Chromium blocks ES modules, so no page was ever scanned with a live
+  component. Assertions went from 368 to 1248.
 
 ### Changed
 
@@ -88,13 +92,27 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Fixed issue-template links to `docs/` and `CHANGELOG.md`, which pointed at a
   `rends/` path prefix this repository does not have, and CHANGELOG compare
   links that jumped from v0.11.0 straight to HEAD.
-- Fixed four `@ren10/astro` wrappers rendering custom elements that nothing
-  defines — `<Radio>`, `<Toast>`, `<Dropzone>` and `<Toolbar>` emitted inert
-  markup in 0.13.0. The generator reads the registry's usage snippets, and
+- Fixed five `@ren10/astro` wrappers rendering custom elements that nothing
+  defines — `<Radio>`, `<Toast>`, `<Dropzone>`, `<Toolbar>` and `<Icon>`
+  emitted inert markup in 0.13.0. The generator reads the registry's usage snippets, and
   `check-public-contracts` was requiring the tag to be `ren-<registry key>`,
   which is wrong for `ren-radio-group` and `ren-toast-viewport` — so the check
   enforced the broken documentation. Valid tags now come from the components'
   own `customElements.define()` calls.
+- Fixed eleven accessibility violations that shipped because no gate had ever
+  scanned a documentation page with its component running: an invalid
+  `aria-haspopup="tooltip"`, `role="button"` inside a menubar, a calendar grid
+  with no rows, date-picker triggers named only through CSS-generated content,
+  `aria-label` stranded on roleless custom element hosts, and an invented
+  `autocomplete` token.
+- Fixed `[data-disabled] { opacity: .5 }` in `base/utilities.css`: unscoped, in
+  the highest cascade layer, it multiplied onto every descendant, so any text
+  inside a disabled container measured about 2.6:1 no matter which token it
+  used, and no component could opt out.
+- Fixed `ren-menu` positioning itself with viewport coordinates while its CSS
+  said `absolute`: on a scrolled page the menu opened 1392px from its trigger.
+- Fixed a transparent full-screen backdrop in the docs shell that captured
+  every click on mobile, on every page.
 
 ### Removed
 
