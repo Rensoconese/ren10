@@ -67,7 +67,11 @@
   }
 
   &:disabled {
-    opacity: 0.5;
+    /* Colour, not opacity: 0.5 over --color-text-muted lands at ~2.3:1.
+       These are <button> elements, so :disabled would be exempt from the
+       contrast requirement — but the date is information a user still reads
+       to understand what the calendar is offering, so keep it legible. */
+    color: var(--color-text-muted);
     cursor: not-allowed;
   }
 
@@ -200,7 +204,6 @@
   &[disabled] {
     color: var(--color-text-muted);
     cursor: not-allowed;
-    opacity: 0.5;
   }
 
   /* ═══ RANGE START ═══ */
