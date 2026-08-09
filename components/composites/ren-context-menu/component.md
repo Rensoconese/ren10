@@ -48,6 +48,7 @@ canonicalImports:
     - "If the page already imports rends/components/index.css, do not import the CSS again."
     - "ren-menu.css must be present alongside this CSS — the menu items (.ren-menu-item, .ren-menu-separator) live there and are reused."
     - "JS handles contextmenu event interception, pointer-based positioning, and popover open/close."
+    - "Escape and click-outside are delegated to the shared dismissable layer stack (utils/dismissable.js), so a nested context menu dismisses before the dialog/popover hosting it. Copying the component standalone requires that util."
 
 requiredMarkup:
   - "Declare the trigger region with data-context=\"<menu-id>\" on any element; do not use inline oncontextmenu attributes."
@@ -61,6 +62,7 @@ forbiddenPatterns:
   - "<div role=\"menuitem\" tabindex=\"0\"> styled as a button; use a real <button class=\"ren-menu-item\">."
   - "Static anchored positioning (top: 0; left: 0) — context menus must follow the contextmenu event coordinates."
   - "Suppressing the native context menu globally (document.oncontextmenu = e => e.preventDefault()) — scope prevention to data-context regions only."
+  - "Adding your own document-level keydown/pointerdown listener to close the menu — that dismisses every open overlay at once; the component already registers a layer in the shared dismissable stack."
   - "Hardcoded box-shadow / hex backgrounds; use --shadow-lg and --color-surface."
 
 tokenPolicy:
@@ -77,6 +79,7 @@ accessibility:
   required:
     - "Menu root has role=\"menu\" (set by JS) and each .ren-menu-item has role=\"menuitem\"; do not nest interactive controls inside items."
     - "Keyboard: Arrow Up/Down moves focus across items, Home/End jump to first/last, Escape closes the menu, Enter / Space activates."
+    - "Escape closes only the topmost overlay: with the menu open inside a dialog (or under a popover) one Escape dismisses the menu and leaves the host open."
     - "Trigger must be reachable by keyboard via Shift+F10 (or the dedicated context-menu key) — never gate the menu behind right-click only."
     - "Disabled items set aria-disabled=\"true\" AND skip in keyboard navigation order."
     - "Focus moves into the menu on open and returns to the trigger on close — preserve this when extending behavior."

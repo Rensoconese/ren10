@@ -332,7 +332,23 @@ if (eventsFixtureIndex !== -1) {
 }
 
 const errors = [];
+// Known custom element tags, read from the customElements.define() calls the
+// components actually make — not assumed to be `ren-<registry key>`. That
+// assumption was wrong for two components and, because this check enforced it,
+// it kept their documented usage wrong: ren-radio-group was documented as
+// <ren-radio> and ren-toast-viewport as <ren-toast>, so the snippet `ren10 add`
+// prints never upgraded.
 const tags = new Set(Object.keys(REGISTRY).map((name) => `ren-${name}`));
+for (const meta of Object.values(REGISTRY)) {
+  for (const file of meta.files ?? []) {
+    if (!file.endsWith('.js')) continue;
+    const source = path.join(root, 'components', meta.layer, meta.dir, file);
+    if (!fs.existsSync(source)) continue;
+    for (const match of fs.readFileSync(source, 'utf8').matchAll(/customElements\.define\(\s*['"]([a-z][a-z0-9-]*)['"]/g)) {
+      tags.add(match[1]);
+    }
+  }
+}
 for (const [name, meta] of Object.entries(REGISTRY)) {
   const dir = path.join(root, 'components', meta.layer, meta.dir);
   const contract = path.join(dir, meta.layer === 'patterns' ? 'pattern.md' : 'component.md');
@@ -348,6 +364,12 @@ for (const [name, meta] of Object.entries(REGISTRY)) {
   }
   for (const file of meta.files) if (!fs.existsSync(path.join(dir, file))) errors.push(`${name}: missing ${file}`);
   if (/TODO|your-component|<ren-(?:component|example)\b/i.test(meta.usage)) errors.push(`${name}: placeholder usage`);
+  // `ren10 add` prints these snippets, and the Astro generator reads them, so
+  // an ellipsis standing in for markup ships as a broken example. Several did:
+  // ren-otp listed two inputs and "...", ren-calendar "<table role=grid>...".
+  if (/(^|[\s>])\.\.\.($|[\s<])/.test(meta.usage)) {
+    errors.push(`${name}: usage uses "..." as a stand-in for markup — write the real thing`);
+  }
   for (const tag of meta.usage.matchAll(/<((?:ren)-[a-z0-9-]+)/gi)) if (!tags.has(tag[1])) errors.push(`${name}: unknown tag ${tag[1]}`);
 }
 
@@ -390,6 +412,38 @@ for (const event of PUBLIC_EVENTS) {
 }
 errors.push(...compareEventMetadata(PUBLIC_EVENTS, runtimeEventManifest));
 errors.push(...compareEventMetadata(PUBLIC_EVENTS, docsEventMetadata(eventsHtml, PUBLIC_EVENTS)));
+
+// A component's docs page must mount the component, not a static lookalike.
+//
+// 23 of the 30 pages for JS components used to load the component's script and
+// then demo a hand-written <div class="ren-x"> instead of <ren-x>, so the
+// script upgraded nothing. That is how a recursion bug that left ren-menubar
+// unable to open any menu survived the whole a11y suite: those tests run
+// against these pages, and were validating static markup.
+for (const [name, meta] of Object.entries(REGISTRY)) {
+  const definedTags = new Set();
+  for (const file of meta.files ?? []) {
+    if (!file.endsWith('.js')) continue;
+    const source = path.join(root, 'components', meta.layer, meta.dir, file);
+    if (!fs.existsSync(source)) continue;
+    for (const match of fs.readFileSync(source, 'utf8').matchAll(/customElements\.define\(\s*['"]([a-z][a-z0-9-]*)['"]/g)) {
+      definedTags.add(match[1]);
+    }
+  }
+  if (definedTags.size === 0) continue; // CSS-only, or a helper-function API
+
+  const page = path.join(root, 'docs', 'components', `${meta.dir}.html`);
+  if (!fs.existsSync(page)) continue; // absence is reported elsewhere
+
+  const html = fs.readFileSync(page, 'utf8');
+  const mounted = [...definedTags].some((tag) => new RegExp(`<${tag}[\\s>]`).test(html));
+  if (!mounted) {
+    errors.push(
+      `${name}: docs/components/${meta.dir}.html never mounts <${[...definedTags].join('> or <')}> — ` +
+        'the demo has to be the component, otherwise the page documents markup nobody runs'
+    );
+  }
+}
 
 if (errors.length) {
   console.error(errors.map((error) => `✗ ${error}`).join('\n'));

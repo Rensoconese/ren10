@@ -1,3 +1,9 @@
+/* A scrollable region is an interactive region: WCAG 2.1.1 requires it to be
+   reachable and operable by keyboard, so the contract mandates tabindex="0"
+   whenever the region has no focusable descendant (axe:
+   scrollable-region-focusable). That tab stop is only usable if it is visible,
+   hence the focus ring below — the UA default outline is not guaranteed to be
+   perceivable against every RenDS surface. */
 .ren-scroll-area {
   position: relative;
   overflow: auto;
@@ -6,6 +12,11 @@
   scrollbar-color: var(--color-fill-active) transparent;
 
   transition: scrollbar-color var(--duration-enter) var(--ease-enter);
+
+  &:focus-visible {
+    outline: var(--ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--ring-offset-width);
+  }
 
   &::-webkit-scrollbar {
     width: 8px;

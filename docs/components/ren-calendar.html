@@ -13,46 +13,6 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; justify-content: center; }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
-
-    /* Demo calendar */
-    .demo-cal {
-      padding: var(--space-3);
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-md);
-      width: 280px;
-    }
-    .demo-cal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--space-2);
-    }
-    .demo-cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 2px;
-      text-align: center;
-      font-size: var(--text-xs);
-    }
-    .demo-cal-grid .wd {
-      color: var(--color-text-muted);
-      padding: var(--space-1);
-      font-weight: var(--weight-semibold);
-    }
-    .demo-cal-grid .day {
-      padding: var(--space-1);
-      cursor: pointer;
-      border-radius: 4px;
-    }
-    .demo-cal-grid .day:hover { background: var(--color-fill); }
-    .demo-cal-grid .day.outside { color: var(--color-text-faint); }
-    .demo-cal-grid .day.today { font-weight: var(--weight-semibold); color: var(--color-accent); }
-    .demo-cal-grid .day.selected {
-      background: var(--color-accent);
-      color: var(--color-on-accent);
-      font-weight: var(--weight-semibold);
-    }
   </style>
 </head>
 <body>
@@ -171,30 +131,9 @@
         <h2>Demo</h2>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <div class="demo-cal" role="application" aria-label="Calendar, May 2026">
-              <div class="demo-cal-head">
-                <button class="ren-btn ren-btn-ghost ren-btn-sm" type="button" aria-label="Previous month">‹</button>
-                <strong style="font-size: var(--text-sm);">May 2026</strong>
-                <button class="ren-btn ren-btn-ghost ren-btn-sm" type="button" aria-label="Next month">›</button>
-              </div>
-              <div class="demo-cal-grid">
-                <span class="wd">M</span><span class="wd">T</span><span class="wd">W</span><span class="wd">T</span><span class="wd">F</span><span class="wd">S</span><span class="wd">S</span>
-                <span class="day outside">27</span><span class="day outside">28</span><span class="day outside">29</span><span class="day outside">30</span>
-                <span class="day">1</span><span class="day">2</span><span class="day">3</span>
-                <span class="day">4</span><span class="day">5</span><span class="day">6</span>
-                <span class="day selected" aria-selected="true">7</span>
-                <span class="day">8</span><span class="day">9</span><span class="day">10</span>
-                <span class="day">11</span><span class="day">12</span><span class="day">13</span><span class="day">14</span>
-                <span class="day">15</span><span class="day">16</span><span class="day">17</span>
-                <span class="day">18</span><span class="day">19</span><span class="day">20</span><span class="day">21</span>
-                <span class="day">22</span><span class="day">23</span><span class="day">24</span>
-                <span class="day">25</span><span class="day">26</span><span class="day">27</span><span class="day">28</span>
-                <span class="day">29</span><span class="day">30</span><span class="day">31</span>
-                <span class="day outside">1</span><span class="day outside">2</span><span class="day outside">3</span><span class="day outside">4</span>
-              </div>
-            </div>
+            <ren-calendar value="2026-05-07" locale="en-US" aria-label="Choose a date"></ren-calendar>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-calendar value="2026-05-07" locale="en-US"&gt;&lt;/ren-calendar&gt;</code></pre>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-calendar value="2026-05-07" locale="en-US" aria-label="Choose a date"&gt;&lt;/ren-calendar&gt;</code></pre>
         </div>
       </section>
 
@@ -253,6 +192,7 @@
 
     </main>
   </div>
+  <script type="module" src="../../components/composites/ren-calendar/ren-calendar.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

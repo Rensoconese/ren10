@@ -41,8 +41,13 @@
 }
 
 /* ═══ TRIGGER BUTTON (Shows Current Color) ═══ */
+/* The anchor name is NOT declared here on purpose. `anchor-name` is a
+   document-wide identifier: a single shared name would resolve to the last
+   matching element in tree order, so with two or more pickers on a page every
+   dropdown would position itself against the final trigger. ren-color-picker.js
+   generates one name per instance and injects it inline on the trigger
+   (anchor name) and on the dropdown (position anchor). */
 .ren-color-picker-trigger {
-  anchor-name: --ren-color-picker-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -105,9 +110,11 @@
 }
 
 /* ═══ DROPDOWN CONTAINER (Popover) ═══ */
+/* The positioning anchor is injected inline per instance by
+   ren-color-picker.js — see the note on .ren-color-picker-trigger. Only the
+   placement geometry lives here. */
 .ren-color-picker-dropdown {
   position: absolute;
-  position-anchor: --ren-color-picker-anchor;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   inset: auto;
@@ -122,7 +129,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 50;
+  z-index: var(--z-popover);
 
   /* Popover API defaults */
   &:popover-open {

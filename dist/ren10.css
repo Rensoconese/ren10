@@ -3363,7 +3363,12 @@ sup, sub {
 /* ─── Disabled state ─── */
 .ren-disabled,
 [aria-disabled="true"] {
-  opacity: 0.6;
+  /* No opacity, for the same reason as [data-disabled] below: unscoped, in
+     the highest layer, multiplying onto every descendant with no way to opt
+     out. WCAG exempts natively disabled controls (:disabled) from contrast —
+     aria-disabled is precisely what you use when the control must STAY
+     perceivable and focusable, so it gets no exemption. It measured 2.45:1 on
+     ren-calendar's outside days. Express the state with colour. */
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -3478,8 +3483,15 @@ sup, sub {
 
 /* Disabled State */
 [data-disabled] {
+  /* No opacity here. This selector is unscoped and sits in @layer utilities,
+     the highest layer, so it multiplied 0.5 onto every descendant of every
+     element carrying the attribute — and no component could opt out. Any text
+     inside landed near 2.6:1 no matter which token it used. WCAG exempts
+     disabled NATIVE controls from contrast; it does not exempt arbitrary
+     containers, and components use this attribute for non-control states too
+     (ren-form marks steps you have not reached yet). Express the disabled look
+     with colour tokens in the component, which stays measurable. */
   pointer-events: none;
-  opacity: 0.5;
 }
 
 /* Highlighted State */
@@ -3926,8 +3938,10 @@ sup, sub {
   --auto-grid-gap: var(--grid-gutter);
   --auto-grid-placement: auto-fill;
 
-  /* Ease function for animations */
-  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+  /* Motion curves come from tokens/primitives/motion.css. This file lives in
+     @layer base, which outranks @layer tokens, so declaring --ease-out here
+     silently overrode the system token for every consumer on the page — not
+     just for grid. Grid transitions below use the token like everyone else. */
 }
 
 /* ============================================================================
@@ -5481,7 +5495,7 @@ sup, sub {
     height: 3px;
     background: var(--color-accent);
     transform-origin: left;
-    z-index: 9999;
+    z-index: var(--z-max);
     animation: ren-scale-x linear both;
     animation-timeline: scroll(root);
   }
@@ -6131,6 +6145,13 @@ select.ren-input {
 }
 
 /* ─── Error Message ─── */
+/* A class selector outranks the UA's `[hidden] { display: none }`, so the JS
+   setting `error.hidden = true` could not hide this: any <span data-error>
+   with text stayed visible permanently. */
+.ren-field-error[hidden] {
+  display: none;
+}
+
 .ren-field-error {
   font-size: var(--caption-size);
   color: var(--ren-field-error-color);
@@ -7158,8 +7179,17 @@ select.ren-input {
   border-color: var(--color-accent);
 }
 
+/* Selected state. `aria-selected` only styles a card whose role actually
+   supports it (option / tab / row / gridcell / treeitem); on a bare div or a
+   <label> it is a prohibited attribute, which is why the other hooks exist:
+   `aria-pressed` for the <button> form, `aria-checked` for
+   role="radio" / role="checkbox", `:has(:checked)` for the label-wrapping-a-
+   real-input form, and `data-selected` for purely decorative surfaces. */
 .ren-card-selectable[aria-selected="true"],
-.ren-card-selectable[data-selected] {
+.ren-card-selectable[aria-pressed="true"],
+.ren-card-selectable[aria-checked="true"],
+.ren-card-selectable[data-selected],
+.ren-card-selectable:has(:checked) {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 1px var(--color-accent);
 }
@@ -7311,7 +7341,8 @@ select.ren-input {
   border-radius: var(--radius-md);
   font-weight: var(--weight-semibold);
   text-decoration: none;
-  z-index: 9999;
+  /* Skip link must clear every overlay — this is the documented escape hatch. */
+  z-index: var(--z-max);
   transition: top var(--duration-tactile) var(--ease-enter);
 }
 
@@ -8461,6 +8492,14 @@ ren-dialog {
 .ren-dialog::backdrop,
 .ren-alert-dialog::backdrop { background: var(--ren-dialog-backdrop, var(--color-overlay)); }
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
+
+/* Until the element upgrades it has no `popover` attribute, so the panel
+   paints inline and then disappears once the script runs — a real flash of
+   unstyled content on every page load. Hide it until it is defined. */
+ren-popover:not(:defined) {
+  display: none;
+}
+
 .ren-popover {
   position: absolute;
   background: var(--color-surface);
@@ -8475,8 +8514,10 @@ ren-dialog {
   inset: auto;
   border-top: none;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --popover-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-popover.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every popover but the last one. */
 
   /* Default: below the trigger with automatic fallback */
   position-area: bottom span-all;
@@ -8687,7 +8728,7 @@ ren-dialog {
   font-size: var(--size-caption, 0.75rem);
   max-width: 15rem;
   pointer-events: none;
-  z-index: var(--z-tooltip, 2000);
+  z-index: var(--z-tooltip);
   overflow-wrap: break-word;
   white-space: normal;
   line-height: 1.4;
@@ -8695,8 +8736,10 @@ ren-dialog {
   inset: auto;
   overflow: visible;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --tooltip-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-tooltip.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every tooltip but the last one. */
 
   /* Default: above the trigger with automatic fallback */
   position-area: top span-all;
@@ -9414,7 +9457,14 @@ ren-dialog {
   padding-block: var(--space-1, 0.25rem);
   min-width: 12rem;
   z-index: var(--z-dropdown, 1000);
-  position: absolute;
+  /* fixed, not absolute: the menu is shown through the Popover API, so it
+     lives in the top layer, where `absolute` resolves against the initial
+     containing block — which does not move with the scroll. positionMenu()
+     computes from getBoundingClientRect(), i.e. viewport coordinates, so on a
+     scrolled page the two disagreed by exactly the scroll offset and the menu
+     landed hundreds of pixels from its trigger. ren-context-menu already used
+     fixed, which is why it never had this. */
+  position: fixed;
   animation: ren-menu-open var(--duration-enter) var(--ease-enter);
   visibility: hidden;
   opacity: 0;
@@ -11035,7 +11085,7 @@ ren-dialog {
     position: absolute;
     inset-inline: 0;
     top: calc(100% + var(--space-1));
-    z-index: 50;
+    z-index: var(--z-popover);
 
     max-height: 15rem;
     padding-block: var(--space-1);
@@ -11255,7 +11305,7 @@ ren-sheet {
   display: flex;
   flex-direction: column;
 
-  z-index: 50;
+  z-index: var(--z-modal);
   max-width: 100%;
   max-height: 100%;
   touch-action: none; /* Prevent scroll chaining; swipe-to-dismiss handled by JS */
@@ -11545,14 +11595,13 @@ ren-sheet {
 .ren-sheet::backdrop { background: var(--ren-sheet-backdrop, var(--color-overlay)); }
 /* ═══ REN HOVER CARD COMPONENT ═══ */
 
-/* ═══ TRIGGER ELEMENT ═══ */
-.ren-hover-card-trigger {
-  anchor-name: --ren-hover-card-anchor;
-}
+/* ═══ TRIGGER ELEMENT ═══
+   `anchor-name` / `position-anchor` are injected inline per instance by
+   ren-hover-card.js — a single shared anchor name would resolve to the last
+   matching trigger in tree order and mis-place every card but the last one. */
 
 /* ═══ BASE CARD ═══ */
 .ren-hover-card {
-  position-anchor: --ren-hover-card-anchor;
   position: absolute;
   position-area: bottom span-all;
   inset: auto;
@@ -11564,7 +11613,7 @@ ren-sheet {
   padding: var(--space-4);
   max-width: 20rem;
   min-width: 15rem;
-  z-index: 1000;
+  z-index: var(--z-popover);
 
   /* ═══ POPOVER API ═══
      Semantic tokens keep hover-card in sync with tooltip + popover. */
@@ -11782,6 +11831,12 @@ ren-sheet {
     outline-offset: 2px;
   }
 }
+/* A scrollable region is an interactive region: WCAG 2.1.1 requires it to be
+   reachable and operable by keyboard, so the contract mandates tabindex="0"
+   whenever the region has no focusable descendant (axe:
+   scrollable-region-focusable). That tab stop is only usable if it is visible,
+   hence the focus ring below — the UA default outline is not guaranteed to be
+   perceivable against every RenDS surface. */
 .ren-scroll-area {
   position: relative;
   overflow: auto;
@@ -11790,6 +11845,11 @@ ren-sheet {
   scrollbar-color: var(--color-fill-active) transparent;
 
   transition: scrollbar-color var(--duration-enter) var(--ease-enter);
+
+  &:focus-visible {
+    outline: var(--ring-width) solid var(--color-focus-ring);
+    outline-offset: var(--ring-offset-width);
+  }
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -11993,11 +12053,12 @@ ren-sheet {
    Supports keyboard navigation, long-press acceleration, and
    min/max bounds. Follows RenDS design token system.
 
-   Usage:
+   Usage — the stepper buttons stay empty, the − and + below are drawn with
+   ::before; writing them as button text renders −− / ++:
    <ren-number-field min="0" max="100" step="1" value="5">
-     <button class="ren-number-field-decrement" aria-label="Decrease">−</button>
+     <button class="ren-number-field-decrement" type="button" aria-label="Decrease"></button>
      <input class="ren-number-field-input" type="number" value="5">
-     <button class="ren-number-field-increment" aria-label="Increase">+</button>
+     <button class="ren-number-field-increment" type="button" aria-label="Increase"></button>
    </ren-number-field>
    ═══════════════════════════════════════════════════════════════ */
 
@@ -12493,7 +12554,11 @@ ren-sheet {
   }
 
   &:disabled {
-    opacity: 0.5;
+    /* Colour, not opacity: 0.5 over --color-text-muted lands at ~2.3:1.
+       These are <button> elements, so :disabled would be exempt from the
+       contrast requirement — but the date is information a user still reads
+       to understand what the calendar is offering, so keep it legible. */
+    color: var(--color-text-muted);
     cursor: not-allowed;
   }
 
@@ -12539,6 +12604,27 @@ ren-sheet {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: var(--space-1);
+}
+
+/* ═══ ARIA ROWS ═══
+   role="grid" only accepts rows, so the component wraps the weekday strip and
+   each week in a role="row" element. `display: contents` keeps those rows out
+   of layout: the columnheaders and gridcells stay direct grid items of the
+   7-column track above, so the visual grid is unchanged.
+
+   Scoped to `.ren-calendar-grid >` on purpose — legacy static markup renders
+   .ren-calendar-weekdays as a SIBLING of the grid, and that copy must keep its
+   own `display: grid`. */
+.ren-calendar-grid > .ren-calendar-weekdays,
+.ren-calendar-grid > .ren-calendar-week {
+  display: contents;
+}
+
+/* The header row's box (and its margin-bottom) is gone under `display:
+   contents`, so the separation moves onto the cells: --space-1 here plus the
+   grid's --space-1 row gap reproduces the previous --space-2. */
+.ren-calendar-grid > .ren-calendar-weekdays > .ren-calendar-weekday {
+  margin-block-end: var(--space-1);
 }
 
 /* ═══ INDIVIDUAL DAY BUTTON ═══ */
@@ -12605,7 +12691,6 @@ ren-sheet {
   &[disabled] {
     color: var(--color-text-muted);
     cursor: not-allowed;
-    opacity: 0.5;
   }
 
   /* ═══ RANGE START ═══ */
@@ -12736,6 +12821,12 @@ ren-sheet {
     margin-bottom: var(--space-4);
   }
 
+  /* Header row is `display: contents` inside the grid — --space-2 on the cells
+     plus the --space-2 row gap below reproduces the --space-4 above. */
+  .ren-calendar-grid > .ren-calendar-weekdays > .ren-calendar-weekday {
+    margin-block-end: var(--space-2);
+  }
+
   .ren-calendar-grid {
     gap: var(--space-2);
   }
@@ -12815,7 +12906,10 @@ ren-sheet {
 
 /* ═══ TRIGGER INPUT ═══ */
 .ren-date-picker-trigger {
-  anchor-name: --ren-date-picker-anchor;
+  /* `anchor-name` is injected inline per instance by ren-date-picker.js —
+     a single shared anchor name is a document-wide identifier and would
+     resolve to the last matching trigger in tree order, so every dropdown
+     but the last one would open next to the wrong input. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12887,7 +12981,8 @@ ren-sheet {
 
 /* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
 .ren-date-picker-dropdown {
-  position-anchor: --ren-date-picker-anchor;
+  /* `position-anchor` is injected inline per instance by ren-date-picker.js,
+     paired with the matching `anchor-name` on that instance's trigger. */
   position: absolute;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -12897,7 +12992,7 @@ ren-sheet {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
   max-width: 400px;
 
   /* ═══ POPOVER API ═══ */
@@ -13152,9 +13247,15 @@ ren-sheet {
   position: relative;
 }
 
-/* ═══ TRIGGER BUTTON ═══ */
+/* ═══ TRIGGER BUTTON ═══
+   No `anchor-name` here on purpose. Anchor names are document-wide
+   identifiers, so a single shared name would resolve to the last trigger in
+   tree order and every dropdown on the page would render against that one.
+   ren-date-range-picker.js generates a unique name per instance and applies
+   it inline to this trigger, pairing it with the matching `position-anchor`
+   on that instance's dropdown. An `anchor-name` you set inline yourself is
+   respected and reused. */
 .ren-date-range-trigger {
-  anchor-name: --ren-date-range-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -13233,9 +13334,10 @@ ren-sheet {
   }
 }
 
-/* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
+/* ═══ DROPDOWN CONTAINER (POPOVER) ═══
+   `position-anchor` is injected inline by the component, pointing at the
+   per-instance name on its own trigger (see the trigger block above). */
 .ren-date-range-dropdown {
-  position-anchor: --ren-date-range-anchor;
   position: absolute;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -13245,7 +13347,7 @@ ren-sheet {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
 
   /* ═══ POPOVER API ═══ */
   &[popover] {
@@ -14138,8 +14240,13 @@ ren-sheet {
 }
 
 /* ═══ TRIGGER BUTTON (Shows Current Color) ═══ */
+/* The anchor name is NOT declared here on purpose. `anchor-name` is a
+   document-wide identifier: a single shared name would resolve to the last
+   matching element in tree order, so with two or more pickers on a page every
+   dropdown would position itself against the final trigger. ren-color-picker.js
+   generates one name per instance and injects it inline on the trigger
+   (anchor name) and on the dropdown (position anchor). */
 .ren-color-picker-trigger {
-  anchor-name: --ren-color-picker-anchor;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -14202,9 +14309,11 @@ ren-sheet {
 }
 
 /* ═══ DROPDOWN CONTAINER (Popover) ═══ */
+/* The positioning anchor is injected inline per instance by
+   ren-color-picker.js — see the note on .ren-color-picker-trigger. Only the
+   placement geometry lives here. */
 .ren-color-picker-dropdown {
   position: absolute;
-  position-anchor: --ren-color-picker-anchor;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   inset: auto;
@@ -14219,7 +14328,7 @@ ren-sheet {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 50;
+  z-index: var(--z-popover);
 
   /* Popover API defaults */
   &:popover-open {
@@ -15374,7 +15483,7 @@ ren-sheet {
   &.ren-nav-sticky {
     position: sticky;
     top: 0;
-    z-index: var(--ren-z-sticky, 100);
+    z-index: var(--ren-z-sticky, var(--z-sticky));
     backdrop-filter: blur(8px);
     background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
   }
@@ -15421,7 +15530,7 @@ ren-sheet {
     border-bottom: 1px solid var(--color-border);
     padding: var(--ren-space-2, 0.5rem) 0;
     animation: ren-nav-slide-down var(--duration-enter) var(--ease-enter);
-    z-index: 1000;
+    z-index: var(--z-dropdown);
 
     @media (prefers-reduced-motion: reduce) {
       animation: none;
@@ -15584,7 +15693,10 @@ ren-sheet {
   flex-direction: column;
   transition: width var(--duration-enter) var(--ease-state-change), transform var(--duration-enter) var(--ease-state-change);
   overflow: hidden;
-  z-index: 50;
+  /* Must outrank its own backdrop (--z-overlay), which covers the page while
+     the mobile drawer is open — otherwise the scrim swallows every click
+     meant for the sidebar. Keep this above --z-overlay if either moves. */
+  z-index: var(--z-modal);
 
   &[data-collapsed] {
     width: var(--sidebar-collapsed-width);
@@ -15620,7 +15732,8 @@ ren-sheet {
         border-radius: 0.375rem;
         font-size: var(--ren-caption-size, 0.75rem);
         white-space: nowrap;
-        z-index: 1000;
+        /* Flyout label for collapsed items — behaves as a tooltip. */
+        z-index: var(--z-tooltip);
         pointer-events: none;
       }
     }
@@ -15716,7 +15829,11 @@ ren-sheet {
   padding: var(--ren-space-1, 0.25rem) var(--ren-space-3, 0.75rem);
   font-size: var(--ren-caption-size, 0.75rem);
   font-weight: 600;
-  color: var(--color-text-faint);
+  /* --color-text-faint is 1.5:1 against the sidebar surface: it is a hairline
+     token for dividers and disabled glyphs, not for reading. These labels are
+     the section headings a user navigates by, at 12px uppercase — the hardest
+     case for legibility, not the easiest. */
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   transition: opacity var(--duration-enter) var(--ease-state-change);
@@ -15856,7 +15973,7 @@ ren-sheet {
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--duration-enter) var(--ease-state-change);
-  z-index: 40;
+  z-index: var(--z-overlay);
 
   @media (max-width: 48rem) {
     .ren-sidebar[data-open] ~ & {
@@ -15902,7 +16019,7 @@ ren-sheet {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  z-index: var(--ren-z-modal, 1000);
+  z-index: var(--ren-z-modal, var(--z-modal));
   margin: auto;
   animation: ren-command-in var(--duration-enter) var(--ease-enter);
 
@@ -17021,13 +17138,17 @@ ren-table[data-loading] {
 
 .ren-form-step[data-disabled]::before {
   background-color: var(--color-fill);
-  color: var(--color-text-faint);
-  opacity: 0.5;
+  /* --color-text-faint is 1.68:1 on the page surface. WCAG exempts disabled
+     NATIVE controls from contrast; these are <span>/::before, so they are not
+     exempt — and ren-form marks every not-yet-reached step as data-disabled,
+     which made future step labels unreadable rather than merely de-emphasised. */
+  color: var(--color-text-muted);
 }
 
 .ren-form-step[data-disabled] .ren-form-step-label {
-  color: var(--color-text-faint);
-  opacity: 0.5;
+  /* No opacity here either: 0.5 over a 5.99:1 colour lands around 2.6:1.
+     The muted colour alone carries the de-emphasis and stays readable. */
+  color: var(--color-text-muted);
 }
 
 /* Stack steps vertically on narrow containers */
@@ -17167,7 +17288,7 @@ ren-table[data-loading] {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -17316,7 +17437,7 @@ ren-table[data-loading] {
   top: 0;
   inset-inline-start: calc(100% + var(--space-1));
   margin-top: 0;
-  z-index: 1100;
+  z-index: calc(var(--z-popover) + 1);
 }
 
 /* =================================================================

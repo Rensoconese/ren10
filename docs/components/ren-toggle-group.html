@@ -128,30 +128,30 @@
         <h2>Demo</h2>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <div class="ren-toggle-group" role="radiogroup" aria-label="Time range">
-              <button class="ren-toggle-item" type="button" role="radio" aria-checked="true">Day</button>
-              <button class="ren-toggle-item" type="button" role="radio" aria-checked="false">Week</button>
-              <button class="ren-toggle-item" type="button" role="radio" aria-checked="false">Month</button>
-              <button class="ren-toggle-item" type="button" role="radio" aria-checked="false">Year</button>
-            </div>
-            <div class="ren-toggle-group" role="group" aria-label="Text format">
-              <button class="ren-toggle-item" type="button" aria-pressed="true"><strong>B</strong></button>
-              <button class="ren-toggle-item" type="button" aria-pressed="false"><em>I</em></button>
-              <button class="ren-toggle-item" type="button" aria-pressed="false"><u>U</u></button>
-            </div>
+            <ren-toggle-group type="single" value="day" role="group" aria-label="Time range">
+              <button class="ren-toggle-group-item" type="button" data-value="day">Day</button>
+              <button class="ren-toggle-group-item" type="button" data-value="week">Week</button>
+              <button class="ren-toggle-group-item" type="button" data-value="month">Month</button>
+              <button class="ren-toggle-group-item" type="button" data-value="year">Year</button>
+            </ren-toggle-group>
+            <ren-toggle-group type="multiple" role="group" aria-label="Text format">
+              <button class="ren-toggle-group-item" type="button" data-value="bold" aria-label="Bold"><strong>B</strong></button>
+              <button class="ren-toggle-group-item" type="button" data-value="italic" aria-label="Italic"><em>I</em></button>
+              <button class="ren-toggle-group-item" type="button" data-value="underline" aria-label="Underline"><u>U</u></button>
+            </ren-toggle-group>
           </div>
           <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;!-- Single (one selected at a time) --&gt;
-&lt;div class="ren-toggle-group" role="radiogroup" aria-label="Time range"&gt;
-  &lt;button role="radio" class="ren-toggle-item" aria-checked="true"&gt;Day&lt;/button&gt;
-  &lt;button role="radio" class="ren-toggle-item" aria-checked="false"&gt;Week&lt;/button&gt;
-  &lt;button role="radio" class="ren-toggle-item" aria-checked="false"&gt;Month&lt;/button&gt;
-&lt;/div&gt;
+&lt;ren-toggle-group type="single" value="day" role="group" aria-label="Time range"&gt;
+  &lt;button class="ren-toggle-group-item" type="button" data-value="day"&gt;Day&lt;/button&gt;
+  &lt;button class="ren-toggle-group-item" type="button" data-value="week"&gt;Week&lt;/button&gt;
+  &lt;button class="ren-toggle-group-item" type="button" data-value="month"&gt;Month&lt;/button&gt;
+&lt;/ren-toggle-group&gt;
 
 &lt;!-- Multi (any number selected) --&gt;
-&lt;div class="ren-toggle-group" role="group" aria-label="Text format"&gt;
-  &lt;button class="ren-toggle-item" aria-pressed="true"&gt;Bold&lt;/button&gt;
-  &lt;button class="ren-toggle-item" aria-pressed="false"&gt;Italic&lt;/button&gt;
-&lt;/div&gt;</code></pre>
+&lt;ren-toggle-group type="multiple" role="group" aria-label="Text format"&gt;
+  &lt;button class="ren-toggle-group-item" type="button" data-value="bold"&gt;Bold&lt;/button&gt;
+  &lt;button class="ren-toggle-group-item" type="button" data-value="italic"&gt;Italic&lt;/button&gt;
+&lt;/ren-toggle-group&gt;</code></pre>
         </div>
       </section>
 
@@ -161,8 +161,16 @@
         <table class="dx-api">
           <thead><tr><th>Class</th><th>Effect</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">.ren-toggle-group</code></td><td>The container. Inline-flex row, items share borders, no gaps. Single rounded shape.</td></tr>
-            <tr><td><code class="dx-api-name">.ren-toggle-item</code></td><td>One option. Always a real <code>&lt;button type="button"&gt;</code>. Selected state via <code>aria-checked="true"</code> (radio mode) or <code>aria-pressed="true"</code> (multi mode).</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toggle-group</code></td><td>The container styling. Added to <code>&lt;ren-toggle-group&gt;</code> by the component. Inline-flex row, items share borders, no gaps. Single rounded shape.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-toggle-group-item</code></td><td>One option. Always a real <code>&lt;button type="button"&gt;</code> with a <code>data-value</code>. Selected state is <code>aria-pressed="true"</code>, written by the component — never by hand.</td></tr>
+          </tbody>
+        </table>
+        <h3>Web Component attributes</h3>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">type</code></td><td><span class="dx-api-type">"single" | "multiple"</span></td><td><span class="dx-api-default">"single"</span></td><td>Single clears the other items; multiple toggles each independently.</td></tr>
+            <tr><td><code class="dx-api-name">value</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td>Initial <code>data-value</code> to press (single mode). Also a property; the host fires <code>ren-toggle-change</code>.</td></tr>
           </tbody>
         </table>
       </section>
@@ -171,9 +179,10 @@
         <p class="dx-kicker">Inclusive by default</p>
         <h2>Accessibility</h2>
         <ul>
-          <li><strong>Single mode</strong>: wrap in <code>role="radiogroup"</code>; items use <code>role="radio"</code> + <code>aria-checked</code>. Arrow keys move selection.</li>
-          <li><strong>Multi mode</strong>: wrap in <code>role="group"</code>; items use plain <code>aria-pressed</code>. Tab moves between, Space toggles each.</li>
-          <li>Always pair the group with <code>aria-label</code> or a visible label outside.</li>
+          <li>Items are buttons in both modes: the component gives each one <code>role="button"</code> and an <code>aria-pressed</code> it keeps in sync — <code>type="single"</code> clears the others, <code>type="multiple"</code> toggles each independently.</li>
+          <li>Roving tabindex: <kbd>Tab</kbd> enters the group once, then <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> move focus between items (wrapping) and <kbd>Space</kbd> / <kbd>Enter</kbd> activate the focused one.</li>
+          <li>Always pair the group with <code>role="group"</code> + <code>aria-label</code>, or a visible label outside.</li>
+          <li>Icon-only items need an <code>aria-label</code>; the pressed state is carried by background <em>and</em> weight, never colour alone.</li>
         </ul>
       </section>
 

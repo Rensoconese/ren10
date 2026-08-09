@@ -86,7 +86,7 @@
       "name": "Radio",
       "exportName": "Radio",
       "import": "@ren10/astro/components/Radio",
-      "rootTag": "ren-radio",
+      "rootTag": "ren-radio-group",
       "defaultClasses": [],
       "layer": "primitives",
       "contract": "ren10/components/primitives/ren-radio/component.md",
@@ -118,8 +118,9 @@
       "name": "Icon",
       "exportName": "Icon",
       "import": "@ren10/astro/components/Icon",
-      "rootTag": "ren-icon",
+      "rootTag": "span",
       "defaultClasses": [
+        "ren-icon",
         "ren-icon-sm"
       ],
       "layer": "primitives",
@@ -424,7 +425,7 @@
       "name": "Toast",
       "exportName": "Toast",
       "import": "@ren10/astro/components/Toast",
-      "rootTag": "ren-toast",
+      "rootTag": "ren-toast-viewport",
       "defaultClasses": [],
       "layer": "composites",
       "contract": "ren10/components/composites/ren-toast/component.md",
@@ -699,8 +700,10 @@
       "name": "Dropzone",
       "exportName": "Dropzone",
       "import": "@ren10/astro/components/Dropzone",
-      "rootTag": "ren-dropzone",
-      "defaultClasses": [],
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-dropzone"
+      ],
       "layer": "composites",
       "contract": "ren10/components/composites/ren-dropzone/component.md",
       "css": [
@@ -715,8 +718,10 @@
       "name": "Toolbar",
       "exportName": "Toolbar",
       "import": "@ren10/astro/components/Toolbar",
-      "rootTag": "ren-toolbar",
-      "defaultClasses": [],
+      "rootTag": "div",
+      "defaultClasses": [
+        "ren-toolbar"
+      ],
       "layer": "composites",
       "contract": "ren10/components/composites/ren-toolbar/component.md",
       "css": [
@@ -820,9 +825,7 @@
       "exportName": "Menubar",
       "import": "@ren10/astro/components/Menubar",
       "rootTag": "ren-menubar",
-      "defaultClasses": [
-        "ren-menubar"
-      ],
+      "defaultClasses": [],
       "layer": "patterns",
       "contract": "ren10/components/patterns/ren-menubar/pattern.md",
       "css": [

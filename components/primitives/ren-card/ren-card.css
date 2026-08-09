@@ -180,8 +180,17 @@
   border-color: var(--color-accent);
 }
 
+/* Selected state. `aria-selected` only styles a card whose role actually
+   supports it (option / tab / row / gridcell / treeitem); on a bare div or a
+   <label> it is a prohibited attribute, which is why the other hooks exist:
+   `aria-pressed` for the <button> form, `aria-checked` for
+   role="radio" / role="checkbox", `:has(:checked)` for the label-wrapping-a-
+   real-input form, and `data-selected` for purely decorative surfaces. */
 .ren-card-selectable[aria-selected="true"],
-.ren-card-selectable[data-selected] {
+.ren-card-selectable[aria-pressed="true"],
+.ren-card-selectable[aria-checked="true"],
+.ren-card-selectable[data-selected],
+.ren-card-selectable:has(:checked) {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 1px var(--color-accent);
 }

@@ -15,7 +15,10 @@
 
 /* ═══ TRIGGER INPUT ═══ */
 .ren-date-picker-trigger {
-  anchor-name: --ren-date-picker-anchor;
+  /* `anchor-name` is injected inline per instance by ren-date-picker.js —
+     a single shared anchor name is a document-wide identifier and would
+     resolve to the last matching trigger in tree order, so every dropdown
+     but the last one would open next to the wrong input. */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -87,7 +90,8 @@
 
 /* ═══ DROPDOWN CONTAINER (POPOVER) ═══ */
 .ren-date-picker-dropdown {
-  position-anchor: --ren-date-picker-anchor;
+  /* `position-anchor` is injected inline per instance by ren-date-picker.js,
+     paired with the matching `anchor-name` on that instance's trigger. */
   position: absolute;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
@@ -97,7 +101,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
   max-width: 400px;
 
   /* ═══ POPOVER API ═══ */

@@ -122,7 +122,8 @@
   border-radius: var(--radius-md);
   font-weight: var(--weight-semibold);
   text-decoration: none;
-  z-index: 9999;
+  /* Skip link must clear every overlay — this is the documented escape hatch. */
+  z-index: var(--z-max);
   transition: top var(--duration-tactile) var(--ease-enter);
 }
 

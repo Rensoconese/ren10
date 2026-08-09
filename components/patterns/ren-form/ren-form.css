@@ -261,13 +261,17 @@
 
 .ren-form-step[data-disabled]::before {
   background-color: var(--color-fill);
-  color: var(--color-text-faint);
-  opacity: 0.5;
+  /* --color-text-faint is 1.68:1 on the page surface. WCAG exempts disabled
+     NATIVE controls from contrast; these are <span>/::before, so they are not
+     exempt — and ren-form marks every not-yet-reached step as data-disabled,
+     which made future step labels unreadable rather than merely de-emphasised. */
+  color: var(--color-text-muted);
 }
 
 .ren-form-step[data-disabled] .ren-form-step-label {
-  color: var(--color-text-faint);
-  opacity: 0.5;
+  /* No opacity here either: 0.5 over a 5.99:1 colour lands around 2.6:1.
+     The muted colour alone carries the de-emphasis and stays readable. */
+  color: var(--color-text-muted);
 }
 
 /* Stack steps vertically on narrow containers */

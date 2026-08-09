@@ -13,6 +13,10 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* The host is width: 100% by contract — it takes the width of the filter
+       bar or form column it sits in. The demo supplies that column. */
+    .demo-picker-field { width: 280px; max-width: 100%; }
   </style>
 </head>
 <body>
@@ -111,17 +115,19 @@
         <nav class="ren-breadcrumb" aria-label="Breadcrumb" style="margin-bottom: var(--space-4);"><ol><li><a href="../index.html" class="ren-link-plain">Docs</a></li><li><a href="../components.html" class="ren-link-plain">Components</a></li><li aria-current="page">Date Range Picker</li></ol></nav>
         <p class="dx-kicker">Composite</p>
         <h1>Date Range Picker <span class="dx-api-badge dx-api-badge-js" title="JavaScript is required for interaction">Requires JS</span></h1>
-        <p class="lede">Two-handle date range with presets (last 7 days, this month, last quarter…). For analytics filters, booking flows, report scopes.</p>
+        <p class="lede">Two-handle date range with presets (last 7 days, this month, this quarter…). For analytics filters, booking flows, report scopes.</p>
       </header>
-      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>For "from–to" date ranges. Renders two inputs (start / end) plus an optional preset list ("Last 7 days", "Last 30 days", "This year"). The calendar lets users pick both ends visually.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview"><div style="display: flex; gap: var(--space-2); align-items: center;"><input type="date" class="ren-input" value="2026-04-01" style="width: 160px;"><span>→</span><input type="date" class="ren-input" value="2026-04-30" style="width: 160px;"></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-date-range-picker name="period"
+      <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>For "from–to" date ranges. The empty host renders a single trigger showing <em>start → end</em>, and a dropdown holding a preset list ("Last 7 days", "Last 30 days", "This month"), two side-by-side calendars, and Cancel / Apply. The selection stays a draft until Apply, so Escape and outside-click revert instead of committing.</p></section>
+      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview"><div class="demo-picker-field"><ren-date-range-picker name="period" start="2026-04-01" end="2026-04-30" presets="last7,last30,thisMonth,thisYear" placement="bottom"></ren-date-range-picker></div><div class="demo-picker-field"><ren-date-range-picker name="comparison" placeholder="Comparison period" presets="last7,last30,lastMonth,lastYear" placement="bottom"></ren-date-range-picker></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-date-range-picker name="period"
                        start="2026-04-01" end="2026-04-30"
-                       presets="7d,30d,90d,year"&gt;
-&lt;/ren-date-range-picker&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api dx-api-cols-4"><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead><tbody><tr><td><code class="dx-api-name">start</code> / <code class="dx-api-name">end</code></td><td><span class="dx-api-type">"YYYY-MM-DD"</span></td><td><span class="dx-api-default">—</span></td><td>Range bounds.</td></tr><tr><td><code class="dx-api-name">max-range</code></td><td><span class="dx-api-type">number (days)</span></td><td><span class="dx-api-default">—</span></td><td>Limit the maximum span the user can pick.</td></tr><tr><td><code class="dx-api-name">presets</code></td><td><span class="dx-api-type">string list</span></td><td><span class="dx-api-default">—</span></td><td>Comma-separated preset keys: <code>7d, 30d, 90d, year, ytd, last-quarter</code>.</td></tr><tr><td><code class="dx-api-name">placement</code></td><td><span class="dx-api-type">"top" | "right" | "bottom" | "left"</span></td><td><span class="dx-api-default">"bottom"</span></td><td>Preferred side for the range popover. Reflected to <code>data-side</code>.</td></tr></tbody></table></section>
+                       presets="last7,last30,thisMonth,thisYear"&gt;
+&lt;/ren-date-range-picker&gt;</code></pre></div><p>The demo mounts two pickers so the anchoring stays honest: each host generates its own CSS anchor name on upgrade, so both dropdowns open against their own trigger instead of stacking on the last one in the document.</p></section>
+      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api dx-api-cols-4"><thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead><tbody><tr><td><code class="dx-api-name">start</code> / <code class="dx-api-name">end</code></td><td><span class="dx-api-type">"YYYY-MM-DD"</span></td><td><span class="dx-api-default">—</span></td><td>Range bounds.</td></tr><tr><td><code class="dx-api-name">max-range</code></td><td><span class="dx-api-type">number (days)</span></td><td><span class="dx-api-default">—</span></td><td>Limit the maximum span the user can pick.</td></tr><tr><td><code class="dx-api-name">presets</code></td><td><span class="dx-api-type">string list</span></td><td><span class="dx-api-default">"last7, last30, thisMonth, lastMonth"</span></td><td>Comma-separated preset keys: <code>today, yesterday, last7, last14, last30, last90, thisWeek, lastWeek, thisMonth, lastMonth, thisQuarter, thisYear, lastYear</code>.</td></tr><tr><td><code class="dx-api-name">placement</code></td><td><span class="dx-api-type">"top" | "right" | "bottom" | "left"</span></td><td><span class="dx-api-default">"bottom"</span></td><td>Preferred side for the range popover. Reflected to <code>data-side</code>.</td></tr></tbody></table></section>
       <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Inside the calendar, the two ends of the range have distinct ARIA labels ("Start of range", "End of range").</li><li>Days that would fall outside the allowed range get <code>aria-disabled="true"</code>.</li></ul></section>
     </main>
   </div>
+  <script type="module" src="../../components/composites/ren-calendar/ren-calendar.js"></script>
+  <script type="module" src="../../components/composites/ren-date-range-picker/ren-date-range-picker.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

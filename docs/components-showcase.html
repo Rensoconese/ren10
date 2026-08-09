@@ -15,21 +15,14 @@
   <link rel="stylesheet" href="../index.css">
   <link rel="stylesheet" href="../components/index.css">
 
-  <!-- Fallback links for when opened directly (without @import support) -->
-  <link rel="stylesheet" href="../tokens/primitives/colors.css">
-  <link rel="stylesheet" href="../tokens/primitives/typography.css">
-  <link rel="stylesheet" href="../tokens/primitives/spacing.css">
-  <link rel="stylesheet" href="../tokens/primitives/radius.css">
-  <link rel="stylesheet" href="../tokens/primitives/shadows.css">
-  <link rel="stylesheet" href="../tokens/primitives/sizing.css">
-  <link rel="stylesheet" href="../tokens/primitives/motion.css">
-  <link rel="stylesheet" href="../tokens/primitives/z-index.css">
-  <link rel="stylesheet" href="../tokens/semantic/colors.css">
-  <link rel="stylesheet" href="../tokens/semantic/typography.css">
-  <link rel="stylesheet" href="../base/reset.css">
-  <link rel="stylesheet" href="../base/classless.css">
-  <link rel="stylesheet" href="../base/utilities.css">
-  <link rel="stylesheet" href="../base/layouts.css">
+  <!--
+    No per-file fallback links here. index.css and components/index.css pull
+    these in through @import inside cascade layers; linking them again puts an
+    unlayered copy on top, and unlayered CSS outranks every layer. That let raw
+    primitives override the semantic tokens, which is how this page ended up
+    painting black --color-on-accent text on a light-mode blue button: 3.71:1,
+    below AA, while the tokens themselves are 5.67:1 and 8.24:1.
+  -->
 
   <!-- New components (Phase 2-3) -->
   <link rel="stylesheet" href="../components/primitives/ren-card/ren-card.css">
@@ -1507,7 +1500,7 @@
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Basic Stepper</h3>
-          <ren-number-field min="0" max="100" value="50" step="1" style="width: 200px;"></ren-number-field>
+          <ren-number-field aria-label="Quantity" min="0" max="100" value="50" step="1" style="width: 200px;"></ren-number-field>
         </div>
 
         <div>
@@ -1515,11 +1508,11 @@
           <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
             <div>
               <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Range 0-50</p>
-              <ren-number-field min="0" max="50" value="25" step="1" style="width: 200px;"></ren-number-field>
+              <ren-number-field aria-label="Items" min="0" max="50" value="25" step="1" style="width: 200px;"></ren-number-field>
             </div>
             <div>
               <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Range 10-100</p>
-              <ren-number-field min="10" max="100" value="50" step="5" style="width: 200px;"></ren-number-field>
+              <ren-number-field aria-label="Amount" min="10" max="100" value="50" step="5" style="width: 200px;"></ren-number-field>
             </div>
           </div>
         </div>
@@ -1529,22 +1522,22 @@
           <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: flex-end;">
             <div>
               <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Small</p>
-              <ren-number-field min="0" max="100" value="25" style="width: 160px; --field-height: 32px;"></ren-number-field>
+              <ren-number-field aria-label="Volume" min="0" max="100" value="25" style="width: 160px; --field-height: 32px;"></ren-number-field>
             </div>
             <div>
               <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Default</p>
-              <ren-number-field min="0" max="100" value="50" style="width: 200px;"></ren-number-field>
+              <ren-number-field aria-label="Count" min="0" max="100" value="50" style="width: 200px;"></ren-number-field>
             </div>
             <div>
               <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">Large</p>
-              <ren-number-field min="0" max="100" value="75" style="width: 240px; --field-height: 48px;"></ren-number-field>
+              <ren-number-field aria-label="Level" min="0" max="100" value="75" style="width: 240px; --field-height: 48px;"></ren-number-field>
             </div>
           </div>
         </div>
 
         <div>
           <h3 style="font-size: var(--text-lg); margin: var(--space-3) 0 var(--space-2);">Disabled State</h3>
-          <ren-number-field min="0" max="100" value="50" disabled style="width: 200px;"></ren-number-field>
+          <ren-number-field aria-label="Units" min="0" max="100" value="50" disabled style="width: 200px;"></ren-number-field>
         </div>
       </section>
 
@@ -1678,12 +1671,18 @@
             </div>
 
             <!-- Progress Indicator -->
-            <div class="ren-form-progress" style="display: flex; gap: var(--space-2); margin-bottom: var(--space-6); justify-content: space-between;">
-              <div class="ren-form-step" data-step="1" data-active style="flex: 1; text-align: center; padding: var(--space-2); border-radius: var(--radius-md); background: var(--color-accent); color: var(--color-on-accent);">
-                <span class="ren-form-step-label" style="font-weight: var(--weight-semibold);">Account</span>
+            <!-- No inline colours here: ren-form.css already styles
+                 .ren-form-step[data-active] / [data-completed]. Painting the
+                 active step's background with --color-accent while the
+                 component sets the label to --color-accent produced blue text
+                 on a blue box (1:1), and the second step landed on
+                 --color-text-faint at 1.68:1. -->
+            <div class="ren-form-progress">
+              <div class="ren-form-step" data-step="1" data-active>
+                <span class="ren-form-step-label">Account</span>
               </div>
-              <div class="ren-form-step" data-step="2" style="flex: 1; text-align: center; padding: var(--space-2); border-radius: var(--radius-md); background: var(--color-fill); color: var(--color-text-secondary);">
-                <span class="ren-form-step-label" style="font-weight: var(--weight-semibold);">Profile</span>
+              <div class="ren-form-step" data-step="2">
+                <span class="ren-form-step-label">Profile</span>
               </div>
             </div>
 
@@ -2892,7 +2891,8 @@
 
           <div class="ren-date-range-picker">
             <button class="ren-date-range-trigger ren-date-range-empty" disabled
-                    aria-haspopup="dialog" aria-expanded="false">
+                    aria-haspopup="dialog" aria-expanded="false"
+                    aria-label="Select date range (disabled)">
               <span class="ren-date-range-value" data-placeholder>Select date range</span>
             </button>
           </div>

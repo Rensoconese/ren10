@@ -10,8 +10,12 @@
   <link rel="stylesheet" href="../../tokens/component/tokens.css">
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
-    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
+    /* overflow: visible so an open .ren-menubar-menu (absolutely positioned
+       under its trigger) is not clipped by the demo frame. */
+    .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: visible; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+    /* Room under the bar so an open menu stays inside the preview frame. */
+    .demo-menubar-preview { display: block; min-height: 240px; }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
   </style>
 </head>
@@ -114,15 +118,91 @@
         <p class="lede">Horizontal menu bar with sub-menus. For desktop-style apps with a top-level File / Edit / View structure.</p>
       </header>
       <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Use a Menubar when your app has more global commands than fit in a button row, and the desktop-app metaphor (File menu, Edit menu) makes sense — IDEs, design tools, document editors.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="display: block;"><div role="menubar" class="ren-menubar" style="display: flex; gap: var(--space-1); padding: var(--space-1); border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface);"><button role="menuitem" type="button" style="padding: var(--space-1) var(--space-3); background: transparent; border: 0; border-radius: var(--radius-sm); cursor: pointer; font-size: var(--text-sm);">File</button><button role="menuitem" type="button" style="padding: var(--space-1) var(--space-3); background: transparent; border: 0; border-radius: var(--radius-sm); cursor: pointer; font-size: var(--text-sm);">Edit</button><button role="menuitem" type="button" style="padding: var(--space-1) var(--space-3); background: transparent; border: 0; border-radius: var(--radius-sm); cursor: pointer; font-size: var(--text-sm);">View</button><button role="menuitem" type="button" style="padding: var(--space-1) var(--space-3); background: transparent; border: 0; border-radius: var(--radius-sm); cursor: pointer; font-size: var(--text-sm);">Help</button></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-menubar aria-label="Main menu"&gt;
-  &lt;button role="menuitem"&gt;File&lt;/button&gt;
-  &lt;button role="menuitem"&gt;Edit&lt;/button&gt;
-  &lt;button role="menuitem"&gt;View&lt;/button&gt;
-&lt;/ren-menubar&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><p>Each top-level item is a <code>&lt;button role="menuitem"&gt;</code>. Submenus use <a href="ren-menu.html" class="ren-link">Menu</a> popovers triggered by each item.</p></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Wrapper has <code>role="menubar"</code> + descriptive <code>aria-label</code>.</li><li>Arrow keys navigate horizontally between top-level items, vertically inside an open submenu.</li><li><kbd>Esc</kbd> closes any open submenu.</li></ul></section>
+      <section class="dx-section" id="demo">
+        <p class="dx-kicker">Live</p>
+        <h2>Demo</h2>
+        <p>Click a top-level menu to open it, then use <kbd>←</kbd> / <kbd>→</kbd> to glide between menus and <kbd>↑</kbd> / <kbd>↓</kbd> inside one. <kbd>Esc</kbd> closes.</p>
+        <div class="dx-demo">
+          <div class="dx-demo-preview demo-menubar-preview">
+            <ren-menubar>
+              <div class="ren-menubar" role="menubar" aria-label="Document">
+                <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">File</button>
+                <div class="ren-menubar-menu" role="menu" aria-label="File" hidden>
+                  <button type="button" class="ren-menubar-item" role="menuitem">New file<span class="ren-menubar-shortcut">⌘N</span></button>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Open…<span class="ren-menubar-shortcut">⌘O</span></button>
+                  <div class="ren-menubar-separator" role="separator"></div>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Save<span class="ren-menubar-shortcut">⌘S</span></button>
+                </div>
+
+                <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">Edit</button>
+                <div class="ren-menubar-menu" role="menu" aria-label="Edit" hidden>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Undo<span class="ren-menubar-shortcut">⌘Z</span></button>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Redo<span class="ren-menubar-shortcut">⇧⌘Z</span></button>
+                  <div class="ren-menubar-separator" role="separator"></div>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Find…<span class="ren-menubar-shortcut">⌘F</span></button>
+                </div>
+
+                <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">View</button>
+                <div class="ren-menubar-menu" role="menu" aria-label="View" hidden>
+                  <button type="button" class="ren-menubar-item ren-menubar-checkbox" role="menuitemcheckbox" aria-checked="true">Show sidebar</button>
+                  <button type="button" class="ren-menubar-item ren-menubar-checkbox" role="menuitemcheckbox" aria-checked="false">Show status bar</button>
+                </div>
+
+                <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">Help</button>
+                <div class="ren-menubar-menu" role="menu" aria-label="Help" hidden>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Documentation</button>
+                  <button type="button" class="ren-menubar-item" role="menuitem">Keyboard shortcuts</button>
+                </div>
+              </div>
+            </ren-menubar>
+          </div>
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-menubar&gt;
+  &lt;div class="ren-menubar" role="menubar" aria-label="Document"&gt;
+    &lt;button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false"&gt;File&lt;/button&gt;
+    &lt;div class="ren-menubar-menu" role="menu" aria-label="File" hidden&gt;
+      &lt;button type="button" class="ren-menubar-item" role="menuitem"&gt;New file&lt;span class="ren-menubar-shortcut"&gt;⌘N&lt;/span&gt;&lt;/button&gt;
+      &lt;div class="ren-menubar-separator" role="separator"&gt;&lt;/div&gt;
+      &lt;button type="button" class="ren-menubar-item" role="menuitem"&gt;Save&lt;span class="ren-menubar-shortcut"&gt;⌘S&lt;/span&gt;&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false"&gt;Edit&lt;/button&gt;
+    &lt;div class="ren-menubar-menu" role="menu" aria-label="Edit" hidden&gt;
+      &lt;button type="button" class="ren-menubar-item" role="menuitem"&gt;Undo&lt;span class="ren-menubar-shortcut"&gt;⌘Z&lt;/span&gt;&lt;/button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/ren-menubar&gt;</code></pre>
+        </div>
+      </section>
+      <section class="dx-section" id="api">
+        <p class="dx-kicker">Reference</p>
+        <h2>API</h2>
+        <p>The pattern is a fixed three-level shape: <code>&lt;ren-menubar&gt;</code> wraps a <code>&lt;div class="ren-menubar" role="menubar"&gt;</code>; inside it every top-level menu is a <code>.ren-menubar-trigger</code> button followed immediately by its sibling <code>.ren-menubar-menu</code> panel. The component pairs each trigger with <code>trigger.nextElementSibling</code>, so a button without the <code>.ren-menubar-trigger</code> class is not a menu at all — it will never open.</p>
+        <table class="dx-api">
+          <thead><tr><th>Class</th><th>Effect</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">.ren-menubar</code></td><td>The bar itself, on a <code>&lt;div role="menubar"&gt;</code> inside the custom element.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-menubar-trigger</code></td><td>A top-level menu button. The component manages its <code>aria-expanded</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-menubar-menu</code></td><td>The dropdown panel, a sibling right after its trigger. Toggled via the <code>hidden</code> attribute.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-menubar-item</code></td><td>One command inside a panel. Always a <code>&lt;button&gt;</code>, never an <code>&lt;a&gt;</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-menubar-checkbox</code> / <code class="dx-api-name">-radio</code></td><td>Stateful items. Pair with <code>role="menuitemcheckbox|menuitemradio"</code> and <code>aria-checked</code>; the check / dot is drawn by <code>::before</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-menubar-submenu</code></td><td>An item that owns a nested <code>.ren-menubar-menu</code> child. The chevron is drawn by <code>::after</code>.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-menubar-separator</code> / <code class="dx-api-name">-shortcut</code> / <code class="dx-api-name">-label</code></td><td>Divider, trailing shortcut text, and non-interactive group heading.</td></tr>
+          </tbody>
+        </table>
+        <h3>Events</h3>
+        <table class="dx-api">
+          <thead><tr><th>Event</th><th>Detail</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">ren-menubar-select</code></td><td>An item was activated. <code>{ item, value, checked }</code>.</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Wrapper has <code>role="menubar"</code> + descriptive <code>aria-label</code>; each panel is a <code>role="menu"</code> with its own label.</li><li>Triggers expose <code>aria-haspopup</code> and an <code>aria-expanded</code> that the component flips as menus open and close.</li><li>Arrow keys navigate horizontally between top-level menus, vertically inside an open one; <kbd>Home</kbd> / <kbd>End</kbd> jump to the first / last item and typeahead matches by character.</li><li><kbd>Esc</kbd> closes the open menu and returns focus to its trigger.</li></ul></section>
     </main>
   </div>
+  <!-- Web Component registration: the demo above is a real <ren-menubar>, so the
+       keyboard model, roving focus and aria-expanded come from the component. -->
+  <script type="module" src="../../components/patterns/ren-menubar/ren-menubar.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

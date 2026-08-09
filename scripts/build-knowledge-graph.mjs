@@ -111,12 +111,14 @@ const buildSql = (graph) => {
     'DROP TABLE IF EXISTS node_fts;',
     'DROP TABLE IF EXISTS edges;',
     'DROP TABLE IF EXISTS nodes;',
+    // No `body` column: the FTS table below already stores the text it needs
+    // for MATCH and snippet(), and the search query never selects n.body. A
+    // second copy here added ~3.2 MB to the shipped database for nothing.
     `CREATE TABLE nodes (
       id TEXT PRIMARY KEY,
       type TEXT NOT NULL,
       name TEXT NOT NULL,
       path TEXT,
-      body TEXT,
       data TEXT NOT NULL
     );`,
     `CREATE TABLE edges (
@@ -136,12 +138,11 @@ const buildSql = (graph) => {
 
   for (const node of graph.nodes) {
     statements.push(
-      `INSERT INTO nodes (id, type, name, path, body, data) VALUES (${[
+      `INSERT INTO nodes (id, type, name, path, data) VALUES (${[
         node.id,
         node.type,
         node.name,
         node.path,
-        node.body,
         JSON.stringify(node.data ?? {}),
       ]
         .map(sqlLiteral)
@@ -334,10 +335,33 @@ const main = async () => {
     ),
   };
 
-  await writeFile(jsonPath, `${JSON.stringify(graph, null, 2)}\n`);
+  // The SQLite build needs every node body in memory to populate the FTS
+  // index, so it runs against the full graph.
   const sqlite = await writeSqlite(graph);
 
+  // The published JSON drops a body only when it is byte-identical to the file
+  // the node already points at — that text ships in the package anyway, so
+  // storing it again was pure duplication, and loadJsonGraph() reads it back.
+  //
+  // The comparison is deliberate rather than a type allowlist: `component`
+  // nodes aggregate several files, and `selector` / `token` nodes hold
+  // fragments, so their bodies are NOT their file and must be kept. Deriving
+  // that from the bytes means a future change to how any body is assembled
+  // keeps the graph correct instead of silently degrading search ranking.
+  const publishedNodes = await Promise.all(
+    graph.nodes.map(async (node) => {
+      if (!node.path || !node.body) return node;
+      const fileBody = await readFile(path.join(root, node.path), 'utf8').catch(() => null);
+      if (fileBody !== node.body) return node;
+      const { body, ...rest } = node; // eslint-disable-line no-unused-vars
+      return rest;
+    }),
+  );
+  await writeFile(jsonPath, `${JSON.stringify({ ...graph, nodes: publishedNodes }, null, 2)}\n`);
+
+  const inlined = publishedNodes.filter((node) => node.body !== undefined).length;
   console.log(`RenDS knowledge graph: ${graph.nodes.length} nodes, ${graph.edges.length} edges`);
+  console.log(`JSON bodies: ${inlined} inlined, ${publishedNodes.length - inlined} read back from their file`);
   console.log(`JSON: ${relativePath(jsonPath)}`);
   console.log(sqlite.ok ? `SQLite: ${relativePath(sqlitePath)}` : `SQLite skipped: ${sqlite.reason}`);
 };

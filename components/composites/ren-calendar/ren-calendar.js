@@ -1,4 +1,7 @@
 import { formatLocalDate, parseLocalDate } from '../../../utils/local-date.js';
+import { t } from '../../../utils/i18n.js';
+import { renWarn } from '../../../utils/debug.js';
+import { uid } from '../../../utils/id-generator.js';
 
 /* ═══ REN CALENDAR WEB COMPONENT ═══
    A fully accessible, keyboard-navigable calendar for date selection.
@@ -77,8 +80,12 @@ export class RenCalendar extends HTMLElement {
     const header = document.createElement('div');
     header.className = 'ren-calendar-header';
 
+    /* ═══ STABLE ID SO THE GRID CAN BE NAMED BY THE MONTH TITLE ═══ */
+    this.titleId ??= uid('calendar-title');
+
     const title = document.createElement('div');
     title.className = 'ren-calendar-title';
+    title.id = this.titleId;
     title.textContent = this.formatMonthYear();
     title.setAttribute('aria-live', 'polite');
 
@@ -87,12 +94,12 @@ export class RenCalendar extends HTMLElement {
 
     const prevBtn = document.createElement('button');
     prevBtn.className = 'ren-calendar-prev';
-    prevBtn.setAttribute('aria-label', `Previous month (${this.formatPrevMonth()})`);
+    prevBtn.setAttribute('aria-label', t('calendar.previousMonth', { month: this.formatPrevMonth() }));
     prevBtn.addEventListener('click', this.handlePrevMonth);
 
     const nextBtn = document.createElement('button');
     nextBtn.className = 'ren-calendar-next';
-    nextBtn.setAttribute('aria-label', `Next month (${this.formatNextMonth()})`);
+    nextBtn.setAttribute('aria-label', t('calendar.nextMonth', { month: this.formatNextMonth() }));
     nextBtn.addEventListener('click', this.handleNextMonth);
 
     navDiv.appendChild(prevBtn);
@@ -102,28 +109,49 @@ export class RenCalendar extends HTMLElement {
     header.appendChild(navDiv);
     this.appendChild(header);
 
-    /* ═══ BUILD WEEKDAY HEADERS ═══ */
-    const weekdaysDiv = document.createElement('div');
-    weekdaysDiv.className = 'ren-calendar-weekdays';
-
-    const weekdayNames = this.getWeekdayNames();
-    weekdayNames.forEach((name) => {
-      const dayLabel = document.createElement('div');
-      dayLabel.className = 'ren-calendar-weekday';
-      dayLabel.textContent = name;
-      dayLabel.setAttribute('aria-label', name);
-      weekdaysDiv.appendChild(dayLabel);
-    });
-
-    this.appendChild(weekdaysDiv);
-
-    /* ═══ BUILD CALENDAR GRID ═══ */
+    /* ═══ BUILD CALENDAR GRID ═══
+       An ARIA grid may only contain rows: role="grid" > role="row" >
+       role="columnheader" | role="gridcell". The weekday strip is therefore
+       the grid's header row, not a sibling of the grid — a flat grid of 42
+       gridcells fails aria-required-children AND aria-required-parent. The
+       rows carry no layout (see `display: contents` in ren-calendar.css), so
+       every cell stays a direct grid item of the 7-column track. ═══ */
     const grid = document.createElement('div');
     grid.className = 'ren-calendar-grid';
     grid.setAttribute('role', 'grid');
+    grid.setAttribute('aria-labelledby', this.titleId);
+
+    /* ═══ BUILD WEEKDAY HEADER ROW ═══ */
+    const weekdaysRow = document.createElement('div');
+    weekdaysRow.className = 'ren-calendar-weekdays';
+    weekdaysRow.setAttribute('role', 'row');
+
+    const weekdayNames = this.getWeekdayNames();
+    const weekdayFullNames = this.getWeekdayNames('long');
+    weekdayNames.forEach((name, index) => {
+      const dayLabel = document.createElement('div');
+      dayLabel.className = 'ren-calendar-weekday';
+      dayLabel.setAttribute('role', 'columnheader');
+      dayLabel.textContent = name;
+      /* The visible text is a 2-letter abbreviation; announce the full name. */
+      dayLabel.setAttribute('aria-label', weekdayFullNames[index]);
+      weekdaysRow.appendChild(dayLabel);
+    });
+
+    grid.appendChild(weekdaysRow);
 
     const dates = this.generateCalendarDates();
+    let weekRow = null;
+
     dates.forEach((date, index) => {
+      /* ═══ ONE role="row" PER WEEK ═══ */
+      if (index % 7 === 0) {
+        weekRow = document.createElement('div');
+        weekRow.className = 'ren-calendar-week';
+        weekRow.setAttribute('role', 'row');
+        grid.appendChild(weekRow);
+      }
+
       const dayBtn = document.createElement('button');
       dayBtn.className = 'ren-calendar-day';
       dayBtn.textContent = date.date.getDate();
@@ -181,7 +209,7 @@ export class RenCalendar extends HTMLElement {
       dayBtn.addEventListener('click', (e) => this.handleDayClick(e, date.date));
       dayBtn.addEventListener('keydown', (e) => this.handleDayKeyDown(e, date.date, index, dates.length));
 
-      grid.appendChild(dayBtn);
+      weekRow.appendChild(dayBtn);
     });
 
     this.appendChild(grid);
@@ -254,15 +282,18 @@ export class RenCalendar extends HTMLElement {
     return dates;
   }
 
-  /* ═══ GET WEEKDAY NAMES ═══ */
-  getWeekdayNames() {
-    const formatter = new Intl.DateTimeFormat(this.locale, { weekday: 'short' });
+  /* ═══ GET WEEKDAY NAMES ═══
+     'short' → the 2-letter visible abbreviation used in the header row.
+     'long'  → the full locale name used as the columnheader's aria-label. ═══ */
+  getWeekdayNames(style = 'short') {
+    const formatter = new Intl.DateTimeFormat(this.locale, { weekday: style });
     const weekdays = [];
 
     for (let i = 0; i < 7; i++) {
       const dayIndex = (i + this.firstDay) % 7;
       const date = new Date(2024, 0, dayIndex + 7); // Sunday is Jan 7, 2024
-      weekdays.push(formatter.format(date).toUpperCase().substring(0, 2));
+      const formatted = formatter.format(date);
+      weekdays.push(style === 'short' ? formatted.toUpperCase().substring(0, 2) : formatted);
     }
 
     return weekdays;
@@ -427,7 +458,7 @@ export class RenCalendar extends HTMLElement {
   /* ═══ SET RANGE ═══ */
   setRange(start, end) {
     if (this.mode !== 'range') {
-      console.warn('RenCalendar: setRange() only works in range mode');
+      renWarn('RenCalendar', 'setRange() only works in range mode');
       return;
     }
 

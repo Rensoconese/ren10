@@ -49,6 +49,9 @@
  * ═════════════════════════════════════════════════════════════════════════
  */
 
+import { t } from '../../../utils/i18n.js';
+import { renWarn } from '../../../utils/debug.js';
+
 let nextId = 0;
 
 export class RenCarousel extends HTMLElement {
@@ -187,13 +190,13 @@ export class RenCarousel extends HTMLElement {
     this.setAttribute('role', 'group');
     this.setAttribute('aria-roledescription', 'carousel');
     if (!this.getAttribute('aria-label')) {
-      this.setAttribute('aria-label', 'Image carousel');
+      this.setAttribute('aria-label', t('carousel.label'));
     }
 
     // Find viewport
     this._viewport = this.querySelector('.ren-carousel-viewport');
     if (!this._viewport) {
-      console.warn('RenCarousel: No viewport found');
+      renWarn('RenCarousel', 'No viewport found');
       return;
     }
 
@@ -215,7 +218,7 @@ export class RenCarousel extends HTMLElement {
       this._prevButton = null;
       this._nextButton = null;
       this._counterElement = null;
-      console.warn('RenCarousel: No slides found');
+      renWarn('RenCarousel', 'No slides found');
       return;
     }
 
@@ -236,7 +239,10 @@ export class RenCarousel extends HTMLElement {
       }
       slide.setAttribute('role', 'group');
       slide.setAttribute('aria-roledescription', 'slide');
-      slide.setAttribute('aria-label', `Slide ${index + 1} of ${this._totalSlides}`);
+      slide.setAttribute('aria-label', t('carousel.slideOf', {
+        current: index + 1,
+        total: this._totalSlides,
+      }));
       if (index === this._currentIndex) {
         slide.setAttribute('aria-current', 'true');
       } else {
@@ -271,14 +277,14 @@ export class RenCarousel extends HTMLElement {
     // Create dots container
     this._dotsContainer = document.createElement('ul');
     this._dotsContainer.className = 'ren-carousel-dots';
-    this._dotsContainer.setAttribute('aria-label', 'Carousel pagination');
+    this._dotsContainer.setAttribute('aria-label', t('carousel.pagination'));
 
     // Create individual dots
     this._dots = this._slides.map((_, index) => {
       const dot = document.createElement('button');
       dot.className = 'ren-carousel-dot';
       dot.setAttribute('type', 'button');
-      dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+      dot.setAttribute('aria-label', t('carousel.goToSlide', { index: index + 1 }));
       dot.setAttribute('aria-controls', this._slides[index].id);
       if (index === 0) {
         dot.setAttribute('aria-current', 'true');
@@ -304,14 +310,14 @@ export class RenCarousel extends HTMLElement {
     this._prevButton = document.createElement('button');
     this._prevButton.className = 'ren-carousel-prev';
     this._prevButton.setAttribute('type', 'button');
-    this._prevButton.setAttribute('aria-label', 'Previous slide');
+    this._prevButton.setAttribute('aria-label', t('carousel.previous'));
     this._prevButton.addEventListener('click', () => this.prev());
 
     // Create next button
     this._nextButton = document.createElement('button');
     this._nextButton.className = 'ren-carousel-next';
     this._nextButton.setAttribute('type', 'button');
-    this._nextButton.setAttribute('aria-label', 'Next slide');
+    this._nextButton.setAttribute('aria-label', t('carousel.next'));
     this._nextButton.addEventListener('click', () => this.next());
 
     // Insert after viewport

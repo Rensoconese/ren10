@@ -46,6 +46,8 @@
  * @fires ren-filter - Dispatched when filter changes: { columnIndex, value }
  */
 
+import { renWarn } from '../../../utils/debug.js';
+
 export class RenTable extends HTMLElement {
   #table = null;
   #thead = null;
@@ -74,7 +76,12 @@ export class RenTable extends HTMLElement {
   }
 
   connectedCallback() {
-    this._initializeComponent();
+    // Bail out when the required structure is missing. _initializeComponent()
+    // warns and returns early, but it used to leave #thead/#tbody null while
+    // the two calls below ran anyway — so a bare <ren-table> threw
+    // "Cannot read properties of null" right after the warning that was
+    // supposed to explain the problem.
+    if (!this._initializeComponent()) return;
     this._attachEventListeners();
     this._setupPagination();
   }
@@ -84,7 +91,8 @@ export class RenTable extends HTMLElement {
   }
 
   /**
-   * Initialize table references and attributes
+   * Initialize table references and attributes.
+   * @returns {boolean} true when the required structure was found
    * @private
    */
   _initializeComponent() {
@@ -93,8 +101,8 @@ export class RenTable extends HTMLElement {
     this.#tbody = this.querySelector('.ren-table-body');
 
     if (!this.#table || !this.#thead || !this.#tbody) {
-      console.warn('RenTable: Missing required table structure');
-      return;
+      renWarn('RenTable', 'Missing required table structure');
+      return false;
     }
 
     // Get page size from attribute
@@ -118,6 +126,8 @@ export class RenTable extends HTMLElement {
     if (!this.#tbody.hasAttribute('role')) {
       this.#tbody.setAttribute('role', 'rowgroup');
     }
+
+    return true;
   }
 
   /**

@@ -58,7 +58,8 @@ requiredMarkup:
 forbiddenPatterns:
   - "Styling a <div> or <span> as the trigger instead of a real <button> — keyboard activation and aria-expanded depend on the button."
   - "Replacing the inner <ren-calendar> with raw markup — the host wires ren-date-select events directly to the calendar element."
-  - "Hardcoding popover positioning offsets via inline styles — rely on anchor-name: --ren-date-picker-anchor, position-anchor, and position-area in the stylesheet."
+  - "Hardcoding popover positioning offsets via inline styles — rely on the stylesheet's position-area / position-try-fallbacks plus the per-instance CSS anchor link the component wires up between the trigger and its dropdown."
+  - "Declaring a shared CSS anchor identifier for the trigger in consumer CSS — the anchor name is a document-wide identifier and the component generates a unique one per instance; a shared name resolves to the last trigger in tree order and mis-places every dropdown but the last."
   - "Toggling the dropdown by setting display: none — use open()/close()/toggle() on the host so aria-expanded and popover state stay in sync."
   - "Wrapping a native <input type=\"date\"> in .ren-date-picker — the component expects to own its trigger and popover."
 

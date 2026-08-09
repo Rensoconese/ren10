@@ -7,7 +7,14 @@
   padding-block: var(--space-1, 0.25rem);
   min-width: 12rem;
   z-index: var(--z-dropdown, 1000);
-  position: absolute;
+  /* fixed, not absolute: the menu is shown through the Popover API, so it
+     lives in the top layer, where `absolute` resolves against the initial
+     containing block — which does not move with the scroll. positionMenu()
+     computes from getBoundingClientRect(), i.e. viewport coordinates, so on a
+     scrolled page the two disagreed by exactly the scroll offset and the menu
+     landed hundreds of pixels from its trigger. ren-context-menu already used
+     fixed, which is why it never had this. */
+  position: fixed;
   animation: ren-menu-open var(--duration-enter) var(--ease-enter);
   visibility: hidden;
   opacity: 0;

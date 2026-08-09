@@ -12,9 +12,13 @@
   <style>
     /* Page-specific styles — chrome and tables live in shell.css */
 
-    /* Custom element default — <div class="ren-tabs"> is display: inline by default,
-       which collapses its panels. Force a block layout. */
+    /* Custom elements are display: inline by default, which collapses the
+       panels. Mirror the .ren-tabs rule from ren-tabs.css onto the element
+       selector so the demos below render exactly like the shipped component
+       (the container-name drives the narrow-width scroll query). */
     ren-tabs {
+      container-type: inline-size;
+      container-name: ren-tabs;
       display: flex;
       flex-direction: column;
       width: 100%;
@@ -302,7 +306,7 @@
         <div class="dx-anatomy">
           <div class="dx-anatomy-stage">
             <p class="dx-anatomy-stage-label">Assembled</p>
-            <div class="ren-tabs">
+            <ren-tabs>
               <div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Anatomy preview">
                 <button role="tab" class="ren-tab" type="button">Overview</button>
                 <button role="tab" class="ren-tab" type="button">Activity</button>
@@ -317,7 +321,7 @@
               <div role="tabpanel" class="ren-tab-panel" hidden>
                 <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary);">The <strong>Settings</strong> panel — a form for configuring the resource.</p>
               </div>
-            </div>
+            </ren-tabs>
           </div>
 
           <div class="dx-anatomy-parts">
@@ -363,7 +367,7 @@
 
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <div class="ren-tabs">
+            <ren-tabs>
               <div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Project sections">
                 <button role="tab" class="ren-tab" type="button">Overview</button>
                 <button role="tab" class="ren-tab" type="button">Activity</button>
@@ -386,7 +390,7 @@
                 <h3 style="font-size: var(--text-base); font-weight: var(--weight-semibold); margin: 0 0 var(--space-2);">Project settings</h3>
                 <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.55;">Name, description, visibility, danger-zone actions. Changes are saved as you go.</p>
               </div>
-            </div>
+            </ren-tabs>
           </div>
           <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-tabs&gt;
   &lt;div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Project sections"&gt;
@@ -417,7 +421,7 @@
           <div class="dx-vrow">
             <span class="dx-vrow-label">Underline</span>
             <div class="dx-vrow-items">
-              <div class="ren-tabs">
+              <ren-tabs>
                 <div role="tablist" class="ren-tab-list ren-tab-list-underline" aria-label="Underline variant">
                   <button role="tab" class="ren-tab" type="button">First</button>
                   <button role="tab" class="ren-tab" type="button">Second</button>
@@ -426,14 +430,14 @@
                 <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Default style. Selected tab gets a 2 px accent underline.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Second panel.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Third panel.</div>
-              </div>
+              </ren-tabs>
             </div>
           </div>
 
           <div class="dx-vrow">
             <span class="dx-vrow-label">Pills</span>
             <div class="dx-vrow-items">
-              <div class="ren-tabs">
+              <ren-tabs>
                 <div role="tablist" class="ren-tab-list ren-tab-list-pills" aria-label="Pills variant">
                   <button role="tab" class="ren-tab" type="button">All</button>
                   <button role="tab" class="ren-tab" type="button">Active</button>
@@ -442,14 +446,14 @@
                 <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Pills feel like a segmented control — good for filters and view modes.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Active items.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Archived items.</div>
-              </div>
+              </ren-tabs>
             </div>
           </div>
 
           <div class="dx-vrow">
             <span class="dx-vrow-label">Enclosed</span>
             <div class="dx-vrow-items">
-              <div class="ren-tabs">
+              <ren-tabs>
                 <div role="tablist" class="ren-tab-list ren-tab-list-enclosed" aria-label="Enclosed variant">
                   <button role="tab" class="ren-tab" type="button">README</button>
                   <button role="tab" class="ren-tab" type="button">License</button>
@@ -458,14 +462,14 @@
                 <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted); border: 1px solid var(--color-border); border-top: none; padding: var(--space-4); border-radius: 0 0 var(--radius-md) var(--radius-md);">Enclosed gives the "files in a folder" metaphor. Pair with a bordered panel.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted); border: 1px solid var(--color-border); border-top: none; padding: var(--space-4); border-radius: 0 0 var(--radius-md) var(--radius-md);">License contents.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted); border: 1px solid var(--color-border); border-top: none; padding: var(--space-4); border-radius: 0 0 var(--radius-md) var(--radius-md);">Changelog entries.</div>
-              </div>
+              </ren-tabs>
             </div>
           </div>
 
           <div class="dx-vrow">
             <span class="dx-vrow-label">Vertical</span>
             <div class="dx-vrow-items">
-              <div class="ren-tabs" data-orientation="vertical">
+              <ren-tabs orientation="vertical">
                 <div class="demo-vertical-grid">
                   <div role="tablist" class="ren-tab-list" aria-label="Vertical tabs" aria-orientation="vertical">
                     <button role="tab" class="ren-tab" type="button">Profile</button>
@@ -478,14 +482,14 @@
                     <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Billing — plan, invoices, payment method.</div>
                   </div>
                 </div>
-              </div>
+              </ren-tabs>
             </div>
           </div>
 
           <div class="dx-vrow">
             <span class="dx-vrow-label">Default</span>
             <div class="dx-vrow-items">
-              <div class="ren-tabs" data-default="1">
+              <ren-tabs default-value="1">
                 <div role="tablist" class="ren-tab-list ren-tab-list-pills" aria-label="Default tab demo">
                   <button role="tab" class="ren-tab" type="button">Day</button>
                   <button role="tab" class="ren-tab" type="button">Week</button>
@@ -494,7 +498,7 @@
                 <div role="tabpanel" class="ren-tab-panel" style="font-size: var(--text-sm); color: var(--color-text-muted);">Day stats.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Week stats — opens by default via <code>default-value="1"</code>.</div>
                 <div role="tabpanel" class="ren-tab-panel" hidden style="font-size: var(--text-sm); color: var(--color-text-muted);">Month stats.</div>
-              </div>
+              </ren-tabs>
             </div>
           </div>
 
@@ -767,58 +771,10 @@ tabs.addEventListener('ren-tab-change', (e) =&gt; {
 
   </div>
 
-  <!-- Web Component registration (handles arrow keys, ARIA wiring, etc.) -->
+  <!-- Web Component registration. Every demo above is a real <ren-tabs>, so
+       the component itself owns selection, roving tabindex, arrow keys, and
+       the ARIA wiring — there is no demo-only fallback script to drift from it. -->
   <script type="module" src="../../components/composites/ren-tabs/ren-tabs.js"></script>
-
-  <!-- Demo wiring — vanilla, runs against div.ren-tabs containers.
-       Toggles aria-selected and the hidden attribute on paired panels.
-       Falls back gracefully if there's no JS, since the first panel
-       starts visible in the markup. -->
-  <script>
-    document.querySelectorAll('.ren-tabs').forEach(container => {
-      const tabs = container.querySelectorAll('[role="tab"]');
-      const panels = container.querySelectorAll('[role="tabpanel"]');
-      if (!tabs.length || !panels.length) return;
-
-      // Initial selection: data-default attribute, then any aria-selected="true",
-      // then index 0.
-      let initialIndex = parseInt(container.getAttribute('data-default'), 10);
-      if (isNaN(initialIndex)) {
-        initialIndex = Array.from(tabs).findIndex(t => t.getAttribute('aria-selected') === 'true');
-      }
-      if (initialIndex < 0 || initialIndex >= tabs.length) initialIndex = 0;
-
-      const select = (index) => {
-        tabs.forEach((t, j) => {
-          const active = j === index;
-          t.setAttribute('aria-selected', active ? 'true' : 'false');
-          t.setAttribute('tabindex', active ? '0' : '-1');
-          if (panels[j]) panels[j].toggleAttribute('hidden', !active);
-        });
-      };
-
-      select(initialIndex);
-
-      tabs.forEach((tab, i) => {
-        tab.addEventListener('click', () => select(i));
-        tab.addEventListener('keydown', (e) => {
-          const isVertical = container.getAttribute('data-orientation') === 'vertical';
-          const next = isVertical ? 'ArrowDown' : 'ArrowRight';
-          const prev = isVertical ? 'ArrowUp' : 'ArrowLeft';
-          let target = null;
-          if (e.key === next) target = (i + 1) % tabs.length;
-          else if (e.key === prev) target = (i - 1 + tabs.length) % tabs.length;
-          else if (e.key === 'Home') target = 0;
-          else if (e.key === 'End') target = tabs.length - 1;
-          if (target !== null) {
-            e.preventDefault();
-            select(target);
-            tabs[target].focus();
-          }
-        });
-      });
-    });
-  </script>
 
   <script src="../../site/shell.js" defer></script>
 </body>

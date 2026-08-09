@@ -45,6 +45,8 @@ const defaultLocale = {
 
   carousel: {
     label: 'Image carousel',
+    pagination: 'Carousel pagination',
+    goToSlide: 'Go to slide {index}',
     previous: 'Previous slide',
     next: 'Next slide',
     slideOf: 'Slide {current} of {total}',
@@ -52,16 +54,34 @@ const defaultLocale = {
 
   combobox: {
     placeholder: 'Search...',
-    noResults: 'No results found',
+    noResults: 'No results',
+    loading: 'Loading…',
+    resultsAvailable: '{count} result available|{count} results available',
   },
 
   command: {
     placeholder: 'Type a command or search...',
     noResults: 'No results found',
+    resultsAvailable: '{count} result available|{count} results available',
+  },
+
+  colorPicker: {
+    saturation: 'Color saturation and brightness',
+    hue: 'Color hue',
+    opacity: 'Color opacity',
+    current: 'Current',
+    hexValue: 'Hex color value',
+    formatToggle: 'Toggle color format between HEX, RGB, and HSL',
+    eyeDropper: 'Pick color from screen',
+    presets: 'Preset color swatches',
+    trigger: 'Color picker, current color {color}',
+    swatch: 'Color {color}',
   },
 
   dateRangePicker: {
     placeholder: 'Select date range',
+    label: 'Date range selection',
+    presets: 'Date range presets',
     apply: 'Apply',
     cancel: 'Cancel',
     selectStart: 'Select a start date',
@@ -87,6 +107,7 @@ const defaultLocale = {
 
   dialog: {
     close: 'Close',
+    label: 'Dialog',
   },
 
   dropzone: {
@@ -115,6 +136,8 @@ const defaultLocale = {
   select: {
     placeholder: 'Select an option',
     noResults: 'No options available',
+    optionsAvailable: '{count} option available|{count} options available',
+    removeOption: 'Remove {label}',
   },
 
   sheet: {
@@ -122,7 +145,11 @@ const defaultLocale = {
   },
 
   toast: {
-    close: 'Dismiss',
+    close: 'Dismiss notification',
+    region: 'Notifications',
+    promiseLoading: 'Loading...',
+    promiseSuccess: 'Done',
+    promiseError: 'Failed',
     success: 'Success',
     error: 'Error',
     warning: 'Warning',
@@ -369,6 +396,8 @@ registerLocale('es', {
 
   carousel: {
     label: 'Carrusel de imágenes',
+    pagination: 'Paginación del carrusel',
+    goToSlide: 'Ir a la diapositiva {index}',
     previous: 'Diapositiva anterior',
     next: 'Siguiente diapositiva',
     slideOf: 'Diapositiva {current} de {total}',
@@ -376,16 +405,34 @@ registerLocale('es', {
 
   combobox: {
     placeholder: 'Buscar...',
-    noResults: 'No se encontraron resultados',
+    noResults: 'Sin resultados',
+    loading: 'Cargando…',
+    resultsAvailable: '{count} resultado disponible|{count} resultados disponibles',
   },
 
   command: {
     placeholder: 'Escribe un comando o busca...',
     noResults: 'No se encontraron resultados',
+    resultsAvailable: '{count} resultado disponible|{count} resultados disponibles',
+  },
+
+  colorPicker: {
+    saturation: 'Saturación y brillo del color',
+    hue: 'Tono del color',
+    opacity: 'Opacidad del color',
+    current: 'Actual',
+    hexValue: 'Valor hexadecimal del color',
+    formatToggle: 'Alternar formato de color entre HEX, RGB y HSL',
+    eyeDropper: 'Seleccionar color de la pantalla',
+    presets: 'Muestras de color predefinidas',
+    trigger: 'Selector de color, color actual {color}',
+    swatch: 'Color {color}',
   },
 
   dateRangePicker: {
     placeholder: 'Seleccionar rango de fechas',
+    label: 'Selección de rango de fechas',
+    presets: 'Rangos de fechas predefinidos',
     apply: 'Aplicar',
     cancel: 'Cancelar',
     selectStart: 'Selecciona una fecha de inicio',
@@ -411,6 +458,7 @@ registerLocale('es', {
 
   dialog: {
     close: 'Cerrar',
+    label: 'Diálogo',
   },
 
   dropzone: {
@@ -439,6 +487,8 @@ registerLocale('es', {
   select: {
     placeholder: 'Selecciona una opción',
     noResults: 'No hay opciones disponibles',
+    optionsAvailable: '{count} opción disponible|{count} opciones disponibles',
+    removeOption: 'Quitar {label}',
   },
 
   sheet: {
@@ -446,7 +496,11 @@ registerLocale('es', {
   },
 
   toast: {
-    close: 'Descartar',
+    close: 'Descartar notificación',
+    region: 'Notificaciones',
+    promiseLoading: 'Cargando...',
+    promiseSuccess: 'Listo',
+    promiseError: 'Falló',
     success: 'Éxito',
     error: 'Error',
     warning: 'Advertencia',

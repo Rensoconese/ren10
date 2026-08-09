@@ -63,7 +63,7 @@
     position: absolute;
     inset-inline: 0;
     top: calc(100% + var(--space-1));
-    z-index: 50;
+    z-index: var(--z-popover);
 
     max-height: 15rem;
     padding-block: var(--space-1);

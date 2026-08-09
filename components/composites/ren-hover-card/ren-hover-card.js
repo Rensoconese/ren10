@@ -1,10 +1,16 @@
 /* ═══ REN HOVER CARD WEB COMPONENT ═══ */
 
+import { createAnchorLink } from '../../../utils/anchor.js';
+import { renWarn } from '../../../utils/debug.js';
+import { autoId } from '../../../utils/id-generator.js';
+
 export class RenHoverCard extends HTMLElement {
   constructor() {
     super();
     this.card = null;
     this.trigger = null;
+    this.anchorLink = null;
+    this.describedById = null;
     this.showDelay = 200;
     this.hideDelay = 300;
     this.showTimeout = null;
@@ -25,7 +31,7 @@ export class RenHoverCard extends HTMLElement {
     this.card = this.querySelector('[role="tooltip"]') || this.querySelector('.ren-hover-card');
 
     if (!this.card) {
-      console.warn('RenHoverCard: No card element found');
+      renWarn('RenHoverCard', 'No card element found');
       return;
     }
 
@@ -46,14 +52,21 @@ export class RenHoverCard extends HTMLElement {
     }
 
     if (!this.trigger) {
-      console.warn('RenHoverCard: No trigger element found');
+      renWarn('RenHoverCard', 'No trigger element found');
       return;
     }
 
-    /* ═══ SET UP TRIGGER ARIA ATTRIBUTES ═══ */
+    /* ═══ SET UP TRIGGER ARIA ATTRIBUTES ═══
+       No aria-haspopup: "tooltip" is not one of its allowed values
+       (false | true | menu | listbox | tree | grid | dialog), so it read as an
+       invalid attribute value to every validator and to AT. The card is a
+       role="tooltip" surface, so the correct wiring — the same one
+       ren-tooltip uses — is aria-describedby from the trigger to the card,
+       which also makes the preview reachable for screen readers that never
+       see a hover. */
     this.trigger.classList.add('ren-hover-card-trigger');
-    this.trigger.setAttribute('aria-haspopup', 'tooltip');
     this.trigger.setAttribute('aria-expanded', 'false');
+    this.linkDescription();
 
     /* ═══ READ DELAY ATTRIBUTES ═══ */
     const showDelayAttr = this.getAttribute('show-delay');
@@ -61,15 +74,11 @@ export class RenHoverCard extends HTMLElement {
     if (showDelayAttr) this.showDelay = parseInt(showDelayAttr, 10);
     if (hideDelayAttr) this.hideDelay = parseInt(hideDelayAttr, 10);
 
-    /* ═══ SET ANCHOR NAME ON TRIGGER ═══ */
-    if (!this.trigger.style.anchorName) {
-      this.trigger.style.anchorName = '--ren-hover-card-anchor';
-    }
-
-    /* ═══ SET POSITION ANCHOR ON CARD ═══ */
-    if (!this.card.style.positionAnchor) {
-      this.card.style.positionAnchor = '--ren-hover-card-anchor';
-    }
+    /* ═══ LINK TRIGGER AND CARD WITH A PER-INSTANCE ANCHOR NAME ═══
+       A shared `anchor-name` resolves to the last matching element in tree
+       order, which would render every hover card against the final trigger. */
+    this.anchorLink?.release();
+    this.anchorLink = createAnchorLink(this.trigger, this.card, 'ren-hover-card');
 
     /* ═══ ATTACH EVENT LISTENERS ═══ */
     this.trigger.addEventListener('mouseenter', this.handleTriggerMouseEnter);
@@ -94,7 +103,42 @@ export class RenHoverCard extends HTMLElement {
       this.card.removeEventListener('mouseleave', this.handleCardMouseLeave);
     }
 
+    this.anchorLink?.release();
+    this.anchorLink = null;
+
+    this.unlinkDescription();
+
     this.clearTimeouts();
+  }
+
+  /* ═══ DESCRIBE THE TRIGGER WITH THE CARD ═══
+     Only the id this instance contributed is removed on disconnect, so an
+     author-written aria-describedby survives connect/disconnect intact. */
+  linkDescription() {
+    if (!this.trigger || !this.card) return;
+
+    this.describedById = autoId(this.card, 'hover-card');
+    const ids = new Set(
+      (this.trigger.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean)
+    );
+    ids.add(this.describedById);
+    this.trigger.setAttribute('aria-describedby', [...ids].join(' '));
+  }
+
+  unlinkDescription() {
+    if (!this.trigger || !this.describedById) return;
+
+    const ids = (this.trigger.getAttribute('aria-describedby') || '')
+      .split(/\s+/)
+      .filter(Boolean)
+      .filter((id) => id !== this.describedById);
+
+    if (ids.length > 0) {
+      this.trigger.setAttribute('aria-describedby', ids.join(' '));
+    } else {
+      this.trigger.removeAttribute('aria-describedby');
+    }
+    this.describedById = null;
   }
 
   /* ═══ TRIGGER MOUSE ENTER ═══ */

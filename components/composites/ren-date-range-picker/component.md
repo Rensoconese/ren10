@@ -46,6 +46,7 @@ canonicalImports:
   notes:
     - "Also requires ren-calendar to be registered — the component instantiates two <ren-calendar mode=\"range\"> children inside the dropdown."
     - "If the page already imports rends/components/index.css, do not import the CSS again."
+    - "UI strings (placeholder, dropdown/preset aria-labels, preset labels, Cancel/Apply, footer summary) come from utils/i18n.js and are resolved with t() while the DOM is built, so call setLocale() before the host upgrades — a locale switched after upgrade leaves the already-rendered labels in the previous language."
 
 requiredMarkup:
   - "Use <ren-date-range-picker> as the host so the upgrade lifecycle builds the trigger, dropdown, dual calendars, presets, and hidden inputs."
@@ -54,6 +55,7 @@ requiredMarkup:
   - "Footer must contain .ren-date-range-summary (aria-live=\"polite\"), .ren-date-range-cancel, and .ren-date-range-apply — Apply is disabled until both endpoints are set."
   - "Use `name=\"…\"` on the host so the component injects <input type=\"hidden\" name=\"<name>-start\"> and `…-end` for form submission."
   - "Use placement=\"bottom\" by default; the host and .ren-date-range-dropdown mirror the preferred side to data-side."
+  - "Let the component own the anchor wiring: on upgrade it generates a name unique to that instance and writes it inline as `anchor-name` on its own .ren-date-range-trigger plus the matching `position-anchor` on its own .ren-date-range-dropdown. Nothing in the stylesheet names the anchor, so several pickers can share a page without their dropdowns colliding."
 
 forbiddenPatterns:
   - "Wiring presets to a single ren-calendar instead of using both calendarLeft/calendarRight — the host depends on having two ren-calendar children to call setRange on."
@@ -61,6 +63,7 @@ forbiddenPatterns:
   - "Hardcoding dropdown placement offsets or breakpoints — use placement/data-side for side preference, and keep the container-type: inline-size @container ren-date-range layout under 500px."
   - "Adding extra inline color tokens to .ren-date-range-preset[aria-selected=\"true\"] — the highlighted preset already styles via --color-accent-subtle / --color-accent."
   - "Calling showPopover() directly from outside — use the host's open() / close() / handleApply() / handleCancel() so draft/confirmed state stays consistent."
+  - "Declaring one shared `anchor-name` for .ren-date-range-trigger in stylesheet rules — anchor names are document-wide identifiers, so a name matched by more than one trigger resolves to the last one in tree order and every dropdown on the page then positions itself against that single trigger. To pin one picker to a custom anchor, set `anchor-name` inline on that instance's trigger; the component detects it, reuses it, and leaves it untouched on teardown."
 
 tokenPolicy:
   allowed:
@@ -75,7 +78,7 @@ tokenPolicy:
 accessibility:
   required:
     - "Trigger is a real <button type=\"button\"> with aria-haspopup=\"dialog\" and aria-expanded synced to the dropdown state."
-    - "Dropdown is role=\"dialog\" with aria-label=\"Date range selection\" and focuses the first preset (or first calendar day) on open."
+    - "Dropdown is role=\"dialog\" with aria-label=\"Date range selection\" (the default-locale value of dateRangePicker.label) and focuses the first preset (or first calendar day) on open."
     - "Preset listbox uses role=\"listbox\" with each .ren-date-range-preset as role=\"option\"; the active preset sets aria-selected=\"true\"."
     - ".ren-date-range-summary uses aria-live=\"polite\" so changes to the draft range are announced."
     - "Escape closes via Cancel semantics (reverts draft to confirmed); outside-click does the same — do not silently apply."
@@ -123,6 +126,21 @@ Use the docs page and source files listed below for full examples before adding 
 - `.ren-date-range-summary`
 - `.ren-date-range-trigger`
 - `.ren-date-range-value`
+
+## Anchor Positioning
+
+The dropdown is placed with CSS anchor positioning, but the anchor identifier
+never appears in the stylesheet. `anchor-name` is a document-wide identifier:
+if the CSS declared one name for every trigger, the spec would resolve it to
+the last matching trigger in tree order and each picker's dropdown would jump
+to that trigger. Instead the JavaScript mints a name unique to each upgraded
+instance and writes it inline — `anchor-name` on that instance's trigger,
+`position-anchor` on that instance's dropdown — so any number of pickers can
+coexist on one page. Removing a picker from the DOM removes only the inline
+values it injected. Setting `anchor-name` inline on the trigger yourself wins:
+the component points the dropdown at your name and leaves it in place. Browsers
+without anchor positioning fall back to the fixed-position rules already in the
+stylesheet.
 
 ## States And Attributes
 

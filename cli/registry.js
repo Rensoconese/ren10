@@ -84,12 +84,18 @@ export const REGISTRY = {
     files: ['ren-radio.css', 'ren-radio.js'],
     utils: ['keyboard-nav.js'],
     components: [],
-    usage: `<ren-radio name="option">
-  <input type="radio" id="opt1" value="a">
-  <label for="opt1">Option A</label>
-  <input type="radio" id="opt2" value="b">
-  <label for="opt2">Option B</label>
-</ren-radio>`,
+    usage: `<ren-radio-group>
+  <label class="ren-radio">
+    <input type="radio" name="option" value="a">
+    <span class="ren-radio-control"></span>
+    <span>Option A</span>
+  </label>
+  <label class="ren-radio">
+    <input type="radio" name="option" value="b">
+    <span class="ren-radio-control"></span>
+    <span>Option B</span>
+  </label>
+</ren-radio-group>`,
   },
 
   progress: {
@@ -114,8 +120,19 @@ export const REGISTRY = {
     files: ['ren-icon.css'],
     utils: [],
     components: [],
-    usage: `<ren-icon class="ren-icon-sm"><svg>...</svg></ren-icon>
-<ren-icon class="ren-icon-lg">🎨</ren-icon>`,
+    usage: `<span class="ren-icon ren-icon-sm">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+</span>
+
+<button class="ren-btn" aria-label="Confirm">
+  <span class="ren-icon ren-icon-lg">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  </span>
+</button>`,
   },
 
   avatar: {
@@ -275,7 +292,7 @@ export const REGISTRY = {
     dir: 'ren-dialog',
     description: 'Modal dialog with backdrop, animations, focus trap',
     files: ['ren-dialog.css', 'ren-dialog.js'],
-    utils: ['focus-trap.js'],
+    utils: ['focus-trap.js', 'i18n.js'],
     components: [],
     usage: `<ren-dialog>
   <dialog class="ren-dialog">
@@ -293,7 +310,7 @@ export const REGISTRY = {
     dir: 'ren-popover',
     description: 'Floating popover with anchor positioning',
     files: ['ren-popover.css', 'ren-popover.js'],
-    utils: [],
+    utils: ['anchor.js', 'dismissable.js', 'focus-trap.js', 'positioning.js'],
     components: [],
     usage: `<ren-popover>
   <button slot="trigger">Open</button>
@@ -307,7 +324,7 @@ export const REGISTRY = {
     dir: 'ren-tooltip',
     description: 'Accessible tooltip with positioning and delay',
     files: ['ren-tooltip.css', 'ren-tooltip.js'],
-    utils: [],
+    utils: ['anchor.js', 'positioning.js'],
     components: [],
     usage: `<ren-tooltip content="Help text">
   <button>Hover me</button>
@@ -320,7 +337,7 @@ export const REGISTRY = {
     dir: 'ren-tabs',
     description: 'Tab interface with keyboard navigation',
     files: ['ren-tabs.css', 'ren-tabs.js'],
-    utils: ['keyboard-nav.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js', 'id-generator.js', 'debug.js'],
     components: [],
     usage: `<ren-tabs>
   <button role="tab">Tab 1</button>
@@ -373,12 +390,14 @@ export const REGISTRY = {
     dir: 'ren-select',
     description: 'Custom select dropdown with search support',
     files: ['ren-select.css', 'ren-select.js'],
-    utils: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js'],
+    utils: ['keyboard-nav.js', 'dismissable.js', 'id-generator.js', 'i18n.js', 'positioning.js'],
     components: [],
-    usage: `<ren-select name="choice">
-  <option>Select...</option>
-  <option value="a">Option A</option>
-  <option value="b">Option B</option>
+    usage: `<ren-select name="choice" placeholder="Choose an option" aria-label="Choice">
+  <button type="button" data-select-trigger></button>
+  <div data-select-content role="listbox">
+    <div data-select-item data-value="a" role="option">Option A</div>
+    <div data-select-item data-value="b" role="option">Option B</div>
+  </div>
 </ren-select>`,
   },
 
@@ -388,12 +407,15 @@ export const REGISTRY = {
     dir: 'ren-toast',
     description: 'Toast notifications with dismiss action',
     files: ['ren-toast.css', 'ren-toast.js'],
-    utils: ['live-region.js'],
+    utils: ['live-region.js', 'i18n.js'],
     components: [],
-    usage: `<ren-toast role="status" aria-live="polite">
-  Message sent successfully
-  <button aria-label="Dismiss">×</button>
-</ren-toast>`,
+    usage: `<ren-toast-viewport data-position="bottom-right"></ren-toast-viewport>
+
+<script type="module">
+  import { toast } from 'ren10/components/composites/ren-toast/ren-toast.js';
+  toast('Message sent successfully');
+  toast({ title: 'Upload failed', description: 'Try again', status: 'error' });
+</script>`,
   },
 
   slider: {
@@ -402,7 +424,7 @@ export const REGISTRY = {
     dir: 'ren-slider',
     description: 'Range slider with keyboard support',
     files: ['ren-slider.css', 'ren-slider.js'],
-    utils: [],
+    utils: ['debug.js'],
     components: [],
     usage: `<ren-slider min="0" max="100" value="50">
   <input type="range">
@@ -416,7 +438,7 @@ export const REGISTRY = {
     dir: 'ren-toggle-group',
     description: 'Grouped toggle buttons with selection',
     files: ['ren-toggle-group.css', 'ren-toggle-group.js'],
-    utils: [],
+    utils: ['debug.js'],
     components: [],
     usage: `<ren-toggle-group>
   <button>Left</button>
@@ -431,13 +453,12 @@ export const REGISTRY = {
     dir: 'ren-combobox',
     description: 'Autocomplete input with list filtering',
     files: ['ren-combobox.css', 'ren-combobox.js'],
-    utils: ['id-generator.js'],
+    utils: ['id-generator.js', 'dismissable.js', 'i18n.js'],
     components: [],
-    usage: `<ren-combobox autocomplete="list">
-  <input type="text" placeholder="Search...">
-  <ul role="listbox" class="ren-combobox-list">
-    <li role="option">Option 1</li>
-  </ul>
+    usage: `<ren-combobox placeholder="Search a country">
+  <div class="ren-combobox-item" role="option" data-value="ar">Argentina</div>
+  <div class="ren-combobox-item" role="option" data-value="br">Brazil</div>
+  <div class="ren-combobox-empty" hidden>No results</div>
 </ren-combobox>`,
   },
 
@@ -463,7 +484,7 @@ export const REGISTRY = {
     dir: 'ren-hover-card',
     description: 'Card that appears on hover/focus',
     files: ['ren-hover-card.css', 'ren-hover-card.js'],
-    utils: [],
+    utils: ['anchor.js', 'debug.js', 'id-generator.js'],
     components: [],
     usage: `<ren-hover-card>
   <button>Hover me</button>
@@ -490,7 +511,7 @@ export const REGISTRY = {
     dir: 'ren-number-field',
     description: 'Input for numbers with increment/decrement',
     files: ['ren-number-field.css', 'ren-number-field.js'],
-    utils: [],
+    utils: ['i18n.js'],
     components: [],
     usage: `<ren-number-field>
   <label>Quantity</label>
@@ -504,13 +525,9 @@ export const REGISTRY = {
     dir: 'ren-otp',
     description: 'One-time password input with auto-focus',
     files: ['ren-otp.css', 'ren-otp.js'],
-    utils: [],
+    utils: ['i18n.js'],
     components: [],
-    usage: `<ren-otp length="6">
-  <input type="text" maxlength="1">
-  <input type="text" maxlength="1">
-  ...
-</ren-otp>`,
+    usage: `<ren-otp length="6" type="numeric" aria-label="One-time code"></ren-otp>`,
   },
 
   calendar: {
@@ -519,11 +536,9 @@ export const REGISTRY = {
     dir: 'ren-calendar',
     description: 'Date picker calendar interface',
     files: ['ren-calendar.css', 'ren-calendar.js'],
-    utils: ['local-date.js'],
+    utils: ['local-date.js', 'i18n.js', 'debug.js', 'id-generator.js'],
     components: [],
-    usage: `<ren-calendar selected="2025-03-15">
-  <table role="grid">...</table>
-</ren-calendar>`,
+    usage: `<ren-calendar value="2026-03-15" aria-label="Choose a date"></ren-calendar>`,
   },
 
   'date-picker': {
@@ -532,7 +547,7 @@ export const REGISTRY = {
     dir: 'ren-date-picker',
     description: 'Input with calendar dropdown',
     files: ['ren-date-picker.css', 'ren-date-picker.js'],
-    utils: [],
+    utils: ['anchor.js', 'i18n.js'],
     components: ['calendar'],
     usage: `<ren-date-picker>
   <input type="date">
@@ -546,7 +561,7 @@ export const REGISTRY = {
     dir: 'ren-carousel',
     description: 'Slide carousel with pagination',
     files: ['ren-carousel.css', 'ren-carousel.js'],
-    utils: [],
+    utils: ['i18n.js', 'debug.js'],
     components: [],
     usage: `<ren-carousel auto-play interval="5000">
   <div class="ren-carousel-slide">Slide 1</div>
@@ -594,7 +609,7 @@ export const REGISTRY = {
     dir: 'ren-color-picker',
     description: 'Color input with swatches, hex field, and native picker',
     files: ['ren-color-picker.css', 'ren-color-picker.js'],
-    utils: [],
+    utils: ['anchor.js', 'i18n.js'],
     components: [],
     usage: `<ren-color-picker value="#5b6cff">
   <input type="color">
@@ -608,7 +623,7 @@ export const REGISTRY = {
     dir: 'ren-context-menu',
     description: 'Right-click / long-press menu with keyboard support',
     files: ['ren-context-menu.css', 'ren-context-menu.js'],
-    utils: [],
+    utils: ['dismissable.js'],
     components: [],
     styles: ['menu'],
     usage: `<div class="ren-context-menu-trigger" data-context="editor-actions" tabindex="0">Right-click me</div>
@@ -624,7 +639,7 @@ export const REGISTRY = {
     dir: 'ren-date-range-picker',
     description: 'Two-calendar picker for start/end date selection',
     files: ['ren-date-range-picker.css', 'ren-date-range-picker.js'],
-    utils: [],
+    utils: ['anchor.js', 'i18n.js'],
     components: ['calendar'],
     usage: `<ren-date-range-picker>
   <input type="text" placeholder="Start">
@@ -640,12 +655,19 @@ export const REGISTRY = {
     files: ['ren-dropzone.css', 'ren-dropzone.js'],
     utils: [],
     components: [],
-    usage: `<ren-dropzone accept="image/*" multiple>
-  <label>
-    <input type="file" multiple>
-    <span>Drop files here or click to browse</span>
-  </label>
-</ren-dropzone>`,
+    usage: `<div class="ren-dropzone">
+  <input type="file" class="ren-dropzone-input" accept="image/*" multiple>
+  <div class="ren-dropzone-content">
+    <div class="ren-dropzone-title">Drop files here</div>
+    <div class="ren-dropzone-description">or click to browse</div>
+  </div>
+</div>
+
+<script type="module">
+  import { initDropZone } from 'ren10/components/composites/ren-dropzone/ren-dropzone.js';
+  const zone = initDropZone(document.querySelector('.ren-dropzone'));
+  zone.addEventListener('ren-files-added', (event) => console.log(event.detail.files));
+</script>`,
   },
 
   toolbar: {
@@ -656,11 +678,17 @@ export const REGISTRY = {
     files: ['ren-toolbar.css', 'ren-toolbar.js'],
     utils: [],
     components: [],
-    usage: `<ren-toolbar role="toolbar" aria-label="Formatting">
-  <button>Bold</button>
-  <button>Italic</button>
-  <button>Underline</button>
-</ren-toolbar>`,
+    usage: `<div class="ren-toolbar" role="toolbar" aria-label="Formatting">
+  <button class="ren-toolbar-item" tabindex="0">Bold</button>
+  <button class="ren-toolbar-item" tabindex="-1">Italic</button>
+  <div class="ren-toolbar-separator" role="separator"></div>
+  <button class="ren-toolbar-item" tabindex="-1">Underline</button>
+</div>
+
+<script type="module">
+  import { initAllToolbars } from 'ren10/components/composites/ren-toolbar/ren-toolbar.js';
+  initAllToolbars();
+</script>`,
   },
 
   // PATTERNS
@@ -703,14 +731,19 @@ export const REGISTRY = {
     dir: 'ren-command',
     description: 'Command/search palette with keyboard shortcuts',
     files: ['ren-command.css', 'ren-command.js'],
-    utils: [],
+    utils: ['i18n.js'],
     components: [],
-    usage: `<ren-command open>
-  <input class="ren-command-input" placeholder="Type a command...">
-  <ul class="ren-command-list">
-    <li data-value="save">Save</li>
-    <li data-value="copy">Copy</li>
-  </ul>
+    usage: `<ren-command>
+  <dialog class="ren-command">
+    <div class="ren-command-input-wrapper">
+      <input class="ren-command-input" type="text" placeholder="Type a command…">
+    </div>
+    <ul class="ren-command-list">
+      <li><button type="button" class="ren-command-item" data-value="save">Save</button></li>
+      <li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>
+    </ul>
+    <div class="ren-command-empty" hidden>No results found</div>
+  </dialog>
 </ren-command>`,
   },
 
@@ -720,7 +753,7 @@ export const REGISTRY = {
     dir: 'ren-table',
     description: 'Sortable, responsive data table',
     files: ['ren-table.css', 'ren-table.js'],
-    utils: [],
+    utils: ['debug.js'],
     components: [],
     usage: `<ren-table class="ren-table">
   <thead>
@@ -755,12 +788,19 @@ export const REGISTRY = {
     dir: 'ren-menubar',
     description: 'Top-level menu bar with submenu support',
     files: ['ren-menubar.css', 'ren-menubar.js'],
-    utils: [],
+    utils: ['dismissable.js'],
     components: [],
-    usage: `<ren-menubar class="ren-menubar">
-  <div role="menubar">
-    <button role="menuitem">File</button>
-    <button role="menuitem">Edit</button>
+    usage: `<ren-menubar>
+  <div class="ren-menubar" role="menubar" aria-label="Main">
+    <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">File</button>
+    <div class="ren-menubar-menu" role="menu" hidden>
+      <button type="button" class="ren-menubar-item" role="menuitem">New</button>
+      <button type="button" class="ren-menubar-item" role="menuitem">Open</button>
+    </div>
+    <button type="button" class="ren-menubar-trigger" aria-haspopup="menu" aria-expanded="false">Edit</button>
+    <div class="ren-menubar-menu" role="menu" hidden>
+      <button type="button" class="ren-menubar-item" role="menuitem">Undo</button>
+    </div>
   </div>
 </ren-menubar>`,
   },

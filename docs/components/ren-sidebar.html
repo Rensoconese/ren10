@@ -13,6 +13,16 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: hidden; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-6) var(--space-5); }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
+
+    /* The pattern's shell is full-viewport by design. The preview caps its
+       height and takes over as containing block, so the off-canvas drawer
+       the pattern switches to under 48rem stays inside the demo frame. */
+    .demo-sidebar-shell {
+      height: 280px;
+      min-height: 0;
+      contain: layout;
+    }
+    .demo-sidebar-body { padding: var(--space-4); font-size: var(--text-sm); color: var(--color-text-muted); }
   </style>
 </head>
 <body>
@@ -114,17 +124,34 @@
         <p class="lede">Left navigation column for app shells. Collapsible sections, active-route indicator, footer for account / sign-out. The post-login surface that runs every workspace app.</p>
       </header>
       <section class="dx-section" id="overview"><p class="dx-kicker">About</p><h2>Overview</h2><p>Sidebars present persistent navigation in admin / dashboard apps. They give users a stable mental map of "what's in this app". Stay narrow (240–280 px), collapsible to icons-only on tight screens, scroll independently from the main content.</p></section>
-      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="display: block; padding: 0; height: 280px;"><div style="display: grid; grid-template-columns: 220px 1fr; height: 100%; background: var(--color-surface);"><aside class="ren-sidebar" style="border-right: 1px solid var(--color-border); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1);"><strong style="font-size: var(--text-sm); padding: var(--space-1) var(--space-2);">Acme</strong><div style="margin-top: var(--space-2); display: flex; flex-direction: column; gap: 2px;"><a href="#" style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); background: var(--color-fill); font-size: var(--text-sm); color: var(--color-text); text-decoration: none; font-weight: var(--weight-medium);">Dashboard</a><a href="#" style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none;">Projects</a><a href="#" style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none;">Reports</a><a href="#" style="padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm); color: var(--color-text-muted); text-decoration: none;">Settings</a></div></aside><main style="padding: var(--space-3); color: var(--color-text-muted); font-size: var(--text-sm);">Main content</main></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-sidebar aria-label="Workspace"&gt;
-  &lt;a class="ren-sidebar-brand" href="/"&gt;Acme&lt;/a&gt;
-  &lt;ul class="ren-sidebar-section"&gt;
-    &lt;li&gt;&lt;a aria-current="page"&gt;Dashboard&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a&gt;Projects&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-&lt;/ren-sidebar&gt;</code></pre></div></section>
-      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-sidebar</code></td><td>The aside container. Use with <code>aria-label</code>.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-brand</code></td><td>Top brand / logo link.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-section</code></td><td>One group of links. Optional <code>.ren-sidebar-section-title</code> as a heading.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-footer</code></td><td>Bottom-pinned slot for account menu, version info.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-collapsed</code></td><td>State class for icon-only mode.</td></tr></tbody></table></section>
-      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>Always <code>&lt;aside&gt;</code> with descriptive <code>aria-label</code>.</li><li>Mark active route with <code>aria-current="page"</code>.</li><li>On mobile (sub-720 px), the sidebar becomes a Sheet triggered from the Nav.</li></ul></section>
+      <section class="dx-section" id="demo"><p class="dx-kicker">Live</p><h2>Demo</h2><div class="dx-demo"><div class="dx-demo-preview" style="display: block; padding: 0;"><div class="ren-sidebar-layout demo-sidebar-shell"><ren-sidebar class="ren-sidebar" aria-label="Workspace"><div class="ren-sidebar-header"><a class="ren-sidebar-item" href="#demo-home" data-tooltip="Acme"><span class="ren-sidebar-item-icon" aria-hidden="true">◆</span><span class="ren-sidebar-item-text">Acme</span></a><button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"><span aria-hidden="true">☰</span></button></div><nav class="ren-sidebar-nav" aria-label="Workspace sections"><a class="ren-sidebar-item active" href="#demo-dashboard" aria-current="page" data-tooltip="Dashboard"><span class="ren-sidebar-item-icon" aria-hidden="true">▤</span><span class="ren-sidebar-item-text">Dashboard</span></a><a class="ren-sidebar-item" href="#demo-projects" data-tooltip="Projects"><span class="ren-sidebar-item-icon" aria-hidden="true">▣</span><span class="ren-sidebar-item-text">Projects</span></a><a class="ren-sidebar-item" href="#demo-reports" data-tooltip="Reports"><span class="ren-sidebar-item-icon" aria-hidden="true">▥</span><span class="ren-sidebar-item-text">Reports</span></a></nav><div class="ren-sidebar-footer"><a class="ren-sidebar-item" href="#demo-settings" data-tooltip="Settings"><span class="ren-sidebar-item-icon" aria-hidden="true">⚙</span><span class="ren-sidebar-item-text">Settings</span></a></div></ren-sidebar><div class="ren-sidebar-main"><p class="demo-sidebar-body">Main content. Above 48rem, the ☰ button collapses the sidebar to icons and back, and the choice is written to <code>localStorage</code>. Below 48rem the sidebar leaves the flow and waits off-canvas as a drawer, which is why only this column shows on a narrow screen.</p></div></div></div><pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;div class="ren-sidebar-layout"&gt;
+  &lt;ren-sidebar class="ren-sidebar" aria-label="Workspace"&gt;
+    &lt;div class="ren-sidebar-header"&gt;
+      &lt;a class="ren-sidebar-item" href="/"&gt;
+        &lt;span class="ren-sidebar-item-icon" aria-hidden="true"&gt;◆&lt;/span&gt;
+        &lt;span class="ren-sidebar-item-text"&gt;Acme&lt;/span&gt;
+      &lt;/a&gt;
+      &lt;button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"&gt;
+        &lt;span aria-hidden="true"&gt;☰&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;nav class="ren-sidebar-nav" aria-label="Workspace sections"&gt;
+      &lt;a class="ren-sidebar-item active" href="/dashboard" aria-current="page" data-tooltip="Dashboard"&gt;
+        &lt;span class="ren-sidebar-item-icon" aria-hidden="true"&gt;▤&lt;/span&gt;
+        &lt;span class="ren-sidebar-item-text"&gt;Dashboard&lt;/span&gt;
+      &lt;/a&gt;
+      &lt;a class="ren-sidebar-item" href="/projects"&gt;…&lt;/a&gt;
+    &lt;/nav&gt;
+  &lt;/ren-sidebar&gt;
+
+  &lt;main class="ren-sidebar-main"&gt;…&lt;/main&gt;
+&lt;/div&gt;</code></pre></div><p>The preview above is the same markup with one deviation: its content column is a <code>&lt;div class="ren-sidebar-main"&gt;</code> rather than a <code>&lt;main&gt;</code>, because this documentation page already owns the only <code>main</code> landmark on the page. In an app shell, use <code>&lt;main&gt;</code>.</p></section>
+      <section class="dx-section" id="api"><p class="dx-kicker">Reference</p><h2>API</h2><table class="dx-api"><thead><tr><th>Class</th><th>Effect</th></tr></thead><tbody><tr><td><code class="dx-api-name">.ren-sidebar-layout</code></td><td>The app shell. Flex row holding the sidebar and the content column.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar</code></td><td>On the <code>&lt;ren-sidebar&gt;</code> host. Fixed width, own scroll, collapses to icons.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-header</code></td><td>Top row: brand link plus the collapse toggle.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-nav</code></td><td>The <code>&lt;nav&gt;</code> landmark wrapping the items.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-item</code></td><td>One link. Holds <code>.ren-sidebar-item-icon</code> and <code>.ren-sidebar-item-text</code>; the text fades out when collapsed.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-section</code></td><td>One group of links. Optional <code>.ren-sidebar-section-label</code> as its caption.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-footer</code></td><td>Bottom-pinned slot for account menu, version info.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-toggle</code></td><td>Collapse button. Needs an <code>aria-label</code>; hidden under 48rem.</td></tr><tr><td><code class="dx-api-name">.ren-sidebar-main</code></td><td>The content column beside the sidebar.</td></tr><tr><td><code class="dx-api-name">[data-collapsed]</code></td><td>State attribute on the host for icon-only mode. Set by the toggle, persisted in <code>localStorage</code>.</td></tr><tr><td><code class="dx-api-name">[data-open]</code></td><td>State attribute on the host for the mobile drawer, paired with <code>.ren-sidebar-overlay</code>.</td></tr></tbody></table></section>
+      <section class="dx-section" id="a11y"><p class="dx-kicker">Inclusive by default</p><h2>Accessibility</h2><ul><li>The landmark is the inner <code>&lt;nav class="ren-sidebar-nav"&gt;</code> — label it whenever the page carries more than one navigation.</li><li>Mark active route with <code>aria-current="page"</code>; the <code>.active</code> class only exists for styling parity.</li><li>Collapsed items keep their link text in the accessibility tree, so their names survive icon-only mode.</li><li>Under 48rem the sidebar becomes an off-canvas drawer: <code>[data-open]</code> on the host, dismissed with <kbd>Escape</kbd> or a click on <code>.ren-sidebar-overlay</code>.</li></ul></section>
     </main>
   </div>
+  <script type="module" src="../../components/patterns/ren-sidebar/ren-sidebar.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

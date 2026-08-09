@@ -1,5 +1,7 @@
 /* ═══ REN SLIDER WEB COMPONENT ═══ */
 
+import { renWarn } from '../../../utils/debug.js';
+
 export class RenSlider extends HTMLElement {
   constructor() {
     super();
@@ -15,7 +17,7 @@ export class RenSlider extends HTMLElement {
     this.input = this.inputs[0] || null;
 
     if (!this.input) {
-      console.warn('RenSlider: No input[type="range"] found');
+      renWarn('RenSlider', 'No input[type="range"] found');
       return;
     }
 

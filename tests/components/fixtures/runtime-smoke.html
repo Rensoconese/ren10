@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Runtime smoke host</title>
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body>
+    <!--
+      Deliberately a served page rather than page.setContent(). setContent
+      leaves the document on about:blank, where a `<script type="module">`
+      fails with net::ERR_FAILED because the origin is opaque — the component
+      never loads, nothing throws, and the smoke passes without testing
+      anything. It has to be same-origin with the assets it imports.
+    -->
+    <main id="host"></main>
+  </body>
+</html>

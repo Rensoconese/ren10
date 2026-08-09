@@ -1,13 +1,13 @@
 blank_issues_enabled: false
 contact_links:
   - name: Documentation
-    url: https://github.com/Rensoconese/ren10/tree/main/rends/docs
+    url: https://github.com/Rensoconese/ren10/tree/main/docs
     about: Tokens, theming, accessibility, components, CLI — start here.
   - name: CHANGELOG
-    url: https://github.com/Rensoconese/ren10/blob/main/rends/CHANGELOG.md
+    url: https://github.com/Rensoconese/ren10/blob/main/CHANGELOG.md
     about: Per-release notes. Check here before reporting a regression.
   - name: Roadmap
-    url: https://github.com/Rensoconese/ren10/blob/main/ROADMAP.md
+    url: https://github.com/Rensoconese/ren10/blob/main/docs/agent-ready-roadmap.md
     about: What's planned for the next releases.
   - name: Discussions
     url: https://github.com/Rensoconese/ren10/discussions

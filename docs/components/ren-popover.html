@@ -13,9 +13,9 @@
     .dx-demo { border: 1px solid var(--color-border); border-radius: var(--radius-md); overflow: visible; margin: var(--space-4) 0; }
     .dx-demo-preview { background: var(--color-surface-raised); padding: var(--space-8) var(--space-5); display: flex; gap: var(--space-3); align-items: center; justify-content: center; min-height: 160px; }
     .dx-demo-code { margin: 0; border-radius: 0; border: none; border-top: 1px solid var(--color-border); }
-    .demo-pop { position: relative; }
-    .demo-pop-content { position: absolute; top: calc(100% + 8px); left: 0; min-width: 240px; padding: var(--space-4); background: var(--color-surface-raised); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); z-index: 5; }
-    .demo-pop-content[hidden] { display: none; }
+    /* Until the module upgrades the element it has no popover attribute, so it
+       would render its panel inline for a frame and then transition out. */
+    ren-popover:not(:defined) { display: none; }
     .demo-filter-group { min-inline-size: 0; margin: 0; padding: 0; border: 0; }
     .demo-filter-legend { margin-bottom: var(--space-3); font-size: var(--text-sm); font-weight: var(--weight-semibold); }
     .demo-filter-options { --stack-gap: var(--space-3); }
@@ -133,30 +133,50 @@
       <section class="dx-section" id="demo">
         <p class="dx-kicker">Live</p>
         <h2>Demo</h2>
+        <p>Two popovers share this page on purpose: each panel must open against its own trigger, never against the last trigger in the document. Filters dismisses with <kbd>Esc</kbd> or a click outside; Sort adds an explicit <code>.ren-popover-footer</code>.</p>
         <div class="dx-demo">
           <div class="dx-demo-preview">
-            <div class="demo-pop" id="popover-demo">
-              <button class="ren-btn ren-btn-secondary" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="popover-demo-content">Filters</button>
-              <div class="demo-pop-content ren-stack" id="popover-demo-content" role="dialog" aria-label="Filters" hidden>
-                <fieldset class="demo-filter-group">
-                  <legend class="demo-filter-legend">Filter posts</legend>
-                  <div class="ren-stack demo-filter-options">
-                    <label class="ren-checkbox"><input type="checkbox" checked><span class="ren-checkbox-control"></span><span>Drafts</span></label>
-                    <label class="ren-checkbox"><input type="checkbox"><span class="ren-checkbox-control"></span><span>Archived</span></label>
-                  </div>
-                </fieldset>
-                <div class="ren-row demo-pop-actions">
-                  <button class="ren-btn ren-btn-ghost ren-btn-sm" type="button" data-close>Cancel</button>
-                  <button class="ren-btn ren-btn-primary ren-btn-sm" type="button" data-close>Apply</button>
+            <div id="popover-demo">
+              <button class="ren-btn ren-btn-secondary" type="button" id="popover-demo-trigger">Filters</button>
+              <ren-popover id="popover-demo-content" trigger-id="popover-demo-trigger" placement="bottom" aria-label="Filters">
+                <div class="ren-popover-header">Filter posts</div>
+                <div class="ren-popover-body">
+                  <fieldset class="demo-filter-group">
+                    <legend class="demo-filter-legend">Status</legend>
+                    <div class="ren-stack demo-filter-options">
+                      <label class="ren-checkbox"><input type="checkbox" checked><span class="ren-checkbox-control"></span><span>Drafts</span></label>
+                      <label class="ren-checkbox"><input type="checkbox"><span class="ren-checkbox-control"></span><span>Archived</span></label>
+                    </div>
+                  </fieldset>
                 </div>
-              </div>
+              </ren-popover>
+            </div>
+
+            <div id="popover-demo-sort">
+              <button class="ren-btn ren-btn-secondary" type="button" id="popover-demo-sort-trigger">Sort</button>
+              <ren-popover id="popover-demo-sort-content" trigger-id="popover-demo-sort-trigger" placement="bottom" aria-label="Sort">
+                <div class="ren-popover-header">Sort posts</div>
+                <div class="ren-popover-body">
+                  <fieldset class="demo-filter-group">
+                    <legend class="demo-filter-legend">Order</legend>
+                    <div class="ren-stack demo-filter-options">
+                      <label class="ren-radio"><input type="radio" name="popover-demo-order" value="newest" checked><span class="ren-radio-control"></span><span>Newest first</span></label>
+                      <label class="ren-radio"><input type="radio" name="popover-demo-order" value="oldest"><span class="ren-radio-control"></span><span>Oldest first</span></label>
+                    </div>
+                  </fieldset>
+                </div>
+                <div class="ren-popover-footer demo-pop-actions">
+                  <button class="ren-btn ren-btn-ghost ren-btn-sm" type="button" data-demo-close>Cancel</button>
+                  <button class="ren-btn ren-btn-primary ren-btn-sm" type="button" data-demo-close>Apply</button>
+                </div>
+              </ren-popover>
             </div>
           </div>
-          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;ren-popover&gt;
-  &lt;button slot="trigger"&gt;Filters&lt;/button&gt;
-  &lt;div slot="content" role="dialog" aria-label="Filters"&gt;
-    &lt;!-- form, checkboxes, etc. --&gt;
-  &lt;/div&gt;
+          <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;button type="button" id="filters-trigger"&gt;Filters&lt;/button&gt;
+&lt;ren-popover trigger-id="filters-trigger" placement="bottom" aria-label="Filters"&gt;
+  &lt;div class="ren-popover-header"&gt;Filter posts&lt;/div&gt;
+  &lt;div class="ren-popover-body"&gt;&lt;!-- checkboxes, radios, etc. --&gt;&lt;/div&gt;
+  &lt;div class="ren-popover-footer"&gt;…&lt;/div&gt;
 &lt;/ren-popover&gt;</code></pre>
         </div>
       </section>
@@ -167,8 +187,9 @@
         <table class="dx-api">
           <thead><tr><th>Class</th><th>Effect</th></tr></thead>
           <tbody>
-            <tr><td><code class="dx-api-name">.ren-popover</code></td><td>The floating panel. Card-like surface, shadow, padding.</td></tr>
-            <tr><td><code class="dx-api-name">.ren-popover-arrow</code></td><td>Optional arrow pointing at the trigger.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-popover</code></td><td>The floating panel. Added to <code>&lt;ren-popover&gt;</code> by the component — you don't write it by hand.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-popover-header</code> / <code class="dx-api-name">-body</code> / <code class="dx-api-name">-footer</code></td><td>The three content slots inside the panel.</td></tr>
+            <tr><td><code class="dx-api-name">.ren-popover-arrow</code></td><td>Arrow pointing at the trigger. Injected automatically when missing.</td></tr>
           </tbody>
         </table>
         <h3>Web Component attributes</h3>
@@ -176,9 +197,11 @@
           <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
           <tbody>
             <tr><td><code class="dx-api-name">placement</code></td><td><span class="dx-api-type">"top" | "right" | "bottom" | "left"</span></td><td><span class="dx-api-default">"bottom"</span></td><td>Side relative to the trigger; auto-flips when there isn't room.</td></tr>
-            <tr><td><code class="dx-api-name">open</code></td><td><span class="dx-api-type">boolean</span></td><td><span class="dx-api-default">false</span></td><td>Programmatically toggle open state.</td></tr>
+            <tr><td><code class="dx-api-name">trigger-id</code></td><td><span class="dx-api-type">string</span></td><td><span class="dx-api-default">—</span></td><td><code>id</code> of the trigger. Without it the component looks for a child <code>[data-popover-trigger]</code>, then the previous sibling. Give every popover on a page its own trigger id.</td></tr>
+            <tr><td><code class="dx-api-name">offset</code></td><td><span class="dx-api-type">number (px)</span></td><td><span class="dx-api-default">8</span></td><td>Gap between trigger and panel in the JS positioning fallback.</td></tr>
           </tbody>
         </table>
+        <p>Open state is driven by the methods <code>open()</code>, <code>close()</code> and <code>toggle()</code>; the component fires <code>ren-open</code> and <code>ren-close</code>.</p>
       </section>
 
       <section class="dx-section" id="a11y">
@@ -196,28 +219,23 @@
         <p class="dx-kicker">Patterns</p>
         <h2>Examples</h2>
         <h3>Quick filters panel</h3>
-        <div class="dx-pre" tabindex="0"><code>&lt;ren-popover&gt;
-  &lt;button slot="trigger" class="ren-btn ren-btn-secondary"&gt;Filters&lt;/button&gt;
-  &lt;form slot="content"&gt;…&lt;/form&gt;
+        <div class="dx-pre" tabindex="0"><code>&lt;button type="button" id="filters-trigger" class="ren-btn ren-btn-secondary"&gt;Filters&lt;/button&gt;
+&lt;ren-popover trigger-id="filters-trigger" aria-label="Filters"&gt;
+  &lt;div class="ren-popover-body"&gt;&lt;form&gt;…&lt;/form&gt;&lt;/div&gt;
 &lt;/ren-popover&gt;</code></div>
       </section>
 
     </main>
   </div>
+  <script type="module" src="../../components/composites/ren-popover/ren-popover.js"></script>
   <script>
-    // Vanilla popover toggle for the demo
-    document.querySelectorAll('.demo-pop').forEach(root => {
-      const trigger = root.querySelector('button');
-      const content = root.querySelector('.demo-pop-content');
-      const open = () => { content.hidden = false; trigger.setAttribute('aria-expanded', 'true'); content.querySelector('input,button')?.focus(); };
-      const close = () => { content.hidden = true; trigger.setAttribute('aria-expanded', 'false'); trigger.focus(); };
-      trigger.addEventListener('click', () => content.hidden ? open() : close());
-      content.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', close));
-      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !content.hidden) close(); });
-      document.addEventListener('click', (e) => { if (!root.contains(e.target) && !content.hidden) close(); });
+    // Demo only: the footer buttons dismiss the panel through the component's
+    // public close() method. Opening, Escape and click-outside are the
+    // component's own job — never re-wire the trigger by hand.
+    document.querySelectorAll('[data-demo-close]').forEach((button) => {
+      button.addEventListener('click', () => button.closest('ren-popover').close());
     });
   </script>
-  <script type="module" src="../../components/composites/ren-popover/ren-popover.js"></script>
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

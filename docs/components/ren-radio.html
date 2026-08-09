@@ -155,17 +155,17 @@
         <div class="dx-demo">
           <div class="dx-demo-preview">
             <fieldset style="border: 0; padding: 0; margin: 0;">
-              <legend style="font-size: var(--label-size); font-weight: var(--label-weight); margin-bottom: var(--space-3);">How would you like to receive notifications?</legend>
-              <div class="ren-radio-group">
+              <legend id="demo-notif-legend" style="font-size: var(--label-size); font-weight: var(--label-weight); margin-bottom: var(--space-3);">How would you like to receive notifications?</legend>
+              <ren-radio-group aria-labelledby="demo-notif-legend">
                 <label class="ren-radio"><input type="radio" name="demo-notif" value="all" checked><span class="ren-radio-control"></span><span>All updates</span></label>
                 <label class="ren-radio"><input type="radio" name="demo-notif" value="mentions"><span class="ren-radio-control"></span><span>Mentions only</span></label>
                 <label class="ren-radio"><input type="radio" name="demo-notif" value="none"><span class="ren-radio-control"></span><span>Nothing</span></label>
-              </div>
+              </ren-radio-group>
             </fieldset>
           </div>
           <pre class="dx-pre dx-demo-code" tabindex="0"><code>&lt;fieldset&gt;
-  &lt;legend&gt;How would you like to receive notifications?&lt;/legend&gt;
-  &lt;div class="ren-radio-group"&gt;
+  &lt;legend id="notif-legend"&gt;How would you like to receive notifications?&lt;/legend&gt;
+  &lt;ren-radio-group aria-labelledby="notif-legend"&gt;
     &lt;label class="ren-radio"&gt;
       &lt;input type="radio" name="notif" value="all" checked&gt;
       &lt;span class="ren-radio-control"&gt;&lt;/span&gt;
@@ -181,7 +181,7 @@
       &lt;span class="ren-radio-control"&gt;&lt;/span&gt;
       &lt;span&gt;Nothing&lt;/span&gt;
     &lt;/label&gt;
-  &lt;/div&gt;
+  &lt;/ren-radio-group&gt;
 &lt;/fieldset&gt;</code></pre>
         </div>
       </section>
@@ -235,7 +235,16 @@
             <tr><td><code class="dx-api-name">.ren-radio-group-horizontal</code></td><td>Lays the group out as a wrap-friendly horizontal row.</td></tr>
           </tbody>
         </table>
-        <p>No JavaScript or Web Component. The browser handles the radio-group selection logic via the shared <code>name</code> attribute.</p>
+        <h3>Web Component</h3>
+        <p>The custom element is <code>&lt;ren-radio-group&gt;</code> — there is no <code>&lt;ren-radio&gt;</code> element; individual options stay native <code>&lt;input type="radio"&gt;</code>. The browser already handles selection via the shared <code>name</code> attribute, so the classes work without JavaScript; the element adds <code>role="radiogroup"</code> and a roving-tabindex arrow-key contract on top.</p>
+        <table class="dx-api dx-api-cols-4">
+          <thead><tr><th>Attribute</th><th>Type</th><th>Default</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code class="dx-api-name">orientation</code></td><td><span class="dx-api-type">"vertical" | "horizontal"</span></td><td><span class="dx-api-default">"vertical"</span></td><td>Sets the arrow-key axis and swaps <code>.ren-radio-group</code> for <code>.ren-radio-group-horizontal</code>.</td></tr>
+            <tr><td><code class="dx-api-name">value</code></td><td><span class="dx-api-type">string (property)</span></td><td><span class="dx-api-default">—</span></td><td>Getter / setter for the checked radio's value. Setting it fires a native <code>change</code> event.</td></tr>
+          </tbody>
+        </table>
+        <p>Never set <code>tabindex</code> by hand on inputs inside <code>&lt;ren-radio-group&gt;</code> — the roving-tabindex utility owns it.</p>
       </section>
 
       <section class="dx-section" id="a11y">
@@ -282,6 +291,10 @@
 
     </main>
   </div>
+
+  <!-- Web Component registration — adds role="radiogroup" + roving tabindex on top of the CSS-only baseline -->
+  <script type="module" src="../../components/primitives/ren-radio/ren-radio.js"></script>
+
   <script src="../../site/shell.js" defer></script>
 </body>
 </html>

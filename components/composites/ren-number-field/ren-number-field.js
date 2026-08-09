@@ -22,6 +22,8 @@
    - setValue(val): Set value and clamp to bounds
    ═══════════════════════════════════════════════════════════════ */
 
+import { t } from '../../../utils/i18n.js';
+
 export class RenNumberField extends HTMLElement {
   constructor() {
     super();
@@ -47,6 +49,13 @@ export class RenNumberField extends HTMLElement {
   }
 
   connectedCallback() {
+    /* ═══ HOST CLASS ═══ */
+    /* The group styling (inline-flex, border, focus ring via :has()) lives on
+       .ren-number-field. Without this the canonical <ren-number-field> mounted
+       unstyled — no border, no focus ring, the steppers and the input simply
+       laid out inline. */
+    this.classList.add('ren-number-field');
+
     /* ═══ READ ATTRIBUTES ═══ */
     const minAttr = this.getAttribute('min');
     const maxAttr = this.getAttribute('max');
@@ -72,17 +81,29 @@ export class RenNumberField extends HTMLElement {
       this.appendChild(this.input);
     }
 
+    // Move a host-level name onto the input. The host is a custom element with
+    // no role, so aria-label on it is both ignored by assistive tech and
+    // flagged as aria-prohibited-attr; meanwhile a generated input with no
+    // <label> fails the `label` rule outright. Same adoption ren-select and
+    // ren-otp do.
+    for (const attribute of ['aria-label', 'aria-labelledby']) {
+      if (this.hasAttribute(attribute) && !this.input.hasAttribute(attribute)) {
+        this.input.setAttribute(attribute, this.getAttribute(attribute));
+        this.removeAttribute(attribute);
+      }
+    }
+
     if (!this.decrementBtn) {
       this.decrementBtn = document.createElement('button');
       this.decrementBtn.className = 'ren-number-field-decrement';
-      this.decrementBtn.setAttribute('aria-label', 'Decrease');
+      this.decrementBtn.setAttribute('aria-label', t('numberField.decrease'));
       this.insertBefore(this.decrementBtn, this.input);
     }
 
     if (!this.incrementBtn) {
       this.incrementBtn = document.createElement('button');
       this.incrementBtn.className = 'ren-number-field-increment';
-      this.incrementBtn.setAttribute('aria-label', 'Increase');
+      this.incrementBtn.setAttribute('aria-label', t('numberField.increase'));
       this.appendChild(this.incrementBtn);
     }
 
