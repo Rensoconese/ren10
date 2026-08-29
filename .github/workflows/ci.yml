@@ -60,7 +60,7 @@ jobs:
 
       - name: Cache Playwright Chromium
         id: package-playwright-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-chromium-${{ hashFiles('package-lock.json') }}
@@ -122,7 +122,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
@@ -176,7 +176,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ matrix.browser }}-${{ hashFiles('package-lock.json') }}
@@ -217,7 +217,7 @@ jobs:
 
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-chromium-${{ hashFiles('package-lock.json') }}
