@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Carbon for AI Patterns
    ============================================
@@ -655,4 +658,6 @@
 .ren-ai-tool-call[data-status="error"] .ren-ai-tool-call-result {
   background: color-mix(in srgb, var(--color-danger) 4%, var(--color-surface));
   color: var(--color-text);
+}
+
 }

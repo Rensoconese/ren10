@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Icon Component
    ============================================
@@ -119,4 +122,6 @@
   .ren-icon-spin {
     animation: none;
   }
+}
+
 }

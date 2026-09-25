@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card media slots</title>
+  <link rel="stylesheet" href="../../../tokens/index.css">
+  <link rel="stylesheet" href="../../../base/reset.css">
+  <link rel="stylesheet" href="../../../base/layouts.css">
+  <link rel="stylesheet" href="../../../tokens/component/tokens.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-button/ren-button.css">
+  <link rel="stylesheet" href="../../../components/primitives/ren-card/ren-card.css">
+</head>
+<body>
+  <main class="ren-stack">
+    <article id="cover-first-image" class="ren-card">
+      <img class="ren-card-cover" alt="North studio" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='currentColor'/%3E%3C/svg%3E" width="640" height="360">
+      <div class="ren-card-body">
+        <p>Cover image leads the card.</p>
+      </div>
+    </article>
+
+    <article id="cover-last-image" class="ren-card">
+      <div class="ren-card-body">
+        <p>Cover image closes the card.</p>
+      </div>
+      <img class="ren-card-cover" alt="South studio" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='currentColor'/%3E%3C/svg%3E" width="640" height="360">
+    </article>
+
+    <article id="cover-first-wrapper" class="ren-card">
+      <figure class="ren-card-cover">
+        <img alt="East studio" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='currentColor'/%3E%3C/svg%3E" width="640" height="360">
+      </figure>
+      <div class="ren-card-body">
+        <p>Wrapped cover leads the card.</p>
+      </div>
+    </article>
+
+    <article id="cover-last-wrapper" class="ren-card">
+      <div class="ren-card-header">
+        <h2 class="ren-card-title">West studio</h2>
+        <p class="ren-card-description">Wrapped cover closes the card.</p>
+      </div>
+      <div class="ren-card-cover">
+        <img alt="West studio interior" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='360'%3E%3Crect width='640' height='360' fill='currentColor'/%3E%3C/svg%3E" width="640" height="360">
+      </div>
+    </article>
+
+    <article id="footer-border" class="ren-card">
+      <div class="ren-card-body">
+        <p>Archive this project.</p>
+      </div>
+      <div class="ren-card-footer-border">
+        <button class="ren-btn" type="button">Archive</button>
+      </div>
+    </article>
+
+    <article id="footer-border-after-header" class="ren-card">
+      <div class="ren-card-header">
+        <h2 class="ren-card-title">Delete account</h2>
+        <p class="ren-card-description">Permanently remove the account.</p>
+      </div>
+      <div class="ren-card-footer-border">
+        <button class="ren-btn" type="button">Delete account</button>
+      </div>
+    </article>
+
+    <article id="simple" class="ren-card ren-card-simple">
+      <p>Sectionless note.</p>
+    </article>
+
+    <article id="loose" class="ren-card">
+      <p>Loose content still keeps card padding.</p>
+    </article>
+
+    <article id="structured" class="ren-card">
+      <div class="ren-card-header">
+        <h2 class="ren-card-title">Project status</h2>
+        <p class="ren-card-description">Updated 2 minutes ago.</p>
+      </div>
+      <div class="ren-card-body">
+        <p>All checks passing.</p>
+      </div>
+      <div class="ren-card-footer">
+        <button class="ren-btn" type="button">Open</button>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

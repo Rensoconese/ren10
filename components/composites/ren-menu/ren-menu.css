@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ MENU CONTAINER ═══ */
 .ren-menu {
   background: var(--color-surface);
@@ -285,3 +288,5 @@
 .ren-menu-item { min-block-size: var(--ren-menu-item-height, var(--size-md)); padding: var(--ren-menu-item-padding, var(--space-2) var(--space-3)); border-radius: var(--ren-menu-item-radius, var(--radius-sm)); }
 .ren-menu-item:hover, .ren-menu-item[data-highlighted] { background: var(--ren-menu-item-hover-bg, var(--color-fill)); }
 .ren-menu-item-danger { color: var(--ren-menu-danger-color, var(--color-danger)); }
+
+}

@@ -13,6 +13,23 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Added
 
+### Changed
+
+### Fixed
+
+### Removed
+
+## [0.14.0] — 2026-09-25
+
+### Added
+
+- Added a packaged agent provenance checker that compares installed, vendored
+  and skill copies, including CSS hashes and obsolete component selectors.
+- Added a responsive tour composition example and recipes for wrapping CTAs,
+  consent controls, payment groups and informational actions.
+- Added regression coverage for CSS entrypoint parity, stack rhythm, card
+  media slots, Astro overrides and the documented tabs history adapter.
+
 - Added `utils/anchor.js`, a shared helper that mints a unique CSS anchor name
   per trigger/overlay pairing, defers to an author-supplied `anchor-name`, and
   restores what it injected on disconnect.
@@ -40,6 +57,14 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ### Changed
 
+- Components and the standalone reset now declare their own cascade layers;
+  source, selective imports, full bundles and split bundles preserve the same
+  override behavior. CSS bundles use a parser instead of regular expressions.
+- Each stack owns its direct flow-element margins and initializes its own gap.
+  Nested plain stacks no longer inherit an outer size modifier. Review the
+  upgrade guidance in [MIGRATION.md](./MIGRATION.md) before removing app patches.
+- Refreshed the canonical agent skill with provenance and composition routing.
+
 - Adopted the packaged i18n catalogue across 12 components. UI strings and
   `aria-label`s now resolve through `t()`; every English string is unchanged.
   The catalogue gained 14 keys, and `calendar`, `otp` and `datePicker` finally
@@ -66,6 +91,16 @@ consolidates them and starts formal version tracking with 0.7.0.
   gated, so the root pair was redundant as well as wrong.
 
 ### Fixed
+
+- Fixed missing layout base classes in both distributed starters and the
+  empty close button in the reference dialog.
+- Updated vulnerable dependency resolutions within their supported ranges.
+- Fixed the provenance CLI silently skipping execution through a symlink.
+- Fixed card covers receiving first/last-child padding and sectionless cards
+  receiving padding twice; image wrappers also render edge to edge.
+- Fixed unsupported Sass-style suffix selectors in the native CSS combobox.
+- Fixed the tabs recipe using nonexistent selectors and events.
+- Fixed the standalone reset overriding component typography and surfaces.
 
 - Fixed anchored overlays sharing one document-wide `anchor-name`: with two or
   more instances on a page, every popover, tooltip, hover card, date picker,
@@ -1440,7 +1475,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.13.0...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.14.0...HEAD
+[0.14.0]: https://github.com/Rensoconese/ren10/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/Rensoconese/ren10/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/Rensoconese/ren10/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/Rensoconese/ren10/compare/v0.10.0...v0.11.0

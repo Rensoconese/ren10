@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en" data-theme="default">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>RenDS · Tour composition regression example</title>
+
+  <link rel="stylesheet" href="../index.css">
+
+  <script type="module" src="../components/patterns/ren-nav/ren-nav.js"></script>
+  <script type="module" src="../components/primitives/ren-field/ren-field.js"></script>
+  <script type="module" src="../components/patterns/ren-form/ren-form.js"></script>
+
+  <style>
+    /*
+     * Local composition layer — scoped to this page only (F06/F07/F08).
+     * Nothing here changes global classless defaults or RenDS source CSS:
+     * every selector is prefixed with .tour-composition, and every value
+     * is a semantic (--color-*), layout (--space-*), or component
+     * (--ren-*) token. See docs/composition-recipes.md for the rationale.
+     */
+
+    /* F06: .ren-btn ships white-space: nowrap, which clips long bilingual
+       labels at 390px. Neutralize locally so controls wrap and grow. */
+    .tour-composition .tour-cta {
+      white-space: normal;
+      height: auto;
+      line-height: var(--body-leading);
+      text-align: start;
+    }
+
+    /* Keep the icon glued to the first line of a wrapped label. */
+    .tour-composition .tour-cta svg {
+      flex-shrink: 0;
+    }
+
+    /* Prose owns reading width; stacks own control rhythm (never mix). */
+    .tour-composition .tour-prose {
+      max-width: var(--width-prose);
+      color: var(--color-text-muted);
+    }
+
+    /* F08: native details disclosure, neutralized locally — the global
+       classless details/summary rendering is untouched. */
+    .tour-composition details.tour-includes {
+      border: var(--ren-card-border-width, 1px) solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      background-color: var(--color-surface-raised);
+      max-width: 100%;
+      overflow-wrap: break-word;
+    }
+
+    .tour-composition details.tour-includes summary {
+      cursor: pointer;
+      font-weight: var(--headline-weight);
+    }
+
+    .tour-composition details.tour-includes summary:focus-visible {
+      outline: 2px solid var(--color-focus-ring);
+      outline-offset: 2px;
+    }
+
+    /* F07: payment group chrome — grouping only, no payment semantics. */
+    .tour-composition .tour-payment {
+      border: var(--ren-card-border-width, 1px) solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-4);
+      background-color: var(--color-surface-raised);
+    }
+  </style>
+</head>
+<body class="tour-composition" id="top">
+  <!--
+    F08: canonical ren-nav. Landmark + list semantics, hamburger owns
+    aria-expanded/aria-controls, Escape-to-close and resize live in ren-nav.js.
+  -->
+  <ren-nav>
+    <nav class="ren-nav ren-nav-sticky" aria-label="Primary">
+      <a class="ren-nav-brand" href="#top">TourCo</a>
+      <ul id="tour-nav-links" class="ren-nav-links">
+        <li><a class="ren-nav-link" href="#tours" aria-current="page">Tours</a></li>
+        <li><a class="ren-nav-link" href="#tour-alhambra-details">Details</a></li>
+        <li><a class="ren-nav-link" href="#booking">Booking</a></li>
+      </ul>
+      <div class="ren-nav-actions">
+        <a class="ren-nav-link" href="#booking">Enquire</a>
+      </div>
+      <button class="ren-nav-toggle" type="button" aria-expanded="false" aria-controls="tour-nav-links" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </ren-nav>
+
+  <!-- Page skeleton: ren-center caps width, ren-stack-lg owns section rhythm. -->
+  <main class="ren-stack ren-center ren-stack-lg" style="padding: var(--space-6) var(--space-4)">
+    <header class="ren-stack ren-stack-sm">
+      <h1>Guided walking tours</h1>
+      <p class="tour-prose">Two small-group tours with the same booking flow. Every primary
+      action on this page opens the tour details first — booking and payment always
+      happen as a separate, explicit step.</p>
+    </header>
+
+    <!-- F08: tour cards. Primary action = open details, never purchase. -->
+    <section class="ren-stack" aria-labelledby="tours-heading" id="tours">
+      <h2 id="tours-heading">Available tours</h2>
+
+      <div class="ren-grid ren-grid-2">
+        <article class="ren-card" aria-labelledby="tour-alhambra-title" data-tour-card>
+          <div class="ren-card-header">
+            <h3 class="ren-card-title" id="tour-alhambra-title">Alhambra at golden hour</h3>
+            <p class="ren-card-description">2.5 hours · max 12 people · English and Spanish</p>
+          </div>
+          <div class="ren-stack ren-card-body ren-stack-sm">
+            <p class="tour-prose">Palaces, gardens, and viewpoints as the light changes. No tickets
+            are sold on this page — the details section explains what is included and how
+            booking works.</p>
+            <details class="tour-includes" data-tour-includes>
+              <summary>What is included in this tour?</summary>
+              <ul>
+                <li>Local guide for the full route</li>
+                <li>Headsets so you can hear at the back of the group</li>
+                <li>Printed map with the meeting point and departure times</li>
+              </ul>
+            </details>
+          </div>
+          <div class="ren-card-footer">
+            <!-- F06: long bilingual label, icon INSIDE the real link, wraps freely. -->
+            <a class="ren-btn tour-cta" href="#tour-alhambra-details" data-tour-cta="en">
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>View full tour details, departure times and meeting point · Ver detalles del tour, horarios y punto de encuentro</span>
+            </a>
+          </div>
+        </article>
+
+        <article class="ren-card" aria-labelledby="tour-albaicin-title" data-tour-card>
+          <div class="ren-card-header">
+            <h3 class="ren-card-title" id="tour-albaicin-title">Albaicín morning walk</h3>
+            <p class="ren-card-description">2 hours · max 10 people · English and Spanish</p>
+          </div>
+          <div class="ren-stack ren-card-body ren-stack-sm">
+            <p class="tour-prose">Whitewashed lanes, cármenes, and the classic viewpoint over the
+            Alhambra. Details first — nothing here charges you or reserves a seat.</p>
+            <details class="tour-includes" data-tour-includes>
+              <summary lang="es">¿Qué incluye este tour?</summary>
+              <ul>
+                <li>Guía local durante todo el recorrido</li>
+                <li>Auriculares para escuchar al final del grupo</li>
+                <li>Mapa impreso con el punto de encuentro y los horarios</li>
+              </ul>
+            </details>
+          </div>
+          <div class="ren-card-footer">
+            <a class="ren-btn tour-cta" href="#tour-albaicin-details" data-tour-cta="es">
+              <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16">
+                <path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span lang="es">Ver los detalles completos del tour, horarios de salida y punto de encuentro · View full tour details, departure times and meeting point</span>
+            </a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- F08: the details targets. Plain sections, no nested interactive controls. -->
+    <section class="ren-stack ren-stack-sm" aria-labelledby="tour-alhambra-details-heading" id="tour-alhambra-details" data-tour-details>
+      <h2 id="tour-alhambra-details-heading">Alhambra at golden hour — details</h2>
+      <p class="tour-prose">Departures daily at 17:30 and 18:00 from Plaza Nueva, by the
+      fountain. The guide carries a green umbrella. Booking and payment happen
+      separately through the enquiry form below — this section is information only.</p>
+      <p><a href="#booking">Go to the booking enquiry form</a></p>
+    </section>
+
+    <section class="ren-stack ren-stack-sm" aria-labelledby="tour-albaicin-details-heading" id="tour-albaicin-details" data-tour-details>
+      <h2 id="tour-albaicin-details-heading">Albaicín morning walk — details</h2>
+      <p class="tour-prose">Departures Tuesday to Sunday at 10:00 from Mirador de San Nicolás.
+      The route includes steps and uneven paving. Booking and payment happen
+      separately through the enquiry form below — this section is information only.</p>
+      <p><a href="#booking">Go to the booking enquiry form</a></p>
+    </section>
+
+    <!-- F07: booking enquiry form. Demo only — no payment, no network. -->
+    <section class="ren-card" aria-labelledby="booking-heading" id="booking">
+      <div class="ren-card-header">
+        <h2 class="ren-card-title" id="booking-heading">Booking enquiry</h2>
+        <p class="ren-card-description">Demo only. This form never charges you and sends nothing
+        over the network.</p>
+      </div>
+
+      <div class="ren-card-body">
+      <ren-form data-validate="onTouched">
+        <form class="ren-form ren-stack" novalidate aria-labelledby="booking-heading">
+          <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden>
+            <strong>Please fix the following errors:</strong>
+            <ul></ul>
+          </div>
+
+          <ren-field data-rules="required">
+            <label>Full name (required)</label>
+            <input class="ren-input" type="text" name="fullName" autocomplete="name" required>
+            <span data-error></span>
+          </ren-field>
+
+          <ren-field data-rules="required|email">
+            <label>Email (required)</label>
+            <input class="ren-input" type="email" name="email" autocomplete="email" required>
+            <span data-description>We reply within two working days.</span>
+            <span data-error></span>
+          </ren-field>
+
+          <ren-field>
+            <label>Preferred date (optional)</label>
+            <input class="ren-input" type="date" name="date">
+            <span data-description>Optional — leave empty if your dates are flexible.</span>
+          </ren-field>
+
+          <ren-field>
+            <label>Notes (optional)</label>
+            <textarea class="ren-input" name="notes" rows="3" maxlength="500"></textarea>
+            <span data-description>Optional — access needs, group size, or questions.</span>
+          </ren-field>
+
+          <fieldset class="ren-stack ren-stack-sm" style="border: 0; padding: 0; margin: 0">
+            <legend class="ren-field-label">Consent</legend>
+            <label class="ren-checkbox" data-consent="short">
+              <input type="checkbox" name="contactConsent" value="yes" required>
+              <span class="ren-checkbox-control"></span>
+              <span>I agree to be contacted about this enquiry.</span>
+            </label>
+            <label class="ren-checkbox" data-consent="long">
+              <input type="checkbox" name="updatesConsent" value="yes">
+              <span class="ren-checkbox-control"></span>
+              <span>Optional: I would like to receive occasional emails about new tour dates,
+              schedule changes, accessibility improvements, and seasonal routes. You can
+              withdraw this consent at any time by replying to any message.</span>
+            </label>
+          </fieldset>
+
+          <!-- Payment group: explanatory text, then the action, then the result note. -->
+          <div class="ren-stack tour-payment ren-stack-sm" aria-labelledby="payment-heading">
+            <h3 id="payment-heading">Payment</h3>
+            <p class="tour-prose">No payment is taken here. If you confirm a booking later, you
+            will be directed to a separate, secure payment step with its own summary and
+            receipt. Submitting this form only sends an enquiry.</p>
+            <div>
+              <button class="ren-btn tour-cta" type="submit" data-tour-cta="submit">
+                <svg aria-hidden="true" focusable="false" width="16" height="16" viewBox="0 0 16 16">
+                  <path d="M2 8h11M9 3.5 13.5 8 9 12.5" stroke="currentColor" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Send booking enquiry · Enviar solicitud — demo only, no payment taken</span>
+              </button>
+            </div>
+            <p class="ren-form-success" data-booking-result aria-live="polite" hidden></p>
+          </div>
+        </form>
+      </ren-form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="ren-stack ren-center ren-stack-sm" style="padding: var(--space-6) var(--space-4)">
+    <hr class="ren-separator">
+    <p style="color: var(--color-text-muted)">TourCo demo page · Built with RenDS layout primitives and tokens ·
+    <a href="#top">Back to top</a></p>
+  </footer>
+
+  <script type="module">
+    // Demo-only submission. ren-form owns validation and emits ren-submit;
+    // this consumer only announces the result. No fetch, no payment, no network.
+    const renForm = document.querySelector('#booking ren-form');
+    const form = renForm.querySelector('form.ren-form');
+    const result = document.querySelector('[data-booking-result]');
+    const consent = form.elements.contactConsent;
+
+    renForm.addEventListener('ren-submit', (event) => {
+      event.preventDefault();
+
+      if (!consent.checked) {
+        consent.setCustomValidity('Please confirm you agree to be contacted about this enquiry.');
+        consent.reportValidity();
+        consent.setCustomValidity('');
+        result.hidden = true;
+        return;
+      }
+
+      const name = event.detail.values.fullName;
+      result.hidden = false;
+      result.textContent = `Demo only — enquiry noted for ${name}, no payment processed and nothing sent.`;
+    });
+  </script>
+</body>
+</html>

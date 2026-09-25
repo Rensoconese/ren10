@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ TABS CONTAINER ═══ */
 .ren-tabs {
   container-type: inline-size;
@@ -206,3 +209,5 @@
 }
 .ren-tabs [aria-selected="true"], .ren-tabs [data-state="active"] { color: var(--ren-tabs-active-color, var(--color-text)); }
 .ren-tabs [data-indicator], .ren-tabs-indicator { background: var(--ren-tabs-indicator-color, var(--color-accent)); }
+
+}

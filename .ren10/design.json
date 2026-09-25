@@ -4,7 +4,7 @@
   "system": {
     "name": "Ren10",
     "package": "ren10",
-    "version": "0.13.0"
+    "version": "0.14.0"
   },
   "sources": [
     "ren-design.md",
@@ -1222,8 +1222,8 @@
       "--space-section-sm": "var(--space-8)",
       "--space-page-top": "var(--space-12)",
       "--space-page-bottom": "var(--space-16)",
-      "--gap": "…\" */\n  --space-stack-tight:         var(--space-2)",
-      "--space-stack": "var(--space-4)",
+      "--stack-gap": "var(--space-6)\"\n     (set it on the .ren-stack element itself — see base/layouts.md:\n     an .ren-stack initializes --stack-gap and no longer inherits\n     a value from an ancestor). */\n  --space-stack-tight:         var(--space-2)",
+      "--space-stack": "var(--space-density-row, var(--space-3))",
       "--space-stack-loose": "var(--space-6)",
       "--space-density-card": "var(--space-8)",
       "--space-density-form": "var(--space-6)",

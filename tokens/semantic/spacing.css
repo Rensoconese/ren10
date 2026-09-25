@@ -61,10 +61,20 @@
   --space-page-bottom:         var(--space-16); /* page footer breathing room */
 
   /* ─── Stack defaults ───────────────────────
-     Default --gap value for ren-stack utilities.
-     Override per-instance with style="--gap: …" */
+     .ren-stack initializes --stack-gap from --space-stack, so this
+     IS the rhythm a bare .ren-stack gets. It follows [data-density]
+     (12 comfortable / 8 compact / 16 spacious) via the density
+     alias below, so an un-sized stack still responds to density.
+
+     -tight / -loose are fixed scale steps and do not move with
+     density; the ren-stack-xs…-xl modifiers are fixed too.
+
+     Override per instance: style="--stack-gap: var(--space-6)"
+     (set it on the .ren-stack element itself — see base/layouts.md:
+     an .ren-stack initializes --stack-gap and no longer inherits
+     a value from an ancestor). */
   --space-stack-tight:         var(--space-2);
-  --space-stack:               var(--space-4);
+  --space-stack:               var(--space-density-row, var(--space-3));
   --space-stack-loose:         var(--space-6);
 
   /* ─── Density-aware aliases ────────────────

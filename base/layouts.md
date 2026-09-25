@@ -34,6 +34,41 @@ zones, explicit spans, subgrid alignment, bento, animated sidebars - route
 through the Grid Routing Table below. `base/grid.css` is already loaded by
 `index.css`; its classes are public API, not internals.
 
+## Stack rhythm and nesting
+
+Use `ren-stack` with an optional size modifier: `class="ren-stack ren-stack-lg"`.
+The modifier alone sets a custom property; it does not create a flex layout.
+Every stack initializes its own `--stack-gap` from `--space-stack`. Bare
+comfortable/compact/spacious stacks use 12/8/16px respectively; density is set
+on the root `html` element. Fixed xs/sm/md/lg/xl gaps are 4/8/16/24/32px.
+
+A nested bare stack starts from the semantic default, even inside a large
+stack. Set a modifier or `style="--stack-gap: var(--space-6)"` on each stack
+that needs an explicit size. Use an inherited `--space-stack` theme override
+for a shared default. `--stack-gap` on a non-stack ancestor no longer controls
+all descendants; migrate that intent to `--space-stack`.
+
+The stack owns block margins of its direct flow children: headings,
+paragraphs, lists, quotes, preformatted blocks, figures, tables, fieldsets,
+details and separators. Their classless block margins become zero, so a
+24px gap measures 24px. Inline margins are untouched. A generic child wrapper
+keeps its own styles and its nested prose keeps the classless reading rhythm.
+Consumer margin overrides, including intentional auto margins, still win;
+such overrides deliberately add to or distribute the stack's space.
+
+```html
+<section class="ren-stack ren-stack-lg">
+  <h2>Tour details</h2>
+  <p>The heading-to-paragraph space is 24px.</p>
+  <div class="ren-stack">
+    <label for="name">Name</label>
+    <input id="name" name="name">
+  </div>
+</section>
+```
+
+See `MIGRATION.md` before removing consumer margin resets.
+
 ## Grid Routing Table
 
 | Need | Use | Instead of |

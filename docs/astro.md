@@ -83,3 +83,12 @@ npm run build
 ```
 
 Use each catalog entry's `import` and read its `contract` before composing it.
+
+### Cascade parity for selective components
+
+Each component stylesheet declares the shared layer order and wraps its rules
+in `@layer components`. Direct Astro component imports therefore have the same
+cascade behavior as `index.css` and the generated bundles. Import
+`ren10/foundation.css` once; keep application theme/overrides outside a layer
+(or in an explicitly later layer). Do not add a second `layer(components)`
+around a component import. See `MIGRATION.md` for older selective imports.

@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Kbd (keyboard shortcut)
    ============================================
@@ -28,4 +31,6 @@
   border-bottom-width: 2px;
   border-radius: var(--ren-kbd-radius);
   white-space: nowrap;
+}
+
 }

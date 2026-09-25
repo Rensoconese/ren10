@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* A scrollable region is an interactive region: WCAG 2.1.1 requires it to be
    reachable and operable by keyboard, so the contract mandates tabindex="0"
    whenever the region has no focusable descendant (axe:
@@ -212,4 +215,6 @@
 .ren-scroll-area-full {
   height: 100%;
   max-height: none;
+}
+
 }

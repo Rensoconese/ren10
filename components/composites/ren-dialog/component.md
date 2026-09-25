@@ -105,7 +105,7 @@ Confirmation dialog with trigger:
   <dialog>
     <div class="ren-dialog-header">
       <h2 class="ren-dialog-title">Delete project</h2>
-      <button class="ren-dialog-close" data-dialog-close aria-label="Close"></button>
+      <button class="ren-dialog-close" data-dialog-close aria-label="Close"><span aria-hidden="true">×</span></button>
     </div>
     <div class="ren-dialog-body">
       <p>This action cannot be undone.</p>

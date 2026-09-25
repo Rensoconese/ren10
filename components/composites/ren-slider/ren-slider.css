@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ REN SLIDER COMPONENT ═══ */
 
 /* ═══ BASE WRAPPER ═══ */
@@ -361,3 +364,5 @@
 .ren-slider-track input[type="range"]::-webkit-slider-thumb { inline-size: var(--ren-slider-thumb-size, 20px); block-size: var(--ren-slider-thumb-size, 20px); background: var(--ren-slider-thumb-bg, var(--color-surface)); border-color: var(--ren-slider-thumb-border, var(--color-accent)); box-shadow: var(--ren-slider-thumb-shadow, var(--shadow-sm)); }
 .ren-slider-track input[type="range"]::-moz-range-thumb { inline-size: var(--ren-slider-thumb-size, 20px); block-size: var(--ren-slider-thumb-size, 20px); background: var(--ren-slider-thumb-bg, var(--color-surface)); border-color: var(--ren-slider-thumb-border, var(--color-accent)); box-shadow: var(--ren-slider-thumb-shadow, var(--shadow-sm)); }
 .ren-slider-track input[type="range"] { background-image: linear-gradient(to right, var(--ren-slider-fill-color, var(--color-accent)) 0%, var(--ren-slider-fill-color, var(--color-accent)) var(--value, 0%), var(--ren-slider-track-bg, var(--color-fill-active)) var(--value, 0%), var(--ren-slider-track-bg, var(--color-fill-active)) 100%); }
+
+}

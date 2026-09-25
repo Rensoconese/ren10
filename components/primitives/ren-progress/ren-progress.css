@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Progress Bar & Meter Components
    ============================================
@@ -187,4 +190,6 @@
 
 .ren-meter-xl {
   height: 1rem;
+}
+
 }

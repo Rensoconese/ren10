@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ REN DATE RANGE PICKER WEB COMPONENT ═══
    A composable date range picker with dual calendars,
    preset shortcuts, and an input trigger with popover dropdown.
@@ -457,4 +460,6 @@
   input[type='hidden'] {
     display: none;
   }
+}
+
 }

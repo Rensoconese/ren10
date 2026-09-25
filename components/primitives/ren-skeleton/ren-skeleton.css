@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Skeleton
    ============================================
@@ -66,4 +69,6 @@
     animation: none;
     background: var(--ren-skeleton-bg);
   }
+}
+
 }

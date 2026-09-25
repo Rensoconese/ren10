@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ REN CALENDAR WEB COMPONENT ═══
    A fully accessible, keyboard-navigable calendar component
    with support for single, range, and multiple date selection.
@@ -401,4 +404,6 @@
     min-inline-size: calc(var(--touch-min) + var(--stroke-1));
     min-block-size: calc(var(--touch-min) + var(--stroke-1));
   }
+}
+
 }

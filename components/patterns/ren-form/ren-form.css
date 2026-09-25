@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Form Validation System Organism
    ============================================
@@ -326,3 +329,5 @@
 .ren-form input:focus, .ren-form select:focus, .ren-form textarea:focus { border-color: var(--ren-field-focus-color, var(--color-input-border-focus)); }
 .ren-form [aria-invalid="true"] { border-color: var(--ren-field-error-color, var(--color-input-error-border)); }
 .ren-form [aria-invalid="false"] { border-color: var(--ren-field-success-color, var(--color-success)); }
+
+}

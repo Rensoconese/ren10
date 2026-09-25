@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Empty State Pattern
    ============================================
@@ -113,3 +116,5 @@
 .ren-empty-state .ren-empty-state-icon { inline-size: var(--ren-empty-icon-size, 3rem); block-size: var(--ren-empty-icon-size, 3rem); }
 .ren-empty-state h1, .ren-empty-state h2, .ren-empty-state h3 { font-size: var(--ren-empty-title-size, var(--title-sm-size)); }
 .ren-empty-state p { color: var(--ren-empty-desc-color, var(--color-text-muted)); }
+
+}

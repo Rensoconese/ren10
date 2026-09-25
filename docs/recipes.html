@@ -63,7 +63,7 @@
 
   <header class="dx-nav">
     <div class="dx-nav-inner">
-      <a href="index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.13.0</span></a>
+      <a href="index.html" class="dx-brand"><span class="dx-brand-mark">R</span><span>RenDS</span><span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.14.0</span></a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="index.html" aria-current="page">Docs</a>
         <a href="components.html">Components</a>
@@ -242,55 +242,47 @@ document.addEventListener('click', async (e) =&gt; {
       <section class="dx-section" id="tabbed-settings">
         <p class="dx-kicker">Recipe 3</p>
         <h2>Tabbed settings with URL hash</h2>
-        <p>A settings page where each tab is deep-linkable (<code>#account</code>, <code>#billing</code>, etc.), panels load on demand, and Back / Forward navigates between tabs.</p>
+        <p>A settings page where each tab is deep-linkable (<code>#account</code>, <code>#billing</code>, etc.), and Back / Forward navigates between tabs through a small application adapter.</p>
 
         <div class="recipe-card">
           <p class="recipe-uses">
             <span class="recipe-uses-label">Uses</span>
             <a class="ren-tag ren-tag-clickable" href="components/ren-tabs.html">ren-tabs</a>
           </p>
-          <pre class="dx-pre" tabindex="0"><code>&lt;ren-tabs data-tabs-hash="true"&gt;
-  &lt;div class="ren-tabs-list" role="tablist"&gt;
-    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="account"&gt;Account&lt;/button&gt;
-    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="billing"&gt;Billing&lt;/button&gt;
-    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="team"&gt;Team&lt;/button&gt;
-    &lt;button class="ren-tabs-trigger" type="button" data-tab-id="api"&gt;API keys&lt;/button&gt;
+          <pre class="dx-pre" tabindex="0"><code>&lt;ren-tabs aria-label="Account settings"&gt;
+  &lt;div class="ren-tab-list" role="tablist"&gt;
+    &lt;button id="settings-account" class="ren-tab" role="tab" type="button"&gt;Account&lt;/button&gt;
+    &lt;button id="settings-billing" class="ren-tab" role="tab" type="button"&gt;Billing&lt;/button&gt;
   &lt;/div&gt;
-
-  &lt;section class="ren-tabs-panel" data-tab-id="account"&gt;
-    &lt;!-- always-rendered: profile is cheap --&gt;
-    &lt;h2&gt;Account&lt;/h2&gt;
-    …
-  &lt;/section&gt;
-
-  &lt;section class="ren-tabs-panel" data-tab-id="billing" data-lazy&gt;
-    &lt;!-- lazy: only fetch when visited --&gt;
-  &lt;/section&gt;
-
-  &lt;section class="ren-tabs-panel" data-tab-id="team" data-lazy&gt;&lt;/section&gt;
-  &lt;section class="ren-tabs-panel" data-tab-id="api" data-lazy&gt;&lt;/section&gt;
+  &lt;section class="ren-tab-panel" role="tabpanel"&gt;Account settings&lt;/section&gt;
+  &lt;section class="ren-tab-panel" role="tabpanel" hidden&gt;Billing settings&lt;/section&gt;
 &lt;/ren-tabs&gt;
-
-&lt;script&gt;
+&lt;script type="module"&gt;
+import '../components/composites/ren-tabs/ren-tabs.js';
+await customElements.whenDefined('ren-tabs');
 const tabs = document.querySelector('ren-tabs');
-
-tabs.addEventListener('ren-tab-change', async (e) =&gt; {
-  const panel = tabs.querySelector(`.ren-tabs-panel[data-tab-id="${e.detail.tabId}"]`);
-  if (panel.dataset.lazy === '' &amp;&amp; !panel.dataset.loaded) {
-    panel.dataset.loaded = '';
-    panel.innerHTML = await fetch(`/settings/${e.detail.tabId}`).then(r =&gt; r.text());
-  }
+const ids = ['settings-account', 'settings-billing'];
+function restore() {
+  const id = location.hash.slice(1);
+  tabs.selectTabById(ids.includes(id) ? id : ids[0]);
+}
+restore();
+window.addEventListener('hashchange', restore);
+window.addEventListener('popstate', restore);
+tabs.addEventListener('ren-tab-change', (event) =&gt; {
+  const id = ids[event.detail.index];
+  if (id &amp;&amp; location.hash !== `#${id}`) history.pushState(null, '', `#${id}`);
 });
 &lt;/script&gt;</code></pre>
           <div class="recipe-gotchas">
             <h4>Edge cases &amp; gotchas</h4>
             <ul>
-              <li><strong><code>data-tabs-hash="true"</code></strong> wires <code>location.hash</code> automatically. The hash matches <code>data-tab-id</code>.</li>
-              <li><strong>If your tab IDs collide with anchors on the page</strong> (e.g. a section also has <code>id="account"</code>), prefix them: <code>data-tab-id="t-account"</code>.</li>
-              <li><strong>Lazy panels should keep their <code>data-loaded</code> flag</strong> after the first fetch so revisits don't refetch.</li>
-              <li><strong>Persist UI state too, not just the tab</strong> — if Billing has a form, store its draft in <code>sessionStorage</code> so the user doesn't lose it on tab switch.</li>
+              <li>Hash synchronization is consumer code. Ren10 exposes <code>selectTabById()</code> and <code>ren-tab-change.detail.index</code>; it does not implement a hash attribute or lazy loading.</li>
+              <li>Triggers and panels pair by document order. Use unique trigger IDs, real buttons, and the documented singular <code>ren-tab</code> selectors.</li>
+              <li>For asynchronous content, own loading, error, retry and cancellation states in the application. Preserve form drafts when switching panels.</li>
             </ul>
           </div>
+        </div>
         </div>
       </section>
 

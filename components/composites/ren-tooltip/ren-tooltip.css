@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
 .ren-tooltip {
   position: absolute;
@@ -194,4 +197,6 @@
   box-shadow: var(--ren-tooltip-shadow, var(--shadow-sm));
   transition-duration: var(--ren-tooltip-duration, var(--duration-fast));
   transition-timing-function: var(--ren-tooltip-easing, var(--ease-out));
+}
+
 }

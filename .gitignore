@@ -64,3 +64,6 @@ output/playwright-verify/
 # OS files
 .DS_Store
 .windows-build-tools
+
+# Local delegation logs (curated results live with the field audit)
+output/ren10-remediation/

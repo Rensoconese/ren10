@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /**
  * RenDS Menubar
  * Horizontal menu bar component (File, Edit, View, etc.)
@@ -335,4 +338,6 @@
     transition: none;
     animation: none;
   }
+}
+
 }

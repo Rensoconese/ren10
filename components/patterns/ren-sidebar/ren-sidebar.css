@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 .ren-sidebar-layout {
   display: flex;
   min-height: 100dvh;
@@ -325,4 +328,6 @@
     min-inline-size: var(--touch-min);
     min-block-size: var(--touch-min);
   }
+}
+
 }

@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
 
 /* Until the element upgrades it has no `popover` attribute, so the panel
@@ -224,4 +227,6 @@ ren-popover:not(:defined) {
   box-shadow: var(--ren-popover-shadow, var(--shadow-lg));
   transition-duration: var(--ren-popover-duration, var(--duration-normal));
   transition-timing-function: var(--ren-popover-easing, var(--ease-out));
+}
+
 }

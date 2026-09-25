@@ -23,7 +23,7 @@ test('buildDesignManifest derives machine-readable design context from canonical
 
   assert.equal(manifest.schemaVersion, 1);
   assert.equal(manifest.system.name, 'Ren10');
-  assert.equal(manifest.system.version, '0.13.0');
+  assert.equal(manifest.system.version, JSON.parse(await readFile(path.join(packageRoot, 'package.json'), 'utf8')).version);
   assert.ok(manifest.sources.includes('ren-design.md'));
   assert.ok(manifest.tokens.semantic.includes('--color-accent'));
   assert.ok(manifest.tokens.type.includes('--text-base'));

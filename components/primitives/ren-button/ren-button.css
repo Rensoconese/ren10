@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Button Component
    ============================================
@@ -300,4 +303,6 @@
 .ren-btn:focus-visible {
   outline: var(--ren-btn-ring-width) solid var(--ren-btn-ring-color);
   outline-offset: var(--ren-btn-ring-offset);
+}
+
 }

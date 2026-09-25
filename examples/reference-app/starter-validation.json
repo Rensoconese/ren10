@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.13.0",
+  "packageVersion": "0.14.0",
   "artifactPath": "examples/reference-app",
-  "contentHash": "sha256:9c15aebb2eae5e8e336e0807412b45924a477635d26b48d23aeceab81b34f853",
+  "contentHash": "sha256:b4eb1c71a2a048f94b032440e861c96ac09e14e660ac75b16ab00e80a10ad5c4",
   "scenarios": [
     "shell-sidebar",
     "settings-form",
@@ -21,8 +21,8 @@
   "visualManifest": "examples/reference-app/visual-references.json",
   "review": {
     "process": "independent-review",
-    "reviewer": "Codex independent-review agent",
-    "reviewedAt": "2026-07-24",
+    "reviewer": "Codex independent-review agent (release_review)",
+    "reviewedAt": "2026-09-25",
     "command": "node scripts/capture-starter-visuals.mjs && npx playwright test --config tests/agent-starter/playwright.config.cjs",
     "result": "approved"
   },
@@ -31,7 +31,7 @@
     "command": "npx playwright test --config tests/agent-starter/playwright.config.cjs",
     "result": {
       "status": "passed",
-      "tests": 11,
+      "tests": 13,
       "failures": 0,
       "axeViolations": 0
     }

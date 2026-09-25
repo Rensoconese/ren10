@@ -189,3 +189,24 @@ test.describe('distributed vanilla starter', () => {
     });
   });
 });
+
+
+for (const target of ['reference', 'distributed']) {
+  test(`${target} starter preserves desktop card columns and section rhythm`, async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    if (target === 'distributed') {
+      await routePublishedPackageToLocal(page);
+      await page.goto(`${server.origin}/skills/rends/assets/starter/index.html`, { waitUntil: 'networkidle' });
+    }
+    const metrics = page.locator('main section').filter({ has: page.locator(':scope > article.ren-card') }).first();
+    const boxes = await metrics.locator(':scope > article').evaluateAll((cards) => cards.map((card) => {
+      const { x, y, width } = card.getBoundingClientRect();
+      return { x, y, width };
+    }));
+    expect(boxes).toHaveLength(3);
+    expect(Math.abs(boxes[0].y - boxes[1].y)).toBeLessThan(1);
+    expect(boxes[1].x - boxes[0].x - boxes[0].width).toBeGreaterThanOrEqual(8);
+    const gap = await metrics.evaluate((element) => element.getBoundingClientRect().top - element.previousElementSibling.getBoundingClientRect().bottom);
+    expect(gap).toBeGreaterThanOrEqual(24);
+  });
+}

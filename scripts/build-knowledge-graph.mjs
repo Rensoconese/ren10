@@ -175,7 +175,8 @@ const buildSql = (graph) => {
     );
   }
 
-  statements.push('COMMIT;');
+  // Compact the complete search index without dropping searchable content.
+  statements.push('COMMIT;', "INSERT INTO node_fts(node_fts) VALUES ('optimize');", 'VACUUM;');
   return statements.join('\n');
 };
 
@@ -357,7 +358,7 @@ const main = async () => {
       return rest;
     }),
   );
-  await writeFile(jsonPath, `${JSON.stringify({ ...graph, nodes: publishedNodes }, null, 2)}\n`);
+  await writeFile(jsonPath, `${JSON.stringify({ ...graph, nodes: publishedNodes }, null, 1)}\n`);
 
   const inlined = publishedNodes.filter((node) => node.body !== undefined).length;
   console.log(`RenDS knowledge graph: ${graph.nodes.length} nodes, ${graph.edges.length} edges`);

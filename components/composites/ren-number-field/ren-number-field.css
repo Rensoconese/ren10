@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══════════════════════════════════════════════════════════════
    REN NUMBER FIELD (STEPPER) COMPONENT
    ═══════════════════════════════════════════════════════════════
@@ -225,4 +228,6 @@
   .ren-number-field-increment {
     transition: none;
   }
+}
+
 }

@@ -108,6 +108,12 @@ Use the docs page and source files listed below for full examples before adding 
 ## Variants And Public Selectors
 
 - `.ren-combobox`
+- `.ren-combobox-input`
+- `.ren-combobox-list`
+- `.ren-combobox-item`
+- `.ren-combobox-item-label` / `.ren-combobox-item-description`
+- `.ren-combobox-group` / `.ren-combobox-group-label`
+- `.ren-combobox-empty` / `.ren-combobox-loading`
 
 ## States And Attributes
 

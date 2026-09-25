@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>RenDS stack rhythm</title>
+  <link rel="stylesheet" href="../../../index.css">
+  <style>
+    /* Consumer override on the stack element itself. */
+    #explicit-class { --stack-gap: var(--space-8); }
+    /* Keep the sections close together so measurements are unambiguous. */
+    body { margin: 0; padding: 0; }
+  </style>
+</head>
+<body>
+  <!-- F02: heading + paragraph must be exactly the stack gap (24px). -->
+  <section class="ren-stack ren-stack-lg" id="heading-stack">
+    <h3 id="heading">Stack heading</h3>
+    <p id="heading-body">Paragraph directly after the heading.</p>
+  </section>
+
+  <!-- Bare stack keeps the comfortable 12px default. -->
+  <section class="ren-stack" id="default-stack">
+    <h3 id="default-heading">Heading</h3>
+    <p id="default-body">Paragraph.</p>
+  </section>
+
+  <!-- F04: nested plain stack must use its own default, not the parent gap. -->
+  <section class="ren-stack" id="nested-outer" style="--stack-gap: var(--space-8)">
+    <div class="ren-stack" id="nested-inner">
+      <h3 id="nested-a">Inner heading</h3>
+      <p id="nested-b">Inner paragraph.</p>
+    </div>
+  </section>
+
+  <!-- Nested modifier owns its own fixed step. -->
+  <section class="ren-stack ren-stack-lg" id="variant-outer">
+    <div class="ren-stack ren-stack-sm" id="variant-inner">
+      <h3 id="variant-a">Inner heading</h3>
+      <p id="variant-b">Inner paragraph.</p>
+    </div>
+  </section>
+
+  <!-- Nested prose is not a direct child and keeps classless margins. -->
+  <section class="ren-stack" id="prose-stack">
+    <div id="prose-holder">
+      <p id="nested-first">First nested paragraph.</p>
+      <p id="nested-middle">Middle nested paragraph.</p>
+      <p id="nested-last">Last nested paragraph.</p>
+    </div>
+  </section>
+
+  <!-- Explicit local override through a consumer class. -->
+  <section class="ren-stack" id="explicit-class">
+    <h3 id="explicit-a">Heading</h3>
+    <p id="explicit-b">Paragraph.</p>
+  </section>
+</body>
+</html>

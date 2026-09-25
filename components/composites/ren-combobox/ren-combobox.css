@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /**
  * RenDS — Combobox
  * =================
@@ -18,7 +21,7 @@
   display: block;
   width: 100%;
 
-  &-input {
+  .ren-combobox-input {
     width: 100%;
     padding-block: var(--space-2);
     padding-inline: var(--space-3);
@@ -59,7 +62,7 @@
     }
   }
 
-  &-list {
+  .ren-combobox-list {
     position: absolute;
     inset-inline: 0;
     top: calc(100% + var(--space-1));
@@ -113,19 +116,19 @@
     }
   }
 
-  &[data-side="top"] &-list,
-  &-list[data-side="top"] {
+  &[data-side="top"] .ren-combobox-list,
+  .ren-combobox-list[data-side="top"] {
     top: auto;
     bottom: calc(100% + var(--space-1));
   }
 
-  &[data-side="bottom"] &-list,
-  &-list[data-side="bottom"] {
+  &[data-side="bottom"] .ren-combobox-list,
+  .ren-combobox-list[data-side="bottom"] {
     top: calc(100% + var(--space-1));
     bottom: auto;
   }
 
-  &-item {
+  .ren-combobox-item {
     padding: var(--space-2) var(--space-3);
     cursor: pointer;
     border-radius: var(--radius-sm);
@@ -164,17 +167,17 @@
     }
   }
 
-  &-item-label {
+  .ren-combobox-item-label {
     font-weight: 500;
     color: var(--color-text);
   }
 
-  &-item-description {
+  .ren-combobox-item-description {
     font-size: var(--text-xs);
     color: var(--color-text-muted);
   }
 
-  &-empty {
+  .ren-combobox-empty {
     padding: var(--space-8) var(--space-3);
     text-align: center;
     color: var(--color-text-muted);
@@ -185,7 +188,7 @@
     }
   }
 
-  &-loading {
+  .ren-combobox-loading {
     padding: var(--space-3);
     text-align: center;
     color: var(--color-text-muted);
@@ -215,7 +218,7 @@
     }
   }
 
-  &-group {
+  .ren-combobox-group {
     & + & {
       margin-top: var(--space-1);
       border-top: 1px solid var(--color-border);
@@ -227,7 +230,7 @@
     }
   }
 
-  &-group-label {
+  .ren-combobox-group-label {
     padding: var(--space-2) var(--space-3);
     padding-bottom: var(--space-1);
 
@@ -254,4 +257,6 @@
   to {
     transform: rotate(360deg);
   }
+}
+
 }
