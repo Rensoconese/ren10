@@ -46,6 +46,8 @@ const DOCS = [...listPages(''), ...listPages('components')];
 for (const page of DOCS) {
   test.describe(`docs/${page} — WCAG 2.1 AA`, () => {
     test.beforeEach(async ({ page: pw }) => {
+      // Scan settled content: entry fades otherwise cause transient contrast failures.
+      await pw.emulateMedia({ reducedMotion: 'reduce' });
       await pw.goto(`${server.origin}/docs/${page}`, { waitUntil: 'networkidle' });
       // Give custom elements a beat to upgrade before axe reads the tree.
       await pw
