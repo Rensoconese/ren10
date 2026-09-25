@@ -31,7 +31,17 @@ async function measure(page, mode, overrides) {
     <div><button type="button" class="ren-btn ren-btn-primary consumer-button">View tour</button></div>
     <div class="ren-combobox"><input class="ren-combobox-input" aria-label="Destination"><div class="ren-combobox-list" role="listbox"><div class="ren-combobox-item" role="option" aria-selected="true">Patagonia</div></div></div>
     </main></body></html>`, { waitUntil: 'load' });
-  return page.evaluate(() => {
+  return page.evaluate(async () => {
+    // Stylesheet load can precede the first transition frame (notably in Firefox).
+    // Compare settled styles while retaining the normal-motion cascade.
+    await document.fonts.ready;
+    for (;;) {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const active = document.getAnimations().filter((animation) =>
+        animation.playState === 'running' && Number.isFinite(animation.effect?.getComputedTiming().endTime));
+      if (!active.length) break;
+      await Promise.all(active.map((animation) => animation.finished.catch(() => {})));
+    }
     const style = (sel) => getComputedStyle(document.querySelector(sel));
     const card = style('.ren-card'), media = style('.consumer-media'), button = style('.consumer-button');
     const list = style('.ren-combobox-list'), item = style('.ren-combobox-item');
