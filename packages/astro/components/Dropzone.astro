@@ -14,9 +14,9 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-dropzone class:list={className} {...rest}><slot /></ren-dropzone>
+<div class:list={['ren-dropzone', className]} {...rest}><slot /></div>
 
 <script>
   import { initDropZone } from 'ren10/components/composites/ren-dropzone/ren-dropzone.js';
-  document.querySelectorAll('ren-dropzone').forEach((element) => initDropZone(element));
+  document.querySelectorAll('div').forEach((element) => initDropZone(element));
 </script>

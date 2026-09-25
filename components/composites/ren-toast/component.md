@@ -171,6 +171,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- The viewport `aria-label` comes from `utils/i18n.js` (`toast.region`) and is resolved when the viewport connects, while each toast's close-button label (`toast.close`) is resolved when that toast is created — call `setLocale()` before the viewport is inserted so both read the intended locale.
 
 ## Related Files
 

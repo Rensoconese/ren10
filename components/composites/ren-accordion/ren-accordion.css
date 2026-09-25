@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /**
  * RenDS — <ren-accordion> Component
  * ═══════════════════════════════════
@@ -322,4 +325,6 @@
 @media (prefers-color-scheme: dark) {
   /* Tokens like --color-text, --color-border, etc. should already be defined
      in the design system's color token reset. No additional changes needed. */
+}
+
 }

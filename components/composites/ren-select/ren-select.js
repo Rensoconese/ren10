@@ -27,15 +27,24 @@
  * </ren-select>
  *
  * @fires ren-select-change - Dispatched when selection changes
+ * @fires ren-select-open - Dispatched when the listbox opens
+ * @fires ren-select-close - Dispatched when the listbox closes
  * @fires change - Standard change event for form submission
  */
 
 import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
+import { t } from '../../../utils/i18n.js';
 import { createDismissable } from '../../../utils/dismissable.js';
 import { autoId } from '../../../utils/id-generator.js';
+import { computeOverlayPosition } from '../../../utils/positioning.js';
 
 const SELECT_SIDES = new Set(['top', 'right', 'bottom', 'left']);
 const SELECT_ALIGNS = new Set(['start', 'end']);
+
+/** Distance between the trigger and the dropdown. */
+const SELECT_GAP = 8;
+/** Viewport inset the dropdown keeps — it never sits flush against an edge. */
+const SELECT_MARGIN = 16;
 
 function normalizeSelectPlacement(value) {
   const [sideValue, alignValue] = String(value || 'bottom')
@@ -45,100 +54,6 @@ function normalizeSelectPlacement(value) {
   const align = SELECT_ALIGNS.has(alignValue) ? alignValue : 'start';
 
   return { side, align };
-}
-
-/**
- * Compute dropdown position relative to trigger element.
- * Falls back above if not enough space below.
- *
- * @private
- * @param {HTMLElement} trigger - Trigger button element
- * @param {HTMLElement} content - Dropdown content element
- * @param {Object} placement - Normalized placement object
- * @returns {Object} Position with top, left, flipped, side, and align properties
- */
-function computePosition(trigger, content, placement = normalizeSelectPlacement()) {
-  const triggerRect = trigger.getBoundingClientRect();
-  const contentRect = content.getBoundingClientRect();
-  const viewport = {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  };
-  const gap = 8;
-  const margin = 16;
-
-  let finalSide = placement.side;
-  let flipped = false;
-  let top = triggerRect.bottom + gap;
-  let left = triggerRect.left;
-
-  if (placement.align === 'end') {
-    left = triggerRect.right - contentRect.width;
-  }
-
-  if (placement.side === 'top') {
-    top = triggerRect.top - contentRect.height - gap;
-  } else if (placement.side === 'right') {
-    top = placement.align === 'end'
-      ? triggerRect.bottom - contentRect.height
-      : triggerRect.top;
-    left = triggerRect.right + gap;
-  } else if (placement.side === 'left') {
-    top = placement.align === 'end'
-      ? triggerRect.bottom - contentRect.height
-      : triggerRect.top;
-    left = triggerRect.left - contentRect.width - gap;
-  }
-
-  if (
-    placement.side === 'bottom' &&
-    top + contentRect.height > viewport.height - margin &&
-    triggerRect.top - contentRect.height - gap >= margin
-  ) {
-    top = triggerRect.top - contentRect.height - gap;
-    finalSide = 'top';
-    flipped = true;
-  } else if (
-    placement.side === 'top' &&
-    top < margin &&
-    triggerRect.bottom + contentRect.height + gap <= viewport.height - margin
-  ) {
-    top = triggerRect.bottom + gap;
-    finalSide = 'bottom';
-    flipped = true;
-  } else if (
-    placement.side === 'right' &&
-    left + contentRect.width > viewport.width - margin &&
-    triggerRect.left - contentRect.width - gap >= margin
-  ) {
-    left = triggerRect.left - contentRect.width - gap;
-    finalSide = 'left';
-    flipped = true;
-  } else if (
-    placement.side === 'left' &&
-    left < margin &&
-    triggerRect.right + contentRect.width + gap <= viewport.width - margin
-  ) {
-    left = triggerRect.right + gap;
-    finalSide = 'right';
-    flipped = true;
-  }
-
-  if (left + contentRect.width > viewport.width - margin) {
-    left = viewport.width - contentRect.width - margin;
-  }
-  if (left < margin) {
-    left = margin;
-  }
-
-  if (top + contentRect.height > viewport.height - margin) {
-    top = viewport.height - contentRect.height - margin;
-  }
-  if (top < margin) {
-    top = margin;
-  }
-
-  return { top, left, flipped, side: finalSide, align: placement.align };
 }
 
 /**
@@ -164,6 +79,12 @@ export class RenSelect extends HTMLElement {
   #animationFrame = null;
   #listenerController = null;
   #scrollController = null;
+  /**
+   * Placeholder text the consumer authored inside the trigger, read once
+   * before the component takes the trigger over. Null until first mount so a
+   * disconnect/reconnect cycle never mistakes a rendered value for it.
+   */
+  #authoredPlaceholder = null;
 
   constructor() {
     super();
@@ -184,6 +105,11 @@ export class RenSelect extends HTMLElement {
     this.setupARIA();
     this.setupHiddenInput();
     this.attachListeners();
+    // Render the trigger on mount. Without this the component only painted
+    // itself after the first selection, so the canonical markup showed an
+    // empty trigger — no placeholder, no chevron — until the user guessed
+    // that the blank box opened a listbox.
+    this.updateTriggerDisplay();
   }
 
   disconnectedCallback() {
@@ -253,6 +179,22 @@ export class RenSelect extends HTMLElement {
       this.createDefaultStructure();
     }
 
+    // The consumer marks the parts with data-* attributes; the classes carry
+    // the styling. Adding them here means [data-select-trigger] renders as a
+    // trigger instead of an unstyled 24px-tall button.
+    this.#trigger.classList.add('ren-select-trigger');
+    this.#content.classList.add('ren-select-content');
+
+    // Read the authored placeholder before updateTriggerDisplay() replaces the
+    // trigger contents, so <button data-select-trigger>Choose a country</button>
+    // keeps its wording even without a placeholder attribute.
+    if (this.#authoredPlaceholder === null) {
+      this.#authoredPlaceholder =
+        this.#trigger.querySelector('.ren-select-placeholder')?.textContent?.trim() ||
+        this.#trigger.textContent?.trim() ||
+        '';
+    }
+
     // Cache items
     this.updateItems();
     this.syncPlacement();
@@ -295,6 +237,8 @@ export class RenSelect extends HTMLElement {
     this.#trigger.setAttribute('aria-controls', contentId);
     this.#trigger.type = 'button';
 
+    this.applyTriggerLabel();
+
     // Content setup
     this.#content.setAttribute('role', 'listbox');
     this.#content.id = contentId;
@@ -303,13 +247,82 @@ export class RenSelect extends HTMLElement {
     }
 
     // Set aria-label on content based on trigger text or placeholder
-    const placeholder = this.getAttribute('placeholder') || 'Select an option';
-    if (!this.#content.getAttribute('aria-label')) {
-      this.#content.setAttribute('aria-label', placeholder);
+    if (!this.#content.getAttribute('aria-label') && !this.#content.getAttribute('aria-labelledby')) {
+      this.#content.setAttribute('aria-label', this.placeholderText);
     }
 
     // Wire up items
     this.updateItemsARIA();
+  }
+
+  /**
+   * Give the trigger an accessible name.
+   *
+   * `role="combobox"` is name-from-author: the placeholder rendered inside the
+   * button is read as the combobox *value*, never as its name. A trigger with
+   * visible text therefore still failed WCAG 4.1.2 (axe `button-name`,
+   * critical) on every mount, including the one in this contract. Resolution
+   * order, most explicit first:
+   *
+   *   1. aria-labelledby / aria-label already on the trigger — the author wins.
+   *   2. The same attributes on the host, moved down onto the trigger. A name
+   *      on the role-less host is exposed to nobody, so it is relocated rather
+   *      than copied.
+   *   3. A <label for="{host id}"> or a wrapping <label>, referenced by id.
+   *   4. The placeholder text — the same string the listbox is labelled with.
+   *
+   * @private
+   */
+  applyTriggerLabel() {
+    const named = (element) =>
+      Boolean(element.getAttribute('aria-labelledby')?.trim() || element.getAttribute('aria-label')?.trim());
+
+    if (named(this.#trigger)) return;
+
+    for (const attribute of ['aria-labelledby', 'aria-label']) {
+      const value = this.getAttribute(attribute)?.trim();
+      if (!value) continue;
+      this.#trigger.setAttribute(attribute, value);
+      this.removeAttribute(attribute);
+      return;
+    }
+
+    const label =
+      (this.id && this.ownerDocument.querySelector(`label[for="${CSS.escape(this.id)}"]`)) ||
+      this.closest('label');
+    if (label && !label.contains(this)) {
+      this.#trigger.setAttribute('aria-labelledby', autoId(label, 'select-label'));
+      return;
+    }
+    if (label) {
+      // A wrapping <label> cannot be referenced: aria-labelledby reads the whole
+      // subtree, so the select's own placeholder and options would end up inside
+      // its name. Take the label's own text instead.
+      const ownText = [...label.childNodes]
+        .filter((node) => node !== this && !(node.nodeType === Node.ELEMENT_NODE && node.contains(this)))
+        .map((node) => node.textContent?.trim() || '')
+        .filter(Boolean)
+        .join(' ');
+      if (ownText) {
+        this.#trigger.setAttribute('aria-label', ownText);
+        return;
+      }
+    }
+
+    this.#trigger.setAttribute('aria-label', this.placeholderText);
+  }
+
+  /**
+   * Text shown when nothing is selected, and the fallback accessible name.
+   *
+   * @returns {string}
+   */
+  get placeholderText() {
+    return (
+      this.getAttribute('placeholder') ||
+      this.#authoredPlaceholder ||
+      t('select.placeholder')
+    );
   }
 
   /**
@@ -594,7 +607,7 @@ export class RenSelect extends HTMLElement {
     announcement.setAttribute('role', 'status');
     announcement.setAttribute('aria-live', 'polite');
     announcement.className = 'ren-sr-only';
-    announcement.textContent = `${resultCount} option${resultCount !== 1 ? 's' : ''} available`;
+    announcement.textContent = t('select.optionsAvailable', { count: resultCount });
     this.appendChild(announcement);
     setTimeout(() => announcement.remove(), 1000);
 
@@ -649,7 +662,21 @@ export class RenSelect extends HTMLElement {
    */
   positionContent() {
     const placement = normalizeSelectPlacement(this.getAttribute('placement'));
-    const { top, left, flipped, side, align } = computePosition(this.#trigger, this.#content, placement);
+    // Unlike popover/tooltip the dropdown aligns to a trigger edge instead of
+    // centring, keeps a margin from every viewport edge, and clamps on both
+    // axes — a listbox pushed off-screen is unusable, not just clipped.
+    const { x: left, y: top, side, align, flipped } = computeOverlayPosition(
+      this.#trigger,
+      this.#content,
+      {
+        side: placement.side,
+        align: placement.align,
+        offset: SELECT_GAP,
+        overflowPadding: SELECT_MARGIN,
+        clampPadding: SELECT_MARGIN,
+        clampAxis: 'both',
+      }
+    );
 
     this.#content.style.position = 'fixed';
     this.#content.style.top = `${top}px`;
@@ -771,7 +798,7 @@ export class RenSelect extends HTMLElement {
    * @private
    */
   updateTriggerDisplay() {
-    const placeholder = this.getAttribute('placeholder') || 'Select an option';
+    const placeholder = this.placeholderText;
 
     this.querySelector(':scope > .ren-select-chips[data-ren-select-chips]')?.remove();
 
@@ -796,7 +823,7 @@ export class RenSelect extends HTMLElement {
         remove.type = 'button';
         remove.className = 'ren-select-chip-remove';
         remove.dataset.value = value;
-        remove.setAttribute('aria-label', `Remove ${label.textContent}`);
+        remove.setAttribute('aria-label', t('select.removeOption', { label: label.textContent }));
         remove.textContent = '×';
         remove.addEventListener('click', (event) => {
           event.preventDefault();

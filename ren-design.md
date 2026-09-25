@@ -2,7 +2,7 @@
 # ────────────────────────────────────────────────────────────
 # RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.13.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.14.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
@@ -17,7 +17,7 @@
 
 system:
   name: RenDS
-  version: 0.13.0
+  version: 0.14.0
   package: ren10
   license: MIT
   repo: https://github.com/Rensoconese/ren10
@@ -394,7 +394,7 @@ layout:
     page-top:            space-12
     page-bottom:         space-16
     stack-tight:         space-2
-    stack:               space-4
+    stack:               space-density-row  # 12px comfortable, 8px compact, 16px spacious
     stack-loose:         space-6
 
   density:
@@ -667,6 +667,21 @@ counts:
 A vanilla, accessible, atomic design system. No framework required, no Shadow
 DOM, no runtime — just CSS custom properties, custom elements, and web
 standards that have been in Chrome, Firefox, and Safari stable for years.
+
+## CSS delivery and composition contracts
+
+The full `index.css`, `foundation.css` plus selective components, Astro direct
+component imports, and the generated `dist/` bundles share the cascade order
+`reset, tokens, base, components, utilities`. Each component CSS file declares
+its own layer; import it directly without adding another `layer(components)`.
+Normal unlayered consumer CSS overrides the system. See `MIGRATION.md` before
+removing older site patches.
+
+For stack spacing ownership and nesting, load `base/layouts.md`. For card
+media and sectionless padding, load the card's colocated contract. Practical
+CTA/form/navigation compositions live in `docs/composition-recipes.md` and
+`examples/tour-composition.html`. Verify the installed copy and skill using
+`scripts/check-agent-provenance.mjs`; a version string alone is insufficient.
 
 ## Agent Routing Contract
 

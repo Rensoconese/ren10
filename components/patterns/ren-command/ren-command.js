@@ -3,6 +3,8 @@
  * Modern dialog-based command palette with keyboard navigation
  */
 
+import { t } from '../../../utils/i18n.js';
+
 const KEYBOARD_CODES = {
   Escape: 'Escape',
   Enter: 'Enter',
@@ -231,9 +233,11 @@ class RenCommand extends HTMLElement {
     }
 
     if (resultCount === 0) {
-      announcement.textContent = 'No results found';
+      // Resolved per announcement, so a setLocale() before the next keystroke
+      // is honoured. Static markup strings still resolve at build/parse time.
+      announcement.textContent = t('command.noResults');
     } else {
-      announcement.textContent = `${resultCount} result${resultCount !== 1 ? 's' : ''} available`;
+      announcement.textContent = t('command.resultsAvailable', { count: resultCount });
     }
   }
 

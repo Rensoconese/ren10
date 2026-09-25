@@ -58,8 +58,10 @@ canonicalImports:
 requiredMarkup:
   - "A single .ren-card root wrapping any number of .ren-card-header, .ren-card-body, .ren-card-footer."
   - ".ren-card-title is the heading; use a real <h*> element inside it for outline / a11y."
-  - "Selectable cards must wire aria-selected (or [data-selected]) AND a keyboard handler — the class only styles."
+  - "Selectable cards must wire a state attribute AND a keyboard handler — the class only styles. Pick the attribute the card's role allows: aria-pressed on a <button>, aria-checked with role=\"radio\"/\"checkbox\", a real checked <input> inside a <label>, or [data-selected] for a decorative sample. aria-selected is legal only on option/tab/row/gridcell/treeitem — on a bare <div> or <label> it fails aria-allowed-attr."
   - "Interactive cards (whole-card click) should wrap content in a real <a> or <button>, not a div with onclick."
+  - "Media uses .ren-card-cover as a direct child: either <img class=\"ren-card-cover\" alt=\"...\"> or a wrapper (<div> or <figure class=\"ren-card-cover\">) with one <img> inside. The slot is edge-to-edge in either position (first or last)."
+  - ".ren-card-simple is only for sectionless content. Do not combine it with header, body, footer, footer-border, or cover — the root padding would stack on those slots."
 
 forbiddenPatterns:
   - "Nesting another .ren-card inside .ren-card-body — flatten the structure."
@@ -78,7 +80,8 @@ accessibility:
   required:
     - "Card titles use real heading elements (<h2>, <h3>) — never style a <div> as a heading."
     - "Whole-card click targets must use <a> or <button> wrappers and respect tab order / focus rings."
-    - "Selectable cards announce state via aria-selected + data-selected; pair with keyboard activation."
+    - "Selectable cards announce state through an attribute their role supports (aria-pressed on <button>, aria-checked with role=radio/checkbox, or a real <input>); [data-selected] is a styling hook only and announces nothing."
+    - "Never put aria-selected on a role-less .ren-card — it is a prohibited attribute there, not a state."
     - "[data-status] is decorative; pair it with meaningful text or icons, not color alone."
 ```
 
@@ -116,7 +119,8 @@ Interactive (whole-card click) with link wrapper:
 </a>
 ```
 
-Selectable in a grid:
+Selectable in a grid (toggle form — `aria-pressed` drives both the semantics
+and the accent ring):
 
 ```html
 <div class="ren-grid-3">
@@ -125,6 +129,17 @@ Selectable in a grid:
     <span class="ren-card-description">$0/mo</span>
   </button>
 </div>
+```
+
+Exclusive choice (radio form — the real `<input>` carries the state, and
+`:has(:checked)` paints the ring; no ARIA needed):
+
+```html
+<label class="ren-card ren-card-selectable">
+  <input type="radio" name="plan" class="ren-sr-only" checked>
+  <span class="ren-card-title">Pro</span>
+  <span class="ren-card-description">$12/mo</span>
+</label>
 ```
 
 ## Variants
@@ -136,12 +151,38 @@ Selectable in a grid:
 | `.ren-card-outline`     | Border-only, transparent fill.            |
 | `.ren-card-sunken`      | Inset surface (sunken background).        |
 | `.ren-card-ghost`       | No surface; spacing only.                 |
-| `.ren-card-simple`      | Reduced padding for dense lists.          |
+| `.ren-card-simple`      | One root padding for sectionless content. |
 | `.ren-card-interactive` | Hover / focus styles for clickable cards. |
-| `.ren-card-selectable`  | Toggleable card; pair with `aria-selected`. |
-| `.ren-card-cover`       | Edge-to-edge media slot at the top.       |
+| `.ren-card-selectable`  | Selectable surface; use role-appropriate state. |
+| `.ren-card-cover`       | Edge-to-edge media slot (image or wrapper). |
 | `.ren-card-group`       | Joined sibling cards with shared borders. |
 | `.ren-card-footer-border` | Footer with top divider.                |
+
+## Slot spacing
+
+Direct children of `.ren-card` fall into two groups. Named slots own their
+padding. Everything else is loose content and only the first and last loose
+children receive `--ren-card-padding` on the outer edge.
+
+| Slot | Markup | Block padding |
+|---|---|---|
+| Header | `.ren-card-header` | `--ren-card-padding` on top and inline edges; bottom is `0`. |
+| Body | `.ren-card-body` | `--ren-card-padding` on every side. After a header, top tightens to `--space-3`. |
+| Footer | `.ren-card-footer` | `--ren-card-padding` on bottom and inline edges; top is `0`. |
+| Bordered footer | `.ren-card-footer-border` | `--space-3` block, `--ren-card-padding` inline, plus a top divider. After a header, top tightens to `--space-2`. The first/last-child fallback does not add `--ren-card-padding` on top of this. |
+| Cover, image | `<img class="ren-card-cover" alt="...">` | `0` on every side, first or last. The image is `width: 100%`, `display: block`, `object-fit: cover`, and sits flush with the card's border box. |
+| Cover, wrapper | `<div class="ren-card-cover">` or `<figure class="ren-card-cover">` with one `<img>` | The wrapper is flush (`margin: 0`, `padding: 0`) in either position. The inner image fills the wrapper the same way. |
+| Loose content | Any other first/last child, such as a `<p>` | `--ren-card-padding` on the outer edge only (`padding-top` if first, `padding-bottom` if last). |
+| Simple | `.ren-card.ren-card-simple` around sectionless content | `--ren-card-padding` once, on the card root. Children do not receive the loose-content fallback. |
+
+Adjacent named slots (header, body, footer, footer-border) separate with
+`--ren-card-gap` (default `0`). Cover is not part of that stack, so it does
+not pick up section gap or section padding.
+
+Give the image an `alt`. A decorative cover uses `alt=""`. Do not put
+`.ren-card-cover` inside `.ren-card-simple` or `.ren-card-body` — those
+parents already inset their content, and the cover would no longer be
+edge-to-edge.
 
 ## States
 
@@ -149,7 +190,11 @@ Selectable in a grid:
 |------------------------|---------------------------------------------|
 | `:hover` / `:active`   | Pointer interaction (interactive cards).    |
 | `:focus-visible`       | Keyboard focus ring (interactive cards).    |
-| `[aria-selected="true"]` / `[data-selected]` | Selection state.       |
+| `[aria-selected="true"]` | Selection state — only on a card whose role supports it (option / tab / row / gridcell / treeitem). |
+| `[aria-pressed="true"]` | Selection state for the `<button>` form.    |
+| `[aria-checked="true"]` | Selection state for `role="radio"` / `role="checkbox"`. |
+| `:has(:checked)`       | Selection driven by a real `<input>` inside a `<label>` card. |
+| `[data-selected]`      | Decorative selection styling; announces nothing. |
 | `[data-status="success" / "warning" / "danger" / "info"]` | Status accent. |
 
 ## Public Token API
@@ -167,8 +212,12 @@ Selectable in a grid:
 
 - Card titles are real `<h*>` elements; never style a `<div>` as a heading.
 - Whole-card clickability wraps the entire card in a real `<a>` or `<button>`.
-- Selectable cards must expose `aria-selected` (or `aria-pressed`) plus a
-  visible focus ring via `:focus-visible`.
+- Selectable cards must expose the state attribute their role allows —
+  `aria-pressed` on a `<button>`, `aria-checked` with `role="radio"` /
+  `role="checkbox"`, or a real `<input>` — plus a visible focus ring via
+  `:focus-visible`. `aria-selected` is reserved for cards that carry
+  `option` / `tab` / `row` / `gridcell` / `treeitem`; anywhere else it is a
+  prohibited attribute (axe: `aria-allowed-attr`).
 - `[data-status]` is decorative; status meaning must be carried by text or
   icons too.
 
@@ -176,10 +225,18 @@ Selectable in a grid:
 
 - ❌ `<div class="ren-card" onclick="...">` — wrap with a real link / button.
 - ❌ Nesting `.ren-card` inside `.ren-card-body`.
+- ❌ `<div class="ren-card ren-card-selectable" aria-selected="true">` — a
+  role-less card cannot carry `aria-selected`. Use `aria-pressed` on a
+  `<button>`, `aria-checked` with an explicit role, a real `<input>`, or
+  `[data-selected]` when the card is only a visual sample.
 - ❌ Inline hex colors on `.ren-card { background: #FFFFFF; }` — override
   `--ren-card-bg` on the parent scope.
 - ❌ Replacing built-in selectors (`.ren-card-title`) with custom classes
   for theming — theme through component tokens.
+- ❌ Putting padding or margin on `.ren-card-cover` to "inset" a photo —
+  the slot is edge-to-edge; inset media belongs in `.ren-card-body`.
+- ❌ Combining `.ren-card-simple` with header, body, footer, or cover —
+  simple padding is the root padding for sectionless content only.
 
 ## Related Files
 

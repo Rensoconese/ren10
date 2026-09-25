@@ -7,12 +7,11 @@
    3. Utilities (essential helper classes)
    4. Layouts (composable layout primitives)
 
-   Note: When imported via index.css, this entire
-   file lives inside @layer base. The reset is
-   promoted to @layer reset for lowest priority.
+   Each import owns its layer. Entry points declare the
+   shared reset, tokens, base, components, utilities order.
    ============================================ */
 
-@import './reset.css' layer(reset);
+@import './reset.css';
 @import './classless.css' layer(base);
 @import './utilities.css' layer(utilities);
 @import './layouts.css' layer(base);

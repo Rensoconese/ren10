@@ -34,6 +34,9 @@
  * @fires ren-input - Dispatched during interactive changes
  */
 
+import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { t } from '../../../utils/i18n.js';
+
 /* ═════════════════════════════════════════════════════════════════════
    COLOR CONVERSION UTILITIES
    ═════════════════════════════════════════════════════════════════════ */
@@ -277,6 +280,7 @@ function normalizeColorPickerSide(value) {
 
 export class RenColorPicker extends HTMLElement {
   static observedAttributes = ['placement'];
+  static supportsAnchor = supportsAnchorPositioning();
 
   #isOpen = false;
   #hsv = { h: 0, s: 100, v: 100, a: 1 };
@@ -285,6 +289,7 @@ export class RenColorPicker extends HTMLElement {
   #dragState = null;
   #popover = null;
   #trigger = null;
+  #anchorLink = null;
   #isDragging = false;
   #listenerController = null;
 
@@ -356,6 +361,9 @@ export class RenColorPicker extends HTMLElement {
       this.#trigger.setAttribute('popovertarget', popoverId);
     }
 
+    // Trigger and dropdown both exist now — wire their anchor pairing.
+    this.#linkAnchor();
+
     this.#syncPlacement();
 
     // ═══ POPULATE POPOVER ON OPEN ═══
@@ -378,6 +386,8 @@ export class RenColorPicker extends HTMLElement {
   disconnectedCallback() {
     this.#listenerController?.abort();
     this.#listenerController = null;
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
   }
@@ -385,6 +395,26 @@ export class RenColorPicker extends HTMLElement {
   /* ═════════════════════════════════════════════════════════════════
      RENDERING METHODS
      ═════════════════════════════════════════════════════════════════ */
+
+  /**
+   * Pair this instance's trigger with its dropdown using a unique anchor name.
+   *
+   * `anchor-name` is a document-wide identifier: if every trigger declared the
+   * same name from the stylesheet, the spec would resolve it to the *last*
+   * matching element in tree order and every dropdown on the page would
+   * position itself against the final trigger. The name is therefore generated
+   * per instance and injected inline. Safe to call again after the trigger or
+   * dropdown is rebuilt — the previous pairing is released first.
+   */
+  #linkAnchor() {
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
+
+    if (!RenColorPicker.supportsAnchor) return;
+    if (!this.#trigger || !this.#popover) return;
+
+    this.#anchorLink = createAnchorLink(this.#trigger, this.#popover, 'ren-color-picker');
+  }
 
   #syncPlacement() {
     const side = normalizeColorPickerSide(this.getAttribute('placement'));
@@ -416,10 +446,15 @@ export class RenColorPicker extends HTMLElement {
       <div class="ren-color-picker-trigger-value">${hex}</div>
     `;
 
-    trigger.setAttribute('aria-label', `Color picker, current color ${hex}`);
+    trigger.setAttribute('aria-label', t('colorPicker.trigger', { color: hex }));
 
     this.insertBefore(trigger, this.#popover);
     this.#trigger = trigger;
+
+    // The old trigger carried the injected anchor name; re-pair the new one.
+    // No-op while the dropdown does not exist yet (first pass in
+    // connectedCallback, which links explicitly once both are in place).
+    this.#linkAnchor();
   }
 
   /**
@@ -434,7 +469,7 @@ export class RenColorPicker extends HTMLElement {
     // ═══ SATURATION/BRIGHTNESS AREA ═══
     const saturationContainer = document.createElement('div');
     saturationContainer.className = 'ren-color-picker-saturation';
-    saturationContainer.setAttribute('aria-label', 'Color saturation and brightness');
+    saturationContainer.setAttribute('aria-label', t('colorPicker.saturation'));
 
     this.#saturationCanvas = document.createElement('canvas');
     this.#saturationCanvas.className = 'ren-color-picker-saturation-canvas';
@@ -456,7 +491,7 @@ export class RenColorPicker extends HTMLElement {
     // ═══ HUE SLIDER ═══
     const hueContainer = document.createElement('div');
     hueContainer.className = 'ren-color-picker-hue';
-    hueContainer.setAttribute('aria-label', 'Color hue');
+    hueContainer.setAttribute('aria-label', t('colorPicker.hue'));
     hueContainer.setAttribute('role', 'slider');
     hueContainer.setAttribute('aria-valuenow', this.#hsv.h);
     hueContainer.setAttribute('aria-valuemin', '0');
@@ -481,7 +516,7 @@ export class RenColorPicker extends HTMLElement {
     if (hasAlpha) {
       const alphaContainer = document.createElement('div');
       alphaContainer.className = 'ren-color-picker-alpha';
-      alphaContainer.setAttribute('aria-label', 'Color opacity');
+      alphaContainer.setAttribute('aria-label', t('colorPicker.opacity'));
       alphaContainer.setAttribute('role', 'slider');
       alphaContainer.setAttribute('aria-valuenow', Math.round(this.#hsv.a * 100));
       alphaContainer.setAttribute('aria-valuemin', '0');
@@ -521,7 +556,7 @@ export class RenColorPicker extends HTMLElement {
 
     const label = document.createElement('div');
     label.className = 'ren-color-picker-preview-label';
-    label.textContent = 'Current';
+    label.textContent = t('colorPicker.current');
 
     const value = document.createElement('div');
     value.className = 'ren-color-picker-preview-value';
@@ -544,7 +579,7 @@ export class RenColorPicker extends HTMLElement {
     hexInput.type = 'text';
     hexInput.placeholder = '#000000';
     hexInput.value = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
-    hexInput.setAttribute('aria-label', 'Hex color value');
+    hexInput.setAttribute('aria-label', t('colorPicker.hexValue'));
     hexInput.disabled = disabled;
     hexInput.addEventListener('change', this.handleInputChange);
     inputsSection.appendChild(hexInput);
@@ -612,7 +647,7 @@ export class RenColorPicker extends HTMLElement {
     formatToggle.className = 'ren-color-picker-format-toggle';
     formatToggle.type = 'button';
     formatToggle.textContent = this.#format.toUpperCase();
-    formatToggle.setAttribute('aria-label', 'Toggle color format between HEX, RGB, and HSL');
+    formatToggle.setAttribute('aria-label', t('colorPicker.formatToggle'));
     formatToggle.disabled = disabled;
     formatToggle.addEventListener('click', this.handleFormatToggle);
 
@@ -623,7 +658,7 @@ export class RenColorPicker extends HTMLElement {
       const eyedropperBtn = document.createElement('button');
       eyedropperBtn.className = 'ren-color-picker-eyedropper';
       eyedropperBtn.type = 'button';
-      eyedropperBtn.setAttribute('aria-label', 'Pick color from screen');
+      eyedropperBtn.setAttribute('aria-label', t('colorPicker.eyeDropper'));
       eyedropperBtn.disabled = disabled;
 
       // Simple eyedropper icon (SVG)
@@ -643,14 +678,14 @@ export class RenColorPicker extends HTMLElement {
     if (swatches.trim()) {
       const swatchesContainer = document.createElement('div');
       swatchesContainer.className = 'ren-color-picker-swatches';
-      swatchesContainer.setAttribute('aria-label', 'Preset color swatches');
+      swatchesContainer.setAttribute('aria-label', t('colorPicker.presets'));
 
       const colors = swatches.split(',').map((s) => s.trim());
       colors.forEach((color) => {
         const swatch = document.createElement('button');
         swatch.className = 'ren-color-picker-swatch';
         swatch.type = 'button';
-        swatch.setAttribute('aria-label', `Color ${color}`);
+        swatch.setAttribute('aria-label', t('colorPicker.swatch', { color }));
 
         const colorDiv = document.createElement('div');
         colorDiv.className = 'ren-color-picker-swatch-color';

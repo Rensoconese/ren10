@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>i18n locale fixture</title>
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/components/composites/ren-number-field/ren-number-field.css" />
+    <link rel="stylesheet" href="/components/composites/ren-carousel/ren-carousel.css" />
+  </head>
+  <body class="ren-stack">
+    <h1>i18n locale fixture</h1>
+
+    <ren-number-field id="number-field" value="1" min="0" max="10"></ren-number-field>
+
+    <ren-carousel id="carousel">
+      <div class="ren-carousel-viewport">
+        <div class="ren-carousel-slide">One</div>
+        <div class="ren-carousel-slide">Two</div>
+      </div>
+    </ren-carousel>
+
+    <!--
+      Locale must be selected before the components upgrade: t() resolves at
+      DOM-build time, so a setLocale() call after mount cannot relabel already
+      rendered instances. `?locale=es` exercises the documented ordering.
+
+      Module scripts execute in document order, so this block runs to
+      completion before the component modules below evaluate.
+    -->
+    <script type="module">
+      const locale = new URLSearchParams(location.search).get('locale');
+      if (locale) {
+        const i18n = await import('/utils/i18n.js');
+        i18n.setLocale(locale);
+      }
+      await import('/components/composites/ren-number-field/ren-number-field.js');
+      await import('/components/composites/ren-carousel/ren-carousel.js');
+      document.body.dataset.ready = 'true';
+    </script>
+  </body>
+</html>

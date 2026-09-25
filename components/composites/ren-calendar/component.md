@@ -49,13 +49,17 @@ canonicalImports:
     - "Configure via attributes (value, mode, locale, first-day, min, max); avoid manual DOM mutations on .ren-calendar-grid."
 
 requiredMarkup:
-  - "Render <ren-calendar> as the host; the component populates its own .ren-calendar-header, .ren-calendar-weekdays, and .ren-calendar-grid."
-  - "Each day cell is a real <button class=\"ren-calendar-day\"> with aria-selected and (when applicable) data-today / data-outside / [disabled]."
+  - "Render <ren-calendar> as the host; the component populates its own .ren-calendar-header and .ren-calendar-grid."
+  - "The grid follows the ARIA grid structure: .ren-calendar-grid[role=\"grid\"] > rows only — .ren-calendar-weekdays[role=\"row\"] (the header row, 7 × .ren-calendar-weekday[role=\"columnheader\"]) followed by 6 × .ren-calendar-week[role=\"row\"] (7 × [role=\"gridcell\"] each). Cells are never direct children of the grid."
+  - "Rows are ARIA structure only: .ren-calendar-weekdays and .ren-calendar-week are display: contents inside the grid, so the 7-column track stays on .ren-calendar-grid. Do not give them their own layout."
+  - "Each day cell is a real <button class=\"ren-calendar-day\" role=\"gridcell\"> with aria-selected and (when applicable) data-today / data-outside / [disabled]."
   - "Navigation arrows use .ren-calendar-prev / .ren-calendar-next inside .ren-calendar-nav and rely on the component's chevron pseudo-elements."
   - "Use .ren-calendar-sm or .ren-calendar-lg on the host for size variants; do not invent custom size classes."
   - "For ranges, the component sets .ren-calendar-day-range-start, .ren-calendar-day-in-range, .ren-calendar-day-range-end — do not author these by hand."
 
 forbiddenPatterns:
+  - "Putting [role=\"gridcell\"] or [role=\"columnheader\"] directly under [role=\"grid\"] without a [role=\"row\"] wrapper — fails axe aria-required-children and aria-required-parent (WCAG 2.1 A, 1.3.1)."
+  - "Giving .ren-calendar-week or the in-grid .ren-calendar-weekdays a display other than contents — it breaks the shared 7-column track and misaligns headers from cells."
   - "Replacing day <button>s with <div role=\"button\"> — breaks keyboard + screen reader expectations."
   - "Hardcoded today highlight (border: 2px solid #...) — rely on [data-today] and --color-accent."
   - "Toggling a day's selected state by adding a custom class instead of aria-selected=\"true\"."
@@ -74,6 +78,9 @@ tokenPolicy:
 
 accessibility:
   required:
+    - "The grid is a complete ARIA grid: role=\"grid\" > role=\"row\" > role=\"columnheader\" / role=\"gridcell\". A flat grid of gridcells is invalid ARIA and screen readers lose row/column context."
+    - "The weekday header row lives INSIDE the grid as role=\"row\" with role=\"columnheader\" cells, so AT can announce the weekday alongside the date; each columnheader carries the full locale weekday name in aria-label because the visible text is a 2-letter abbreviation."
+    - "The grid is named by the month/year title through aria-labelledby, so entering it announces the month being browsed."
     - "Day cells implement the ARIA grid pattern with a single roving tabindex; never expose more than one tab stop in the grid."
     - "Keyboard: Arrow keys move focus between days, PageUp/PageDown move months, Home/End jump within a week — preserve these in any customization."
     - "Selected days set aria-selected=\"true\"; do not communicate selection through color alone."
@@ -115,6 +122,7 @@ Use the docs page and source files listed below for full examples before adding 
 - `.ren-calendar-prev`
 - `.ren-calendar-sm`
 - `.ren-calendar-title`
+- `.ren-calendar-week`
 - `.ren-calendar-weekday`
 - `.ren-calendar-weekdays`
 

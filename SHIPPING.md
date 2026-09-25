@@ -47,8 +47,9 @@ While CI runs, expect:
   agent CLI JSON surface, `ren10 doctor`, evals, knowledge graph/package
   files, and the versioned skill.
 - **Local portability**: `npm test` delegates to `npm run test:portable` and
-  excludes platform-specific screenshots. CI/release run the authoritative
-  `npm run test:visual:linux` gate separately.
+  excludes screenshots. CI/release run the authoritative
+  `npm run test:visual:linux` gate separately; it renders inside the pinned
+  Playwright container, so it reproduces anywhere Docker runs.
 - **Release/package gates**: installed-tarball smoke, versioned budgets,
   runtime/full moderate audits, release metadata, and supply-chain checks are
   blocking in CI and release verification.
@@ -112,7 +113,8 @@ ls rends/    # tokens/  base/  components/  index.css ...
 | `npm publish` fails with `403 Forbidden`                                      | `NPM_TOKEN` is wrong or expired. Regenerate at npmjs.com (type "Automation").                                                          |
 | `npm publish` fails with `403 You do not have permission to publish "rends"`  | The package name was rejected by npm's anti-typosquatting policy as 'too similar to existing packages'. Renamed to `ren10` in 0.8.4 (already applied; this row is left as a marker if the next rename round-trip ever repeats). |
 | `ci.yml` Firefox/WebKit a11y or components fail but Chromium passes           | Engine-specific bug surfaced by the matrix. Advisory; doesn't block merge. Investigate via the uploaded `playwright-report-*-firefox` (or `-webkit`) artifact. |
-| `ci.yml` visual job fails on Firefox/WebKit but Chromium passes               | Visual baselines are chromium/linux only by design. Firefox/WebKit visual runs always diff against those baselines — they're advisory. |
+| `ci.yml` visual job fails on Firefox/WebKit but Chromium passes               | Visual baselines are Chromium-only by design. Firefox/WebKit visual runs always diff against those baselines — they're advisory. |
+| Visual job fails on many unrelated sections with small (~200px) text diffs    | The run rendered outside the pinned container. `check:performance` fails if `ci.yml` and the installed `@playwright/test` disagree on the image tag; after a Playwright bump, update the tag and recapture with `npm run test:visual:linux -- --update-snapshots`. |
 | `npm ci` fails: lockfile out of sync                                          | Locally run `rm -rf node_modules package-lock.json && npm install`, recommit.                                                          |
 
 ---

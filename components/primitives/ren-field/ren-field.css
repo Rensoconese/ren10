@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Field Component (Input + Label + Error)
    ============================================
@@ -267,6 +270,13 @@ select.ren-input {
 }
 
 /* ─── Error Message ─── */
+/* A class selector outranks the UA's `[hidden] { display: none }`, so the JS
+   setting `error.hidden = true` could not hide this: any <span data-error>
+   with text stayed visible permanently. */
+.ren-field-error[hidden] {
+  display: none;
+}
+
 .ren-field-error {
   font-size: var(--caption-size);
   color: var(--ren-field-error-color);
@@ -337,4 +347,6 @@ select.ren-input {
 
 .ren-field:has(.ren-input:user-valid) .ren-field-error {
   display: none;
+}
+
 }

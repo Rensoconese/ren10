@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Separator
    ============================================
@@ -47,4 +50,6 @@
   flex: 1;
   height: var(--ren-separator-width);
   background-color: var(--ren-separator-color);
+}
+
 }

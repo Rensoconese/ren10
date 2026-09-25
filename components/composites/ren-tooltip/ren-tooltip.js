@@ -1,85 +1,10 @@
-const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
+import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { computeOverlayPosition } from '../../../utils/positioning.js';
 
-function supportsAnchorPositioning() {
-  return (
-    typeof CSS !== 'undefined' &&
-    typeof CSS.supports === 'function' &&
-    CSS.supports('anchor-name', '--ren-anchor') &&
-    CSS.supports('position-anchor', '--ren-anchor') &&
-    CSS.supports('position-area', 'top span-all')
-  );
-}
+const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
 
 function normalizePlacement(value, fallback = 'top') {
   return PLACEMENTS.has(value) ? value : fallback;
-}
-
-/**
- * Fallback position computation for browsers without CSS anchor positioning.
- * Used only when full CSS anchor positioning support is unavailable.
- *
- * @param {HTMLElement} trigger - The trigger element
- * @param {HTMLElement} tooltip - The tooltip element
- * @param {string} placement - Placement: 'top', 'right', 'bottom', 'left'
- * @param {number} offset - Offset in pixels between trigger and tooltip
- * @returns {Object} Position object with x, y, and finalPlacement properties
- */
-function computePosition(trigger, tooltip, placement = 'top', offset = 8) {
-  const triggerRect = trigger.getBoundingClientRect();
-  const tooltipRect = tooltip.getBoundingClientRect();
-  const viewport = { width: window.innerWidth, height: window.innerHeight };
-
-  let x = 0;
-  let y = 0;
-  let finalPlacement = placement;
-
-  const placements = {
-    top: () => {
-      x = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
-      y = triggerRect.top - tooltipRect.height - offset;
-      if (y < 0) {
-        finalPlacement = 'bottom';
-        return placements.bottom();
-      }
-      return { x, y };
-    },
-    bottom: () => {
-      x = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
-      y = triggerRect.bottom + offset;
-      if (y + tooltipRect.height > viewport.height) {
-        finalPlacement = 'top';
-        return placements.top();
-      }
-      return { x, y };
-    },
-    left: () => {
-      x = triggerRect.left - tooltipRect.width - offset;
-      y = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
-      if (x < 0) {
-        finalPlacement = 'right';
-        return placements.right();
-      }
-      return { x, y };
-    },
-    right: () => {
-      x = triggerRect.right + offset;
-      y = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
-      if (x + tooltipRect.width > viewport.width) {
-        finalPlacement = 'left';
-        return placements.left();
-      }
-      return { x, y };
-    },
-  };
-
-  const result = placements[placement]?.() || placements.top();
-
-  // Clamp X position within viewport
-  if (result.x < 0) result.x = 8;
-  else if (result.x + tooltipRect.width > viewport.width)
-    result.x = viewport.width - tooltipRect.width - 8;
-
-  return { ...result, finalPlacement };
 }
 
 /**
@@ -105,6 +30,7 @@ export class RenTooltip extends HTMLElement {
   #hideTimeout = null;
   #touchTimer = null;
   #listenerController = null;
+  #anchorLink = null;
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
@@ -163,9 +89,14 @@ export class RenTooltip extends HTMLElement {
       describedBy.add(this.id);
       this.#trigger.setAttribute('aria-describedby', [...describedBy].join(' '));
 
-      // Set up anchor relationship if CSS anchors are supported
+      // Set up anchor relationship if CSS anchors are supported.
+      // Unique per instance — a shared `anchor-name` resolves to the last
+      // matching element in tree order, so every tooltip on the page would
+      // render against the final trigger.
+      this.#anchorLink?.release();
+      this.#anchorLink = null;
       if (RenTooltip.supportsAnchor) {
-        this.#trigger.style.anchorName = '--tooltip-anchor';
+        this.#anchorLink = createAnchorLink(this.#trigger, this, 'ren-tooltip');
       } else {
         // Fallback: ensure trigger can be positioned relative to
         if (getComputedStyle(this.#trigger).position === 'static') {
@@ -289,16 +220,14 @@ export class RenTooltip extends HTMLElement {
     const placement = normalizePlacement(this.getAttribute('placement'), 'top');
     const offset = parseInt(this.getAttribute('offset')) || 8;
 
-    const { x, y, finalPlacement } = computePosition(
-      this.#trigger,
-      this,
-      placement,
-      offset
-    );
+    const { x, y, side } = computeOverlayPosition(this.#trigger, this, {
+      side: placement,
+      offset,
+    });
 
     this.style.left = `${x}px`;
     this.style.top = `${y}px`;
-    this.setAttribute('data-side', finalPlacement);
+    this.setAttribute('data-side', side);
   }
 
   #syncPlacement() {
@@ -370,6 +299,8 @@ export class RenTooltip extends HTMLElement {
     this.clearTimeouts();
     this.#listenerController?.abort();
     this.#listenerController = null;
+    this.#anchorLink?.release();
+    this.#anchorLink = null;
     if (this.#trigger) {
       const describedBy = (this.#trigger.getAttribute('aria-describedby') || '')
         .split(/\s+/)

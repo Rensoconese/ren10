@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Card Component
    ============================================
@@ -104,16 +107,21 @@
   padding-top: var(--space-2);
 }
 
-/* When card has no sections, just padding */
-.ren-card > :first-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer) {
+/* Loose content (a paragraph, list, or other non-slot child) borrows card
+   padding from the first and last edges. Named slots opt out: header, body,
+   and footer already pad themselves; footer-border owns its own block
+   padding (adding --ren-card-padding here would stack on top of it); cover
+   stays flush with the card border. .ren-card-simple pads the root instead,
+   so the same fallback must not run again on its children. */
+.ren-card:not(.ren-card-simple) > :first-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer):not(.ren-card-footer-border):not(.ren-card-cover) {
   padding-top: var(--ren-card-padding);
 }
 
-.ren-card > :last-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer) {
+.ren-card:not(.ren-card-simple) > :last-child:not(.ren-card-header):not(.ren-card-body):not(.ren-card-footer):not(.ren-card-footer-border):not(.ren-card-cover) {
   padding-bottom: var(--ren-card-padding);
 }
 
-/* Simple card (no sections) */
+/* Simple card (no sections). Padding lives on the root once. */
 .ren-card-simple {
   padding: var(--ren-card-padding);
 }
@@ -180,8 +188,17 @@
   border-color: var(--color-accent);
 }
 
+/* Selected state. `aria-selected` only styles a card whose role actually
+   supports it (option / tab / row / gridcell / treeitem); on a bare div or a
+   <label> it is a prohibited attribute, which is why the other hooks exist:
+   `aria-pressed` for the <button> form, `aria-checked` for
+   role="radio" / role="checkbox", `:has(:checked)` for the label-wrapping-a-
+   real-input form, and `data-selected` for purely decorative surfaces. */
 .ren-card-selectable[aria-selected="true"],
-.ren-card-selectable[data-selected] {
+.ren-card-selectable[aria-pressed="true"],
+.ren-card-selectable[aria-checked="true"],
+.ren-card-selectable[data-selected],
+.ren-card-selectable:has(:checked) {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 1px var(--color-accent);
 }
@@ -193,13 +210,27 @@
 .ren-card[data-status="danger"]  { border-top: 3px solid var(--color-danger); }
 .ren-card[data-status="info"]    { border-top: 3px solid var(--color-info); }
 
-/* ─── Card with cover image ─── */
+/* ─── Card media slot ───
+   .ren-card-cover is the direct-child media slot. It may be the image
+   itself or a wrapper (div or figure) around one image. Either form is
+   edge-to-edge on every side, including when the slot is :first-child
+   or :last-child. The generic content padding fallback does not apply. */
 
 .ren-card-cover {
+  display: block;
   width: 100%;
   height: auto;
+  margin: 0;
+  padding: 0;
   object-fit: cover;
+}
+
+.ren-card-cover > img {
   display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  object-fit: cover;
 }
 
 /* ─── Card Group (grid of cards) ─── */
@@ -208,4 +239,6 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: var(--space-4);
+}
+
 }

@@ -27,6 +27,7 @@
  *   action       — { label, onClick } inline button
  */
 
+import { t } from '../../../utils/i18n.js';
 import { announceAssertive, announcePolite } from '../../../utils/live-region.js';
 
 /* ─── Defaults ─── */
@@ -72,7 +73,9 @@ export class RenToastViewport extends HTMLElement {
       this.setAttribute('data-position', 'bottom-right');
     }
     if (!this.hasAttribute('aria-label')) {
-      this.setAttribute('aria-label', 'Notifications');
+      // Resolved at connect time: a setLocale() call after this point does not
+      // relabel an already-connected viewport.
+      this.setAttribute('aria-label', t('toast.region'));
     }
     if (!this.hasAttribute('role')) this.setAttribute('role', 'region');
 
@@ -262,7 +265,9 @@ function buildToast(id, opts) {
     const close = document.createElement('button');
     close.type = 'button';
     close.className = 'ren-toast-close';
-    close.setAttribute('aria-label', 'Dismiss notification');
+    // Resolved per toast: each toast.show() picks up the locale active at that
+    // moment, so a setLocale() call between toasts is honoured.
+    close.setAttribute('aria-label', t('toast.close'));
     close.textContent = '×';
     close.addEventListener('click', () => {
       const viewport = toast.closest('.ren-toast-viewport, ren-toast-viewport');
@@ -471,7 +476,7 @@ export const toast = Object.assign(show, {
 
   promise(promise, options = {}) {
     const id = generateId();
-    const loadingOpts = normalize(options.loading || 'Loading...', 'loading');
+    const loadingOpts = normalize(options.loading || t('toast.promiseLoading'), 'loading');
     loadingOpts.id = id;
     const viewport = resolveViewport();
     showOnViewport(viewport, loadingOpts);
@@ -482,7 +487,7 @@ export const toast = Object.assign(show, {
           typeof options.success === 'function'
             ? options.success(data)
             : options.success;
-        const successOpts = normalize(successInput || 'Done', 'success');
+        const successOpts = normalize(successInput || t('toast.promiseSuccess'), 'success');
         successOpts.id = id;
         showOnViewport(viewport, successOpts);
         return data;
@@ -490,7 +495,7 @@ export const toast = Object.assign(show, {
       .catch((err) => {
         const errorInput =
           typeof options.error === 'function' ? options.error(err) : options.error;
-        const errorOpts = normalize(errorInput || 'Failed', 'danger');
+        const errorOpts = normalize(errorInput || t('toast.promiseError'), 'danger');
         errorOpts.id = id;
         showOnViewport(viewport, errorOpts);
         throw err;

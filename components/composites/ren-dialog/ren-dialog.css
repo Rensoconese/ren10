@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══════════════════════════════════════════════════════════════════════════
    REN DIALOG / MODAL COMPONENT
    Native <dialog> element enhancement with CSS animations and modern APIs
@@ -289,3 +292,5 @@ ren-dialog {
 }
 .ren-dialog::backdrop,
 .ren-alert-dialog::backdrop { background: var(--ren-dialog-backdrop, var(--color-overlay)); }
+
+}

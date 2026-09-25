@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 .ren-nav {
   display: flex;
   align-items: center;
@@ -16,7 +19,7 @@
   &.ren-nav-sticky {
     position: sticky;
     top: 0;
-    z-index: var(--ren-z-sticky, 100);
+    z-index: var(--ren-z-sticky, var(--z-sticky));
     backdrop-filter: blur(8px);
     background-color: color-mix(in srgb, var(--color-surface) 95%, transparent);
   }
@@ -63,7 +66,7 @@
     border-bottom: 1px solid var(--color-border);
     padding: var(--ren-space-2, 0.5rem) 0;
     animation: ren-nav-slide-down var(--duration-enter) var(--ease-enter);
-    z-index: 1000;
+    z-index: var(--z-dropdown);
 
     @media (prefers-reduced-motion: reduce) {
       animation: none;
@@ -208,3 +211,5 @@
 .ren-nav { min-block-size: var(--ren-nav-height, 3.5rem); padding-inline: var(--ren-nav-padding-x, var(--space-4)); background: var(--ren-nav-bg, var(--color-surface)); border-color: var(--ren-nav-border, var(--color-border)); gap: var(--ren-nav-gap, var(--space-6)); }
 .ren-nav a { color: var(--ren-nav-link-color, var(--color-text-muted)); }
 .ren-nav a[aria-current="page"], .ren-nav a[data-active] { color: var(--ren-nav-link-active, var(--color-text)); }
+
+}

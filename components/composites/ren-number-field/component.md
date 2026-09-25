@@ -51,6 +51,8 @@ requiredMarkup:
   - "Use <ren-number-field min=\"…\" max=\"…\" step=\"…\" value=\"…\"> as the host so attributes wire min/max/step on the inner input."
   - "Inner input is <input type=\"number\" class=\"ren-number-field-input\"> — keep type=\"number\" so mobile keyboards switch to digits."
   - "Decrement / increment must be real type=\"button\" steppers with class=\"ren-number-field-decrement\" / class=\"ren-number-field-increment\" and aria-label=\"Decrease\" / \"Increase\" (the component fills these if missing)."
+  - "Leave the stepper buttons empty: the CSS injects − and + via ::before, so writing the glyph as button text renders −− / ++."
+  - "The host element carries .ren-number-field; the component adds it on connect, so <ren-number-field> alone is enough."
   - "Validation state goes on the wrapper as [data-invalid] or [data-valid]; the inner focus ring color reads from --color-danger / --color-success."
   - "Size variants are .ren-number-field-sm and .ren-number-field-lg on the wrapper; do not size buttons or input independently."
 
@@ -59,6 +61,7 @@ forbiddenPatterns:
   - "Showing the native spinner UI — the CSS already hides ::-webkit-inner-spin-button / ::-webkit-outer-spin-button and uses -moz-appearance: textfield."
   - "Bypassing the host's clamp() by writing this.value directly — call setValue(), increment(), or decrement() so min/max/step clamping runs and ren-change dispatches."
   - "Removing aria-label from the stepper buttons — the visible ± glyph alone has no accessible name."
+  - "Writing − / + as the stepper button text — the CSS already injects them with ::before, so the button renders −− / ++."
   - "Custom outline on the inner input — focus styling is owned by the wrapper via :has(.ren-number-field-input:focus)."
 
 tokenPolicy:
@@ -93,9 +96,13 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<ren-number-field min="0" max="10" step="1" value="2"><button class="ren-number-field-decrement" type="button" aria-label="Decrease">−</button><input class="ren-number-field-input" type="number" aria-label="Quantity"><button class="ren-number-field-increment" type="button" aria-label="Increase">+</button></ren-number-field>
+<ren-number-field min="0" max="10" step="1" value="2"><button class="ren-number-field-decrement" type="button" aria-label="Decrease"></button><input class="ren-number-field-input" type="number" aria-label="Quantity"><button class="ren-number-field-increment" type="button" aria-label="Increase"></button></ren-number-field>
 
 ```
+
+The stepper buttons stay empty: the CSS draws `−` and `+` through
+`::before`, so typing the glyph as button text renders `−−` / `++`. The
+`aria-label` is what names them.
 
 Use the docs page and source files listed below for full examples before adding production markup.
 
@@ -130,6 +137,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- The auto-generated stepper `aria-label`s come from `utils/i18n.js` and are resolved once while the DOM is built, so call `setLocale()` before the component upgrades — a locale change after mount does not relabel existing steppers.
 
 ## Related Files
 

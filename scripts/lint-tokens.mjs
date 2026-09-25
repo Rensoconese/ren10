@@ -186,6 +186,71 @@ async function checkFile(absPath) {
   return violations;
 }
 
+/**
+ * Collect custom properties declared on `:root` in a set of CSS files.
+ * @returns {Map<string, {path: string, line: number}>}
+ */
+async function collectRootTokens(files) {
+  const declared = new Map();
+  for (const absPath of files) {
+    const rel = relative(PKG_ROOT, absPath);
+    const lines = (await readFile(absPath, 'utf8')).split('\n');
+    let inRoot = false;
+    let depth = 0;
+    for (const [index, raw] of lines.entries()) {
+      const line = stripCommentsAndStrings(raw);
+      if (!inRoot && /(^|[,\s}])(:root|html)\s*(,[^{]*)?\{/.test(line)) {
+        inRoot = true;
+        depth = 0;
+      }
+      if (!inRoot) continue;
+      depth += (line.match(/\{/g) || []).length - (line.match(/\}/g) || []).length;
+      const match = line.match(/^\s*(--[\w-]+)\s*:/);
+      if (match && !declared.has(match[1])) {
+        declared.set(match[1], { path: rel, line: index + 1 });
+      }
+      if (depth <= 0) inRoot = false;
+    }
+  }
+  return declared;
+}
+
+/**
+ * `base/` is imported into `@layer base`, which outranks `@layer tokens`.
+ * A `:root` custom property redeclared there silently overrides the design
+ * token of the same name for every consumer on the page — a system-wide
+ * change that reads like a local one. Base layers may define their own
+ * namespaced knobs; they may not shadow a token.
+ */
+async function checkLayerShadowing() {
+  const violations = [];
+  let tokenFiles;
+  let baseFiles;
+  try {
+    tokenFiles = await walkCssFiles(join(PKG_ROOT, 'tokens'));
+    baseFiles = await walkCssFiles(join(PKG_ROOT, 'base'));
+  } catch (err) {
+    if (err.code === 'ENOENT') return violations;
+    throw err;
+  }
+
+  const tokens = await collectRootTokens(tokenFiles);
+  const baseDeclared = await collectRootTokens(baseFiles);
+
+  for (const [name, where] of baseDeclared) {
+    const origin = tokens.get(name);
+    if (!origin) continue;
+    violations.push({
+      kind: 'layer-shadowed-token',
+      path: where.path,
+      line: where.line,
+      match: name,
+      snippet: `${name} is a design token declared in ${origin.path}:${origin.line}`,
+    });
+  }
+  return violations;
+}
+
 async function main() {
   const componentsDir = join(PKG_ROOT, 'components');
   let componentFiles;
@@ -202,6 +267,7 @@ async function main() {
   for (const file of componentFiles) {
     allViolations.push(...(await checkFile(file)));
   }
+  allViolations.push(...(await checkLayerShadowing()));
   if (allViolations.length === 0) {
     console.log(
       `RenDS token lint: OK (${componentFiles.length} component CSS files, ${EXEMPT_FILES.size} documented exemptions).`,
@@ -216,6 +282,8 @@ async function main() {
         ? 'colored side-border accent (use subtle surface, icon, text, or neutral border instead)'
         : v.kind === 'hex-color'
         ? `hardcoded hex color ${v.match} (use a token)`
+        : v.kind === 'layer-shadowed-token'
+        ? `${v.match} redeclared in @layer base, which outranks @layer tokens — this silently overrides the design token for every consumer. Rename it to a base-local knob or change the token at its source.`
         : `non-grayscale ${v.match} (use a token; only rgba(0,0,0,X) / rgba(255,255,255,X) are allowed)`;
     console.error(`${v.path}:${v.line}  ${detail}`);
     console.error(`    ${v.snippet}`);

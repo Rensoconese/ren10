@@ -1,3 +1,4 @@
+import { t } from '../../../utils/i18n.js';
 /* ═══════════════════════════════════════════════════════════════
    REN OTP (ONE-TIME PASSWORD) INPUT WEB COMPONENT
    ═══════════════════════════════════════════════════════════════
@@ -42,6 +43,24 @@ export class RenOtp extends HTMLElement {
   }
 
   connectedCallback() {
+    /* ═══ HOST CLASS ═══ */
+    /* The wrapper styling (flex row, gap, container query) lives on .ren-otp.
+       Without this the canonical <ren-otp length="6"> rendered as an inline
+       box with six stacked slots, and every consumer had to hand-write the
+       class the component is named after. */
+    this.classList.add('ren-otp');
+
+    /* ═══ HOST ROLE ═══ */
+    /* A name on a role-less host is exposed to no one (and axe flags it as a
+       prohibited attribute). The slots form one control, so when the consumer
+       names the host, expose it as a group. */
+    if (
+      !this.hasAttribute('role') &&
+      (this.hasAttribute('aria-label') || this.hasAttribute('aria-labelledby'))
+    ) {
+      this.setAttribute('role', 'group');
+    }
+
     /* ═══ READ ATTRIBUTES ═══ */
     const lengthAttr = this.getAttribute('length');
     const typeAttr = this.getAttribute('type');
@@ -73,7 +92,7 @@ export class RenOtp extends HTMLElement {
       slot.setAttribute('placeholder', '•');
       slot.setAttribute('autocomplete', 'off');
       slot.setAttribute('data-index', i.toString());
-      slot.setAttribute('aria-label', `Code digit ${i + 1} of ${this.length}`);
+      slot.setAttribute('aria-label', t('otp.digitLabel', { current: i + 1, total: this.length }));
 
       if (disabled) {
         slot.disabled = true;

@@ -990,11 +990,16 @@ body {
   background: rgba(0, 0, 0, 0.5);
   z-index: 40;
   opacity: 0;
+  /* Below 900px this becomes display:block so it can fade in, which left a
+     fully transparent full-screen layer swallowing every click on every docs
+     page. It only exists to be clicked while the drawer is open. */
+  pointer-events: none;
   transition: opacity 0.3s ease;
 }
 
 .dx-sidebar-backdrop[data-open] {
   opacity: 1;
+  pointer-events: auto;
 }
 
 @media (max-width: 900px) {

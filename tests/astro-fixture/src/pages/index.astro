@@ -15,11 +15,12 @@ import Toolbar from '@ren10/astro/components/Toolbar';
     <title>RenDS Astro compatibility fixture</title>
   </head>
   <body>
-    <main class="ren-center-narrow ren-stack-lg">
+    <main class="ren-center-narrow ren-stack ren-stack-lg">
       <h1>RenDS on Astro</h1>
 
       <Card data-fixture="card">
-        <div class="ren-card-body ren-stack">
+        <div class="ren-card-header">Card heading</div>
+        <div class="ren-card-body ren-stack consumer-body" data-fixture="cascade-body">
           <Badge class="ren-badge-success">Astro 7 compatible</Badge>
           <Button variant="primary">Enhanced button</Button>
           <button class="ren-btn ren-btn-secondary" type="button" data-dialog-trigger="astro-dialog">
@@ -52,3 +53,8 @@ import Toolbar from '@ren10/astro/components/Toolbar';
     </main>
   </body>
 </html>
+
+<style is:global>
+  /* Must beat the more specific header + body component selector. */
+  .consumer-body { padding-top: var(--space-7); }
+</style>

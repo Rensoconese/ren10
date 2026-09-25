@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Banner / Alert Component
    ============================================
@@ -181,4 +184,6 @@
     animation: none;
     display: none;
   }
+}
+
 }

@@ -78,7 +78,7 @@
     height: 3px;
     background: var(--color-accent);
     transform-origin: left;
-    z-index: 9999;
+    z-index: var(--z-max);
     animation: ren-scale-x linear both;
     animation-timeline: scroll(root);
   }

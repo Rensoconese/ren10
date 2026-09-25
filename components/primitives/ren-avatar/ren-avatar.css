@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Avatar
    ============================================
@@ -87,4 +90,6 @@
 
 .ren-avatar-group > .ren-avatar:last-child {
   margin-inline-start: 0;
+}
+
 }

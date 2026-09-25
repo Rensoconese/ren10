@@ -20,14 +20,50 @@
    </div>
 
    Custom gap: style="--stack-gap: var(--space-6)"
+
+   LOCAL CONTRACT — the stack owns the vertical rhythm of its own
+   direct children, and only of its own. See base/layouts.md.
+
+   1. --stack-gap is INITIALIZED on every .ren-stack instead of being
+      read from whatever value it inherits, so a nested plain stack
+      starts from the system default (12px) instead of copying its
+      parent's gap.
+   2. Gap owns the rhythm, so the classless block margins of direct
+      flow children are neutralized. A ren-stack-lg between an <h3>
+      and a <p> measures 24px — not 24 + 8 (h3 margin) + 12 (p
+      margin), which is what a bare gap produced.
+   3. Only DIRECT children are touched. Nested prose keeps the
+      classless margins from base/classless.css.
+   4. The reset is written with :where(), so the whole rule stays at
+      class specificity. Components, themes, and unlayered consumer
+      CSS that set those margins still win.
+   5. margin-inline is never touched, so auto-centering and consumer
+      inline offsets survive.
 */
 .ren-stack {
+  --stack-gap: var(--space-stack, var(--space-density-row, var(--space-3)));
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap, var(--space-density-row, var(--space-4)));
+  gap: var(--stack-gap);
 }
 
-/* Stack variants */
+/* Direct flow text/block children only. These are exactly the
+   elements base/classless.css gives block margins to; generic
+   containers (div, section, article, …) keep whatever the consumer
+   set, and their children keep the classless rhythm. */
+.ren-stack > :where(
+  h1, h2, h3, h4, h5, h6,
+  p,
+  ul, ol, dl,
+  blockquote, pre, figure, table,
+  fieldset, details, hr
+) {
+  margin-block: 0;
+}
+
+/* Stack size variants — fixed scale steps, declared after the base
+   rule so they win the class tie. These do NOT move with
+   [data-density]; only the bare .ren-stack default does. */
 .ren-stack-xs { --stack-gap: var(--space-1); }
 .ren-stack-sm { --stack-gap: var(--space-2); }
 .ren-stack-md { --stack-gap: var(--space-4); }

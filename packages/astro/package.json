@@ -1,6 +1,6 @@
 {
   "name": "@ren10/astro",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "description": "Official Astro integration and generated Light DOM components for RenDS.",
   "license": "MIT",
   "author": "Ren",
@@ -43,7 +43,7 @@
   ],
   "peerDependencies": {
     "astro": ">=7.0.0 <8.0.0",
-    "ren10": "^0.13.0"
+    "ren10": "^0.14.0"
   },
   "devDependencies": {
     "ren10": "file:../.."

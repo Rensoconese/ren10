@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Spinner
    ============================================
@@ -52,4 +55,6 @@
   .ren-spinner {
     animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
   }
+}
+
 }

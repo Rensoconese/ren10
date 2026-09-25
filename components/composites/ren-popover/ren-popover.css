@@ -1,4 +1,15 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══ ANCHOR POSITIONING & BASE STYLES ═══ */
+
+/* Until the element upgrades it has no `popover` attribute, so the panel
+   paints inline and then disappears once the script runs — a real flash of
+   unstyled content on every page load. Hide it until it is defined. */
+ren-popover:not(:defined) {
+  display: none;
+}
+
 .ren-popover {
   position: absolute;
   background: var(--color-surface);
@@ -13,8 +24,10 @@
   inset: auto;
   border-top: none;
 
-  /* Anchor positioning (modern browsers) */
-  position-anchor: --popover-anchor;
+  /* Anchor positioning (modern browsers).
+     `position-anchor` is injected inline per instance by ren-popover.js —
+     a single shared anchor name would resolve to the last matching trigger
+     in tree order and mis-place every popover but the last one. */
 
   /* Default: below the trigger with automatic fallback */
   position-area: bottom span-all;
@@ -214,4 +227,6 @@
   box-shadow: var(--ren-popover-shadow, var(--shadow-lg));
   transition-duration: var(--ren-popover-duration, var(--duration-normal));
   transition-timing-function: var(--ren-popover-easing, var(--ease-out));
+}
+
 }

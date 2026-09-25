@@ -1,5 +1,6 @@
 import { spawnSync } from 'child_process';
 import fs from 'fs';
+import path from 'path';
 
 const sqlLiteral = (value) => `'${String(value).replaceAll("'", "''")}'`;
 
@@ -20,7 +21,43 @@ export const sqliteAvailable = () => {
   return result.status === 0;
 };
 
-export const loadJsonGraph = (jsonPath) => JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+/**
+ * Load the JSON graph and rehydrate node bodies from the package.
+ *
+ * The published graph omits `body`: every node carries a `path` into this same
+ * package, so the text ships once as the file itself rather than twice. Ranking
+ * and snippets still need it, so it is read back here — lazily per node, and
+ * only when the JSON fallback runs at all (the SQLite path never calls this).
+ *
+ * Nodes are hydrated with a getter so a query that only matches on name or
+ * path never touches the filesystem, and an unreadable file degrades to an
+ * empty body instead of failing the whole search.
+ */
+export const loadJsonGraph = (jsonPath) => {
+  const graph = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  const packageRoot = path.resolve(path.dirname(jsonPath), '..');
+
+  for (const node of graph.nodes) {
+    if (node.body !== undefined || !node.path) continue;
+    let cached;
+    Object.defineProperty(node, 'body', {
+      configurable: true,
+      enumerable: true,
+      get() {
+        if (cached === undefined) {
+          try {
+            cached = fs.readFileSync(path.join(packageRoot, node.path), 'utf8');
+          } catch {
+            cached = '';
+          }
+        }
+        return cached;
+      },
+    });
+  }
+
+  return graph;
+};
 
 export const querySqliteGraph = (sqlitePath, rawQuery, limit = 12) => {
   const sql = `

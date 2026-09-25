@@ -42,6 +42,32 @@ If a requested component cannot be verified, run
 `npx ren10 search "<intent>" --json`. Compose it from returned contracts or
 report the capability gap; never invent a `ren-*` selector or custom element.
 
+## Installed Provenance
+
+Installed packages drift, and old skills can teach selectors that no longer
+exist. Before trusting a selector, attribute, or token, confirm which copy is
+installed and verify it against the contract or CLI output:
+
+```bash
+npx ren10 doctor
+node node_modules/ren10/scripts/check-agent-provenance.mjs .
+```
+
+The provenance report names the installed `ren10` version, the resolved real
+path, and the hashes of the selected public contracts. A `VERSION.md` marker
+identifies a foundation-only vendored copy, which intentionally ships fewer
+contracts than the full package, even when the copy has no `package.json`.
+Pass the vendored copy or a project path that contains it so the checker can
+report the version or source commit and resolved path. In a Ren10 checkout,
+use `node scripts/check-agent-provenance.mjs .`; in a consumer project use
+the installed script path shown above. Add `--skill /path/to/ren10/SKILL.md`
+to check a separately installed skill.
+
+Selector names are versioned API. For example, the tabs trigger row is
+`.ren-tab-list`; the legacy `.ren-tabs-list` is not valid and must never be
+copied from old skills, notes, or archived copies. When a skill and the
+installed contract disagree, the installed contract and CLI win.
+
 ## Mandatory Loading Order
 
 For any task that builds, edits, or reviews UI with RenDS:

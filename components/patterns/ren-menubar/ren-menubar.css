@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /**
  * RenDS Menubar
  * Horizontal menu bar component (File, Edit, View, etc.)
@@ -83,7 +86,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: var(--z-popover);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -232,7 +235,7 @@
   top: 0;
   inset-inline-start: calc(100% + var(--space-1));
   margin-top: 0;
-  z-index: 1100;
+  z-index: calc(var(--z-popover) + 1);
 }
 
 /* =================================================================
@@ -335,4 +338,6 @@
     transition: none;
     animation: none;
   }
+}
+
 }

@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-radio class:list={className} {...rest}><slot /></ren-radio>
+<ren-radio-group class:list={className} {...rest}><slot /></ren-radio-group>
 
 <script>
   import 'ren10/components/primitives/ren-radio/ren-radio.js';

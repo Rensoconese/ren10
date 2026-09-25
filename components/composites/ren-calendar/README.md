@@ -150,7 +150,11 @@ The component uses these design tokens:
 
 ## Accessibility
 
-- **ARIA Grid Pattern**: Proper roles and labels for screen readers
+- **ARIA Grid Pattern**: `role="grid"` > `role="row"` > `role="columnheader"` /
+  `role="gridcell"`. The weekday strip is the grid's header row, and each week
+  is its own row; the rows are `display: contents` so they add semantics
+  without changing the 7-column layout. The grid is named by the month title
+  through `aria-labelledby`.
 - **Roving Tabindex**: Keyboard navigation with tabindex management
 - **Semantic HTML**: Button elements with proper ARIA attributes
 - **Focus Management**: Visual focus indicators

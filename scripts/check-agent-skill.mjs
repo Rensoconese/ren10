@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { validateV0Adapter } from './check-v0-adapter.mjs';
 import { validateStarterApproval } from './check-starter-approval.mjs';
+import { CANONICAL_TAB_SELECTOR, LEGACY_TAB_SELECTOR, scanSkill } from './check-agent-provenance.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(path.join(root, 'package.json'), 'utf8'));
@@ -79,6 +80,13 @@ for (const stale of [
   contractFile('COMPONENTS'),
 ]) {
   if (combined.includes(stale)) fail(`Agent skill contains stale text: ${stale}`);
+}
+
+const skillScan = scanSkill(skillDir);
+for (const finding of skillScan.errors) {
+  fail(
+    `SKILL.md teaches the legacy selector ${LEGACY_TAB_SELECTOR} at line ${finding.line}; the installed contract uses ${CANONICAL_TAB_SELECTOR}.`,
+  );
 }
 
 const versionPattern = new RegExp(`rends-skill-${pkg.version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\.tgz`);

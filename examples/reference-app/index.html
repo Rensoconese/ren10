@@ -54,9 +54,9 @@
     </ren-sidebar>
 
     <main id="main-content" class="ren-sidebar-main" tabindex="-1">
-      <div class="ren-center-wide ren-stack-lg" style="padding: var(--space-page-top) var(--space-card-padding) var(--space-page-bottom)">
+      <div class="ren-stack ren-center ren-center-wide ren-stack-lg" style="padding: var(--space-page-top) var(--space-card-padding) var(--space-page-bottom)">
         <header id="overview" class="ren-row-spread">
-          <div class="ren-stack-sm">
+          <div class="ren-stack ren-stack-sm">
             <span class="ren-badge ren-badge-success">All systems operational</span>
             <h1>Workspace overview</h1>
             <p style="color: var(--color-text-muted)">A canonical Ren10 consumer showing a complete product workflow.</p>
@@ -77,7 +77,7 @@
           </div>
         </header>
 
-        <section class="ren-grid-3" aria-label="Workspace metrics">
+        <section class="ren-grid ren-grid-3" aria-label="Workspace metrics">
           <article class="ren-card" data-status="success">
             <div class="ren-card-header">
               <h2 class="ren-card-title">Active projects</h2>
@@ -114,7 +114,7 @@
 
         <section id="projects" class="ren-card ren-stack" aria-labelledby="projects-title">
           <header class="ren-card-header ren-row-spread">
-            <div class="ren-stack-sm">
+            <div class="ren-stack ren-stack-sm">
               <h2 id="projects-title" class="ren-card-title">Recent projects</h2>
               <p class="ren-card-description">Current delivery health and ownership.</p>
             </div>
@@ -198,7 +198,7 @@
                   </ren-field>
                 </div>
 
-                <fieldset class="ren-stack-sm">
+                <fieldset class="ren-stack ren-stack-sm">
                   <legend>Digest preference</legend>
                   <label class="ren-checkbox">
                     <input type="checkbox" name="weeklySummary" checked>
@@ -222,11 +222,11 @@
   <ren-dialog id="invite-dialog">
     <dialog class="ren-dialog ren-dialog-md" aria-labelledby="invite-title" aria-describedby="invite-description">
       <div class="ren-dialog-header">
-        <div class="ren-stack-sm">
+        <div class="ren-stack ren-stack-sm">
           <h2 id="invite-title" class="ren-dialog-title">Invite teammate</h2>
           <p id="invite-description" class="ren-dialog-description">Send a workspace invitation by email.</p>
         </div>
-        <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close invitation dialog"></button>
+        <button class="ren-dialog-close" type="button" data-dialog-close aria-label="Close invitation dialog"><span aria-hidden="true">×</span></button>
       </div>
 
       <form id="invite-form" method="dialog">

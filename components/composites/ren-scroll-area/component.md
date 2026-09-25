@@ -47,12 +47,15 @@ canonicalImports:
 
 requiredMarkup:
   - "Apply class=\"ren-scroll-area\" to a real block element that owns overflow (commonly <div>, <section>, <main>)."
+  - "Add tabindex=\"0\" plus an accessible name (aria-label / aria-labelledby) unless the region already contains a focusable descendant. Static content — text, images, non-interactive lists — always needs it: <section class=\"ren-scroll-area ren-scroll-area-md\" tabindex=\"0\" aria-label=\"Activity log\">…</section>."
+  - "Only omit tabindex when every scroll position is reachable by tabbing through focusable children (links, buttons, form controls) already inside the region."
   - "Constrain height/width explicitly — either via .ren-scroll-area-sm/-md/-lg/-xl/-full, an inline --scroll-max custom property, or a parent flex/grid track."
   - "Pair direction with intent: .-x for horizontal-only, .-y for vertical-only; omit for auto in both axes."
   - "When using .-fade or .-fade-x the masking ::before/::after read from --color-surface; ensure the scroll area sits on a surface that matches that token."
-  - "Children that should be focusable for keyboard scrolling need tabindex=\"0\" on the .ren-scroll-area itself when it has no focusable descendants."
 
 forbiddenPatterns:
+  - "A .ren-scroll-area whose content overflows, with no tabindex=\"0\" and no focusable descendant — keyboard-only users cannot reach the hidden content (axe: scrollable-region-focusable, WCAG 2.1 A, 2.1.1)."
+  - "Removing the :focus-visible outline (outline: none) from a .ren-scroll-area that carries tabindex=\"0\" — the tab stop then exists but is invisible (WCAG 2.4.7)."
   - "Overriding overflow with overflow: hidden — that defeats the entire component (no scrollbar, no fade mask alignment)."
   - "Wrapping a <ren-scroll-area> custom element instead of the .ren-scroll-area class — no custom element exists for this composite."
   - "Stacking position: absolute children that escape the scroll context — the fade overlays (::before/::after at z-index: 10) assume in-flow content underneath."
@@ -61,8 +64,8 @@ forbiddenPatterns:
 
 tokenPolicy:
   allowed:
-    - "Semantic tokens used by the scrollbar and fade masks: --color-fill-active, --color-fill-hover, --color-surface."
-    - "Layout / shape / motion tokens: --radius-full, --duration-enter, --ease-enter, --transition-tactile."
+    - "Semantic tokens used by the scrollbar, fade masks, and focus ring: --color-fill-active, --color-fill-hover, --color-surface, --color-focus-ring."
+    - "Layout / shape / motion tokens: --radius-full, --ring-width, --ring-offset-width, --duration-enter, --ease-enter, --transition-tactile."
     - "Authoring custom max-height via the --scroll-max custom property on the .ren-scroll-area element."
   forbidden:
     - "Primitive palette tokens (--blue-*, --gray-*, --red-*, --green-*, --orange-*, --yellow-*, --teal-*, --purple-*, --pink-*) in consumer overrides."
@@ -71,8 +74,9 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "If the scrollable region contains no focusable child, set tabindex=\"0\" on the .ren-scroll-area so keyboard users can scroll it with Arrow / PageUp / PageDown."
-    - "Provide an accessible name (aria-label / aria-labelledby) when the region is a discrete content landmark; e.g. <section class=\"ren-scroll-area\" aria-label=\"Logs\">."
+    - "If the scrollable region contains no focusable child, set tabindex=\"0\" on the .ren-scroll-area so keyboard users can scroll it with Arrow / PageUp / PageDown. This is not optional polish: without it the content is unreachable without a mouse."
+    - "A .ren-scroll-area with tabindex=\"0\" must also carry an accessible name (aria-label / aria-labelledby), otherwise the tab stop announces as an unnamed group; e.g. <section class=\"ren-scroll-area\" tabindex=\"0\" aria-label=\"Logs\">."
+    - "The component ships the focus ring for that tab stop (:focus-visible → --ring-width / --color-focus-ring / --ring-offset-width). Do not suppress it."
     - "Honor prefers-reduced-motion: the component disables scroll-behavior: smooth via the existing @media rule — do not re-enable smooth scrolling under reduced-motion."
     - "Do not rely on the fade-edge gradients alone to signal more content; pair with a visible affordance (chevron, scroll-hint) when content overflow is decision-critical."
     - "Scrollbar contrast: --color-fill-active and --color-fill-hover must remain distinguishable from --color-surface in both themes; do not theme so the thumb disappears."
@@ -107,7 +111,9 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## States And Attributes
 
+- `:focus-visible`
 - `:hover`
+- `[tabindex]`
 
 ## Public Token API
 
@@ -117,6 +123,9 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 
 ## Accessibility Contract
 
+- A scrollable region with no focusable descendant must be focusable itself
+  (`tabindex="0"`) and named. Scrolling is an operation; WCAG 2.1.1 requires it
+  to be available from the keyboard.
 - Preserve native semantics first; add ARIA only when semantic HTML is insufficient.
 - Keep visible keyboard focus via RenDS focus tokens and `:focus-visible`.
 - Keep interactive hit areas at 44px minimum unless this file's source clearly defines a smaller non-touch target.

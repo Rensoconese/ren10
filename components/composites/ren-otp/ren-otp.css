@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ═══════════════════════════════════════════════════════════════
    REN OTP (ONE-TIME PASSWORD) INPUT COMPONENT
    ═══════════════════════════════════════════════════════════════
@@ -208,4 +211,6 @@
       padding: 0 var(--space-0-5);
     }
   }
+}
+
 }

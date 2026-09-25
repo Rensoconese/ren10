@@ -1,22 +1,22 @@
 {
   "version": 1,
   "capturedFor": "ren10@0.13.0",
-  "capturedAt": "2026-08-01",
+  "capturedAt": "2026-08-06",
   "capturedFrom": "validated ren10@0.13.0 catalog plus the official Astro integration, 53 generated Astro components, Astro starter, AI hints, reference-theme tools, detector support, and release metadata",
   "captureRuntime": { "node": "22.15.0", "npm": "10.9.2" },
   "metrics": {
-    "unpackedBytes": { "baseline": 25176177, "allowedDelta": 0, "target": 25176177 },
-    "tarballBytes": { "baseline": 5968903, "allowedDelta": 0, "target": 5968903 },
-    "fullCssBytes": { "baseline": 512555, "allowedDelta": 0, "target": 512555 },
-    "minCssBytes": { "baseline": 291758, "allowedDelta": 0, "target": 291758 },
-    "knowledgeJsonBytes": { "baseline": 4189971, "allowedDelta": 0, "target": 4189971 },
-    "knowledgeSqliteBytes": { "baseline": 9347072, "allowedDelta": 0, "target": 9347072 },
+    "unpackedBytes": { "baseline": 19843719, "allowedDelta": 0, "target": 19843719 },
+    "tarballBytes": { "baseline": 5483586, "allowedDelta": 0, "target": 5483586 },
+    "fullCssBytes": { "baseline": 520835, "allowedDelta": 0, "target": 520835 },
+    "minCssBytes": { "baseline": 292070, "allowedDelta": 0, "target": 292070 },
+    "knowledgeJsonBytes": { "baseline": 2020762, "allowedDelta": 0, "target": 2020762 },
+    "knowledgeSqliteBytes": { "baseline": 6053888, "allowedDelta": 0, "target": 6053888 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
     "requestCount": { "baseline": 1, "allowedDelta": 0, "target": 1 },
-    "cliRssBytes": { "baseline": 46153728, "allowedDelta": 8388608, "target": 54542336 }
+    "cliRssBytes": { "baseline": 46055424, "allowedDelta": 8388608, "target": 54444032 }
   },
   "rationale": {
-    "package": "0.13.0 Astro-enabled npm pack measurements; zero growth allowed.",
+    "package": "Re-baselined DOWN after de-duplicating the knowledge graph: the JSON dropped every node body that was byte-identical to the file the node already points at (the package ships that text once), and the SQLite nodes table dropped its body column (the FTS index already stores what MATCH and snippet() need). Graph went 13.75 MB -> 7.9 MB and the unpacked package 25.4 MB -> 19.6 MB, a 23% cut, with search output byte-identical on both the SQLite and JSON-fallback paths. Earlier growth in this branch (utils/anchor.js and utils/positioning.js, per-instance anchor and layer-stack wiring across nine components, i18n adoption in twelve against an 82-key catalogue, base/layouts.md 62 -> 148 lines) is included in these numbers. Zero growth allowed from here.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."

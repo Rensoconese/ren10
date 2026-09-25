@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Overlay multi-instance fixture</title>
+    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/components/composites/ren-popover/ren-popover.css" />
+    <link rel="stylesheet" href="/components/composites/ren-tooltip/ren-tooltip.css" />
+    <link rel="stylesheet" href="/components/composites/ren-hover-card/ren-hover-card.css" />
+    <link rel="stylesheet" href="/components/composites/ren-calendar/ren-calendar.css" />
+    <link rel="stylesheet" href="/components/composites/ren-date-picker/ren-date-picker.css" />
+    <link rel="stylesheet" href="/components/composites/ren-date-range-picker/ren-date-range-picker.css" />
+    <link rel="stylesheet" href="/components/composites/ren-color-picker/ren-color-picker.css" />
+    <style>
+      /* Vertical separation makes a mis-resolved anchor unambiguous:
+         each overlay must stay next to its own trigger, not the last one. */
+      .ren-spacer {
+        block-size: 300px;
+      }
+    </style>
+  </head>
+  <body class="ren-stack">
+    <h1>Overlay multi-instance fixture</h1>
+
+    <button type="button" id="popover-trigger-1">Popover trigger one</button>
+    <ren-popover id="popover-1" trigger-id="popover-trigger-1">
+      <div class="ren-popover-body">Popover one body</div>
+    </ren-popover>
+
+    <div class="ren-spacer"></div>
+
+    <button type="button" id="popover-trigger-2">Popover trigger two</button>
+    <ren-popover id="popover-2" trigger-id="popover-trigger-2">
+      <div class="ren-popover-body">Popover two body</div>
+    </ren-popover>
+
+    <div class="ren-spacer"></div>
+
+    <button type="button" id="tooltip-trigger-1">
+      Tooltip trigger one
+      <ren-tooltip id="tooltip-1" content="Tooltip one"></ren-tooltip>
+    </button>
+
+    <div class="ren-spacer"></div>
+
+    <button type="button" id="tooltip-trigger-2">
+      Tooltip trigger two
+      <ren-tooltip id="tooltip-2" content="Tooltip two"></ren-tooltip>
+    </button>
+
+    <div class="ren-spacer"></div>
+
+    <button type="button" id="hover-card-trigger-1">Hover card trigger one</button>
+    <ren-hover-card>
+      <div class="ren-hover-card" id="hover-card-1" role="tooltip">Hover card one</div>
+    </ren-hover-card>
+
+    <div class="ren-spacer"></div>
+
+    <button type="button" id="hover-card-trigger-2">Hover card trigger two</button>
+    <ren-hover-card>
+      <div class="ren-hover-card" id="hover-card-2" role="tooltip">Hover card two</div>
+    </ren-hover-card>
+
+    <div class="ren-spacer"></div>
+
+    <ren-date-picker id="date-picker-1"></ren-date-picker>
+    <div class="ren-spacer"></div>
+    <ren-date-picker id="date-picker-2"></ren-date-picker>
+
+    <div class="ren-spacer"></div>
+
+    <ren-date-range-picker id="date-range-1"></ren-date-range-picker>
+    <div class="ren-spacer"></div>
+    <ren-date-range-picker id="date-range-2"></ren-date-range-picker>
+
+    <div class="ren-spacer"></div>
+
+    <ren-color-picker id="color-picker-1"></ren-color-picker>
+    <div class="ren-spacer"></div>
+    <ren-color-picker id="color-picker-2"></ren-color-picker>
+
+    <script type="module" src="/components/composites/ren-calendar/ren-calendar.js"></script>
+    <script type="module" src="/components/composites/ren-date-picker/ren-date-picker.js"></script>
+    <script type="module" src="/components/composites/ren-date-range-picker/ren-date-range-picker.js"></script>
+    <script type="module" src="/components/composites/ren-color-picker/ren-color-picker.js"></script>
+    <script type="module" src="/components/composites/ren-popover/ren-popover.js"></script>
+    <script type="module" src="/components/composites/ren-tooltip/ren-tooltip.js"></script>
+    <script type="module" src="/components/composites/ren-hover-card/ren-hover-card.js"></script>
+  </body>
+</html>

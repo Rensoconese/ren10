@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Toolbar Component
    ============================================
@@ -123,3 +126,5 @@
 .ren-toolbar button, .ren-toolbar [role="button"] { inline-size: var(--ren-toolbar-item-size, var(--size-md)); block-size: var(--ren-toolbar-item-size, var(--size-md)); border-radius: var(--ren-toolbar-item-radius, var(--radius-sm)); }
 .ren-toolbar button:hover, .ren-toolbar [role="button"]:hover { background: var(--ren-toolbar-item-hover, var(--color-fill)); }
 .ren-toolbar button[aria-pressed="true"], .ren-toolbar [data-state="on"] { background: var(--ren-toolbar-active-bg, var(--color-accent-subtle)); }
+
+}

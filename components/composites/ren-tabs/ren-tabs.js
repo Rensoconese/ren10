@@ -35,6 +35,7 @@
 
 import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
 import { autoId } from '../../../utils/id-generator.js';
+import { renWarn } from '../../../utils/debug.js';
 
 export class RenTabs extends HTMLElement {
   static get observedAttributes() {
@@ -86,7 +87,7 @@ export class RenTabs extends HTMLElement {
     // Find tablist container
     this._tabList = this.querySelector('[role="tablist"]') || this.querySelector('.ren-tab-list');
     if (!this._tabList) {
-      console.warn('RenTabs: No tablist found');
+      renWarn('RenTabs', 'No tablist found');
       return;
     }
 
@@ -95,7 +96,7 @@ export class RenTabs extends HTMLElement {
     this._panels = Array.from(this.querySelectorAll('[role="tabpanel"], .ren-tab-panel'));
 
     if (this._tabs.length === 0) {
-      console.warn('RenTabs: No tabs found');
+      renWarn('RenTabs', 'No tabs found');
       return;
     }
 

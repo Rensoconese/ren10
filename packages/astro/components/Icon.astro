@@ -14,4 +14,4 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-icon class:list={['ren-icon-sm', className]} {...rest}><slot /></ren-icon>
+<span class:list={['ren-icon ren-icon-sm', className]} {...rest}><slot /></span>

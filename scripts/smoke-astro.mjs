@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { chromium } from '@playwright/test';
+import staticServer from '../tests/utils/static-server.cjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const fixture = path.join(root, 'tests', 'astro-fixture');
@@ -59,6 +61,32 @@ try {
   assert.match(clientRuntime, /ren-dialog/, 'Dialog custom element runtime was not bundled');
   assert.match(clientRuntime, /ren-files-added/, 'Dropzone initializer runtime was not bundled');
   assert.match(html, /Fixture toolbar/, 'Toolbar wrapper was not rendered');
+
+  const server = await staticServer.startStaticServer(output);
+  let browser;
+  try {
+    browser = await chromium.launch();
+    const page = await browser.newPage();
+    await page.goto(`${server.origin}/index.html`);
+    const spacing = await page.locator('[data-fixture="cascade-body"]').evaluate((node) => ({
+      actual: getComputedStyle(node).paddingTop,
+      expected: getComputedStyle(node).getPropertyValue('--space-7').trim(),
+    }));
+    // Compare through a probe so rem/px serialization is irrelevant.
+    const expected = await page.evaluate(() => {
+      const probe = document.createElement('div');
+      probe.style.paddingTop = 'var(--space-7)';
+      document.body.append(probe);
+      const value = getComputedStyle(probe).paddingTop;
+      probe.remove();
+      return value;
+    });
+    assert.notEqual(expected, '0px', 'Spacing token must resolve');
+    assert.equal(spacing.actual, expected, 'Astro direct imports overrode unlayered consumer CSS');
+  } finally {
+    await browser?.close();
+    await server.close();
+  }
 
   console.log(`Astro compatibility fixture: OK (${assets.length} built assets)`);
 } finally {

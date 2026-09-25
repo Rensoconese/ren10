@@ -1,3 +1,6 @@
+@layer reset, tokens, base, components, utilities;
+
+@layer components {
 /* ============================================
    RenDS — Badge
    ============================================
@@ -84,3 +87,5 @@
 .ren-badge-dot-success { background-color: var(--color-success); }
 .ren-badge-dot-warning { background-color: var(--color-warning); }
 .ren-badge-dot-danger  { background-color: var(--color-danger); }
+
+}

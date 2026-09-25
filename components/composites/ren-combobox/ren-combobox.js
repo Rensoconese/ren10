@@ -38,6 +38,8 @@
  */
 
 import { autoId } from '../../../utils/id-generator.js';
+import { createDismissable } from '../../../utils/dismissable.js';
+import { t } from '../../../utils/i18n.js';
 
 const COMBOBOX_SIDES = new Set(['top', 'right', 'bottom', 'left']);
 
@@ -61,10 +63,14 @@ export class RenCombobox extends HTMLElement {
   #isOpen = false;
   #highlightedIndex = -1;
   #upgraded = false;
-  #onDocClick;
+  #dismissLayer = null;
 
   connectedCallback() {
-    if (this.#upgraded) return;
+    if (this.#upgraded) {
+      // Re-connected: the list can still be open, so restore its layer.
+      if (this.#isOpen) this.#dismissLayer?.activate();
+      return;
+    }
     this.#upgraded = true;
     this.#enhance();
     this.#wire();
@@ -77,15 +83,13 @@ export class RenCombobox extends HTMLElement {
   }
 
   disconnectedCallback() {
-    if (this.#onDocClick) {
-      document.removeEventListener('click', this.#onDocClick);
-    }
+    this.#dismissLayer?.deactivate();
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
     if (!this.#upgraded) return;
     if (name === 'placeholder' && this.#input) {
-      this.#input.placeholder = newVal || 'Search...';
+      this.#input.placeholder = newVal || t('combobox.placeholder');
     } else if (name === 'disabled' && this.#input) {
       this.#input.disabled = this.hasAttribute('disabled');
     } else if (name === 'value' && newVal !== oldVal) {
@@ -107,18 +111,23 @@ export class RenCombobox extends HTMLElement {
       fragment.appendChild(this.firstChild);
     }
 
-    // Input. type="search" + an unguessable autocomplete value defeats the
-    // Chromium heuristic that autofills "country"-flavored fields.
+    // Input. type="search" already suppresses most autofill; `autocomplete`
+    // must stay a valid token — an invented one ("ren-combobox-no-autofill")
+    // failed axe's autocomplete-valid (WCAG 1.3.5, Identify Input Purpose).
+    // The Chromium heuristic this guarded against keys off a semantic `name`,
+    // and this generated input never has one.
     this.#input = document.createElement('input');
     this.#input.type = 'search';
     this.#input.className = 'ren-combobox-input';
-    this.#input.setAttribute('autocomplete', 'ren-combobox-no-autofill');
+    this.#input.setAttribute('autocomplete', 'off');
     this.#input.setAttribute('autocorrect', 'off');
     this.#input.setAttribute('autocapitalize', 'off');
     this.#input.setAttribute('data-1p-ignore', '');
     this.#input.setAttribute('data-lpignore', 'true');
     this.#input.spellcheck = false;
-    this.#input.placeholder = this.getAttribute('placeholder') || 'Search...';
+    // Localized strings are resolved during #enhance(), i.e. at connect time.
+    // A setLocale() call after the element is upgraded does not relabel it.
+    this.#input.placeholder = this.getAttribute('placeholder') || t('combobox.placeholder');
     if (this.hasAttribute('disabled')) this.#input.disabled = true;
     autoId(this.#input, 'combobox-input');
 
@@ -136,7 +145,7 @@ export class RenCombobox extends HTMLElement {
     if (!this.#empty) {
       this.#empty = document.createElement('div');
       this.#empty.className = 'ren-combobox-empty';
-      this.#empty.textContent = 'No results';
+      this.#empty.textContent = t('combobox.noResults');
       this.#empty.hidden = true;
       this.#list.appendChild(this.#empty);
     }
@@ -146,7 +155,7 @@ export class RenCombobox extends HTMLElement {
     if (!this.#loading) {
       this.#loading = document.createElement('div');
       this.#loading.className = 'ren-combobox-loading';
-      this.#loading.textContent = 'Loading…';
+      this.#loading.textContent = t('combobox.loading');
       this.#loading.hidden = true;
       this.#list.insertBefore(this.#loading, this.#list.firstChild);
     }
@@ -234,11 +243,17 @@ export class RenCombobox extends HTMLElement {
       if (idx !== -1) this.#highlight(idx);
     });
 
-    // Close on outside click
-    this.#onDocClick = (e) => {
-      if (!this.contains(e.target)) this.close();
-    };
-    document.addEventListener('click', this.#onDocClick);
+    // Dismissal (outside pointerdown, Escape) runs through the shared layer
+    // stack so a combobox nested in a dialog/popover dismisses innermost-first
+    // instead of every overlay reacting to the same document-level event.
+    // The host is the container: input, list, and generated rows all live in it,
+    // which mirrors the previous `this.contains(e.target)` guard.
+    this.#dismissLayer?.deactivate();
+    this.#dismissLayer = createDismissable(this, {
+      triggerElement: this.#input,
+      excludeElements: [this.#list],
+      onDismiss: () => this.close(),
+    });
   }
 
   #onInput(e) {
@@ -293,6 +308,12 @@ export class RenCombobox extends HTMLElement {
         }
         break;
       case 'Escape':
+        // Open listbox: the dismissable layer handles this first (document
+        // capture) and stops the event there, so a combobox nested in another
+        // overlay dismisses only its own listbox. This branch is the fallback
+        // for keydowns that never reach the layer.
+        // Closed listbox: Escape clears the input (ARIA combobox pattern) —
+        // no layer is active then, so the event still lands here.
         if (this.#isOpen) {
           e.preventDefault();
           this.close();
@@ -333,8 +354,8 @@ export class RenCombobox extends HTMLElement {
     const count = items.filter((i) => !i.hidden).length;
     if (this.#liveRegion) {
       this.#liveRegion.textContent = count
-        ? `${count} result${count === 1 ? '' : 's'} available`
-        : 'No results';
+        ? t('combobox.resultsAvailable', { count })
+        : t('combobox.noResults');
     }
   }
 
@@ -413,6 +434,7 @@ export class RenCombobox extends HTMLElement {
     this.#isOpen = true;
     this.#list.hidden = false;
     this.#input.setAttribute('aria-expanded', 'true');
+    this.#dismissLayer?.activate();
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
   }
 
@@ -424,6 +446,7 @@ export class RenCombobox extends HTMLElement {
     this.#input.removeAttribute('aria-activedescendant');
     this.#getItems().forEach((i) => i.removeAttribute('data-highlighted'));
     this.#highlightedIndex = -1;
+    this.#dismissLayer?.deactivate();
     this.dispatchEvent(new CustomEvent('ren-close', { bubbles: true }));
   }
 

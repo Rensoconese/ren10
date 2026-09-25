@@ -152,6 +152,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- The empty-result announcement comes from `utils/i18n.js` (`command.noResults`) and is resolved when the announcement is written — call `setLocale()` before the palette is used, because the author-supplied `.ren-command-empty` and input placeholder markup is never re-translated.
 
 ## Related Files
 

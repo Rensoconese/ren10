@@ -108,7 +108,12 @@
 /* ─── Disabled state ─── */
 .ren-disabled,
 [aria-disabled="true"] {
-  opacity: 0.6;
+  /* No opacity, for the same reason as [data-disabled] below: unscoped, in
+     the highest layer, multiplying onto every descendant with no way to opt
+     out. WCAG exempts natively disabled controls (:disabled) from contrast —
+     aria-disabled is precisely what you use when the control must STAY
+     perceivable and focusable, so it gets no exemption. It measured 2.45:1 on
+     ren-calendar's outside days. Express the state with colour. */
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -223,8 +228,15 @@
 
 /* Disabled State */
 [data-disabled] {
+  /* No opacity here. This selector is unscoped and sits in @layer utilities,
+     the highest layer, so it multiplied 0.5 onto every descendant of every
+     element carrying the attribute — and no component could opt out. Any text
+     inside landed near 2.6:1 no matter which token it used. WCAG exempts
+     disabled NATIVE controls from contrast; it does not exempt arbitrary
+     containers, and components use this attribute for non-control states too
+     (ren-form marks steps you have not reached yet). Express the disabled look
+     with colour tokens in the component, which stays measurable. */
   pointer-events: none;
-  opacity: 0.5;
 }
 
 /* Highlighted State */
