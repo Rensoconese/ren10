@@ -85,3 +85,20 @@ test('reference motion durations collapse when the reduced-motion preference cha
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await expect.poll(markerDuration).toBe('0.28s');
 });
+
+test('root semantic themes and scoped component overrides honor the documented alias boundary', async ({ page }) => {
+  await render(page, {
+    theme: ':root { --color-accent: rgb(0, 50, 100); }',
+    content: `<button id="root-action" class="ren-btn">Root theme</button>
+      <section style="--color-accent: rgb(200, 0, 0)">
+        <button id="semantic-action" class="ren-btn">Inherited alias</button>
+      </section>
+      <section style="--ren-btn-bg: rgb(0, 100, 0)">
+        <button id="component-action" class="ren-btn">Scoped component</button>
+      </section>`,
+    extra: '.ren-btn { transition: none; }',
+  });
+  await expect(page.locator('#root-action')).toHaveCSS('background-color', 'rgb(0, 50, 100)');
+  await expect(page.locator('#semantic-action')).toHaveCSS('background-color', 'rgb(0, 50, 100)');
+  await expect(page.locator('#component-action')).toHaveCSS('background-color', 'rgb(0, 100, 0)');
+});
