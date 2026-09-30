@@ -17,19 +17,12 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Keep date and date-range form values in ISO format; restore radio and checkbox draft selections correctly.
 - Skip disabled tabs and combobox options, support native number-field activation, and restore focus after calendar Escape.
 - Correct theme token mappings, contrast, reduced-motion behavior, and typed CSS registration fallbacks.
+- Keep desktop mega menus open after rapid pointer re-entry following Escape; discard stale deferred pointer-leave callbacks.
 - Clarify core and Astro installation paths and remove the audited development dependency advisory.
 
 ### Validation
 - Add focused Node and browser regressions for form values, keyboard activation, token computed styles, and local Astro tarball installation.
 
-
-### Added
-
-### Changed
-
-### Fixed
-
-### Removed
 
 ## [0.14.0] — 2026-09-25
 
