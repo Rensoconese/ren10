@@ -120,14 +120,18 @@ test('the ready-made theme guide loads shipped appearance CSS and selects a real
 
 test('Astro installation docs disclose registry status and route to a local tarball fallback', () => {
   const guide = read('docs/astro.md');
+  const version = JSON.parse(read('package.json')).version;
+  assert.equal(JSON.parse(read('packages/astro/package.json')).version, version);
   assert.match(guide, /E404/);
   assert.match(guide, /npm pack --workspace @ren10\/astro/);
   assert.match(guide, /npm pack --pack-destination/);
-  assert.match(guide, /ren10-astro-0\.14\.0\.tgz/);
-  assert.match(guide, /ren10-0\.14\.0\.tgz/);
+  assert.ok(guide.includes(`ren10-astro-${version}.tgz`), 'adapter tarball matches the current release');
+  assert.ok(guide.includes(`ren10-${version}.tgz`), 'core tarball matches the current release');
+  assert.ok(guide.includes(`npm view @ren10/astro@${version} version`), 'check the current adapter version');
+  assert.ok(guide.includes(`ren10@^${version} @ren10/astro@^${version}`), 'install matching current versions');
   assert.match(guide, /npm owner/i);
   for (const file of ['README.md', 'packages/astro/README.md', 'starters/astro/README.md']) {
-    assert.match(read(file), /E404/, `${file} must not present registry installation as available`);
+    assert.match(read(file), /E404/, `${file} must document the unavailable-version fallback`);
     assert.match(read(file), /docs\/astro\.md/, `${file} must link the fallback guide`);
   }
 });

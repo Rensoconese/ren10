@@ -1,8 +1,9 @@
 # Ren10 Astro starter
 
-Requires Node.js 22.12 or newer and Astro 7. As of 2026-09-30, public npm
-returns E404 for `@ren10/astro`, so running `npm install` alone against this
-starter's registry dependency ranges is not supported yet.
+Use a current Node.js 22 LTS release (22.19 or newer for the locked
+dependencies) and Astro 7. Verify both package versions in the installation
+guide before installing from npm. If the adapter version returns E404
+(observed for 0.14.0 on 2026-09-30), use the local fallback.
 
 Follow the [local tarball install guide](https://github.com/Rensoconese/ren10/blob/main/docs/astro.md#local-tarball-install)
 to build matching core and adapter packages, copy this starter, and install
@@ -13,9 +14,8 @@ npm run build
 npm run dev
 ```
 
-Keep the tarballs at the paths recorded in your project's `package.json` and
-lockfile so later `npm install` / `npm ci` runs can find them. The guide also
-explains how to verify public registry availability when publication is fixed.
+When using local tarballs, keep them at the paths recorded in your project's
+`package.json` and lockfile so later `npm install` / `npm ci` runs can find them.
 
 The starter uses the official `@ren10/astro` integration, direct component
 subpath imports, semantic theme overrides, and an `AGENTS.md` that teaches

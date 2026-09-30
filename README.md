@@ -108,11 +108,12 @@ for the full CSS system, and load optional behavior from paths such as
 
 ### Astro
 
-Astro 7 projects can use the official source adapter and generated component
-catalog. As of 2026-09-30, the public npm registry returns E404 for
-`@ren10/astro`; a registry-only install is not currently available. Follow the
+Astro 7 projects can use the official adapter and generated component catalog.
+Check matching core and adapter versions using the [registry guide](./docs/astro.md#public-registry-status-and-owner-action).
+If the adapter version returns E404 (observed for the 0.14.0 release on
+2026-09-30), follow the
 [local build and tarball installation](./docs/astro.md#local-tarball-install)
-for matching core and adapter packages, then configure the integration:
+for matching packages. After installation, configure the integration:
 
 ```js
 import { defineConfig } from 'astro/config';
