@@ -32,18 +32,49 @@ component token API.
 - Use semantic tokens for day-to-day UI values.
 - Add a semantic token when an intent is missing; do not hard-code raw values.
 - Use component tokens for surgical component theming.
-- Do not override semantic tokens inside a component implementation; override
-  at `:root`, `[data-theme]`, or a consumer-owned theme scope.
+- Do not override semantic tokens inside a component implementation. Apply
+  page-wide semantic themes at `:root` (including a root `data-theme` attribute).
+  Scoped component-token overrides may live on any wrapping element; inherited
+  aliases do not automatically recompute when only their source token changes.
 - Use `light-dark()` in the semantic layer; do not write `.dark` patches.
-- Use `--color-border-interactive` for actionable control borders.
+- Use `--color-border-interactive` for actionable control borders. It must meet
+  3:1 against adjacent neutral surfaces and control fills, including hover and
+  active fills; decorative border tokens have no such guarantee.
 - Use `--color-*-strong` for status/accent text on neutral surfaces.
-- Use `--color-on-*` only on the matching solid background.
+- Use `--color-on-*` only on the matching solid background. Keep the entire
+  interactive ramp at 4.5:1 for normal text: `--color-on-accent` pairs with
+  `--color-accent`, `--color-accent-hover`, and `--color-accent-active`;
+  `--color-on-danger` pairs with the equivalent danger state tokens.
 - Pair `--color-on-surface-contrast` only with
   `--color-surface-contrast` for editorial surfaces that remain dark in every
   theme.
 - Do not use `--color-text-faint` for information the user must read.
 - Use semantic motion tokens and transition presets; do not write raw
   durations or easings in components.
+
+## Visual Reference Mapping
+
+`generateThemeFromReference()` maps observations to the existing public tokens:
+
+- `colors.background` → `--color-surface`, the page/body background
+- `colors.surface` → `--color-surface-raised` and `--color-surface-overlay`, the
+  card/dialog/popover surface; defaults to the page background when omitted
+- `typography.fontSans` → `--font-sans`
+- `typography.fontDisplay` → `--font-heading`
+- `motion` → `--duration-fast`, `--duration-normal`, and `--duration-slow`
+
+There is no separate `--color-bg`, `--font-display`, or `--duration-base` API.
+Use a generated theme on the document root for these page-wide choices.
+Generated CSS includes a same-scope reduced-motion override that zeros the three
+motion durations. Keep that media block when installing the theme: unlayered
+motion overrides otherwise outrank the foundation's layered accessibility defaults.
+
+## Typed Length Defaults
+
+Spacing and radius tokens remain unregistered and `rem`-based so root font-size
+preferences scale them consistently in Chromium, Firefox, and WebKit. Typed
+length registration freezes these root-relative values in Firefox and WebKit;
+color and duration tokens retain their valid, independent registrations.
 
 ## Related Files
 

@@ -34,7 +34,12 @@ export function generateThemeFromReference(input) {
   const mutedFallback = mix(text, background, spec.mode === 'light' ? 0.28 : 0.38);
   const mutedText = accessibleColor(spec.colors.mutedText ?? mutedFallback, [background, surface], textMinimum, 'mutedText', repairs);
   const accent = accessibleAccent(base.scale, spec.mode, background, textMinimum, repairs, spec.colors.accent);
-  const onAccent = onColor(accent);
+  const interactionTarget = spec.mode === 'light' ? '#000000' : '#ffffff';
+  const accentHover = mix(accent, interactionTarget, 0.12);
+  const accentActive = mix(accent, interactionTarget, 0.2);
+  // One fixed label must remain readable across the entire ramp, not just its
+  // base. Keep the mode's ramp direction because accent-active also colors links.
+  const onAccent = accessibleColor(onColor(accent), [accent, accentHover, accentActive], textMinimum, 'onAccent', repairs);
   const border = mix(text, surface, spec.mode === 'light' ? 0.82 : 0.72);
   const elevation = ELEVATION_TOKENS[spec.elevation ?? 'subtle'];
   const motion = MOTION_TOKENS[spec.motion ?? 'standard'];
@@ -42,27 +47,27 @@ export function generateThemeFromReference(input) {
   const fontDisplay = safeFont(spec.typography?.fontDisplay ?? fontSans, 'typography.fontDisplay');
 
   const tokens = {
-    '--color-bg': background,
-    '--color-surface': surface,
-    '--color-surface-raised': mix(surface, spec.mode === 'light' ? '#ffffff' : '#000000', 0.16),
+    '--color-surface': background,
+    '--color-surface-raised': surface,
+    '--color-surface-overlay': surface,
     '--color-surface-sunken': mix(surface, spec.mode === 'light' ? '#000000' : '#ffffff', 0.05),
     '--color-text': text,
     '--color-text-muted': mutedText,
     '--color-border': border,
     '--color-accent': accent,
-    '--color-accent-hover': mix(accent, spec.mode === 'light' ? '#000000' : '#ffffff', 0.12),
-    '--color-accent-active': mix(accent, spec.mode === 'light' ? '#000000' : '#ffffff', 0.2),
+    '--color-accent-hover': accentHover,
+    '--color-accent-active': accentActive,
     '--color-accent-strong': accent,
     '--color-accent-subtle': mix(accent, background, 0.86),
     '--color-on-accent': onAccent,
     '--color-focus-ring': accent,
     '--font-sans': fontSans,
-    '--font-display': fontDisplay,
+    '--font-heading': fontDisplay,
     '--shadow-sm': elevation[0],
     '--shadow-md': elevation[1],
     '--shadow-lg': elevation[2],
     '--duration-fast': motion[0],
-    '--duration-base': motion[1],
+    '--duration-normal': motion[1],
     '--duration-slow': motion[2],
   };
 
@@ -71,6 +76,8 @@ export function generateThemeFromReference(input) {
     pair('text/surface', text, surface, textMinimum),
     pair('mutedText/background', mutedText, background, textMinimum),
     pair('onAccent/accent', onAccent, accent, textMinimum),
+    pair('onAccent/accent-hover', onAccent, accentHover, textMinimum),
+    pair('onAccent/accent-active', onAccent, accentActive, textMinimum),
     pair('focus/background', accent, background, level === 'AAA' ? 4.5 : 3),
   ];
 
@@ -148,7 +155,22 @@ function pair(label, foreground, background, minimum) {
 
 function renderCss(spec, tokens) {
   const source = String(spec.source.label).replace(/[\r\n*]/g, ' ').trim();
-  return [`/* RenDS visual reference: ${source} */`, `[data-theme='${spec.name}'] {`, `  color-scheme: ${spec.mode};`, ...Object.entries(tokens).map(([name, value]) => `  ${name}: ${value};`), `}`].join('\n');
+  const selector = `[data-theme='${spec.name}']`;
+  // Generated themes are unlayered and therefore outrank the foundation's
+  // reduced-motion tokens. Reset every emitted duration in this same scope.
+  const durations = Object.keys(tokens).filter((name) => name.startsWith('--duration-'));
+  return [
+    `/* RenDS visual reference: ${source} */`,
+    `${selector} {`,
+    `  color-scheme: ${spec.mode};`,
+    ...Object.entries(tokens).map(([name, value]) => `  ${name}: ${value};`),
+    `}`,
+    `@media (prefers-reduced-motion: reduce) {`,
+    `  ${selector} {`,
+    ...durations.map((name) => `    ${name}: 0ms;`),
+    `  }`,
+    `}`,
+  ].join('\n');
 }
 
 function safeFont(value, label) {

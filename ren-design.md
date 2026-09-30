@@ -2,7 +2,7 @@
 # ────────────────────────────────────────────────────────────
 # RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.14.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.14.1 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
@@ -17,7 +17,7 @@
 
 system:
   name: RenDS
-  version: 0.14.0
+  version: 0.14.1
   package: ren10
   license: MIT
   repo: https://github.com/Rensoconese/ren10
@@ -177,6 +177,8 @@ colors:
       warning-strong: light-dark(orange-700, orange-300)
       on-warning:     light-dark(white, black)
       danger:         light-dark(red-500,    red-400)
+      danger-hover:   light-dark(red-600,    red-300)
+      danger-active:  light-dark(red-700,    red-200)
       danger-subtle:  light-dark(red-50,     red-900)
       danger-strong:  light-dark(red-500,    red-300)
       on-danger:      light-dark(white, black)
@@ -208,7 +210,7 @@ colors:
       base:        light-dark(gray-200, gray-900)   # decorative (may fail 3:1)
       strong:      light-dark(gray-300, gray-800)
       muted:       light-dark(gray-100, gray-950)
-      interactive: light-dark(gray-500, gray-500)   # WCAG 1.4.11 ≥3:1
+      interactive: light-dark(gray-700, gray-500)   # WCAG 1.4.11 ≥3:1
       accent:      accent.base
     fill:
       base:    light-dark(gray-100, gray-950)
@@ -936,13 +938,14 @@ Borders serve two roles with very different contrast requirements:
 - **Interactive borders** (`--color-border-interactive`) outline actionable
   controls: inputs, unchecked checkboxes, toggle buttons. These must meet
   WCAG 1.4.11 (≥3:1 vs their surface). `--color-border-interactive`
-  resolves to `gray-500` in both modes — 3.07:1 on white, 7.42:1 on black
-  — which clears AA everywhere the system expects a border to communicate
-  affordance.
+  resolves to `gray-700` in light mode and `gray-500` in dark mode. These
+  pass against the supported neutral surfaces and control fills, including
+  the active fill (3.94:1 light / 4.13:1 dark). Presets are checked separately.
 
 Components enforce this split: `ren-field`, `ren-checkbox`, `ren-radio`,
-`ren-select`, `ren-toggle-group`, and `ren-button.ren-btn-outline` all use
-`--color-border-interactive`. `ren-card`, `ren-separator`, and
+`ren-select`, and `ren-toggle-group` use `--color-border-interactive`.
+`ren-button.ren-btn-outline` uses the theme's accent border and the text-safe
+`--color-accent-strong` for its label. `ren-card`, `ren-separator`, and
 `ren-sidebar` use `--color-border`. If you're deciding which to use, the
 test is: *does removing this border make the component ambiguous about
 being interactive?* If yes, interactive. If no, decorative.

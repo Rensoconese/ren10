@@ -1,7 +1,7 @@
 {
   "name": "ren10",
-  "version": "0.14.0",
-  "description": "RenDS — A vanilla, accessible, atomic design system. No framework required.",
+  "version": "0.14.1",
+  "description": "RenDS \u2014 A vanilla, accessible, atomic design system. No framework required.",
   "author": "Ren",
   "license": "MIT",
   "engines": {
@@ -114,7 +114,7 @@
     "lint:aihints": "node scripts/check-ai-hints.mjs",
     "check:release": "node scripts/check-release.mjs",
     "test": "npm run test:portable",
-    "test:portable": "node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && npm run test:debug && npm run test:ai-hints && npm run test:form-fuzz && npm run check:performance && npm run check:public-contracts && npm run test:detector && npm run test:astro-integration && npm run test:a11y && npm run test:components && npm run test:runtime-smoke && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
+    "test:portable": "npm run test:audit-regressions && node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && npm run test:debug && npm run test:ai-hints && npm run test:form-fuzz && npm run check:performance && npm run check:public-contracts && npm run test:detector && npm run test:astro-integration && npm run test:a11y && npm run test:components && npm run test:runtime-smoke && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
     "test:all": "npm run test:portable && npm run test:visual:linux",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
@@ -122,7 +122,7 @@
     "test:components": "playwright test --config tests/components/playwright.config.cjs",
     "test:detector": "node --test tests/detector/*.test.mjs scripts/check-design-context.test.mjs",
     "test:agent-starter": "playwright test --config tests/agent-starter/playwright.config.cjs",
-    "test:theme": "node themes/theme-generator.test.js && node --test themes/reference-theme.test.js",
+    "test:theme": "node themes/theme-generator.test.js && node --test themes/reference-theme.test.js && node --test themes/token-contracts.test.js",
     "test:evals": "node evals/run-eval.mjs --all",
     "test:exports": "node scripts/verify-package-exports.mjs",
     "test:knowledge-package": "npm run knowledge:check",
@@ -153,7 +153,7 @@
     "test:astro": "node scripts/smoke-astro.mjs",
     "astro:generate": "node scripts/generate-astro-components.mjs",
     "astro:check": "node scripts/generate-astro-components.mjs --check",
-    "test:astro-integration": "npm run astro:check && node --test packages/astro/integration.test.mjs && npm run test:astro && npm run test:astro-starter && npm run test:astro-package",
+    "test:astro-integration": "npm run astro:check && node --test packages/astro/integration.test.mjs && npm run test:astro && npm run test:astro-starter && npm run test:astro-package && npm run test:astro-local-install",
     "test:astro-starter": "node scripts/smoke-astro-starter.mjs",
     "test:astro-package": "node scripts/check-astro-package.mjs",
     "test:debug": "node tests/debug-utils.test.mjs",
@@ -166,7 +166,9 @@
     "test:workflow": "node --test scripts/relume-workflow.test.mjs scripts/capture-block-matrix.test.mjs",
     "test:runtime-smoke": "playwright test --config tests/components/playwright.config.cjs runtime-smoke",
     "agent:provenance": "node scripts/check-agent-provenance.mjs",
-    "test:field-regressions": "node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && playwright test --config tests/components/playwright.config.cjs css-entrypoints stack-rhythm card-media-slots tour-composition tabs-recipe"
+    "test:field-regressions": "node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && playwright test --config tests/components/playwright.config.cjs css-entrypoints stack-rhythm card-media-slots tour-composition tabs-recipe",
+    "test:audit-regressions": "node --test tests/date-form-regressions.test.mjs tests/components/keyboard-activation.test.mjs scripts/installation-docs.test.mjs",
+    "test:astro-local-install": "node scripts/smoke-astro-local-install.mjs"
   },
   "keywords": [
     "design-system",

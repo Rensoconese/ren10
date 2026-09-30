@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.14.0**
+Current version: **0.14.1**
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
@@ -35,53 +35,85 @@ npx ren10 add button dialog tooltip
 npx ren10 add --all
 ```
 
-Then link the foundation and whatever components you added:
+Then link the generated entrypoint. It includes tokens, base styles, appearance
+presets, and the components you added:
 
 ```html
-<!-- Foundation: reset + tokens + base layers -->
 <link rel="stylesheet" href="rends/index.css">
-
-<!-- All components in one file -->
-<link rel="stylesheet" href="rends/components/index.css">
-
-<!-- …or cherry-pick -->
-<link rel="stylesheet" href="rends/components/primitives/ren-button/ren-button.css">
 ```
 
-And use them:
+Native buttons work without JavaScript:
 
 ```html
 <button class="ren-btn">Click me</button>
 <button class="ren-btn ren-btn-secondary">Cancel</button>
+```
 
-<!-- Same component, also available as a custom element -->
+For the optional custom element, load its JavaScript too:
+
+```html
+<script type="module" src="rends/components/button/ren-button.js"></script>
 <ren-button variant="primary">Click me</ren-button>
 ```
 
-Import JavaScript only for the interactive composites that need it:
+Load other behavior only when used, for example a dialog:
 
 ```html
-<script type="module" src="rends/components/composites/ren-dialog/ren-dialog.js"></script>
+<script type="module" src="rends/components/dialog/ren-dialog.js"></script>
 ```
+
+CLI copies use flat component folders: `rends/components/button/ren-button.css`,
+`rends/components/dialog/ren-dialog.js`, and so on. The generated
+`rends/components/index.css` imports the CSS for the components you add; there
+is no need to link it a second time after `rends/index.css`.
 
 That's it. No build step, no bundler, no framework.
 
+### npm install
+
+For a project with a CSS-aware bundler, use the published core package:
+
+```bash
+npm install ren10
+```
+
+```js
+import 'ren10/foundation.css';
+import 'ren10/components/primitives/ren-button/ren-button.css';
+// Only needed for <ren-button>; native .ren-btn buttons are CSS-only.
+import 'ren10/components/primitives/ren-button/ren-button.js';
+```
+
+The npm package keeps the source `primitives/`, `composites/`, and `patterns/`
+folders. These package imports are different from the flattened CLI copy paths.
+For all component styles, use `import 'ren10'` instead of the foundation and
+individual CSS imports; JavaScript remains opt-in.
+
 ### Manual install
 
-If you'd rather not use the CLI, clone the repo and copy the `rends/` folder into your project:
+If you'd rather not use the CLI or a bundler, copy the runtime files from the
+repository root into your project's `rends/` directory:
 
 ```bash
 git clone https://github.com/Rensoconese/ren10.git
-cp -r ren10/rends ./my-project/
+mkdir -p my-project/rends
+cp -R ren10/index.css ren10/foundation.css ren10/tokens ren10/base ren10/components ren10/utils ren10/themes my-project/rends/
 ```
+
+This preserves the source layout, unlike the CLI copy. Link `rends/index.css`
+for the full CSS system, and load optional behavior from paths such as
+`rends/components/primitives/ren-button/ren-button.js` or
+`rends/components/composites/ren-dialog/ren-dialog.js`. Add
+`rends/themes/appearance.css` when using the named presets.
 
 ### Astro
 
-Astro 7 projects can use the official adapter and generated component catalog:
-
-```bash
-npm install astro ren10 @ren10/astro
-```
+Astro 7 projects can use the official adapter and generated component catalog.
+Check matching core and adapter versions using the [registry guide](./docs/astro.md#public-registry-status-and-owner-action).
+If the adapter version returns E404 (observed for the 0.14.0 release on
+2026-09-30), follow the
+[local build and tarball installation](./docs/astro.md#local-tarball-install)
+for matching packages. After installation, configure the integration:
 
 ```js
 import { defineConfig } from 'astro/config';
@@ -148,9 +180,9 @@ The presets and the hex→tokens generator ship as separate files so you only pa
 **Preset themes** (opt-in):
 
 ```html
-<!-- Foundation -->
+<!-- Full RenDS styles -->
 <link rel="stylesheet" href="rends/index.css">
-<!-- Theme presets — only needed if you use [data-theme="..."] -->
+<!-- Presets: omit this extra link with the CLI-generated index.css -->
 <link rel="stylesheet" href="rends/themes/appearance.css">
 ```
 
@@ -196,10 +228,13 @@ Any CSS you write outside a layer automatically overrides RenDS styles. No `!imp
 
 ## Architecture
 
+Source repository and npm package layout (the CLI copy flattens component folders):
+
 ```
-rends/
+ren10/
 ├── index.html          ← Marketing landing page
-├── index.css           ← Import this for the foundation (reset + tokens + base)
+├── index.css           ← Full CSS entrypoint (foundation + all components)
+├── foundation.css      ← Tokens + reset + base, without component CSS
 ├── ren-design.md       ← Agent-facing RenDS contract and routing map
 ├── tokens/             ← Primitives, semantic, component tokens + motion
 ├── base/               ← Reset, classless styles, layouts, utilities, motion presets

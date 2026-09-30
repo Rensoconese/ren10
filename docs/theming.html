@@ -61,7 +61,7 @@
       <a href="index.html" class="dx-brand">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.14.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.14.1</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="index.html" aria-current="page">Docs</a>
@@ -382,23 +382,22 @@
       <div class="dx-pre" tabindex="0"><code>:root {
   --ren-btn-radius: var(--radius-full);
   --ren-btn-padding-x: var(--space-5);
-  --ren-btn-weight: var(--weight-semibold);
+  --ren-btn-font-weight: var(--weight-semibold);
 }</code></div>
       <p>Doesn't touch cards, tags, dialogs — only buttons. Use this when the design system's baseline is close but not quite right.</p>
 
-      <h3>Level 3 — Scope to a section (opt-in)</h3>
-      <p>Scoping an override to a class keeps the rest of the app on defaults:</p>
-      <div class="dx-pre" tabindex="0"><code>&lt;section class="brand-rose"&gt;
-  &lt;button class="ren-btn ren-btn-primary"&gt;Rose only&lt;/button&gt;
+      <h3>Level 3 — Scope component tokens to a section</h3>
+      <p>Set the component token itself on a wrapping class to keep the rest of the app on defaults:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;section class="rounded-actions"&gt;
+  &lt;button class="ren-btn ren-btn-primary"&gt;Rounded only&lt;/button&gt;
 &lt;/section&gt;
 
 &lt;style&gt;
-.brand-rose {
-  --color-accent: #F43F5E;
-  --color-accent-hover: #E11D48;
-  --color-accent-subtle: #FFE4E6;
+.rounded-actions {
+  --ren-btn-radius: var(--radius-full);
 }
 &lt;/style&gt;</code></div>
+      <p>For semantic or page-wide themes, apply overrides on <code>:root</code>. A class-only <code>--color-accent</code> override does not necessarily update inherited component aliases such as <code>--ren-btn-bg</code>.</p>
 
       <div class="dx-callout">
         <p><strong>Why this works without <code>!important</code>:</strong> RenDS uses CSS Cascade Layers. Any CSS you write <em>outside</em> a layer automatically wins over everything inside <code>@layer components</code>. You never fight specificity. See <a href="foundations/cascade-layers.html" class="ren-link">Foundations · Cascade Layers</a> for the full layer order, integration recipes for legacy CSS / other design systems, and anti-patterns.</p>
@@ -434,20 +433,19 @@
 
       <h3>Step 4 — Optional: component-level tweaks</h3>
       <div class="dx-pre" tabindex="0"><code>:root {
-  --ren-btn-weight: var(--weight-semibold);
+  --ren-btn-font-weight: var(--weight-semibold);
   --ren-card-radius: var(--radius-xl);
-  --ren-field-border: var(--color-border-strong);
+  --ren-field-border-color: var(--color-border-strong);
 }</code></div>
 
       <h3>That's the whole theme</h3>
       <p>Save it as <code>themes/my-brand.css</code>, link it after <code>rends/index.css</code>, and you're done:</p>
       <div class="dx-pre" tabindex="0"><code>&lt;link rel="stylesheet" href="rends/index.css"&gt;
-&lt;link rel="stylesheet" href="rends/components/index.css"&gt;
 &lt;link rel="stylesheet" href="themes/my-brand.css"&gt;</code></div>
 
       <div class="dx-theme-card">
-        <p class="dx-theme-card-label">Example: "amber-editorial"</p>
-        <div class="dx-pre" style="margin: 0;" tabindex="0"><code>/* themes/amber-editorial.css */
+        <p class="dx-theme-card-label">Example: custom brand file</p>
+        <div class="dx-pre" style="margin: 0;" tabindex="0"><code>/* themes/my-brand.css — create this file yourself */
 :root {
   --color-accent:        #F59E0B;
   --color-accent-hover:  #D97706;
@@ -459,7 +457,7 @@
   --font-heading: "Fraunces", Georgia, serif;
 
   --ren-card-radius: var(--radius-xl);
-  --ren-btn-weight: var(--weight-semibold);
+  --ren-btn-font-weight: var(--weight-semibold);
 }
 :root[data-density="compact"] { /* optional density tune */ }</code></div>
       </div>
@@ -469,33 +467,37 @@
     <section class="dx-section" id="ready-made">
       <p class="dx-kicker">Drop-in</p>
       <h2>Ready-made themes</h2>
-      <p>RenDS ships a small set of reference themes under <code>rends/themes/</code>. Each is a plain CSS file — link it after <code>rends/index.css</code> and you're done. They're also meant to be read: every one is short enough to understand end-to-end, and copying the structure is the fastest way to learn the token vocabulary.</p>
+      <p>All built-in presets ship together in <code>rends/themes/appearance.css</code>. Load that stylesheet after the foundation, then select a preset with <code>data-theme</code> on <code>&lt;html&gt;</code>. The CLI-generated <code>rends/index.css</code> already imports it; npm and manual-copy consumers opt in explicitly.</p>
 
       <div class="dx-theme-card">
-        <p class="dx-theme-card-label">themes/amber-editorial.css</p>
+        <p class="dx-theme-card-label">data-theme="amber-editorial"</p>
         <p>Warm editorial palette on a Fraunces display face. Amber accent, generous card radius, comfortable density. Pairs well with long-form reading UIs, marketing pages, and newsletter dashboards.</p>
       </div>
 
       <div class="dx-theme-card">
-        <p class="dx-theme-card-label">themes/cyber.css</p>
+        <p class="dx-theme-card-label">data-theme="cyber"</p>
         <p>High-contrast neon on near-black surfaces. Cyan/magenta accent pair, mono-first typography, sharp corners. Tuned for ops consoles, terminal-adjacent dashboards, and anything that wants to feel like a deck readout. Light and dark both ship — the light variant is a "daybreak" shift rather than a pure inversion, so contrast holds.</p>
       </div>
 
       <div class="dx-theme-card">
-        <p class="dx-theme-card-label">themes/minimal-mono.css</p>
+        <p class="dx-theme-card-label">data-theme="minimal-mono"</p>
         <p>A monochrome baseline: one gray ramp, one accent reserved for actions. Zero decoration. Best as a starting point for a product theme (fork and add an accent) or for screenshots and docs where color would distract.</p>
       </div>
 
       <p>All three themes:</p>
       <ul>
         <li>Stay AA-compliant in both light and dark modes — contrast was audited before merge.</li>
-        <li>Override only semantic tokens. No component CSS is touched, so upgrades stay painless.</li>
-        <li>Are safe to use as references — copy, rename, and edit rather than importing and re-overriding.</li>
+        <li>Set design tokens for color, type, shape, and selected component defaults without replacing component CSS.</li>
+        <li>Can be studied in <code>appearance.css</code>; copy a preset block into your own theme file when customizing it.</li>
       </ul>
 
-      <div class="dx-pre" tabindex="0"><code>&lt;link rel="stylesheet" href="rends/index.css"&gt;
-&lt;link rel="stylesheet" href="rends/components/index.css"&gt;
-&lt;link rel="stylesheet" href="rends/themes/amber-editorial.css"&gt;</code></div>
+      <div class="dx-pre" tabindex="0"><code>&lt;html data-theme="amber-editorial"&gt;
+&lt;head&gt;
+  &lt;link rel="stylesheet" href="rends/index.css"&gt;
+  &lt;!-- Omit this extra link with the CLI-generated index.css. --&gt;
+  &lt;link rel="stylesheet" href="rends/themes/appearance.css"&gt;
+&lt;/head&gt;
+&lt;/html&gt;</code></div>
     </section>
 
     <!-- Theme Builder -->
@@ -565,27 +567,33 @@ console.log(strict.report.warnings); // shortfalls flagged per-pair</code></div>
     <section class="dx-section" id="multi">
       <p class="dx-kicker">Advanced</p>
       <h2>Multi-theme apps</h2>
-      <p>Because themes are just CSS custom properties, nothing stops you from running multiple themes on one page. The rules:</p>
+      <p>Use the document root for page-wide semantic themes. Direct component-token overrides can be scoped to a section, but inherited aliases are resolved where they are declared:</p>
       <ul>
-        <li>Tokens cascade. A child element inherits from its ancestor unless overridden.</li>
-        <li>Override at any ancestor. The scope is "from here down".</li>
+        <li>Semantic aliases are declared on <code>:root</code>; component defaults are declared on <code>:root</code> and <code>[data-theme]</code>.</li>
+        <li>Changing a semantic token on an arbitrary class does not automatically recompute every inherited alias.</li>
+        <li>Nested semantic themes and nested light/dark switches need browser verification for every affected component; they are not covered by the root-theme guarantee.</li>
       </ul>
 
-      <h3>Per-section</h3>
-      <div class="dx-pre" tabindex="0"><code>&lt;body&gt;
+      <h3>Per-section component styling</h3>
+      <p>For example, scope <code>--ren-btn-radius</code> directly:</p>
+      <div class="dx-pre" tabindex="0"><code>&lt;style&gt;
+.promo-theme { --ren-btn-radius: var(--radius-full); }
+&lt;/style&gt;
+
+&lt;body&gt;
   &lt;main&gt;
     &lt;!-- Default theme --&gt;
   &lt;/main&gt;
   &lt;aside class="promo-theme"&gt;
-    &lt;!-- Rose accent within this aside --&gt;
+    &lt;!-- Rounded primary buttons within this aside --&gt;
     &lt;button class="ren-btn ren-btn-primary"&gt;Upgrade&lt;/button&gt;
   &lt;/aside&gt;
 &lt;/body&gt;</code></div>
 
       <h3>Per-route (SPA)</h3>
-      <p>Set <code>data-theme</code> or a class on the route container when routing:</p>
-      <div class="dx-pre" tabindex="0"><code>document.getElementById('app').dataset.theme = routeConfig.theme;
-// e.g. "dark", "light", "brand-b2b"</code></div>
+      <p>Update <code>data-theme</code> on the document root when routing. Load the matching preset or custom CSS first:</p>
+      <div class="dx-pre" tabindex="0"><code>document.documentElement.dataset.theme = routeConfig.theme;
+// e.g. "ocean", "amber-editorial", "minimal-mono"</code></div>
 
       <h3>Per-user</h3>
       <p>Save preference to <code>localStorage</code> on change, apply on load:</p>

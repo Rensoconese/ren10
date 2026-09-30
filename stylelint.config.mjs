@@ -128,10 +128,6 @@ export default {
         // surface") exists.
         'components/primitives/ren-avatar/ren-avatar.css',
 
-        // Danger button hover/active steps use primitive --red-500/--red-600
-        // to step down from --color-danger. Preserved for visual parity.
-        'components/primitives/ren-button/ren-button.css',
-
         // Switch checked-hover transitions to --green-500 to maintain the
         // toggle-on tactile color. Visual parity preserved.
         'components/primitives/ren-checkbox/ren-checkbox.css',

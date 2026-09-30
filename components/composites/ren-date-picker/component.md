@@ -101,6 +101,16 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 
 Use the docs page and source files listed below for full examples before adding production markup.
 
+## Submitted Value
+
+With `name="day"`, the hidden input submits `YYYY-MM-DD` in single mode,
+including the initial `value` before any interaction. `locale` and `format`
+only affect the visible trigger label. In `mode="range"`, a complete range
+submits the ISO interval `YYYY-MM-DD/YYYY-MM-DD`; an incomplete range submits
+an empty string. `getValue()` returns `null` until the range is complete.
+Use `ren-date-range-picker` when separate start/end fields and Apply/Cancel
+confirmation are needed.
+
 ## Variants And Public Selectors
 
 - `.ren-calendar`

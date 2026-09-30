@@ -3,9 +3,13 @@
 Official Astro integration for RenDS. It keeps RenDS framework-free and emits
 native HTML plus Light DOM custom elements.
 
-```bash
-npx astro add @ren10/astro
-```
+Use a current Node.js 22 LTS release (22.19 or newer for the locked
+dependencies), Astro 7, and a matching `ren10` core package.
+Check matching public versions in the installation guide. If the adapter
+version returns E404 (observed for 0.14.0 on 2026-09-30), use the supported
+[local build and tarball installation](https://github.com/Rensoconese/ren10/blob/main/docs/astro.md#local-tarball-install)
+to install both packages from the same source checkout. Then configure the
+integration:
 
 ```js
 // astro.config.mjs

@@ -51,6 +51,7 @@ export class RenDatePicker extends HTMLElement {
     /* ═══ BIND METHODS ═══ */
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
     this.handleTriggerKeyDown = this.handleTriggerKeyDown.bind(this);
+    this.handleDropdownKeyDown = this.handleDropdownKeyDown.bind(this);
     this.handleCalendarSelect = this.handleCalendarSelect.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
   }
@@ -83,6 +84,7 @@ export class RenDatePicker extends HTMLElement {
       this.dropdown.setAttribute('popover', 'manual');
       this.appendChild(this.dropdown);
     }
+    this.dropdown.addEventListener('keydown', this.handleDropdownKeyDown);
 
     /* ═══ SET UP CALENDAR (must come after dropdown) ═══ */
     this.calendar = this.querySelector('ren-calendar');
@@ -106,14 +108,14 @@ export class RenDatePicker extends HTMLElement {
     /* ═══ LISTEN TO DOCUMENT CLICKS ═══ */
     document.addEventListener('click', this.handleDocumentClick);
 
+    /* ═══ PREPARE FORM VALUE BEFORE APPLYING THE INITIAL DATE ═══ */
+    this.addHiddenInput();
+
     /* ═══ SET INITIAL VALUE ═══ */
     const valueAttr = this.getAttribute('value');
     if (valueAttr) {
       this.setValue(valueAttr);
     }
-
-    /* ═══ ADD TO FORM IF PARENT IS FORM ═══ */
-    this.addHiddenInput();
   }
 
   disconnectedCallback() {
@@ -125,6 +127,7 @@ export class RenDatePicker extends HTMLElement {
     if (this.calendar) {
       this.calendar.removeEventListener('ren-date-select', this.handleCalendarSelect);
     }
+    this.dropdown?.removeEventListener('keydown', this.handleDropdownKeyDown);
 
     document.removeEventListener('click', this.handleDocumentClick);
 
@@ -236,8 +239,15 @@ export class RenDatePicker extends HTMLElement {
     }
 
     if (event.key === 'Escape') {
-      this.close();
+      this.handleDropdownKeyDown(event);
     }
+  }
+
+  handleDropdownKeyDown(event) {
+    if (event.key !== 'Escape' || !this.isOpen) return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.close();
   }
 
   /* ═══ HANDLE CALENDAR DATE SELECT ═══ */
@@ -340,6 +350,12 @@ export class RenDatePicker extends HTMLElement {
 
   /* ═══ UPDATE TRIGGER TEXT ═══ */
   updateTrigger(formattedValue) {
+    // Display text is localized; submitted values are locale-independent.
+    if (this.hiddenInput) {
+      const value = this.getValue();
+      this.hiddenInput.value = typeof value === 'string' ? value
+        : value ? `${value.start}/${value.end}` : '';
+    }
     if (!this.trigger) return;
 
     const valueSpan = this.trigger.querySelector('.ren-date-picker-value');
@@ -352,10 +368,6 @@ export class RenDatePicker extends HTMLElement {
     this.trigger.removeAttribute('aria-label');
     this.trigger.classList.remove('ren-date-picker-empty');
 
-    /* ═══ UPDATE HIDDEN INPUT ═══ */
-    if (this.hiddenInput) {
-      this.hiddenInput.value = formattedValue;
-    }
   }
 
   /* ═══ FORMAT DATE FOR DISPLAY ═══ */
@@ -422,7 +434,7 @@ export class RenDatePicker extends HTMLElement {
     if (this.mode === 'single') {
       return this.selectedValue ? this.dateToString(this.selectedValue) : null;
     } else if (this.mode === 'range') {
-      return this.selectedRange
+      return this.selectedRange?.start && this.selectedRange?.end
         ? {
             start: this.dateToString(this.selectedRange.start),
             end: this.dateToString(this.selectedRange.end),

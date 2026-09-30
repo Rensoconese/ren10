@@ -7,9 +7,71 @@ JavaScript supplied by the canonical component contracts.
 
 ## Install
 
+Use a current Node.js 22 LTS release (22.19 or newer for the locked
+dependencies) and Astro 7. Check matching package versions using the
+registry commands below. If either package version is unavailable, use the
+local tarball route. A successful local build is not proof of publication.
+The 0.14.0 core was available when the adapter returned E404 on 2026-09-30;
+that observation does not determine the availability of later releases.
+
+### Local tarball install
+
+Build and pack both packages from the same trusted checkout. These commands
+assume the checkout is version 0.14.1; if using a different version, use the
+filenames printed by `npm pack`. Packing is local and does not publish to npm.
+
 ```bash
-npm install astro ren10 @ren10/astro
+git clone https://github.com/Rensoconese/ren10.git
+cd ren10
+npm ci
+npm run astro:generate
+npm run build:bundles
+mkdir -p ../ren10-packages
+npm pack --pack-destination ../ren10-packages
+npm pack --workspace @ren10/astro --pack-destination ../ren10-packages
+cd ..
 ```
+
+Copy and install the starter using both local tarballs in the same command.
+This replaces its registry dependency ranges with local file references, so
+npm does not try to fetch `@ren10/astro` from the registry:
+
+```bash
+cp -R ren10/starters/astro my-astro-site
+cd my-astro-site
+npm install ../ren10-packages/ren10-0.14.1.tgz ../ren10-packages/ren10-astro-0.14.1.tgz
+npm run build
+npm run dev
+```
+
+For an existing Astro 7 project, run that same `npm install` command from its
+root, adjusting the relative tarball paths, then add the integration below.
+Keep the tarballs at the referenced paths for reproducible installs, or vendor
+them into the project and update its dependencies. Do not install the GitHub
+repository as `@ren10/astro`: the repository root package is `ren10`.
+
+### Public registry status and owner action
+
+To check availability without installing anything:
+
+```bash
+npm view ren10@0.14.1 version --registry=https://registry.npmjs.org
+npm view @ren10/astro@0.14.1 version --registry=https://registry.npmjs.org
+```
+
+If both queries succeed, consumers can use:
+
+```bash
+npm install astro@^7 ren10@^0.14.1 @ren10/astro@^0.14.1
+```
+
+If a query returns E404, use the local tarballs above. An npm owner must
+inspect publication logs, confirm permission under `@ren10`, and complete
+the authorized release. The release workflow verifies the tagged source
+before publishing both packages with public access and provenance. E404 alone
+does not identify the cause; local tests cannot verify account permissions.
+
+### Configure the integration
 
 ```js
 // astro.config.mjs

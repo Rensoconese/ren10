@@ -128,12 +128,14 @@ export class RenNumberField extends HTMLElement {
     this.input.addEventListener('keydown', this.handleInputKeydown);
 
     /* ═══ BUTTON PRESS & HOLD ═══ */
+    this.decrementBtn.addEventListener('click', this.handleDecrementClick);
     this.decrementBtn.addEventListener('mousedown', this.handleDecrementPress);
     this.decrementBtn.addEventListener('mouseup', this.handleDecrementRelease);
     this.decrementBtn.addEventListener('mouseleave', this.handleDecrementRelease);
     this.decrementBtn.addEventListener('touchstart', this.handleDecrementPress);
     this.decrementBtn.addEventListener('touchend', this.handleDecrementRelease);
 
+    this.incrementBtn.addEventListener('click', this.handleIncrementClick);
     this.incrementBtn.addEventListener('mousedown', this.handleIncrementPress);
     this.incrementBtn.addEventListener('mouseup', this.handleIncrementRelease);
     this.incrementBtn.addEventListener('mouseleave', this.handleIncrementRelease);
@@ -149,6 +151,7 @@ export class RenNumberField extends HTMLElement {
     }
 
     if (this.decrementBtn) {
+      this.decrementBtn.removeEventListener('click', this.handleDecrementClick);
       this.decrementBtn.removeEventListener('mousedown', this.handleDecrementPress);
       this.decrementBtn.removeEventListener('mouseup', this.handleDecrementRelease);
       this.decrementBtn.removeEventListener('mouseleave', this.handleDecrementRelease);
@@ -157,6 +160,7 @@ export class RenNumberField extends HTMLElement {
     }
 
     if (this.incrementBtn) {
+      this.incrementBtn.removeEventListener('click', this.handleIncrementClick);
       this.incrementBtn.removeEventListener('mousedown', this.handleIncrementPress);
       this.incrementBtn.removeEventListener('mouseup', this.handleIncrementRelease);
       this.incrementBtn.removeEventListener('mouseleave', this.handleIncrementRelease);
@@ -171,6 +175,13 @@ export class RenNumberField extends HTMLElement {
   /* ═══════════════════════════════════════════════════════════════
      DECREMENT BUTTON HANDLERS
      ═══════════════════════════════════════════════════════════════ */
+  handleDecrementClick = (e) => {
+    // Keyboard/AT and .click() activate native buttons without a press.
+    // Pointer clicks were already handled by press/hold; do not count twice.
+    if (e.detail > 0 || this.input.disabled || this.decrementBtn.disabled) return;
+    this.decrement();
+  };
+
   handleDecrementPress = (e) => {
     if (this.input.disabled || this.decrementBtn.disabled) return;
     e.preventDefault();
@@ -202,6 +213,11 @@ export class RenNumberField extends HTMLElement {
   /* ═══════════════════════════════════════════════════════════════
      INCREMENT BUTTON HANDLERS
      ═══════════════════════════════════════════════════════════════ */
+  handleIncrementClick = (e) => {
+    if (e.detail > 0 || this.input.disabled || this.incrementBtn.disabled) return;
+    this.increment();
+  };
+
   handleIncrementPress = (e) => {
     if (this.input.disabled || this.incrementBtn.disabled) return;
     e.preventDefault();

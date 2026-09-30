@@ -75,6 +75,10 @@ jobs:
         if: steps.package-playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
+      - run: npm run test:audit-regressions
+
+      - run: npm run test:astro-local-install
+
       - run: npm run test:theme
 
       - run: npm run test:evals

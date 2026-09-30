@@ -14,12 +14,6 @@
   @property --duration-normal { syntax: "<time>"; inherits: true; initial-value: 150ms; }
   @property --duration-moderate { syntax: "<time>"; inherits: true; initial-value: 250ms; }
   @property --duration-slow { syntax: "<time>"; inherits: true; initial-value: 300ms; }
-  @property --space-1 { syntax: "<length>"; inherits: true; initial-value: 0.25rem; }
-  @property --space-2 { syntax: "<length>"; inherits: true; initial-value: 0.5rem; }
-  @property --space-4 { syntax: "<length>"; inherits: true; initial-value: 1rem; }
-  @property --radius-sm { syntax: "<length>"; inherits: true; initial-value: 0.25rem; }
-  @property --radius-md { syntax: "<length>"; inherits: true; initial-value: 0.5rem; }
-  @property --radius-lg { syntax: "<length>"; inherits: true; initial-value: 0.75rem; }
 }
 
 /* tokens/primitives/colors.css */
@@ -433,6 +427,8 @@
     --color-warning-subtle: light-dark(var(--orange-50), var(--orange-900));
     --color-on-warning: light-dark(var(--white), var(--black));
     --color-danger: light-dark(var(--red-500), var(--red-400));
+    --color-danger-hover: light-dark(var(--red-600), var(--red-300));
+    --color-danger-active: light-dark(var(--red-700), var(--red-200));
     --color-danger-subtle: light-dark(var(--red-50), var(--red-900));
     --color-on-danger: light-dark(var(--white), var(--black));
     --color-info: light-dark(var(--teal-700), var(--teal-400));
@@ -458,7 +454,7 @@
     --color-border: light-dark(var(--gray-200), var(--gray-900));
     --color-border-strong: light-dark(var(--gray-300), var(--gray-800));
     --color-border-muted: light-dark(var(--gray-100), var(--gray-950));
-    --color-border-interactive: light-dark(var(--gray-500), var(--gray-500));
+    --color-border-interactive: light-dark(var(--gray-700), var(--gray-500));
     --color-border-accent: var(--color-accent);
     --color-fill: light-dark(var(--gray-100), var(--gray-950));
     --color-fill-hover: light-dark(var(--gray-200), var(--gray-900));
@@ -3738,7 +3734,7 @@
   }
   .ren-btn-outline {
     background-color: transparent;
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     border-color: var(--color-accent);
   }
   .ren-btn-outline:hover:not(:disabled):not([aria-disabled=true]) {
@@ -3754,12 +3750,12 @@
     border-color: var(--color-danger);
   }
   .ren-btn-danger:hover:not(:disabled):not([aria-disabled=true]) {
-    background-color: var(--red-500);
-    border-color: var(--red-500);
+    background-color: var(--color-danger-hover);
+    border-color: var(--color-danger-hover);
   }
   .ren-btn-danger:active:not(:disabled):not([aria-disabled=true]) {
-    background-color: var(--red-600);
-    border-color: var(--red-600);
+    background-color: var(--color-danger-active);
+    border-color: var(--color-danger-active);
   }
   .ren-btn-link {
     background-color: transparent;

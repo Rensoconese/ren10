@@ -214,8 +214,8 @@ export class RenCombobox extends HTMLElement {
     return Array.from(this.#list.querySelectorAll('.ren-combobox-item'));
   }
 
-  #getVisibleItems() {
-    return this.#getItems().filter((i) => !i.hidden);
+  #getNavigableItems() {
+    return this.#getItems().filter((i) => !i.hidden && i.getAttribute('aria-disabled') !== 'true');
   }
 
   /* ─── Event wiring ─── */
@@ -230,7 +230,7 @@ export class RenCombobox extends HTMLElement {
     // Item selection (delegated)
     this.#list.addEventListener('click', (e) => {
       const item = e.target.closest('.ren-combobox-item');
-      if (item && !item.hasAttribute('aria-disabled')) {
+      if (item) {
         this.#selectItem(item);
       }
     });
@@ -238,7 +238,7 @@ export class RenCombobox extends HTMLElement {
     this.#list.addEventListener('mouseover', (e) => {
       const item = e.target.closest('.ren-combobox-item');
       if (!item || item.hidden) return;
-      const visible = this.#getVisibleItems();
+      const visible = this.#getNavigableItems();
       const idx = visible.indexOf(item);
       if (idx !== -1) this.#highlight(idx);
     });
@@ -275,7 +275,7 @@ export class RenCombobox extends HTMLElement {
   }
 
   #onKeydown(e) {
-    const visible = this.#getVisibleItems();
+    const visible = this.#getNavigableItems();
 
     switch (e.key) {
       case 'ArrowDown':
@@ -362,7 +362,7 @@ export class RenCombobox extends HTMLElement {
   /* ─── Highlight management (aria-activedescendant pattern) ─── */
 
   #highlight(index) {
-    const visible = this.#getVisibleItems();
+    const visible = this.#getNavigableItems();
     if (!visible.length) {
       this.#highlightedIndex = -1;
       this.#input.removeAttribute('aria-activedescendant');
@@ -388,6 +388,9 @@ export class RenCombobox extends HTMLElement {
   /* ─── Selection ─── */
 
   #selectItem(item) {
+    // Pointer, keyboard, and assistive activation share this guard.
+    if (item.getAttribute('aria-disabled') === 'true') return;
+
     const value = item.getAttribute('data-value') || item.textContent.trim();
     const label = item.textContent.trim();
 

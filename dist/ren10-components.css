@@ -68,7 +68,7 @@
   }
   .ren-btn-outline {
     background-color: transparent;
-    color: var(--color-accent);
+    color: var(--color-accent-strong);
     border-color: var(--color-accent);
   }
   .ren-btn-outline:hover:not(:disabled):not([aria-disabled=true]) {
@@ -84,12 +84,12 @@
     border-color: var(--color-danger);
   }
   .ren-btn-danger:hover:not(:disabled):not([aria-disabled=true]) {
-    background-color: var(--red-500);
-    border-color: var(--red-500);
+    background-color: var(--color-danger-hover);
+    border-color: var(--color-danger-hover);
   }
   .ren-btn-danger:active:not(:disabled):not([aria-disabled=true]) {
-    background-color: var(--red-600);
-    border-color: var(--red-600);
+    background-color: var(--color-danger-active);
+    border-color: var(--color-danger-active);
   }
   .ren-btn-link {
     background-color: transparent;
