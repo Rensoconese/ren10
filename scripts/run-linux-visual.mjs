@@ -78,6 +78,10 @@ function runContainerised(extraArgs) {
     [
       'run',
       '--rm',
+      // CI baselines render on x86_64; pin architecture as well as image so
+      // Apple Silicon does not introduce ARM font rasterization differences.
+      '--platform',
+      'linux/amd64',
       '-v',
       `${PKG_ROOT}:/work`,
       '-w',
