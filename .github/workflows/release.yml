@@ -44,6 +44,10 @@ jobs:
 
       - run: npm run test:theme
 
+      - run: npm run test:audit-regressions
+
+      - run: npm run test:astro-local-install
+
       - run: npm run test:evals
 
       - run: npm run test:detector

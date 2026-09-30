@@ -140,7 +140,8 @@ test('number field supports programmatic activation and does not double count po
   await expect(input).toHaveValue('3');
 });
 test('number field long press stops on release with no extra click increment', async ({ page }) => {
-  await page.clock.install();
+  await page.clock.install({ time: new Date('2026-09-30T12:00:00Z') });
+  await page.clock.pauseAt(new Date('2026-09-30T12:00:01Z'));
   await mount(page, 'ren-number-field', numberMarkup);
   const button = page.getByRole('button', { name: 'Increase' });
   const box = await button.boundingBox();
