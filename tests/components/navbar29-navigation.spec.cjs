@@ -874,11 +874,10 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
     }
   });
 
-  test('render-matrix marker counts hold across packet viewport states', async ({ page }) => {
-    expect(RMOC_RENDER_MATRIX.states.length, 'packet render matrix must have 15 states').toBe(15);
-
-    for (const state of RMOC_RENDER_MATRIX.states) {
-      if (!state.javaScript) continue;
+  for (const state of RMOC_RENDER_MATRIX.states) {
+    if (!state.javaScript) continue;
+    test(`render-matrix marker counts hold: ${state.id}`, async ({ page }) => {
+      expect(RMOC_RENDER_MATRIX.states.length, 'packet render matrix must have 15 states').toBe(15);
 
       if (state.reducedMotion) {
         await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -1002,6 +1001,6 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
           }
         }
       }
-    }
-  });
+    });
+  }
 });
