@@ -951,7 +951,13 @@ test.describe('Navbar Mega Menu Overlay Collections (navbar29)', () => {
             const target = page.locator(selector).first();
             await expect(target, `${state.id} expects visible ${selector}`).toBeVisible();
             if (expectedState.detailsOpen === true) {
-              // Wait through enter opacity transition — not a mid-animation snapshot.
+              // WebKit can report the base opacity before the enter animation
+              // starts. A successful opacity poll alone does not mean it settled.
+              // Flush a frame and await the element's actual finite animations.
+              await target.evaluate(async (el) => {
+                await new Promise((resolve) => requestAnimationFrame(resolve));
+                await Promise.all(el.getAnimations().map((animation) => animation.finished));
+              });
               await expect
                 .poll(async () => target.evaluate((el) => {
                   const style = getComputedStyle(el);
