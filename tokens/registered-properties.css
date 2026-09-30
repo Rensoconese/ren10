@@ -96,44 +96,7 @@
   initial-value: 300ms;
 }
 
-/* ─── Spacing Tokens ───
-   Enables smooth spacing animations */
-
-@property --space-1 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0.25rem;
-}
-
-@property --space-2 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0.5rem;
-}
-
-@property --space-4 {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 1rem;
-}
-
-/* ─── Radius Tokens ───
-   Enables smooth border-radius animations */
-
-@property --radius-sm {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0.25rem;
-}
-
-@property --radius-md {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0.5rem;
-}
-
-@property --radius-lg {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0.75rem;
-}
+/* Spacing and radius remain unregistered rem tokens. Typed length
+   registration computes their root-relative values too early in Firefox and
+   WebKit, freezing them at the initial font size. Preserve font-size scaling
+   across engines instead of opting these tokens into typed interpolation. */

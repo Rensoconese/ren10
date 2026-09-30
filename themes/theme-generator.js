@@ -29,9 +29,9 @@
      - Step selection walks the scale and picks the
        tightest step that still passes the target ratio
        (4.5:1 for AA, 7:1 for AAA).
-     - --color-on-accent is decided per-step (white vs
-       black) to guarantee text contrast regardless of
-       brand color.
+     - --color-on-accent matches the foreground used to
+       select the entire state ramp: white in light mode,
+       black in dark mode, including hover and active.
      - Subtle variants stay below 15% saturation on text
        surfaces to avoid muddying.
      - AAA cannot always be satisfied with the brand hue
@@ -263,7 +263,7 @@ function buildScheme(scale, mode /* 'light' | 'dark' */, textRatio = 4.5) {
   const accentActive  = scale[activeKey] ?? accentHover;
   const accentStrong  = scale[strongKey] ?? accent;
   const accentSubtle  = scale[subtleKey];
-  const onAccent      = onColor(accent);
+  const onAccent      = mode === 'light' ? '#ffffff' : '#000000';
 
   return {
     '--color-accent':        accent,
@@ -454,6 +454,12 @@ export function auditTheme({ name, light, dark, surfaceLight = '#ffffff', surfac
     { label: `${name} dark: accent vs surface (focus ring)`,
       fg: dark['--color-accent'], bg: surfaceDark, min: uiMin, kind: 'ui' },
   ];
+  for (const [mode, scheme] of [['light', light], ['dark', dark]]) {
+    for (const state of ['hover', 'active']) {
+      checks.push({ label: `${name} ${mode}: on-accent vs accent-${state}`,
+        fg: scheme['--color-on-accent'], bg: scheme[`--color-accent-${state}`], min: textMin, kind: 'text' });
+    }
+  }
   const passes = [];
   const warnings = [];
   for (const c of checks) {

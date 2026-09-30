@@ -113,7 +113,8 @@ export class RenTabs extends HTMLElement {
       }
     });
 
-    // Wire up ARIA relationships
+    // Initialize an inactive state even when no tab can be selected.
+    this._selectedIndex = -1;
     this._wireAria();
 
     // Set up keyboard navigation
@@ -123,9 +124,10 @@ export class RenTabs extends HTMLElement {
     const defaultValue = this.getAttribute('default-value');
     if (defaultValue !== null) {
       this._selectTabByValue(defaultValue);
-    } else {
-      // Select first tab by default
-      this._selectTab(0);
+    }
+    if (this._selectedIndex === -1) {
+      // Navigation excludes disabled tabs; select the same first enabled tab.
+      this._selectTab(this._tabs.indexOf(this._nav.getItems()[0]));
     }
 
     // Listen for clicks on tabs
@@ -154,8 +156,11 @@ export class RenTabs extends HTMLElement {
         panel.setAttribute('aria-labelledby', tab.id);
       }
 
-      // Initialize aria-selected state
-      tab.setAttribute('aria-selected', index === this._selectedIndex ? 'true' : 'false');
+      // Hide inactive panels independently of whether selection succeeds.
+      const isSelected = index === this._selectedIndex;
+      tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+      tab.setAttribute('data-state', isSelected ? 'active' : 'inactive');
+      if (panel) panel.toggleAttribute('hidden', !isSelected);
     });
   }
 
@@ -173,18 +178,18 @@ export class RenTabs extends HTMLElement {
       loop: true,
       typeahead: false,
       focusOnHover: false,
-      onActivate: (tab, index) => {
+      onActivate: (tab) => {
         // Arrow key navigation
         if (activation === 'automatic') {
           // Automatic: immediately select the tab
-          this._selectTab(index);
+          this._selectTab(this._tabs.indexOf(tab));
         }
         // Manual: just move focus, don't select
         // (User must press Enter/Space to select)
       },
-      onSelect: (tab, index) => {
-        // Enter/Space pressed on focused tab
-        this._selectTab(index);
+      onSelect: (tab) => {
+        // Navigation indices belong to the enabled subset, not all panels.
+        this._selectTab(this._tabs.indexOf(tab));
       },
     });
 
@@ -200,8 +205,7 @@ export class RenTabs extends HTMLElement {
     if (!tab) return;
 
     const index = this._tabs.indexOf(tab);
-    if (index !== -1) {
-      this._selectTab(index);
+    if (this._selectTab(index)) {
       // Ensure focus is on the clicked tab
       tab.focus();
     }
@@ -215,8 +219,9 @@ export class RenTabs extends HTMLElement {
    * @private
    */
   _selectTab(index) {
-    if (index < 0 || index >= this._tabs.length) {
-      return;
+    const tab = this._tabs[index];
+    if (!tab || tab.hasAttribute('disabled') || tab.getAttribute('aria-disabled') === 'true') {
+      return false;
     }
 
     // Deselect all tabs and hide all panels
@@ -232,7 +237,6 @@ export class RenTabs extends HTMLElement {
     this._selectedIndex = index;
 
     // Dispatch custom event
-    const tab = this._tabs[index];
     const panel = this._panels[index];
     this.dispatchEvent(
       new CustomEvent('ren-tab-change', {
@@ -246,6 +250,7 @@ export class RenTabs extends HTMLElement {
         composed: true,
       })
     );
+    return true;
   }
 
   /**

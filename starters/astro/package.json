@@ -1,7 +1,7 @@
 {
   "name": "ren10-astro-starter",
   "private": true,
-  "version": "0.14.0",
+  "version": "0.14.1",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -10,8 +10,8 @@
     "check:design": "ren10 detect src --profile codex"
   },
   "dependencies": {
-    "@ren10/astro": "^0.14.0",
+    "@ren10/astro": "^0.14.1",
     "astro": "^7.1.6",
-    "ren10": "^0.14.0"
+    "ren10": "^0.14.1"
   }
 }

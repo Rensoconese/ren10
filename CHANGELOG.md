@@ -11,6 +11,18 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+## [0.14.1] — 2026-09-30
+
+### Fixed
+- Keep date and date-range form values in ISO format; restore radio and checkbox draft selections correctly.
+- Skip disabled tabs and combobox options, support native number-field activation, and restore focus after calendar Escape.
+- Correct theme token mappings, contrast, reduced-motion behavior, and typed CSS registration fallbacks.
+- Clarify core and Astro installation paths and remove the audited development dependency advisory.
+
+### Validation
+- Add focused Node and browser regressions for form values, keyboard activation, token computed styles, and local Astro tarball installation.
+
+
 ### Added
 
 ### Changed
@@ -1475,7 +1487,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.14.0...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.14.1...HEAD
+[0.14.1]: https://github.com/Rensoconese/ren10/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/Rensoconese/ren10/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/Rensoconese/ren10/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/Rensoconese/ren10/compare/v0.11.0...v0.12.0

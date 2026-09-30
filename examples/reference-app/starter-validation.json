@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.14.0",
+  "packageVersion": "0.14.1",
   "artifactPath": "examples/reference-app",
-  "contentHash": "sha256:b4eb1c71a2a048f94b032440e861c96ac09e14e660ac75b16ab00e80a10ad5c4",
+  "contentHash": "sha256:14ab7fc9f787c5c684c71aa09da803c21e41ee6c0d8f14099f606bf8db1fc6f3",
   "scenarios": [
     "shell-sidebar",
     "settings-form",
@@ -36,5 +36,9 @@
       "axeViolations": 0
     }
   },
-  "status": "approved"
+  "status": "approved",
+  "versionUpdate": {
+    "date": "2026-09-30",
+    "note": "Only packageVersion metadata changed in the reviewed starter artifact; existing review and screenshots are retained without claiming a new independent review."
+  }
 }

@@ -223,6 +223,7 @@ export class RenDateRangePicker extends HTMLElement {
     /* ═══ BIND METHODS ═══ */
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
     this.handleTriggerKeyDown = this.handleTriggerKeyDown.bind(this);
+    this.handleDropdownKeyDown = this.handleDropdownKeyDown.bind(this);
     this.handleDocumentClick = this.handleDocumentClick.bind(this);
     this.handleCalendarSelect = this.handleCalendarSelect.bind(this);
     this.handleApply = this.handleApply.bind(this);
@@ -270,6 +271,7 @@ export class RenDateRangePicker extends HTMLElement {
       this.trigger.removeEventListener('click', this.handleTriggerClick);
       this.trigger.removeEventListener('keydown', this.handleTriggerKeyDown);
     }
+    this.dropdown?.removeEventListener('keydown', this.handleDropdownKeyDown);
 
     document.removeEventListener('click', this.handleDocumentClick);
     this.#releaseAnchor();
@@ -453,6 +455,7 @@ export class RenDateRangePicker extends HTMLElement {
   setupEventListeners() {
     this.trigger.addEventListener('click', this.handleTriggerClick);
     this.trigger.addEventListener('keydown', this.handleTriggerKeyDown);
+    this.dropdown.addEventListener('keydown', this.handleDropdownKeyDown);
     document.addEventListener('click', this.handleDocumentClick);
 
     /* ═══ CALENDAR SELECT EVENTS ═══ */
@@ -539,8 +542,15 @@ export class RenDateRangePicker extends HTMLElement {
     }
 
     if (event.key === 'Escape') {
-      this.close();
+      this.handleDropdownKeyDown(event);
     }
+  }
+
+  handleDropdownKeyDown(event) {
+    if (event.key !== 'Escape' || !this.isOpen) return;
+    event.preventDefault();
+    event.stopPropagation();
+    this.handleCancel();
   }
 
   /* ═══ HANDLE OUTSIDE CLICK ═══ */

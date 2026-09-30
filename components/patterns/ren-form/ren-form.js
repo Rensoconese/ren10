@@ -565,11 +565,19 @@ export class RenForm extends HTMLElement {
     this._persistKey = this.getAttribute('data-persist');
     if (!this._persistKey) return;
     try {
-      const values = JSON.parse(localStorage.getItem(this._persistKey) || '{}');
+      const saved = localStorage.getItem(this._persistKey);
+      if (saved === null) return;
+      const values = JSON.parse(saved);
       this._form.querySelectorAll('[name]').forEach((input) => {
-        const value = values[input.name]; if (value == null) return;
-        if (input.type === 'checkbox' || input.type === 'radio') input.checked = Array.isArray(value) ? value.includes(input.value) : Boolean(value);
-        else input.value = Array.isArray(value) ? value[0] : value;
+        const value = values[input.name];
+        if (input.type === 'checkbox' || input.type === 'radio') {
+          // FormData omits unchecked controls and collapses one selection to
+          // a scalar. Restore membership, including an empty saved selection.
+          const selected = Array.isArray(value) ? value : value == null ? [] : [value];
+          input.checked = selected.includes(input.value);
+        } else if (value != null) {
+          input.value = Array.isArray(value) ? value[0] : value;
+        }
       });
     } catch { /* storage is optional */ }
   }

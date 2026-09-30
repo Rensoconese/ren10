@@ -182,6 +182,9 @@ Multi-step form with progress:
   `email`, `pattern`, `min`, `max`, and `invalid` messages. Set `lang` on
   `<ren-form>` (or `<html>`) for locale selection. `data-persist="key"`
   stores/restores values in `localStorage`; call `reset()` to clear it.
+  Radios and checkboxes restore by matching their native `value`. An empty
+  saved selection clears checked markup defaults; no saved record preserves
+  the original defaults.
 
 ## Variants and Public Selectors
 

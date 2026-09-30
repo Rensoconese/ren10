@@ -50,9 +50,6 @@ const EXEMPT_FILES = new Set([
   // Offline status: --gray-400 with no semantic equivalent.
   'components/primitives/ren-avatar/ren-avatar.css',
 
-  // Danger button hover/active: primitive --red-500/--red-600 step.
-  'components/primitives/ren-button/ren-button.css',
-
   // Switch checked-hover: primitive --green-500 toggle tint.
   'components/primitives/ren-checkbox/ren-checkbox.css',
 
