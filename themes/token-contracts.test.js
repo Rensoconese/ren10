@@ -21,7 +21,7 @@ function declarations(sheet, matches) {
   return values;
 }
 
-const rootDeclarations = (sheet) => declarations(sheet, (rule) => rule.selector === ':root');
+const rootDeclarations = (sheet) => declarations(sheet, (rule) => rule.selector === ':root' || /^:where\(:root[,)]/.test(rule.selector));
 const presetNames = [];
 appearance.walkRules((rule) => {
   const match = rule.selector.match(/^\[data-theme="([a-z-]+)"\]$/);
@@ -34,7 +34,7 @@ function rootTokens(preset) {
   return {
     ...rootDeclarations(primitives),
     ...rootDeclarations(semantics),
-    ...declarations(components, (rule) => rule.selector === ':where(:root, [data-theme])'),
+    ...declarations(components, (rule) => /^:where\(:root[,)]/.test(rule.selector)),
     ...declarations(appearance, (rule) => rule.selector === `[data-theme="${preset}"]`),
   };
 }

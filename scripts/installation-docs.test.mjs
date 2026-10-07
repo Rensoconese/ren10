@@ -145,3 +145,16 @@ test('theme guide scopes component overrides directly and applies page themes at
   assert.match(scoped, /--ren-btn-radius: var\(--radius-full\)/);
   assert.match(multiTheme, /browser verification/);
 });
+
+
+test('Getting Started uses the supported package, repository, and HTTP recipe', () => {
+  const guide = read('docs/getting-started.html');
+  assert.doesNotMatch(guide, /There is no package|github\.com\/rens\/rends|18 components/);
+  assert.match(guide, /npm install ren10/);
+  assert.match(guide, /github\.com\/Rensoconese\/ren10/);
+  assert.match(guide, /npx ren10 init/);
+  assert.match(guide, /JavaScript modules require HTTP/);
+  assert.doesNotMatch(guide, /components\/index\.js/);
+  assert.match(guide, /rends\/components\/dialog\/ren-dialog\.js/);
+  assert.doesNotMatch(guide, /&lt;link[^\n]+components\/index\.css/);
+});

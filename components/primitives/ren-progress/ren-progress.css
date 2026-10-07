@@ -78,8 +78,9 @@
 /* ─── Indeterminate Animation ─── */
 
 .ren-progress-indeterminate .ren-progress-bar {
+  /* Override inline determinate values while this state is active. */
   width: 30% !important;
-  animation: ren-progress-slide 1.5s var(--ease-enter) infinite;
+  animation: ren-progress-slide var(--duration-loading) var(--ease-enter) infinite;
 }
 
 @keyframes ren-progress-slide {

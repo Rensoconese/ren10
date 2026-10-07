@@ -73,7 +73,7 @@
   background-color: var(--color-success);
 }
 
-.ren-avatar-status-offline { background-color: var(--gray-400); }
+.ren-avatar-status-offline { background-color: var(--color-presence-offline); }
 .ren-avatar-status-busy    { background-color: var(--color-danger); }
 .ren-avatar-status-away    { background-color: var(--color-warning); }
 

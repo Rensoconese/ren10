@@ -267,3 +267,7 @@ Form layout uses `ren-stack` / `--space-*`. Field chrome inherits from
 - Run component / docs a11y coverage on submit / invalid flows.
 - Run `npm run lint` after token / selector changes.
 - Manually verify keyboard-only submit and error summary focus.
+
+## Density and color mode
+
+Use `data-density="compact|comfortable|spacious"` on the root or a subtree. Bare stacks, card padding, and form field rhythm respond to the scope; fixed stack size modifiers and explicit component token overrides retain their values. Default card padding remains 16px; compact is 12px and spacious is 32px. Use `data-mode="light|dark|auto"` independently of a named `data-theme`; legacy `data-theme="light|dark"` remains supported.

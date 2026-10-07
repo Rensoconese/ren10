@@ -10,7 +10,10 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.14.1**
+Current version: **0.14.1** (source checkout). The published npm version is shown by the badge above;
+see the [registry status](https://rensoconese.github.io/ren10/docs/astro.md#public-registry-status-and-owner-action) before installing the Astro adapter.
+
+[Documentation](https://rensoconese.github.io/ren10/docs/) · [Components](https://rensoconese.github.io/ren10/docs/components.html) · [Theme Builder](https://rensoconese.github.io/ren10/create/)
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
 > assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
@@ -305,11 +308,12 @@ npm run test:a11y
 ## Testing
 
 ```bash
-npm run test              # all Playwright suites
+npm run test              # portable Node and browser suites
+npm run test:all          # portable suites + pinned Linux visual gate
 npm run test:a11y         # axe-core accessibility audit
 npm run test:visual       # visual regression (baselines per-project)
 npm run test:components   # per-component demo render + scoped a11y
-npm run lint              # stylelint + eslint
+npm run lint              # CSS, tokens, contracts, aiHints and JS
 ```
 
 ---
@@ -323,3 +327,7 @@ Chrome, Edge, Firefox, Safari — latest 2 versions. No IE 11.
 ## License
 
 MIT © 2025 Ren
+
+### Independent mode and scoped themes
+
+Use `data-mode="light|dark|auto"` independently of a named `data-theme`, for example `<html data-theme="forest" data-mode="dark">`. Existing `data-theme="light|dark"` remains supported. Named theme scopes recompute semantic aliases for links and focus rings. `data-density` can scope bare stacks, card padding and form rhythm; explicit component overrides and fixed stack modifiers keep their values. AAA follows the effective color scheme, including manually forced mode.

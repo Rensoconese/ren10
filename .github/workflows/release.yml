@@ -112,6 +112,11 @@ jobs:
 
       - run: npm ci
 
+      - name: Verify scoped npm publishing prerequisites
+        run: node scripts/check-publish-access.mjs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Dry-run publish ren10
         run: npm publish --dry-run
 

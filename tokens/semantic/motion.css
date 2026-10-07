@@ -22,6 +22,12 @@
    ============================================ */
 
 :root {
+  --duration-loading: 1500ms;
+  --duration-spinner: 800ms;
+  --duration-blink: 800ms;
+  --duration-typing: 1400ms;
+  --delay-stagger: 200ms;
+  --ease-pulse: ease-in-out;
   /* ─── INTENT DURATIONS ─────────────────────────
      Name by *role*, not by value. If later you need
      every enter to be 50ms faster, change one token. */
@@ -132,5 +138,15 @@
     --duration-route:     0ms;
     --duration-overlay:   0ms;
     --motion-stagger-step: 0ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-loading: 0ms;
+    --duration-spinner: 0ms;
+    --duration-blink: 0ms;
+    --duration-typing: 0ms;
+    --delay-stagger: 0ms;
   }
 }

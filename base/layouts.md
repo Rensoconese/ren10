@@ -40,7 +40,7 @@ Use `ren-stack` with an optional size modifier: `class="ren-stack ren-stack-lg"`
 The modifier alone sets a custom property; it does not create a flex layout.
 Every stack initializes its own `--stack-gap` from `--space-stack`. Bare
 comfortable/compact/spacious stacks use 12/8/16px respectively; density is set
-on the root `html` element. Fixed xs/sm/md/lg/xl gaps are 4/8/16/24/32px.
+on `html` or a `[data-density]` subtree. Fixed xs/sm/md/lg/xl gaps are 4/8/16/24/32px.
 
 A nested bare stack starts from the semantic default, even inside a large
 stack. Set a modifier or `style="--stack-gap: var(--space-6)"` on each stack
@@ -180,3 +180,11 @@ does not affect the other. Descendants of `ren-page-grid`, `ren-col-grid`,
   desktop widths.
 - Do not add raw layout CSS when an existing primitive can express the same
   structure.
+
+## Density and color mode
+
+Use `data-density="compact|comfortable|spacious"` on the root or a subtree. Bare stacks, card padding, and form field rhythm respond to the scope; fixed stack size modifiers and explicit component token overrides retain their values. Default card padding remains 16px; compact is 12px and spacious is 32px. Use `data-mode="light|dark|auto"` independently of a named `data-theme`; legacy `data-theme="light|dark"` remains supported.
+
+## Responsive thresholds
+
+The standard viewport thresholds are 480px (small controls), 600px (compact content), 640px (small layout), 768px (medium), 900px (wide content), and 1024px (large). Existing `48rem` navigation queries intentionally respond to user font scaling. Container queries use the component's own content threshold rather than a theme token. CSS custom properties cannot be interpolated into native media queries; a build transform is not required to consume RenDS. New layouts should use these thresholds or document a component-specific content constraint in its contract.

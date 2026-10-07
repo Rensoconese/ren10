@@ -5,6 +5,10 @@ motion, z-index, or component-level theme overrides.
 
 ## Purpose
 
+`--color-highlight` paints native `mark` backgrounds in the effective light or
+dark scheme. Loading/spinner/typing/blink durations use semantic motion tokens
+and collapse under `prefers-reduced-motion`.
+
 RenDS uses a three-layer token model:
 
 1. Primitive tokens are raw values: `--blue-500`, `--space-4`,
@@ -21,7 +25,6 @@ tokens directly.
 
 ```html
 <link rel="stylesheet" href="rends/index.css">
-<link rel="stylesheet" href="rends/tokens/component/tokens.css">
 ```
 
 Use `tokens/component/tokens.css` when a page or component depends on the
@@ -91,3 +94,7 @@ color and duration tokens retain their valid, independent registrations.
 - Accessibility/a11y checks should pass when color pairings change.
 - Any new component value should be expressible as a semantic or component
   token before shipping.
+
+## Density and color mode
+
+Use `data-density="compact|comfortable|spacious"` on the root or a subtree. Bare stacks, card padding, and form field rhythm respond to the scope; fixed stack size modifiers and explicit component token overrides retain their values. Default card padding remains 16px; compact is 12px and spacious is 32px. Use `data-mode="light|dark|auto"` independently of a named `data-theme`; legacy `data-theme="light|dark"` remains supported.

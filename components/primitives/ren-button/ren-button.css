@@ -220,7 +220,7 @@
 /* Hovered/focused button rises above siblings so border isn't hidden */
 .ren-btn-group > .ren-btn:hover,
 .ren-btn-group > .ren-btn:focus-visible {
-  z-index: 1;
+  z-index: var(--z-raised);
 }
 
 /* ─── States ─── */
@@ -251,7 +251,7 @@
   border: 2px solid currentColor;
   border-inline-end-color: transparent;
   border-radius: var(--radius-full);
-  animation: ren-btn-spin 600ms linear infinite;
+  animation: ren-btn-spin var(--duration-slowest) linear infinite;
   /* Restore color since parent is transparent */
   color: var(--color-on-accent);
 }
@@ -268,7 +268,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ren-btn[data-loading]::after {
-    animation-duration: 1.5s;
+    animation: none;
   }
   .ren-btn:active:not(:disabled):not([aria-disabled="true"]) {
     transform: none;

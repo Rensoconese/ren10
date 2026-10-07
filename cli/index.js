@@ -899,7 +899,9 @@ async function cmdInit() {
    RenDS — Design System
    ============================================ */
 
-@import './tokens/index.css';
+@layer reset, tokens, base, components, utilities;
+
+@import './tokens/index.css' layer(tokens);
 @import './base/index.css';
 @import './themes/appearance.css';
 @import './components/index.css';
@@ -925,7 +927,7 @@ async function cmdInit() {
     if (shapeKey)   attrParts.push(`data-shape="${shapeKey}"`);
     console.log(`${c.bold}Add these attributes to your ${c.cyan}<html>${c.reset}${c.bold} element:${c.reset}`);
     console.log(`  ${c.cyan}<html ${attrParts.join(' ')}>${c.reset}\n`);
-    console.log(`${c.dim}themes/appearance.css is imported by default and declares the styles for data-density / data-shape.${c.reset}\n`);
+    console.log(`${c.dim}Density is defined in tokens; themes/appearance.css supplies shape presets and named themes.${c.reset}\n`);
   }
 }
 

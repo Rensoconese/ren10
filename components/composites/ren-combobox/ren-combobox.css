@@ -210,7 +210,7 @@
       border-top-color: var(--color-accent);
       border-radius: var(--radius-full);
 
-      animation: ren-combobox-spin var(--duration-slow, 800ms) linear infinite;
+      animation: ren-combobox-spin var(--duration-slow) linear infinite;
 
       @media (prefers-reduced-motion: reduce) {
         animation: none;

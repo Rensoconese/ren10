@@ -36,6 +36,11 @@ jobs:
       - name: Dry-run publish @ren10/astro
         run: npm publish --workspace @ren10/astro --dry-run
 
+      - name: Verify scoped npm publishing prerequisites
+        run: node scripts/check-publish-access.mjs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish @ren10/astro with public diagnostics
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

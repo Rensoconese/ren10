@@ -31,6 +31,16 @@ test('missing local imports fail rather than emit incomplete CSS', async (t) => 
   await assert.rejects(bundleCss(entry), /Could not resolve/);
 });
 
+test('merges adjacent declarations without crossing cascade boundaries', async (t) => {
+  const entry = await fixture(t, {
+    'entry.css': '@layer tokens { .sample { --a: 1; } .sample { --b: 2; } .other { --a: 3; } .sample { --a: 4; } }',
+  });
+  const css = await bundleCss(entry);
+  assert.equal((css.match(/\.sample\s*\{/g) || []).length, 2);
+  assert.match(css, /--a: 1;[\s\S]*--b: 2;/);
+  assert.ok(css.indexOf('.other') < css.lastIndexOf('.sample'));
+});
+
 test('minification preserves significant string and calc whitespace', async (t) => {
   const entry = await fixture(t, { 'entry.css': '.sample::before { content: "a > b: ; { x }"; width: calc(100% - 2rem); }' });
   const css = await bundleCss(entry, { minify: true });

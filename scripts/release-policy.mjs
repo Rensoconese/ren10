@@ -129,7 +129,7 @@ export function validateWorkflowPolicy(workflows, requiredCommands) {
   }
   if (release?.jobs?.publish?.if) errors.push('release.yml:publish must not be conditional');
 
-  const chromiumIf = "matrix.browser == 'chromium'";
+  const chromiumIf = "${{ !cancelled() && matrix.browser == 'chromium' }}";
   requireBlockingCommands(errors, 'audit.yml', 'audit', audit?.jobs?.audit, requiredCommands, chromiumIf);
   if (audit?.jobs?.audit?.['continue-on-error'] !== "${{ matrix.browser != 'chromium' }}") {
     errors.push('audit.yml:audit must keep Chromium blocking and other browsers advisory');

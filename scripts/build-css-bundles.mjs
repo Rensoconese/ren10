@@ -36,7 +36,22 @@ export async function bundleCss(entryPoint, { minify = false } = {}) {
     if (orders.has(order)) node.remove();
     else orders.add(order);
   }
-  if (!minify) return css.toString();
+  // Adjacent identical declaration-only selectors have the same cascade.
+  // Merge within each parent only; never cross another rule or an at-rule.
+  css.walk((parent) => {
+    if (!parent.nodes) return;
+    let previous;
+    for (const node of [...parent.nodes]) {
+      if (node.type === 'comment') continue;
+      if (node.type === 'rule' && node.nodes.every(child => child.type === 'decl') &&
+          previous?.type === 'rule' && previous.selector === node.selector &&
+          previous.nodes.every(child => child.type === 'decl')) {
+        previous.append(...node.nodes);
+        node.remove();
+      } else previous = node;
+    }
+  });
+  if (!minify) return css.toString().replace(/[ \t]+$/gm, '');
   return (await transform(css.toString(), {
     loader: 'css', minify: true, charset: 'utf8', legalComments: 'none', target: 'esnext',
   })).code;

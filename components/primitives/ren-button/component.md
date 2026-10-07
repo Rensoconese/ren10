@@ -227,3 +227,7 @@ Do **not** override the internal `.ren-btn` class.
 - Run `npm run lint` after token / selector changes.
 - Manually verify light/dark themes when surface, border, or shadow values
   change — focus rings must remain visible in both modes.
+
+## Host accessibility attributes
+
+`aria-label`, `aria-labelledby`, and `aria-describedby` on `<ren-button>` are reactive and forwarded to the real child control. Removing a host override restores the child control’s original attribute. Prefer a native named `<button>` when enhancement is unnecessary.

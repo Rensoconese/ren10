@@ -13,37 +13,38 @@ jobs:
     continue-on-error: ${{ matrix.browser != 'chromium' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npx playwright install --with-deps ${{ matrix.browser }}
       - run: npm run lint
       - run: npm run snapshots:check
       - run: npm run check:public-contracts
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run test:detector
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run smoke:installed
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run check:budgets
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run test:budgets
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run audit:runtime
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run audit:full
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run check:release
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run check:supply-chain
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run test:release-policy
-      - run: npm run test:a11y
+      - if: ${{ !cancelled() }}
+        run: npm run test:a11y
         env: { PLAYWRIGHT_BROWSER: "${{ matrix.browser }}" }
-      - if: matrix.browser == 'chromium'
+      - if: ${{ !cancelled() && matrix.browser == 'chromium' }}
         run: npm run test:visual:linux
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: weekly-rends-audit-${{ matrix.browser }}
@@ -51,3 +52,8 @@ jobs:
             playwright-report
             test-results
           retention-days: 30
+      - name: Audit result summary
+        if: always()
+        run: |
+          echo "## RenDS weekly audit: ${{ matrix.browser }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Result: ${{ job.status }}. Security, package checks, accessibility and visual results are available in this run." >> "$GITHUB_STEP_SUMMARY"

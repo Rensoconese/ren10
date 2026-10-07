@@ -226,7 +226,7 @@
 
 /* Loading */
 .ren-toast-loading .ren-toast-icon {
-  animation: ren-spinner-rotate 0.8s linear infinite;
+  animation: ren-spinner-rotate var(--duration-spinner) linear infinite;
 }
 
 /* ═══ PROGRESS BAR ═══ */

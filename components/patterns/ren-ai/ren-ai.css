@@ -89,7 +89,7 @@
 .ren-ai-streaming .ren-ai-message-content::after {
   content: '▊';
   display: inline;
-  animation: ren-ai-blink 0.8s step-end infinite;
+  animation: ren-ai-blink var(--duration-blink) step-end infinite;
   color: var(--color-ai);
   margin-inline-start: 1px;
 }
@@ -128,11 +128,11 @@
   height: 6px;
   border-radius: var(--radius-full);
   background: var(--color-ai);
-  animation: ren-ai-dot-bounce 1.4s ease-in-out infinite;
+  animation: ren-ai-dot-bounce var(--duration-typing) var(--ease-pulse) infinite;
 }
 
-.ren-ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.ren-ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+.ren-ai-typing-dots span:nth-child(2) { animation-delay: var(--delay-stagger); }
+.ren-ai-typing-dots span:nth-child(3) { animation-delay: calc(var(--delay-stagger) * 2); }
 
 @keyframes ren-ai-dot-bounce {
   0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
@@ -146,7 +146,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .ren-ai-typing-dots span {
-    animation: ren-ai-dot-fade 1.4s ease-in-out infinite;
+    animation: ren-ai-dot-fade var(--duration-typing) var(--ease-pulse) infinite;
   }
 }
 
@@ -405,7 +405,7 @@
     var(--color-fill) 75%
   );
   background-size: 200% 100%;
-  animation: ren-ai-shimmer 1.5s ease-in-out infinite;
+  animation: ren-ai-shimmer var(--duration-loading) var(--ease-pulse) infinite;
 }
 
 .ren-ai-skeleton-line + .ren-ai-skeleton-line {
@@ -462,7 +462,7 @@
   font-size: 1.1em;
   display: inline-block;
   /* Subtle hint that this re-runs inference */
-  transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+  transition: transform var(--duration-state) var(--ease-enter, ease);
 }
 
 .ren-ai-action-regenerate:hover::before {
@@ -584,7 +584,7 @@
   content: '▸';
   font-size: 0.75em;
   color: var(--color-text-muted);
-  transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+  transition: transform var(--duration-state) var(--ease-enter, ease);
 }
 
 .ren-ai-tool-call[open] > .ren-ai-tool-call-header::before {

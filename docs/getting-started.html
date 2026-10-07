@@ -4,10 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Getting Started — RenDS Docs</title>
-  <link rel="stylesheet" href="../index.css">
-  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../dist/ren10.min.css">
   <link rel="stylesheet" href="../themes/appearance.css">
-  <link rel="stylesheet" href="../tokens/component/tokens.css">
   <link rel="stylesheet" href="../site/shell.css">
   <style>
     /* Page-specific styles — chrome is in shell.css */
@@ -280,18 +278,19 @@
       </nav>
 
       <h1>Getting Started</h1>
-      <p class="lede">Go from an empty folder to a styled, accessible, themeable page in about two minutes. No npm, no build step, no framework.</p>
+      <p class="lede">Go from an empty folder to a styled, accessible, themeable page in about two minutes. No framework or build step required.</p>
 
       <!-- 1. Install -->
       <section id="install">
         <h2 data-step="01">Install</h2>
-        <p>RenDS is a folder you copy into your project. There is no package to <code>npm install</code> — you own the source.</p>
+        <p>Install <code>ren10</code> from npm, or copy the source into your project. The CLI creates a local <code>rends/</code> folder that you own.</p>
 
-        <h3>Option A — Clone the repo</h3>
-        <div class="dx-pre" tabindex="0"><code>git clone https://github.com/rens/rends.git
-cd rends</code></div>
+        <h3>Option A — CLI (recommended)</h3>
+        <div class="dx-pre" tabindex="0"><code>npx ren10 init
+npx ren10 add --all</code></div>
 
-        <h3>Option B — Copy the <code>rends/</code> folder</h3>
+        <h3>Option B — Clone the source</h3>
+        <div class="dx-pre" tabindex="0"><code>git clone https://github.com/Rensoconese/ren10.git rends</code></div>
         <p>Drop it into your project anywhere. Most people put it alongside their own source:</p>
         <div class="dx-tree" tabindex="0" aria-label="Example project file tree">my-project/
 ├── rends/          ← the design system lives here
@@ -299,8 +298,14 @@ cd rends</code></div>
 └── styles.css</div>
 
         <div class="dx-callout">
-          <p><strong>No build step required.</strong> Open your <code>index.html</code> directly in the browser and it works. CSS Cascade Layers, <code>light-dark()</code>, and container queries do the work that bundlers used to.</p>
+          <p><strong>No build step required.</strong> Serve your folder over HTTP, for example with <code>npx serve .</code>. JavaScript modules require HTTP; opening <code>index.html</code> with <code>file://</code> will block them. CSS Cascade Layers, <code>light-dark()</code>, and container queries do the work that bundlers used to.</p>
         </div>
+      </section>
+
+      <section id="npm-install">
+        <h2>npm package</h2>
+        <div class="dx-pre" tabindex="0"><code>npm install ren10</code></div>
+        <p>In a CSS-aware build tool, import <code>ren10</code> for the complete system, or <code>ren10/foundation.css</code> plus individual component styles. npm/source components live under <code>components/primitives/</code>, <code>composites/</code>, or <code>patterns/</code>; CLI copies use <code>rends/components/button/</code>, for example. Load optional JavaScript from the matching installation path.</p>
       </section>
 
       <!-- 2. Structure -->
@@ -308,7 +313,8 @@ cd rends</code></div>
         <h2 data-step="02">Project structure</h2>
         <p>The important folders inside <code>rends/</code>:</p>
         <div class="dx-tree" tabindex="0" aria-label="RenDS folder structure">rends/
-├── index.css              ← foundation: tokens + reset + layouts + utilities
+├── index.css              ← complete: tokens + base + all added components
+├── foundation.css         ← source/npm only: tokens + base
 ├── tokens/
 │   ├── primitives/        ← raw values (--blue-500, --space-4)
 │   ├── semantic/          ← purpose-based (--color-accent, --color-text)
@@ -318,7 +324,7 @@ cd rends</code></div>
 │   ├── layouts.css        ← ren-stack, ren-grid, ren-cover, ...
 │   └── utilities.css      ← ren-sr-only, ren-truncate, ...
 ├── components/
-│   ├── primitives/        ← 18 components (button, card, field, ...)
+│   ├── primitives/        ← 19 components (button, card, field, ...)
 │   ├── composites/        ← 26 components (dialog, select, tabs, ...)
 │   └── patterns/          ← 8 patterns (nav, sidebar, form, table, ...)
 ├── themes/
@@ -330,7 +336,7 @@ cd rends</code></div>
       <!-- 3. First HTML -->
       <section id="first-html">
         <h2 data-step="03">Your first HTML</h2>
-        <p>Create an <code>index.html</code> and link the foundation + all components. This is the simplest possible setup:</p>
+        <p>Create an <code>index.html</code> and link the complete entrypoint. This is the simplest possible setup:</p>
 
         <p class="dx-pre-caption">index.html</p>
         <div class="dx-pre" tabindex="0"><code>&lt;!DOCTYPE html&gt;
@@ -340,11 +346,10 @@ cd rends</code></div>
   &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
   &lt;title&gt;Hello, RenDS&lt;/title&gt;
 
-  &lt;!-- Foundation: tokens, reset, layouts, utilities --&gt;
+  &lt;!-- Tokens, base, and all installed components --&gt;
   &lt;link rel="stylesheet" href="rends/index.css"&gt;
 
-  &lt;!-- All components at once (or pick individual ones) --&gt;
-  &lt;link rel="stylesheet" href="rends/components/index.css"&gt;
+
 &lt;/head&gt;
 &lt;body&gt;
   &lt;main class="ren-cover"&gt;
@@ -384,10 +389,10 @@ cd rends</code></div>
 &lt;/div&gt;</code></div>
 
         <h3>Interactive components: add JS</h3>
-        <p>Primitives (button, card, tag, badge...) are CSS-only. For interactive composites like Dialog, Select, or Tooltip, import the JS module:</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/composites/ren-dialog/ren-dialog.js"&gt;&lt;/script&gt;</code></div>
-        <p>Or import everything:</p>
-        <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/index.js"&gt;&lt;/script&gt;</code></div>
+        <p>Native button, card, tag, and badge styles work without JavaScript. Custom elements such as &lt;ren-button&gt;, &lt;ren-field&gt;, and &lt;ren-radio-group&gt; also have optional enhancement modules. For a dialog in a CLI installation, import:</p>
+        <div class="dx-pre" tabindex="0"><code>&lt;script type="module" src="rends/components/dialog/ren-dialog.js"&gt;&lt;/script&gt;</code></div>
+        <p>There is no all-components JavaScript entrypoint. Import each required enhancement module separately.</p>
+
       </section>
 
       <!-- 5. Theming -->

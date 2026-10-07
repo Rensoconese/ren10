@@ -11,6 +11,17 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+### Fixed
+- Align CLI and package cascade layers; make scoped density, named themes, independent light/dark mode, and AAA contrast work together.
+- Forward button host ARIA to the native control, enlarge carousel and removable-chip targets, distinguish muted links, and correct Theme Builder names, contrast, and keyboard controls.
+- Honor alert-dialog width overrides, namespace table shimmer, and replace component palette, motion, and stacking literals with tokens.
+- Correct installation instructions, component counts, versions, and demo links; publish a stable 404 and the bundled CSS while excluding internal audit/workflow artifacts.
+- Update vulnerable runtime dependencies and release access preflight; preserve diagnostics when scheduled dependency audits fail.
+
+### Validation
+- Expand accessibility coverage to foundations, landing, examples, templates, Theme Builder, and theme preview, including actual dark mode and WCAG 2.2 AA.
+- Add scoped-theme, density, CLI cascade, ARIA, touch-target, site assembly, and npm-access regressions; retain the existing package budgets.
+
 ## [0.14.1] — 2026-09-30
 
 ### Fixed

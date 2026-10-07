@@ -39,12 +39,13 @@ const SIZE_MAP = {
 
 export class RenButton extends HTMLElement {
   static get observedAttributes() {
-    return ['variant', 'size', 'loading', 'disabled', 'icon', 'full'];
+    return ['variant', 'size', 'loading', 'disabled', 'icon', 'full', 'aria-label', 'aria-labelledby', 'aria-describedby'];
   }
 
   constructor() {
     super();
     this._button = null;
+    this._originalAria = new Map();
   }
 
   connectedCallback() {
@@ -96,6 +97,20 @@ export class RenButton extends HTMLElement {
 
   _updateState() {
     if (!this._button) return;
+
+    // The accessible name belongs to the real control, not the generic host.
+    // Restore a child control's original ARIA when a host override is removed.
+    for (const name of ['aria-label', 'aria-labelledby', 'aria-describedby']) {
+      if (this.hasAttribute(name)) {
+        if (!this._originalAria.has(name)) this._originalAria.set(name, this._button.getAttribute(name));
+        this._button.setAttribute(name, this.getAttribute(name));
+      } else if (this._originalAria.has(name)) {
+        const original = this._originalAria.get(name);
+        if (original === null) this._button.removeAttribute(name);
+        else this._button.setAttribute(name, original);
+        this._originalAria.delete(name);
+      }
+    }
 
     // Loading
     if (this.hasAttribute('loading')) {

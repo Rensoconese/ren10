@@ -20,10 +20,10 @@
          This action cannot be undone.
        </p>
        <div class="ren-alert-dialog-actions">
-         <button class="ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">
+         <button class="ren-btn ren-btn-secondary" onclick="this.closest('dialog').close('cancel')">
            Cancel
          </button>
-         <button class="ren-btn-danger" onclick="this.closest('dialog').close('confirm')">
+         <button class="ren-btn ren-btn-danger" onclick="this.closest('dialog').close('confirm')">
            Delete
          </button>
        </div>
@@ -43,8 +43,8 @@
   border: none;
 
   /* Sizing */
-  max-width: 24rem;
-  width: 90vw;
+  max-width: 100%;
+  width: var(--ren-dialog-width, min(90vw, 24rem));
 
   /* Appearance */
   background: var(--color-surface);

@@ -64,7 +64,7 @@
   height: 6px;
   background: var(--ren-tooltip-bg, var(--color-text));
   transform: rotate(45deg);
-  z-index: -1;
+  z-index: var(--z-behind);
 }
 
 /* ═══ PLACEMENT VARIANTS ═══ */

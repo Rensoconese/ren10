@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/Rensoconese/ren10.git"
   },
-  "homepage": "https://github.com/Rensoconese/ren10#readme",
+  "homepage": "https://rensoconese.github.io/ren10/docs/",
   "type": "module",
   "workspaces": [
     "packages/*"
@@ -64,7 +64,10 @@
     "tests/utils/static-server.cjs",
     "tests/agent-starter/",
     "scripts/check-agent-provenance.mjs",
-    "MIGRATION.md"
+    "MIGRATION.md",
+    "!docs/superpowers/**",
+    "!docs/audits/**",
+    "!docs/workflows/**"
   ],
   "publishConfig": {
     "access": "public",
@@ -167,8 +170,10 @@
     "test:runtime-smoke": "playwright test --config tests/components/playwright.config.cjs runtime-smoke",
     "agent:provenance": "node scripts/check-agent-provenance.mjs",
     "test:field-regressions": "node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && playwright test --config tests/components/playwright.config.cjs css-entrypoints stack-rhythm card-media-slots tour-composition tabs-recipe",
-    "test:audit-regressions": "node --test tests/date-form-regressions.test.mjs tests/components/keyboard-activation.test.mjs scripts/installation-docs.test.mjs",
-    "test:astro-local-install": "node scripts/smoke-astro-local-install.mjs"
+    "test:audit-regressions": "node --test tests/date-form-regressions.test.mjs tests/components/keyboard-activation.test.mjs scripts/installation-docs.test.mjs scripts/assemble-site.test.mjs scripts/check-publish-access.test.mjs",
+    "test:astro-local-install": "node scripts/smoke-astro-local-install.mjs",
+    "site:build": "npm run build:bundles && node scripts/assemble-site.mjs",
+    "check:publish-access": "node scripts/check-publish-access.mjs"
   },
   "keywords": [
     "design-system",

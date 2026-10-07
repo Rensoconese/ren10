@@ -6,7 +6,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Build artifacts
-dist/
+# dist/ is a tracked package deliverable; rebuild it with build:bundles.
 build/
 .cache/
 .ren-knowledge/
@@ -67,3 +67,6 @@ output/playwright-verify/
 
 # Local delegation logs (curated results live with the field audit)
 output/ren10-remediation/
+
+# Generated skill tarballs are not CSS package deliverables.
+dist/*.tgz

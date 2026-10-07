@@ -261,13 +261,6 @@
 }
 
 /* ═══ DARK MODE SUPPORT ═══ */
-@media (prefers-color-scheme: dark) {
-  .ren-date-picker-trigger,
-  .ren-date-picker-dropdown {
-    /* ═══ USES CSS VARIABLES - AUTO ADAPTS ═══ */
-  }
-}
-
 /* ═══ MOBILE RESPONSIVENESS ═══ */
 @media (max-width: 480px) {
   .ren-date-picker-dropdown {

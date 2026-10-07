@@ -11,13 +11,14 @@
    Structure: --{purpose}-{property}-{variant}
    ============================================ */
 
-:root {
-  color-scheme: light dark;
+:root { color-scheme: light dark; }
+
+:where(:root, [data-theme], [data-mode], [data-contrast]) {
 
   /* ─── Accent / Tint ─── */
   /* Accent is used as a SOLID background with --color-on-accent text. Values tuned
      so that WHITE on accent (light) and BLACK on accent (dark) both pass WCAG AA.
-     Light: blue-600 (5.88:1 vs white). Dark: blue-400 (8.2:1 vs black). */
+     Light: blue-600 with white. Dark: blue-400 with black. */
   --color-accent:        light-dark(var(--blue-600), var(--blue-400));
   --color-accent-hover:  light-dark(var(--blue-700), var(--blue-300));
   --color-accent-active: light-dark(var(--blue-800), var(--blue-200));
@@ -55,15 +56,16 @@
   /* ─── Text ─── */
   --color-text:           light-dark(var(--black), var(--white));
   --color-text-secondary: light-dark(var(--gray-700), var(--gray-300));
-  --color-text-muted:     light-dark(var(--gray-700), var(--gray-500)); /* gray-700 light 7.24:1; gray-500 dark 4.78:1 */
+  --color-text-muted:     light-dark(var(--gray-700), var(--gray-500)); /* AA text pair; verified by theme tests. */
   /* NOTE: --color-text-faint is INCIDENTAL CONTENT ONLY (WCAG-exempt): disabled labels, placeholder
      hints, decorative punctuation (breadcrumb separators, ellipsis), non-interactive calendar
      outside-month dates. It does NOT meet AA and must NEVER be used for eyebrows, captions, table
      headers, step numbering, or any other text the user is expected to read. Use --color-text-muted
-     for those cases (7.24:1 light / 4.78:1 dark = AA in both). */
+     for those cases (AA in both schemes). */
   --color-text-faint:     light-dark(var(--gray-400), var(--gray-800));
   --color-text-inverted:  light-dark(var(--white), var(--black));
   --color-text-link:      var(--color-accent-strong); /* strong variant so links pass AA on light surface */
+  --color-highlight:      light-dark(var(--yellow-100), var(--yellow-800));
   --color-text-link-hover:var(--color-accent-active);
 
   /* ─── Surfaces / Backgrounds ─── */
@@ -91,11 +93,11 @@
   --color-fill-active: light-dark(var(--gray-300), var(--gray-800));
 
   /* ─── Strong variants (AA-compliant for text on light surfaces) ─── */
-  --color-accent-strong:     var(--color-accent-hover);                   /* blue-600 light, 5.88:1 vs white */
-  --color-success-strong:    light-dark(var(--green-700), var(--green-300)); /* 5.92:1 light, 6.22:1 dark */
-  --color-danger-strong:     light-dark(var(--red-500),   var(--red-300));   /* 6.93:1 light, 4.63:1 dark */
-  --color-info-strong:       light-dark(var(--teal-700),  var(--teal-300)); /* 5.27:1 light */
-  --color-warning-strong:    light-dark(var(--orange-700), var(--orange-300)); /* 6.29:1 light */
+  --color-accent-strong:     var(--color-accent-hover);                   /* Inherits the stronger hover color in this scope. */
+  --color-success-strong:    light-dark(var(--green-700), var(--green-300)); /* AA text pair. */
+  --color-danger-strong:     light-dark(var(--red-500),   var(--red-300));   /* AA text pair. */
+  --color-info-strong:       light-dark(var(--teal-700),  var(--teal-300)); /* AA text pair. */
+  --color-warning-strong:    light-dark(var(--orange-700), var(--orange-300)); /* AA text pair. */
 
   /* ─── Aliases (compatibility) ─── */
   --color-background-hover:  var(--color-fill-hover);
@@ -128,7 +130,15 @@
   --color-input-disabled-bg:      light-dark(var(--gray-200), var(--gray-950));
   --color-input-disabled-text:    light-dark(var(--gray-400), var(--gray-800));
   --color-input-error-border:     var(--color-danger);
-  --color-input-focus-ring:       light-dark(rgb(0, 122, 255, 0.15), rgb(10, 132, 255, 0.25));
+  --color-input-focus-ring:       color-mix(in srgb, var(--color-accent) 20%, transparent);
+
+  /* Native option painting and validation glows remain theme-aware. */
+  --color-option-hover: light-dark(var(--gray-50), var(--gray-800));
+  --color-option-selected-hover: color-mix(in srgb, var(--color-accent) 20%, var(--color-surface));
+  --color-option-disabled: light-dark(var(--gray-500), var(--gray-400));
+  --color-input-danger-ring: color-mix(in srgb, var(--color-danger) 15%, transparent);
+  --color-input-success-ring: color-mix(in srgb, var(--color-success) 15%, transparent);
+  --color-presence-offline: var(--gray-400);
 
   /* ─── Disabled ─── */
   --color-disabled-bg:   light-dark(var(--gray-200), var(--gray-950));
@@ -178,3 +188,7 @@
 [data-theme="dark"] {
   color-scheme: dark;
 }
+
+[data-mode="light"] { color-scheme: light; }
+[data-mode="dark"] { color-scheme: dark; }
+[data-mode="auto"] { color-scheme: light dark; }

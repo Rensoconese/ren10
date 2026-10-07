@@ -217,11 +217,6 @@
   width: 95dvw;
 }
 
-/* ═══ ALERT DIALOG VARIANT ═══ */
-.ren-alert-dialog {
-  /* No additional styling needed - alert behavior handled in JS */
-}
-
 /* ═══ MOBILE RESPONSIVE ═══ */
 @media (max-width: 640px) {
   .ren-dialog {

@@ -85,15 +85,11 @@ item is binary: pass / fail. Failures must be fixed, not noted-and-shipped.
 - [ ] For full applications, I validated the runnable result in a browser in
       addition to running the regex evals.
 
-## Lint exemptions (hardening debt)
+## Lint exceptions
 
-- [ ] If you add a CSS file under `components/`, do not extend the
-      `EXEMPT_FILES` list in `stylelint.config.mjs` /
-      `scripts/lint-tokens.mjs` without a colocated comment in the CSS
-      explaining the non-trivial primitive / hex use.
-- [ ] Prefer per-line allowlists (stylelint inline disable comments)
-      over full-file exemptions. Full-file exemptions are tracked as
-      hardening debt for the 0.9.x line.
+- [ ] No full component files are exempt from token lint.
+- [ ] Per-line allowlists explain any literal essential to behavior;
+      ordinary colors, stacking and motion use the token surface.
 
 ## Validation
 

@@ -178,19 +178,27 @@ test('number field ignores zero-detail click when disabled', (t) => {
 });
 
 test('number field hold repeats, then release and click stop without an extra step', (t) => {
-  t.mock.timers.enable({ apis: ['setTimeout', 'setInterval'] });
+  // Drive scheduled callbacks explicitly: Node 22 fake timers backdate timers
+  // created within tick(), producing repeats before their real due time.
+  const pending = new Map();
+  let next = 0;
+  const schedule = (callback) => { const id = ++next; pending.set(id, callback); return id; };
+  t.mock.method(globalThis, 'setTimeout', schedule);
+  t.mock.method(globalThis, 'setInterval', schedule);
+  t.mock.method(globalThis, 'clearTimeout', (id) => pending.delete(id));
+  t.mock.method(globalThis, 'clearInterval', (id) => pending.delete(id));
   const host = numberFixture(t);
   fire(host.incrementBtn, 'mousedown');
   assert.equal(host.getValue(), 3);
-  t.mock.timers.tick(host.pressRepeatDelay);
-  t.mock.timers.tick(host.pressRepeatInterval);
+  pending.get(host.pressTimeout)();
+  pending.get(host.pressInterval)();
   assert.equal(host.getValue(), 4);
   fire(host.incrementBtn, 'mouseup');
   fire(host.incrementBtn, 'click', { detail: 1 });
-  t.mock.timers.tick(1000);
   assert.equal(host.getValue(), 4);
   assert.equal(host.pressTimeout, null);
   assert.equal(host.pressInterval, null);
+  assert.equal(pending.size, 0);
 });
 test('number field touch press and its compatibility click count once', (t) => {
   const host = numberFixture(t);

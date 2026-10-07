@@ -60,7 +60,7 @@
       font-weight: var(--weight-medium);
       padding: var(--space-2) var(--space-3);
       border-radius: var(--radius-sm);
-      transition: background 120ms, color 120ms;
+      transition: background var(--duration-tactile) var(--ease-enter), color var(--duration-tactile) var(--ease-enter);
     }
     .bl-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
     .bl-nav-links a.active { color: var(--color-text); font-weight: var(--weight-semibold); }
@@ -309,7 +309,7 @@
       gap: var(--space-2);
     }
     .bl-tag-cloud .ren-tag {
-      transition: background 120ms, color 120ms;
+      transition: background var(--duration-tactile) var(--ease-enter), color var(--duration-tactile) var(--ease-enter);
     }
     .bl-tag-cloud .ren-tag:hover {
       background: var(--color-fill);
