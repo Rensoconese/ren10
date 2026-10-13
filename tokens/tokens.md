@@ -79,6 +79,15 @@ preferences scale them consistently in Chromium, Firefox, and WebKit. Typed
 length registration freezes these root-relative values in Firefox and WebKit;
 color and duration tokens retain their valid, independent registrations.
 
+`--color-surface-raised` retains its `<color>` registration, inherited value,
+initial white fallback and direct interpolation. Named/generated themes emit
+concrete light/dark values into private `--_ren-raised-*` helpers; the resolved
+pair is assigned to the public token. This avoids Firefox retaining initial
+white for a direct `light-dark()` assignment while preserving automatic OS
+mode, `data-mode`, legacy modes, native `color-scheme` and nested themes. These
+helpers are implementation details; consumers still override
+`--color-surface-raised` or component tokens. No JavaScript is required.
+
 ## Related Files
 
 - `tokens/primitives/*.css` - raw palettes and scales.

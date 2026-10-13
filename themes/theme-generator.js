@@ -332,7 +332,8 @@ export function generateTheme(hex, opts = {}) {
     `  --color-on-accent:     ${pair(light['--color-on-accent'], dark['--color-on-accent'])};`,
     `  --color-focus-ring:    ${pair(light['--color-focus-ring'], dark['--color-focus-ring'])};`,
     `  --color-surface:        ${pair(surfaceLight, surfaceDark)};`,
-    `  --color-surface-raised: ${pair(surfaceRaisedLight, surfaceRaisedDark)};`,
+    `  --_ren-raised-light: ${surfaceRaisedLight};`,
+    `  --_ren-raised-dark:  ${surfaceRaisedDark};`,
     `  --color-surface-sunken: ${pair(surfaceSunkenLight, surfaceSunkenDark)};`,
     `}`,
   ];

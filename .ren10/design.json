@@ -1109,7 +1109,7 @@
       "--color-highlight": "light-dark(var(--yellow-100), var(--yellow-800))",
       "--color-text-link-hover": "var(--color-accent-active)",
       "--color-surface": "light-dark(var(--white), var(--black))",
-      "--color-surface-raised": "light-dark(var(--white), var(--gray-1000))",
+      "--color-surface-raised": "var(--_ren-raised-resolved)",
       "--color-surface-sunken": "light-dark(var(--gray-100), var(--black))",
       "--color-surface-overlay": "light-dark(var(--white), var(--gray-1000))",
       "--color-surface-contrast": "var(--black)",

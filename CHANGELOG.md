@@ -11,7 +11,16 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+## [0.14.1] — 2026-10-13
+
+### Security
+- Replace Magicast's embedded source-map-js 1.2.1 with the patched external dependency in a reproducible, private local artifact; keep Astro's existing public API and peer ranges.
+- Add regressions for indexed maps, ordinary config edits and the image-build cache boundary. Pin a private, reproducible braces derivative with fixed nesting guards and source integrity checks; npm audit does not assess this fork, so regression and upstream compatibility checks validate the effective code. http-cache-semantics 4.3.0 is not claimed as a semantic security fix.
+- Let public-surface accessibility checks finish theme transitions before evaluating contrast; retain the same accessibility rules and final-state assertions.
+
 ### Fixed
+- Resolve raised-surface mode values before assigning the typed color token; preserve automatic and nested themes, native color-scheme, overrides, initial fallback and interpolation in Firefox.
+- Resolve Theme Builder inherited styles before rebuilding cards, so WebKit applies the selected mode consistently without changing palette values.
 - Align CLI and package cascade layers; make scoped density, named themes, independent light/dark mode, and AAA contrast work together.
 - Forward button host ARIA to the native control, enlarge carousel and removable-chip targets, distinguish muted links, and correct Theme Builder names, contrast, and keyboard controls.
 - Honor alert-dialog width overrides, namespace table shimmer, and replace component palette, motion, and stacking literals with tokens.
@@ -21,8 +30,6 @@ consolidates them and starts formal version tracking with 0.7.0.
 ### Validation
 - Expand accessibility coverage to foundations, landing, examples, templates, Theme Builder, and theme preview, including actual dark mode and WCAG 2.2 AA.
 - Add scoped-theme, density, CLI cascade, ARIA, touch-target, site assembly, and npm-access regressions; retain the existing package budgets.
-
-## [0.14.1] — 2026-09-30
 
 ### Fixed
 - Keep date and date-range form values in ISO format; restore radio and checkbox draft selections correctly.

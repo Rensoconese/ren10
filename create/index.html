@@ -1475,6 +1475,10 @@
       // Dark class
       preview.classList.toggle('dark-preview', state.mode === 'dark');
 
+      // Resolve the updated inherited theme before rebuilding descendants.
+      // WebKit can otherwise reuse their previous custom-property values.
+      getComputedStyle(preview).getPropertyValue("--surface-raised");
+
       // Re-render preview cards
       renderPreview();
     }

@@ -890,6 +890,12 @@ with `<html data-theme="light">` or `<html data-theme="dark">`, which set
 `color-scheme` explicitly. There is no separate `.dark` class, no
 duplicated declaration blocks, no JS required. Dark mode is free.
 
+Raised surfaces keep their typed registration. Named/generated themes supply
+the existing concrete light/dark palette values through private helpers, and
+the resolved pair is assigned to `--color-surface-raised`. This intermediate
+resolution preserves Firefox mode switching, initial fallback and token
+interpolation without changing the public override API or requiring JS.
+
 ### Accent, status, AI
 
 Four semantic color families are tuned for maximum legibility on their solid

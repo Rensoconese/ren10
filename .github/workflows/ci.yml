@@ -18,7 +18,7 @@ concurrency:
 #   - lint runs once (no browser).
 #   - a11y and components run on [chromium, firefox, webkit]:
 #       * Chromium is the primary engine. Failures BLOCK the run.
-#       * Firefox and WebKit are advisory (continue-on-error).
+#       * Firefox and WebKit failures also block the run.
 #       * The playwright configs detect PLAYWRIGHT_BROWSER and skip
 #         Mobile/Tablet projects for Firefox (Firefox doesn't support
 #         isMobile: true; Chromium and WebKit do).
@@ -75,6 +75,11 @@ jobs:
         if: steps.package-playwright-cache.outputs.cache-hit == 'true'
         run: npx playwright install-deps chromium
 
+      - name: Confirm native Linux x64
+        run: node -e "if (process.platform !== 'linux' || process.arch !== 'x64') process.exit(1); console.log(process.platform, process.arch)"
+
+      - run: npm run test:portable
+
       - run: npm run test:audit-regressions
 
       - run: npm run test:astro-local-install
@@ -115,7 +120,6 @@ jobs:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
-    continue-on-error: ${{ matrix.browser != 'chromium' }}
     steps:
       - uses: actions/checkout@v6
 
@@ -169,7 +173,6 @@ jobs:
             shard: 1/2
           - browser: webkit
             shard: 2/2
-    continue-on-error: ${{ matrix.browser != 'chromium' }}
     steps:
       - uses: actions/checkout@v6
 

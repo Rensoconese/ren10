@@ -31,6 +31,15 @@ for (const file of pages) {
       await expect(page.locator('#preview-grid .p-card').first()).toBeVisible();
       await page.evaluate(mode => { state.mode = mode; applyTheme(); }, testInfo.project.use.colorScheme);
     }
+    // Scan the requested theme's finished paint, not an interpolated color pair
+    // during the scheme change. Keep real final-state contrast violations visible.
+    await page.evaluate(async () => {
+      await document.fonts.ready;
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await Promise.all(document.getAnimations()
+        .filter(animation => animation.constructor.name === 'CSSTransition')
+        .map(animation => animation.finished.catch(() => {})));
+    });
     await injectAxe(page);
     const violations = await getViolations(page, null, {
       preload: false,
@@ -40,3 +49,28 @@ for (const file of pages) {
     expect(violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => ({ target: n.target, summary: n.failureSummary })) }))).toEqual([]);
   });
 }
+
+// Theme inheritance must survive repeated rebuilds, including cards whose
+// descendants share a style cache in WebKit. Check both mode directions.
+test('create/index.html — rebuilt cards inherit the selected theme', async ({ page }) => {
+  await page.route('https://fonts.googleapis.com/**', route => route.abort());
+  await page.route('https://fonts.gstatic.com/**', route => route.abort());
+  await page.goto(`${server.origin}/create/index.html`, { waitUntil: 'load' });
+  await expect(page.locator('#preview-grid .p-card').first()).toBeVisible();
+  for (const mode of ['dark', 'light', 'dark']) {
+    const backgrounds = await page.evaluate(mode => {
+      state.mode = mode;
+      applyTheme();
+      const actual = [...document.querySelectorAll('#preview-grid .p-card')]
+        .map(card => getComputedStyle(card).backgroundColor);
+      const probe = document.createElement('div');
+      probe.style.backgroundColor = 'var(--surface-raised)';
+      document.getElementById('preview-main').append(probe);
+      const expected = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      return actual.map(actual => ({ actual, expected }));
+    }, mode);
+    expect(backgrounds.length).toBeGreaterThan(0);
+    expect(backgrounds.every(({ actual, expected }) => actual === expected)).toBe(true);
+  }
+});

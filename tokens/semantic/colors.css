@@ -11,7 +11,11 @@
    Structure: --{purpose}-{property}-{variant}
    ============================================ */
 
-:root { color-scheme: light dark; }
+:root {
+  color-scheme: light dark;
+  --_ren-raised-light: var(--white);
+  --_ren-raised-dark: var(--gray-1000);
+}
 
 :where(:root, [data-theme], [data-mode], [data-contrast]) {
 
@@ -70,7 +74,10 @@
 
   /* ─── Surfaces / Backgrounds ─── */
   --color-surface:        light-dark(var(--white), var(--black));
-  --color-surface-raised: light-dark(var(--white), var(--gray-1000));
+  /* Resolve the light/dark pair before assigning the registered <color>.
+     Firefox can retain initial white for a direct light-dark() assignment. */
+  --_ren-raised-resolved: light-dark(var(--_ren-raised-light), var(--_ren-raised-dark));
+  --color-surface-raised: var(--_ren-raised-resolved);
   --color-surface-sunken: light-dark(var(--gray-100), var(--black));
   --color-surface-overlay:light-dark(var(--white), var(--gray-1000));
   --color-surface-contrast: var(--black);
