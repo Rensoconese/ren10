@@ -47,3 +47,17 @@ test('minification preserves significant string and calc whitespace', async (t) 
   assert.match(css, /a > b: ; \{ x \}/);
   assert.match(css, /calc\(100% - 2rem\)/);
 });
+
+
+test('coalesces adjacent named layers while preserving cascade boundaries', async (t) => {
+  const entry = await fixture(t, {
+    'entry.css': '@layer first, second; @layer first { .a { color: red; } } @layer first { .b { color: blue; } } @layer second { .c { color: green; } } @layer first { .d { color: black; } } @layer { .e { color: red; } } @layer { .f { color: blue; } }',
+  });
+  for (const minify of [false, true]) {
+    const css = await bundleCss(entry, { minify });
+    assert.equal((css.match(/@layer first\s*\{/g) || []).length, 2);
+    assert.equal((css.match(/@layer\s*\{/g) || []).length, 2);
+    const selectors = [...css.matchAll(/\.([a-f])\s*\{/g)].map(match => match[1]);
+    assert.deepEqual(selectors, ['a', 'b', 'c', 'd', 'e', 'f']);
+  }
+});

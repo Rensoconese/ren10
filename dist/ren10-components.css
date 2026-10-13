@@ -219,10 +219,6 @@
     outline: var(--ren-btn-ring-width) solid var(--ren-btn-ring-color);
     outline-offset: var(--ren-btn-ring-offset);
   }
-}
-
-/* components/primitives/ren-field/ren-field.css */
-@layer components {
   .ren-field {
     display: flex;
     flex-direction: column;
@@ -479,10 +475,6 @@
   .ren-field:has(.ren-input:user-valid) .ren-field-error {
     display: none;
   }
-}
-
-/* components/primitives/ren-checkbox/ren-checkbox.css */
-@layer components {
   .ren-checkbox {
     display: inline-flex;
     align-items: center;
@@ -569,10 +561,6 @@
     margin: 0;
     border-radius: 1px;
   }
-}
-
-/* components/primitives/ren-switch/ren-switch.css */
-@layer components {
   .ren-switch {
     display: inline-flex;
     align-items: center;
@@ -642,10 +630,6 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
-}
-
-/* components/primitives/ren-badge/ren-badge.css */
-@layer components {
   .ren-badge {
     display: inline-flex;
     align-items: center;
@@ -705,10 +689,6 @@
   .ren-badge-dot-danger {
     background-color: var(--color-danger);
   }
-}
-
-/* components/primitives/ren-radio/ren-radio.css */
-@layer components {
   .ren-radio {
     display: inline-flex;
     align-items: center;
@@ -791,10 +771,6 @@
     flex-direction: row;
     gap: var(--space-4);
   }
-}
-
-/* components/primitives/ren-progress/ren-progress.css */
-@layer components {
   .ren-progress {
     display: flex;
     width: 100%;
@@ -917,10 +893,6 @@
   .ren-meter-xl {
     height: 1rem;
   }
-}
-
-/* components/primitives/ren-icon/ren-icon.css */
-@layer components {
   .ren-icon {
     display: inline-flex;
     align-items: center;
@@ -991,10 +963,6 @@
       animation: none;
     }
   }
-}
-
-/* components/primitives/ren-card/ren-card.css */
-@layer components {
   .ren-card {
     background-color: var(--ren-card-bg);
     border: var(--ren-card-border-width) solid var(--ren-card-border-color);
@@ -1135,10 +1103,6 @@
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: var(--space-4);
   }
-}
-
-/* components/primitives/ren-link/ren-link.css */
-@layer components {
   .ren-link {
     display: inline;
     color: var(--ren-link-color);
@@ -1230,10 +1194,6 @@
   .ren-link-skip:focus {
     top: var(--space-3);
   }
-}
-
-/* components/primitives/ren-banner/ren-banner.css */
-@layer components {
   .ren-banner {
     display: flex;
     align-items: flex-start;
@@ -1352,10 +1312,6 @@
       display: none;
     }
   }
-}
-
-/* components/primitives/ren-breadcrumb/ren-breadcrumb.css */
-@layer components {
   .ren-breadcrumb > ol {
     display: flex;
     flex-wrap: wrap;
@@ -1408,10 +1364,6 @@
     color: var(--color-text-faint);
     padding: 0 var(--space-1);
   }
-}
-
-/* components/primitives/ren-pagination/ren-pagination.css */
-@layer components {
   .ren-pagination {
     display: flex;
     align-items: center;
@@ -1495,10 +1447,6 @@
   .ren-pagination-centered {
     justify-content: center;
   }
-}
-
-/* components/primitives/ren-tag/ren-tag.css */
-@layer components {
   .ren-tag {
     display: inline-flex;
     align-items: center;
@@ -1601,10 +1549,6 @@
     gap: var(--space-2);
     align-items: center;
   }
-}
-
-/* components/primitives/ren-separator/ren-separator.css */
-@layer components {
   .ren-separator {
     border: none;
     background-color: var(--ren-separator-color);
@@ -1636,10 +1580,6 @@
     height: var(--ren-separator-width);
     background-color: var(--ren-separator-color);
   }
-}
-
-/* components/primitives/ren-avatar/ren-avatar.css */
-@layer components {
   .ren-avatar {
     display: inline-flex;
     align-items: center;
@@ -1722,10 +1662,6 @@
   .ren-avatar-group > .ren-avatar:last-child {
     margin-inline-start: 0;
   }
-}
-
-/* components/primitives/ren-spinner/ren-spinner.css */
-@layer components {
   .ren-spinner {
     display: inline-block;
     width: var(--ren-spinner-size);
@@ -1777,10 +1713,6 @@
       animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
     }
   }
-}
-
-/* components/primitives/ren-skeleton/ren-skeleton.css */
-@layer components {
   .ren-skeleton {
     display: block;
     background:
@@ -1828,10 +1760,6 @@
       background: var(--ren-skeleton-bg);
     }
   }
-}
-
-/* components/primitives/ren-kbd/ren-kbd.css */
-@layer components {
   .ren-kbd {
     display: inline-flex;
     align-items: center;
@@ -1849,10 +1777,6 @@
     border-radius: var(--ren-kbd-radius);
     white-space: nowrap;
   }
-}
-
-/* components/composites/ren-dialog/ren-dialog.css */
-@layer components {
   .ren-dialog {
     margin: auto;
     padding: 0;
@@ -2057,10 +1981,6 @@
   .ren-alert-dialog::backdrop {
     background: var(--ren-dialog-backdrop, var(--color-overlay));
   }
-}
-
-/* components/composites/ren-popover/ren-popover.css */
-@layer components {
   ren-popover:not(:defined) {
     display: none;
   }
@@ -2232,10 +2152,6 @@
     transition-duration: var(--ren-popover-duration, var(--duration-normal));
     transition-timing-function: var(--ren-popover-easing, var(--ease-out));
   }
-}
-
-/* components/composites/ren-tooltip/ren-tooltip.css */
-@layer components {
   .ren-tooltip {
     position: absolute;
     background: var(--ren-tooltip-bg, var(--color-text));
@@ -2383,10 +2299,6 @@
     transition-duration: var(--ren-tooltip-duration, var(--duration-fast));
     transition-timing-function: var(--ren-tooltip-easing, var(--ease-out));
   }
-}
-
-/* components/composites/ren-tabs/ren-tabs.css */
-@layer components {
   .ren-tabs {
     container-type: inline-size;
     container-name: ren-tabs;
@@ -2554,10 +2466,6 @@
   .ren-tabs-indicator {
     background: var(--ren-tabs-indicator-color, var(--color-accent));
   }
-}
-
-/* components/composites/ren-accordion/ren-accordion.css */
-@layer components {
   .ren-accordion {
     display: flex;
     flex-direction: column;
@@ -2759,10 +2667,6 @@
     outline: 2px solid var(--color-accent);
     outline-offset: -2px;
   }
-}
-
-/* components/composites/ren-menu/ren-menu.css */
-@layer components {
   .ren-menu {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -2995,10 +2899,6 @@
   .ren-menu-item-danger {
     color: var(--ren-menu-danger-color, var(--color-danger));
   }
-}
-
-/* components/composites/ren-select/ren-select.css */
-@layer components {
   .ren-select {
     position: relative;
     display: inline-flex;
@@ -3289,10 +3189,6 @@
       opacity: 1;
     }
   }
-}
-
-/* components/composites/ren-toast/ren-toast.css */
-@layer components {
   .ren-toast-viewport {
     position: fixed;
     z-index: var(--z-toast, 9999);
@@ -3606,10 +3502,6 @@
       min-block-size: var(--touch-min);
     }
   }
-}
-
-/* components/composites/ren-slider/ren-slider.css */
-@layer components {
   .ren-slider {
     display: flex;
     flex-direction: column;
@@ -3933,10 +3825,6 @@
         var(--ren-slider-track-bg, var(--color-fill-active)) var(--value, 0%),
         var(--ren-slider-track-bg, var(--color-fill-active)) 100%);
   }
-}
-
-/* components/composites/ren-toggle-group/ren-toggle-group.css */
-@layer components {
   .ren-toggle-group {
     display: inline-flex;
     gap: var(--space-0-5);
@@ -4075,10 +3963,6 @@
       min-block-size: var(--touch-min);
     }
   }
-}
-
-/* components/composites/ren-combobox/ren-combobox.css */
-@layer components {
   .ren-combobox {
     position: relative;
     display: block;
@@ -4271,10 +4155,6 @@
       transform: rotate(360deg);
     }
   }
-}
-
-/* components/composites/ren-sheet/ren-sheet.css */
-@layer components {
   ren-sheet {
     display: contents;
   }
@@ -4503,10 +4383,6 @@
   .ren-sheet::backdrop {
     background: var(--ren-sheet-backdrop, var(--color-overlay));
   }
-}
-
-/* components/composites/ren-hover-card/ren-hover-card.css */
-@layer components {
   .ren-hover-card {
     position: absolute;
     position-area: bottom span-all;
@@ -4680,10 +4556,6 @@
       outline-offset: 2px;
     }
   }
-}
-
-/* components/composites/ren-scroll-area/ren-scroll-area.css */
-@layer components {
   .ren-scroll-area {
     position: relative;
     overflow: auto;
@@ -4842,10 +4714,6 @@
     height: 100%;
     max-height: none;
   }
-}
-
-/* components/composites/ren-number-field/ren-number-field.css */
-@layer components {
   .ren-number-field {
     display: inline-flex;
     align-items: center;
@@ -5004,10 +4872,6 @@
       transition: none;
     }
   }
-}
-
-/* components/composites/ren-otp/ren-otp.css */
-@layer components {
   .ren-otp {
     container-type: inline-size;
     container-name: ren-otp;
@@ -5139,10 +5003,6 @@
       }
     }
   }
-}
-
-/* components/composites/ren-calendar/ren-calendar.css */
-@layer components {
   .ren-calendar {
     container-type: inline-size;
     container-name: ren-calendar;
@@ -5463,10 +5323,6 @@
       min-block-size: calc(var(--touch-min) + var(--stroke-1));
     }
   }
-}
-
-/* components/composites/ren-date-picker/ren-date-picker.css */
-@layer components {
   .ren-date-picker {
     display: inline-flex;
     flex-direction: column;
@@ -5718,10 +5574,6 @@
       display: none;
     }
   }
-}
-
-/* components/composites/ren-date-range-picker/ren-date-range-picker.css */
-@layer components {
   .ren-date-range-picker {
     display: inline-flex;
     flex-direction: column;
@@ -6073,10 +5925,6 @@
       display: none;
     }
   }
-}
-
-/* components/composites/ren-carousel/ren-carousel.css */
-@layer components {
   .ren-carousel {
     container-type: inline-size;
     container-name: ren-carousel;
@@ -6466,10 +6314,6 @@
   .ren-carousel .ren-carousel-dot.is-active::before {
     background: var(--ren-carousel-dot-active, var(--color-accent));
   }
-}
-
-/* components/composites/ren-color-picker/ren-color-picker.css */
-@layer components {
   .ren-color-picker {
     position: relative;
     display: inline-flex;
@@ -6934,10 +6778,6 @@
   .ren-color-picker .ren-color-picker-track {
     block-size: var(--ren-cp-track-height, 12px);
   }
-}
-
-/* components/composites/ren-collapsible/ren-collapsible.css */
-@layer components {
   .ren-collapsible {
     interpolate-size: allow-keywords;
     border: var(--stroke-1) solid var(--color-border);
@@ -7019,10 +6859,6 @@
     font-size: var(--ren-collapse-trigger-font, var(--label-lg-size));
     font-weight: var(--ren-collapse-trigger-weight, var(--weight-semibold));
   }
-}
-
-/* components/composites/ren-toolbar/ren-toolbar.css */
-@layer components {
   .ren-toolbar {
     display: inline-flex;
     align-items: center;
@@ -7118,10 +6954,6 @@
   .ren-toolbar [data-state=on] {
     background: var(--ren-toolbar-active-bg, var(--color-accent-subtle));
   }
-}
-
-/* components/composites/ren-dropzone/ren-dropzone.css */
-@layer components {
   .ren-dropzone {
     position: relative;
     display: flex;
@@ -7270,10 +7102,6 @@
     background: var(--ren-dropzone-hover-bg, var(--color-accent-subtle));
     border-color: var(--ren-dropzone-hover-border, var(--color-accent));
   }
-}
-
-/* components/composites/ren-alert-dialog/ren-alert-dialog.css */
-@layer components {
   .ren-alert-dialog {
     container-type: inline-size;
     container-name: ren-alert-dialog;
@@ -7366,10 +7194,6 @@
       transition: none;
     }
   }
-}
-
-/* components/composites/ren-context-menu/ren-context-menu.css */
-@layer components {
   .ren-context-menu {
     margin: 0;
     padding: 0;
@@ -7411,10 +7235,6 @@
       transition: none;
     }
   }
-}
-
-/* components/patterns/ren-nav/ren-nav.css */
-@layer components {
   .ren-nav {
     display: flex;
     align-items: center;
@@ -7606,10 +7426,6 @@
   .ren-nav a[data-active] {
     color: var(--ren-nav-link-active, var(--color-text));
   }
-}
-
-/* components/patterns/ren-sidebar/ren-sidebar.css */
-@layer components {
   .ren-sidebar-layout {
     display: flex;
     min-height: 100dvh;
@@ -7900,10 +7716,6 @@
       min-block-size: var(--touch-min);
     }
   }
-}
-
-/* components/patterns/ren-command/ren-command.css */
-@layer components {
   .ren-command {
     position: fixed;
     top: 50%;
@@ -8188,10 +8000,6 @@
     min-block-size: var(--ren-command-item-height, var(--size-lg));
     border-radius: var(--ren-command-item-radius, var(--radius-md));
   }
-}
-
-/* components/patterns/ren-table/ren-table.css */
-@layer components {
   ren-table {
     container-type: inline-size;
     container-name: ren-table;
@@ -8615,10 +8423,6 @@
   .ren-table tbody tr[data-selected] {
     background: var(--ren-table-selected-bg, var(--color-accent-subtle));
   }
-}
-
-/* components/patterns/ren-form/ren-form.css */
-@layer components {
   .ren-form {
     container-type: inline-size;
     container-name: ren-form;
@@ -8886,10 +8690,6 @@
   .ren-form [aria-invalid=false] {
     border-color: var(--ren-field-success-color, var(--color-success));
   }
-}
-
-/* components/patterns/ren-menubar/ren-menubar.css */
-@layer components {
   .ren-menubar {
     display: flex;
     align-items: center;
@@ -9117,10 +8917,6 @@
       animation: none;
     }
   }
-}
-
-/* components/patterns/ren-empty-state/ren-empty-state.css */
-@layer components {
   .ren-empty-state {
     display: flex;
     flex-direction: column;
@@ -9202,10 +8998,6 @@
   .ren-empty-state p {
     color: var(--ren-empty-desc-color, var(--color-text-muted));
   }
-}
-
-/* components/patterns/ren-ai/ren-ai.css */
-@layer components {
   .ren-ai-slug {
     display: inline-flex;
     align-items: center;
@@ -9742,5 +9534,109 @@
     color: var(--color-text);
   }
 }
+
+/* components/primitives/ren-field/ren-field.css */
+
+/* components/primitives/ren-checkbox/ren-checkbox.css */
+
+/* components/primitives/ren-switch/ren-switch.css */
+
+/* components/primitives/ren-badge/ren-badge.css */
+
+/* components/primitives/ren-radio/ren-radio.css */
+
+/* components/primitives/ren-progress/ren-progress.css */
+
+/* components/primitives/ren-icon/ren-icon.css */
+
+/* components/primitives/ren-card/ren-card.css */
+
+/* components/primitives/ren-link/ren-link.css */
+
+/* components/primitives/ren-banner/ren-banner.css */
+
+/* components/primitives/ren-breadcrumb/ren-breadcrumb.css */
+
+/* components/primitives/ren-pagination/ren-pagination.css */
+
+/* components/primitives/ren-tag/ren-tag.css */
+
+/* components/primitives/ren-separator/ren-separator.css */
+
+/* components/primitives/ren-avatar/ren-avatar.css */
+
+/* components/primitives/ren-spinner/ren-spinner.css */
+
+/* components/primitives/ren-skeleton/ren-skeleton.css */
+
+/* components/primitives/ren-kbd/ren-kbd.css */
+
+/* components/composites/ren-dialog/ren-dialog.css */
+
+/* components/composites/ren-popover/ren-popover.css */
+
+/* components/composites/ren-tooltip/ren-tooltip.css */
+
+/* components/composites/ren-tabs/ren-tabs.css */
+
+/* components/composites/ren-accordion/ren-accordion.css */
+
+/* components/composites/ren-menu/ren-menu.css */
+
+/* components/composites/ren-select/ren-select.css */
+
+/* components/composites/ren-toast/ren-toast.css */
+
+/* components/composites/ren-slider/ren-slider.css */
+
+/* components/composites/ren-toggle-group/ren-toggle-group.css */
+
+/* components/composites/ren-combobox/ren-combobox.css */
+
+/* components/composites/ren-sheet/ren-sheet.css */
+
+/* components/composites/ren-hover-card/ren-hover-card.css */
+
+/* components/composites/ren-scroll-area/ren-scroll-area.css */
+
+/* components/composites/ren-number-field/ren-number-field.css */
+
+/* components/composites/ren-otp/ren-otp.css */
+
+/* components/composites/ren-calendar/ren-calendar.css */
+
+/* components/composites/ren-date-picker/ren-date-picker.css */
+
+/* components/composites/ren-date-range-picker/ren-date-range-picker.css */
+
+/* components/composites/ren-carousel/ren-carousel.css */
+
+/* components/composites/ren-color-picker/ren-color-picker.css */
+
+/* components/composites/ren-collapsible/ren-collapsible.css */
+
+/* components/composites/ren-toolbar/ren-toolbar.css */
+
+/* components/composites/ren-dropzone/ren-dropzone.css */
+
+/* components/composites/ren-alert-dialog/ren-alert-dialog.css */
+
+/* components/composites/ren-context-menu/ren-context-menu.css */
+
+/* components/patterns/ren-nav/ren-nav.css */
+
+/* components/patterns/ren-sidebar/ren-sidebar.css */
+
+/* components/patterns/ren-command/ren-command.css */
+
+/* components/patterns/ren-table/ren-table.css */
+
+/* components/patterns/ren-form/ren-form.css */
+
+/* components/patterns/ren-menubar/ren-menubar.css */
+
+/* components/patterns/ren-empty-state/ren-empty-state.css */
+
+/* components/patterns/ren-ai/ren-ai.css */
 
 /* components/index.css */

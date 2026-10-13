@@ -14,10 +14,6 @@
   @property --duration-normal { syntax: "<time>"; inherits: true; initial-value: 150ms; }
   @property --duration-moderate { syntax: "<time>"; inherits: true; initial-value: 250ms; }
   @property --duration-slow { syntax: "<time>"; inherits: true; initial-value: 300ms; }
-}
-
-/* tokens/primitives/colors.css */
-@layer tokens {
   :root {
     --blue-50: #EBF5FF;
     --blue-100: #D1E9FF;
@@ -114,12 +110,6 @@
     --white: #FFFFFF;
     --black: #000000;
     --transparent: transparent;
-  }
-}
-
-/* tokens/primitives/spacing.css */
-@layer tokens {
-  :root {
     --space-unit: 0.5rem;
     --space-0: 0;
     --space-px: 1px;
@@ -146,12 +136,6 @@
     --space-64: 16rem;
     --space-0-25: 0.0625rem;
     --space-1-5: 0.375rem;
-  }
-}
-
-/* tokens/primitives/typography.css */
-@layer tokens {
-  :root {
     --font-sans:
       -apple-system,
       BlinkMacSystemFont,
@@ -210,10 +194,6 @@
     --tracking-wider: 0.05em;
     --tracking-widest: 0.1em;
   }
-}
-
-/* tokens/primitives/type-scales.css */
-@layer tokens {
   :root,
   [data-type-ratio=major-third] {
     --type-ratio: 1.250;
@@ -272,12 +252,6 @@
     --scale-step-6: calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
     --scale-step-7: calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
     --scale-step-8: calc(1rem * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio) * var(--type-ratio));
-  }
-}
-
-/* tokens/primitives/sizing.css */
-@layer tokens {
-  :root {
     --touch-min: 2.75rem;
     --size-xs: 1.5rem;
     --size-sm: 2rem;
@@ -315,12 +289,6 @@
     --stroke-2: 2px;
     --stroke-3: 3px;
     --stroke-4: 4px;
-  }
-}
-
-/* tokens/primitives/radius.css */
-@layer tokens {
-  :root {
     --radius-none: 0;
     --radius-xs: 0.125rem;
     --radius-sm: 0.25rem;
@@ -330,12 +298,6 @@
     --radius-2xl: 1.25rem;
     --radius-3xl: 1.5rem;
     --radius-full: 9999px;
-  }
-}
-
-/* tokens/primitives/shadows.css */
-@layer tokens {
-  :root {
     --shadow-none: none;
     --shadow-inset-color: light-dark(rgb(0, 0, 0, 0.06), rgb(0, 0, 0, 0.3));
     --shadow-inset: inset 0 2px 4px var(--shadow-inset-color);
@@ -343,12 +305,6 @@
     --ring-color: var(--color-focus-ring);
     --ring-offset-width: 2px;
     --ring-offset-color: light-dark(var(--white), var(--black));
-  }
-}
-
-/* tokens/primitives/motion.css */
-@layer tokens {
-  :root {
     --duration-0: 0ms;
     --duration-fastest: 50ms;
     --duration-fast: 100ms;
@@ -387,10 +343,6 @@
       --duration-slowest: 0ms;
     }
   }
-}
-
-/* tokens/primitives/z-index.css */
-@layer tokens {
   :root {
     --z-behind: -1;
     --z-base: 0;
@@ -406,6 +358,24 @@
     --z-max: 9999;
   }
 }
+
+/* tokens/primitives/colors.css */
+
+/* tokens/primitives/spacing.css */
+
+/* tokens/primitives/typography.css */
+
+/* tokens/primitives/type-scales.css */
+
+/* tokens/primitives/sizing.css */
+
+/* tokens/primitives/radius.css */
+
+/* tokens/primitives/shadows.css */
+
+/* tokens/primitives/motion.css */
+
+/* tokens/primitives/z-index.css */
 
 /* tokens/primitives/index.css */
 @layer tokens;
@@ -526,10 +496,6 @@
   [data-mode=auto] {
     color-scheme: light dark;
   }
-}
-
-/* tokens/semantic/typography.css */
-@layer tokens {
   :root {
     --font-body: var(--font-sans, system-ui, sans-serif);
     --font-heading: var(--font-body);
@@ -597,10 +563,6 @@
     --leading-5: var(--leading-normal);
     --size-body-sm: var(--body-sm-size);
   }
-}
-
-/* tokens/semantic/type-dual.css */
-@layer tokens {
   :root,
   :root[data-type-mode=productive],
   [data-type-mode=productive] {
@@ -659,10 +621,6 @@
     --display-lg-leading: var(--leading-none);
     --display-lg-tracking:var(--tracking-tighter);
   }
-}
-
-/* tokens/semantic/dynamic-type.css */
-@layer tokens {
   :root,
   [data-type-scale=default] {
     --type-scale-factor: 1;
@@ -830,10 +788,6 @@
     font-weight: var(--weight-semibold);
     line-height: var(--type-leading-normal);
   }
-}
-
-/* tokens/semantic/spacing.css */
-@layer tokens {
   :where(:root, [data-density]) {
     --space-card-padding: var(--space-6);
     --space-card-padding-sm: var(--space-4);
@@ -879,10 +833,6 @@
     --space-card-padding: var(--space-8);
     --space-form-gap: var(--space-6);
   }
-}
-
-/* tokens/semantic/motion.css */
-@layer tokens {
   :root {
     --duration-loading: 1500ms;
     --duration-spinner: 800ms;
@@ -962,12 +912,6 @@
       --delay-stagger: 0ms;
     }
   }
-}
-
-/* tokens/semantic/index.css */
-
-/* tokens/component/tokens.css */
-@layer tokens {
   :where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
     --ren-btn-height: var(--size-lg);
     --ren-btn-padding-x: var(--space-4);
@@ -1291,6 +1235,20 @@
         #ff0000 100% );
   }
 }
+
+/* tokens/semantic/typography.css */
+
+/* tokens/semantic/type-dual.css */
+
+/* tokens/semantic/dynamic-type.css */
+
+/* tokens/semantic/spacing.css */
+
+/* tokens/semantic/motion.css */
+
+/* tokens/semantic/index.css */
+
+/* tokens/component/tokens.css */
 
 /* tokens/index.css */
 
@@ -2527,10 +2485,6 @@
       grid-template-columns: repeat(3, 1fr);
     }
   }
-}
-
-/* base/grid.css */
-@layer base {
   :root {
     --grid-columns: 12;
     --grid-gutter: clamp(1rem, 3vw, 1.5rem);
@@ -3045,10 +2999,6 @@
       --mod-cols: 2;
     }
   }
-}
-
-/* base/glass.css */
-@layer base {
   :root {
     --glass-blur-thin: 8px;
     --glass-blur-regular: 20px;
@@ -3110,10 +3060,6 @@
       border: var(--stroke-1) solid CanvasText;
     }
   }
-}
-
-/* base/motion-alternatives.css */
-@layer base {
   @keyframes ren-dissolve-in {
     from {
       opacity: 0;
@@ -3182,10 +3128,6 @@
       animation: ren-focus-glow 800ms ease-in-out both !important;
     }
   }
-}
-
-/* base/motion-presets.css */
-@layer base {
   @keyframes ren-fade-in {
     from {
       opacity: 0;
@@ -3516,10 +3458,6 @@
       animation-delay: 0ms !important;
     }
   }
-}
-
-/* base/enhancements.css */
-@layer base {
   @supports (view-transition-name: none) {
     @view-transition {
       navigation: auto;
@@ -3627,6 +3565,16 @@
     }
   }
 }
+
+/* base/grid.css */
+
+/* base/glass.css */
+
+/* base/motion-alternatives.css */
+
+/* base/motion-presets.css */
+
+/* base/enhancements.css */
 
 /* base/index.css */
 
