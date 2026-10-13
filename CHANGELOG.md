@@ -19,6 +19,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Let public-surface accessibility checks finish theme transitions before evaluating contrast; retain the same accessibility rules and final-state assertions.
 
 ### Fixed
+- Serve the Theme Builder icon and ZIP libraries locally with their existing integrity hashes, preserving rendering and export when external CDNs are unavailable.
 - Coalesce adjacent named cascade-layer blocks in generated bundles while preserving anonymous layers, scope and rule order; keep CSS within the existing package budget.
 - Resolve raised-surface mode values before assigning the typed color token; preserve automatic and nested themes, native color-scheme, overrides, initial fallback and interpolation in Firefox.
 - Resolve Theme Builder inherited styles before rebuilding cards, so WebKit applies the selected mode consistently without changing palette values.

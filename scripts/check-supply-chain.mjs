@@ -56,5 +56,17 @@ if (!bracesEntry || bracesEntry.name !== '@ren10/braces' || bracesEntry.version 
     }
   }
 }
+// Unmodified upstream browser bundles are hash-checked instead of rewritten by
+// the authored-source style linter. Keep the existing HTML SRI checks enabled.
+const builderHtml = existsSync('create/index.html') ? readFileSync('create/index.html', 'utf8') : '';
+if (!builderHtml) errors.push('Theme Builder entrypoint is required');
+for (const [filename, integrity] of [
+  ['lucide-1.16.0.min.js', 'sha384-ZgnJ3Zpr70Xoify35DjOZWqHib1iYJBpYpQUIEpDASG9+fJ745WzNQuC004dwU0W'],
+  ['jszip-3.10.1.min.js', 'sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG'],
+]) {
+  const asset = `create/vendor/${filename}`;
+  if (!existsSync(asset) || `sha384-${createHash('sha384').update(readFileSync(asset)).digest('base64')}` !== integrity) errors.push(`Theme Builder bundle integrity failed: ${filename}`);
+  if (!builderHtml.includes(`src="./vendor/${filename}"`) || !builderHtml.includes(`integrity="${integrity}"`)) errors.push(`Theme Builder SRI contract failed: ${filename}`);
+}
 if (errors.length) { errors.forEach(console.error); process.exit(1); }
 console.log(`Supply-chain contract OK (${pkg.name}@${pkg.version})`);
