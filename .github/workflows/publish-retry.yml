@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish-astro:
-    name: Publish @ren10/astro (verified release retry)
+    name: Stage and confirm verified release retry
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -23,6 +23,9 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
+
+      - name: Install pinned npm staging CLI
+        run: npm install --global --ignore-scripts npm@11.21.0
 
       - run: npm ci
 
@@ -41,30 +44,13 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @ren10/astro with public diagnostics
+      - name: Stage exact verified tarballs with provenance
+        run: node scripts/stage-release.mjs
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          VERSION=$(node -p "require('./packages/astro/package.json').version")
-          if npm view "@ren10/astro@$VERSION" version >/dev/null 2>&1; then
-            echo "@ren10/astro@$VERSION is already published; skipping."
-            exit 0
-          fi
 
-          LOG_FILE=$(mktemp)
-          if npm publish --workspace @ren10/astro --provenance --access public >"$LOG_FILE" 2>&1; then
-            cat "$LOG_FILE"
-            exit 0
-          fi
-
-          ERROR_OUTPUT=$(grep -E '^npm (error|ERR!)' "$LOG_FILE" | tail -n 20 || true)
-          if [ -z "$ERROR_OUTPUT" ]; then
-            ERROR_OUTPUT=$(tail -n 20 "$LOG_FILE")
-          fi
-          while IFS= read -r line; do
-            echo "::error::$line"
-          done <<< "$ERROR_OUTPUT"
-          exit 1
+      - name: Confirm both 2FA-approved versions are public
+        run: node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800
 
       - name: Extract release notes
         id: release
@@ -73,7 +59,7 @@ jobs:
           echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
           awk -v ver="$VERSION" '
             $0 ~ "^## \\[" ver "\\]" { found=1; next }
-            found && /^## \\[/ { exit }
+            found && /^## \[/ { exit }
             found { print }
           ' CHANGELOG.md > release-notes.md
 

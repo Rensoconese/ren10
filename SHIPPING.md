@@ -22,10 +22,12 @@ npm run test:release-policy
 
 ## Registry prerequisites
 
-Before publication, run `npm run check:publish-access` with the intended npm identity. The check verifies authentication and membership in the `ren10` organization before the core package can publish. Granular token write permissions are still enforced by npm during publication. A scoped package returning E404 does not prove permission to create it. The local tarball fallback is documented in `docs/astro.md`.
+Before publication, run `npm run check:publish-access` with the intended npm identity. The check verifies authentication and membership in the `ren10` organization before the core package can publish. Use a granular token with stage-only access to ren10 and the @ren10 scope, read-only organization access for the membership preflight, and no bypass of 2FA. The publishing account must retain 2FA. Token permissions are still enforced by npm during staging. A scoped package returning E404 does not prove permission to create it. The local tarball fallback is documented in `docs/astro.md`.
 
 ## Authorized publication
 
-Create a reviewable pull request with validation evidence. Merge and publish only after maintainer authorization and passing release checks. Read the version from `package.json` when creating the tag; do not copy a historical tag from this document. `release.yml` verifies that the tag matches both package versions, publishes with provenance, skips versions already present, and creates the GitHub Release. `publish-retry.yml` supports recovery of the scoped package without republishing the core.
+Create a reviewable pull request with validation evidence. Merge and publish only after maintainer authorization and passing release checks. Read the version from `package.json` when creating the tag; do not copy a historical tag from this document. `release.yml` verifies that the tag matches both package versions, stages integrity-pinned tarballs with provenance using npm 11.21.0, reuses only byte-identical pending stages, and skips byte-identical public versions. A maintainer approves both staged packages with 2FA in npm; the workflow waits up to 30 minutes and verifies the exact public tarball integrities and provenance before creating the GitHub Release. If approval happens later, rerun the release workflow; neither version is uploaded again. `publish-retry.yml` supports recovery of the scoped package without republishing the core.
 
 Verify both exact versions in npm and the GitHub Release after publication. Pages is a separate deployment; inspect its assembled artifact and deploy result independently.
+
+Staged publication: https://docs.npmjs.com/staged-publishing/

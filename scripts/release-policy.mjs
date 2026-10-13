@@ -129,6 +129,16 @@ export function validateWorkflowPolicy(workflows, requiredCommands) {
   }
   if (release?.jobs?.publish?.if) errors.push('release.yml:publish must not be conditional');
 
+  requireBlockingCommands(errors, 'release.yml', 'publish', release?.jobs?.publish, [
+    'node scripts/stage-release.mjs',
+    'node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800',
+  ]);
+
+  requireBlockingCommands(errors, 'publish-retry.yml', 'publish-astro', workflows['publish-retry.yml']?.jobs?.['publish-astro'], [
+    'node scripts/stage-release.mjs',
+    'node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800',
+  ]);
+
   const chromiumIf = "${{ !cancelled() && matrix.browser == 'chromium' }}";
   requireBlockingCommands(errors, 'audit.yml', 'audit', audit?.jobs?.audit, requiredCommands, chromiumIf);
   if (audit?.jobs?.audit?.['continue-on-error'] !== "${{ matrix.browser != 'chromium' }}") {

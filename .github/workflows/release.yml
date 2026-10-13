@@ -100,7 +100,7 @@ jobs:
           fi
 
   publish:
-    name: Publish to npm
+    name: Stage and confirm npm publication
     needs: verify
     runs-on: ubuntu-latest
     permissions:
@@ -115,6 +115,9 @@ jobs:
           cache: npm
           registry-url: https://registry.npmjs.org
 
+      - name: Install pinned npm staging CLI
+        run: npm install --global --ignore-scripts npm@11.21.0
+
       - run: npm ci
 
       - name: Verify scoped npm publishing prerequisites
@@ -128,27 +131,13 @@ jobs:
       - name: Dry-run publish @ren10/astro
         run: npm publish --workspace @ren10/astro --dry-run
 
-      - name: Publish ren10
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          if npm view "ren10@$VERSION" version >/dev/null 2>&1; then
-            echo "ren10@$VERSION is already published; skipping."
-          else
-            npm publish --provenance --access public
-          fi
+      - name: Stage exact verified tarballs with provenance
+        run: node scripts/stage-release.mjs
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish @ren10/astro
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          if npm view "@ren10/astro@$VERSION" version >/dev/null 2>&1; then
-            echo "@ren10/astro@$VERSION is already published; skipping."
-          else
-            npm publish --workspace @ren10/astro --provenance --access public
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Confirm both 2FA-approved versions are public
+        run: node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800
 
   github-release:
     name: Create GitHub Release

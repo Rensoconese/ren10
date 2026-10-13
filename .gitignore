@@ -70,3 +70,6 @@ output/ren10-remediation/
 
 # Generated skill tarballs are not CSS package deliverables.
 dist/*.tgz
+
+# Exact tarball manifest emitted by the staged release workflow.
+release-candidate.json
