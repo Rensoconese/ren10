@@ -1,0 +1,16 @@
+[
+  {
+    "name": "lucide",
+    "version": "1.16.0",
+    "upstreamIntegrity": "sha512-20QvduCJTB7e7K9WVvoLBuKPsYZ8d6ptwe9PIdTFiZmjVTPdFWQreBNyNCM9QQtGnqHR0PLiEQdxyhYsL1LdoA==",
+    "scriptIntegrity": "sha384-ZgnJ3Zpr70Xoify35DjOZWqHib1iYJBpYpQUIEpDASG9+fJ745WzNQuC004dwU0W",
+    "source": "https://registry.npmjs.org/lucide/-/lucide-1.16.0.tgz"
+  },
+  {
+    "name": "jszip",
+    "version": "3.10.1",
+    "upstreamIntegrity": "sha512-xXDvecyTpGLrqFrvkrUSoxxfJI5AH7U8zxxtVclpsUtMCq4JQ290LY8AW5c7Ggnr/Y/oK+bQMbqK2qmtk3pN4g==",
+    "scriptIntegrity": "sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG",
+    "source": "https://registry.npmjs.org/jszip/-/jszip-3.10.1.tgz"
+  }
+]

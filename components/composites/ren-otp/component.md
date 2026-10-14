@@ -148,3 +148,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Run component or docs a11y coverage when markup, states, or ARIA change.
 - Run CSS lint when selectors, tokens, or visual states change.
 - Manually verify light/dark themes when color, surface, border, or shadow behavior changes.
+
+## Attribute lifecycle
+
+`length` are read when the component connects. Changing those attributes after mount is not a supported update mechanism; use only the documented methods for runtime changes. For a new initialization configuration, create a new component instance. `placement`, where documented, is reactive. Existing event names remain stable; see the [event reference](../../../docs/foundations/events.html).

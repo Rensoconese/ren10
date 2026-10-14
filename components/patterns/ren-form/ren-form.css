@@ -24,9 +24,13 @@
   container-name: ren-form;
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
+  gap: var(--stack-gap);
   width: 100%;
   max-width: 100%;
+}
+
+.ren-form:not(.ren-stack-xs, .ren-stack-sm, .ren-stack-md, .ren-stack-lg, .ren-stack-xl) {
+  --stack-gap: var(--space-density-form);
 }
 
 /* Submitting state — disable interactions */

@@ -1,0 +1,26 @@
+name: npm publish access preflight
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [fix/end-to-end-audit]
+    paths:
+      - .github/workflows/publish-access.yml
+      - scripts/check-publish-access.mjs
+
+permissions:
+  contents: read
+
+jobs:
+  access:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+      - name: Verify identity and ren10 scope membership
+        run: node scripts/check-publish-access.mjs
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

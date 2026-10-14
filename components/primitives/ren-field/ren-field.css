@@ -158,35 +158,35 @@ select.ren-input {
   }
 
   select.ren-input option:hover {
-    background: light-dark(var(--gray-50), var(--gray-800));
+    background: var(--color-option-hover);
   }
 
   select.ren-input option:focus-visible,
   select.ren-input option:active {
     outline: 2px solid var(--color-accent);
     outline-offset: -2px;
-    background: light-dark(var(--gray-50), var(--gray-800));
+    background: var(--color-option-hover);
   }
 
   select.ren-input option:checked:not(:disabled) {
-    background: light-dark(var(--blue-50), var(--blue-900));
-    color: light-dark(var(--blue-700), var(--blue-200));
+    background: var(--color-accent-subtle);
+    color: var(--color-text-link);
     font-weight: var(--weight-medium);
   }
 
   select.ren-input option:checked:not(:disabled)::after {
     content: "✓";
     margin-inline-start: auto;
-    color: light-dark(var(--blue-600), var(--blue-300));
+    color: var(--color-accent-strong);
     font-weight: var(--weight-bold);
   }
 
   select.ren-input option:checked:hover {
-    background: light-dark(var(--blue-100), var(--blue-800));
+    background: var(--color-option-selected-hover);
   }
 
   select.ren-input option:disabled {
-    color: light-dark(var(--gray-500), var(--gray-400));
+    color: var(--color-option-disabled);
     cursor: not-allowed;
   }
 
@@ -297,7 +297,7 @@ select.ren-input {
 .ren-field[data-invalid] .ren-input:focus,
 .ren-input[aria-invalid="true"]:focus,
 .ren-input-error:focus {
-  box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+  box-shadow: 0 0 0 3px var(--color-input-danger-ring);
   border-color: var(--ren-field-error-color);
 }
 
@@ -314,7 +314,7 @@ select.ren-input {
 
 .ren-field[data-valid] .ren-input:focus,
 .ren-input-success:focus {
-  box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+  box-shadow: 0 0 0 3px var(--color-input-success-ring);
 }
 
 /* ─── Modern Validation (no JS needed) ─── */
@@ -324,7 +324,7 @@ select.ren-input {
 }
 
 .ren-input:user-invalid:focus {
-  box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+  box-shadow: 0 0 0 3px var(--color-input-danger-ring);
   border-color: var(--ren-field-error-color);
 }
 
@@ -333,7 +333,7 @@ select.ren-input {
 }
 
 .ren-input:user-valid:focus {
-  box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+  box-shadow: 0 0 0 3px var(--color-input-success-ring);
 }
 
 /* Show/hide error and success messages based on validation */

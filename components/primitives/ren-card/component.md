@@ -252,3 +252,7 @@ edge-to-edge.
 - Run `npm run lint` after token / selector changes.
 - Manually verify light/dark themes when surface, border, or shadow values
   change.
+
+## Density and color mode
+
+Use `data-density="compact|comfortable|spacious"` on the root or a subtree. Bare stacks, card padding, and form field rhythm respond to the scope; fixed stack size modifiers and explicit component token overrides retain their values. Default card padding remains 16px; compact is 12px and spacious is 32px. Use `data-mode="light|dark|auto"` independently of a named `data-theme`; legacy `data-theme="light|dark"` remains supported.

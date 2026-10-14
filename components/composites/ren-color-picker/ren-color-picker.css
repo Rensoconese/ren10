@@ -247,16 +247,7 @@
   cursor: pointer;
   /* Hue rainbow. Intencionalmente hex literals: son los 6 puntos del espectro
      HSL puros (red→yellow→green→cyan→blue→magenta→red), no colores de UI. */
-  background: linear-gradient(
-    to right,
-    #ff0000 0%,
-    #ffff00 16.67%,
-    #00ff00 33.33%,
-    #00ffff 50%,
-    #0000ff 66.67%,
-    #ff00ff 83.33%,
-    #ff0000 100%
-  );
+  background: var(--ren-cp-hue-gradient);
   overflow: hidden;
 }
 

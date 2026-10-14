@@ -20,8 +20,8 @@
  *      should come from subtle surfaces, icons, text, or full component state,
  *      not from one-sided accent stripes.
  *
- * Files in `EXEMPT_FILES` are skipped. The list mirrors the overrides in
- * `stylelint.config.mjs` and each entry has a short reason.
+ * No component files are exempt. Narrow per-line exceptions must explain
+ * why a literal is essential to the component's behavior.
  *
  * Run via:
  *   node scripts/lint-tokens.mjs
@@ -35,32 +35,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = resolve(__dirname, '..');
 
-// Files exempt from token-policy enforcement. Same list as
-// `overrides` in stylelint.config.mjs — keep them in sync.
-//
-// TODO (0.9.x hardening): these are full-file exemptions. A stricter
-// pass should replace each entry with line-level allowlists — either
-// stylelint inline disable comments inside the CSS or a per-line
-// allow comment understood by this script. That guarantees future
-// additions to these files DO get linted.
-const EXEMPT_FILES = new Set([
-  // Hue gradient: literal RGB color wheel.
-  'components/composites/ren-color-picker/ren-color-picker.css',
-
-  // Offline status: --gray-400 with no semantic equivalent.
-  'components/primitives/ren-avatar/ren-avatar.css',
-
-  // Switch checked-hover: primitive --green-500 toggle tint.
-  'components/primitives/ren-checkbox/ren-checkbox.css',
-
-  // Autofill / select-option @supports fallbacks: native UA painting.
-  'components/primitives/ren-field/ren-field.css',
-
-  // Validation focus glow rgba(255,59,48,…) / rgba(52,199,89,…)
-  // preserved for light-mode visual parity (color-mix would darken).
-  'components/composites/ren-number-field/ren-number-field.css',
-  'components/composites/ren-otp/ren-otp.css',
-]);
+// No component has a full-file token-policy exemption.
+const EXEMPT_FILES = new Set();
 
 const PRIMITIVE_TOKEN = /var\(\s*--(?:blue|gray|grey|red|green|orange|yellow|teal|purple|pink)-\d+\s*[,)]/;
 const COLORED_SIDE_BORDER =

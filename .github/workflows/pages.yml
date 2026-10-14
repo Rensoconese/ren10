@@ -44,27 +44,13 @@ jobs:
       # Note: the package working tree IS the repo root (no `rends/`
       # prefix on the runner). Locally Renso runs from ~/RenDS/rends/
       # but that "rends/" is the repo checkout itself.
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
+
+      - run: npm ci
+      - run: npm run build:bundles
       - name: Assemble site root
-        run: |
-          set -e
-          mkdir -p _site
-          cp    index.html       _site/
-          cp    index.css        _site/
-          cp    ren-design.md    _site/
-          cp -r tokens           _site/
-          cp -r base             _site/
-          cp -r components       _site/
-          cp -r utils            _site/
-          cp -r themes           _site/
-          cp -r site             _site/
-          cp -r docs             _site/
-          cp -r templates        _site/
-          cp -r create           _site/
-          cp -r examples         _site/
-          # 404 page so wrong URLs land somewhere readable.
-          if [ -f docs/index.html ]; then
-            cp docs/index.html _site/404.html || true
-          fi
+        run: node scripts/assemble-site.mjs _site /ren10/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5

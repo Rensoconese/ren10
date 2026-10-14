@@ -36,3 +36,12 @@ Use lowercase contract paths (`ren-design.md`, `tokens.md`, `layouts.md`,
 `components.md`). Replace primitive palette variables with semantic `--color-*`
 tokens and load `index.css` once. Run `npm run lint:contracts` to find stale
 aliases before upgrading.
+
+## Audit follow-up compatibility
+
+- Existing theme and event names remain valid. `data-mode` is additive and lets a named preset keep a separately forced color scheme.
+- Scoped themes now recolor links and focus consistently. Scoped density affects cards and form rhythm: card padding is 12px compact, 16px default and 32px spacious; forms use 12/24/32px. Fixed stack modifiers remain fixed.
+- Carousel dot tokens style the visual marker inside a 44px button. Overrides of the button's own width/height should migrate to `--ren-carousel-dot-size`.
+- Muted links keep an underline in text. Host accessibility attributes on `ren-button` now name the real control and update reactively.
+- Native option and validation colors follow semantic tokens; consumers should override those tokens instead of primitive colors.
+- Initialization-only attributes are explicitly documented per component. Event names were preserved to avoid a breaking migration.

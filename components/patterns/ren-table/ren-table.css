@@ -98,7 +98,7 @@ ren-table {
 .ren-table-header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: var(--z-dropdown);
   background-color: var(--color-surface-raised);
 }
 
@@ -189,7 +189,7 @@ ren-table {
 /* Pinned columns */
 .ren-th-pinned {
   position: sticky;
-  z-index: 11;
+  z-index: calc(var(--z-dropdown) + var(--z-raised));
 }
 
 /* ===== Body & Row Styles ===== */
@@ -245,7 +245,7 @@ ren-table {
 /* Pinned column cells */
 .ren-td-pinned {
   position: sticky;
-  z-index: 9;
+  z-index: calc(var(--z-dropdown) - var(--z-raised));
   background-color: inherit;
 }
 
@@ -429,15 +429,15 @@ ren-table[data-loading] {
   background: linear-gradient(
     90deg,
     transparent,
-    rgb(255, 255, 255, 0.4),
+    color-mix(in srgb, var(--color-text) 8%, transparent),
     transparent
   );
   background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  z-index: 20;
+  animation: ren-table-shimmer var(--duration-loading) infinite;
+  z-index: var(--z-sticky);
 }
 
-@keyframes shimmer {
+@keyframes ren-table-shimmer {
   0% {
     background-position: -200% 0;
   }
@@ -539,12 +539,6 @@ ren-table[data-loading] {
 }
 
 /* Dark mode support (if light/dark theming is used) */
-@media (prefers-color-scheme: dark) {
-  .ren-table {
-    /* Uses CSS custom properties from design tokens */
-    /* No additional overrides needed if tokens are properly defined */
-  }
-}
 /* Appearance API bridge */
 .ren-table { font-size: var(--ren-table-header-size, var(--body-size)); }
 .ren-table thead { background: var(--ren-table-header-bg, var(--color-surface-sunken)); color: var(--ren-table-header-color, var(--color-text-muted)); font-weight: var(--ren-table-header-weight, var(--weight-semibold)); }

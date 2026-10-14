@@ -37,7 +37,7 @@ const compareFiles = (actual, expected, messages) => {
 };
 
 const runSqliteJson = (dbPath, sql) => {
-  const result = spawnSync('sqlite3', ['-json', dbPath, sql], {
+  const result = spawnSync('sqlite3', ['-json', '-cmd', '.explain off', dbPath, sql], {
     encoding: 'utf8',
     maxBuffer: 1024 * 1024 * 10,
   });
@@ -170,6 +170,12 @@ const checkSqliteAgainstGraph = (graph, dbPath, messages) => {
     `SELECT n.id FROM node_fts JOIN nodes n ON n.id = node_fts.id WHERE node_fts MATCH '"ren-toast" OR "status"' LIMIT 1;`,
   );
   if (smoke.length === 0) messages.push('SQLite FTS smoke query returned no rows.');
+  for (const direction of ['source', 'target']) {
+    const plan = runSqliteJson(dbPath, `EXPLAIN QUERY PLAN SELECT source, target, type FROM edges WHERE ${direction} = 'component:ren-button';`);
+    if (!plan.some(row => row.detail.includes('SEARCH edges'))) {
+      messages.push(`SQLite ${direction} edge lookup must use an index.`);
+    }
+  }
 };
 
 const checkPacklist = (graph, messages) => {

@@ -11,6 +11,7 @@
   --z-behind:    -1;
   --z-base:       0;
   --z-raised:     1;     /* slightly above siblings */
+  --z-control:    5;     /* local control thumb/track layers */
   --z-dropdown:  10;     /* dropdown menus */
   --z-sticky:    20;     /* sticky headers, navbars */
   --z-overlay:   30;     /* overlays, backdrops */

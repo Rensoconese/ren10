@@ -67,7 +67,7 @@ forbiddenPatterns:
 
 tokenPolicy:
   allowed:
-    - "Component tokens: --ren-cp-bg, --ren-cp-handle-size, --ren-cp-radius, --ren-cp-shadow, --ren-cp-swatch-size, --ren-cp-track-height, --ren-cp-width."
+    - "Component tokens: --ren-cp-bg, --ren-cp-handle-size, --ren-cp-hue-gradient, --ren-cp-radius, --ren-cp-shadow, --ren-cp-swatch-size, --ren-cp-track-height, --ren-cp-width."
     - "Semantic tokens: --color-surface, --color-surface-raised, --color-border, --color-text, --color-text-muted, --color-fill, --color-fill-hover, --color-accent, --color-input-bg, --color-input-border, --color-input-border-focus, --color-input-focus-ring."
     - "Layout / motion tokens: --space-*, --radius-*, --shadow-lg, --touch-min, --font-mono, --duration-enter, --ease-enter, --transition-tactile."
   forbidden:
@@ -147,6 +147,7 @@ Use the docs page and source files listed below for full examples before adding 
 
 - `--ren-cp-bg`
 - `--ren-cp-handle-size`
+- `--ren-cp-hue-gradient` — HSV input spectrum; preserve hue order when overriding.
 - `--ren-cp-radius`
 - `--ren-cp-shadow`
 - `--ren-cp-swatch-size`
@@ -178,3 +179,7 @@ Theme through these public custom properties before reaching for selectors.
 - Run component or docs a11y coverage when markup, states, or ARIA change.
 - Run CSS lint when selectors, tokens, or visual states change.
 - Manually verify light/dark themes when color, surface, border, or shadow behavior changes.
+
+## Attribute lifecycle
+
+`value` are read when the component connects. Changing those attributes after mount is not a supported update mechanism; use only the documented methods for runtime changes. For a new initialization configuration, create a new component instance. `placement`, where documented, is reactive. Existing event names remain stable; see the [event reference](../../../docs/foundations/events.html).

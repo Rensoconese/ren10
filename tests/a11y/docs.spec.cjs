@@ -41,14 +41,16 @@ const listPages = (dir) =>
     .map((entry) => (dir ? `${dir}/${entry.name}` : entry.name))
     .sort();
 
-const DOCS = [...listPages(''), ...listPages('components')];
+const DOCS = [...listPages(''), ...listPages('components'), ...listPages('foundations')];
 
 for (const page of DOCS) {
   test.describe(`docs/${page} — WCAG 2.1 AA`, () => {
-    test.beforeEach(async ({ page: pw }) => {
+    test.beforeEach(async ({ page: pw }, testInfo) => {
       // Scan settled content: entry fades otherwise cause transient contrast failures.
       await pw.emulateMedia({ reducedMotion: 'reduce' });
       await pw.goto(`${server.origin}/docs/${page}`, { waitUntil: 'networkidle' });
+      await pw.evaluate((mode) => { document.documentElement.dataset.mode = mode; }, testInfo.project.use.colorScheme);
+      await expect(pw.locator('html')).toHaveCSS('color-scheme', testInfo.project.use.colorScheme);
       // Give custom elements a beat to upgrade before axe reads the tree.
       await pw
         .waitForFunction(() => !document.querySelector('ren-calendar, ren-tabs, ren-select') ||
@@ -61,7 +63,8 @@ for (const page of DOCS) {
 
     test('no AA violations', async ({ page: pw }) => {
       const violations = await getViolations(pw, null, {
-        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+        preload: false,
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] },
       });
       if (violations.length) {
         console.log(`[${page}]`, JSON.stringify(violations, null, 2));
@@ -71,7 +74,7 @@ for (const page of DOCS) {
 
     test('contrast passes', async ({ page: pw }) => {
       await checkA11y(pw, null, {
-        axeOptions: { runOnly: { type: 'rule', values: ['color-contrast'] } },
+        axeOptions: { preload: false, runOnly: { type: 'rule', values: ['color-contrast'] } },
       });
     });
   });

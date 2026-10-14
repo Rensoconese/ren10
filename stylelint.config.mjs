@@ -104,53 +104,8 @@ export default {
     },
 
     // ─────────────────────────────────────────────────────────────
-    // Documented exemptions.
-    //
-    // Each entry records WHY the file is exempt. New exemptions
-    // require a colocated comment in the CSS explaining the
-    // non-trivial primitive / hex use.
-    //
-    // Hardening debt (TODO 0.9.x): these are full-file exemptions —
-    // a stricter pass should narrow them to per-line / per-block
-    // disable comments (`/* stylelint-disable-next-line ... */`) so
-    // future additions to these files inherit the strict rule.
-    // Keep this list in sync with EXEMPT_FILES in
-    // scripts/lint-tokens.mjs.
-    // ─────────────────────────────────────────────────────────────
-    {
-      files: [
-        // Hue gradient is a literal RGB color wheel; semantic tokens cannot
-        // express the saturated full-spectrum stops.
-        'components/composites/ren-color-picker/ren-color-picker.css',
-
-        // Avatar offline indicator uses --gray-400 for a clearly desaturated
-        // status dot. No semantic equivalent ("disabled chip on neutral
-        // surface") exists.
-        'components/primitives/ren-avatar/ren-avatar.css',
-
-        // Switch checked-hover transitions to --green-500 to maintain the
-        // toggle-on tactile color. Visual parity preserved.
-        'components/primitives/ren-checkbox/ren-checkbox.css',
-
-        // Autofill / select-option states reach for primitive --blue-* and
-        // --gray-* in @supports + browser fallbacks. Native UA painting only
-        // reads literal colors here.
-        'components/primitives/ren-field/ren-field.css',
-
-        // OTP and number-field validation focus glows use the saturated
-        // rgba (255,59,48,0.15) / (52,199,89,0.15) recipe paired with
-        // --color-danger / --color-success. Switching to color-mix() would
-        // tonally darken the glow in light mode (red-500 #D70015 vs
-        // red-400 #FF3B30); preserved for visual parity.
-        'components/composites/ren-number-field/ren-number-field.css',
-        'components/composites/ren-otp/ren-otp.css',
-      ],
-      rules: {
-        'color-no-hex': null,
-        'declaration-property-value-disallowed-list': null,
-      },
-    },
-
+    // No component file exemptions. Use justified per-line exceptions for
+    // literals essential to a component's behavior.
     // ─────────────────────────────────────────────────────────────
     // Token + base layers — full primitive access by design.
     // ─────────────────────────────────────────────────────────────

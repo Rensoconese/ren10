@@ -9,6 +9,7 @@ import {
   isStableSemverAtLeast,
   validateWorkflowPolicy,
 } from './release-policy.mjs';
+import { decideStageAction } from './release-registry.mjs';
 import { collectLifecycleErrors } from './check-release.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
@@ -111,7 +112,7 @@ const requiredPackageCommands = [
   'npm run test:release-policy',
 ];
 const workflows = Object.fromEntries(
-  ['ci.yml', 'release.yml', 'audit.yml'].map((file) => [file, yaml.load(read(`.github/workflows/${file}`))])
+  ['ci.yml', 'release.yml', 'audit.yml', 'publish-retry.yml'].map((file) => [file, yaml.load(read(`.github/workflows/${file}`))])
 );
 for (const error of validateWorkflowPolicy(workflows, requiredPackageCommands)) requirePolicy(false, error);
 for (const [filename, workflow] of Object.entries(workflows)) {
@@ -125,17 +126,31 @@ const releaseRuns = workflows['release.yml'].jobs.publish.steps.map((step) => st
 for (const command of [
   'npm publish --dry-run',
   'npm publish --workspace @ren10/astro --dry-run',
-  'npm publish --provenance --access public',
-  'npm publish --workspace @ren10/astro --provenance --access public',
+  'node scripts/stage-release.mjs',
+  'node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800',
 ]) {
   requirePolicy(releaseRuns.some((run) => run.includes(command)), `release workflow must run: ${command}`);
 }
-for (const packageSpec of ['ren10@$VERSION', '@ren10/astro@$VERSION']) {
-  requirePolicy(
-    releaseRuns.some((run) => run.includes(`npm view "${packageSpec}" version`)),
-    `release workflow must skip an already-published ${packageSpec}`,
-  );
+for (const name of ['ren10', '@ren10/astro']) {
+  const expected = { name, version: pkg.version, integrity: 'sha512-verified' };
+  const published = { name, version: pkg.version, dist: {
+    integrity: expected.integrity,
+    attestations: { url: `https://registry.npmjs.org/-/npm/v1/attestations/${name}@${pkg.version}`,
+      provenance: { predicateType: 'https://slsa.dev/provenance/v1' } },
+  } };
+  requirePolicy(decideStageAction(expected, published, []).state === 'published',
+    `release workflow must reuse the identical public ${name} version`);
 }
+const missingApprovalFixture = structuredClone(workflows);
+missingApprovalFixture['release.yml'].jobs.publish.steps = missingApprovalFixture['release.yml'].jobs.publish.steps
+  .filter(step => !step.run?.includes('node scripts/check-published-release.mjs'));
+requirePolicy(
+  validateWorkflowPolicy(missingApprovalFixture, requiredPackageCommands)
+    .some(error => error.includes('check-published-release.mjs')),
+  'workflow policy must reject release completion before both 2FA-approved versions are public'
+);
+requirePolicy(!releaseRuns.some(run => /npm publish (?:--workspace @ren10\/astro )?--provenance/.test(run)),
+  'release must not use a direct publish token or bypass the staging approval');
 const conditionalFixture = structuredClone(workflows);
 conditionalFixture['ci.yml'].jobs.package.steps
   .find((step) => step.run === 'npm run check:budgets').if = 'false';

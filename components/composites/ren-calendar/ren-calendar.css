@@ -223,7 +223,7 @@
       bottom: 0;
       width: 50%;
       background: var(--color-accent-subtle);
-      z-index: -1;
+      z-index: var(--z-behind);
     }
   }
 
@@ -241,7 +241,7 @@
       bottom: 0;
       width: 50%;
       background: var(--color-accent-subtle);
-      z-index: -1;
+      z-index: var(--z-behind);
     }
   }
 
@@ -354,13 +354,6 @@
   }
 }
 
-/* ═══ DARK MODE SUPPORT ═══ */
-@media (prefers-color-scheme: dark) {
-  .ren-calendar {
-    /* ═══ USES CSS VARIABLES - AUTO ADAPTS ═══ */
-  }
-}
-
 /* ═══ COMPACT LAYOUT (Container Query) ═══ */
 @container ren-calendar (max-width: 320px) {
   .ren-calendar {
@@ -397,6 +390,17 @@
 .ren-calendar [data-range], .ren-calendar-range { background: var(--ren-calendar-range-bg, var(--color-accent-subtle)); }
 
 @media (any-pointer: coarse), (pointer: coarse) {
+  /* Seven enlarged targets must also fit their tracks. Enlarging only the
+     buttons makes adjacent days overlap in the compact calendar. */
+  .ren-calendar {
+    inline-size: max(var(--ren-calendar-width), calc(7 * (var(--touch-min) + var(--stroke-1)) + var(--space-4) + 2 * var(--stroke-1)));
+    padding: var(--space-2);
+    flex-shrink: 0;
+  }
+  .ren-calendar-grid,
+  .ren-calendar-weekdays {
+    gap: var(--space-0);
+  }
   .ren-calendar .ren-calendar-nav button,
   .ren-calendar .ren-calendar-day {
     inline-size: calc(var(--touch-min) + var(--stroke-1));

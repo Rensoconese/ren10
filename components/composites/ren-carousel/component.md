@@ -170,3 +170,7 @@ Theme through these public custom properties before reaching for selectors.
 - Run component or docs a11y coverage when markup, states, or ARIA change.
 - Run CSS lint when selectors, tokens, or visual states change.
 - Manually verify light/dark themes when color, surface, border, or shadow behavior changes.
+
+## Pagination hit areas
+
+Dot buttons have a 44px hit area. `--ren-carousel-dot-size` controls the visible `::before` marker, not the hit area; `--ren-carousel-dot-color` defaults to the interactive border token. Active and hover markers use `--ren-carousel-dot-active`.

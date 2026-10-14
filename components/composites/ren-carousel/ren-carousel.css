@@ -141,7 +141,7 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
+  z-index: var(--z-dropdown);
 
   width: var(--touch-min);
   height: var(--touch-min);
@@ -228,7 +228,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
+    z-index: var(--z-dropdown);
 
     width: var(--touch-min, 44px);
     height: var(--touch-min, 44px);
@@ -282,27 +282,36 @@
 }
 
 .ren-carousel-dot {
-  width: 8px;
-  height: 8px;
+  position: relative;
+  width: var(--touch-min);
+  height: var(--touch-min);
   border-radius: var(--radius-full);
-  background-color: var(--color-border);
+  background: transparent;
   border: none;
   cursor: pointer;
-  transition: var(--transition-tactile);
   padding: 0;
   margin: 0;
 }
 
-/* Active dot */
-.ren-carousel-dot[aria-current="true"] {
-  background-color: var(--color-accent);
+.ren-carousel-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: var(--ren-carousel-dot-size);
+  height: var(--ren-carousel-dot-size);
+  border-radius: var(--radius-full);
+  background-color: var(--ren-carousel-dot-color);
+  transition: var(--transition-tactile);
+}
+
+.ren-carousel-dot[aria-current="true"]::before {
+  background-color: var(--ren-carousel-dot-active);
   transform: scale(1.25);
 }
 
-/* Hover state */
-.ren-carousel-dot:hover:not([aria-current="true"]) {
-  background-color: var(--color-border);
-  opacity: 0.7;
+.ren-carousel-dot:hover:not([aria-current="true"])::before {
+  background-color: var(--ren-carousel-dot-active);
 }
 
 /* Focus visible */
@@ -417,11 +426,10 @@
   }
 
   .ren-carousel-dot {
-    width: 6px;
-    height: 6px;
+    --ren-carousel-dot-size: var(--space-1-5);
   }
 
-  .ren-carousel-dot[aria-current="true"] {
+  .ren-carousel-dot[aria-current="true"]::before {
     transform: scale(1.1);
   }
 }
@@ -512,7 +520,7 @@
 /* Appearance API bridge */
 .ren-carousel { gap: var(--ren-carousel-gap, var(--space-4)); border-radius: var(--ren-carousel-radius, var(--radius-lg)); transition-duration: var(--ren-carousel-duration, var(--duration-normal)); transition-timing-function: var(--ren-carousel-easing, var(--ease-out)); }
 .ren-carousel .ren-carousel-arrow { inline-size: var(--ren-carousel-arrow-size, var(--size-lg)); block-size: var(--ren-carousel-arrow-size, var(--size-lg)); }
-.ren-carousel .ren-carousel-dot { inline-size: var(--ren-carousel-dot-size, 8px); block-size: var(--ren-carousel-dot-size, 8px); background: var(--ren-carousel-dot-color, var(--color-fill)); }
-.ren-carousel .ren-carousel-dot[aria-current="true"], .ren-carousel .ren-carousel-dot.is-active { background: var(--ren-carousel-dot-active, var(--color-accent)); }
+.ren-carousel .ren-carousel-dot { inline-size: var(--touch-min); block-size: var(--touch-min); }
+.ren-carousel .ren-carousel-dot[aria-current="true"]::before, .ren-carousel .ren-carousel-dot.is-active::before { background: var(--ren-carousel-dot-active, var(--color-accent)); }
 
 }

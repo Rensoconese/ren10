@@ -21,7 +21,7 @@
 /* ═══════════════════════════════════════════════
    BUTTON
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-btn-height:       var(--size-lg);
   --ren-btn-padding-x:    var(--space-4);
   --ren-btn-padding-y:    var(--space-2);
@@ -51,12 +51,12 @@
 /* ═══════════════════════════════════════════════
    CARD
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-card-bg:            var(--color-surface-raised);
   --ren-card-border-color:  var(--color-border);
   --ren-card-border-width:  var(--stroke-1);
   --ren-card-radius:        var(--radius-lg);
-  --ren-card-padding:       var(--space-4);
+  --ren-card-padding:       var(--space-density-card);
   --ren-card-shadow:        none;
   --ren-card-header-gap:    var(--space-1);
   --ren-card-gap:           0px;
@@ -65,7 +65,7 @@
 /* ═══════════════════════════════════════════════
    INPUT / FIELD
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-field-height:        var(--size-lg);
   --ren-field-padding-x:     var(--space-3);
   --ren-field-padding-y:     var(--space-2);
@@ -84,7 +84,7 @@
 /* ═══════════════════════════════════════════════
    BADGE
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-badge-height:      auto;
   --ren-badge-padding-x:   0.55em;
   --ren-badge-font-size:   var(--text-xs);
@@ -97,7 +97,7 @@
 /* ═══════════════════════════════════════════════
    TAG
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-tag-height:       auto;
   --ren-tag-padding-x:    0.65em;
   --ren-tag-font-size:    var(--caption-size);
@@ -112,7 +112,7 @@
 /* ═══════════════════════════════════════════════
    BANNER / ALERT
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-banner-padding:      var(--space-3) var(--space-4);
   --ren-banner-radius:       var(--radius-md);
   --ren-banner-border-width: var(--stroke-1);
@@ -126,7 +126,7 @@
 /* ═══════════════════════════════════════════════
    DIALOG
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-dialog-width:        min(90vw, 500px);
   --ren-dialog-padding:      var(--space-6);
   --ren-dialog-radius:       var(--radius-xl);
@@ -144,7 +144,7 @@
 /* ═══════════════════════════════════════════════
    SHEET
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-sheet-width:      320px;
   --ren-sheet-bg:         var(--color-surface-overlay);
   --ren-sheet-border:     var(--color-border);
@@ -161,7 +161,7 @@
 /* ═══════════════════════════════════════════════
    TOOLTIP
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-tooltip-bg:        var(--color-text);
   --ren-tooltip-color:     var(--color-text-inverted);
   --ren-tooltip-font-size: var(--caption-sm-size);
@@ -179,7 +179,7 @@
 /* ═══════════════════════════════════════════════
    POPOVER
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-popover-width:        280px;
   --ren-popover-bg:           var(--color-surface-overlay);
   --ren-popover-border-color: var(--color-border);
@@ -195,7 +195,7 @@
 /* ═══════════════════════════════════════════════
    TABS
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-tabs-height:         var(--size-lg);
   --ren-tabs-font-size:      var(--label-size);
   --ren-tabs-font-weight:    var(--label-weight);
@@ -213,7 +213,7 @@
 /* ═══════════════════════════════════════════════
    CHECKBOX & SWITCH
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-checkbox-size:        1.25rem;
   --ren-checkbox-radius:      var(--radius-sm);
   --ren-checkbox-border:      var(--color-border-interactive);
@@ -226,7 +226,7 @@
   --ren-checkbox-easing:      var(--ease-playful);
 }
 
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-switch-width:       3.1875rem;  /* 51px Apple HIG */
   --ren-switch-height:      1.9375rem;  /* 31px Apple HIG */
   --ren-switch-thumb-size:  1.6875rem;  /* 27px */
@@ -242,7 +242,7 @@
 /* ═══════════════════════════════════════════════
    SLIDER
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-slider-track-height:  6px;
   --ren-slider-track-radius:  var(--radius-full);
   --ren-slider-track-bg:      var(--color-fill);
@@ -260,7 +260,7 @@
 /* ═══════════════════════════════════════════════
    TOGGLE GROUP
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-toggle-height:       var(--size-lg);
   --ren-toggle-padding-x:    var(--space-4);
   --ren-toggle-font-size:    var(--label-size);
@@ -275,7 +275,7 @@
 /* ═══════════════════════════════════════════════
    AVATAR
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-avatar-size:     var(--avatar-md);
   --ren-avatar-radius:   var(--radius-full);
   --ren-avatar-bg:       var(--color-fill);
@@ -287,7 +287,7 @@
 /* ═══════════════════════════════════════════════
    BREADCRUMB
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-breadcrumb-font-size:  var(--caption-size);
   --ren-breadcrumb-color:      var(--color-text-muted);
   --ren-breadcrumb-active-color: var(--color-text);
@@ -298,7 +298,7 @@
 /* ═══════════════════════════════════════════════
    PAGINATION
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-pagination-size:        var(--size-lg);
   --ren-pagination-font-size:   var(--label-size);
   --ren-pagination-radius:      var(--radius-md);
@@ -312,7 +312,7 @@
 /* ═══════════════════════════════════════════════
    PROGRESS
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-progress-height:     8px;
   --ren-progress-radius:     var(--radius-full);
   --ren-progress-bg:         var(--color-fill);
@@ -326,7 +326,7 @@
 /* ═══════════════════════════════════════════════
    SPINNER
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-spinner-size:   var(--icon-lg);
   --ren-spinner-width:  2.5px;
   --ren-spinner-color:  var(--color-accent);
@@ -336,7 +336,7 @@
 /* ═══════════════════════════════════════════════
    SKELETON
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-skeleton-bg:      var(--color-fill);
   --ren-skeleton-shine:   var(--color-fill-hover);
   --ren-skeleton-radius:  var(--radius-sm);
@@ -346,7 +346,7 @@
 /* ═══════════════════════════════════════════════
    SEPARATOR
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-separator-color:  var(--color-separator);
   --ren-separator-width:  var(--stroke-1);
   --ren-separator-margin: var(--space-4);
@@ -355,7 +355,7 @@
 /* ═══════════════════════════════════════════════
    LINK
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-link-color:       var(--color-text-link);
   --ren-link-hover-color: var(--color-text-link-hover);
   --ren-link-underline:   1px;
@@ -365,7 +365,7 @@
 /* ═══════════════════════════════════════════════
    NAV
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-nav-height:       3.5rem;
   --ren-nav-bg:           var(--color-surface);
   --ren-nav-border:       var(--color-border);
@@ -378,7 +378,7 @@
 /* ═══════════════════════════════════════════════
    SIDEBAR
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-sidebar-width:         260px;
   --ren-sidebar-collapsed-width: 60px;
   --ren-sidebar-bg:            var(--color-surface-sunken);
@@ -397,7 +397,7 @@
 /* ═══════════════════════════════════════════════
    COMMAND
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-command-width:      min(95vw, 560px);
   --ren-command-max-height: 340px;
   --ren-command-radius:     var(--radius-xl);
@@ -411,7 +411,7 @@
 /* ═══════════════════════════════════════════════
    TABLE
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-table-header-bg:    var(--color-surface-sunken);
   --ren-table-header-color: var(--color-text-muted);
   --ren-table-header-weight:var(--weight-semibold);
@@ -427,7 +427,7 @@
 /* ═══════════════════════════════════════════════
    MENU
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-menu-width:        200px;
   --ren-menu-padding:      var(--space-1);
   --ren-menu-radius:       var(--radius-lg);
@@ -448,7 +448,7 @@
 /* ═══════════════════════════════════════════════
    CALENDAR
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-calendar-width:       280px;
   --ren-calendar-day-size:    var(--size-md);
   --ren-calendar-radius:      var(--radius-lg);
@@ -463,7 +463,7 @@
 /* ═══════════════════════════════════════════════
    TOAST
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-toast-width:       360px;
   --ren-toast-padding:     var(--space-4);
   --ren-toast-radius:      var(--radius-lg);
@@ -481,7 +481,7 @@
 /* ═══════════════════════════════════════════════
    DROPZONE
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-dropzone-padding:      var(--space-8);
   --ren-dropzone-radius:       var(--radius-lg);
   --ren-dropzone-border-color: var(--color-border-strong);
@@ -495,7 +495,7 @@
 /* ═══════════════════════════════════════════════
    EMPTY STATE
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-empty-padding:     var(--space-10);
   --ren-empty-icon-size:   3rem;
   --ren-empty-gap:         var(--space-3);
@@ -507,7 +507,7 @@
 /* ═══════════════════════════════════════════════
    COLLAPSIBLE / ACCORDION
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-collapse-radius:       var(--radius-lg);
   --ren-collapse-border:       var(--color-border);
   --ren-collapse-bg:           var(--color-surface);
@@ -523,7 +523,7 @@
 /* ═══════════════════════════════════════════════
    TOOLBAR
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-toolbar-height:      var(--size-lg);
   --ren-toolbar-padding:     var(--space-1);
   --ren-toolbar-radius:      var(--radius-lg);
@@ -538,7 +538,7 @@
 /* ═══════════════════════════════════════════════
    COLOR PICKER
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-cp-width:       280px;
   --ren-cp-radius:      var(--radius-lg);
   --ren-cp-bg:          var(--color-surface-overlay);
@@ -551,13 +551,13 @@
 /* ═══════════════════════════════════════════════
    CAROUSEL
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-carousel-gap:        var(--space-4);
   --ren-carousel-radius:     var(--radius-lg);
   --ren-carousel-arrow-size: var(--size-lg);
   --ren-carousel-dot-size:   8px;
   --ren-carousel-dot-active: var(--color-accent);
-  --ren-carousel-dot-color:  var(--color-fill);
+  --ren-carousel-dot-color:  var(--color-border-interactive);
 
   /* Motion */
   --ren-carousel-duration:   var(--duration-normal);
@@ -567,7 +567,7 @@
 /* ═══════════════════════════════════════════════
    KBD
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-kbd-bg:          var(--color-surface-sunken);
   --ren-kbd-border:      var(--color-border-strong);
   --ren-kbd-color:       var(--color-text);
@@ -580,10 +580,24 @@
 /* ═══════════════════════════════════════════════
    ICON
    ═══════════════════════════════════════════════ */
-:where(:root, [data-theme]) {
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
   --ren-icon-size:       var(--icon-md);
   --ren-icon-color:      currentColor;
   --ren-icon-fill:       currentColor;
 }
 
 /* (accordion + carousel duplicates removed — defined above) */
+
+/* Hue spectrum is input data, independent of the active brand theme. */
+:where(:root, [data-theme], [data-mode], [data-density], [data-contrast]) {
+  --ren-cp-hue-gradient: linear-gradient(
+    to right,
+    #ff0000 0%,
+    #ffff00 16.67%,
+    #00ff00 33.33%,
+    #00ffff 50%,
+    #0000ff 66.67%,
+    #ff00ff 83.33%,
+    #ff0000 100%
+  );
+}

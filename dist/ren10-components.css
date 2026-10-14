@@ -154,7 +154,7 @@
   }
   .ren-btn-group > .ren-btn:hover,
   .ren-btn-group > .ren-btn:focus-visible {
-    z-index: 1;
+    z-index: var(--z-raised);
   }
   .ren-btn:disabled,
   .ren-btn[aria-disabled=true] {
@@ -178,7 +178,7 @@
     border: 2px solid currentColor;
     border-inline-end-color: transparent;
     border-radius: var(--radius-full);
-    animation: ren-btn-spin 600ms linear infinite;
+    animation: ren-btn-spin var(--duration-slowest) linear infinite;
     color: var(--color-on-accent);
   }
   .ren-btn-secondary[data-loading]::after,
@@ -193,7 +193,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .ren-btn[data-loading]::after {
-      animation-duration: 1.5s;
+      animation: none;
     }
     .ren-btn:active:not(:disabled):not([aria-disabled=true]) {
       transform: none;
@@ -219,10 +219,6 @@
     outline: var(--ren-btn-ring-width) solid var(--ren-btn-ring-color);
     outline-offset: var(--ren-btn-ring-offset);
   }
-}
-
-/* components/primitives/ren-field/ren-field.css */
-@layer components {
   .ren-field {
     display: flex;
     flex-direction: column;
@@ -335,30 +331,30 @@
       margin-block-start: 1px;
     }
     select.ren-input option:hover {
-      background: light-dark(var(--gray-50), var(--gray-800));
+      background: var(--color-option-hover);
     }
     select.ren-input option:focus-visible,
     select.ren-input option:active {
       outline: 2px solid var(--color-accent);
       outline-offset: -2px;
-      background: light-dark(var(--gray-50), var(--gray-800));
+      background: var(--color-option-hover);
     }
     select.ren-input option:checked:not(:disabled) {
-      background: light-dark(var(--blue-50), var(--blue-900));
-      color: light-dark(var(--blue-700), var(--blue-200));
+      background: var(--color-accent-subtle);
+      color: var(--color-text-link);
       font-weight: var(--weight-medium);
     }
     select.ren-input option:checked:not(:disabled)::after {
       content: "✓";
       margin-inline-start: auto;
-      color: light-dark(var(--blue-600), var(--blue-300));
+      color: var(--color-accent-strong);
       font-weight: var(--weight-bold);
     }
     select.ren-input option:checked:hover {
-      background: light-dark(var(--blue-100), var(--blue-800));
+      background: var(--color-option-selected-hover);
     }
     select.ren-input option:disabled {
-      color: light-dark(var(--gray-500), var(--gray-400));
+      color: var(--color-option-disabled);
       cursor: not-allowed;
     }
     select.ren-input option[hidden] {
@@ -443,7 +439,7 @@
   .ren-field[data-invalid] .ren-input:focus,
   .ren-input[aria-invalid=true]:focus,
   .ren-input-error:focus {
-    box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+    box-shadow: 0 0 0 3px var(--color-input-danger-ring);
     border-color: var(--ren-field-error-color);
   }
   .ren-field[data-invalid] .ren-field-label {
@@ -455,20 +451,20 @@
   }
   .ren-field[data-valid] .ren-input:focus,
   .ren-input-success:focus {
-    box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+    box-shadow: 0 0 0 3px var(--color-input-success-ring);
   }
   .ren-input:user-invalid {
     border-color: var(--ren-field-error-color);
   }
   .ren-input:user-invalid:focus {
-    box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+    box-shadow: 0 0 0 3px var(--color-input-danger-ring);
     border-color: var(--ren-field-error-color);
   }
   .ren-input:user-valid {
     border-color: var(--ren-field-success-color);
   }
   .ren-input:user-valid:focus {
-    box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+    box-shadow: 0 0 0 3px var(--color-input-success-ring);
   }
   .ren-field:has(.ren-input:user-invalid) .ren-field-label {
     color: var(--ren-field-error-color);
@@ -479,10 +475,6 @@
   .ren-field:has(.ren-input:user-valid) .ren-field-error {
     display: none;
   }
-}
-
-/* components/primitives/ren-checkbox/ren-checkbox.css */
-@layer components {
   .ren-checkbox {
     display: inline-flex;
     align-items: center;
@@ -569,10 +561,6 @@
     margin: 0;
     border-radius: 1px;
   }
-}
-
-/* components/primitives/ren-switch/ren-switch.css */
-@layer components {
   .ren-switch {
     display: inline-flex;
     align-items: center;
@@ -642,10 +630,6 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
-}
-
-/* components/primitives/ren-badge/ren-badge.css */
-@layer components {
   .ren-badge {
     display: inline-flex;
     align-items: center;
@@ -705,10 +689,6 @@
   .ren-badge-dot-danger {
     background-color: var(--color-danger);
   }
-}
-
-/* components/primitives/ren-radio/ren-radio.css */
-@layer components {
   .ren-radio {
     display: inline-flex;
     align-items: center;
@@ -791,10 +771,6 @@
     flex-direction: row;
     gap: var(--space-4);
   }
-}
-
-/* components/primitives/ren-progress/ren-progress.css */
-@layer components {
   .ren-progress {
     display: flex;
     width: 100%;
@@ -833,7 +809,7 @@
   }
   .ren-progress-indeterminate .ren-progress-bar {
     width: 30% !important;
-    animation: ren-progress-slide 1.5s var(--ease-enter) infinite;
+    animation: ren-progress-slide var(--duration-loading) var(--ease-enter) infinite;
   }
   @keyframes ren-progress-slide {
     0% {
@@ -917,10 +893,6 @@
   .ren-meter-xl {
     height: 1rem;
   }
-}
-
-/* components/primitives/ren-icon/ren-icon.css */
-@layer components {
   .ren-icon {
     display: inline-flex;
     align-items: center;
@@ -991,10 +963,6 @@
       animation: none;
     }
   }
-}
-
-/* components/primitives/ren-card/ren-card.css */
-@layer components {
   .ren-card {
     background-color: var(--ren-card-bg);
     border: var(--ren-card-border-width) solid var(--ren-card-border-color);
@@ -1135,10 +1103,6 @@
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
     gap: var(--space-4);
   }
-}
-
-/* components/primitives/ren-link/ren-link.css */
-@layer components {
   .ren-link {
     display: inline;
     color: var(--ren-link-color);
@@ -1169,7 +1133,7 @@
   }
   .ren-link-muted {
     color: var(--color-text-muted);
-    text-decoration: none;
+    text-decoration: underline;
   }
   .ren-link-muted:hover {
     color: var(--color-text);
@@ -1230,10 +1194,6 @@
   .ren-link-skip:focus {
     top: var(--space-3);
   }
-}
-
-/* components/primitives/ren-banner/ren-banner.css */
-@layer components {
   .ren-banner {
     display: flex;
     align-items: flex-start;
@@ -1352,10 +1312,6 @@
       display: none;
     }
   }
-}
-
-/* components/primitives/ren-breadcrumb/ren-breadcrumb.css */
-@layer components {
   .ren-breadcrumb > ol {
     display: flex;
     flex-wrap: wrap;
@@ -1408,10 +1364,6 @@
     color: var(--color-text-faint);
     padding: 0 var(--space-1);
   }
-}
-
-/* components/primitives/ren-pagination/ren-pagination.css */
-@layer components {
   .ren-pagination {
     display: flex;
     align-items: center;
@@ -1495,10 +1447,6 @@
   .ren-pagination-centered {
     justify-content: center;
   }
-}
-
-/* components/primitives/ren-tag/ren-tag.css */
-@layer components {
   .ren-tag {
     display: inline-flex;
     align-items: center;
@@ -1601,10 +1549,6 @@
     gap: var(--space-2);
     align-items: center;
   }
-}
-
-/* components/primitives/ren-separator/ren-separator.css */
-@layer components {
   .ren-separator {
     border: none;
     background-color: var(--ren-separator-color);
@@ -1636,10 +1580,6 @@
     height: var(--ren-separator-width);
     background-color: var(--ren-separator-color);
   }
-}
-
-/* components/primitives/ren-avatar/ren-avatar.css */
-@layer components {
   .ren-avatar {
     display: inline-flex;
     align-items: center;
@@ -1703,7 +1643,7 @@
     background-color: var(--color-success);
   }
   .ren-avatar-status-offline {
-    background-color: var(--gray-400);
+    background-color: var(--color-presence-offline);
   }
   .ren-avatar-status-busy {
     background-color: var(--color-danger);
@@ -1722,10 +1662,6 @@
   .ren-avatar-group > .ren-avatar:last-child {
     margin-inline-start: 0;
   }
-}
-
-/* components/primitives/ren-spinner/ren-spinner.css */
-@layer components {
   .ren-spinner {
     display: inline-block;
     width: var(--ren-spinner-size);
@@ -1777,10 +1713,6 @@
       animation: ren-spin-gentle var(--duration-loop-gentle) var(--ease-loop-pulse) infinite;
     }
   }
-}
-
-/* components/primitives/ren-skeleton/ren-skeleton.css */
-@layer components {
   .ren-skeleton {
     display: block;
     background:
@@ -1828,10 +1760,6 @@
       background: var(--ren-skeleton-bg);
     }
   }
-}
-
-/* components/primitives/ren-kbd/ren-kbd.css */
-@layer components {
   .ren-kbd {
     display: inline-flex;
     align-items: center;
@@ -1849,10 +1777,6 @@
     border-radius: var(--ren-kbd-radius);
     white-space: nowrap;
   }
-}
-
-/* components/composites/ren-dialog/ren-dialog.css */
-@layer components {
   .ren-dialog {
     margin: auto;
     padding: 0;
@@ -1997,8 +1921,6 @@
     max-height: 95dvh;
     width: 95dvw;
   }
-  .ren-alert-dialog {
-  }
   @media (max-width: 640px) {
     .ren-dialog {
       max-width: 100%;
@@ -2059,10 +1981,6 @@
   .ren-alert-dialog::backdrop {
     background: var(--ren-dialog-backdrop, var(--color-overlay));
   }
-}
-
-/* components/composites/ren-popover/ren-popover.css */
-@layer components {
   ren-popover:not(:defined) {
     display: none;
   }
@@ -2112,7 +2030,7 @@
     border-top: none;
     border-inline-start: none;
     transform: rotate(45deg);
-    z-index: -1;
+    z-index: var(--z-behind);
   }
   .ren-popover[data-side=bottom],
   .ren-popover:not([data-side]) {
@@ -2234,10 +2152,6 @@
     transition-duration: var(--ren-popover-duration, var(--duration-normal));
     transition-timing-function: var(--ren-popover-easing, var(--ease-out));
   }
-}
-
-/* components/composites/ren-tooltip/ren-tooltip.css */
-@layer components {
   .ren-tooltip {
     position: absolute;
     background: var(--ren-tooltip-bg, var(--color-text));
@@ -2281,7 +2195,7 @@
     height: 6px;
     background: var(--ren-tooltip-bg, var(--color-text));
     transform: rotate(45deg);
-    z-index: -1;
+    z-index: var(--z-behind);
   }
   .ren-tooltip[data-side=bottom] {
     position-area: bottom span-all;
@@ -2385,10 +2299,6 @@
     transition-duration: var(--ren-tooltip-duration, var(--duration-fast));
     transition-timing-function: var(--ren-tooltip-easing, var(--ease-out));
   }
-}
-
-/* components/composites/ren-tabs/ren-tabs.css */
-@layer components {
   .ren-tabs {
     container-type: inline-size;
     container-name: ren-tabs;
@@ -2403,8 +2313,6 @@
     border-bottom: 1px solid var(--color-border);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-  }
-  .ren-tab-list {
     scroll-behavior: smooth;
   }
   .ren-tab {
@@ -2503,7 +2411,7 @@
     background-color: var(--color-surface);
     color: var(--color-text);
     position: relative;
-    z-index: 1;
+    z-index: var(--z-raised);
   }
   .ren-tab-list-enclosed .ren-tab[aria-selected=true]::after {
     content: "";
@@ -2558,10 +2466,6 @@
   .ren-tabs-indicator {
     background: var(--ren-tabs-indicator-color, var(--color-accent));
   }
-}
-
-/* components/composites/ren-accordion/ren-accordion.css */
-@layer components {
   .ren-accordion {
     display: flex;
     flex-direction: column;
@@ -2763,12 +2667,6 @@
     outline: 2px solid var(--color-accent);
     outline-offset: -2px;
   }
-  @media (prefers-color-scheme: dark) {
-  }
-}
-
-/* components/composites/ren-menu/ren-menu.css */
-@layer components {
   .ren-menu {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
@@ -3001,10 +2899,6 @@
   .ren-menu-item-danger {
     color: var(--ren-menu-danger-color, var(--color-danger));
   }
-}
-
-/* components/composites/ren-select/ren-select.css */
-@layer components {
   .ren-select {
     position: relative;
     display: inline-flex;
@@ -3169,8 +3063,6 @@
     background: var(--color-accent);
     border-radius: var(--radius-sm);
     position: relative;
-  }
-  .ren-select-item[aria-selected=true]::before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: center;
@@ -3240,8 +3132,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 1rem;
-    height: 1rem;
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    width: var(--touch-min);
+    height: var(--touch-min);
     cursor: pointer;
     color: var(--color-text-muted);
     transition: var(--transition-tactile);
@@ -3295,10 +3189,6 @@
       opacity: 1;
     }
   }
-}
-
-/* components/composites/ren-toast/ren-toast.css */
-@layer components {
   .ren-toast-viewport {
     position: fixed;
     z-index: var(--z-toast, 9999);
@@ -3468,7 +3358,7 @@
     color: var(--color-info);
   }
   .ren-toast-loading .ren-toast-icon {
-    animation: ren-spinner-rotate 0.8s linear infinite;
+    animation: ren-spinner-rotate var(--duration-spinner) linear infinite;
   }
   .ren-toast-progress {
     position: absolute;
@@ -3612,10 +3502,6 @@
       min-block-size: var(--touch-min);
     }
   }
-}
-
-/* components/composites/ren-slider/ren-slider.css */
-@layer components {
   .ren-slider {
     display: flex;
     flex-direction: column;
@@ -3852,7 +3738,7 @@
       position: absolute;
       inset: 0;
       width: 100%;
-      z-index: 5;
+      z-index: var(--z-control);
       margin: 0;
       padding: 0;
       appearance: none;
@@ -3873,7 +3759,7 @@
         box-shadow: var(--shadow-sm);
         cursor: pointer;
         transition: var(--transition-tactile);
-        z-index: 6;
+        z-index: calc(var(--z-control) + var(--z-raised));
         pointer-events: auto;
         &:hover {
           transform: scale(1.1);
@@ -3891,7 +3777,7 @@
         box-shadow: var(--shadow-sm);
         cursor: pointer;
         transition: var(--transition-tactile);
-        z-index: 6;
+        z-index: calc(var(--z-control) + var(--z-raised));
         pointer-events: auto;
         &:hover {
           transform: scale(1.1);
@@ -3939,10 +3825,6 @@
         var(--ren-slider-track-bg, var(--color-fill-active)) var(--value, 0%),
         var(--ren-slider-track-bg, var(--color-fill-active)) 100%);
   }
-}
-
-/* components/composites/ren-toggle-group/ren-toggle-group.css */
-@layer components {
   .ren-toggle-group {
     display: inline-flex;
     gap: var(--space-0-5);
@@ -4081,10 +3963,6 @@
       min-block-size: var(--touch-min);
     }
   }
-}
-
-/* components/composites/ren-combobox/ren-combobox.css */
-@layer components {
   .ren-combobox {
     position: relative;
     display: block;
@@ -4236,7 +4114,7 @@
         border: 2px solid var(--color-border);
         border-top-color: var(--color-accent);
         border-radius: var(--radius-full);
-        animation: ren-combobox-spin var(--duration-slow, 800ms) linear infinite;
+        animation: ren-combobox-spin var(--duration-slow) linear infinite;
         @media (prefers-reduced-motion: reduce) {
           animation: none;
         }
@@ -4277,10 +4155,6 @@
       transform: rotate(360deg);
     }
   }
-}
-
-/* components/composites/ren-sheet/ren-sheet.css */
-@layer components {
   ren-sheet {
     display: contents;
   }
@@ -4509,10 +4383,6 @@
   .ren-sheet::backdrop {
     background: var(--ren-sheet-backdrop, var(--color-overlay));
   }
-}
-
-/* components/composites/ren-hover-card/ren-hover-card.css */
-@layer components {
   .ren-hover-card {
     position: absolute;
     position-area: bottom span-all;
@@ -4539,7 +4409,7 @@
       border-inline-end: none;
       border-bottom: none;
       transform: rotate(45deg);
-      z-index: -1;
+      z-index: var(--z-behind);
       top: -4px;
       left: 50%;
       margin-inline-start: -4px;
@@ -4623,10 +4493,6 @@
       }
     }
   }
-  @media (prefers-color-scheme: dark) {
-    .ren-hover-card {
-    }
-  }
   @media (max-width: 640px) {
     .ren-hover-card {
       max-width: calc(100vw - var(--space-4));
@@ -4690,10 +4556,6 @@
       outline-offset: 2px;
     }
   }
-}
-
-/* components/composites/ren-scroll-area/ren-scroll-area.css */
-@layer components {
   .ren-scroll-area {
     position: relative;
     overflow: auto;
@@ -4777,7 +4639,7 @@
             to bottom,
             var(--color-surface) 0%,
             transparent 100%);
-        z-index: 10;
+        z-index: var(--z-dropdown);
       }
       &::after {
         content: "";
@@ -4792,7 +4654,7 @@
             to top,
             var(--color-surface) 0%,
             transparent 100%);
-        z-index: 10;
+        z-index: var(--z-dropdown);
       }
     }
     &.-fade-x {
@@ -4810,7 +4672,7 @@
             to right,
             var(--color-surface) 0%,
             transparent 100%);
-        z-index: 10;
+        z-index: var(--z-dropdown);
       }
       &::after {
         content: "";
@@ -4825,7 +4687,7 @@
             to left,
             var(--color-surface) 0%,
             transparent 100%);
-        z-index: 10;
+        z-index: var(--z-dropdown);
       }
     }
     &[--scroll-max] {
@@ -4852,10 +4714,6 @@
     height: 100%;
     max-height: none;
   }
-}
-
-/* components/composites/ren-number-field/ren-number-field.css */
-@layer components {
   .ren-number-field {
     display: inline-flex;
     align-items: center;
@@ -4998,13 +4856,13 @@
   .ren-number-field[data-invalid] {
     border-color: var(--color-danger);
     &:focus-within {
-      box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+      box-shadow: 0 0 0 3px var(--color-input-danger-ring);
     }
   }
   .ren-number-field[data-valid] {
     border-color: var(--color-success);
     &:focus-within {
-      box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+      box-shadow: 0 0 0 3px var(--color-input-success-ring);
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -5014,10 +4872,6 @@
       transition: none;
     }
   }
-}
-
-/* components/composites/ren-otp/ren-otp.css */
-@layer components {
   .ren-otp {
     container-type: inline-size;
     container-name: ren-otp;
@@ -5084,14 +4938,14 @@
   .ren-otp[data-invalid] .ren-otp-slot {
     border-color: var(--color-danger);
     &:focus {
-      box-shadow: 0 0 0 3px rgb(255, 59, 48, 0.15);
+      box-shadow: 0 0 0 3px var(--color-input-danger-ring);
       border-color: var(--color-danger);
     }
   }
   .ren-otp[data-valid] .ren-otp-slot {
     border-color: var(--color-success);
     &:focus {
-      box-shadow: 0 0 0 3px rgb(52, 199, 89, 0.15);
+      box-shadow: 0 0 0 3px var(--color-input-success-ring);
       border-color: var(--color-success);
     }
   }
@@ -5149,10 +5003,6 @@
       }
     }
   }
-}
-
-/* components/composites/ren-calendar/ren-calendar.css */
-@layer components {
   .ren-calendar {
     container-type: inline-size;
     container-name: ren-calendar;
@@ -5313,7 +5163,7 @@
         bottom: 0;
         width: 50%;
         background: var(--color-accent-subtle);
-        z-index: -1;
+        z-index: var(--z-behind);
       }
     }
     &.ren-calendar-day-range-end {
@@ -5328,7 +5178,7 @@
         bottom: 0;
         width: 50%;
         background: var(--color-accent-subtle);
-        z-index: -1;
+        z-index: var(--z-behind);
       }
     }
     &.ren-calendar-day-in-range {
@@ -5413,10 +5263,6 @@
       min-height: 52px;
     }
   }
-  @media (prefers-color-scheme: dark) {
-    .ren-calendar {
-    }
-  }
   @container ren-calendar (max-width: 320px) {
     .ren-calendar {
       padding: var(--space-3);
@@ -5460,6 +5306,15 @@
     background: var(--ren-calendar-range-bg, var(--color-accent-subtle));
   }
   @media (any-pointer: coarse), (pointer: coarse) {
+    .ren-calendar {
+      inline-size: max(var(--ren-calendar-width), calc(7 * (var(--touch-min) + var(--stroke-1)) + var(--space-4) + 2 * var(--stroke-1)));
+      padding: var(--space-2);
+      flex-shrink: 0;
+    }
+    .ren-calendar-grid,
+    .ren-calendar-weekdays {
+      gap: var(--space-0);
+    }
     .ren-calendar .ren-calendar-nav button,
     .ren-calendar .ren-calendar-day {
       inline-size: calc(var(--touch-min) + var(--stroke-1));
@@ -5468,10 +5323,6 @@
       min-block-size: calc(var(--touch-min) + var(--stroke-1));
     }
   }
-}
-
-/* components/composites/ren-date-picker/ren-date-picker.css */
-@layer components {
   .ren-date-picker {
     display: inline-flex;
     flex-direction: column;
@@ -5671,11 +5522,6 @@
       transition: none;
     }
   }
-  @media (prefers-color-scheme: dark) {
-    .ren-date-picker-trigger,
-    .ren-date-picker-dropdown {
-    }
-  }
   @media (max-width: 480px) {
     .ren-date-picker-dropdown {
       position: fixed !important;
@@ -5728,10 +5574,6 @@
       display: none;
     }
   }
-}
-
-/* components/composites/ren-date-range-picker/ren-date-range-picker.css */
-@layer components {
   .ren-date-range-picker {
     display: inline-flex;
     flex-direction: column;
@@ -6083,10 +5925,6 @@
       display: none;
     }
   }
-}
-
-/* components/composites/ren-carousel/ren-carousel.css */
-@layer components {
   .ren-carousel {
     container-type: inline-size;
     container-name: ren-carousel;
@@ -6182,7 +6020,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 10;
+    z-index: var(--z-dropdown);
     width: var(--touch-min);
     height: var(--touch-min);
     min-width: 44px;
@@ -6244,7 +6082,7 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      z-index: 10;
+      z-index: var(--z-dropdown);
       width: var(--touch-min, 44px);
       height: var(--touch-min, 44px);
       min-width: 44px;
@@ -6286,23 +6124,33 @@
     list-style: none;
   }
   .ren-carousel-dot {
-    width: 8px;
-    height: 8px;
+    position: relative;
+    width: var(--touch-min);
+    height: var(--touch-min);
     border-radius: var(--radius-full);
-    background-color: var(--color-border);
+    background: transparent;
     border: none;
     cursor: pointer;
-    transition: var(--transition-tactile);
     padding: 0;
     margin: 0;
   }
-  .ren-carousel-dot[aria-current=true] {
-    background-color: var(--color-accent);
+  .ren-carousel-dot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: var(--ren-carousel-dot-size);
+    height: var(--ren-carousel-dot-size);
+    border-radius: var(--radius-full);
+    background-color: var(--ren-carousel-dot-color);
+    transition: var(--transition-tactile);
+  }
+  .ren-carousel-dot[aria-current=true]::before {
+    background-color: var(--ren-carousel-dot-active);
     transform: scale(1.25);
   }
-  .ren-carousel-dot:hover:not([aria-current=true]) {
-    background-color: var(--color-border);
-    opacity: 0.7;
+  .ren-carousel-dot:hover:not([aria-current=true])::before {
+    background-color: var(--ren-carousel-dot-active);
   }
   .ren-carousel-dot:focus-visible {
     outline: 2px solid var(--color-accent);
@@ -6388,10 +6236,9 @@
       gap: var(--space-1);
     }
     .ren-carousel-dot {
-      width: 6px;
-      height: 6px;
+      --ren-carousel-dot-size: var(--space-1-5);
     }
-    .ren-carousel-dot[aria-current=true] {
+    .ren-carousel-dot[aria-current=true]::before {
       transform: scale(1.1);
     }
   }
@@ -6426,8 +6273,6 @@
   .ren-carousel-slide {
     user-select: none;
     -webkit-user-select: none;
-  }
-  .ren-carousel-slide {
     cursor: grab;
   }
   .ren-carousel-slide:active {
@@ -6462,18 +6307,13 @@
     block-size: var(--ren-carousel-arrow-size, var(--size-lg));
   }
   .ren-carousel .ren-carousel-dot {
-    inline-size: var(--ren-carousel-dot-size, 8px);
-    block-size: var(--ren-carousel-dot-size, 8px);
-    background: var(--ren-carousel-dot-color, var(--color-fill));
+    inline-size: var(--touch-min);
+    block-size: var(--touch-min);
   }
-  .ren-carousel .ren-carousel-dot[aria-current=true],
-  .ren-carousel .ren-carousel-dot.is-active {
+  .ren-carousel .ren-carousel-dot[aria-current=true]::before,
+  .ren-carousel .ren-carousel-dot.is-active::before {
     background: var(--ren-carousel-dot-active, var(--color-accent));
   }
-}
-
-/* components/composites/ren-color-picker/ren-color-picker.css */
-@layer components {
   .ren-color-picker {
     position: relative;
     display: inline-flex;
@@ -6643,16 +6483,7 @@
     border-radius: var(--radius-md);
     border: 1px solid var(--color-border);
     cursor: pointer;
-    background:
-      linear-gradient(
-        to right,
-        #ff0000 0%,
-        #ffff00 16.67%,
-        #00ff00 33.33%,
-        #00ffff 50%,
-        #0000ff 66.67%,
-        #ff00ff 83.33%,
-        #ff0000 100%);
+    background: var(--ren-cp-hue-gradient);
     overflow: hidden;
   }
   .ren-color-picker-hue-handle {
@@ -6947,10 +6778,6 @@
   .ren-color-picker .ren-color-picker-track {
     block-size: var(--ren-cp-track-height, 12px);
   }
-}
-
-/* components/composites/ren-collapsible/ren-collapsible.css */
-@layer components {
   .ren-collapsible {
     interpolate-size: allow-keywords;
     border: var(--stroke-1) solid var(--color-border);
@@ -7032,10 +6859,6 @@
     font-size: var(--ren-collapse-trigger-font, var(--label-lg-size));
     font-weight: var(--ren-collapse-trigger-weight, var(--weight-semibold));
   }
-}
-
-/* components/composites/ren-toolbar/ren-toolbar.css */
-@layer components {
   .ren-toolbar {
     display: inline-flex;
     align-items: center;
@@ -7131,10 +6954,6 @@
   .ren-toolbar [data-state=on] {
     background: var(--ren-toolbar-active-bg, var(--color-accent-subtle));
   }
-}
-
-/* components/composites/ren-dropzone/ren-dropzone.css */
-@layer components {
   .ren-dropzone {
     position: relative;
     display: flex;
@@ -7283,18 +7102,14 @@
     background: var(--ren-dropzone-hover-bg, var(--color-accent-subtle));
     border-color: var(--ren-dropzone-hover-border, var(--color-accent));
   }
-}
-
-/* components/composites/ren-alert-dialog/ren-alert-dialog.css */
-@layer components {
   .ren-alert-dialog {
     container-type: inline-size;
     container-name: ren-alert-dialog;
     margin: auto;
     padding: var(--space-6);
     border: none;
-    max-width: 24rem;
-    width: 90vw;
+    max-width: 100%;
+    width: var(--ren-dialog-width, min(90vw, 24rem));
     background: var(--color-surface);
     color: var(--color-text);
     border-radius: var(--radius-xl);
@@ -7379,10 +7194,6 @@
       transition: none;
     }
   }
-}
-
-/* components/composites/ren-context-menu/ren-context-menu.css */
-@layer components {
   .ren-context-menu {
     margin: 0;
     padding: 0;
@@ -7424,10 +7235,6 @@
       transition: none;
     }
   }
-}
-
-/* components/patterns/ren-nav/ren-nav.css */
-@layer components {
   .ren-nav {
     display: flex;
     align-items: center;
@@ -7619,10 +7426,6 @@
   .ren-nav a[data-active] {
     color: var(--ren-nav-link-active, var(--color-text));
   }
-}
-
-/* components/patterns/ren-sidebar/ren-sidebar.css */
-@layer components {
   .ren-sidebar-layout {
     display: flex;
     min-height: 100dvh;
@@ -7913,10 +7716,6 @@
       min-block-size: var(--touch-min);
     }
   }
-}
-
-/* components/patterns/ren-command/ren-command.css */
-@layer components {
   .ren-command {
     position: fixed;
     top: 50%;
@@ -8201,10 +8000,6 @@
     min-block-size: var(--ren-command-item-height, var(--size-lg));
     border-radius: var(--ren-command-item-radius, var(--radius-md));
   }
-}
-
-/* components/patterns/ren-table/ren-table.css */
-@layer components {
   ren-table {
     container-type: inline-size;
     container-name: ren-table;
@@ -8248,7 +8043,7 @@
   .ren-table-header {
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: var(--z-dropdown);
     background-color: var(--color-surface-raised);
   }
   .ren-table-header tr {
@@ -8326,7 +8121,7 @@
   }
   .ren-th-pinned {
     position: sticky;
-    z-index: 11;
+    z-index: calc(var(--z-dropdown) + var(--z-raised));
   }
   .ren-table-body {
     background-color: var(--color-surface);
@@ -8368,7 +8163,7 @@
   }
   .ren-td-pinned {
     position: sticky;
-    z-index: 9;
+    z-index: calc(var(--z-dropdown) - var(--z-raised));
     background-color: inherit;
   }
   .ren-table-select {
@@ -8517,13 +8312,13 @@
       linear-gradient(
         90deg,
         transparent,
-        rgb(255, 255, 255, 0.4),
+        color-mix(in srgb, var(--color-text) 8%, transparent),
         transparent);
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    z-index: 20;
+    animation: ren-table-shimmer var(--duration-loading) infinite;
+    z-index: var(--z-sticky);
   }
-  @keyframes shimmer {
+  @keyframes ren-table-shimmer {
     0% {
       background-position: -200% 0;
     }
@@ -8599,10 +8394,6 @@
       background: rgb(255, 255, 255, 0.2);
     }
   }
-  @media (prefers-color-scheme: dark) {
-    .ren-table {
-    }
-  }
   .ren-table {
     font-size: var(--ren-table-header-size, var(--body-size));
   }
@@ -8632,18 +8423,17 @@
   .ren-table tbody tr[data-selected] {
     background: var(--ren-table-selected-bg, var(--color-accent-subtle));
   }
-}
-
-/* components/patterns/ren-form/ren-form.css */
-@layer components {
   .ren-form {
     container-type: inline-size;
     container-name: ren-form;
     display: flex;
     flex-direction: column;
-    gap: var(--space-6);
+    gap: var(--stack-gap);
     width: 100%;
     max-width: 100%;
+  }
+  .ren-form:not(.ren-stack-xs, .ren-stack-sm, .ren-stack-md, .ren-stack-lg, .ren-stack-xl) {
+    --stack-gap: var(--space-density-form);
   }
   .ren-form[data-submitting] {
     opacity: 0.6;
@@ -8900,10 +8690,6 @@
   .ren-form [aria-invalid=false] {
     border-color: var(--ren-field-success-color, var(--color-success));
   }
-}
-
-/* components/patterns/ren-menubar/ren-menubar.css */
-@layer components {
   .ren-menubar {
     display: flex;
     align-items: center;
@@ -9131,10 +8917,6 @@
       animation: none;
     }
   }
-}
-
-/* components/patterns/ren-empty-state/ren-empty-state.css */
-@layer components {
   .ren-empty-state {
     display: flex;
     flex-direction: column;
@@ -9216,10 +8998,6 @@
   .ren-empty-state p {
     color: var(--ren-empty-desc-color, var(--color-text-muted));
   }
-}
-
-/* components/patterns/ren-ai/ren-ai.css */
-@layer components {
   .ren-ai-slug {
     display: inline-flex;
     align-items: center;
@@ -9273,7 +9051,7 @@
   .ren-ai-streaming .ren-ai-message-content::after {
     content: "▊";
     display: inline;
-    animation: ren-ai-blink 0.8s step-end infinite;
+    animation: ren-ai-blink var(--duration-blink) step-end infinite;
     color: var(--color-ai);
     margin-inline-start: 1px;
   }
@@ -9308,13 +9086,13 @@
     height: 6px;
     border-radius: var(--radius-full);
     background: var(--color-ai);
-    animation: ren-ai-dot-bounce 1.4s ease-in-out infinite;
+    animation: ren-ai-dot-bounce var(--duration-typing) var(--ease-pulse) infinite;
   }
   .ren-ai-typing-dots span:nth-child(2) {
-    animation-delay: 0.2s;
+    animation-delay: var(--delay-stagger);
   }
   .ren-ai-typing-dots span:nth-child(3) {
-    animation-delay: 0.4s;
+    animation-delay: calc(var(--delay-stagger) * 2);
   }
   @keyframes ren-ai-dot-bounce {
     0%, 80%, 100% {
@@ -9336,7 +9114,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .ren-ai-typing-dots span {
-      animation: ren-ai-dot-fade 1.4s ease-in-out infinite;
+      animation: ren-ai-dot-fade var(--duration-typing) var(--ease-pulse) infinite;
     }
   }
   .ren-ai-citation {
@@ -9547,7 +9325,7 @@
         color-mix(in srgb, var(--color-ai) 6%, var(--color-fill)) 50%,
         var(--color-fill) 75%);
     background-size: 200% 100%;
-    animation: ren-ai-shimmer 1.5s ease-in-out infinite;
+    animation: ren-ai-shimmer var(--duration-loading) var(--ease-pulse) infinite;
   }
   .ren-ai-skeleton-line + .ren-ai-skeleton-line {
     margin-top: var(--space-2);
@@ -9592,7 +9370,7 @@
     margin-inline-end: var(--space-1);
     font-size: 1.1em;
     display: inline-block;
-    transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+    transition: transform var(--duration-state) var(--ease-enter, ease);
   }
   .ren-ai-action-regenerate:hover::before {
     transform: rotate(-45deg);
@@ -9692,7 +9470,7 @@
     content: "▸";
     font-size: 0.75em;
     color: var(--color-text-muted);
-    transition: transform var(--duration-state, 200ms) var(--ease-enter, ease);
+    transition: transform var(--duration-state) var(--ease-enter, ease);
   }
   .ren-ai-tool-call[open] > .ren-ai-tool-call-header::before {
     transform: rotate(90deg);
@@ -9756,5 +9534,109 @@
     color: var(--color-text);
   }
 }
+
+/* components/primitives/ren-field/ren-field.css */
+
+/* components/primitives/ren-checkbox/ren-checkbox.css */
+
+/* components/primitives/ren-switch/ren-switch.css */
+
+/* components/primitives/ren-badge/ren-badge.css */
+
+/* components/primitives/ren-radio/ren-radio.css */
+
+/* components/primitives/ren-progress/ren-progress.css */
+
+/* components/primitives/ren-icon/ren-icon.css */
+
+/* components/primitives/ren-card/ren-card.css */
+
+/* components/primitives/ren-link/ren-link.css */
+
+/* components/primitives/ren-banner/ren-banner.css */
+
+/* components/primitives/ren-breadcrumb/ren-breadcrumb.css */
+
+/* components/primitives/ren-pagination/ren-pagination.css */
+
+/* components/primitives/ren-tag/ren-tag.css */
+
+/* components/primitives/ren-separator/ren-separator.css */
+
+/* components/primitives/ren-avatar/ren-avatar.css */
+
+/* components/primitives/ren-spinner/ren-spinner.css */
+
+/* components/primitives/ren-skeleton/ren-skeleton.css */
+
+/* components/primitives/ren-kbd/ren-kbd.css */
+
+/* components/composites/ren-dialog/ren-dialog.css */
+
+/* components/composites/ren-popover/ren-popover.css */
+
+/* components/composites/ren-tooltip/ren-tooltip.css */
+
+/* components/composites/ren-tabs/ren-tabs.css */
+
+/* components/composites/ren-accordion/ren-accordion.css */
+
+/* components/composites/ren-menu/ren-menu.css */
+
+/* components/composites/ren-select/ren-select.css */
+
+/* components/composites/ren-toast/ren-toast.css */
+
+/* components/composites/ren-slider/ren-slider.css */
+
+/* components/composites/ren-toggle-group/ren-toggle-group.css */
+
+/* components/composites/ren-combobox/ren-combobox.css */
+
+/* components/composites/ren-sheet/ren-sheet.css */
+
+/* components/composites/ren-hover-card/ren-hover-card.css */
+
+/* components/composites/ren-scroll-area/ren-scroll-area.css */
+
+/* components/composites/ren-number-field/ren-number-field.css */
+
+/* components/composites/ren-otp/ren-otp.css */
+
+/* components/composites/ren-calendar/ren-calendar.css */
+
+/* components/composites/ren-date-picker/ren-date-picker.css */
+
+/* components/composites/ren-date-range-picker/ren-date-range-picker.css */
+
+/* components/composites/ren-carousel/ren-carousel.css */
+
+/* components/composites/ren-color-picker/ren-color-picker.css */
+
+/* components/composites/ren-collapsible/ren-collapsible.css */
+
+/* components/composites/ren-toolbar/ren-toolbar.css */
+
+/* components/composites/ren-dropzone/ren-dropzone.css */
+
+/* components/composites/ren-alert-dialog/ren-alert-dialog.css */
+
+/* components/composites/ren-context-menu/ren-context-menu.css */
+
+/* components/patterns/ren-nav/ren-nav.css */
+
+/* components/patterns/ren-sidebar/ren-sidebar.css */
+
+/* components/patterns/ren-command/ren-command.css */
+
+/* components/patterns/ren-table/ren-table.css */
+
+/* components/patterns/ren-form/ren-form.css */
+
+/* components/patterns/ren-menubar/ren-menubar.css */
+
+/* components/patterns/ren-empty-state/ren-empty-state.css */
+
+/* components/patterns/ren-ai/ren-ai.css */
 
 /* components/index.css */

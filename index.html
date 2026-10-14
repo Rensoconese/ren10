@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RenDS — Vanilla, accessible, atomic design system</title>
   <meta name="description" content="A design system that ships HTML, CSS, and a sprinkle of Web Components. No React. No build step. WCAG 2.1 AA out of the box.">
-  <link rel="stylesheet" href="index.css">
-  <link rel="stylesheet" href="components/index.css">
+  <link rel="stylesheet" href="dist/ren10.min.css">
   <link rel="stylesheet" href="themes/appearance.css">
-  <link rel="stylesheet" href="tokens/component/tokens.css">
   <link rel="stylesheet" href="site/shell.css">
   <style>
     /* ─────────────────────────────────────────────
@@ -277,7 +275,7 @@
       <a href="index.html" class="dx-brand" aria-current="page">
         <span class="dx-brand-mark">R</span>
         <span>RenDS</span>
-        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.9.0</span>
+        <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-1);">v0.14.1</span>
       </a>
       <nav class="dx-nav-menu" aria-label="Primary">
         <a href="docs/index.html">Docs</a>
@@ -380,20 +378,20 @@
         <article class="lp-atom">
           <span class="lp-atom-eyebrow">Layer 1</span>
           <h4>Primitives</h4>
-          <p>Single-purpose CSS-only components. Button, Card, Field, Badge, Tag, Banner, and 13 more.</p>
+          <p>Single-purpose components with optional JavaScript enhancements. Button, Card, Field, Badge, Tag, Banner, and 13 more.</p>
           <span class="lp-atom-count">19 components</span>
         </article>
         <article class="lp-atom">
           <span class="lp-atom-eyebrow">Layer 2</span>
           <h4>Composites</h4>
           <p>JS-enhanced behavior on top of primitives. Dialog, Tabs, Popover, Combobox, Calendar, and more.</p>
-          <span class="lp-atom-count">28 components</span>
+          <span class="lp-atom-count">26 components</span>
         </article>
         <article class="lp-atom">
           <span class="lp-atom-eyebrow">Layer 3</span>
           <h4>Patterns</h4>
           <p>Multi-component recipes. Nav, Sidebar, Data Table, Form Validation, Empty State.</p>
-          <span class="lp-atom-count">7 patterns</span>
+          <span class="lp-atom-count">8 patterns</span>
         </article>
       </div>
     </section>
@@ -429,7 +427,7 @@
             </label>
           </div>
         </div>
-        <pre class="lp-preview-code"><code><span class="com">&lt;!-- Just HTML. No React. --&gt;</span>
+        <pre class="lp-preview-code" tabindex="0" aria-label="HTML example"><code><span class="com">&lt;!-- Just HTML. No React. --&gt;</span>
 <span class="tag">&lt;button</span> <span class="attr">class=</span><span class="str">"ren-btn ren-btn-primary"</span><span class="tag">&gt;</span>
   Save changes
 <span class="tag">&lt;/button&gt;</span>
@@ -508,7 +506,7 @@
     <div class="dx-footer-inner">
       <div class="ren-cluster" style="--cluster-gap: var(--space-2);">
         <span class="dx-brand-mark" style="width: 20px; height: 20px; font-size: 10px;">R</span>
-        <span>RenDS v0.9.0</span>
+        <span>RenDS v0.14.1</span>
         <span>·</span>
         <span>MIT License</span>
       </div>

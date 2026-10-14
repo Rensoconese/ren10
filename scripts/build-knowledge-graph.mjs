@@ -129,7 +129,8 @@ const buildSql = (graph) => {
       data TEXT NOT NULL,
       PRIMARY KEY (source, target, type, detail)
     );`,
-    'CREATE INDEX edges_source_idx ON edges(source);',
+    // The primary-key index starts with source and already supports these
+    // lookups. A second source-only index duplicates that searchable prefix.
     'CREATE INDEX edges_target_idx ON edges(target);',
     'CREATE INDEX edges_type_idx ON edges(type);',
     'CREATE VIRTUAL TABLE node_fts USING fts5(id UNINDEXED, type UNINDEXED, name, path, body);',

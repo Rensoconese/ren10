@@ -149,7 +149,7 @@
   background-color: var(--color-surface);
   color: var(--color-text);
   position: relative;
-  z-index: 1;
+  z-index: var(--z-raised);
 }
 
 .ren-tab-list-enclosed .ren-tab[aria-selected="true"]::after {

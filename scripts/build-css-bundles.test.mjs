@@ -31,9 +31,33 @@ test('missing local imports fail rather than emit incomplete CSS', async (t) => 
   await assert.rejects(bundleCss(entry), /Could not resolve/);
 });
 
+test('merges adjacent declarations without crossing cascade boundaries', async (t) => {
+  const entry = await fixture(t, {
+    'entry.css': '@layer tokens { .sample { --a: 1; } .sample { --b: 2; } .other { --a: 3; } .sample { --a: 4; } }',
+  });
+  const css = await bundleCss(entry);
+  assert.equal((css.match(/\.sample\s*\{/g) || []).length, 2);
+  assert.match(css, /--a: 1;[\s\S]*--b: 2;/);
+  assert.ok(css.indexOf('.other') < css.lastIndexOf('.sample'));
+});
+
 test('minification preserves significant string and calc whitespace', async (t) => {
   const entry = await fixture(t, { 'entry.css': '.sample::before { content: "a > b: ; { x }"; width: calc(100% - 2rem); }' });
   const css = await bundleCss(entry, { minify: true });
   assert.match(css, /a > b: ; \{ x \}/);
   assert.match(css, /calc\(100% - 2rem\)/);
+});
+
+
+test('coalesces adjacent named layers while preserving cascade boundaries', async (t) => {
+  const entry = await fixture(t, {
+    'entry.css': '@layer first, second; @layer first { .a { color: red; } } @layer first { .b { color: blue; } } @layer second { .c { color: green; } } @layer first { .d { color: black; } } @layer { .e { color: red; } } @layer { .f { color: blue; } }',
+  });
+  for (const minify of [false, true]) {
+    const css = await bundleCss(entry, { minify });
+    assert.equal((css.match(/@layer first\s*\{/g) || []).length, 2);
+    assert.equal((css.match(/@layer\s*\{/g) || []).length, 2);
+    const selectors = [...css.matchAll(/\.([a-f])\s*\{/g)].map(match => match[1]);
+    assert.deepEqual(selectors, ['a', 'b', 'c', 'd', 'e', 'f']);
+  }
 });

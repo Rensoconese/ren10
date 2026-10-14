@@ -12,9 +12,7 @@
   -->
 
   <!-- Main design system CSS -->
-  <link rel="stylesheet" href="../index.css">
-  <link rel="stylesheet" href="../components/index.css">
-
+  <link rel="stylesheet" href="../dist/ren10.min.css">
   <!--
     No per-file fallback links here. index.css and components/index.css pull
     these in through @import inside cascade layers; linking them again puts an
@@ -39,7 +37,6 @@
   <link rel="stylesheet" href="../components/patterns/ren-empty-state/ren-empty-state.css">
   <link rel="stylesheet" href="../components/patterns/ren-ai/ren-ai.css">
   <link rel="stylesheet" href="../tokens/semantic/dynamic-type.css">
-  <link rel="stylesheet" href="../tokens/component/tokens.css">
   <link rel="stylesheet" href="../themes/appearance.css">
   <link rel="stylesheet" href="../site/shell.css">
 
@@ -2975,8 +2972,8 @@
                       style="anchor-name: --sel-multi;"
                       aria-expanded="false">
                 <span class="ren-select-value" style="display: flex; gap: var(--space-1); flex-wrap: wrap;">
-                  <span class="ren-select-chip">Design <button class="ren-select-chip-remove">&times;</button></span>
-                  <span class="ren-select-chip">Code <button class="ren-select-chip-remove">&times;</button></span>
+                  <span class="ren-select-chip">Design <button class="ren-select-chip-remove" aria-label="Remove selected option">&times;</button></span>
+                  <span class="ren-select-chip">Code <button class="ren-select-chip-remove" aria-label="Remove selected option">&times;</button></span>
                 </span>
                 <span class="ren-select-icon"></span>
               </button>
@@ -3039,25 +3036,19 @@
         <h2>Menubar</h2>
         <p class="demo-description">Application-level menu bar (File, Edit, View). ARIA Menubar pattern with keyboard navigation.</p>
 
-        <div class="ren-menubar" role="menubar" style="max-width: 500px;">
-          <button role="menuitem" class="ren-menubar-trigger"
-                  popovertarget="demo-mb-file"
-                  style="anchor-name: --mb-file;"
+<ren-menubar>        <div class="ren-menubar" role="menubar" style="max-width: 500px;">
+          <button role="menuitem" class="ren-menubar-trigger" aria-haspopup="menu"
                   aria-expanded="false">File</button>
-          <div role="menu" class="ren-menubar-menu" id="demo-mb-file" popover
-               style="position-anchor: --mb-file;">
+          <div role="menu" class="ren-menubar-menu" id="demo-mb-file" hidden>
             <button role="menuitem" class="ren-menubar-item">New Tab <span class="ren-menubar-shortcut">⌘T</span></button>
             <button role="menuitem" class="ren-menubar-item">New Window <span class="ren-menubar-shortcut">⌘N</span></button>
             <div class="ren-menubar-separator"></div>
             <button role="menuitem" class="ren-menubar-item">Print <span class="ren-menubar-shortcut">⌘P</span></button>
           </div>
 
-          <button role="menuitem" class="ren-menubar-trigger"
-                  popovertarget="demo-mb-edit"
-                  style="anchor-name: --mb-edit;"
+          <button role="menuitem" class="ren-menubar-trigger" aria-haspopup="menu"
                   aria-expanded="false">Edit</button>
-          <div role="menu" class="ren-menubar-menu" id="demo-mb-edit" popover
-               style="position-anchor: --mb-edit;">
+          <div role="menu" class="ren-menubar-menu" id="demo-mb-edit" hidden>
             <button role="menuitem" class="ren-menubar-item">Undo <span class="ren-menubar-shortcut">⌘Z</span></button>
             <button role="menuitem" class="ren-menubar-item">Redo <span class="ren-menubar-shortcut">⇧⌘Z</span></button>
             <div class="ren-menubar-separator"></div>
@@ -3066,12 +3057,9 @@
             <button role="menuitem" class="ren-menubar-item">Paste <span class="ren-menubar-shortcut">⌘V</span></button>
           </div>
 
-          <button role="menuitem" class="ren-menubar-trigger"
-                  popovertarget="demo-mb-view"
-                  style="anchor-name: --mb-view;"
+          <button role="menuitem" class="ren-menubar-trigger" aria-haspopup="menu"
                   aria-expanded="false">View</button>
-          <div role="menu" class="ren-menubar-menu" id="demo-mb-view" popover
-               style="position-anchor: --mb-view;">
+          <div role="menu" class="ren-menubar-menu" id="demo-mb-view" hidden>
             <button role="menuitemcheckbox" class="ren-menubar-checkbox" aria-checked="true">Toolbar</button>
             <button role="menuitemcheckbox" class="ren-menubar-checkbox" aria-checked="true">Sidebar</button>
             <button role="menuitemcheckbox" class="ren-menubar-checkbox" aria-checked="false">Status Bar</button>
@@ -3081,7 +3069,7 @@
             <button role="menuitemradio" class="ren-menubar-radio" aria-checked="true">100%</button>
             <button role="menuitemradio" class="ren-menubar-radio" aria-checked="false">150%</button>
           </div>
-        </div>
+        </div></ren-menubar>
       </section>
 
       <!-- ═══════════════════════════════════════════════════════════
@@ -3264,19 +3252,28 @@
            ═══════════════════════════════════════════════════════════ -->
       <section id="appearance-api" class="demo-section">
         <h2>Appearance API</h2>
-        <p class="demo-description">Theme the entire system by setting <code>data-theme</code>, <code>data-shape</code>, and <code>data-density</code> attributes. 6 color presets + shape + density combos.</p>
+        <p class="demo-description">Theme the entire system by setting <code>data-theme</code>, <code>data-shape</code>, and <code>data-density</code> attributes. 9 color presets + independent light/dark mode, shape, and density controls.</p>
 
+        <h3>Color mode</h3>
+        <div class="ren-cluster">
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.documentElement.dataset.mode='auto'">System</button>
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.documentElement.dataset.mode='light'">Light</button>
+          <button type="button" class="ren-btn ren-btn-secondary" onclick="document.documentElement.dataset.mode='dark'">Dark</button>
+        </div>
         <h3>Color Themes</h3>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='light'" style="background: #2563eb; color: var(--color-on-accent); border: none;">Default</button>
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='ocean'" style="background: #0066CC; color: var(--color-on-accent); border: none;">Ocean</button>
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='forest'" style="background: #15803d; color: var(--color-on-accent); border: none;">Forest</button>
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='sunset'" style="background: #c2410c; color: var(--color-on-accent); border: none;">Sunset</button>
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='rose'" style="background: #E11D48; color: var(--color-on-accent); border: none;">Rose</button>
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='slate'" style="background: #334155; color: var(--color-on-accent); border: none;">Slate</button>
-          <button type="button" class="ren-btn ren-btn-sm" onclick="document.documentElement.dataset.theme='purple'" style="background: #7C3AED; color: var(--color-on-accent); border: none;">Purple</button>
+          <button type="button" class="ren-btn" data-theme="light" onclick="document.documentElement.dataset.theme='light'">Default</button>
+          <button type="button" class="ren-btn" data-theme="ocean" onclick="document.documentElement.dataset.theme='ocean'">Ocean</button>
+          <button type="button" class="ren-btn" data-theme="forest" onclick="document.documentElement.dataset.theme='forest'">Forest</button>
+          <button type="button" class="ren-btn" data-theme="sunset" onclick="document.documentElement.dataset.theme='sunset'">Sunset</button>
+          <button type="button" class="ren-btn" data-theme="rose" onclick="document.documentElement.dataset.theme='rose'">Rose</button>
+          <button type="button" class="ren-btn" data-theme="slate" onclick="document.documentElement.dataset.theme='slate'">Slate</button>
+          <button type="button" class="ren-btn" data-theme="purple" onclick="document.documentElement.dataset.theme='purple'">Purple</button>
         </div>
 
+        <div class="ren-cluster"><button type="button" class="ren-btn" data-theme="amber-editorial" onclick="document.documentElement.dataset.theme='amber-editorial'">Amber editorial</button></div>
+        <div class="ren-cluster"><button type="button" class="ren-btn" data-theme="cyber" onclick="document.documentElement.dataset.theme='cyber'">Cyber</button></div>
+        <div class="ren-cluster"><button type="button" class="ren-btn" data-theme="minimal-mono" onclick="document.documentElement.dataset.theme='minimal-mono'">Minimal mono</button></div>
         <h3>Shape</h3>
         <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
           <button type="button" class="ren-btn ren-btn-sm ren-btn-secondary" onclick="delete document.documentElement.dataset.shape">Default</button>
@@ -3610,5 +3607,6 @@
     }
   </script>
   <script src="../site/shell.js" defer></script>
+<script type="module" src="../components/patterns/ren-menubar/ren-menubar.js"></script>
 </body>
 </html>

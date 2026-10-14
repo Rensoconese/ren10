@@ -36,7 +36,40 @@ export async function bundleCss(entryPoint, { minify = false } = {}) {
     if (orders.has(order)) node.remove();
     else orders.add(order);
   }
-  if (!minify) return css.toString();
+  // Consecutive blocks of one named layer already share cascade priority.
+  // Keep child order and parent scope; never merge anonymous layers (each
+  // creates a distinct priority), or move a block across intervening rules.
+  const mergeNamedLayers = (parent) => {
+    if (!parent.nodes) return;
+    let previous;
+    for (const node of [...parent.nodes]) {
+      if (node.type === 'comment') continue;
+      if (node.type === 'atrule' && node.name === 'layer' && node.nodes && node.params &&
+          previous?.type === 'atrule' && previous.name === 'layer' && previous.nodes &&
+          previous.params === node.params) {
+        previous.append(...node.nodes);
+        node.remove();
+      } else previous = node;
+    }
+  };
+  mergeNamedLayers(css);
+  css.walk(mergeNamedLayers);
+  // Adjacent identical declaration-only selectors have the same cascade.
+  // Merge within each parent only; never cross another rule or an at-rule.
+  css.walk((parent) => {
+    if (!parent.nodes) return;
+    let previous;
+    for (const node of [...parent.nodes]) {
+      if (node.type === 'comment') continue;
+      if (node.type === 'rule' && node.nodes.every(child => child.type === 'decl') &&
+          previous?.type === 'rule' && previous.selector === node.selector &&
+          previous.nodes.every(child => child.type === 'decl')) {
+        previous.append(...node.nodes);
+        node.remove();
+      } else previous = node;
+    }
+  });
+  if (!minify) return css.toString().replace(/[ \t]+$/gm, '');
   return (await transform(css.toString(), {
     loader: 'css', minify: true, charset: 'utf8', legalComments: 'none', target: 'esnext',
   })).code;

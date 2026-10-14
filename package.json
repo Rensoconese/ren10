@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/Rensoconese/ren10.git"
   },
-  "homepage": "https://github.com/Rensoconese/ren10#readme",
+  "homepage": "https://rensoconese.github.io/ren10/docs/",
   "type": "module",
   "workspaces": [
     "packages/*"
@@ -64,7 +64,10 @@
     "tests/utils/static-server.cjs",
     "tests/agent-starter/",
     "scripts/check-agent-provenance.mjs",
-    "MIGRATION.md"
+    "MIGRATION.md",
+    "!docs/superpowers/**",
+    "!docs/audits/**",
+    "!docs/workflows/**"
   ],
   "publishConfig": {
     "access": "public",
@@ -105,6 +108,7 @@
     "./components/**/*.js"
   ],
   "scripts": {
+    "test:security-dependencies": "node --test scripts/security-dependencies.test.mjs scripts/braces-regression.test.mjs",
     "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "lint:contracts": "node scripts/check-css-contracts.mjs",
@@ -114,7 +118,7 @@
     "lint:aihints": "node scripts/check-ai-hints.mjs",
     "check:release": "node scripts/check-release.mjs",
     "test": "npm run test:portable",
-    "test:portable": "npm run test:audit-regressions && node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && npm run test:debug && npm run test:ai-hints && npm run test:form-fuzz && npm run check:performance && npm run check:public-contracts && npm run test:detector && npm run test:astro-integration && npm run test:a11y && npm run test:components && npm run test:runtime-smoke && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
+    "test:portable": "npm run test:security-dependencies && npm run test:audit-regressions && node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs scripts/release-registry.test.mjs && npm run build:bundles && npm run test:debug && npm run test:ai-hints && npm run test:form-fuzz && npm run check:performance && npm run check:public-contracts && npm run test:detector && npm run test:astro-integration && npm run test:a11y && npm run test:components && npm run test:runtime-smoke && npm run test:agent-starter && npm run test:theme && npm run test:evals && npm run test:exports && npm run test:knowledge-package && npm run smoke:cli-copy && npm run test:release-policy && npm run test:workflow && npm run workflow:relume:check",
     "test:all": "npm run test:portable && npm run test:visual:linux",
     "test:a11y": "playwright test --config tests/a11y/playwright.config.cjs",
     "test:visual": "playwright test --config tests/visual/playwright.config.cjs",
@@ -167,8 +171,10 @@
     "test:runtime-smoke": "playwright test --config tests/components/playwright.config.cjs runtime-smoke",
     "agent:provenance": "node scripts/check-agent-provenance.mjs",
     "test:field-regressions": "node --test scripts/build-css-bundles.test.mjs scripts/check-agent-provenance.test.mjs && npm run build:bundles && playwright test --config tests/components/playwright.config.cjs css-entrypoints stack-rhythm card-media-slots tour-composition tabs-recipe",
-    "test:audit-regressions": "node --test tests/date-form-regressions.test.mjs tests/components/keyboard-activation.test.mjs scripts/installation-docs.test.mjs",
-    "test:astro-local-install": "node scripts/smoke-astro-local-install.mjs"
+    "test:audit-regressions": "node --test tests/date-form-regressions.test.mjs tests/components/keyboard-activation.test.mjs scripts/installation-docs.test.mjs scripts/assemble-site.test.mjs scripts/check-publish-access.test.mjs",
+    "test:astro-local-install": "node scripts/smoke-astro-local-install.mjs",
+    "site:build": "npm run build:bundles && node scripts/assemble-site.mjs",
+    "check:publish-access": "node scripts/check-publish-access.mjs"
   },
   "keywords": [
     "design-system",
@@ -182,12 +188,17 @@
   "peerDependencies": {
     "playwright": ">=1.50.0"
   },
+  "overrides": {
+    "magicast": "$magicast",
+    "braces": "$braces"
+  },
   "peerDependenciesMeta": {
     "playwright": {
       "optional": true
     }
   },
   "devDependencies": {
+    "magicast": "file:vendor/magicast-0.5.4-ren10.1.tgz",
     "@playwright/test": "^1.59.1",
     "astro": "^7.1.6",
     "axe-core": "^4.11.3",
@@ -198,6 +209,7 @@
     "js-yaml": "^4.1.2",
     "postcss": "8.5.25",
     "stylelint": "^17.11.0",
-    "stylelint-config-standard": "^40.0.0"
+    "stylelint-config-standard": "^40.0.0",
+    "braces": "file:vendor/braces-3.0.3-ren10.1.tgz"
   }
 }

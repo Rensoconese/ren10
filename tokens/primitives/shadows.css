@@ -22,7 +22,7 @@
   /* ─── Ring Shadow (for focus, borders) ─── */
   /* Used as: box-shadow: var(--ring-offset), var(--ring); */
   --ring-width: 2px;
-  --ring-color: var(--blue-500);
+  --ring-color: var(--color-focus-ring);
   --ring-offset-width: 2px;
   --ring-offset-color: light-dark(var(--white), var(--black));
 }

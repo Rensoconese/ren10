@@ -17,7 +17,7 @@
      - header / page top      → --space-page
    ============================================ */
 
-:root {
+:where(:root, [data-density]) {
   /* ─── Container insets ─────────────────────
      Padding inside surfaces (cards, panels, dialogs). */
   --space-card-padding:        var(--space-6);  /* 24 */
@@ -80,14 +80,14 @@
   /* ─── Density-aware aliases ────────────────
      These shift with [data-density] on <html>.
      Defaults to "comfortable" values. */
-  --space-density-card:        var(--space-card-padding);
-  --space-density-form:        var(--space-form-gap);
+  --space-density-card:        var(--space-card-padding-sm);
+  --space-density-form:        var(--space-6);
   --space-density-row:         var(--space-3);
 }
 
 /* ─── Density: compact ─── */
-:root[data-density="compact"] {
-  --space-density-card:        var(--space-4);
+[data-density="compact"] {
+  --space-density-card:        var(--space-3);
   --space-density-form:        var(--space-3);
   --space-density-row:         var(--space-2);
   --space-card-padding:        var(--space-4);
@@ -95,9 +95,9 @@
 }
 
 /* ─── Density: spacious ─── */
-:root[data-density="spacious"] {
+[data-density="spacious"] {
   --space-density-card:        var(--space-8);
-  --space-density-form:        var(--space-6);
+  --space-density-form:        var(--space-8);
   --space-density-row:         var(--space-4);
   --space-card-padding:        var(--space-8);
   --space-form-gap:            var(--space-6);

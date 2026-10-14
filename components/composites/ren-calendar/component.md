@@ -148,6 +148,11 @@ Use the docs page and source files listed below for full examples before adding 
 - `--ren-calendar-today-bg`
 - `--ren-calendar-width`
 
+On coarse pointers, all seven day targets keep their enlarged size without
+overlapping. The calendar uses a minimum width derived from the touch target,
+padding and borders; compact styling does not compress the interactive tracks.
+In hosts narrower than this minimum, provide a horizontal scroll container.
+
 Theme through these public custom properties before reaching for selectors.
 
 ## Accessibility Contract
@@ -173,3 +178,7 @@ Theme through these public custom properties before reaching for selectors.
 - Run component or docs a11y coverage when markup, states, or ARIA change.
 - Run CSS lint when selectors, tokens, or visual states change.
 - Manually verify light/dark themes when color, surface, border, or shadow behavior changes.
+
+## Attribute lifecycle
+
+`value`, `min`, `max`, `mode`, `locale`, `first-day` are read when the component connects. Changing those attributes after mount is not a supported update mechanism; use only the documented methods for runtime changes. For a new initialization configuration, create a new component instance. `placement`, where documented, is reactive. Existing event names remain stable; see the [event reference](../../../docs/foundations/events.html).

@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Components — RenDS</title>
   <meta name="description" content="The RenDS component catalog, organized by atomic layer.">
-  <link rel="stylesheet" href="../index.css">
-  <link rel="stylesheet" href="../components/index.css">
+  <link rel="stylesheet" href="../dist/ren10.min.css">
   <link rel="stylesheet" href="../themes/appearance.css">
-  <link rel="stylesheet" href="../tokens/component/tokens.css">
   <link rel="stylesheet" href="../site/shell.css">
   <style>
     /* Page-specific styles — chrome lives in shell.css */
@@ -585,12 +583,12 @@
             </header>
             <p class="comp-card-purpose">Page navigation for lists. Supports numbered, simple, and truncated variants.</p>
             <div class="comp-card-render">
-              <nav class="ren-pagination" aria-label="Pagination" style="font-size: var(--text-xs);">
-                <a href="#">‹</a>
-                <a href="#" aria-current="page">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">›</a>
+              <nav class="ren-pagination" aria-label="Pagination">
+                <a class="ren-pagination-item" href="#" aria-label="Previous page">‹</a>
+                <a class="ren-pagination-item" href="#" aria-current="page">1</a>
+                <a class="ren-pagination-item" href="#">2</a>
+                <a class="ren-pagination-item" href="#">3</a>
+                <a class="ren-pagination-item" href="#" aria-label="Next page">›</a>
               </nav>
             </div>
             <footer class="comp-card-footer">
