@@ -6,10 +6,13 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { checkTrustedPublishing } from './check-publish-access.mjs';
 import { decideStageAction, lookupRegistry } from './release-registry.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dryRun = process.argv.includes('--dry-run');
+const oidc = process.argv.includes('--oidc');
+if (oidc && !dryRun) checkTrustedPublishing(process.env, JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version);
 const output = path.join(root, 'release-candidate.json');
 const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'ren10-release-'));
 const records = [];
@@ -17,7 +20,7 @@ function npm(args, cwd = root) {
   const result = spawnSync('npm', args, { cwd, encoding: 'utf8', timeout: 120000 });
   if (result.error || result.status !== 0) {
     const code = result.stderr?.match(/npm (?:error|ERR!) code ([A-Z0-9_]+)/)?.[1] || 'COMMAND_FAILED';
-    throw new Error(`npm ${args[0]} failed (${code}); raw authentication diagnostics are withheld`);
+    throw new Error(`npm ${args[0]} failed (${code}); raw authentication diagnostics are withheld. If this version is already staged, approve the original verified candidate in npm and rerun; OIDC cannot inspect or reuse private pending stages.`);
   }
   return result.stdout;
 }
@@ -39,7 +42,9 @@ try {
     assert.equal(expected.integrity, metadata.integrity);
     assert.equal(expected.shasum, metadata.shasum);
     const published = dryRun ? null : await lookupRegistry(pkg.name, pkg.version);
-    const stages = !dryRun && !published ? JSON.parse(npm(['stage', 'list', pkg.name, '--json'])) : [];
+    // OIDC cannot list or download private stages. A duplicate version is rejected
+    // by npm's shared staged/public version index, never assumed identical.
+    const stages = !oidc && !dryRun && !published ? JSON.parse(npm(['stage', 'list', pkg.name, '--json'])) : [];
     assert.ok(Array.isArray(stages));
     const action = decideStageAction(expected, published, stages);
     if (action.state === 'pending') {

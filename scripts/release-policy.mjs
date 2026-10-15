@@ -130,14 +130,34 @@ export function validateWorkflowPolicy(workflows, requiredCommands) {
   if (release?.jobs?.publish?.if) errors.push('release.yml:publish must not be conditional');
 
   requireBlockingCommands(errors, 'release.yml', 'publish', release?.jobs?.publish, [
-    'node scripts/stage-release.mjs',
+    'node scripts/stage-release.mjs --oidc',
     'node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800',
   ]);
 
-  requireBlockingCommands(errors, 'publish-retry.yml', 'publish-astro', workflows['publish-retry.yml']?.jobs?.['publish-astro'], [
-    'node scripts/stage-release.mjs',
-    'node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800',
+  const retry = workflows['publish-retry.yml']?.jobs?.['publish-astro'];
+  requireBlockingCommands(errors, 'publish-retry.yml', 'publish-astro', retry, [
+    'gh workflow run release.yml --repo Rensoconese/ren10 --ref main --field "release_tag=v$VERSION"',
   ]);
+  if (retry?.permissions?.['id-token'] === 'write' || workflows['publish-retry.yml']?.permissions?.['id-token'] === 'write') {
+    errors.push('publish-retry.yml must dispatch release.yml, not obtain npm OIDC credentials');
+  }
+  if (release?.jobs?.publish?.permissions?.['id-token'] !== 'write') errors.push('release.yml:publish requires OIDC id-token: write');
+  for (const [name, workflow] of Object.entries(workflows)) {
+    if (JSON.stringify(workflow).includes('secrets.NPM_TOKEN') || JSON.stringify(workflow).includes('NODE_AUTH_TOKEN')) {
+      errors.push(`${name}: release authentication must not depend on persistent npm tokens`);
+    }
+  }
+  requireBlockingCommands(errors, 'release.yml', 'publish', release?.jobs?.publish, [
+    'node scripts/check-publish-access.mjs --oidc',
+  ]);
+  if (release?.env?.RELEASE_TAG !== '${{ inputs.release_tag || github.ref_name }}') errors.push('release.yml must resolve the selected immutable release tag');
+  if (release?.on?.workflow_dispatch?.inputs?.release_tag?.required !== true) errors.push('release recovery requires an explicit release tag');
+  for (const jobName of ['verify', 'publish', 'github-release']) {
+    const checkout = release?.jobs?.[jobName]?.steps?.find(step => step.uses?.startsWith('actions/checkout@'));
+    if (checkout?.with?.ref !== 'refs/tags/${{ env.RELEASE_TAG }}') errors.push(`release.yml:${jobName} must check out the exact release tag`);
+  }
+  const githubRelease = release?.jobs?.['github-release']?.steps?.find(step => step.uses?.startsWith('softprops/action-gh-release@'));
+  if (githubRelease?.with?.tag_name !== '${{ env.RELEASE_TAG }}') errors.push('GitHub Release must use the selected release tag');
 
   const chromiumIf = "${{ !cancelled() && matrix.browser == 'chromium' }}";
   requireBlockingCommands(errors, 'audit.yml', 'audit', audit?.jobs?.audit, requiredCommands, chromiumIf);

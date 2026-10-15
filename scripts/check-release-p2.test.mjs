@@ -126,7 +126,7 @@ const releaseRuns = workflows['release.yml'].jobs.publish.steps.map((step) => st
 for (const command of [
   'npm publish --dry-run',
   'npm publish --workspace @ren10/astro --dry-run',
-  'node scripts/stage-release.mjs',
+  'node scripts/stage-release.mjs --oidc',
   'node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800',
 ]) {
   requirePolicy(releaseRuns.some((run) => run.includes(command)), `release workflow must run: ${command}`);
@@ -151,6 +151,17 @@ requirePolicy(
 );
 requirePolicy(!releaseRuns.some(run => /npm publish (?:--workspace @ren10\/astro )?--provenance/.test(run)),
   'release must not use a direct publish token or bypass the staging approval');
+for (const patch of [
+  workflow => { workflow.jobs.publish.permissions['id-token'] = 'read'; },
+  workflow => { workflow.jobs.publish.steps.find(step => step.run?.includes('stage-release')).env = { NODE_AUTH_TOKEN: '${{ secrets.NPM_TOKEN }}' }; },
+  workflow => { workflow.jobs.publish.steps.find(step => step.uses?.startsWith('actions/checkout@')).with.ref = 'main'; },
+  workflow => { workflow.jobs['github-release'].steps.find(step => step.uses?.startsWith('softprops/')).with.tag_name = 'main'; },
+]) {
+  const fixture = structuredClone(workflows);
+  patch(fixture['release.yml']);
+  requirePolicy(validateWorkflowPolicy(fixture, requiredPackageCommands).length > 0,
+    'trusted publishing policy must reject tokens, missing OIDC, mutable checkout and wrong release tag');
+}
 const conditionalFixture = structuredClone(workflows);
 conditionalFixture['ci.yml'].jobs.package.steps
   .find((step) => step.run === 'npm run check:budgets').if = 'false';
