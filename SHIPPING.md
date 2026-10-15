@@ -22,11 +22,17 @@ npm run test:release-policy
 
 ## Registry prerequisites
 
+**Activation is deferred to the next authorized release.** Follow the ordered
+[OIDC activation and token retirement checklist](release-oidc.md). It includes
+first-use verification, both maintainer 2FA approvals, and credential removal
+only after both packages have been published and verified through OIDC.
+
 Automated staging uses npm trusted publishing (GitHub OIDC), not `NPM_TOKEN`.
 Configure a GitHub Actions trusted publisher on **each** npm package (`ren10`
 and `@ren10/astro`): owner `Rensoconese`, repository `ren10`, workflow filename
 `release.yml`. Allow **stage only**; leave direct `npm publish` and dist-tag
-management disabled. Keep account 2FA and the package publishing policy
+management disabled. Keep account 2FA throughout the migration. After the
+first OIDC release is verified, set the package publishing policy to
 **Require two-factor authentication and disallow tokens**. Saving a publisher
 is a security-sensitive permission grant and requires maintainer confirmation.
 
@@ -34,7 +40,7 @@ A newly created publisher must complete its first successful publish within
 48 hours or npm expires the configuration. Activate and validate the setup
 alongside an authorized release; saving the form is not proof OIDC works.
 Do not remove the existing secret or revoke its token until the replacement
-has actually staged both packages successfully. The final migration removes
+has published and verified both packages successfully through OIDC. The final migration removes
 `NPM_TOKEN` from GitHub and revokes the old token in npm.
 
 `node scripts/check-publish-access.mjs --oidc` validates the GitHub release
