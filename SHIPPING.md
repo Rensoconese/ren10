@@ -22,12 +22,48 @@ npm run test:release-policy
 
 ## Registry prerequisites
 
-Before publication, run `npm run check:publish-access` with the intended npm identity. The check verifies authentication and membership in the `ren10` organization before the core package can publish. Use a granular token with stage-only access to ren10 and the @ren10 scope, read-only organization access for the membership preflight, and no bypass of 2FA. The publishing account must retain 2FA. Token permissions are still enforced by npm during staging. A scoped package returning E404 does not prove permission to create it. The local tarball fallback is documented in `docs/astro.md`.
+Automated staging uses npm trusted publishing (GitHub OIDC), not `NPM_TOKEN`.
+Configure a GitHub Actions trusted publisher on **each** npm package (`ren10`
+and `@ren10/astro`): owner `Rensoconese`, repository `ren10`, workflow filename
+`release.yml`. Allow **stage only**; leave direct `npm publish` and dist-tag
+management disabled. Keep account 2FA and the package publishing policy
+**Require two-factor authentication and disallow tokens**. Saving a publisher
+is a security-sensitive permission grant and requires maintainer confirmation.
+
+A newly created publisher must complete its first successful publish within
+48 hours or npm expires the configuration. Activate and validate the setup
+alongside an authorized release; saving the form is not proof OIDC works.
+Do not remove the existing secret or revoke its token until the replacement
+has actually staged both packages successfully. The final migration removes
+`NPM_TOKEN` from GitHub and revokes the old token in npm.
+
+`node scripts/check-publish-access.mjs --oidc` validates the GitHub release
+context and OIDC availability, not registry permissions. The actual
+`npm stage publish` request verifies package-specific trust. `npm whoami`
+and organization listing cannot validate OIDC permissions. Local interactive
+token diagnostics remain available via `npm run check:publish-access`.
 
 ## Authorized publication
 
-Create a reviewable pull request with validation evidence. Merge and publish only after maintainer authorization and passing release checks. Read the version from `package.json` when creating the tag; do not copy a historical tag from this document. `release.yml` verifies that the tag matches both package versions, stages integrity-pinned tarballs with provenance using npm 11.21.0, reuses only byte-identical pending stages, and skips byte-identical public versions. A maintainer approves both staged packages with 2FA in npm; the workflow waits up to 30 minutes and verifies the exact public tarball integrities and provenance before creating the GitHub Release. If approval happens later, rerun the release workflow; neither version is uploaded again. `publish-retry.yml` supports recovery of the scoped package without republishing the core.
+Create a reviewable pull request with validation evidence. Merge and publish only after maintainer authorization and passing release checks. Read the version from `package.json` when creating the tag; do not copy a historical tag from this document. `release.yml` verifies that the selected tag matches both package versions, stages integrity-pinned tarballs with provenance using npm 11.21.0 and GitHub OIDC, and skips only byte-identical public versions. A maintainer approves both staged packages with 2FA in npm; the workflow waits up to 30 minutes and verifies exact public tarball integrities and provenance before creating the GitHub Release. All native Linux, browser, accessibility, budget and dependency gates remain blocking.
+
+OIDC cannot list, inspect or download private pending stages. The workflow
+therefore never assumes that an existing pending version matches: npm's
+shared staged/public version index rejects a duplicate staging request.
+If a run was interrupted after staging, review and approve its original
+candidate in npm, then rerun. An immutable public version with a different
+SHA512 remains a hard failure. Missing authentication or registry errors
+never count as permission or successful publication.
+
+To resume after approval, dispatch **Release** on `main` with the original
+`release_tag`; it checks out and fully verifies that exact tag again. The
+legacy `publish-v*` trigger now only dispatches that same Release workflow,
+so no additional npm trusted publisher is needed. This tokenless path is
+available for release tags created after the migration; historical tags keep
+their original scripts and are not rewritten.
 
 Verify both exact versions in npm and the GitHub Release after publication. Pages is a separate deployment; inspect its assembled artifact and deploy result independently.
 
 Staged publication: https://docs.npmjs.com/staged-publishing/
+
+Trusted publishing: https://docs.npmjs.com/trusted-publishers/

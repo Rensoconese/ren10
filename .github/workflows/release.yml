@@ -1,9 +1,18 @@
 name: Release
 
 on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing verified release tag to resume (for example v0.14.2)
+        required: true
+        type: string
   push:
     tags:
       - "v*.*.*"
+
+env:
+  RELEASE_TAG: ${{ inputs.release_tag || github.ref_name }}
 
 permissions:
   contents: read
@@ -15,12 +24,16 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Validate release tag input
+        run: node -e "if (!/^v[0-9]+[.][0-9]+[.][0-9]+(-[0-9A-Za-z.-]+)?$/.test(process.env.RELEASE_TAG)) process.exit(1)"
       - uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
+          package-manager-cache: false
           registry-url: https://registry.npmjs.org
 
       - run: npm ci
@@ -89,13 +102,13 @@ jobs:
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
           ASTRO_VERSION=$(node -p "require('./packages/astro/package.json').version")
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          TAG_VERSION="${RELEASE_TAG#v}"
           if [ "$PKG_VERSION" != "$TAG_VERSION" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME (=$TAG_VERSION) does not match package.json version $PKG_VERSION"
+            echo "::error::Tag $RELEASE_TAG (=$TAG_VERSION) does not match package.json version $PKG_VERSION"
             exit 1
           fi
           if [ "$ASTRO_VERSION" != "$TAG_VERSION" ]; then
-            echo "::error::Tag $GITHUB_REF_NAME (=$TAG_VERSION) does not match @ren10/astro version $ASTRO_VERSION"
+            echo "::error::Tag $RELEASE_TAG (=$TAG_VERSION) does not match @ren10/astro version $ASTRO_VERSION"
             exit 1
           fi
 
@@ -105,14 +118,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write   # required for npm provenance
+      id-token: write   # npm trusted publishing and provenance
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-          cache: npm
+          package-manager-cache: false
           registry-url: https://registry.npmjs.org
 
       - name: Install pinned npm staging CLI
@@ -120,10 +135,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Verify scoped npm publishing prerequisites
-        run: node scripts/check-publish-access.mjs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Verify trusted publisher release context
+        run: node scripts/check-publish-access.mjs --oidc
 
       - name: Dry-run publish ren10
         run: npm publish --dry-run
@@ -132,9 +145,7 @@ jobs:
         run: npm publish --workspace @ren10/astro --dry-run
 
       - name: Stage exact verified tarballs with provenance
-        run: node scripts/stage-release.mjs
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: node scripts/stage-release.mjs --oidc
 
       - name: Confirm both 2FA-approved versions are public
         run: node scripts/check-published-release.mjs --expected release-candidate.json --wait-seconds 1800
@@ -147,11 +158,13 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ env.RELEASE_TAG }}
 
       - name: Extract notes for this version from CHANGELOG
         id: notes
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="${RELEASE_TAG#v}"
           # Extract the section between [VERSION] and the next ## heading.
           awk -v ver="$VERSION" '
             $0 ~ "^## \\[" ver "\\]" { found=1; next }
@@ -166,7 +179,8 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
-          name: ${{ github.ref_name }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: ${{ env.RELEASE_TAG }}
           body_path: release-notes.md
           draft: false
-          prerelease: ${{ contains(github.ref_name, '-') }}
+          prerelease: ${{ contains(env.RELEASE_TAG, '-') }}
