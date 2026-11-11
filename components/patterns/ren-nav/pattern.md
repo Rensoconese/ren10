@@ -47,6 +47,7 @@ canonicalImports:
   notes:
     - "JS registers <ren-nav> and owns the mobile toggle, Escape-to-close, closing the menu once the CSS stops rendering the toggle (the CSS breakpoint is the single source of truth), and popover-based dropdowns."
     - "CSS-only fallback renders the desktop layout; mobile menu requires JS to toggle [aria-expanded] on .ren-nav-toggle."
+    - "--ren-nav-link-color / --ren-nav-link-active colour nav links only; .ren-nav-brand and .ren-btn actions keep their own colour."
 
 requiredMarkup:
   - "Wrap the bar in <ren-nav> containing a <nav class=\"ren-nav\" aria-label=\"…\">."

@@ -83,6 +83,19 @@
   }
 }
 
+/* The component owns item spacing; drop the base list's block margins. */
+.ren-nav-links > li {
+  margin: 0;
+
+  /* In the mobile panel, make each link a flex item so its padding takes part
+     in layout (inline links would overlap their neighbours). The link keeps
+     its own display, e.g. a .ren-row link stays a flex row. */
+  @media (max-width: 48rem) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 @keyframes ren-nav-slide-down {
   from {
     opacity: 0;
@@ -218,7 +231,8 @@
 }
 /* Appearance API bridge */
 .ren-nav { min-block-size: var(--ren-nav-height, 3.5rem); padding-inline: var(--ren-nav-padding-x, var(--space-4)); background: var(--ren-nav-bg, var(--color-surface)); border-color: var(--ren-nav-border, var(--color-border)); gap: var(--ren-nav-gap, var(--space-6)); }
-.ren-nav a { color: var(--ren-nav-link-color, var(--color-text-muted)); }
+/* Links only: buttons in .ren-nav-actions and the brand keep their own colour. */
+.ren-nav a:where(:not(.ren-btn, .ren-nav-brand)) { color: var(--ren-nav-link-color, var(--color-text-muted)); }
 .ren-nav a[aria-current="page"], .ren-nav a[data-active] { color: var(--ren-nav-link-active, var(--color-text)); }
 
 }

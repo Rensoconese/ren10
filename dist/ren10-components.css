@@ -7304,6 +7304,13 @@
       }
     }
   }
+  .ren-nav-links > li {
+    margin: 0;
+    @media (max-width: 48rem) {
+      display: flex;
+      flex-direction: column;
+    }
+  }
   @keyframes ren-nav-slide-down {
     from {
       opacity: 0;
@@ -7424,7 +7431,7 @@
     border-color: var(--ren-nav-border, var(--color-border));
     gap: var(--ren-nav-gap, var(--space-6));
   }
-  .ren-nav a {
+  .ren-nav a:where(:not(.ren-btn, .ren-nav-brand)) {
     color: var(--ren-nav-link-color, var(--color-text-muted));
   }
   .ren-nav a[aria-current=page],
