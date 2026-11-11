@@ -56,6 +56,9 @@ ren-table {
 }
 
 .ren-table-wrapper {
+  /* Containing block for absolutely positioned descendants (e.g. .ren-sr-only
+     header text) so they are clipped here instead of widening the page. */
+  position: relative;
   flex: 1;
   overflow-x: auto;
   overflow-y: auto;

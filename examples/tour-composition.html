@@ -199,27 +199,27 @@
           </div>
 
           <ren-field data-rules="required">
-            <label>Full name (required)</label>
-            <input class="ren-input" type="text" name="fullName" autocomplete="name" required>
+            <label for="booking-full-name">Full name (required)</label>
+            <input class="ren-input" id="booking-full-name" type="text" name="fullName" autocomplete="name" required>
             <span data-error></span>
           </ren-field>
 
           <ren-field data-rules="required|email">
-            <label>Email (required)</label>
-            <input class="ren-input" type="email" name="email" autocomplete="email" required>
+            <label for="booking-email">Email (required)</label>
+            <input class="ren-input" id="booking-email" type="email" name="email" autocomplete="email" required>
             <span data-description>We reply within two working days.</span>
             <span data-error></span>
           </ren-field>
 
           <ren-field>
-            <label>Preferred date (optional)</label>
-            <input class="ren-input" type="date" name="date">
+            <label for="booking-date">Preferred date (optional)</label>
+            <input class="ren-input" id="booking-date" type="date" name="date">
             <span data-description>Optional — leave empty if your dates are flexible.</span>
           </ren-field>
 
           <ren-field>
-            <label>Notes (optional)</label>
-            <textarea class="ren-input" name="notes" rows="3" maxlength="500"></textarea>
+            <label for="booking-notes">Notes (optional)</label>
+            <textarea class="ren-input" id="booking-notes" name="notes" rows="3" maxlength="500"></textarea>
             <span data-description>Optional — access needs, group size, or questions.</span>
           </ren-field>
 

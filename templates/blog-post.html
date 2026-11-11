@@ -32,6 +32,25 @@
       border-radius: var(--radius-sm);
     }
     .bl-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
+    /* Wrapping top bar: ren-cluster wraps with a gap, this spreads the groups apart */
+    .bl-nav-bar { justify-content: space-between; }
+    @media (max-width: 768px) { .bl-nav .ren-center-wide { padding-inline: var(--space-4); } }
+
+    /* Page footer */
+    .bl-footer {
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface-sunken);
+      padding: var(--space-8) var(--space-6);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+    }
+    .bl-footer-links a {
+      color: var(--color-text-secondary);
+      text-decoration: none;
+      transition: color var(--duration-fast, 150ms);
+    }
+    .bl-footer-links a:hover,
+    .bl-footer-links a:focus-visible { color: var(--color-text); }
 
     /* Article hero */
     .bp-hero {
@@ -176,7 +195,7 @@
       font-size: var(--text-2xl);
       flex-shrink: 0;
     }
-    .bp-author h4 { margin: 0 0 var(--space-1); font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text); }
+    .bp-author h3 { margin: 0 0 var(--space-1); font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text); }
     .bp-author p { margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; }
 
     /* Related */
@@ -226,7 +245,7 @@
   <!-- ═══ TOP NAV ═══ -->
   <header class="bl-nav">
     <div class="ren-center-wide" style="padding-block: var(--space-3);">
-      <div class="ren-row-spread">
+      <div class="ren-cluster bl-nav-bar">
         <div class="ren-row">
           <strong style="font-size: var(--text-lg);">RenDS</strong>
           <span class="ren-badge ren-badge-secondary" style="margin-left: var(--space-2);">v0.14.1</span>
@@ -245,6 +264,7 @@
     </div>
   </header>
 
+  <main>
   <!-- ═══ ARTICLE HEADER ═══ -->
   <article>
     <header class="bp-hero">
@@ -435,7 +455,7 @@
     <footer class="bp-author">
       <div class="bp-author-avatar" aria-hidden="true">R</div>
       <div>
-        <h4>Ren Soconese</h4>
+        <h3>Ren Soconese</h3>
         <p>
           Designer/engineer, currently building RenDS in the open. Mostly writes about
           CSS, accessibility, and the parts of the platform other people skip.
@@ -465,17 +485,18 @@
       </a>
     </div>
   </aside>
+  </main>
 
   <!-- ═══ FOOTER ═══ -->
-  <footer style="border-top: 1px solid var(--color-border); background: var(--color-surface-sunken); padding: var(--space-8) var(--space-6); font-size: var(--text-sm); color: var(--color-text-secondary);">
+  <footer class="bl-footer">
     <div class="ren-center-wide">
       <div class="ren-row-spread">
         <span>© 2026 RenDS · MIT License</span>
-        <div class="ren-cluster">
-          <a href="./landing.html" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">Home</a>
-          <a href="./blog.html" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">Blog</a>
-          <a href="../docs/components.html" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">Docs</a>
-          <a href="#" style="color: var(--color-text-secondary); text-decoration: none; transition: color 150ms;" onmouseover="this.style.color='var(--color-text)'" onmouseout="this.style.color='var(--color-text-secondary)'">RSS</a>
+        <div class="ren-cluster bl-footer-links">
+          <a href="./landing.html">Home</a>
+          <a href="./blog.html">Blog</a>
+          <a href="../docs/components.html">Docs</a>
+          <a href="#">RSS</a>
         </div>
       </div>
     </div>

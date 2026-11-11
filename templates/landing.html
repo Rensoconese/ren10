@@ -28,23 +28,41 @@
               backdrop-filter: saturate(180%) blur(14px);
       border-bottom: 1px solid var(--color-border);
     }
-    .ln-nav-inner {
+    /* <ren-nav> owns the links / toggle / mobile panel; the sticky blurred
+       shell stays on the <header>, so the bar itself is transparent. */
+    .ln-nav ren-nav { display: block; }
+    .ln-nav .ren-nav {
+      --ren-nav-bg: transparent;
+      --ren-nav-padding-x: var(--space-6);
+      --ren-nav-gap: var(--space-6);
+      --ren-nav-link-color: var(--color-text-secondary);
+      position: relative;
       max-width: 1200px;
       margin: 0 auto;
-      padding: var(--space-3) var(--space-6);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-6);
+      padding-block: var(--space-3);
+      border-bottom: 0;
+      flex-wrap: wrap;
+      row-gap: var(--space-2);
     }
-    .ln-brand {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
+    .ln-nav .ren-nav-brand {
+      font-size: inherit;
       font-weight: var(--weight-bold);
-      text-decoration: none;
       color: var(--color-text);
     }
+    .ln-nav .ren-nav-links > li { margin: 0; }
+    .ln-nav .ren-nav-link {
+      display: block;
+      font-size: var(--text-sm);
+      font-weight: var(--weight-medium);
+      line-height: var(--leading-normal);
+      border-radius: var(--radius-sm);
+    }
+    .ln-nav .ren-nav-link:hover { color: var(--color-text); background: var(--color-surface-sunken); }
+    /* Space-between spreads brand / links / actions as before. */
+    .ln-nav .ren-nav-actions { margin-inline-start: 0; }
+    /* ren-nav's `.ren-nav a` link-color bridge also reaches the action
+       buttons; give the ghost button its own text color back. */
+    .ln-nav .ren-nav-actions .ren-btn-ghost { color: var(--color-text); }
     .ln-brand-mark {
       width: 28px; height: 28px;
       background: var(--color-text);
@@ -53,23 +71,37 @@
       display: grid; place-items: center;
       font-size: var(--text-sm);
     }
-    .ln-nav-links {
-      display: flex;
-      gap: var(--space-1);
-    }
-    .ln-nav-links a {
-      color: var(--color-text-secondary);
-      text-decoration: none;
-      font-size: var(--text-sm);
-      font-weight: var(--weight-medium);
-      padding: var(--space-2) var(--space-3);
-      border-radius: var(--radius-sm);
-      transition: background 120ms, color 120ms;
-    }
-    .ln-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
-    .ln-nav-actions { display: flex; gap: var(--space-2); }
-    @media (max-width: 768px) {
-      .ln-nav-links { display: none; }
+    /* Below 48rem ren-nav collapses the links behind its toggle. The row may
+       wrap (long brand / CTA copy), so the panel hangs from the bar's real
+       bottom edge instead of the fixed 3.5rem offset. */
+    @media (max-width: 48rem) {
+      .ln-nav .ren-nav {
+        --ren-nav-gap: var(--space-3);
+        padding-block: var(--space-2);
+      }
+      .ln-nav .ren-nav-brand { flex-shrink: 1; min-width: 0; margin-inline-end: auto; }
+      .ln-nav .ren-nav-actions { flex-wrap: wrap; }
+      .ln-nav .ren-nav-links { top: 100%; align-items: stretch; }
+      .ln-nav .ren-nav-link {
+        display: flex;
+        align-items: center;
+        min-height: var(--touch-min);
+        border-radius: 0;
+        padding-inline: var(--space-6);
+      }
+      /* Without JS the toggle is inert: show the links inline instead. */
+      .ln-nav ren-nav:not(:defined) .ren-nav-toggle { display: none; }
+      .ln-nav ren-nav:not(:defined) .ren-nav-links {
+        display: flex;
+        position: static;
+        flex-direction: row;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+        order: 1;
+        padding: 0;
+        border-bottom: 0;
+        animation: none;
+      }
     }
 
     /* ─────────── Container ─────────── */
@@ -461,7 +493,10 @@
     @media (max-width: 720px) {
       .ln-footer-grid { grid-template-columns: 1fr 1fr; }
     }
-    .ln-footer-col h4 {
+    /* Footer group titles are h2: the footer is a sibling of <main>, not a
+       subsection of the last section, so its groups start a new branch of the
+       outline. Styled down to label size. */
+    .ln-footer-col h2 {
       font-size: var(--text-sm);
       font-weight: var(--weight-semibold);
       color: var(--color-text);
@@ -502,24 +537,33 @@
 
   <!-- ═══ TOP NAV ═══ -->
   <header class="ln-nav">
-    <div class="ln-nav-inner">
-      <a href="#" class="ln-brand">
-        <span class="ln-brand-mark" aria-hidden="true">R</span>
-        <span>RenDS</span>
-      </a>
-      <nav class="ln-nav-links" aria-label="Main">
-        <a href="../docs/components.html">Components</a>
-        <a href="../docs/primitive-zero.html">Primitive Zero</a>
-        <a href="../create/index.html">Theme Builder</a>
-        <a href="./blog.html">Blog</a>
-        <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    <ren-nav>
+      <nav class="ren-nav" aria-label="Main">
+        <a href="#" class="ren-nav-brand">
+          <span class="ln-brand-mark" aria-hidden="true">R</span>
+          <span>RenDS</span>
+        </a>
+        <ul id="ln-primary-links" class="ren-nav-links">
+          <li><a class="ren-nav-link" href="../docs/components.html">Components</a></li>
+          <li><a class="ren-nav-link" href="../docs/primitive-zero.html">Primitive Zero</a></li>
+          <li><a class="ren-nav-link" href="../create/index.html">Theme Builder</a></li>
+          <li><a class="ren-nav-link" href="./blog.html">Blog</a></li>
+          <li><a class="ren-nav-link" href="https://github.com/" target="_blank" rel="noopener">GitHub</a></li>
+        </ul>
+        <div class="ren-nav-actions">
+          <a href="./auth.html" class="ren-btn ren-btn-ghost ren-btn-sm">Sign in</a>
+          <a href="../create/index.html" class="ren-btn ren-btn-primary ren-btn-sm">Try it</a>
+        </div>
+        <button class="ren-nav-toggle" type="button" aria-expanded="false" aria-controls="ln-primary-links" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </nav>
-      <div class="ln-nav-actions">
-        <a href="./auth.html" class="ren-btn ren-btn-ghost ren-btn-sm">Sign in</a>
-        <a href="../create/index.html" class="ren-btn ren-btn-primary ren-btn-sm">Try it</a>
-      </div>
-    </div>
+    </ren-nav>
   </header>
+
+  <main>
 
   <!-- ═══ HERO ═══ -->
   <section class="ln-hero">
@@ -700,16 +744,18 @@
     </div>
   </section>
 
+  </main>
+
   <!-- ═══ FOOTER ═══ -->
   <footer class="ln-footer">
     <div class="ln-container">
       <div class="ln-footer-grid">
         <div class="ln-footer-col">
-          <h4>RenDS</h4>
+          <h2>RenDS</h2>
           <p style="margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6; max-width: 30ch;">A vanilla, accessible, atomic design system. Build with the platform.</p>
         </div>
         <div class="ln-footer-col">
-          <h4>Product</h4>
+          <h2>Product</h2>
           <ul>
             <li><a href="../docs/components.html">Components</a></li>
             <li><a href="../create/index.html">Theme Builder</a></li>
@@ -717,7 +763,7 @@
           </ul>
         </div>
         <div class="ln-footer-col">
-          <h4>Docs</h4>
+          <h2>Docs</h2>
           <ul>
             <li><a href="../docs/getting-started.html">Getting started</a></li>
             <li><a href="../docs/theming.html">Theming</a></li>
@@ -726,7 +772,7 @@
           </ul>
         </div>
         <div class="ln-footer-col">
-          <h4>Community</h4>
+          <h2>Community</h2>
           <ul>
             <li><a href="https://github.com/" target="_blank" rel="noopener">GitHub</a></li>
             <li><a href="./blog.html">Blog</a></li>
@@ -741,5 +787,6 @@
     </div>
   </footer>
 
+  <script type="module" src="../components/patterns/ren-nav/ren-nav.js"></script>
 </body>
 </html>
