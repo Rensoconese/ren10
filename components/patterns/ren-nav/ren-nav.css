@@ -16,6 +16,15 @@
     display: flex;
   }
 
+  /* Anchor the open mobile panel to the bar itself so it starts at the bar's
+     bottom edge whatever the bar's height. Scoped to the open state so the
+     closed bar never changes; sticky bars are already a containing block. */
+  @media (max-width: 48rem) {
+    &:is([data-open], :has(.ren-nav-toggle[aria-expanded="true"])):not(.ren-nav-sticky) {
+      position: relative;
+    }
+  }
+
   &.ren-nav-sticky {
     position: sticky;
     top: 0;
@@ -58,7 +67,7 @@
   @media (max-width: 48rem) {
     display: none;
     position: absolute;
-    top: 3.5rem;
+    top: calc(100% + 1px); /* below the bar's 1px border-bottom */
     inset-inline: 0;
     flex-direction: column;
     gap: 0;

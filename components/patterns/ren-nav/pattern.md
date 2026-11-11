@@ -45,7 +45,7 @@ canonicalImports:
   js:
     - "rends/components/patterns/ren-nav/ren-nav.js"
   notes:
-    - "JS registers <ren-nav> and owns the mobile toggle, Escape-to-close, resize handler, and popover-based dropdowns."
+    - "JS registers <ren-nav> and owns the mobile toggle, Escape-to-close, closing the menu once the CSS stops rendering the toggle (the CSS breakpoint is the single source of truth), and popover-based dropdowns."
     - "CSS-only fallback renders the desktop layout; mobile menu requires JS to toggle [aria-expanded] on .ren-nav-toggle."
 
 requiredMarkup:
@@ -80,7 +80,7 @@ accessibility:
     - "Root is a real <nav> with aria-label (e.g. \"Primary\") so screen readers can list landmarks."
     - "Active route uses aria-current=\"page\" (the .active class is a styling alias, not the source of truth)."
     - ".ren-nav-toggle has aria-expanded reflecting menu state, aria-controls pointing to the links list, and an aria-label (icon-only is not a name)."
-    - "Mobile menu closes on Escape and on link activation (the component owns both behaviors)."
+    - "Mobile menu closes on Escape and on link activation (the component owns both behaviors). Escape returns focus from the hidden panel to the toggle; link activation and outside clicks leave focus where navigation or the click put it."
     - "Dropdown triggers expose aria-expanded; popover panels are real [popover] elements so the platform manages focus return."
     - "Focus-visible outlines use --color-accent at 2px offset — do not remove without a visible alternative."
 ```

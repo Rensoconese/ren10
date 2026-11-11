@@ -10827,6 +10827,11 @@
     &:has(.ren-nav-toggle[aria-expanded=true]) .ren-nav-links {
       display: flex;
     }
+    @media (max-width: 48rem) {
+      &:is([data-open], :has(.ren-nav-toggle[aria-expanded=true])):not(.ren-nav-sticky) {
+        position: relative;
+      }
+    }
     &.ren-nav-sticky {
       position: sticky;
       top: 0;
@@ -10864,7 +10869,7 @@
     @media (max-width: 48rem) {
       display: none;
       position: absolute;
-      top: 3.5rem;
+      top: calc(100% + 1px);
       inset-inline: 0;
       flex-direction: column;
       gap: 0;

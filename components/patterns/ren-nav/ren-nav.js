@@ -3,7 +3,6 @@
  * Modern web component with keyboard navigation and mobile support
  */
 
-const MOBILE_BREAKPOINT = 768;
 const KEYBOARD_CODES = { Escape: 'Escape' };
 
 class RenNav extends HTMLElement {
@@ -53,14 +52,15 @@ class RenNav extends HTMLElement {
       }, { signal });
     });
 
-    // Close on Escape
+    // Close on Escape. Focus inside the panel would be stranded on a hidden
+    // element (and fall back to <body>), so return it to the toggle.
     document.addEventListener('keydown', (e) => {
       if (e.key === KEYBOARD_CODES.Escape && this._isOpen) {
-        this._closeMenu();
+        this._closeMenu({ restoreFocus: true });
       }
     }, { signal });
 
-    // Handle window resize
+    // Close when the layout leaves the mobile breakpoint
     window.addEventListener('resize', () => {
       this._updateMobileState();
     }, { signal });
@@ -136,16 +136,31 @@ class RenNav extends HTMLElement {
     }
   }
 
-  _closeMenu() {
+  // Link activation and outside clicks close without moving focus: navigation
+  // or the clicked target owns focus there. Only Escape restores it.
+  _closeMenu({ restoreFocus = false } = {}) {
+    const active = document.activeElement;
+    const focusWasInside = restoreFocus && active !== this._toggleBtn && this.contains(active);
     this._isOpen = false;
     this.removeAttribute('data-open');
     if (this._toggleBtn) {
       this._toggleBtn.setAttribute('aria-expanded', 'false');
     }
+    if (focusWasInside && this._toggleBtn && active.getClientRects().length === 0) {
+      this._toggleBtn.focus();
+    }
+  }
+
+  // The CSS owns the breakpoint: the mobile layout is the one that renders the
+  // toggle. Reading that back keeps JS and CSS in step at every width
+  // (including exactly 48rem) and with page-level breakpoint overrides.
+  _isMobileLayout() {
+    return Boolean(this._toggleBtn) && getComputedStyle(this._toggleBtn).display !== 'none';
   }
 
   _updateMobileState() {
-    const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+    if (!this._isOpen) return;
+    const isMobile = this._isMobileLayout();
     if (!isMobile && this._isOpen) {
       this._closeMenu();
     }

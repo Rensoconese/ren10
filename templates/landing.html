@@ -391,21 +391,23 @@
     .ln-code-copy .ren-cluster { display: flex; gap: var(--space-3); flex-wrap: wrap; }
 
     .ln-code {
-      background: var(--gray-1000);
-      color: var(--gray-200);
+      /* Always-dark panel: the element carries data-mode="dark" (nested theme
+         scope), so every token below resolves to its dark value in both page modes. */
+      background: var(--color-surface-raised);
+      color: var(--color-text-secondary);
       border-radius: var(--radius-lg);
       padding: var(--space-5);
       font-family: var(--font-mono);
       font-size: var(--text-sm);
       line-height: 1.7;
       overflow-x: auto;
-      border: 1px solid var(--gray-900);
-      box-shadow: 0 12px 32px -16px rgba(0,0,0,0.3);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-lg);
     }
-    .ln-code .c-comment { color: var(--gray-500); }
-    .ln-code .c-tag     { color: var(--pink-300); }
-    .ln-code .c-attr    { color: var(--purple-300); }
-    .ln-code .c-str     { color: var(--green-300); }
+    .ln-code .c-comment { color: var(--color-text-muted); }
+    .ln-code .c-tag     { color: var(--color-danger-strong); }
+    .ln-code .c-attr    { color: var(--color-ai); }
+    .ln-code .c-str     { color: var(--color-success-strong); }
 
     /* ─────────── Quote ─────────── */
     .ln-quote-section {
@@ -570,11 +572,11 @@
     <div class="ln-container">
       <a href="#" class="ln-hero-tag">
         <span class="dot" aria-hidden="true"></span>
-        <span>v0.9.0 · Cmd+K palette is here →</span>
+        <span>New: Cmd+K palette is here →</span>
       </a>
       <h1>The vanilla design system <span class="accent">that respects the browser.</span></h1>
       <p class="ln-hero-lede">
-        54 accessible components, three theme layers, zero dependencies. Drop in a stylesheet — start shipping.
+        53 accessible components, three theme layers, zero dependencies. Drop in a stylesheet — start shipping.
         Works with any framework, or none at all.
       </p>
       <div class="ln-hero-cta">
@@ -705,7 +707,7 @@
           </div>
         </div>
 
-        <pre class="ln-code" tabindex="0" aria-label="HTML example"><span class="c-comment">&lt;!-- Just HTML. That's it. --&gt;</span>
+        <pre class="ln-code" data-mode="dark" tabindex="0" aria-label="HTML example"><span class="c-comment">&lt;!-- Just HTML. That's it. --&gt;</span>
 <span class="c-tag">&lt;button</span> <span class="c-attr">class</span>=<span class="c-str">"ren-btn ren-btn-primary"</span><span class="c-tag">&gt;</span>
   Sign in
 <span class="c-tag">&lt;/button&gt;</span>
