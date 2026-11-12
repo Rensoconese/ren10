@@ -10831,6 +10831,10 @@
       &:is([data-open], :has(.ren-nav-toggle[aria-expanded=true])):not(.ren-nav-sticky) {
         position: relative;
       }
+      &:is([data-open], :has(.ren-nav-toggle[aria-expanded=true])) .ren-nav-links > li {
+        display: flex;
+        flex-direction: column;
+      }
     }
     &.ren-nav-sticky {
       position: sticky;
@@ -10885,10 +10889,6 @@
   }
   .ren-nav-links > li {
     margin: 0;
-    @media (max-width: 48rem) {
-      display: flex;
-      flex-direction: column;
-    }
   }
   @keyframes ren-nav-slide-down {
     from {

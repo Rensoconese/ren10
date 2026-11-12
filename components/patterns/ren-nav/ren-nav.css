@@ -23,6 +23,16 @@
     &:is([data-open], :has(.ren-nav-toggle[aria-expanded="true"])):not(.ren-nav-sticky) {
       position: relative;
     }
+
+    /* In the open panel, make each link a flex item so its padding takes part
+       in layout (inline links would overlap their neighbours). The link keeps
+       its own display, e.g. a .ren-row link stays a flex row. Scoped to the
+       open state so blocks that switch to desktop at exactly 48rem keep their
+       inline items. */
+    &:is([data-open], :has(.ren-nav-toggle[aria-expanded="true"])) .ren-nav-links > li {
+      display: flex;
+      flex-direction: column;
+    }
   }
 
   &.ren-nav-sticky {
@@ -86,14 +96,6 @@
 /* The component owns item spacing; drop the base list's block margins. */
 .ren-nav-links > li {
   margin: 0;
-
-  /* In the mobile panel, make each link a flex item so its padding takes part
-     in layout (inline links would overlap their neighbours). The link keeps
-     its own display, e.g. a .ren-row link stays a flex row. */
-  @media (max-width: 48rem) {
-    display: flex;
-    flex-direction: column;
-  }
 }
 
 @keyframes ren-nav-slide-down {
