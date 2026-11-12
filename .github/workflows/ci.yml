@@ -48,7 +48,7 @@ jobs:
 
   package:
     name: Package smoke (exports + CLI + pack)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # Playwright 1.59 cannot install browsers on ubuntu-latest (26.04)
     needs: lint
     steps:
       - uses: actions/checkout@v6
@@ -114,7 +114,7 @@ jobs:
 
   a11y:
     name: a11y (axe-core, ${{ matrix.browser }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # see package job
     needs: lint
     strategy:
       fail-fast: false
@@ -159,7 +159,7 @@ jobs:
 
   components:
     name: Components (per-component scoped a11y + render, ${{ matrix.browser }}, shard ${{ matrix.shard }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # see package job
     needs: lint
     strategy:
       fail-fast: false
