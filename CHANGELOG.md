@@ -11,6 +11,15 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+### Added
+- `npx ren10 blocks`: list the 335 shipped page-section blocks by family (`--list`, `--family <family>`, `--json`) or print one block with its markup, stylesheets, scripts, inline assets and RenDS components (`blocks <name>`, `--dense`, `--json`). The command is in `manifest --json` and the help text.
+- `templates/blocks/catalog.json`: a block catalog derived from the block pages by `npm run blocks:build` and kept fresh by `npm run blocks:check` (part of `agent:check`).
+- The knowledge graph indexes every block as compact metadata, so blocks appear in `search`, `knowledge query` and `build`. `build` now returns a page recipe (landing, application, blog, article) with the best-matching blocks per section, in page order.
+
+### Changed
+- `search`, `knowledge query` and `build` drop stopwords and generic request words ("page", "for", "website"), map common synonyms (navbar → nav, plans → pricing, modal → dialog), and rank by name, path, type and block family before text relevance, so SQLite and the JSON fallback agree. "landing page for a dental clinic with pricing and contact" no longer returns ren-pagination, ren-breadcrumb and ren-link.
+- Component nodes in the knowledge graph index their contract instead of contract + CSS + JS (the stylesheet and script stay indexed as their own nodes), and the JSON graph reads component bodies back from the contract file. The graph shrinks from 1.97 MB to 0.89 MB (JSON) and 5.97 MB to 5.32 MB (SQLite) while adding the blocks.
+
 ### Fixed
 - Make `.ren-table-wrapper` the containing block for its content, so visually hidden labels in off-screen cells no longer make the whole page scroll horizontally on narrow screens.
 - Dashboard template: stop the main column overflowing at phone widths, scroll the orders table inside a named, keyboard-reachable region instead of clipping it, add a mobile navigation sheet below 880px, and remove the skipped heading level.

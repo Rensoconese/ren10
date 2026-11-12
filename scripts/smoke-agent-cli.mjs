@@ -108,6 +108,26 @@ if (!Array.isArray(build.start) || build.start.length === 0) {
   throw new Error('build JSON returned no start commands');
 }
 
+if (!manifest.commands?.some((command) => command.name === 'blocks') || !(manifest.blocks?.count > 0)) {
+  throw new Error('manifest is missing the blocks command or block catalog summary');
+}
+const blockList = json(['blocks', '--list', '--json'], 'blocks.list');
+if (blockList.count !== manifest.blocks.count || !blockList.families?.pricing?.blocks?.length) {
+  throw new Error('blocks --list JSON drifted from the manifest block count');
+}
+const firstPricing = blockList.families.pricing.blocks[0].name;
+const blockDetail = json(['blocks', firstPricing, '--json'], 'blocks.detail');
+if (!blockDetail.markup?.includes('bb-detail-preview') || !blockDetail.styles?.length) {
+  throw new Error('blocks <name> JSON is missing markup or stylesheets');
+}
+if (!run(['blocks', firstPricing, '--dense']).includes(`file=templates/blocks/${firstPricing}.html`)) {
+  throw new Error('blocks <name> --dense is missing the block file');
+}
+const buildBlocks = json(['build', 'landing page with pricing', '--json'], 'build.kit');
+if (!buildBlocks.blocks?.some((family) => family.family === 'pricing')) {
+  throw new Error('build JSON does not route a pricing request to pricing blocks');
+}
+
 const doctor = json(['doctor', '--json'], 'doctor');
 if ((doctor.summary?.fail ?? 0) !== 0) {
   throw new Error('doctor JSON reported failures');

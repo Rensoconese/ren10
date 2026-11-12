@@ -4,6 +4,7 @@ import { existsSync } from 'node:fs';
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { BLOCK_CATALOG_PATH, blockSearchText, loadBlockCatalog } from '../cli/blocks.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const packageOutDir = path.join(root, 'knowledge');
@@ -247,13 +248,18 @@ const main = async () => {
       const selectors = css ? extractSelectors(css) : [];
       const tokens = css ? extractTokens(css) : [];
 
+      // The component node indexes its contract only. The stylesheet and
+      // script are indexed as their own `css` / `javascript` nodes below, so
+      // concatenating them here stored every byte twice and let CSS noise
+      // (`status`, `page`, `form`...) outrank the curated contract text.
       addNode({
         id: componentId,
         type: 'component',
         name,
         path: dir,
-        body: [contract, css, js].filter(Boolean).join('\n\n'),
+        body: contract ?? css ?? '',
         data: {
+          ...(contract ? { bodyPath: contractPath } : {}),
           kind: group.kind,
           selectors,
           tokens,
@@ -321,6 +327,24 @@ const main = async () => {
     }
   }
 
+  // Blocks are indexed as compact metadata (title, summary, family words and
+  // the RenDS components they use), never as page bodies: 335 HTML pages would
+  // not fit the knowledge budgets, and `npx ren10 blocks <name>` reads the
+  // markup from the shipped file when an agent actually needs it.
+  if (existsSync(path.join(root, BLOCK_CATALOG_PATH))) {
+    const catalog = loadBlockCatalog(root);
+    for (const block of catalog.blocks) {
+      addNode({
+        id: `block:${block.name}`,
+        type: 'block',
+        name: block.name,
+        path: block.path,
+        body: blockSearchText(block, catalog),
+        data: { family: block.family },
+      });
+    }
+  }
+
   const graph = {
     schemaVersion: 1,
     packageName: 'ren10',
@@ -342,7 +366,8 @@ const main = async () => {
   const sqlite = await writeSqlite(graph);
 
   // The published JSON drops a body only when it is byte-identical to the file
-  // the node already points at — that text ships in the package anyway, so
+  // the node already points at (`data.bodyPath` when the node's own path is a
+  // directory, as for components) — that text ships in the package anyway, so
   // storing it again was pure duplication, and loadJsonGraph() reads it back.
   //
   // The comparison is deliberate rather than a type allowlist: `component`
@@ -352,8 +377,9 @@ const main = async () => {
   // keeps the graph correct instead of silently degrading search ranking.
   const publishedNodes = await Promise.all(
     graph.nodes.map(async (node) => {
-      if (!node.path || !node.body) return node;
-      const fileBody = await readFile(path.join(root, node.path), 'utf8').catch(() => null);
+      const bodyPath = node.data?.bodyPath ?? node.path;
+      if (!bodyPath || !node.body) return node;
+      const fileBody = await readFile(path.join(root, bodyPath), 'utf8').catch(() => null);
       if (fileBody !== node.body) return node;
       const { body, ...rest } = node; // eslint-disable-line no-unused-vars
       return rest;
