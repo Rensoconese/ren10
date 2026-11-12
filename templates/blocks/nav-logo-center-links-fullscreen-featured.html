@@ -12,8 +12,8 @@
   <link rel="stylesheet" href="../../site/shell.css">
   <style>
     /*
-     * Shell seam shared with block JS (min-width: 768px / max-width: 767px).
-     * Matches ren-nav’s 768px interaction boundary exactly.
+     * Shell seam shared with block JS (min-width: 48rem / max-width: 47.999rem),
+     * in rem so it scales with the root font size like ren-nav's 48rem.
      */
     html {
       overflow-x: clip;
@@ -534,12 +534,12 @@
       line-height: 1.6;
     }
 
-    /* Desktop shell (≥768px): absolute compact dropdown under the trigger. */
-    @media (min-width: 768px) {
+    /* Desktop shell (≥48rem): absolute compact dropdown under the trigger. */
+    @media (min-width: 48rem) {
       /*
        * ren-nav hides .ren-nav-links at max-width: 48rem (includes 768px).
-       * Force the bar list visible for the inclusive desktop band ≥768px so
-       * CSS, this block’s matchMedia, and ren-nav’s JS (<768 mobile) agree.
+       * Force the bar list visible for the inclusive desktop band ≥48rem so
+       * the bar and this block’s matchMedia agree.
        */
       .rn21-preview[data-rn21-enhanced] nav.ren-nav .ren-nav-links {
         display: flex;
@@ -617,8 +617,8 @@
       }
     }
 
-    /* Mobile / tablet (≤767px): bar is logo + toggle; hide center bar links. */
-    @media (max-width: 767px) {
+    /* Mobile / tablet (<48rem): bar is logo + toggle; hide center bar links. */
+    @media (max-width: 47.999rem) {
       .rn21-preview .ren-nav {
         grid-template-columns: minmax(0, 1fr) auto;
         min-height: var(--ren-nav-height);
@@ -954,11 +954,11 @@
      * 2) non-modal fullscreen overlay (aria-expanded panel) with inert exterior
      *    + focus trap — close control stays in the bar, so this is not a dialog
      *
-     * Shell seam: (min-width: 768px) — shared with block CSS, matches ren-nav 768.
+     * Shell seam: (min-width: 48rem) — shared with block CSS.
      */
     const RN21_CONTROLLER = Symbol.for('ren10.rn21.controller');
-    /** Inclusive desktop shell; complements max-width: 767px CSS. */
-    const DESKTOP_MQ = '(min-width: 768px)';
+    /** Inclusive desktop shell; complements max-width: 47.999rem CSS. */
+    const DESKTOP_MQ = '(min-width: 48rem)';
     const FOCUSABLE_SEL = [
       'a[href]',
       'button:not([disabled])',

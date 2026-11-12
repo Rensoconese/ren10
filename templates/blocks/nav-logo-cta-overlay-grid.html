@@ -560,12 +560,12 @@
      *
      * - Escape restores focus to the toggle after close
      * - Destination / contact / social / bar-CTA activation dismisses the shell
-     * - Resize preserves open within a band; closes only on 768px breakpoint cross
+     * - Resize preserves open within a band; closes only on 48rem breakpoint cross
      *   (re-opens after ren-nav's desktop auto-close when still preferred open)
      */
     const RN18_CONTROLLER = Symbol.for('ren10.rn18.controller');
-    /** Match ren-nav's 768px band boundary (48rem at default root font size). */
-    const RN18_BREAKPOINT = 768;
+    /** Same query as the block CSS `.rn18-menu` placement; scales with root font size. */
+    const RN18_WIDE_MQ = '(min-width: 48rem)';
 
     function initNavLogoCtaOverlayGrid(scope = document) {
       const root = scope.querySelector?.('[data-rn18-root]') ?? scope;
@@ -593,10 +593,11 @@
 
       /** @type {boolean} User-preferred open state across same-band resizes. */
       let preferOpen = false;
-      let lastWidth = window.innerWidth;
+      const wideQuery = window.matchMedia(RN18_WIDE_MQ);
+      let lastBand = band();
 
-      function band(width) {
-        return width < RN18_BREAKPOINT ? 'narrow' : 'wide';
+      function band() {
+        return wideQuery.matches ? 'wide' : 'narrow';
       }
 
       function isOpen() {
@@ -677,10 +678,9 @@
       window.addEventListener(
         'resize',
         () => {
-          const width = window.innerWidth;
-          const previousWidth = lastWidth;
-          lastWidth = width;
-          const crossed = band(previousWidth) !== band(width);
+          const nextBand = band();
+          const crossed = nextBand !== lastBand;
+          lastBand = nextBand;
 
           if (crossed) {
             preferOpen = false;

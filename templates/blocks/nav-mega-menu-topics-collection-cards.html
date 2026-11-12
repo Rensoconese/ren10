@@ -383,7 +383,7 @@
      * and JS DESKTOP_MQ start at 48rem (inclusive). At exact 768px ren-nav's
      * max-width:48rem still applies mobile link/toggle rules — override so
      * links stay visible and the toggle is hidden, matching matchMedia and
-     * ren-nav JS (innerWidth < 768 ⇒ mobile). 767→768 is a real crossing.
+     * ren-nav JS (which reads the hidden toggle as desktop). 767→768 is a real crossing.
      */
     @media (min-width: 48rem) {
       .rmcc-preview .ren-nav-toggle {
@@ -789,7 +789,7 @@
     const RMCC_CONTROLLER = Symbol.for('ren10.rmcc.controller');
     /**
      * Inclusive desktop shell for this block; complements max-width: 47.999rem CSS.
-     * Matches ren-nav JS (innerWidth < 768 ⇒ mobile) and matchMedia(min-width: 48rem).
+     * The block CSS hides ren-nav's toggle from 48rem, so ren-nav JS agrees.
      */
     const DESKTOP_MQ = '(min-width: 48rem)';
 

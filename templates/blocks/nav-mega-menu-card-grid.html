@@ -371,10 +371,10 @@
     }
 
     /*
-     * Seam-free shell boundary: mobile ends below 48rem; desktop mega chrome
-     * and JS DESKTOP_MQ start at 48rem.
+     * Shell boundary follows ren-nav: mobile runs through max-width: 48rem
+     * (toggle shown); desktop mega chrome and JS DESKTOP_MQ start at 48.01rem.
      */
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       .rmcg-disclosure {
         height: auto;
         align-self: center;
@@ -423,7 +423,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rmcg-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -523,7 +523,7 @@
     }
 
     /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rmcg-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
@@ -837,8 +837,8 @@
      * Keyboard Enter/Space: native details toggle (event.detail === 0).
      */
     const RMCG_CONTROLLER = Symbol.for('ren10.rmcg.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /** Desktop shell for this block: same query as its CSS; complements ren-nav's max-width: 48rem toggle. */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavMegaMenuCardGrid(scope = document) {
       const root = scope.querySelector?.('[data-rmcg-root]') ?? scope;

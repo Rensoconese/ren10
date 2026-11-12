@@ -386,7 +386,7 @@
      * and JS DESKTOP_MQ start at 48rem (inclusive). At exact 768px ren-nav's
      * max-width:48rem still applies mobile link/toggle rules — override so
      * links stay visible and the toggle is hidden, matching matchMedia and
-     * ren-nav JS (innerWidth < 768 ⇒ mobile).
+     * ren-nav JS (which reads the hidden toggle as desktop).
      */
     @media (min-width: 48rem) {
       .rmpr-preview .ren-nav-toggle {

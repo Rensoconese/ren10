@@ -980,11 +980,14 @@
         signal.addEventListener('abort', () => observer.disconnect());
       }
 
-      let wasMobile = window.innerWidth < 768;
+      // Same query as the block CSS above: desktop starts at 48.01rem, just
+      // past ren-nav's max-width: 48rem toggle breakpoint (768px inclusive).
+      const desktopQuery = window.matchMedia('(min-width: 48.01rem)');
+      let wasMobile = !desktopQuery.matches;
       window.addEventListener(
         'resize',
         () => {
-          const isMobile = window.innerWidth < 768;
+          const isMobile = !desktopQuery.matches;
           if (wasMobile && !isMobile) closeDisclosure(false);
           wasMobile = isMobile;
         },

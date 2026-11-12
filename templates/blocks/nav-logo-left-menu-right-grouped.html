@@ -236,7 +236,7 @@
       font-size: var(--text-lg);
       line-height: 1.6;
     }
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       /*
        * Disclosure-relative compact panel, right-biased: left edge under the
        * trigger, right edge reaches the nav end via a large width. First
@@ -272,7 +272,7 @@
         pointer-events: auto;
       }
     }
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn12-preview .ren-nav { flex-wrap: wrap; gap: 0; }
       .rn12-preview .ren-nav-brand { order: 1; }
       .rn12-preview .ren-nav-toggle { order: 2; margin-inline-start: auto; }
@@ -342,7 +342,7 @@
       .rn12-destination.ren-row { width: 100%; box-sizing: border-box; }
       .rn12-dest-desc { display: none; }
     }
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn12-preview ren-nav:not(:defined) .ren-nav { flex-wrap: wrap; }
       .rn12-preview ren-nav:not(:defined) .ren-nav-toggle { display: none; }
       .rn12-preview ren-nav:not(:defined) .ren-nav-links {
@@ -561,7 +561,7 @@
   <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
   <script type="module">
     const RN12_CONTROLLER = Symbol.for('ren10.rn12.controller');
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavLogoLeftMenuRightGrouped(scope = document) {
       const root = scope.querySelector?.('[data-rn12-root]') ?? scope;

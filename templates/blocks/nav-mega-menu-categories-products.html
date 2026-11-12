@@ -348,7 +348,7 @@
     }
 
     /* Desktop: full-width mega under the bar. */
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       .rmcp-disclosure {
         position: static;
       }
@@ -389,7 +389,7 @@
     }
 
     /* Tablet band: keep horizontal shell; allow two-up cards and multi-col groups when space allows. */
-    @media (min-width: 48rem) and (max-width: 63.999rem) {
+    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
       .rmcp-panel-inner {
         padding: var(--space-5) var(--space-5);
       }
@@ -413,7 +413,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rmcp-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -515,14 +515,14 @@
     }
 
     /* Small tablet+ within mobile shell: two-up products when width allows inside open panel. */
-    @media (min-width: 30rem) and (max-width: 47.999rem) {
+    @media (min-width: 30rem) and (max-width: 48rem) {
       .rmcp-products.ren-grid-2 {
         grid-template-columns: 1fr;
       }
     }
 
     /* JS-disabled mobile: expose the one tree and actions; hide inert toggle. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rmcp-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
@@ -772,8 +772,8 @@
      * Escape restores focus to the summary even when a destination is focused.
      */
     const RMCP_CONTROLLER = Symbol.for('ren10.rmcp.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /** Desktop shell for this block: same query as its CSS; complements ren-nav's max-width: 48rem toggle. */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavMegaMenuCategoriesProducts(scope = document) {
       const root = scope.querySelector?.('[data-rmcp-root]') ?? scope;
