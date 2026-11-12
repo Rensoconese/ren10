@@ -86,7 +86,16 @@ const DOC_TOPICS = {
   design: {
     title: 'RenDS design contract',
     path: 'ren-design.md',
+    // `docs design --dense` returns the compact entry contract instead of
+    // slicing headings out of the 97 KB canonical file.
+    densePath: 'ren-essentials.md',
     aliases: ['ren-design', 'contract'],
+  },
+  essentials: {
+    title: 'RenDS essentials (compact entry contract)',
+    path: 'ren-essentials.md',
+    densePath: 'ren-essentials.md',
+    aliases: ['ren-essentials', 'start', 'entry', 'quickstart'],
   },
   tokens: {
     title: 'Token contract',
@@ -617,7 +626,12 @@ function buildManifest() {
       },
     },
     docs: Object.fromEntries(
-      Object.entries(DOC_TOPICS).map(([key, doc]) => [key, { title: doc.title, path: doc.path, aliases: doc.aliases ?? [] }]),
+      Object.entries(DOC_TOPICS).map(([key, doc]) => [key, {
+        title: doc.title,
+        path: doc.path,
+        ...(doc.densePath ? { densePath: doc.densePath } : {}),
+        aliases: doc.aliases ?? [],
+      }]),
     ),
   };
 }
@@ -659,7 +673,7 @@ function commandForSearchRow(row) {
     const name = parts[parts.length - 2];
     return `npx ren10 component ${normalizeComponentName(name)} --dense`;
   }
-  if (row.type === 'design-contract') return 'npx ren10 docs design --dense';
+  if (row.type === 'design-contract' || row.type === 'essentials-contract') return 'npx ren10 docs design --dense';
   if (row.type === 'tokens-contract' || String(row.path).includes('tokens/')) return 'npx ren10 docs tokens --dense';
   if (row.type === 'layouts-contract' || String(row.path).includes('layouts.md')) return 'npx ren10 docs layouts --dense';
   if (row.type === 'primitive-zero') return 'npx ren10 docs primitive-zero --dense';
@@ -907,15 +921,20 @@ function generatedAgentBlock() {
   const pkg = readPackageJson();
   const layers = getComponentsByLayer();
   const counts = Object.fromEntries(Object.entries(layers).map(([layer, comps]) => [layer, comps.length]));
+  const blockCount = loadBlockCatalogSummary(RENDS_ROOT)?.count ?? 0;
   return [
     RENDS_MARKER_START,
-    `RenDS v${pkg.version} · vanilla HTML/CSS/JS · Light DOM · ${getAllComponents().length} components`,
+    `RenDS v${pkg.version} · vanilla HTML/CSS/JS · Light DOM · ${getAllComponents().length} components · ${blockCount} blocks`,
+    '',
+    'READ FIRST: `ren-essentials.md` (≈8 KB: rules, tokens, layouts, routing; same as',
+    '`npx ren10 docs design --dense`). Load `ren-design.md` (≈97 KB) only for exact values or rationale.',
     '',
     'WORKFLOW — discover before writing UI:',
-    '1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.',
-    '2. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.',
-    '3. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.',
-    '4. `npx ren10 doctor` — verify package health before shipping.',
+    '1. `npx ren10 build "<idea>"` — composition kit: page sections (blocks), components, docs.',
+    '2. `npx ren10 blocks <name>` — copy a shipped nav/hero/pricing/footer block before hand-building one.',
+    '3. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.',
+    '4. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.',
+    '5. `npx ren10 doctor` — verify package health before shipping.',
     '',
     'RULES:',
     '- Vanilla only: no React/Vue/Svelte/JSX/TSX, no Tailwind, no shadcn/ui.',
@@ -927,8 +946,9 @@ function generatedAgentBlock() {
     `COMPONENTS: primitives=${counts.primitives ?? 0}, composites=${counts.composites ?? 0}, patterns=${counts.patterns ?? 0}.`,
     'MORE CLI:',
     '  manifest --json          self-describing CLI surface',
-    '  search "<query>"         search graph across components/docs/examples/tokens',
-    '  docs <topic> --dense     design, tokens, layouts, primitive-zero, components, evals',
+    '  search "<query>"         search graph across components/blocks/docs/examples/tokens',
+    '  blocks --list            page-section blocks grouped by family',
+    '  docs <topic> --dense     design (essentials), tokens, layouts, primitive-zero, components, evals',
     '  component --list         all components grouped by layer',
     '  knowledge query "<q>"    packaged graph query; --json emits typed JSON',
     RENDS_MARKER_END,
@@ -1585,12 +1605,18 @@ async function cmdDocs() {
     error(`Docs topic exists but file is missing: ${topic.path}`);
   }
   const body = fs.readFileSync(absPath, 'utf8');
+  const densePath = dense && topic.densePath && fs.existsSync(path.join(RENDS_ROOT, topic.densePath))
+    ? topic.densePath
+    : null;
   const data = {
     name: topic.key,
     title: topic.title,
     path: topic.path,
+    ...(densePath ? { densePath } : {}),
     body: dense ? undefined : body,
-    dense: dense ? buildDenseDoc(topic, body) : undefined,
+    dense: dense
+      ? densePath ? fs.readFileSync(path.join(RENDS_ROOT, densePath), 'utf8') : buildDenseDoc(topic, body)
+      : undefined,
   };
   if (hasFlag('--json')) {
     jsonOut('docs.detail', data);

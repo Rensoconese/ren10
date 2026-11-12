@@ -25,7 +25,10 @@ npx ren10 knowledge check
 ```
 
 The query command prefers SQLite when the local `sqlite3` CLI is available and
-falls back to the packaged JSON graph when it is not.
+falls back to the packaged JSON graph when it is not. Both paths drop
+stopwords and generic request words, map common synonyms (navbar → nav,
+plans → pricing), and rank by name, path, type, and block family before text
+relevance, so they return the same kinds of results in the same order.
 
 All agent-facing JSON responses use this envelope:
 
@@ -44,7 +47,9 @@ to force the packaged JSON graph instead of SQLite.
 
 Nodes:
 
-- components
+- components (each indexes its colocated contract)
+- page-section blocks (compact metadata: title, summary, family words, and
+  the components each block uses; `npx ren10 blocks <name>` prints the markup)
 - contracts
 - CSS files
 - JavaScript files

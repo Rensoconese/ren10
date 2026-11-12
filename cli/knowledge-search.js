@@ -162,6 +162,7 @@ const TYPE_WEIGHT = {
   component: 24,
   block: 20,
   example: 30,
+  'essentials-contract': 10,
   'design-contract': 8,
   'tokens-contract': 8,
   'layouts-contract': 8,

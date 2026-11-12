@@ -221,6 +221,8 @@ const checkPacklist = (graph, messages) => {
     'knowledge/README.md',
     'knowledge/ren10-graph.json',
     'knowledge/ren10-graph.sqlite',
+    'ren-essentials.md',
+    'templates/blocks/catalog.json',
     'site/shell.css',
     'skills/rends/SKILL.md',
     'skills/rends/README.md',

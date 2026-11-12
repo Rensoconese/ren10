@@ -30,6 +30,7 @@
     "dist/ren10-foundation.css",
     "dist/ren10-foundation.min.css",
     "ren-design.md",
+    "ren-essentials.md",
     "AGENTS.md",
     "CLAUDE.md",
     ".ren10/design.json",

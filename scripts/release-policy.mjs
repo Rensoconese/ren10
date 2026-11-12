@@ -49,6 +49,7 @@ export function findPublicVersionSurfaces(root, expectedVersion) {
     ...['AGENTS.md', 'CLAUDE.md', '.cursorrules', '.windsurfrules']
       .map((file) => ({ file, pattern: /RenDS v(\d+\.\d+\.\d+)/g })),
     { file: 'ren-design.md', pattern: /^\s*version:\s*(\d+\.\d+\.\d+)\s*$/gm },
+    { file: 'ren-essentials.md', pattern: /^# RenDS essentials · v(\d+\.\d+\.\d+)$/gm },
     { file: 'README.md', pattern: /Current version:\s*\*\*(\d+\.\d+\.\d+)\*\*/g },
   ];
   for (const { file, pattern } of structured) {

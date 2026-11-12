@@ -23,6 +23,7 @@ const componentGroups = [
 ];
 
 const foundationFiles = [
+  ['foundation:essentials', 'essentials-contract', 'RenDS essentials (entry contract)', 'ren-essentials.md'],
   ['foundation:design-contract', 'design-contract', 'RenDS design contract', 'ren-design.md'],
   ['foundation:tokens-contract', 'tokens-contract', 'Token contract', 'tokens/tokens.md'],
   ['foundation:layouts-contract', 'layouts-contract', 'Layout primitives contract', 'base/layouts.md'],

@@ -7863,6 +7863,13 @@
   },
   {
    "data": {},
+   "path": "ren-essentials.md",
+   "id": "foundation:essentials",
+   "type": "essentials-contract",
+   "name": "RenDS essentials (entry contract)"
+  },
+  {
+   "data": {},
    "path": "base/layouts.md",
    "id": "foundation:layouts-contract",
    "type": "layouts-contract",
