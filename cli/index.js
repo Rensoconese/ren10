@@ -723,10 +723,6 @@ const PAGE_RECIPES = [
   { key: 'article', triggers: ['article', 'essay', 'story', 'longform'], families: ['nav', 'article-header', 'footer'] },
 ];
 
-function blockTerms(analysis) {
-  return [...new Set([...analysis.matchTerms, ...analysis.tokens])];
-}
-
 function scoreBlock(block, terms) {
   const name = block.name.split('-');
   const text = `${block.title} ${block.summary} ${block.kicker ?? ''}`.toLowerCase();
@@ -754,7 +750,8 @@ function selectBlocksForQuery(query, { perFamily = 3 } = {}) {
     if (words.has(family.key) || family.aliases.some((alias) => words.has(alias))) wanted.add(family.key);
   }
 
-  const terms = blockTerms(analysis);
+  // matchTerms: stopwords already dropped, so "a" or "for" cannot pick a block.
+  const terms = analysis.matchTerms;
   const families = BLOCK_FAMILIES
     .filter((family) => wanted.has(family.key))
     .map((family) => {
