@@ -564,8 +564,8 @@
      *   (re-opens after ren-nav's desktop auto-close when still preferred open)
      */
     const RN18_CONTROLLER = Symbol.for('ren10.rn18.controller');
-    /** Same query as the block CSS `.rn18-menu` placement; scales with root font size. */
-    const RN18_WIDE_MQ = '(min-width: 48rem)';
+    /** Same threshold as the block CSS `.rn18-menu` placement (min-width: 48rem); scales with root font size. */
+    const RN18_WIDE_REM = 48;
 
     function initNavLogoCtaOverlayGrid(scope = document) {
       const root = scope.querySelector?.('[data-rn18-root]') ?? scope;
@@ -593,11 +593,13 @@
 
       /** @type {boolean} User-preferred open state across same-band resizes. */
       let preferOpen = false;
-      const wideQuery = window.matchMedia(RN18_WIDE_MQ);
       let lastBand = band();
 
+      // Measure instead of reading matchMedia().matches: WebKit can still
+      // report the previous result while the resize event is dispatched.
       function band() {
-        return wideQuery.matches ? 'wide' : 'narrow';
+        const rootPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+        return window.innerWidth >= RN18_WIDE_REM * rootPx ? 'wide' : 'narrow';
       }
 
       function isOpen() {
