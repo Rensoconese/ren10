@@ -135,7 +135,7 @@
 
     /* Full-width element (takes the full row) */
     .element.wide {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .element.wide .element-render,
@@ -145,7 +145,8 @@
 
     /* Mobile */
     @media (max-width: 900px) {
-      .element { grid-template-columns: 1fr; }
+      /* minmax(0, …) so a long cell cannot widen the card past the column. */
+      .element { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
 </head>

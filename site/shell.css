@@ -773,6 +773,33 @@ body {
   word-break: break-word;
 }
 
+
+/* ─────────────────────────────────────────────
+   Horizontal scroll region — wide reference
+   content (multi-column tables, file trees)
+   scrolls inside the column instead of pushing
+   the page sideways on phones. Markup must make
+   it reachable and named:
+   tabindex="0" role="region" aria-label="…".
+   position: relative keeps absolutely positioned
+   descendants (e.g. .ren-sr-only) clipped here.
+   ───────────────────────────────────────────── */
+.dx-scroll-x {
+  position: relative;
+  overflow-x: auto;
+}
+
+.dx-scroll-x:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset);
+}
+
+/* A wrapped .dx-table hands its block margin to the
+   wrapper, so spacing and margin collapsing match an
+   unwrapped table. */
+.dx-scroll-x:has(> .dx-table) { margin-block: var(--space-4); }
+.dx-scroll-x > .dx-table { margin-block: 0; }
+
 .dx-pre code {
   background: none;
   padding: 0;
