@@ -1,0 +1,110 @@
+# ren10
+
+> RenDS — A vanilla, accessible, atomic design system. No framework required.
+
+RenDS (`ren10` on npm) is a vanilla HTML/CSS/JS design system: Light DOM `ren-*` custom elements, semantic design tokens, layout primitives and copyable page-section blocks. No React, Vue, Tailwind or shadcn/ui. Every link below is a file inside the installed package (`node_modules/ren10/`), so it always matches the installed version. Read `ren-essentials.md` first and load the rest only when the task needs it.
+
+## Start here
+
+- [ren-essentials.md](ren-essentials.md): compact entry contract (~8 KB) — hard rules, tokens, layouts and routing. Same text as `npx ren10 docs design --dense`.
+- [AGENTS.md](AGENTS.md): agent routing, validation commands and golden examples.
+- [ren-design.md](ren-design.md): canonical design contract with exact token values and rationale (~97 KB; load for exact values only).
+
+## Foundations
+
+- [tokens/tokens.md](tokens/tokens.md): token decisions — use semantic/component tokens (`--color-*`, `--space-*`, `--ren-*`), never primitive palette tokens.
+- [base/layouts.md](base/layouts.md): layout primitives (`ren-stack`, `ren-grid`, `ren-center`, ...) to use before any custom flex/grid CSS.
+- [base/primitive-zero.md](base/primitive-zero.md): classless styling of native HTML elements.
+- [components/components.md](components/components.md): how to pick a component.
+
+## Components: primitives (19)
+
+- [ren-avatar](components/primitives/ren-avatar/component.md): User avatar with image, initials fallback, status dot, and sizes.
+- [ren-badge](components/primitives/ren-badge/component.md): Small label with variants and sizes.
+- [ren-banner](components/primitives/ren-banner/component.md): Full-width announcement or status banner with variants.
+- [ren-breadcrumb](components/primitives/ren-breadcrumb/component.md): Hierarchical navigation trail with separators.
+- [ren-button](components/primitives/ren-button/component.md): Versatile button with variants, sizes, icon support, loading state.
+- [ren-card](components/primitives/ren-card/component.md): Surface container with header, body, footer sections.
+- [ren-checkbox](components/primitives/ren-checkbox/component.md): Native checkbox with checked, indeterminate, focus, and disabled states.
+- [ren-field](components/primitives/ren-field/component.md): Form field wrapper with label, error, description.
+- [ren-icon](components/primitives/ren-icon/component.md): Icon wrapper for SVG with size and color variants.
+- [ren-kbd](components/primitives/ren-kbd/component.md): Keyboard key indicator for shortcuts.
+- [ren-link](components/primitives/ren-link/component.md): Styled link with underline, external icon, and variants.
+- [ren-pagination](components/primitives/ren-pagination/component.md): Page navigation controls with prev/next and page numbers.
+- [ren-progress](components/primitives/ren-progress/component.md): Progress bar with determinate/indeterminate modes.
+- [ren-radio](components/primitives/ren-radio/component.md): Radio button group with keyboard navigation.
+- [ren-separator](components/primitives/ren-separator/component.md): Visual or semantic divider (horizontal/vertical).
+- [ren-skeleton](components/primitives/ren-skeleton/component.md): Loading placeholder shape (text, circle, rect) with shimmer.
+- [ren-spinner](components/primitives/ren-spinner/component.md): Indeterminate loading spinner respecting reduced-motion.
+- [ren-switch](components/primitives/ren-switch/component.md): Toggle switch built on native checkbox with role="switch".
+- [ren-tag](components/primitives/ren-tag/component.md): Pill-shaped tag/chip with optional dismiss button.
+
+## Components: composites (26)
+
+- [ren-accordion](components/composites/ren-accordion/component.md): Collapsible accordion sections.
+- [ren-alert-dialog](components/composites/ren-alert-dialog/component.md): Modal alert for destructive or blocking confirmations.
+- [ren-calendar](components/composites/ren-calendar/component.md): Date picker calendar interface.
+- [ren-carousel](components/composites/ren-carousel/component.md): Slide carousel with pagination.
+- [ren-collapsible](components/composites/ren-collapsible/component.md): Single expandable region built on native <details>.
+- [ren-color-picker](components/composites/ren-color-picker/component.md): Color input with swatches, hex field, and native picker.
+- [ren-combobox](components/composites/ren-combobox/component.md): Autocomplete input with list filtering.
+- [ren-context-menu](components/composites/ren-context-menu/component.md): Right-click / long-press menu with keyboard support.
+- [ren-date-picker](components/composites/ren-date-picker/component.md): Input with calendar dropdown.
+- [ren-date-range-picker](components/composites/ren-date-range-picker/component.md): Two-calendar picker for start/end date selection.
+- [ren-dialog](components/composites/ren-dialog/component.md): Modal dialog with backdrop, animations, focus trap.
+- [ren-dropzone](components/composites/ren-dropzone/component.md): Drag-and-drop file upload area with keyboard fallback.
+- [ren-hover-card](components/composites/ren-hover-card/component.md): Card that appears on hover/focus.
+- [ren-menu](components/composites/ren-menu/component.md): Dropdown menu with keyboard navigation.
+- [ren-number-field](components/composites/ren-number-field/component.md): Input for numbers with increment/decrement.
+- [ren-otp](components/composites/ren-otp/component.md): One-time password input with auto-focus.
+- [ren-popover](components/composites/ren-popover/component.md): Floating popover with anchor positioning.
+- [ren-scroll-area](components/composites/ren-scroll-area/component.md): Scrollable area with custom scrollbars.
+- [ren-select](components/composites/ren-select/component.md): Custom select dropdown with search support.
+- [ren-sheet](components/composites/ren-sheet/component.md): Side panel drawer with slide animation.
+- [ren-slider](components/composites/ren-slider/component.md): Range slider with keyboard support.
+- [ren-tabs](components/composites/ren-tabs/component.md): Tab interface with keyboard navigation.
+- [ren-toast](components/composites/ren-toast/component.md): Toast notifications with dismiss action.
+- [ren-toggle-group](components/composites/ren-toggle-group/component.md): Grouped toggle buttons with selection.
+- [ren-toolbar](components/composites/ren-toolbar/component.md): Horizontal group of controls with roving tabindex.
+- [ren-tooltip](components/composites/ren-tooltip/component.md): Accessible tooltip with positioning and delay.
+
+## Components: patterns (8)
+
+- [ren-ai](components/patterns/ren-ai/pattern.md): AI chat surface — message bubbles, prompt input, streaming caret.
+- [ren-command](components/patterns/ren-command/pattern.md): Command/search palette with keyboard shortcuts.
+- [ren-empty-state](components/patterns/ren-empty-state/pattern.md): Friendly placeholder for zero-data screens with optional CTA.
+- [ren-form](components/patterns/ren-form/pattern.md): Styled form wrapper with validation styling.
+- [ren-menubar](components/patterns/ren-menubar/pattern.md): Top-level menu bar with submenu support.
+- [ren-nav](components/patterns/ren-nav/pattern.md): Responsive navigation bar with mobile menu.
+- [ren-sidebar](components/patterns/ren-sidebar/pattern.md): Collapsible sidebar with persistence.
+- [ren-table](components/patterns/ren-table/pattern.md): Sortable, responsive data table.
+
+## Blocks (335)
+
+Copyable page sections. List them with `npx ren10 blocks --list` and print one with `npx ren10 blocks <name>`; check here before hand-building a nav, hero, pricing table or footer.
+
+- [templates/blocks/catalog.json](templates/blocks/catalog.json): catalog with title, summary, family, stylesheets, scripts and components per block.
+- Navigation: 29 blocks (`npx ren10 blocks --list --family nav`).
+- Hero: 30 blocks (`npx ren10 blocks --list --family hero`).
+- Feature: 120 blocks (`npx ren10 blocks --list --family feature`).
+- Testimonial: 12 blocks (`npx ren10 blocks --list --family testimonial`).
+- Pricing: 12 blocks (`npx ren10 blocks --list --family pricing`).
+- FAQ: 12 blocks (`npx ren10 blocks --list --family faq`).
+- Call to action: 60 blocks (`npx ren10 blocks --list --family cta`).
+- Contact: 12 blocks (`npx ren10 blocks --list --family contact`).
+- Blog: 12 blocks (`npx ren10 blocks --list --family blog`).
+- Article header: 12 blocks (`npx ren10 blocks --list --family article-header`).
+- Footer: 12 blocks (`npx ren10 blocks --list --family footer`).
+- Application shell: 12 blocks (`npx ren10 blocks --list --family application-shell`).
+
+## Machine-readable
+
+- [custom-elements.json](custom-elements.json): Custom Elements Manifest — tags, attributes, events, methods and CSS custom properties.
+- [html-custom-data.json](html-custom-data.json): VS Code HTML custom data for `ren-*` tag and attribute autocomplete.
+- [knowledge/ren10-graph.json](knowledge/ren10-graph.json): searchable knowledge graph (`npx ren10 search "<query>"`).
+- `npx ren10 manifest --json`: self-describing CLI surface.
+
+## Optional
+
+- [MIGRATION.md](MIGRATION.md): upgrade notes between versions.
+- [CHANGELOG.md](CHANGELOG.md): release history.

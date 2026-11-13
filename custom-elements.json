@@ -1,0 +1,2515 @@
+{
+  "schemaVersion": "2.1.0",
+  "readme": "README.md",
+  "modules": [
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-accordion/ren-accordion.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenAccordion",
+          "description": "Collapsible accordion sections. Contract: components/composites/ren-accordion/component.md",
+          "customElement": true,
+          "tagName": "ren-accordion",
+          "attributes": [
+            {
+              "name": "collapsible"
+            },
+            {
+              "name": "default-value"
+            },
+            {
+              "name": "type"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-accordion-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-collapse-bg"
+            },
+            {
+              "name": "--ren-collapse-border"
+            },
+            {
+              "name": "--ren-collapse-duration"
+            },
+            {
+              "name": "--ren-collapse-easing"
+            },
+            {
+              "name": "--ren-collapse-padding"
+            },
+            {
+              "name": "--ren-collapse-radius"
+            },
+            {
+              "name": "--ren-collapse-trigger-font"
+            },
+            {
+              "name": "--ren-collapse-trigger-weight"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-accordion",
+          "declaration": {
+            "name": "RenAccordion",
+            "module": "components/composites/ren-accordion/ren-accordion.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-calendar/ren-calendar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenCalendar",
+          "description": "Date picker calendar interface. Contract: components/composites/ren-calendar/component.md",
+          "customElement": true,
+          "tagName": "ren-calendar",
+          "attributes": [
+            {
+              "name": "first-day"
+            },
+            {
+              "name": "locale"
+            },
+            {
+              "name": "max"
+            },
+            {
+              "name": "min"
+            },
+            {
+              "name": "mode"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-date-select",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-calendar-bg"
+            },
+            {
+              "name": "--ren-calendar-border"
+            },
+            {
+              "name": "--ren-calendar-day-size"
+            },
+            {
+              "name": "--ren-calendar-radius"
+            },
+            {
+              "name": "--ren-calendar-range-bg"
+            },
+            {
+              "name": "--ren-calendar-selected-bg"
+            },
+            {
+              "name": "--ren-calendar-selected-color"
+            },
+            {
+              "name": "--ren-calendar-today-bg"
+            },
+            {
+              "name": "--ren-calendar-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-calendar",
+          "declaration": {
+            "name": "RenCalendar",
+            "module": "components/composites/ren-calendar/ren-calendar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-carousel/ren-carousel.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenCarousel",
+          "description": "Slide carousel with pagination. Contract: components/composites/ren-carousel/component.md",
+          "customElement": true,
+          "tagName": "ren-carousel",
+          "attributes": [
+            {
+              "name": "autoplay"
+            },
+            {
+              "name": "fade"
+            },
+            {
+              "name": "loop"
+            },
+            {
+              "name": "slides-per-view"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-slide-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-carousel-arrow-size"
+            },
+            {
+              "name": "--ren-carousel-dot-active"
+            },
+            {
+              "name": "--ren-carousel-dot-color"
+            },
+            {
+              "name": "--ren-carousel-dot-size"
+            },
+            {
+              "name": "--ren-carousel-duration"
+            },
+            {
+              "name": "--ren-carousel-easing"
+            },
+            {
+              "name": "--ren-carousel-gap"
+            },
+            {
+              "name": "--ren-carousel-radius"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-carousel",
+          "declaration": {
+            "name": "RenCarousel",
+            "module": "components/composites/ren-carousel/ren-carousel.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-color-picker/ren-color-picker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenColorPicker",
+          "description": "Color input with swatches, hex field, and native picker. Contract: components/composites/ren-color-picker/component.md",
+          "customElement": true,
+          "tagName": "ren-color-picker",
+          "attributes": [
+            {
+              "name": "alpha"
+            },
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "format"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "swatches"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-input",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-cp-bg"
+            },
+            {
+              "name": "--ren-cp-handle-size"
+            },
+            {
+              "name": "--ren-cp-hue-gradient"
+            },
+            {
+              "name": "--ren-cp-radius"
+            },
+            {
+              "name": "--ren-cp-shadow"
+            },
+            {
+              "name": "--ren-cp-swatch-size"
+            },
+            {
+              "name": "--ren-cp-track-height"
+            },
+            {
+              "name": "--ren-cp-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-color-picker",
+          "declaration": {
+            "name": "RenColorPicker",
+            "module": "components/composites/ren-color-picker/ren-color-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-combobox/ren-combobox.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenCombobox",
+          "description": "Autocomplete input with list filtering. Contract: components/composites/ren-combobox/component.md",
+          "customElement": true,
+          "tagName": "ren-combobox",
+          "attributes": [
+            {
+              "name": "async"
+            },
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "name"
+            },
+            {
+              "name": "placeholder"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-search",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-combobox",
+          "declaration": {
+            "name": "RenCombobox",
+            "module": "components/composites/ren-combobox/ren-combobox.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-context-menu/ren-context-menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenContextMenu",
+          "description": "Right-click / long-press menu with keyboard support. Contract: components/composites/ren-context-menu/component.md",
+          "customElement": true,
+          "tagName": "ren-context-menu",
+          "attributes": [],
+          "events": [
+            {
+              "name": "ren-context-menu-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-context-menu",
+          "declaration": {
+            "name": "RenContextMenu",
+            "module": "components/composites/ren-context-menu/ren-context-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-date-picker/ren-date-picker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenDatePicker",
+          "description": "Input with calendar dropdown. Contract: components/composites/ren-date-picker/component.md",
+          "customElement": true,
+          "tagName": "ren-date-picker",
+          "attributes": [
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "format"
+            },
+            {
+              "name": "locale"
+            },
+            {
+              "name": "max"
+            },
+            {
+              "name": "min"
+            },
+            {
+              "name": "mode"
+            },
+            {
+              "name": "name"
+            },
+            {
+              "name": "placeholder"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-date-picker-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-date-picker-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "getValue"
+            },
+            {
+              "kind": "method",
+              "name": "open"
+            },
+            {
+              "kind": "method",
+              "name": "toggle"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-calendar-bg"
+            },
+            {
+              "name": "--ren-calendar-border"
+            },
+            {
+              "name": "--ren-calendar-day-size"
+            },
+            {
+              "name": "--ren-calendar-radius"
+            },
+            {
+              "name": "--ren-calendar-range-bg"
+            },
+            {
+              "name": "--ren-calendar-selected-bg"
+            },
+            {
+              "name": "--ren-calendar-selected-color"
+            },
+            {
+              "name": "--ren-calendar-today-bg"
+            },
+            {
+              "name": "--ren-calendar-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-date-picker",
+          "declaration": {
+            "name": "RenDatePicker",
+            "module": "components/composites/ren-date-picker/ren-date-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-date-range-picker/ren-date-range-picker.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenDateRangePicker",
+          "description": "Two-calendar picker for start/end date selection. Contract: components/composites/ren-date-range-picker/component.md",
+          "customElement": true,
+          "tagName": "ren-date-range-picker",
+          "attributes": [
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "end"
+            },
+            {
+              "name": "format"
+            },
+            {
+              "name": "locale"
+            },
+            {
+              "name": "max"
+            },
+            {
+              "name": "min"
+            },
+            {
+              "name": "name"
+            },
+            {
+              "name": "placeholder"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "presets"
+            },
+            {
+              "name": "start"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-date-range-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-date-range-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value"
+            },
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "handleApply"
+            },
+            {
+              "kind": "method",
+              "name": "handleCancel"
+            },
+            {
+              "kind": "method",
+              "name": "open"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-calendar-bg"
+            },
+            {
+              "name": "--ren-calendar-border"
+            },
+            {
+              "name": "--ren-calendar-day-size"
+            },
+            {
+              "name": "--ren-calendar-radius"
+            },
+            {
+              "name": "--ren-calendar-range-bg"
+            },
+            {
+              "name": "--ren-calendar-selected-bg"
+            },
+            {
+              "name": "--ren-calendar-selected-color"
+            },
+            {
+              "name": "--ren-calendar-today-bg"
+            },
+            {
+              "name": "--ren-calendar-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-date-range-picker",
+          "declaration": {
+            "name": "RenDateRangePicker",
+            "module": "components/composites/ren-date-range-picker/ren-date-range-picker.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-dialog/ren-dialog.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenAlertDialog",
+          "description": "Modal alert for destructive or blocking confirmations. Contract: components/composites/ren-alert-dialog/component.md",
+          "customElement": true,
+          "tagName": "ren-alert-dialog",
+          "superclass": {
+            "name": "RenDialog",
+            "module": "components/composites/ren-dialog/ren-dialog.js"
+          },
+          "attributes": [
+            {
+              "name": "alert"
+            },
+            {
+              "name": "no-escape"
+            },
+            {
+              "name": "open"
+            },
+            {
+              "name": "size"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-dialog-backdrop"
+            },
+            {
+              "name": "--ren-dialog-bg"
+            },
+            {
+              "name": "--ren-dialog-border-color"
+            },
+            {
+              "name": "--ren-dialog-duration"
+            },
+            {
+              "name": "--ren-dialog-easing"
+            },
+            {
+              "name": "--ren-dialog-gap"
+            },
+            {
+              "name": "--ren-dialog-padding"
+            },
+            {
+              "name": "--ren-dialog-radius"
+            },
+            {
+              "name": "--ren-dialog-shadow"
+            },
+            {
+              "name": "--ren-dialog-width"
+            }
+          ]
+        },
+        {
+          "kind": "class",
+          "name": "RenDialog",
+          "description": "Modal dialog with backdrop, animations, focus trap. Contract: components/composites/ren-dialog/component.md",
+          "customElement": true,
+          "tagName": "ren-dialog",
+          "attributes": [
+            {
+              "name": "alert"
+            },
+            {
+              "name": "no-escape"
+            },
+            {
+              "name": "open"
+            },
+            {
+              "name": "size"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "dialog",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isOpen",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "open"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-dialog-backdrop"
+            },
+            {
+              "name": "--ren-dialog-bg"
+            },
+            {
+              "name": "--ren-dialog-border-color"
+            },
+            {
+              "name": "--ren-dialog-duration"
+            },
+            {
+              "name": "--ren-dialog-easing"
+            },
+            {
+              "name": "--ren-dialog-gap"
+            },
+            {
+              "name": "--ren-dialog-padding"
+            },
+            {
+              "name": "--ren-dialog-radius"
+            },
+            {
+              "name": "--ren-dialog-shadow"
+            },
+            {
+              "name": "--ren-dialog-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-alert-dialog",
+          "declaration": {
+            "name": "RenAlertDialog",
+            "module": "components/composites/ren-dialog/ren-dialog.js"
+          }
+        },
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-dialog",
+          "declaration": {
+            "name": "RenDialog",
+            "module": "components/composites/ren-dialog/ren-dialog.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-hover-card/ren-hover-card.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenHoverCard",
+          "description": "Card that appears on hover/focus. Contract: components/composites/ren-hover-card/component.md",
+          "customElement": true,
+          "tagName": "ren-hover-card",
+          "attributes": [
+            {
+              "name": "data-hover-trigger"
+            },
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "hide-delay"
+            },
+            {
+              "name": "show-delay"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-hover-card-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-hover-card-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open"
+            },
+            {
+              "kind": "method",
+              "name": "hide"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-hover-card",
+          "declaration": {
+            "name": "RenHoverCard",
+            "module": "components/composites/ren-hover-card/ren-hover-card.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-menu/ren-menu.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenMenu",
+          "description": "Dropdown menu with keyboard navigation. Contract: components/composites/ren-menu/component.md",
+          "customElement": true,
+          "tagName": "ren-menu",
+          "attributes": [
+            {
+              "name": "placement"
+            },
+            {
+              "name": "trigger-id"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-menu-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-menu-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-menu-select",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "open"
+            },
+            {
+              "kind": "method",
+              "name": "positionMenu"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-menu-bg"
+            },
+            {
+              "name": "--ren-menu-border"
+            },
+            {
+              "name": "--ren-menu-danger-color"
+            },
+            {
+              "name": "--ren-menu-duration"
+            },
+            {
+              "name": "--ren-menu-easing"
+            },
+            {
+              "name": "--ren-menu-item-height"
+            },
+            {
+              "name": "--ren-menu-item-hover-bg"
+            },
+            {
+              "name": "--ren-menu-item-padding"
+            },
+            {
+              "name": "--ren-menu-item-radius"
+            },
+            {
+              "name": "--ren-menu-padding"
+            },
+            {
+              "name": "--ren-menu-radius"
+            },
+            {
+              "name": "--ren-menu-shadow"
+            },
+            {
+              "name": "--ren-menu-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-menu",
+          "declaration": {
+            "name": "RenMenu",
+            "module": "components/composites/ren-menu/ren-menu.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-number-field/ren-number-field.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenNumberField",
+          "description": "Input for numbers with increment/decrement. Contract: components/composites/ren-number-field/component.md",
+          "customElement": true,
+          "tagName": "ren-number-field",
+          "attributes": [
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "max"
+            },
+            {
+              "name": "min"
+            },
+            {
+              "name": "step"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "clamp"
+            },
+            {
+              "kind": "method",
+              "name": "decrement"
+            },
+            {
+              "kind": "method",
+              "name": "increment"
+            },
+            {
+              "kind": "method",
+              "name": "setValue"
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-number-field",
+          "declaration": {
+            "name": "RenNumberField",
+            "module": "components/composites/ren-number-field/ren-number-field.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-otp/ren-otp.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenOtp",
+          "description": "One-time password input with auto-focus. Contract: components/composites/ren-otp/component.md",
+          "customElement": true,
+          "tagName": "ren-otp",
+          "attributes": [
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "length"
+            },
+            {
+              "name": "type"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-complete",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "setValid"
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-otp",
+          "declaration": {
+            "name": "RenOtp",
+            "module": "components/composites/ren-otp/ren-otp.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-popover/ren-popover.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenPopover",
+          "description": "Floating popover with anchor positioning. Contract: components/composites/ren-popover/component.md",
+          "customElement": true,
+          "tagName": "ren-popover",
+          "attributes": [
+            {
+              "name": "offset"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "trigger-id"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "open"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-popover-bg"
+            },
+            {
+              "name": "--ren-popover-border-color"
+            },
+            {
+              "name": "--ren-popover-duration"
+            },
+            {
+              "name": "--ren-popover-easing"
+            },
+            {
+              "name": "--ren-popover-padding"
+            },
+            {
+              "name": "--ren-popover-radius"
+            },
+            {
+              "name": "--ren-popover-shadow"
+            },
+            {
+              "name": "--ren-popover-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-popover",
+          "declaration": {
+            "name": "RenPopover",
+            "module": "components/composites/ren-popover/ren-popover.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-select/ren-select.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenSelect",
+          "description": "Custom select dropdown with search support. Contract: components/composites/ren-select/component.md",
+          "customElement": true,
+          "tagName": "ren-select",
+          "attributes": [
+            {
+              "name": "multiple"
+            },
+            {
+              "name": "name"
+            },
+            {
+              "name": "placeholder"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "size"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-select-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-select-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-select-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "isOpen",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "options",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "selectedOption",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "value"
+            },
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "open"
+            },
+            {
+              "kind": "method",
+              "name": "refresh"
+            },
+            {
+              "kind": "method",
+              "name": "selectValue"
+            }
+          ],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-select",
+          "declaration": {
+            "name": "RenSelect",
+            "module": "components/composites/ren-select/ren-select.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-sheet/ren-sheet.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenSheet",
+          "description": "Side panel drawer with slide animation. Contract: components/composites/ren-sheet/component.md",
+          "customElement": true,
+          "tagName": "ren-sheet",
+          "attributes": [
+            {
+              "name": "data-side"
+            },
+            {
+              "name": "data-size"
+            },
+            {
+              "name": "dismissible"
+            },
+            {
+              "name": "open"
+            },
+            {
+              "name": "side"
+            },
+            {
+              "name": "size"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "open",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "show"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-sheet-backdrop"
+            },
+            {
+              "name": "--ren-sheet-bg"
+            },
+            {
+              "name": "--ren-sheet-border"
+            },
+            {
+              "name": "--ren-sheet-duration"
+            },
+            {
+              "name": "--ren-sheet-easing"
+            },
+            {
+              "name": "--ren-sheet-padding"
+            },
+            {
+              "name": "--ren-sheet-radius"
+            },
+            {
+              "name": "--ren-sheet-shadow"
+            },
+            {
+              "name": "--ren-sheet-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-sheet",
+          "declaration": {
+            "name": "RenSheet",
+            "module": "components/composites/ren-sheet/ren-sheet.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-slider/ren-slider.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenSlider",
+          "description": "Range slider with keyboard support. Contract: components/composites/ren-slider/component.md",
+          "customElement": true,
+          "tagName": "ren-slider",
+          "attributes": [
+            {
+              "name": "label"
+            },
+            {
+              "name": "show-value"
+            },
+            {
+              "name": "unit"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-slider-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-slider-input",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "value"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-slider-duration"
+            },
+            {
+              "name": "--ren-slider-easing"
+            },
+            {
+              "name": "--ren-slider-fill-color"
+            },
+            {
+              "name": "--ren-slider-thumb-bg"
+            },
+            {
+              "name": "--ren-slider-thumb-border"
+            },
+            {
+              "name": "--ren-slider-thumb-shadow"
+            },
+            {
+              "name": "--ren-slider-thumb-size"
+            },
+            {
+              "name": "--ren-slider-track-bg"
+            },
+            {
+              "name": "--ren-slider-track-height"
+            },
+            {
+              "name": "--ren-slider-track-radius"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-slider",
+          "declaration": {
+            "name": "RenSlider",
+            "module": "components/composites/ren-slider/ren-slider.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-tabs/ren-tabs.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenTabs",
+          "description": "Tab interface with keyboard navigation. Contract: components/composites/ren-tabs/component.md",
+          "customElement": true,
+          "tagName": "ren-tabs",
+          "attributes": [
+            {
+              "name": "activation"
+            },
+            {
+              "name": "default-value"
+            },
+            {
+              "name": "orientation"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-tab-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-tabs-active-color"
+            },
+            {
+              "name": "--ren-tabs-border-color"
+            },
+            {
+              "name": "--ren-tabs-color"
+            },
+            {
+              "name": "--ren-tabs-duration"
+            },
+            {
+              "name": "--ren-tabs-easing"
+            },
+            {
+              "name": "--ren-tabs-font-size"
+            },
+            {
+              "name": "--ren-tabs-font-weight"
+            },
+            {
+              "name": "--ren-tabs-gap"
+            },
+            {
+              "name": "--ren-tabs-height"
+            },
+            {
+              "name": "--ren-tabs-indicator-color"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-tabs",
+          "declaration": {
+            "name": "RenTabs",
+            "module": "components/composites/ren-tabs/ren-tabs.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-toast/ren-toast.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenToastViewport",
+          "description": "Toast notifications with dismiss action. Contract: components/composites/ren-toast/component.md",
+          "customElement": true,
+          "tagName": "ren-toast-viewport",
+          "attributes": [
+            {
+              "name": "data-position"
+            }
+          ],
+          "events": [],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-btn-bg"
+            },
+            {
+              "name": "--ren-btn-bg-active"
+            },
+            {
+              "name": "--ren-btn-bg-hover"
+            },
+            {
+              "name": "--ren-btn-border-color"
+            },
+            {
+              "name": "--ren-btn-border-width"
+            },
+            {
+              "name": "--ren-btn-color"
+            },
+            {
+              "name": "--ren-btn-duration"
+            },
+            {
+              "name": "--ren-btn-easing"
+            },
+            {
+              "name": "--ren-btn-font-size"
+            },
+            {
+              "name": "--ren-btn-font-weight"
+            },
+            {
+              "name": "--ren-btn-gap"
+            },
+            {
+              "name": "--ren-btn-height"
+            },
+            {
+              "name": "--ren-btn-padding-x"
+            },
+            {
+              "name": "--ren-btn-padding-y"
+            },
+            {
+              "name": "--ren-btn-radius"
+            },
+            {
+              "name": "--ren-btn-ring-color"
+            },
+            {
+              "name": "--ren-btn-ring-offset"
+            },
+            {
+              "name": "--ren-btn-ring-width"
+            },
+            {
+              "name": "--ren-toast-anim-duration"
+            },
+            {
+              "name": "--ren-toast-bg"
+            },
+            {
+              "name": "--ren-toast-border"
+            },
+            {
+              "name": "--ren-toast-duration"
+            },
+            {
+              "name": "--ren-toast-easing"
+            },
+            {
+              "name": "--ren-toast-gap"
+            },
+            {
+              "name": "--ren-toast-padding"
+            },
+            {
+              "name": "--ren-toast-radius"
+            },
+            {
+              "name": "--ren-toast-shadow"
+            },
+            {
+              "name": "--ren-toast-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-toast-viewport",
+          "declaration": {
+            "name": "RenToastViewport",
+            "module": "components/composites/ren-toast/ren-toast.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-toggle-group/ren-toggle-group.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenToggleGroup",
+          "description": "Grouped toggle buttons with selection. Contract: components/composites/ren-toggle-group/component.md",
+          "customElement": true,
+          "tagName": "ren-toggle-group",
+          "attributes": [
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "type"
+            },
+            {
+              "name": "value"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-toggle-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-toggle-active-bg"
+            },
+            {
+              "name": "--ren-toggle-active-color"
+            },
+            {
+              "name": "--ren-toggle-bg"
+            },
+            {
+              "name": "--ren-toggle-color"
+            },
+            {
+              "name": "--ren-toggle-font-size"
+            },
+            {
+              "name": "--ren-toggle-font-weight"
+            },
+            {
+              "name": "--ren-toggle-height"
+            },
+            {
+              "name": "--ren-toggle-padding-x"
+            },
+            {
+              "name": "--ren-toggle-radius"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-toggle-group",
+          "declaration": {
+            "name": "RenToggleGroup",
+            "module": "components/composites/ren-toggle-group/ren-toggle-group.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/composites/ren-tooltip/ren-tooltip.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenTooltip",
+          "description": "Accessible tooltip with positioning and delay. Contract: components/composites/ren-tooltip/component.md",
+          "customElement": true,
+          "tagName": "ren-tooltip",
+          "attributes": [
+            {
+              "name": "hide-delay"
+            },
+            {
+              "name": "offset"
+            },
+            {
+              "name": "placement"
+            },
+            {
+              "name": "show-delay"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-close",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-open",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-tooltip-bg"
+            },
+            {
+              "name": "--ren-tooltip-color"
+            },
+            {
+              "name": "--ren-tooltip-delay"
+            },
+            {
+              "name": "--ren-tooltip-duration"
+            },
+            {
+              "name": "--ren-tooltip-easing"
+            },
+            {
+              "name": "--ren-tooltip-font-size"
+            },
+            {
+              "name": "--ren-tooltip-padding-x"
+            },
+            {
+              "name": "--ren-tooltip-padding-y"
+            },
+            {
+              "name": "--ren-tooltip-radius"
+            },
+            {
+              "name": "--ren-tooltip-shadow"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-tooltip",
+          "declaration": {
+            "name": "RenTooltip",
+            "module": "components/composites/ren-tooltip/ren-tooltip.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/patterns/ren-command/ren-command.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenCommand",
+          "description": "Command/search palette with keyboard shortcuts. Contract: components/patterns/ren-command/pattern.md",
+          "customElement": true,
+          "tagName": "ren-command",
+          "attributes": [
+            {
+              "name": "data-shortcut"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-command-select",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "close"
+            },
+            {
+              "kind": "method",
+              "name": "registerAction"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-command-bg"
+            },
+            {
+              "name": "--ren-command-border"
+            },
+            {
+              "name": "--ren-command-item-height"
+            },
+            {
+              "name": "--ren-command-item-radius"
+            },
+            {
+              "name": "--ren-command-max-height"
+            },
+            {
+              "name": "--ren-command-radius"
+            },
+            {
+              "name": "--ren-command-shadow"
+            },
+            {
+              "name": "--ren-command-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-command",
+          "declaration": {
+            "name": "RenCommand",
+            "module": "components/patterns/ren-command/ren-command.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/patterns/ren-form/ren-form.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenForm",
+          "description": "Styled form wrapper with validation styling. Contract: components/patterns/ren-form/pattern.md",
+          "customElement": true,
+          "tagName": "ren-form",
+          "attributes": [
+            {
+              "name": "data-persist"
+            },
+            {
+              "name": "data-steps"
+            },
+            {
+              "name": "data-validate"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-field-validated",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-invalid",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-step-change",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-submit",
+              "type": {
+                "text": "CustomEvent"
+              }
+            },
+            {
+              "name": "ren-submit-error",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "method",
+              "name": "reset"
+            },
+            {
+              "kind": "method",
+              "name": "validateAsync"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-field-bg"
+            },
+            {
+              "name": "--ren-field-border-color"
+            },
+            {
+              "name": "--ren-field-border-width"
+            },
+            {
+              "name": "--ren-field-color"
+            },
+            {
+              "name": "--ren-field-error-color"
+            },
+            {
+              "name": "--ren-field-focus-color"
+            },
+            {
+              "name": "--ren-field-height"
+            },
+            {
+              "name": "--ren-field-padding-x"
+            },
+            {
+              "name": "--ren-field-padding-y"
+            },
+            {
+              "name": "--ren-field-placeholder"
+            },
+            {
+              "name": "--ren-field-radius"
+            },
+            {
+              "name": "--ren-field-success-color"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-form",
+          "declaration": {
+            "name": "RenForm",
+            "module": "components/patterns/ren-form/ren-form.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/patterns/ren-menubar/ren-menubar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenMenubar",
+          "description": "Top-level menu bar with submenu support. Contract: components/patterns/ren-menubar/pattern.md",
+          "customElement": true,
+          "tagName": "ren-menubar",
+          "attributes": [],
+          "events": [
+            {
+              "name": "ren-menubar-select",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-menubar",
+          "declaration": {
+            "name": "RenMenubar",
+            "module": "components/patterns/ren-menubar/ren-menubar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/patterns/ren-nav/ren-nav.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenNav",
+          "description": "Responsive navigation bar with mobile menu. Contract: components/patterns/ren-nav/pattern.md",
+          "customElement": true,
+          "tagName": "ren-nav",
+          "attributes": [],
+          "events": [],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-nav-bg"
+            },
+            {
+              "name": "--ren-nav-border"
+            },
+            {
+              "name": "--ren-nav-gap"
+            },
+            {
+              "name": "--ren-nav-height"
+            },
+            {
+              "name": "--ren-nav-link-active"
+            },
+            {
+              "name": "--ren-nav-link-color"
+            },
+            {
+              "name": "--ren-nav-padding-x"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-nav",
+          "declaration": {
+            "name": "RenNav",
+            "module": "components/patterns/ren-nav/ren-nav.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/patterns/ren-sidebar/ren-sidebar.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenSidebar",
+          "description": "Collapsible sidebar with persistence. Contract: components/patterns/ren-sidebar/pattern.md",
+          "customElement": true,
+          "tagName": "ren-sidebar",
+          "attributes": [
+            {
+              "name": "storage-key"
+            }
+          ],
+          "events": [
+            {
+              "name": "ren-sidebar-toggle",
+              "type": {
+                "text": "CustomEvent"
+              }
+            }
+          ],
+          "members": [
+            {
+              "kind": "field",
+              "name": "isCollapsed",
+              "readonly": true
+            },
+            {
+              "kind": "field",
+              "name": "isMobileOpen",
+              "readonly": true
+            },
+            {
+              "kind": "method",
+              "name": "closeMobileMenu"
+            },
+            {
+              "kind": "method",
+              "name": "openMobileMenu"
+            },
+            {
+              "kind": "method",
+              "name": "setActiveItem"
+            },
+            {
+              "kind": "method",
+              "name": "toggleMenu"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-sidebar-active-bg"
+            },
+            {
+              "name": "--ren-sidebar-active-color"
+            },
+            {
+              "name": "--ren-sidebar-bg"
+            },
+            {
+              "name": "--ren-sidebar-border"
+            },
+            {
+              "name": "--ren-sidebar-collapsed-width"
+            },
+            {
+              "name": "--ren-sidebar-duration"
+            },
+            {
+              "name": "--ren-sidebar-easing"
+            },
+            {
+              "name": "--ren-sidebar-item-height"
+            },
+            {
+              "name": "--ren-sidebar-item-padding"
+            },
+            {
+              "name": "--ren-sidebar-item-radius"
+            },
+            {
+              "name": "--ren-sidebar-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-sidebar",
+          "declaration": {
+            "name": "RenSidebar",
+            "module": "components/patterns/ren-sidebar/ren-sidebar.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/patterns/ren-table/ren-table.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenTable",
+          "description": "Sortable, responsive data table. Contract: components/patterns/ren-table/pattern.md",
+          "customElement": true,
+          "tagName": "ren-table",
+          "attributes": [
+            {
+              "name": "data-page-size"
+            }
+          ],
+          "events": [],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-table-border-color"
+            },
+            {
+              "name": "--ren-table-cell-padding"
+            },
+            {
+              "name": "--ren-table-header-bg"
+            },
+            {
+              "name": "--ren-table-header-color"
+            },
+            {
+              "name": "--ren-table-header-size"
+            },
+            {
+              "name": "--ren-table-header-weight"
+            },
+            {
+              "name": "--ren-table-hover-bg"
+            },
+            {
+              "name": "--ren-table-row-height"
+            },
+            {
+              "name": "--ren-table-selected-bg"
+            },
+            {
+              "name": "--ren-table-stripe-bg"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-table",
+          "declaration": {
+            "name": "RenTable",
+            "module": "components/patterns/ren-table/ren-table.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/primitives/ren-button/ren-button.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenButton",
+          "description": "Versatile button with variants, sizes, icon support, loading state. Contract: components/primitives/ren-button/component.md",
+          "customElement": true,
+          "tagName": "ren-button",
+          "attributes": [
+            {
+              "name": "disabled"
+            },
+            {
+              "name": "full"
+            },
+            {
+              "name": "icon"
+            },
+            {
+              "name": "loading"
+            },
+            {
+              "name": "size"
+            },
+            {
+              "name": "variant"
+            }
+          ],
+          "events": [],
+          "members": [
+            {
+              "kind": "field",
+              "name": "disabled"
+            },
+            {
+              "kind": "field",
+              "name": "loading"
+            }
+          ],
+          "cssProperties": [
+            {
+              "name": "--ren-btn-bg"
+            },
+            {
+              "name": "--ren-btn-bg-active"
+            },
+            {
+              "name": "--ren-btn-bg-hover"
+            },
+            {
+              "name": "--ren-btn-border-color"
+            },
+            {
+              "name": "--ren-btn-border-width"
+            },
+            {
+              "name": "--ren-btn-color"
+            },
+            {
+              "name": "--ren-btn-duration"
+            },
+            {
+              "name": "--ren-btn-easing"
+            },
+            {
+              "name": "--ren-btn-font-size"
+            },
+            {
+              "name": "--ren-btn-font-weight"
+            },
+            {
+              "name": "--ren-btn-gap"
+            },
+            {
+              "name": "--ren-btn-height"
+            },
+            {
+              "name": "--ren-btn-padding-x"
+            },
+            {
+              "name": "--ren-btn-padding-y"
+            },
+            {
+              "name": "--ren-btn-radius"
+            },
+            {
+              "name": "--ren-btn-ring-color"
+            },
+            {
+              "name": "--ren-btn-ring-offset"
+            },
+            {
+              "name": "--ren-btn-ring-width"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-button",
+          "declaration": {
+            "name": "RenButton",
+            "module": "components/primitives/ren-button/ren-button.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/primitives/ren-field/ren-field.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenField",
+          "description": "Form field wrapper with label, error, description. Contract: components/primitives/ren-field/component.md",
+          "customElement": true,
+          "tagName": "ren-field",
+          "attributes": [
+            {
+              "name": "data-invalid"
+            }
+          ],
+          "events": [],
+          "members": [],
+          "cssProperties": [
+            {
+              "name": "--ren-field-bg"
+            },
+            {
+              "name": "--ren-field-border-color"
+            },
+            {
+              "name": "--ren-field-border-width"
+            },
+            {
+              "name": "--ren-field-color"
+            },
+            {
+              "name": "--ren-field-error-color"
+            },
+            {
+              "name": "--ren-field-focus-color"
+            },
+            {
+              "name": "--ren-field-font-size"
+            },
+            {
+              "name": "--ren-field-height"
+            },
+            {
+              "name": "--ren-field-padding-x"
+            },
+            {
+              "name": "--ren-field-padding-y"
+            },
+            {
+              "name": "--ren-field-placeholder"
+            },
+            {
+              "name": "--ren-field-radius"
+            },
+            {
+              "name": "--ren-field-success-color"
+            }
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-field",
+          "declaration": {
+            "name": "RenField",
+            "module": "components/primitives/ren-field/ren-field.js"
+          }
+        }
+      ]
+    },
+    {
+      "kind": "javascript-module",
+      "path": "components/primitives/ren-radio/ren-radio.js",
+      "declarations": [
+        {
+          "kind": "class",
+          "name": "RenRadioGroup",
+          "description": "Radio button group with keyboard navigation. Contract: components/primitives/ren-radio/component.md",
+          "customElement": true,
+          "tagName": "ren-radio-group",
+          "attributes": [
+            {
+              "name": "orientation"
+            }
+          ],
+          "events": [],
+          "members": [],
+          "cssProperties": []
+        }
+      ],
+      "exports": [
+        {
+          "kind": "custom-element-definition",
+          "name": "ren-radio-group",
+          "declaration": {
+            "name": "RenRadioGroup",
+            "module": "components/primitives/ren-radio/ren-radio.js"
+          }
+        }
+      ]
+    }
+  ]
+}
