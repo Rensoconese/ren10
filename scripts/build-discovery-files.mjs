@@ -299,6 +299,7 @@ function buildLlmsTxt() {
     '- [base/layouts.md](base/layouts.md): layout primitives (`ren-stack`, `ren-grid`, `ren-center`, ...) to use before any custom flex/grid CSS.',
     '- [base/primitive-zero.md](base/primitive-zero.md): classless styling of native HTML elements.',
     '- [components/components.md](components/components.md): how to pick a component.',
+    '- [docs/agent-safety.md](docs/agent-safety.md): `data-agent-confirm`, `data-agent-secret` and `data-agent-hidden` — what an agent must not do on its own.',
     '',
   ];
   for (const layer of layers) {
