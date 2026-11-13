@@ -12,6 +12,8 @@ consolidates them and starts formal version tracking with 0.7.0.
 ## [Unreleased]
 
 ### Added
+- Agent safety attributes (`docs/agent-safety.md`): `data-agent-confirm="<what it does>"` on the control that commits a delete, payment, send or publish, `data-agent-secret` on fields an agent may fill but must not read, and `data-agent-hidden` on regions an agent should not see. They are declarative markup for agent hosts — RenDS ships no bridge and does not enforce them — and use the same names and meanings as the ui-sdk agent bridge. `ren-essentials.md` (hard rule 8), `AGENTS.md`, `evals/checklist.md` and the ren-alert-dialog, ren-dialog, ren-menu, ren-context-menu, ren-otp and ren-form contracts now say where they go; the golden examples and docs demos mark their confirmation buttons, and `tests/agent-discovery/agent-safety.test.mjs` fails when a destructive button inside a shipped `<dialog>` lacks one or a trigger carries it.
+
 - `npx ren10 blocks`: list the 335 shipped page-section blocks by family (`--list`, `--family <family>`, `--json`) or print one block with its markup, stylesheets, scripts, inline assets and RenDS components (`blocks <name>`, `--dense`, `--json`). The command is in `manifest --json` and the help text.
 - `templates/blocks/catalog.json`: a block catalog derived from the block pages by `npm run blocks:build` and kept fresh by `npm run blocks:check` (part of `agent:check`).
 - `ren-essentials.md`: a compact (about 8 KB) entry contract with the hard rules, token layers and first-choice tokens, layout primitives, how to choose between a component, composite, pattern, block or example, and where to load detail. `npx ren10 docs design --dense` (and `docs essentials`) now return it instead of heading fragments. It is hand-written and gated by `npm run design:check` (every token, class, command, docs topic, path, component list, block count and the version it names must match the package) and by the release version gate.
@@ -23,6 +25,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Component nodes in the knowledge graph index their contract instead of contract + CSS + JS (the stylesheet and script stay indexed as their own nodes), and the JSON graph reads component bodies back from the contract file. The graph shrinks from 1.97 MB to 0.89 MB (JSON) and 5.97 MB to 5.32 MB (SQLite) while adding the blocks.
 
 ### Fixed
+- `examples/settings-form.html`: the "Delete account" button opened a `#confirm-delete` dialog that did not exist on the page. The example now ships the alert dialog, and the agent-safety test checks that every golden-example trigger has its dialog.
 - Make `.ren-table-wrapper` the containing block for its content, so visually hidden labels in off-screen cells no longer make the whole page scroll horizontally on narrow screens.
 - Dashboard template: stop the main column overflowing at phone widths, scroll the orders table inside a named, keyboard-reachable region instead of clipping it, add a mobile navigation sheet below 880px, and remove the skipped heading level.
 - Landing template: add the `<main>` landmark, adopt `<ren-nav>` so the primary links collapse behind a toggle below 48rem instead of disappearing, let the bar wrap with long brand or action text, and remove the skipped heading level in the footer.

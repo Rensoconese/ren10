@@ -84,7 +84,10 @@
         </div>
         <div class="ren-dialog-footer">
           <button type="button" class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
-          <button type="button" class="ren-btn ren-btn-danger" data-dialog-close="delete">
+          <!-- data-agent-confirm: an automated agent must ask a person before
+               pressing this. It goes on the confirming button, not the trigger. -->
+          <button type="button" class="ren-btn ren-btn-danger" data-dialog-close="delete"
+                  data-agent-confirm="Permanently deletes project Atlas, its members and all historical data">
             Yes, delete
           </button>
         </div>

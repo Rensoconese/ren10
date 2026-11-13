@@ -33,6 +33,10 @@ plus 335 ready-made page-section blocks.
 6. Light DOM only: never `attachShadow`.
 7. Never invent a selector, attribute, event, or token. Verify it in the
    colocated contract or with the CLI first.
+8. Agent safety: the button that confirms a delete, payment, send or publish
+   carries `data-agent-confirm="<what it does>"`; fields an agent may fill but
+   not read take `data-agent-secret`; one-time secrets take
+   `data-agent-hidden`. See `docs/agent-safety.md`.
 
 ## Load on demand
 

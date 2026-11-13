@@ -10,6 +10,7 @@
 
   <script type="module" src="../components/primitives/ren-field/ren-field.js"></script>
   <script type="module" src="../components/patterns/ren-form/ren-form.js"></script>
+  <script type="module" src="../components/composites/ren-dialog/ren-dialog.js"></script>
 </head>
 <body>
   <!--
@@ -110,6 +111,29 @@
         </button>
       </div>
     </section>
+
+    <!--
+      Alert dialog: `alert` disables backdrop dismissal. data-agent-confirm on
+      the confirming button tells an automated agent to ask a person first.
+    -->
+    <ren-dialog id="confirm-delete" alert>
+      <dialog class="ren-dialog ren-dialog-sm ren-alert-dialog">
+        <div class="ren-dialog-header">
+          <h2 class="ren-dialog-title">Delete your account?</h2>
+        </div>
+        <div class="ren-dialog-body">
+          <p>This permanently removes your account, your profile and all
+          associated data. This action cannot be undone.</p>
+        </div>
+        <div class="ren-dialog-footer">
+          <button type="button" class="ren-btn ren-btn-secondary" data-dialog-close>Cancel</button>
+          <button type="button" class="ren-btn ren-btn-danger" data-dialog-close="delete"
+                  data-agent-confirm="Permanently deletes your account and all associated data">
+            Yes, delete my account
+          </button>
+        </div>
+      </dialog>
+    </ren-dialog>
   </main>
 </body>
 </html>
