@@ -11,6 +11,22 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+### Fixed
+- Make `.ren-table-wrapper` the containing block for its content, so visually hidden labels in off-screen cells no longer make the whole page scroll horizontally on narrow screens.
+- Dashboard template: stop the main column overflowing at phone widths, scroll the orders table inside a named, keyboard-reachable region instead of clipping it, add a mobile navigation sheet below 880px, and remove the skipped heading level.
+- Landing template: add the `<main>` landmark, adopt `<ren-nav>` so the primary links collapse behind a toggle below 48rem instead of disappearing, let the bar wrap with long brand or action text, and remove the skipped heading level in the footer.
+- Blog templates: add the `<main>` landmark to the post and the template index, let both headers wrap instead of overflowing or hiding links, replace inline hover handlers with `:hover` / `:focus-visible` styles, and remove the skipped heading level.
+- Examples: give every `ren-field` label an explicit `for` / `id` pair so controls keep their accessible name before or without JavaScript, and scroll the data-table example inside `.ren-table-wrapper`.
+- `ren-nav`: Escape returns focus from the hidden mobile panel to the toggle; the menu closes when the CSS stops rendering the toggle, so the script follows the stylesheet's breakpoint (including exactly 48rem and page-level overrides); the open mobile panel is anchored to the bar's bottom edge instead of a fixed 3.5rem offset.
+- `ren-nav`: the link colour tokens now colour nav links only, so buttons in `.ren-nav-actions` and the brand keep their own colour; list items no longer inherit the base list's block margins, and in the mobile panel each link's padding takes part in layout so plain links stack without overlapping. Both change how shipped navigation blocks render: action-button text is no longer muted in 17 blocks, and open mobile panels lose the inherited item margins (32px shorter where the block lists its links in `.ren-nav-links`).
+- Docs shell: keep the primary menu reachable below 720px by wrapping it onto its own row, and stop the top bar overflowing phone widths.
+- Landing template: style the code sample with semantic tokens in a nested dark scope instead of primitive palette tokens, drop the stale version from the hero, and report 53 components.
+
+### Validation
+- Gate every shipped example and template on no horizontal overflow at 390px, exactly one `<main>`, an unbroken heading outline, and named form controls with JavaScript disabled.
+- Add a component regression for absolutely positioned content inside `.ren-table-wrapper`.
+- Add `ren-nav` regressions for Escape focus, breakpoint agreement between script and stylesheet, mobile panel anchoring, link-colour scope, list-item margins and non-overlapping panel links.
+
 ## [0.14.1] — 2026-10-13
 
 ### Security

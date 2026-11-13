@@ -135,7 +135,7 @@
 
     /* Full-width element (takes the full row) */
     .element.wide {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .element.wide .element-render,
@@ -145,7 +145,8 @@
 
     /* Mobile */
     @media (max-width: 900px) {
-      .element { grid-template-columns: 1fr; }
+      /* minmax(0, …) so a long cell cannot widen the card past the column. */
+      .element { grid-template-columns: minmax(0, 1fr); }
     }
   </style>
 </head>
@@ -1322,7 +1323,7 @@ My favorite book is &lt;cite&gt;The Name of the Wind&lt;/cite&gt;.</pre>
           <p class="element-purpose">Code block with mixed program output. &lt;samp&gt; styling is reset inside &lt;pre&gt; so it doesn't compete.</p>
         </header>
         <div class="element-render">
-          <pre><code>$ git status
+          <pre tabindex="0"><code>$ git status
 <samp>On branch main
 nothing to commit, working tree clean</samp>
 

@@ -345,8 +345,10 @@
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
+      /* minmax(0, …): a plain 1fr track grows to the widest demo's
+         min-content width and pushes the page sideways on phones. */
       main {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
       }
 
       .demo-sidebar {
@@ -3149,7 +3151,7 @@
                 </a>
               </div>
             </aside>
-            <div class="ren-sidebar-main" style="padding: var(--space-4); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
+            <div class="ren-sidebar-main" tabindex="0" role="region" aria-label="Main content (demo)" style="padding: var(--space-4); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted);">
               Main content area
             </div>
           </div>

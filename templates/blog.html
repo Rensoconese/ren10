@@ -34,7 +34,8 @@
       margin: 0 auto;
       padding: var(--space-3) var(--space-6);
       box-sizing: border-box;
-      gap: var(--space-6);
+      gap: var(--space-2) var(--space-6);
+      flex-wrap: wrap; /* nav wraps on narrow screens instead of hiding links */
     }
     .bl-brand {
       display: flex;
@@ -52,7 +53,7 @@
       display: grid; place-items: center;
       font-size: var(--text-sm);
     }
-    .bl-nav-links { display: flex; gap: var(--space-1); }
+    .bl-nav-links { display: flex; flex-wrap: wrap; gap: var(--space-1); }
     .bl-nav-links a {
       color: var(--color-text-secondary);
       text-decoration: none;
@@ -65,7 +66,6 @@
     .bl-nav-links a:hover { color: var(--color-text); background: var(--color-surface-sunken); }
     .bl-nav-links a.active { color: var(--color-text); font-weight: var(--weight-semibold); }
     .bl-nav-actions { display: flex; gap: var(--space-2); }
-    @media (max-width: 768px) { .bl-nav-links { display: none; } }
 
     /* ─────────── Container ─────────── */
     .bl-container {

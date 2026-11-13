@@ -321,7 +321,7 @@
       line-height: 1.6;
     }
 
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       .rml-disclosure {
         height: auto;
         align-self: center;
@@ -351,7 +351,7 @@
       }
     }
 
-    @media (min-width: 48rem) and (max-width: 63.999rem) {
+    @media (min-width: 48.01rem) and (max-width: 63.999rem) {
       .rml-panel-inner.ren-switcher {
         flex-direction: column;
         flex-wrap: nowrap;
@@ -394,7 +394,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rml-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -498,7 +498,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rml-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
@@ -880,7 +880,7 @@
   <script type="module" src="../../components/patterns/ren-nav/ren-nav.js"></script>
   <script type="module">
     const RML_CONTROLLER = Symbol.for('ren10.rml.controller');
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavMegaMenuLinkRail(scope = document) {
       const root = scope.querySelector?.('[data-rml-root]') ?? scope;

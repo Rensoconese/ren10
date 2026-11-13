@@ -33,26 +33,26 @@
         <form class="ren-form ren-stack" novalidate>
           <div class="ren-form-row">
             <ren-field data-rules="required">
-              <label>First name</label>
-              <input class="ren-input" type="text" name="first" autocomplete="given-name" required>
+              <label for="settings-first-name">First name</label>
+              <input class="ren-input" id="settings-first-name" type="text" name="first" autocomplete="given-name" required>
             </ren-field>
 
             <ren-field data-rules="required">
-              <label>Last name</label>
-              <input class="ren-input" type="text" name="last" autocomplete="family-name" required>
+              <label for="settings-last-name">Last name</label>
+              <input class="ren-input" id="settings-last-name" type="text" name="last" autocomplete="family-name" required>
             </ren-field>
           </div>
 
           <ren-field data-rules="required|email">
-            <label>Email</label>
-            <input class="ren-input" type="email" name="email" autocomplete="email" required>
+            <label for="settings-email">Email</label>
+            <input class="ren-input" id="settings-email" type="email" name="email" autocomplete="email" required>
             <span data-description>We'll send a confirmation link to this address.</span>
             <span data-error></span>
           </ren-field>
 
           <ren-field>
-            <label>Bio</label>
-            <textarea class="ren-input" name="bio" rows="4" maxlength="240"></textarea>
+            <label for="settings-bio">Bio</label>
+            <textarea class="ren-input" id="settings-bio" name="bio" rows="4" maxlength="240"></textarea>
             <span data-description>Up to 240 characters.</span>
           </ren-field>
 

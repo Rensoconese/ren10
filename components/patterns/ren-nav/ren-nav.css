@@ -16,6 +16,25 @@
     display: flex;
   }
 
+  /* Anchor the open mobile panel to the bar itself so it starts at the bar's
+     bottom edge whatever the bar's height. Scoped to the open state so the
+     closed bar never changes; sticky bars are already a containing block. */
+  @media (max-width: 48rem) {
+    &:is([data-open], :has(.ren-nav-toggle[aria-expanded="true"])):not(.ren-nav-sticky) {
+      position: relative;
+    }
+
+    /* In the open panel, make each link a flex item so its padding takes part
+       in layout (inline links would overlap their neighbours). The link keeps
+       its own display, e.g. a .ren-row link stays a flex row. Scoped to the
+       open state so blocks that switch to desktop at exactly 48rem keep their
+       inline items. */
+    &:is([data-open], :has(.ren-nav-toggle[aria-expanded="true"])) .ren-nav-links > li {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
   &.ren-nav-sticky {
     position: sticky;
     top: 0;
@@ -58,7 +77,7 @@
   @media (max-width: 48rem) {
     display: none;
     position: absolute;
-    top: 3.5rem;
+    top: calc(100% + 1px); /* below the bar's 1px border-bottom */
     inset-inline: 0;
     flex-direction: column;
     gap: 0;
@@ -72,6 +91,11 @@
       animation: none;
     }
   }
+}
+
+/* The component owns item spacing; drop the base list's block margins. */
+.ren-nav-links > li {
+  margin: 0;
 }
 
 @keyframes ren-nav-slide-down {
@@ -209,7 +233,8 @@
 }
 /* Appearance API bridge */
 .ren-nav { min-block-size: var(--ren-nav-height, 3.5rem); padding-inline: var(--ren-nav-padding-x, var(--space-4)); background: var(--ren-nav-bg, var(--color-surface)); border-color: var(--ren-nav-border, var(--color-border)); gap: var(--ren-nav-gap, var(--space-6)); }
-.ren-nav a { color: var(--ren-nav-link-color, var(--color-text-muted)); }
+/* Links only: buttons in .ren-nav-actions and the brand keep their own colour. */
+.ren-nav a:where(:not(.ren-btn, .ren-nav-brand)) { color: var(--ren-nav-link-color, var(--color-text-muted)); }
 .ren-nav a[aria-current="page"], .ren-nav a[data-active] { color: var(--ren-nav-link-active, var(--color-text)); }
 
 }

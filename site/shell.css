@@ -182,8 +182,51 @@ body {
   gap: var(--space-2);
 }
 
+/* Phones: keep the primary menu reachable (CSS only). The bar wraps and the
+   menu takes its own full-width row below brand + actions; the links
+   themselves may wrap so long labels or 320px never overflow. */
 @media (max-width: 720px) {
-  .dx-nav-menu { display: none; }
+  .dx-nav-inner {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: var(--space-1);
+    padding-inline: var(--space-3);
+  }
+
+  /* The hamburger (added by shell.js) has 10px of empty space around its
+     20px icon; pull it into the padding so it lines up with the bar edge
+     while keeping its 40px tap target. */
+  .dx-nav-inner > .dx-sidebar-toggle {
+    margin-inline-start: calc(-1 * var(--space-2));
+  }
+
+  /* Brand stays at the start; actions go to the end of their row. */
+  .dx-nav-actions {
+    margin-inline-start: auto;
+  }
+
+  .dx-nav-menu {
+    order: 3;
+    flex: 1 0 100%;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+
+  .dx-nav-menu a {
+    padding-block: var(--space-2);
+  }
+
+  /* Long CTA labels wrap instead of pushing the bar past the viewport. */
+  .dx-nav-actions {
+    flex-wrap: wrap;
+    min-inline-size: 0;
+    max-inline-size: 100%;
+  }
+
+  .dx-nav-actions > a {
+    white-space: normal;
+    max-inline-size: 100%;
+  }
 }
 
 
@@ -729,6 +772,33 @@ body {
   overflow-wrap: anywhere;
   word-break: break-word;
 }
+
+
+/* ─────────────────────────────────────────────
+   Horizontal scroll region — wide reference
+   content (multi-column tables, file trees)
+   scrolls inside the column instead of pushing
+   the page sideways on phones. Markup must make
+   it reachable and named:
+   tabindex="0" role="region" aria-label="…".
+   position: relative keeps absolutely positioned
+   descendants (e.g. .ren-sr-only) clipped here.
+   ───────────────────────────────────────────── */
+.dx-scroll-x {
+  position: relative;
+  overflow-x: auto;
+}
+
+.dx-scroll-x:focus-visible {
+  outline: var(--ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--ring-offset);
+}
+
+/* A wrapped .dx-table hands its block margin to the
+   wrapper, so spacing and margin collapsing match an
+   unwrapped table. */
+.dx-scroll-x:has(> .dx-table) { margin-block: var(--space-4); }
+.dx-scroll-x > .dx-table { margin-block: 0; }
 
 .dx-pre code {
   background: none;

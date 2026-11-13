@@ -255,10 +255,10 @@
     }
 
     /*
-     * Seam-free shell boundary: mobile ends below 48rem; desktop compact panel
-     * and JS DESKTOP_MQ start at 48rem.
+     * Shell boundary follows ren-nav: mobile runs through max-width: 48rem
+     * (toggle shown); desktop compact panel and JS DESKTOP_MQ start at 48.01rem.
      */
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       /*
        * Narrow panel under the trigger. Disclosure is relative (summary-sized);
        * top offset clears the vertically-centered nav bar so panelTop >= navBottom.
@@ -293,7 +293,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       /*
        * One top row: logo | toggle only. Navigation tree and both actions live
        * inside the opened panel — never permanent top-row chrome.
@@ -407,7 +407,7 @@
     }
 
     /* JS-disabled mobile: hide inert toggle; expose the one tree + both actions. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn14-preview ren-nav:not(:defined) .ren-nav {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -608,8 +608,8 @@
      * Keyboard Enter/Space: native details toggle (event.detail === 0).
      */
     const RN14_CONTROLLER = Symbol.for('ren10.rn14.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /** Desktop shell for this block: same query as its CSS; complements ren-nav's max-width: 48rem toggle. */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavFloatingLogoLeftMenuRightActions(scope = document) {
       const root = scope.querySelector?.('[data-rn14-root]') ?? scope;

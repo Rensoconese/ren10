@@ -259,10 +259,10 @@
     }
 
     /*
-     * Seam-free shell boundary: mobile ends below 48rem; desktop compact panel
-     * and JS DESKTOP_MQ start at 48rem.
+     * Shell boundary follows ren-nav: mobile runs through max-width: 48rem
+     * (toggle shown); desktop compact panel and JS DESKTOP_MQ start at 48.01rem.
      */
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       /*
        * Compact panel under the trigger. Disclosure is relative (summary-sized);
        * top offset clears the vertically-centered nav bar so panelTop >= navBottom.
@@ -294,7 +294,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn11-preview .ren-nav {
         flex-wrap: wrap;
         gap: 0;
@@ -389,7 +389,7 @@
     }
 
     /* JS-disabled mobile: hide inert toggle; expose the one tree + actions. */
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn11-preview ren-nav:not(:defined) .ren-nav {
         flex-wrap: wrap;
       }
@@ -628,8 +628,8 @@
      * Keyboard Enter/Space: native details toggle (event.detail === 0).
      */
     const RN11_CONTROLLER = Symbol.for('ren10.rn11.controller');
-    /** Inclusive desktop shell for this block; complements max-width: 47.999rem CSS. */
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    /** Desktop shell for this block: same query as its CSS; complements ren-nav's max-width: 48rem toggle. */
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavLogoLeftMenuRightDropdown(scope = document) {
       const root = scope.querySelector?.('[data-rn11-root]') ?? scope;

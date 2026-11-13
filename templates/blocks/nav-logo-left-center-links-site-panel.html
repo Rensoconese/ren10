@@ -429,7 +429,7 @@
       }
     }
 
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       .rn19-columns {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
@@ -494,7 +494,7 @@
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn19-preview .ren-nav {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
@@ -548,13 +548,13 @@
       display: block;
     }
 
-    @media (min-width: 48rem) {
+    @media (min-width: 48.01rem) {
       .rn19-preview ren-nav:not(:defined) .ren-nav-links {
         display: flex;
       }
     }
 
-    @media (max-width: 47.999rem) {
+    @media (max-width: 48rem) {
       .rn19-preview ren-nav:not(:defined) .ren-nav {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -821,7 +821,7 @@
      * clicks are captured so ren-nav's mobile-shell handler does not race.
      */
     const RN19_CONTROLLER = Symbol.for('ren10.rn19.controller');
-    const DESKTOP_MQ = '(min-width: 48rem)';
+    const DESKTOP_MQ = '(min-width: 48.01rem)';
 
     export function initNavLogoLeftCenterLinksSitePanel(scope = document) {
       const root = scope.querySelector?.('[data-rn19-root]') ?? scope;

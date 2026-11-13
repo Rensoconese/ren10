@@ -45,6 +45,7 @@
       font-size: var(--text-base);
       font-weight: var(--weight-bold);
     }
+    .db-menu-btn { display: none; }
     .db-brand-mark {
       width: 28px; height: 28px;
       border-radius: var(--radius-md);
@@ -131,6 +132,9 @@
 
     /* ─────────── Main ─────────── */
     .db-main {
+      /* Grid items default to min-width: auto; without this the orders
+         table's min-content width stretches the 1fr track past the viewport. */
+      min-width: 0;
       padding: clamp(var(--space-5), 3vw, var(--space-8)) clamp(var(--space-5), 3vw, var(--space-8));
       max-width: 1400px;
     }
@@ -222,9 +226,10 @@
       align-items: center;
       gap: var(--space-3);
     }
-    .db-panel-head h3 {
+    .db-panel-head h2 {
       margin: 0;
       font-size: var(--text-base);
+      line-height: var(--title-md-leading);
       font-weight: var(--weight-semibold);
     }
     .db-panel-head .ren-link {
@@ -233,6 +238,11 @@
     }
     .db-panel-body { padding: var(--space-5); }
     .db-panel-body.flush { padding: 0; }
+    /* The panel clips overflow for its rounded corners, so the scroll
+       area's focus ring is drawn inside its own edge to stay visible. */
+    .db-panel-body.ren-scroll-area:focus-visible {
+      outline-offset: calc(var(--ring-width) * -1);
+    }
 
     /* ─────────── Real chart ─────────── */
     .db-chart {
@@ -324,9 +334,18 @@
     @media (max-width: 880px) {
       .db-shell { grid-template-columns: 1fr; }
       .db-sidebar { position: static; height: auto; }
-      .db-nav, .db-sidebar-footer { display: none; }
+      .db-sidebar .db-nav, .db-sidebar-footer { display: none; }
       .db-brand { padding-block: var(--space-2); }
+      .db-menu-btn { display: inline-flex; }
+
+      /* Without JS the sheet never upgrades: keep the sidebar nav inline
+         instead of offering a menu button that cannot open anything. */
+      :root:has(ren-sheet:not(:defined)) .db-sidebar .db-nav { display: flex; }
+      :root:has(ren-sheet:not(:defined)) .db-menu-btn { display: none; }
     }
+
+    /* Hide the un-upgraded sheet content (no JS / before definition). */
+    ren-sheet:not(:defined) { display: none; }
   </style>
 </head>
 <body>
@@ -341,9 +360,15 @@
 
     <!-- ═══ SIDEBAR ═══ -->
     <aside class="db-sidebar" aria-label="Primary navigation">
-      <div class="db-brand">
-        <span class="db-brand-mark" aria-hidden="true">R</span>
-        <span>RenDS</span>
+      <div class="ren-row-spread">
+        <div class="db-brand">
+          <span class="db-brand-mark" aria-hidden="true">R</span>
+          <span>RenDS</span>
+        </div>
+        <!-- Mobile only (≤880px): opens the sidebar nav in a sheet -->
+        <button type="button" class="ren-btn ren-btn-ghost ren-btn-icon db-menu-btn" data-sheet-trigger="db-nav-sheet" aria-controls="db-nav-sheet" aria-expanded="false" aria-haspopup="dialog" aria-label="Open navigation menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        </button>
       </div>
 
       <nav class="db-nav" aria-label="App sections">
@@ -467,7 +492,7 @@
       <div class="db-row">
         <section class="db-panel" aria-labelledby="rev-title">
           <div class="db-panel-head">
-            <h3 id="rev-title">Revenue overview</h3>
+            <h2 id="rev-title">Revenue overview</h2>
             <a href="#" class="ren-link">Last 30 days</a>
           </div>
           <div class="db-panel-body">
@@ -512,7 +537,7 @@
 
         <section class="db-panel" aria-labelledby="act-title">
           <div class="db-panel-head">
-            <h3 id="act-title">Recent activity</h3>
+            <h2 id="act-title">Recent activity</h2>
             <a href="#" class="ren-link">View all</a>
           </div>
           <div class="db-panel-body">
@@ -560,10 +585,10 @@
       <!-- Orders table -->
       <section class="db-panel" aria-labelledby="orders-title">
         <div class="db-panel-head">
-          <h3 id="orders-title">Recent orders</h3>
+          <h2 id="orders-title">Recent orders</h2>
           <a href="#" class="ren-link">View all</a>
         </div>
-        <div class="db-panel-body flush">
+        <div class="db-panel-body flush ren-scroll-area -x" tabindex="0" aria-labelledby="orders-title">
           <table class="db-table">
             <thead>
               <tr>
@@ -612,5 +637,40 @@
     </main>
 
   </div>
+
+  <!-- Mobile navigation sheet: filled from the sidebar nav on load so both
+       stay in sync. -->
+  <ren-sheet id="db-nav-sheet" side="left" size="sm">
+    <header class="ren-sheet-header">
+      <h2 class="ren-sheet-title">Navigation</h2>
+      <button type="button" class="ren-sheet-close" data-sheet-close aria-label="Close navigation menu">×</button>
+    </header>
+    <div class="ren-sheet-body" data-db-nav-slot></div>
+  </ren-sheet>
+
+  <script type="module">
+    import '../components/composites/ren-sheet/ren-sheet.js';
+
+    const sheet = document.getElementById('db-nav-sheet');
+    const trigger = document.querySelector('[data-sheet-trigger="db-nav-sheet"]');
+    const slot = document.querySelector('[data-db-nav-slot]');
+    const nav = document.querySelector('.db-sidebar .db-nav');
+
+    if (sheet && slot && nav) {
+      const navCopy = nav.cloneNode(true);
+      navCopy.querySelectorAll('a').forEach((link) => link.setAttribute('data-sheet-close', ''));
+      slot.append(navCopy);
+
+      sheet.addEventListener('ren-open', () => trigger?.setAttribute('aria-expanded', 'true'));
+      sheet.addEventListener('ren-close', () => trigger?.setAttribute('aria-expanded', 'false'));
+
+      // The sheet is a mobile affordance; close it if the viewport grows
+      // back to the desktop layout where the sidebar nav is visible.
+      const mobile = window.matchMedia('(max-width: 880px)');
+      mobile.addEventListener('change', (event) => {
+        if (!event.matches && sheet.open) sheet.close();
+      });
+    }
+  </script>
 </body>
 </html>

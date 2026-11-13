@@ -10827,6 +10827,15 @@
     &:has(.ren-nav-toggle[aria-expanded=true]) .ren-nav-links {
       display: flex;
     }
+    @media (max-width: 48rem) {
+      &:is([data-open], :has(.ren-nav-toggle[aria-expanded=true])):not(.ren-nav-sticky) {
+        position: relative;
+      }
+      &:is([data-open], :has(.ren-nav-toggle[aria-expanded=true])) .ren-nav-links > li {
+        display: flex;
+        flex-direction: column;
+      }
+    }
     &.ren-nav-sticky {
       position: sticky;
       top: 0;
@@ -10864,7 +10873,7 @@
     @media (max-width: 48rem) {
       display: none;
       position: absolute;
-      top: 3.5rem;
+      top: calc(100% + 1px);
       inset-inline: 0;
       flex-direction: column;
       gap: 0;
@@ -10877,6 +10886,9 @@
         animation: none;
       }
     }
+  }
+  .ren-nav-links > li {
+    margin: 0;
   }
   @keyframes ren-nav-slide-down {
     from {
@@ -10998,7 +11010,7 @@
     border-color: var(--ren-nav-border, var(--color-border));
     gap: var(--ren-nav-gap, var(--space-6));
   }
-  .ren-nav a {
+  .ren-nav a:where(:not(.ren-btn, .ren-nav-brand)) {
     color: var(--ren-nav-link-color, var(--color-text-muted));
   }
   .ren-nav a[aria-current=page],
@@ -11588,6 +11600,7 @@
     width: 100%;
   }
   .ren-table-wrapper {
+    position: relative;
     flex: 1;
     overflow-x: auto;
     overflow-y: auto;

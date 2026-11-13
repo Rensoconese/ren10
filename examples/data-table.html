@@ -31,16 +31,16 @@
     <section class="ren-card">
       <div class="ren-card-body ren-row" style="gap: var(--space-3); flex-wrap: wrap">
         <ren-field style="flex: 1; min-width: 12rem">
-          <label class="ren-sr-only">Search users</label>
+          <label class="ren-sr-only" for="users-search">Search users</label>
           <span class="ren-input-wrapper">
             <span class="ren-input-icon" aria-hidden="true">🔍</span>
-            <input class="ren-input" type="search" name="q" placeholder="Search by name or email">
+            <input class="ren-input" id="users-search" type="search" name="q" placeholder="Search by name or email">
           </span>
         </ren-field>
 
         <ren-field>
-          <label class="ren-sr-only">Filter role</label>
-          <select class="ren-input" name="role">
+          <label class="ren-sr-only" for="users-filter-role">Filter role</label>
+          <select class="ren-input" id="users-filter-role" name="role">
             <option>All roles</option>
             <option>Admin</option>
             <option>Member</option>
@@ -49,8 +49,8 @@
         </ren-field>
 
         <ren-field>
-          <label class="ren-sr-only">Filter status</label>
-          <select class="ren-input" name="status">
+          <label class="ren-sr-only" for="users-filter-status">Filter status</label>
+          <select class="ren-input" id="users-filter-status" name="status">
             <option>All statuses</option>
             <option>Active</option>
             <option>Pending</option>
@@ -61,8 +61,8 @@
     </section>
 
     <!-- Table -->
-    <section class="ren-card">
-      <table class="ren-table">
+    <section>
+      <ren-table><div class="ren-table-wrapper"><table class="ren-table">
         <caption class="ren-sr-only">Users</caption>
         <thead>
           <tr>
@@ -145,7 +145,7 @@
             </td>
           </tr>
         </tbody>
-      </table>
+      </table></div></ren-table>
     </section>
 
     <!-- Pagination -->

@@ -43,14 +43,14 @@
             </div>
 
             <ren-field data-rules="required|email">
-              <label>Email</label>
-              <input class="ren-input" type="email" name="email" autocomplete="email" required>
+              <label for="auth-email">Email</label>
+              <input class="ren-input" id="auth-email" type="email" name="email" autocomplete="email" required>
               <span data-error></span>
             </ren-field>
 
             <ren-field data-rules="required|min:8">
-              <label>Password</label>
-              <input class="ren-input" type="password" name="password" autocomplete="current-password" required minlength="8">
+              <label for="auth-password">Password</label>
+              <input class="ren-input" id="auth-password" type="password" name="password" autocomplete="current-password" required minlength="8">
               <span data-description>At least 8 characters.</span>
               <span data-error></span>
             </ren-field>
