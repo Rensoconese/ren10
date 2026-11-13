@@ -12,19 +12,19 @@ import { fileURLToPath } from 'url';
 import { API_VERSION, jsonEnvelope, jsonErrorEnvelope } from './json-envelope.js';
 import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from './registry.js';
 import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
-import { validateV0Adapter } from '../scripts/check-v0-adapter.mjs';
-import { validateStarterApproval } from '../scripts/check-starter-approval.mjs';
-import { buildDesignManifest, detectTargets, saveReview } from './detector/index.js';
-import { detectUrl } from './detector/browser.js';
-import {
-  addIgnoreFile,
-  addIgnoreRule,
-  addIgnoreValue,
-  loadConfig,
-  writeConfig,
-} from './detector/config.js';
-import { installCodexHook, processHookEvent } from './detector/hook.js';
-import { generateThemeFromReference } from '../themes/reference-theme.js';
+// Modules used only by doctor, detect, ignores, hooks and theme load on demand,
+// so short commands (`manifest`, `search`, `blocks`) do not pay for them.
+const lazy = (specifier) => {
+  let loaded;
+  return () => (loaded ??= import(specifier));
+};
+const loadV0Adapter = lazy('../scripts/check-v0-adapter.mjs');
+const loadStarterApproval = lazy('../scripts/check-starter-approval.mjs');
+const loadDetector = lazy('./detector/index.js');
+const loadDetectorBrowser = lazy('./detector/browser.js');
+const loadDetectorConfig = lazy('./detector/config.js');
+const loadDetectorHook = lazy('./detector/hook.js');
+const loadReferenceTheme = lazy('../themes/reference-theme.js');
 import {
   analyzeQuery,
   formatKnowledgeRows,
@@ -1850,14 +1850,14 @@ async function cmdDoctor() {
     {
       id: 'v0-adapter',
       label: 'v0 adapter',
-      validate: validateV0Adapter,
+      validate: async (root) => (await loadV0Adapter()).validateV0Adapter(root),
       success: 'The packaged v0 adapter, provenance, and vanilla starter are valid.',
       fix: 'Run node scripts/check-v0-adapter.mjs and resolve every reported adapter error.',
     },
     {
       id: 'starter-approval',
       label: 'Starter approval',
-      validate: validateStarterApproval,
+      validate: async (root) => (await loadStarterApproval()).validateStarterApproval(root),
       success: 'The reference starter approval is current and valid.',
       fix: 'Run node scripts/check-starter-approval.mjs and refresh approval evidence after review.',
     },
@@ -1919,7 +1919,7 @@ async function cmdDoctor() {
 }
 
 async function cmdDesignContext() {
-  const manifest = await buildDesignManifest(RENDS_ROOT);
+  const manifest = await (await loadDetector()).buildDesignManifest(RENDS_ROOT);
   let outputPath = null;
   if (hasFlag('--write')) {
     outputPath = path.join(process.cwd(), '.ren10', 'design.json');
@@ -1937,21 +1937,21 @@ async function cmdDesignContext() {
 
 async function cmdDetect() {
   const cwd = process.cwd();
-  const config = await loadConfig(cwd);
+  const config = await (await loadDetectorConfig()).loadConfig(cwd);
   const profile = optionValue('--profile', config.detector.profile ?? 'generic');
   const url = optionValue('--url');
   const targets = stripCommandFlags(args.slice(1));
   const designPath = path.join(cwd, '.ren10', 'design.json');
   const manifest = fs.existsSync(designPath)
     ? JSON.parse(fs.readFileSync(designPath, 'utf8'))
-    : await buildDesignManifest(RENDS_ROOT);
+    : await (await loadDetector()).buildDesignManifest(RENDS_ROOT);
   const reports = [];
 
   if (targets.length > 0 || !url) {
-    reports.push(await detectTargets(targets, { cwd, manifest, profile, config }));
+    reports.push(await (await loadDetector()).detectTargets(targets, { cwd, manifest, profile, config }));
   }
   if (url) {
-    reports.push(await detectUrl(url, {
+    reports.push(await (await loadDetectorBrowser()).detectUrl(url, {
       profile,
       config,
       viewport: config.browser?.viewport,
@@ -1975,7 +1975,7 @@ async function cmdDetect() {
     exitCode: summary.errors > 0 ? 1 : 0,
   };
   if (hasFlag('--save-review')) {
-    report.reviewPath = relFromCwd(await saveReview(report, {
+    report.reviewPath = relFromCwd(await (await loadDetector()).saveReview(report, {
       cwd,
       slug: optionValue('--review-slug', targets[0] ?? 'url-review'),
     }));
@@ -2007,12 +2007,12 @@ function relFromCwd(absolute) {
 async function cmdIgnores() {
   const cwd = process.cwd();
   const action = args[1] ?? 'status';
-  let config = await loadConfig(cwd);
+  let config = await (await loadDetectorConfig()).loadConfig(cwd);
   const reason = optionValue('--reason');
-  if (action === 'add-rule') config = addIgnoreRule(config, args[2], reason);
-  else if (action === 'add-file') config = addIgnoreFile(config, args[2], reason);
+  if (action === 'add-rule') config = (await loadDetectorConfig()).addIgnoreRule(config, args[2], reason);
+  else if (action === 'add-file') config = (await loadDetectorConfig()).addIgnoreFile(config, args[2], reason);
   else if (action === 'add-value') {
-    config = addIgnoreValue(config, {
+    config = (await loadDetectorConfig()).addIgnoreValue(config, {
       rule: args[2],
       value: args[3],
       files: repeatedOptionValues('--file'),
@@ -2022,7 +2022,7 @@ async function cmdIgnores() {
     error(`Unknown ignores action "${action}". Use status, add-rule, add-file, or add-value.`);
   }
   let configPath = null;
-  if (action !== 'status') configPath = await writeConfig(cwd, config);
+  if (action !== 'status') configPath = await (await loadDetectorConfig()).writeConfig(cwd, config);
   const data = { action, config, ...(configPath ? { configPath: relFromCwd(configPath) } : {}) };
   if (hasFlag('--json')) jsonOut('detector.ignores', data);
   else console.log(JSON.stringify(data, null, 2));
@@ -2031,15 +2031,15 @@ async function cmdIgnores() {
 async function cmdHooks() {
   const cwd = process.cwd();
   const action = args[1] ?? 'status';
-  let config = await loadConfig(cwd);
+  let config = await (await loadDetectorConfig()).loadConfig(cwd);
   let installation = null;
   if (action === 'install' || action === 'on') {
     config.hook.enabled = true;
-    installation = await installCodexHook(cwd);
-    await writeConfig(cwd, config);
+    installation = await (await loadDetectorHook()).installCodexHook(cwd);
+    await (await loadDetectorConfig()).writeConfig(cwd, config);
   } else if (action === 'off') {
     config.hook.enabled = false;
-    await writeConfig(cwd, config);
+    await (await loadDetectorConfig()).writeConfig(cwd, config);
   } else if (action !== 'status') {
     error(`Unknown hooks action "${action}". Use status, install, on, or off.`);
   }
@@ -2055,7 +2055,7 @@ async function cmdHooks() {
 
 async function cmdHookRun() {
   const input = await readStdinJson();
-  const result = await processHookEvent(input, { cwd: process.cwd(), packageRoot: RENDS_ROOT });
+  const result = await (await loadDetectorHook()).processHookEvent(input, { cwd: process.cwd(), packageRoot: RENDS_ROOT });
   if (result.status !== 'skipped' && result.message) console.log(result.message);
 }
 
@@ -2592,7 +2592,7 @@ async function cmdTheme() {
   } catch (cause) {
     error(`Could not parse visual reference JSON: ${cause.message}`);
   }
-  const theme = generateThemeFromReference(spec);
+  const theme = (await loadReferenceTheme()).generateThemeFromReference(spec);
   const outputArg = optionValue('--out');
   let outputPath = null;
   if (outputArg) {
