@@ -51,6 +51,7 @@ requiredMarkup:
   - "Actions live inside .ren-alert-dialog-actions and use real <button> elements (.ren-btn-secondary + .ren-btn-danger or similar)."
   - "Each button calls dialog.close('cancel' | 'confirm' | …) so the consumer can read returnValue on the close event."
   - "Use .ren-alert-dialog-icon-danger or .ren-alert-dialog-icon-warning on the icon slot for severity — do not invent new severity classes."
+  - "For an irreversible or outward-facing action, the confirming button carries data-agent-confirm=\"<what it does>\" (docs/agent-safety.md); the trigger and the <dialog> do not."
 
 forbiddenPatterns:
   - "<div class=\"ren-alert-dialog\"> rendered without the native <dialog> element."
@@ -141,6 +142,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - This contract is CSS-first; do not introduce JavaScript unless the source component already owns that behavior.
+- Agent safety: when the decision is irreversible or outward-facing (delete, pay, send), put `data-agent-confirm="<what it does>"` on the confirming button — not on the trigger or the `<dialog>` — and give it wording the trigger does not share ("Yes, delete my account"). See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
 
 ## Related Files
 

@@ -134,6 +134,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Agent safety: a destructive or outward-facing `menuitem` carries `data-agent-confirm="<what it does>"` on that item only, unless it opens a confirmation dialog — then the dialog's confirming button carries it. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
 
 ## Related Files
 

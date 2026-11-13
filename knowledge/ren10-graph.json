@@ -16859,6 +16859,13 @@
    "type": "used_by_example"
   },
   {
+   "detail": "ren-alert-dialog",
+   "data": {},
+   "source": "component:composite:ren-alert-dialog",
+   "target": "example:examples/settings-form.html",
+   "type": "used_by_example"
+  },
+  {
    "detail": "",
    "data": {},
    "source": "component:composite:ren-alert-dialog",
@@ -19817,6 +19824,13 @@
    "data": {},
    "source": "component:composite:ren-dialog",
    "target": "example:examples/dialog-workflow.html",
+   "type": "used_by_example"
+  },
+  {
+   "detail": "ren-dialog",
+   "data": {},
+   "source": "component:composite:ren-dialog",
+   "target": "example:examples/settings-form.html",
    "type": "used_by_example"
   },
   {

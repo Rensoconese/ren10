@@ -243,6 +243,7 @@ Form layout uses `ren-stack` / `--space-*`. Field chrome inherits from
   pair with it.
 - Submit buttons are real `<button type="submit">`.
 - During submitting state, focus stays on the form (do not yank focus).
+- Agent safety: a form whose submit pays, sends or publishes carries `data-agent-confirm="<what it does>"` on its submit button (or on the `<form>` to cover every control). Fields an agent may fill but must not read back take `data-agent-secret`; passwords, one-time codes and card fields are secret already. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
 
 ## Anti-Patterns
 

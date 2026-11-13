@@ -133,6 +133,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Agent safety: `<ren-otp>` renders one input per digit with `autocomplete="off"`, so an agent cannot tell it is a code. Put `data-agent-secret` on `<ren-otp>`; it covers every digit input. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
 
 ## Related Files
 

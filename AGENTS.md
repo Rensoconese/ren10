@@ -96,6 +96,11 @@ colocated contract files.
   `:focus-visible`, an accessible name, keyboard support, and respects
   `prefers-reduced-motion`. WCAG 2.1 AA is the baseline.
 - **Light DOM only.** No `attachShadow`, no Shadow DOM workarounds.
+- **Agent safety.** The button that confirms a delete, payment, send or
+  publish carries `data-agent-confirm="<what it does>"` (the confirming
+  button, never the trigger); fields an agent may fill but not read take
+  `data-agent-secret`; one-time secrets take `data-agent-hidden`. See
+  `docs/agent-safety.md`.
 - **One contract per part.** Lowercase filenames only:
   `ren-design.md`, `ren-essentials.md`, `primitive-zero.md`, `tokens.md`,
   `layouts.md`, `components.md`, `component.md`, `pattern.md`. Never
