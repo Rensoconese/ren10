@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadJsonGraph } from '../cli/knowledge-search.js';
+import { BLOCK_CATALOG_PATH } from '../cli/blocks.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const knowledgeDir = path.join(root, 'knowledge');
@@ -79,6 +80,22 @@ const checkGraphShape = (graph, messages) => {
     if (count !== expected) messages.push(`Expected ${expected} ${kind} components, found ${count}.`);
   }
   if (components.length !== 53) messages.push(`Expected 53 component nodes, found ${components.length}.`);
+
+  // Blocks are indexed from the checked-in catalog (npm run blocks:check keeps
+  // that fresh); every catalog entry must be searchable.
+  const catalogPath = path.join(root, BLOCK_CATALOG_PATH);
+  if (existsSync(catalogPath)) {
+    const catalog = readJson(catalogPath);
+    const blockNodes = graph.nodes.filter((node) => node.type === 'block');
+    if (blockNodes.length !== catalog.blocks.length) {
+      messages.push(`Expected ${catalog.blocks.length} block nodes (from ${BLOCK_CATALOG_PATH}), found ${blockNodes.length}.`);
+    }
+    for (const node of blockNodes) {
+      if (!node.body || node.body.length > 1024) {
+        messages.push(`${node.id} must index compact metadata (1-1024 chars), found ${node.body?.length ?? 0}.`);
+      }
+    }
+  }
 
   for (const component of components) {
     const componentName = component.name;
@@ -204,6 +221,8 @@ const checkPacklist = (graph, messages) => {
     'knowledge/README.md',
     'knowledge/ren10-graph.json',
     'knowledge/ren10-graph.sqlite',
+    'ren-essentials.md',
+    'templates/blocks/catalog.json',
     'site/shell.css',
     'skills/rends/SKILL.md',
     'skills/rends/README.md',

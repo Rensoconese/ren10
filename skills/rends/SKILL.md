@@ -15,19 +15,28 @@ documentation and must not become a second source of truth.
 
 ## First Move
 
+Read the compact entry contract first: `rends/ren-essentials.md` (about 8 KB,
+also printed by `npx ren10 docs design --dense`). It carries the hard rules,
+the tokens and layout primitives to reach for first, and how to choose
+between a component, pattern, block, or example.
+
 When the `ren10` CLI is available, discover before generating:
 
 ```bash
+npx ren10 docs design --dense
 npx ren10 manifest --json
 npx ren10 build "<user intent>" --json
+npx ren10 blocks <name>
 npx ren10 component <name> --dense
 npx ren10 docs layouts --dense
 npx ren10 detect <target> --profile codex
 npx ren10 doctor
 ```
 
-Use `npx ren10 search "<query>" --json` when the right component, example,
-selector, or token is unclear.
+Use `npx ren10 search "<query>" --json` when the right component, block,
+example, selector, or token is unclear. Before hand-building a navbar, hero,
+pricing table, FAQ, contact section, or footer, check the 335 shipped blocks:
+`npx ren10 blocks --list`.
 
 ## Source Precedence
 
@@ -72,7 +81,9 @@ installed contract disagree, the installed contract and CLI win.
 
 For any task that builds, edits, or reviews UI with RenDS:
 
-1. Load `rends/ren-design.md` first.
+1. Load `rends/ren-essentials.md` first. Load the canonical
+   `rends/ren-design.md` only for exact token values, rationale, or the
+   component registry.
 2. Load `rends/tokens/tokens.md` before choosing color, spacing, type,
    motion, radius, shadow, or theme values.
 3. Load `rends/base/layouts.md` before writing layout CSS.
@@ -122,6 +133,7 @@ tokens and the returned theme/density/shape attributes.
 
 ```bash
 npx ren10 component --list
+npx ren10 blocks --list --family pricing
 npx ren10 component button --dense
 npx ren10 docs tokens --dense
 npx ren10 docs primitive-zero --dense

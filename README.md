@@ -16,7 +16,10 @@ see the [registry status](https://rensoconese.github.io/ren10/docs/astro.md#publ
 [Documentation](https://rensoconese.github.io/ren10/docs/) · [Components](https://rensoconese.github.io/ren10/docs/components.html) · [Theme Builder](https://rensoconese.github.io/ren10/create/)
 
 > **AI agents:** [`AGENTS.md`](./AGENTS.md) is the routing index for AI
-> assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first.
+> assistants (Claude, Cursor, Windsurf, Copilot, etc.). Load it first; it
+> routes to [`ren-essentials.md`](./ren-essentials.md), the compact entry
+> contract (also `npx ren10 docs design --dense`), and to the 335 page-section
+> blocks in `templates/blocks/` (`npx ren10 blocks --list`).
 > Every colocated `component.md` / `pattern.md` carries an `aiHints` YAML
 > block with selection criteria, canonical imports, required markup,
 > forbidden patterns, and accessibility rules. The npm package also ships a
@@ -238,7 +241,8 @@ ren10/
 ├── index.html          ← Marketing landing page
 ├── index.css           ← Full CSS entrypoint (foundation + all components)
 ├── foundation.css      ← Tokens + reset + base, without component CSS
-├── ren-design.md       ← Agent-facing RenDS contract and routing map
+├── ren-essentials.md   ← Compact entry contract for agents (read first)
+├── ren-design.md       ← Canonical agent-facing RenDS contract and routing map
 ├── tokens/             ← Primitives, semantic, component tokens + motion
 ├── base/               ← Reset, classless styles, layouts, utilities, motion presets
 ├── components/
@@ -249,8 +253,9 @@ ren10/
 ├── utils/              ← JS utilities (focus trap, keyboard nav, portals, live-region)
 ├── themes/             ← Theme presets + hex→token generator
 ├── templates/          ← Full page examples (landing, auth, dashboard, settings, blog, blog-post)
+│   └── blocks/         ← 335 page-section blocks + catalog.json (`npx ren10 blocks`)
 ├── create/             ← Theme Builder (interactive token generator)
-├── cli/                ← `npx ren10` CLI (init, add, list, search, build, doctor)
+├── cli/                ← `npx ren10` CLI (init, add, list, search, build, blocks, doctor)
 ├── site/               ← Doc-site chrome (top nav, sidebar, footer)
 └── docs/               ← Component catalog, per-component pages, foundations
 ```
@@ -273,6 +278,9 @@ npx ren10 component button --dense       Read one component contract summary
 npx ren10 docs layouts --dense           Read dense design/token/layout docs
 npx ren10 search "dialog workflow" --json  Search components, docs, examples, selectors, tokens
 npx ren10 build "dashboard with sidebar" --json  Get a composition kit
+npx ren10 blocks --list                  List page-section blocks by family
+npx ren10 blocks <name> --dense          One block's file, styles, scripts, components
+npx ren10 docs design --dense            Compact entry contract (ren-essentials.md)
 npx ren10 doctor                         Diagnose package and agent-readiness
 npx ren10 agent-docs --agent all         Install/update generated agent guidance
 npx ren10 scales                         List available type scale ratios

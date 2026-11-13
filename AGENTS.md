@@ -10,10 +10,17 @@ next.
 
 ## Package Layout
 
-- `ren-design.md` — root design contract for tokens, themes, philosophy.
+- `ren-essentials.md` — compact entry contract (≈8 KB): hard rules, the
+  tokens and layout primitives to reach for first, how to pick a part, and
+  where to load detail. Read it first.
+- `ren-design.md` — canonical root design contract for tokens, themes,
+  philosophy, and the component registry (≈97 KB; load for detail).
 - `tokens/`, `base/`, `components/`, `utils/`, `themes/` — implementation.
 - `docs/`, `examples/`, `templates/`, `create/` — documentation and
   golden examples.
+- `templates/blocks/` — 335 page-section blocks (nav, hero, feature,
+  pricing, FAQ, CTA, contact, footer, blog, application shell...) indexed
+  by `templates/blocks/catalog.json` and `npx ren10 blocks`.
 - `cli/` — `npx ren10` CLI source.
 - `evals/` — eval prompts + checklist for RenDS-aware agents.
 
@@ -24,8 +31,13 @@ package root.
 
 For any task that builds, edits, or reviews UI with RenDS:
 
-1. **Always first.** `ren-design.md` — root design contract for tokens,
-   themes, philosophy, and the registry of all 53 components.
+1. **Always first.** `ren-essentials.md` (or `npx ren10 docs design --dense`,
+   same text) — the compact entry contract: hard rules, token layers and the
+   tokens to reach for first, layout primitives, how to choose between a
+   component, composite, pattern, block, or example, and how to load
+   detail. Load the full `ren-design.md` only when you need exact token
+   values, the rationale behind them, or the component registry; it stays
+   the canonical source.
 2. **Token decisions.** `tokens/tokens.md` — when choosing a color,
    spacing, type, motion, radius, shadow, or component-level theme value.
 3. **Page skeleton.** `base/layouts.md` — before writing any layout
@@ -36,7 +48,10 @@ For any task that builds, edits, or reviews UI with RenDS:
    classless / native HTML elements (headings, lists, tables, `details`,
    etc.).
 5. **Picking a component.** `components/components.md` — routes to
-   the correct primitive / composite / pattern.
+   the correct primitive / composite / pattern. For a whole page section
+   (navbar, hero, pricing, FAQ, contact, footer, app shell) check the
+   shipped blocks first: `npx ren10 blocks --list`, then
+   `npx ren10 blocks <name>` for its markup and dependencies.
 6. **Building a component.** The colocated contract for *every* RenDS part
    used:
    - `components/primitives/<name>/component.md`
@@ -49,8 +64,9 @@ Every colocated contract carries a YAML `aiHints` block (between
 `forbiddenPatterns` / `tokenPolicy` / `accessibility`. Read the
 `aiHints` first when deciding between two RenDS parts.
 
-Never invent RenDS APIs from `ren-design.md` alone. Selectors, attributes,
-states, and the public token surface live in the colocated contract files.
+Never invent RenDS APIs from `ren-essentials.md` or `ren-design.md` alone.
+Selectors, attributes, states, and the public token surface live in the
+colocated contract files.
 
 ## Hard Rules (apply to every UI task)
 
@@ -74,10 +90,10 @@ states, and the public token surface live in the colocated contract files.
   `prefers-reduced-motion`. WCAG 2.1 AA is the baseline.
 - **Light DOM only.** No `attachShadow`, no Shadow DOM workarounds.
 - **One contract per part.** Lowercase filenames only:
-  `ren-design.md`, `primitive-zero.md`, `tokens.md`, `layouts.md`,
-  `components.md`, `component.md`, `pattern.md`. Never reintroduce the
-  uppercase variants (DESIGN, COMPONENT, PATTERN, TOKENS, LAYOUTS,
-  PRIMITIVE-ZERO, COMPONENTS) — the validation block in this file
+  `ren-design.md`, `ren-essentials.md`, `primitive-zero.md`, `tokens.md`,
+  `layouts.md`, `components.md`, `component.md`, `pattern.md`. Never
+  reintroduce the uppercase variants (DESIGN, COMPONENT, PATTERN, TOKENS,
+  LAYOUTS, PRIMITIVE-ZERO, COMPONENTS) — the validation block in this file
   greps for them.
 
 ## Validation Commands
@@ -106,8 +122,11 @@ npm run lint
 When the package CLI is available, agents can discover before generating:
 
 ```bash
+npx ren10 docs design --dense
 npx ren10 manifest --json
 npx ren10 build "settings form with sidebar" --json
+npx ren10 blocks --list --family pricing
+npx ren10 blocks pricing-billing-period-toggle --dense
 npx ren10 component button --dense
 npx ren10 docs layouts --dense
 npx ren10 search "dialog workflow" --json
@@ -148,6 +167,17 @@ Family/module status lives in
 `in_progress` at a time. Run `npm run workflow:relume:check` to validate
 every inventory entry against its packet.
 
+## Page-Section Blocks
+
+`templates/blocks/*.html` ships 335 standalone blocks grouped in families:
+nav, hero, feature, testimonial, pricing, faq, cta, contact, blog,
+article-header, footer, application-shell. Each page holds one block root
+(`.bb-detail-preview`) plus the stylesheets and scripts it needs.
+`npx ren10 build "<idea>"` suggests blocks per section in page order;
+`npx ren10 blocks <name>` prints the markup and dependencies. The catalog
+(`templates/blocks/catalog.json`) is generated by `npm run blocks:build` and
+verified by `npm run blocks:check`; never edit it by hand.
+
 ## Golden Examples
 
 Concrete, runnable UI flows live at `examples/*.html`. Read these
@@ -176,13 +206,17 @@ file, the CLI manifest, and the colocated contracts; it must not become a
 second source of truth.
 
 <!-- RENDS:START -->
-RenDS v0.14.1 · vanilla HTML/CSS/JS · Light DOM · 53 components
+RenDS v0.14.1 · vanilla HTML/CSS/JS · Light DOM · 53 components · 335 blocks
+
+READ FIRST: `ren-essentials.md` (≈8 KB: rules, tokens, layouts, routing; same as
+`npx ren10 docs design --dense`). Load `ren-design.md` (≈97 KB) only for exact values or rationale.
 
 WORKFLOW — discover before writing UI:
-1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.
-2. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.
-3. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.
-4. `npx ren10 doctor` — verify package health before shipping.
+1. `npx ren10 build "<idea>"` — composition kit: page sections (blocks), components, docs.
+2. `npx ren10 blocks <name>` — copy a shipped nav/hero/pricing/footer block before hand-building one.
+3. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.
+4. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.
+5. `npx ren10 doctor` — verify package health before shipping.
 
 RULES:
 - Vanilla only: no React/Vue/Svelte/JSX/TSX, no Tailwind, no shadcn/ui.
@@ -194,8 +228,9 @@ RULES:
 COMPONENTS: primitives=19, composites=26, patterns=8.
 MORE CLI:
   manifest --json          self-describing CLI surface
-  search "<query>"         search graph across components/docs/examples/tokens
-  docs <topic> --dense     design, tokens, layouts, primitive-zero, components, evals
+  search "<query>"         search graph across components/blocks/docs/examples/tokens
+  blocks --list            page-section blocks grouped by family
+  docs <topic> --dense     design (essentials), tokens, layouts, primitive-zero, components, evals
   component --list         all components grouped by layer
   knowledge query "<q>"    packaged graph query; --json emits typed JSON
 <!-- RENDS:END -->

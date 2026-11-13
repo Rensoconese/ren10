@@ -4,6 +4,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 import { buildDesignManifest } from '../cli/detector/index.js';
+import { validateEssentials } from './check-essentials.mjs';
 
 async function writeDesignContext(packageRoot) {
   const manifest = await buildDesignManifest(packageRoot);
@@ -42,6 +43,15 @@ async function main() {
     process.exit(1);
   }
   console.log('Ren10 design context: OK');
+
+  // The compact entry contract is hand-written; this gate keeps every token,
+  // class, command, path and count it names in step with the package.
+  const essentials = validateEssentials(packageRoot);
+  if (!essentials.ok) {
+    for (const message of essentials.errors) console.error(`Ren10 essentials: ${message}`);
+    process.exit(1);
+  }
+  console.log(`Ren10 essentials: OK (${essentials.bytes} bytes)`);
 }
 
 const isDirectRun = process.argv[1]

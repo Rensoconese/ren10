@@ -12,26 +12,35 @@ import { fileURLToPath } from 'url';
 import { API_VERSION, jsonEnvelope, jsonErrorEnvelope } from './json-envelope.js';
 import { REGISTRY, getComponentsByLayer, getComponent, getAllComponents } from './registry.js';
 import { RATIOS, generateTypeScaleCSS, listRatios } from './type-scale.js';
-import { validateV0Adapter } from '../scripts/check-v0-adapter.mjs';
-import { validateStarterApproval } from '../scripts/check-starter-approval.mjs';
-import { buildDesignManifest, detectTargets, saveReview } from './detector/index.js';
-import { detectUrl } from './detector/browser.js';
+// Modules used only by doctor, detect, ignores, hooks and theme load on demand,
+// so short commands (`manifest`, `search`, `blocks`) do not pay for them.
+const lazy = (specifier) => {
+  let loaded;
+  return () => (loaded ??= import(specifier));
+};
+const loadV0Adapter = lazy('../scripts/check-v0-adapter.mjs');
+const loadStarterApproval = lazy('../scripts/check-starter-approval.mjs');
+const loadDetector = lazy('./detector/index.js');
+const loadDetectorBrowser = lazy('./detector/browser.js');
+const loadDetectorConfig = lazy('./detector/config.js');
+const loadDetectorHook = lazy('./detector/hook.js');
+const loadReferenceTheme = lazy('../themes/reference-theme.js');
 import {
-  addIgnoreFile,
-  addIgnoreRule,
-  addIgnoreValue,
-  loadConfig,
-  writeConfig,
-} from './detector/config.js';
-import { installCodexHook, processHookEvent } from './detector/hook.js';
-import { generateThemeFromReference } from '../themes/reference-theme.js';
-import {
+  analyzeQuery,
   formatKnowledgeRows,
   loadJsonGraph,
   queryJsonGraph,
   querySqliteGraph,
   sqliteAvailable,
 } from './knowledge-search.js';
+import {
+  BLOCK_CATALOG_PATH,
+  BLOCK_FAMILIES,
+  extractBlockMarkup,
+  extractInlineAssets,
+  loadBlockCatalog,
+  loadBlockCatalogSummary,
+} from './blocks.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RENDS_ROOT = path.resolve(__dirname, '..');
@@ -62,6 +71,7 @@ const RESPONSE_TYPES = {
   docs: ['docs.list', 'docs.detail'],
   search: ['search'],
   build: ['build.help', 'build.kit'],
+  blocks: ['blocks.list', 'blocks.detail'],
   doctor: ['doctor'],
   detect: ['detector.report'],
   'design-context': ['design-context.detail', 'design-context.write'],
@@ -76,7 +86,16 @@ const DOC_TOPICS = {
   design: {
     title: 'RenDS design contract',
     path: 'ren-design.md',
+    // `docs design --dense` returns the compact entry contract instead of
+    // slicing headings out of the 97 KB canonical file.
+    densePath: 'ren-essentials.md',
     aliases: ['ren-design', 'contract'],
+  },
+  essentials: {
+    title: 'RenDS essentials (compact entry contract)',
+    path: 'ren-essentials.md',
+    densePath: 'ren-essentials.md',
+    aliases: ['ren-essentials', 'start', 'entry', 'quickstart'],
   },
   tokens: {
     title: 'Token contract',
@@ -200,6 +219,18 @@ const COMMAND_SPECS = [
     arguments: [{ name: 'query', required: true, variadic: true }],
     options: [
       { flag: '--limit <n>', type: 'number', description: 'Maximum results' },
+      { flag: '--json', type: 'boolean', description: 'Emit typed JSON' },
+    ],
+    json: true,
+  },
+  {
+    name: 'blocks',
+    description: 'List the shipped page-section blocks (nav, hero, pricing, footer...) or print one block with its markup and dependencies',
+    arguments: [{ name: 'name', required: false }],
+    options: [
+      { flag: '--list', type: 'boolean', description: 'List blocks grouped by family' },
+      { flag: '--family <family>', type: 'enum', choices: BLOCK_FAMILIES.map((family) => family.key), description: 'Limit the list to one family' },
+      { flag: '--dense', type: 'boolean', description: 'Token-efficient output for agents (no markup)' },
       { flag: '--json', type: 'boolean', description: 'Emit typed JSON' },
     ],
     json: true,
@@ -375,7 +406,7 @@ function stripCommandFlags(values) {
     if (value === '--json' || value === '--dense' || value === '--list' || value === '--remove' || value === '--source-json') {
       continue;
     }
-    if (value === '--limit' || value === '--agent' || value === '--agent-docs-path'
+    if (value === '--limit' || value === '--agent' || value === '--agent-docs-path' || value === '--family'
       || value === '--profile' || value === '--url' || value === '--review-slug'
       || value === '--rule' || value === '--value' || value === '--file' || value === '--reason') {
       i++;
@@ -572,6 +603,18 @@ function buildManifest() {
         path: 'knowledge/schemas/visual-reference-theme.schema.json',
       },
     },
+    blocks: (() => {
+      const catalog = loadBlockCatalogSummary(RENDS_ROOT);
+      return {
+        catalog: BLOCK_CATALOG_PATH,
+        count: catalog?.count ?? 0,
+        families: Object.fromEntries(
+          BLOCK_FAMILIES.map((family) => [family.key, catalog?.families?.[family.key]?.count ?? 0]),
+        ),
+        list: 'npx ren10 blocks --list --json',
+        detail: 'npx ren10 blocks <name> --dense',
+      };
+    })(),
     integrations: {
       astro: {
         package: '@ren10/astro',
@@ -583,7 +626,12 @@ function buildManifest() {
       },
     },
     docs: Object.fromEntries(
-      Object.entries(DOC_TOPICS).map(([key, doc]) => [key, { title: doc.title, path: doc.path, aliases: doc.aliases ?? [] }]),
+      Object.entries(DOC_TOPICS).map(([key, doc]) => [key, {
+        title: doc.title,
+        path: doc.path,
+        ...(doc.densePath ? { densePath: doc.densePath } : {}),
+        aliases: doc.aliases ?? [],
+      }]),
     ),
   };
 }
@@ -616,6 +664,7 @@ function runKnowledgeSearch(rawQuery, { limit = 12, forceJsonSource = false } = 
 }
 
 function commandForSearchRow(row) {
+  if (row.type === 'block') return `npx ren10 blocks ${row.name} --dense`;
   if (row.type === 'component') {
     return `npx ren10 component ${normalizeComponentName(row.name)} --dense`;
   }
@@ -624,36 +673,237 @@ function commandForSearchRow(row) {
     const name = parts[parts.length - 2];
     return `npx ren10 component ${normalizeComponentName(name)} --dense`;
   }
-  if (row.type === 'design-contract') return 'npx ren10 docs design --dense';
+  if (row.type === 'design-contract' || row.type === 'essentials-contract') return 'npx ren10 docs design --dense';
   if (row.type === 'tokens-contract' || String(row.path).includes('tokens/')) return 'npx ren10 docs tokens --dense';
   if (row.type === 'layouts-contract' || String(row.path).includes('layouts.md')) return 'npx ren10 docs layouts --dense';
   if (row.type === 'primitive-zero') return 'npx ren10 docs primitive-zero --dense';
   return row.path ? `open ${row.path}` : 'npx ren10 search';
 }
 
+let blockCatalogCache;
+function readBlockCatalog() {
+  if (blockCatalogCache === undefined) {
+    try {
+      blockCatalogCache = loadBlockCatalog(RENDS_ROOT);
+    } catch {
+      blockCatalogCache = null;
+    }
+  }
+  return blockCatalogCache;
+}
+
+function requireBlockCatalog() {
+  const catalog = readBlockCatalog();
+  if (!catalog) {
+    if (hasFlag('--json')) jsonError(`Block catalog not found: ${BLOCK_CATALOG_PATH}`, 'ERR_FILE_NOT_FOUND');
+    error(`Block catalog not found: ${BLOCK_CATALOG_PATH}`);
+  }
+  return catalog;
+}
+
+/**
+ * Page recipes for `build`: which block families a kind of page is normally
+ * assembled from. Triggers are matched against the raw query words, so
+ * generic words such as "website" still select a recipe even though search
+ * ignores them.
+ */
+const PAGE_RECIPES = [
+  {
+    key: 'landing',
+    triggers: ['landing', 'homepage', 'home', 'marketing', 'website', 'site', 'startup', 'saas', 'agency', 'business',
+      'clinic', 'studio', 'portfolio', 'company', 'brand', 'restaurant', 'shop', 'store', 'launch', 'one-pager'],
+    families: ['nav', 'hero', 'feature', 'cta', 'footer'],
+  },
+  {
+    key: 'application',
+    triggers: ['dashboard', 'admin', 'app', 'application', 'console', 'workspace', 'crm', 'analytics', 'portal', 'backoffice'],
+    families: ['application-shell'],
+  },
+  { key: 'blog', triggers: ['blog', 'magazine', 'journal', 'news'], families: ['nav', 'blog', 'footer'] },
+  { key: 'article', triggers: ['article', 'essay', 'story', 'longform'], families: ['nav', 'article-header', 'footer'] },
+];
+
+function scoreBlock(block, terms) {
+  const name = block.name.split('-');
+  const text = `${block.title} ${block.summary} ${block.kicker ?? ''}`.toLowerCase();
+  let score = 0;
+  for (const term of terms) {
+    if (name.includes(term)) score += 3;
+    else if (new RegExp(`(?<![a-z0-9])${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`).test(text)) score += 1;
+  }
+  return score;
+}
+
+/**
+ * Pick the block families a request needs and the best-matching blocks in
+ * each. Deterministic and backend-independent: it reads the block catalog,
+ * not the search index, so SQLite and the JSON fallback agree.
+ */
+function selectBlocksForQuery(query, { perFamily = 3 } = {}) {
+  const catalog = readBlockCatalog();
+  if (!catalog) return { recipe: null, families: [] };
+  const analysis = analyzeQuery(query);
+  const words = new Set([...analysis.tokens, ...analysis.terms]);
+  const recipes = PAGE_RECIPES.filter((recipe) => recipe.triggers.some((trigger) => words.has(trigger)));
+  const wanted = new Set(recipes.flatMap((recipe) => recipe.families));
+  for (const family of BLOCK_FAMILIES) {
+    if (words.has(family.key) || family.aliases.some((alias) => words.has(alias))) wanted.add(family.key);
+  }
+
+  // matchTerms: stopwords already dropped, so "a" or "for" cannot pick a block.
+  const terms = analysis.matchTerms;
+  const families = BLOCK_FAMILIES
+    .filter((family) => wanted.has(family.key))
+    .map((family) => {
+      // Words naming another family ("contact" in a pricing+contact request)
+      // are served by that family; they must not pull a nav block that merely
+      // links to a contact page ahead of a better nav block.
+      const otherFamilyWords = new Set(BLOCK_FAMILIES
+        .filter((other) => other.key !== family.key)
+        .flatMap((other) => [other.key, ...other.aliases])
+        .filter((word) => word !== family.key && !family.aliases.includes(word)));
+      const familyTerms = terms.filter((term) => !otherFamilyWords.has(term));
+      const ranked = catalog.blocks
+        .filter((block) => block.family === family.key)
+        .map((block, index) => ({ block, index, score: scoreBlock(block, familyTerms) }))
+        .sort((a, b) => (b.score - a.score) || (a.index - b.index))
+        .slice(0, perFamily)
+        .map(({ block }) => block);
+      return {
+        family: family.key,
+        label: family.label,
+        available: catalog.families?.[family.key]?.count ?? ranked.length,
+        list: `npx ren10 blocks --list --family ${family.key}`,
+        blocks: ranked.map((block) => ({
+          name: block.name,
+          title: block.title,
+          summary: block.summary,
+          path: block.path,
+          components: block.components,
+          command: `npx ren10 blocks ${block.name} --dense`,
+        })),
+      };
+    });
+  return { recipe: recipes[0]?.key ?? null, families };
+}
+
 function buildKit(query, limit = 20) {
-  const { rows, source } = runKnowledgeSearch(query, { limit });
-  const components = rows.filter((row) => row.type === 'component').slice(0, 8);
+  const { rows, source } = runKnowledgeSearch(query, {
+    limit,
+    forceJsonSource: hasFlag('--source-json') || process.env.RENDS_KNOWLEDGE_FORCE_JSON === '1',
+  });
+  const blockPlan = selectBlocksForQuery(query);
+  const blockComponents = blockPlan.families.flatMap((family) => family.blocks[0]?.components ?? []);
+  const componentRows = rows.filter((row) => row.type === 'component');
+  for (const dir of blockComponents) {
+    if (componentRows.some((row) => row.name === dir)) continue;
+    const match = getComponentByAnyName(dir);
+    if (!match) continue;
+    componentRows.push({
+      type: 'component',
+      name: dir,
+      path: `components/${match.meta.layer}/${dir}`,
+      snippet: `Used by the suggested blocks. ${match.meta.description}`,
+    });
+  }
+  const components = componentRows.slice(0, 8);
   const docs = rows.filter((row) => /contract|docs|tooling/.test(row.type)).slice(0, 6);
   const examples = rows.filter((row) => row.type === 'example').slice(0, 4);
   const tokens = rows.filter((row) => row.type === 'token').slice(0, 8);
+  const firstBlock = blockPlan.families[0]?.blocks[0];
 
   return {
     query,
     source,
     start: [
+      'npx ren10 docs design --dense',
       'npx ren10 docs layouts --dense',
-      'npx ren10 docs components --dense',
-      components[0] ? commandForSearchRow(components[0]) : `npx ren10 search "${query}"`,
+      firstBlock
+        ? firstBlock.command
+        : components[0] ? commandForSearchRow(components[0]) : `npx ren10 search "${query}"`,
     ],
     frame: [
       'Pick a RenDS layout primitive first: ren-stack, ren-grid, ren-with-sidebar, ren-cover, ren-center, ren-cluster.',
       'Use native HTML/Primitive Zero for semantic headings, forms, lists, tables, details, and prose.',
+      ...(blockPlan.families.length
+        ? ['Assemble page sections from shipped blocks before hand-building them: `npx ren10 blocks <name>` prints the markup, stylesheets, scripts, and components each block needs.']
+        : []),
     ],
+    recipe: blockPlan.recipe,
+    blocks: blockPlan.families,
     components: components.map((row) => ({ ...row, command: commandForSearchRow(row) })),
     docs: docs.map((row) => ({ ...row, command: commandForSearchRow(row) })),
     examples,
     tokens,
+  };
+}
+
+function findBlock(catalog, input) {
+  const wanted = String(input ?? '').trim().toLowerCase().replace(/\.html$/, '').replace(/^templates\/blocks\//, '');
+  return catalog.blocks.find((block) => block.name === wanted) ?? null;
+}
+
+function buildBlockDetail(catalog, block, { dense = false } = {}) {
+  const family = catalog.families?.[block.family];
+  const detail = {
+    name: block.name,
+    family: block.family,
+    familyLabel: family?.label ?? block.family,
+    title: block.title,
+    summary: block.summary,
+    ...(block.kicker ? { kicker: block.kicker } : {}),
+    path: block.path,
+    root: block.root,
+    styles: block.styles,
+    scripts: block.scripts,
+    inlineStyle: block.inlineStyle,
+    inlineScript: block.inlineScript,
+    components: block.components.map((dir) => ({ name: dir, command: `npx ren10 component ${normalizeComponentName(dir)} --dense` })),
+    layouts: block.layouts,
+    media: block.media,
+    usage: catalog.usage,
+  };
+
+  if (dense) {
+    detail.dense = [
+      `${block.name}|${block.family}|${block.title} — ${block.summary}`,
+      `file=${block.path}; markup is the <${block.root}> marked .bb-detail-preview (plus any companion elements before the page pagination)`,
+      `styles=${block.styles.join(',')}`,
+      block.scripts.length ? `scripts=${block.scripts.join(',')} (type=module)` : null,
+      block.inlineStyle || block.inlineScript
+        ? `inline=${[block.inlineStyle ? '<style>' : null, block.inlineScript ? '<script>' : null].filter(Boolean).join('+')} in the block file; copy it too`
+        : null,
+      block.components.length ? `components=${block.components.join(',')}` : null,
+      block.layouts.length ? `layouts=${block.layouts.join(',')}` : null,
+      block.media.length ? `media=${block.media.join(',')} (demo imagery; replace)` : null,
+      `markup=npx ren10 blocks ${block.name}`,
+    ].filter(Boolean).join('\n');
+    return detail;
+  }
+
+  const html = fs.readFileSync(path.join(RENDS_ROOT, block.path), 'utf8');
+  const inline = extractInlineAssets(html);
+  detail.markup = extractBlockMarkup(html);
+  detail.inlineStyles = inline.styles;
+  detail.inlineScripts = inline.scripts;
+  return detail;
+}
+
+function listBlockData(catalog, familyFilter = null) {
+  const families = {};
+  for (const family of BLOCK_FAMILIES) {
+    if (familyFilter && family.key !== familyFilter) continue;
+    const blocks = catalog.blocks.filter((block) => block.family === family.key);
+    families[family.key] = {
+      label: family.label,
+      count: blocks.length,
+      blocks: blocks.map((block) => ({ name: block.name, title: block.title, summary: block.summary })),
+    };
+  }
+  return {
+    count: Object.values(families).reduce((total, family) => total + family.count, 0),
+    catalog: BLOCK_CATALOG_PATH,
+    families,
   };
 }
 
@@ -668,15 +918,20 @@ function generatedAgentBlock() {
   const pkg = readPackageJson();
   const layers = getComponentsByLayer();
   const counts = Object.fromEntries(Object.entries(layers).map(([layer, comps]) => [layer, comps.length]));
+  const blockCount = loadBlockCatalogSummary(RENDS_ROOT)?.count ?? 0;
   return [
     RENDS_MARKER_START,
-    `RenDS v${pkg.version} · vanilla HTML/CSS/JS · Light DOM · ${getAllComponents().length} components`,
+    `RenDS v${pkg.version} · vanilla HTML/CSS/JS · Light DOM · ${getAllComponents().length} components · ${blockCount} blocks`,
+    '',
+    'READ FIRST: `ren-essentials.md` (≈8 KB: rules, tokens, layouts, routing; same as',
+    '`npx ren10 docs design --dense`). Load `ren-design.md` (≈97 KB) only for exact values or rationale.',
     '',
     'WORKFLOW — discover before writing UI:',
-    '1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.',
-    '2. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.',
-    '3. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.',
-    '4. `npx ren10 doctor` — verify package health before shipping.',
+    '1. `npx ren10 build "<idea>"` — composition kit: page sections (blocks), components, docs.',
+    '2. `npx ren10 blocks <name>` — copy a shipped nav/hero/pricing/footer block before hand-building one.',
+    '3. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.',
+    '4. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.',
+    '5. `npx ren10 doctor` — verify package health before shipping.',
     '',
     'RULES:',
     '- Vanilla only: no React/Vue/Svelte/JSX/TSX, no Tailwind, no shadcn/ui.',
@@ -688,8 +943,9 @@ function generatedAgentBlock() {
     `COMPONENTS: primitives=${counts.primitives ?? 0}, composites=${counts.composites ?? 0}, patterns=${counts.patterns ?? 0}.`,
     'MORE CLI:',
     '  manifest --json          self-describing CLI surface',
-    '  search "<query>"         search graph across components/docs/examples/tokens',
-    '  docs <topic> --dense     design, tokens, layouts, primitive-zero, components, evals',
+    '  search "<query>"         search graph across components/blocks/docs/examples/tokens',
+    '  blocks --list            page-section blocks grouped by family',
+    '  docs <topic> --dense     design (essentials), tokens, layouts, primitive-zero, components, evals',
     '  component --list         all components grouped by layer',
     '  knowledge query "<q>"    packaged graph query; --json emits typed JSON',
     RENDS_MARKER_END,
@@ -1346,12 +1602,18 @@ async function cmdDocs() {
     error(`Docs topic exists but file is missing: ${topic.path}`);
   }
   const body = fs.readFileSync(absPath, 'utf8');
+  const densePath = dense && topic.densePath && fs.existsSync(path.join(RENDS_ROOT, topic.densePath))
+    ? topic.densePath
+    : null;
   const data = {
     name: topic.key,
     title: topic.title,
     path: topic.path,
+    ...(densePath ? { densePath } : {}),
     body: dense ? undefined : body,
-    dense: dense ? buildDenseDoc(topic, body) : undefined,
+    dense: dense
+      ? densePath ? fs.readFileSync(path.join(RENDS_ROOT, densePath), 'utf8') : buildDenseDoc(topic, body)
+      : undefined,
   };
   if (hasFlag('--json')) {
     jsonOut('docs.detail', data);
@@ -1413,6 +1675,15 @@ async function cmdBuild() {
   for (const step of kit.start) console.log(`  ${c.cyan}${step}${c.reset}`);
   console.log(`\n${c.bold}Frame:${c.reset}`);
   for (const item of kit.frame) console.log(`  - ${item}`);
+  if (kit.blocks.length) {
+    console.log(`\n${c.bold}Blocks:${c.reset}${kit.recipe ? ` ${c.dim}(${kit.recipe} page)${c.reset}` : ''}`);
+    for (const family of kit.blocks) {
+      const [first, ...rest] = family.blocks;
+      if (!first) continue;
+      console.log(`  ${c.cyan}${family.label.padEnd(18)}${c.reset}${first.command}`);
+      if (rest.length) console.log(`  ${''.padEnd(18)}${c.dim}also: ${rest.map((block) => block.name).join(', ')} · ${family.list}${c.reset}`);
+    }
+  }
   if (kit.components.length) {
     console.log(`\n${c.bold}Components:${c.reset}`);
     for (const row of kit.components) console.log(`  ${c.cyan}${row.name.padEnd(22)}${c.reset}${row.command}`);
@@ -1425,6 +1696,83 @@ async function cmdBuild() {
     console.log(`\n${c.bold}Examples:${c.reset}`);
     for (const row of kit.examples) console.log(`  ${c.cyan}${row.name}${c.reset} ${row.path}`);
   }
+  console.log();
+}
+
+async function cmdBlocks() {
+  const catalog = requireBlockCatalog();
+  const dense = hasFlag('--dense');
+  const nameArg = stripCommandFlags(args.slice(1))[0];
+  const familyFilter = optionValue('--family');
+  if (familyFilter && !BLOCK_FAMILIES.some((family) => family.key === familyFilter)) {
+    const choices = BLOCK_FAMILIES.map((family) => family.key).join(', ');
+    if (hasFlag('--json')) jsonError(`Unknown block family "${familyFilter}".`, 'ERR_UNKNOWN_BLOCK_FAMILY', BLOCK_FAMILIES.map((family) => ({ name: family.key })));
+    error(`Unknown block family "${familyFilter}". Use one of: ${choices}.`);
+  }
+
+  if (!nameArg || hasFlag('--list')) {
+    const data = listBlockData(catalog, familyFilter);
+    if (hasFlag('--json')) {
+      jsonOut('blocks.list', data);
+      return;
+    }
+    if (dense) {
+      for (const [key, family] of Object.entries(data.families)) {
+        console.log(`${key}(${family.count}): ${family.blocks.map((block) => block.name.slice(key.length + 1)).join(',')}`);
+      }
+      return;
+    }
+    console.log(`\n${c.bold}RenDS Blocks${c.reset} (${data.count}) ${c.dim}${data.catalog}${c.reset}\n`);
+    for (const [key, family] of Object.entries(data.families)) {
+      console.log(`${c.bold}${family.label.toUpperCase()}${c.reset} ${c.dim}(${key}, ${family.count})${c.reset}`);
+      for (const block of family.blocks) {
+        console.log(`  ${c.cyan}${block.name.padEnd(52)}${c.reset}${block.title}`);
+      }
+      console.log();
+    }
+    console.log(`${c.dim}Read one: npx ren10 blocks pricing-billing-period-toggle --dense${c.reset}\n`);
+    return;
+  }
+
+  const block = findBlock(catalog, nameArg);
+  if (!block) {
+    const needle = String(nameArg).toLowerCase();
+    const suggestions = catalog.blocks
+      .filter((candidate) => candidate.name.includes(needle) || needle.split('-').some((part) => part.length > 2 && candidate.name.includes(part)))
+      .slice(0, 5)
+      .map((candidate) => ({ name: candidate.name }));
+    if (hasFlag('--json')) jsonError(`Unknown block "${nameArg}".`, 'ERR_UNKNOWN_BLOCK', suggestions);
+    const hint = suggestions.length ? ` Did you mean: ${suggestions.map((item) => item.name).join(', ')}?` : '';
+    error(`Unknown block "${nameArg}".${hint} Run "npx ren10 blocks --list".`);
+  }
+
+  const detail = buildBlockDetail(catalog, block, { dense });
+  if (hasFlag('--json')) {
+    jsonOut('blocks.detail', detail);
+    return;
+  }
+  if (dense) {
+    console.log(detail.dense);
+    return;
+  }
+
+  console.log(`\n${c.bold}${detail.title}${c.reset} ${c.dim}(${detail.name} · ${detail.familyLabel})${c.reset}\n`);
+  console.log(detail.summary);
+  console.log(`\n${c.bold}File:${c.reset} ${detail.path}`);
+  console.log(`${c.bold}Stylesheets${c.reset} ${c.dim}(link in this order)${c.reset}:`);
+  for (const file of detail.styles) console.log(`  ${c.cyan}${file}${c.reset}`);
+  if (detail.scripts.length) {
+    console.log(`${c.bold}Scripts${c.reset} ${c.dim}(type="module")${c.reset}:`);
+    for (const file of detail.scripts) console.log(`  ${c.cyan}${file}${c.reset}`);
+  }
+  if (detail.components.length) {
+    console.log(`${c.bold}Components:${c.reset} ${detail.components.map((item) => item.name).join(', ')}`);
+  }
+  if (detail.layouts.length) console.log(`${c.bold}Layouts:${c.reset} ${detail.layouts.join(', ')}`);
+  if (detail.media.length) console.log(`${c.bold}Demo media:${c.reset} ${detail.media.join(', ')}`);
+  console.log(`\n${c.bold}Markup:${c.reset}\n${detail.markup}`);
+  for (const style of detail.inlineStyles) console.log(`\n${c.bold}Inline <style>:${c.reset}\n${style}`);
+  for (const script of detail.inlineScripts) console.log(`\n${c.bold}Inline <script type="module">:${c.reset}\n${script}`);
   console.log();
 }
 
@@ -1502,14 +1850,14 @@ async function cmdDoctor() {
     {
       id: 'v0-adapter',
       label: 'v0 adapter',
-      validate: validateV0Adapter,
+      validate: async (root) => (await loadV0Adapter()).validateV0Adapter(root),
       success: 'The packaged v0 adapter, provenance, and vanilla starter are valid.',
       fix: 'Run node scripts/check-v0-adapter.mjs and resolve every reported adapter error.',
     },
     {
       id: 'starter-approval',
       label: 'Starter approval',
-      validate: validateStarterApproval,
+      validate: async (root) => (await loadStarterApproval()).validateStarterApproval(root),
       success: 'The reference starter approval is current and valid.',
       fix: 'Run node scripts/check-starter-approval.mjs and refresh approval evidence after review.',
     },
@@ -1571,7 +1919,7 @@ async function cmdDoctor() {
 }
 
 async function cmdDesignContext() {
-  const manifest = await buildDesignManifest(RENDS_ROOT);
+  const manifest = await (await loadDetector()).buildDesignManifest(RENDS_ROOT);
   let outputPath = null;
   if (hasFlag('--write')) {
     outputPath = path.join(process.cwd(), '.ren10', 'design.json');
@@ -1589,21 +1937,21 @@ async function cmdDesignContext() {
 
 async function cmdDetect() {
   const cwd = process.cwd();
-  const config = await loadConfig(cwd);
+  const config = await (await loadDetectorConfig()).loadConfig(cwd);
   const profile = optionValue('--profile', config.detector.profile ?? 'generic');
   const url = optionValue('--url');
   const targets = stripCommandFlags(args.slice(1));
   const designPath = path.join(cwd, '.ren10', 'design.json');
   const manifest = fs.existsSync(designPath)
     ? JSON.parse(fs.readFileSync(designPath, 'utf8'))
-    : await buildDesignManifest(RENDS_ROOT);
+    : await (await loadDetector()).buildDesignManifest(RENDS_ROOT);
   const reports = [];
 
   if (targets.length > 0 || !url) {
-    reports.push(await detectTargets(targets, { cwd, manifest, profile, config }));
+    reports.push(await (await loadDetector()).detectTargets(targets, { cwd, manifest, profile, config }));
   }
   if (url) {
-    reports.push(await detectUrl(url, {
+    reports.push(await (await loadDetectorBrowser()).detectUrl(url, {
       profile,
       config,
       viewport: config.browser?.viewport,
@@ -1627,7 +1975,7 @@ async function cmdDetect() {
     exitCode: summary.errors > 0 ? 1 : 0,
   };
   if (hasFlag('--save-review')) {
-    report.reviewPath = relFromCwd(await saveReview(report, {
+    report.reviewPath = relFromCwd(await (await loadDetector()).saveReview(report, {
       cwd,
       slug: optionValue('--review-slug', targets[0] ?? 'url-review'),
     }));
@@ -1659,12 +2007,12 @@ function relFromCwd(absolute) {
 async function cmdIgnores() {
   const cwd = process.cwd();
   const action = args[1] ?? 'status';
-  let config = await loadConfig(cwd);
+  let config = await (await loadDetectorConfig()).loadConfig(cwd);
   const reason = optionValue('--reason');
-  if (action === 'add-rule') config = addIgnoreRule(config, args[2], reason);
-  else if (action === 'add-file') config = addIgnoreFile(config, args[2], reason);
+  if (action === 'add-rule') config = (await loadDetectorConfig()).addIgnoreRule(config, args[2], reason);
+  else if (action === 'add-file') config = (await loadDetectorConfig()).addIgnoreFile(config, args[2], reason);
   else if (action === 'add-value') {
-    config = addIgnoreValue(config, {
+    config = (await loadDetectorConfig()).addIgnoreValue(config, {
       rule: args[2],
       value: args[3],
       files: repeatedOptionValues('--file'),
@@ -1674,7 +2022,7 @@ async function cmdIgnores() {
     error(`Unknown ignores action "${action}". Use status, add-rule, add-file, or add-value.`);
   }
   let configPath = null;
-  if (action !== 'status') configPath = await writeConfig(cwd, config);
+  if (action !== 'status') configPath = await (await loadDetectorConfig()).writeConfig(cwd, config);
   const data = { action, config, ...(configPath ? { configPath: relFromCwd(configPath) } : {}) };
   if (hasFlag('--json')) jsonOut('detector.ignores', data);
   else console.log(JSON.stringify(data, null, 2));
@@ -1683,15 +2031,15 @@ async function cmdIgnores() {
 async function cmdHooks() {
   const cwd = process.cwd();
   const action = args[1] ?? 'status';
-  let config = await loadConfig(cwd);
+  let config = await (await loadDetectorConfig()).loadConfig(cwd);
   let installation = null;
   if (action === 'install' || action === 'on') {
     config.hook.enabled = true;
-    installation = await installCodexHook(cwd);
-    await writeConfig(cwd, config);
+    installation = await (await loadDetectorHook()).installCodexHook(cwd);
+    await (await loadDetectorConfig()).writeConfig(cwd, config);
   } else if (action === 'off') {
     config.hook.enabled = false;
-    await writeConfig(cwd, config);
+    await (await loadDetectorConfig()).writeConfig(cwd, config);
   } else if (action !== 'status') {
     error(`Unknown hooks action "${action}". Use status, install, on, or off.`);
   }
@@ -1707,7 +2055,7 @@ async function cmdHooks() {
 
 async function cmdHookRun() {
   const input = await readStdinJson();
-  const result = await processHookEvent(input, { cwd: process.cwd(), packageRoot: RENDS_ROOT });
+  const result = await (await loadDetectorHook()).processHookEvent(input, { cwd: process.cwd(), packageRoot: RENDS_ROOT });
   if (result.status !== 'skipped' && result.message) console.log(result.message);
 }
 
@@ -2244,7 +2592,7 @@ async function cmdTheme() {
   } catch (cause) {
     error(`Could not parse visual reference JSON: ${cause.message}`);
   }
-  const theme = generateThemeFromReference(spec);
+  const theme = (await loadReferenceTheme()).generateThemeFromReference(spec);
   const outputArg = optionValue('--out');
   let outputPath = null;
   if (outputArg) {
@@ -2305,6 +2653,10 @@ async function main() {
         break;
       case 'build':
         await cmdBuild();
+        break;
+      case 'blocks':
+      case 'block':
+        await cmdBlocks();
         break;
       case 'manifest':
         await cmdManifest();
@@ -2382,6 +2734,8 @@ ${c.bold}Commands:${c.reset}
   docs <topic>      Print design/token/layout/component/eval docs
   search <query>    Search components, docs, examples, selectors, and tokens
   build <idea>      Return a RenDS composition kit for a UI idea
+  blocks [name]     List page-section blocks (nav, hero, pricing, footer...)
+                    or print one with its markup, styles, and scripts
   manifest          Emit the self-describing CLI manifest for agents
   doctor            Diagnose package health and agent-readiness
   detect [target]   Check static files, directories, or a rendered URL
@@ -2429,6 +2783,8 @@ ${c.bold}Examples:${c.reset}
   npx ren10 docs layouts --dense
   npx ren10 search "dialog workflow" --json
   npx ren10 build "dashboard with sidebar"
+  npx ren10 blocks --list --family pricing
+  npx ren10 blocks pricing-billing-period-toggle --dense
   npx ren10 doctor
   npx ren10 design-context --write
   npx ren10 detect templates/ --profile codex

@@ -109,6 +109,33 @@ try {
   if (installedDesign.type !== 'design-context.detail' || installedDesign.data.components.counts.total !== 53) {
     throw new Error('installed package design-context command is incomplete');
   }
+  // Agent discovery from the installed tarball: blocks resolve their files,
+  // the compact entry contract ships, and both search backends find blocks
+  // (the JSON fallback rehydrates bodies relative to the installed package).
+  const installedBlocks = JSON.parse(run(process.execPath, [cli, 'blocks', '--list', '--json'], packageHost));
+  if (installedBlocks.type !== 'blocks.list' || !(installedBlocks.data.count > 300)) {
+    throw new Error('installed package blocks --list is incomplete');
+  }
+  const firstBlock = installedBlocks.data.families.pricing.blocks[0].name;
+  const installedBlock = JSON.parse(run(process.execPath, [cli, 'blocks', firstBlock, '--json'], packageHost));
+  if (!installedBlock.data.markup?.includes('bb-detail-preview')) {
+    throw new Error('installed package blocks <name> did not read the block markup');
+  }
+  const essentials = run(process.execPath, [cli, 'docs', 'design', '--dense'], packageHost);
+  if (!essentials.startsWith('# RenDS essentials')) {
+    throw new Error('installed package docs design --dense did not return ren-essentials.md');
+  }
+  for (const env of [{}, { RENDS_KNOWLEDGE_FORCE_JSON: '1' }]) {
+    const result = spawnSync(process.execPath, [cli, 'search', 'pricing', '--json'], {
+      cwd: packageHost,
+      encoding: 'utf8',
+      env: { ...process.env, ...env },
+    });
+    const top = result.status === 0 ? JSON.parse(result.stdout).data.results[0] : null;
+    if (top?.type !== 'block' || !top.name.startsWith('pricing-')) {
+      throw new Error(`installed package search "pricing" did not rank pricing blocks first (${env.RENDS_KNOWLEDGE_FORCE_JSON ? 'JSON' : 'SQLite'}):\n${result.stdout}${result.stderr}`);
+    }
+  }
   const detectorConsumer = path.join(tmp, 'detector-consumer');
   fs.mkdirSync(detectorConsumer);
   fs.writeFileSync(path.join(detectorConsumer, 'index.html'), '<!doctype html><html lang="en"><title>Clean</title><main><h1>Clean</h1><button type="button">OK</button></main></html>');

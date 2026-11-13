@@ -6,9 +6,11 @@
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
-# generic external design-system file. Use it as the root router: load
-# this first, then load only the component, pattern, token, layout, or
-# foundation contract required for the current task.
+# generic external design-system file. It is the canonical source; the
+# compact entry contract `ren-essentials.md` (also printed by
+# `npx ren10 docs design --dense`) is what agents read first. Load this
+# file for exact values and rationale, then only the component, pattern,
+# token, layout, or foundation contract required for the current task.
 #
 # If a token is omitted here, it still lives in `tokens/**/*.css`
 # — this document privileges the tokens that compose day-to-day
@@ -687,9 +689,10 @@ CTA/form/navigation compositions live in `docs/composition-recipes.md` and
 
 ## Agent Routing Contract
 
-`ren-design.md` is the root contract for AI agents working with RenDS. Read
-this file first, then load only the smallest colocated contract needed for the
-task:
+`ren-design.md` is the canonical root contract for AI agents working with
+RenDS. Agents read the compact `ren-essentials.md` first (rules, first-choice
+tokens, layout primitives, routing) and come here for exact values and
+rationale. Then load only the smallest colocated contract needed for the task:
 
 | Task | Load next |
 |---|---|
@@ -697,12 +700,14 @@ task:
 | Tokens, themes, colors, spacing, type, motion | `tokens/tokens.md` |
 | Page skeleton, responsive layout, utility classes | `base/layouts.md` |
 | Picking a component | `components/components.md` |
+| A whole page section (nav, hero, pricing, FAQ, contact, footer, app shell) | `npx ren10 blocks --list`, then `npx ren10 blocks <name>` (`templates/blocks/`) |
 | Editing or using a primitive/composite | `components/{tier}/{ren-name}/component.md` |
 | Editing or using a pattern | `components/patterns/{ren-name}/pattern.md` |
 
 Canonical order for UI generation:
 
-1. Load `ren-design.md`.
+1. Load `ren-essentials.md`; load `ren-design.md` when you need exact token
+   values, rationale, or the component registry.
 2. Load `tokens/tokens.md` when choosing any visual value.
 3. Load `base/layouts.md` before writing custom layout CSS.
 4. Load `base/primitive-zero.md` when using native HTML elements without a

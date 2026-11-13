@@ -6,7 +6,9 @@
 #
 # Quick summary (read AGENTS.md for the full contract):
 #
-# 1. Treat ren-design.md as the root contract and load it first.
+# 1. Load ren-essentials.md first (the compact entry contract, also
+#    `npx ren10 docs design --dense`). ren-design.md is the canonical
+#    root contract: load it only for exact values or rationale.
 # 2. Vanilla HTML/CSS/JS only — no React, Vue, Svelte, Tailwind,
 #    shadcn/ui, JSX/TSX, or Shadow DOM.
 # 3. Use RenDS layout primitives (ren-stack, ren-cluster, ren-row,
@@ -21,18 +23,25 @@
 #    44px touch targets, prefers-reduced-motion respect.
 # 7. Every colocated component.md / pattern.md carries an aiHints YAML
 #    block — read it first when picking between two RenDS parts.
+# 8. Before hand-building a navbar, hero, pricing table, FAQ, contact
+#    section or footer, run `npx ren10 blocks --list`: 335 shipped
+#    page-section blocks live in templates/blocks/.
 #
 # Before reporting any task complete, run through evals/checklist.md and
 # `npm run lint`.
 
 <!-- RENDS:START -->
-RenDS v0.14.1 · vanilla HTML/CSS/JS · Light DOM · 53 components
+RenDS v0.14.1 · vanilla HTML/CSS/JS · Light DOM · 53 components · 335 blocks
+
+READ FIRST: `ren-essentials.md` (≈8 KB: rules, tokens, layouts, routing; same as
+`npx ren10 docs design --dense`). Load `ren-design.md` (≈97 KB) only for exact values or rationale.
 
 WORKFLOW — discover before writing UI:
-1. `npx ren10 build "<idea>"` — get a composition kit for the requested UI.
-2. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.
-3. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.
-4. `npx ren10 doctor` — verify package health before shipping.
+1. `npx ren10 build "<idea>"` — composition kit: page sections (blocks), components, docs.
+2. `npx ren10 blocks <name>` — copy a shipped nav/hero/pricing/footer block before hand-building one.
+3. `npx ren10 docs layouts --dense` — choose the page skeleton before custom CSS.
+4. `npx ren10 component <name> --dense` — read contract, imports, aiHints, usage.
+5. `npx ren10 doctor` — verify package health before shipping.
 
 RULES:
 - Vanilla only: no React/Vue/Svelte/JSX/TSX, no Tailwind, no shadcn/ui.
@@ -44,8 +53,9 @@ RULES:
 COMPONENTS: primitives=19, composites=26, patterns=8.
 MORE CLI:
   manifest --json          self-describing CLI surface
-  search "<query>"         search graph across components/docs/examples/tokens
-  docs <topic> --dense     design, tokens, layouts, primitive-zero, components, evals
+  search "<query>"         search graph across components/blocks/docs/examples/tokens
+  blocks --list            page-section blocks grouped by family
+  docs <topic> --dense     design (essentials), tokens, layouts, primitive-zero, components, evals
   component --list         all components grouped by layer
   knowledge query "<q>"    packaged graph query; --json emits typed JSON
 <!-- RENDS:END -->
