@@ -64,6 +64,9 @@ item is binary: pass / fail. Failures must be fixed, not noted-and-shipped.
       `evals/regression-checks.mjs`.
 - [ ] Custom motion respects `prefers-reduced-motion` (use RenDS motion
       tokens).
+- [ ] The button that confirms a delete, payment, send or publish carries
+      `data-agent-confirm="<what it does>"`; fields an agent may fill but
+      not read carry `data-agent-secret` (`docs/agent-safety.md`).
 
 ## Component contracts
 

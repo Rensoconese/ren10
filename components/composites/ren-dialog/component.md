@@ -205,6 +205,7 @@ dlg.addEventListener('ren-close', (e) => console.log(e.detail.returnValue));
 - Backdrop click closes the dialog unless `alert` is set.
 - After close, focus returns to the original trigger.
 - The `aria-label` fallback comes from `utils/i18n.js` (`dialog.label`) and is resolved once, when the element connects — call `setLocale()` before the dialog is inserted, because a later locale change does not relabel an already-connected dialog.
+- Agent safety: a dialog that confirms an irreversible or outward-facing action carries `data-agent-confirm="<what it does>"` on the confirming `[data-dialog-close]` button, not on the trigger or the `<dialog>`. Regions that show one-time secrets (backup codes) take `data-agent-hidden`. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
 
 ## Anti-Patterns
 
