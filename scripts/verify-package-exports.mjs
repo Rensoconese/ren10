@@ -18,6 +18,9 @@ const checks = [
   ['ren10/themes/theme-generator.js', 'themes/theme-generator.js'],
   ['ren10/themes/reference-theme.js', 'themes/reference-theme.js'],
   ['ren10/utils', 'utils/index.js'],
+  ['ren10/custom-elements.json', 'custom-elements.json'],
+  ['ren10/html-custom-data.json', 'html-custom-data.json'],
+  ['ren10/llms.txt', 'llms.txt'],
 ];
 
 let failed = false;

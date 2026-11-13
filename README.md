@@ -292,6 +292,23 @@ npx ren10 knowledge check                Validate packaged graph files
 npx ren10 help                           Show help
 ```
 
+### Editor and agent discovery files
+
+The package ships three generated files that tools read without running the CLI:
+
+- `llms.txt` indexes every Markdown contract in the package
+  ([llmstxt.org](https://llmstxt.org) format). Point an agent at
+  `node_modules/ren10/llms.txt` so it reads the docs of the installed version.
+- `custom-elements.json` is a [Custom Elements Manifest](https://custom-elements-manifest.open-wc.org/)
+  (`package.json#customElements`) with every `ren-*` tag, its attributes,
+  events, documented methods and public `--ren-*` tokens.
+- `html-custom-data.json` adds `ren-*` tag and attribute autocomplete to VS Code:
+
+```json
+// .vscode/settings.json
+{ "html.customData": ["./node_modules/ren10/html-custom-data.json"] }
+```
+
 ---
 
 ## Accessibility

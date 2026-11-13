@@ -1,0 +1,708 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vscode-html-languageservice/main/docs/customData.schema.json",
+  "version": 1.1,
+  "tags": [
+    {
+      "name": "ren-accordion",
+      "description": "Collapsible accordion sections.\n\nEvents: ren-accordion-change.",
+      "attributes": [
+        {
+          "name": "collapsible"
+        },
+        {
+          "name": "default-value"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-accordion/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-alert-dialog",
+      "description": "Modal alert for destructive or blocking confirmations.\n\nEvents: ren-close, ren-open.",
+      "attributes": [
+        {
+          "name": "alert"
+        },
+        {
+          "name": "no-escape"
+        },
+        {
+          "name": "open"
+        },
+        {
+          "name": "size"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-alert-dialog/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-button",
+      "description": "Versatile button with variants, sizes, icon support, loading state.",
+      "attributes": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "full"
+        },
+        {
+          "name": "icon"
+        },
+        {
+          "name": "loading"
+        },
+        {
+          "name": "size"
+        },
+        {
+          "name": "variant"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/primitives/ren-button/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-calendar",
+      "description": "Date picker calendar interface.\n\nEvents: ren-date-select.",
+      "attributes": [
+        {
+          "name": "first-day"
+        },
+        {
+          "name": "locale"
+        },
+        {
+          "name": "max"
+        },
+        {
+          "name": "min"
+        },
+        {
+          "name": "mode"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-calendar/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-carousel",
+      "description": "Slide carousel with pagination.\n\nEvents: ren-slide-change.",
+      "attributes": [
+        {
+          "name": "autoplay"
+        },
+        {
+          "name": "fade"
+        },
+        {
+          "name": "loop"
+        },
+        {
+          "name": "slides-per-view"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-carousel/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-color-picker",
+      "description": "Color input with swatches, hex field, and native picker.\n\nEvents: ren-change, ren-input.",
+      "attributes": [
+        {
+          "name": "alpha"
+        },
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "format"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "swatches"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-color-picker/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-combobox",
+      "description": "Autocomplete input with list filtering.\n\nEvents: ren-change, ren-close, ren-open, ren-search.",
+      "attributes": [
+        {
+          "name": "async"
+        },
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "placeholder"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-combobox/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-command",
+      "description": "Command/search palette with keyboard shortcuts.\n\nEvents: ren-command-select.",
+      "attributes": [
+        {
+          "name": "data-shortcut"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/patterns/ren-command/pattern.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-context-menu",
+      "description": "Right-click / long-press menu with keyboard support.\n\nEvents: ren-context-menu-open.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-context-menu/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-date-picker",
+      "description": "Input with calendar dropdown.\n\nEvents: ren-change, ren-date-picker-close, ren-date-picker-open.",
+      "attributes": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "format"
+        },
+        {
+          "name": "locale"
+        },
+        {
+          "name": "max"
+        },
+        {
+          "name": "min"
+        },
+        {
+          "name": "mode"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "placeholder"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-date-picker/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-date-range-picker",
+      "description": "Two-calendar picker for start/end date selection.\n\nEvents: ren-change, ren-date-range-close, ren-date-range-open.",
+      "attributes": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "end"
+        },
+        {
+          "name": "format"
+        },
+        {
+          "name": "locale"
+        },
+        {
+          "name": "max"
+        },
+        {
+          "name": "min"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "placeholder"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "presets"
+        },
+        {
+          "name": "start"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-date-range-picker/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-dialog",
+      "description": "Modal dialog with backdrop, animations, focus trap.\n\nEvents: ren-close, ren-open.",
+      "attributes": [
+        {
+          "name": "alert"
+        },
+        {
+          "name": "no-escape"
+        },
+        {
+          "name": "open"
+        },
+        {
+          "name": "size"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-dialog/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-field",
+      "description": "Form field wrapper with label, error, description.",
+      "attributes": [
+        {
+          "name": "data-invalid"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/primitives/ren-field/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-form",
+      "description": "Styled form wrapper with validation styling.\n\nEvents: ren-field-validated, ren-invalid, ren-step-change, ren-submit, ren-submit-error.",
+      "attributes": [
+        {
+          "name": "data-persist"
+        },
+        {
+          "name": "data-steps"
+        },
+        {
+          "name": "data-validate"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/patterns/ren-form/pattern.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-hover-card",
+      "description": "Card that appears on hover/focus.\n\nEvents: ren-hover-card-close, ren-hover-card-open.",
+      "attributes": [
+        {
+          "name": "data-hover-trigger"
+        },
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "hide-delay"
+        },
+        {
+          "name": "show-delay"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-hover-card/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-menu",
+      "description": "Dropdown menu with keyboard navigation.\n\nEvents: ren-menu-close, ren-menu-open, ren-menu-select.",
+      "attributes": [
+        {
+          "name": "placement"
+        },
+        {
+          "name": "trigger-id"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-menu/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-menubar",
+      "description": "Top-level menu bar with submenu support.\n\nEvents: ren-menubar-select.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/patterns/ren-menubar/pattern.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-nav",
+      "description": "Responsive navigation bar with mobile menu.",
+      "attributes": [],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/patterns/ren-nav/pattern.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-number-field",
+      "description": "Input for numbers with increment/decrement.\n\nEvents: ren-change.",
+      "attributes": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "max"
+        },
+        {
+          "name": "min"
+        },
+        {
+          "name": "step"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-number-field/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-otp",
+      "description": "One-time password input with auto-focus.\n\nEvents: ren-change, ren-complete.",
+      "attributes": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "length"
+        },
+        {
+          "name": "type"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-otp/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-popover",
+      "description": "Floating popover with anchor positioning.\n\nEvents: ren-close, ren-open.",
+      "attributes": [
+        {
+          "name": "offset"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "trigger-id"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-popover/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-radio-group",
+      "description": "Radio button group with keyboard navigation.",
+      "attributes": [
+        {
+          "name": "orientation"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/primitives/ren-radio/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-select",
+      "description": "Custom select dropdown with search support.\n\nEvents: ren-select-change, ren-select-close, ren-select-open.",
+      "attributes": [
+        {
+          "name": "multiple"
+        },
+        {
+          "name": "name"
+        },
+        {
+          "name": "placeholder"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "size"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-select/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-sheet",
+      "description": "Side panel drawer with slide animation.\n\nEvents: ren-close, ren-open.",
+      "attributes": [
+        {
+          "name": "data-side"
+        },
+        {
+          "name": "data-size"
+        },
+        {
+          "name": "dismissible"
+        },
+        {
+          "name": "open"
+        },
+        {
+          "name": "side"
+        },
+        {
+          "name": "size"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-sheet/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-sidebar",
+      "description": "Collapsible sidebar with persistence.\n\nEvents: ren-sidebar-toggle.",
+      "attributes": [
+        {
+          "name": "storage-key"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/patterns/ren-sidebar/pattern.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-slider",
+      "description": "Range slider with keyboard support.\n\nEvents: ren-slider-change, ren-slider-input.",
+      "attributes": [
+        {
+          "name": "label"
+        },
+        {
+          "name": "show-value"
+        },
+        {
+          "name": "unit"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-slider/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-table",
+      "description": "Sortable, responsive data table.",
+      "attributes": [
+        {
+          "name": "data-page-size"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/patterns/ren-table/pattern.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-tabs",
+      "description": "Tab interface with keyboard navigation.\n\nEvents: ren-tab-change.",
+      "attributes": [
+        {
+          "name": "activation"
+        },
+        {
+          "name": "default-value"
+        },
+        {
+          "name": "orientation"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-tabs/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-toast-viewport",
+      "description": "Toast notifications with dismiss action.",
+      "attributes": [
+        {
+          "name": "data-position"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-toast/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-toggle-group",
+      "description": "Grouped toggle buttons with selection.\n\nEvents: ren-toggle-change.",
+      "attributes": [
+        {
+          "name": "disabled"
+        },
+        {
+          "name": "type"
+        },
+        {
+          "name": "value"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-toggle-group/component.md"
+        }
+      ]
+    },
+    {
+      "name": "ren-tooltip",
+      "description": "Accessible tooltip with positioning and delay.\n\nEvents: ren-close, ren-open.",
+      "attributes": [
+        {
+          "name": "hide-delay"
+        },
+        {
+          "name": "offset"
+        },
+        {
+          "name": "placement"
+        },
+        {
+          "name": "show-delay"
+        }
+      ],
+      "references": [
+        {
+          "name": "ren10 contract",
+          "url": "https://github.com/Rensoconese/ren10/blob/main/components/composites/ren-tooltip/component.md"
+        }
+      ]
+    }
+  ]
+}

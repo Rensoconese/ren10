@@ -31,6 +31,9 @@
     "dist/ren10-foundation.min.css",
     "ren-design.md",
     "ren-essentials.md",
+    "llms.txt",
+    "custom-elements.json",
+    "html-custom-data.json",
     "AGENTS.md",
     "CLAUDE.md",
     ".ren10/design.json",
@@ -102,8 +105,12 @@
     "./utils": {
       "import": "./utils/index.js"
     },
-    "./utils/*": "./utils/*"
+    "./utils/*": "./utils/*",
+    "./custom-elements.json": "./custom-elements.json",
+    "./html-custom-data.json": "./html-custom-data.json",
+    "./llms.txt": "./llms.txt"
   },
+  "customElements": "custom-elements.json",
   "sideEffects": [
     "*.css",
     "./components/**/*.js"
@@ -140,9 +147,11 @@
     "agent:v0:check": "node scripts/check-v0-adapter.mjs && node scripts/check-starter-approval.mjs",
     "agent:manifest": "node cli/index.js manifest --json",
     "agent:doctor": "node cli/index.js doctor",
-    "agent:check": "npm run agent:smoke && npm run agent:skill:check && npm run agent:v0:check && npm run design:check && npm run blocks:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check && npm run test:agent-discovery && npm run agent:provenance",
+    "agent:check": "npm run agent:smoke && npm run agent:skill:check && npm run agent:v0:check && npm run design:check && npm run blocks:check && npm run discovery:check && node cli/index.js doctor && npm run test:evals && npm run knowledge:check && npm run test:agent-discovery && npm run agent:provenance",
     "blocks:build": "node scripts/build-block-catalog.mjs",
     "blocks:check": "node scripts/build-block-catalog.mjs --check",
+    "discovery:build": "node scripts/build-discovery-files.mjs",
+    "discovery:check": "node scripts/build-discovery-files.mjs --check",
     "design:build": "node scripts/check-design-context.mjs --write",
     "design:check": "node scripts/check-design-context.mjs",
     "knowledge:build": "node scripts/build-knowledge-graph.mjs",
@@ -214,6 +223,7 @@
     "postcss": "8.5.25",
     "stylelint": "^17.11.0",
     "stylelint-config-standard": "^40.0.0",
-    "braces": "file:vendor/braces-3.0.3-ren10.1.tgz"
+    "braces": "file:vendor/braces-3.0.3-ren10.1.tgz",
+    "acorn": "^8.17.0"
   }
 }
