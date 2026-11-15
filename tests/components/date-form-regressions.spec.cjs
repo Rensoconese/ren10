@@ -65,7 +65,7 @@ test('date range serializes a complete ISO interval and clears incomplete select
 });
 
 for (const component of ['ren-date-picker', 'ren-date-range-picker']) {
-  test(`${component} Escape from a calendar day closes and restores trigger focus`, async ({ page }) => {
+  test(`${component} Escape from a calendar day closes and restores trigger focus`, { tag: [`@${component}`, '@keyboard'] }, async ({ page }) => {
     await page.goto(`${server.origin}/docs/components/${component}.html`);
     await page.evaluate((component) => {
       document.body.innerHTML = `<${component} name="dates" start="2026-09-30" end="2026-10-02"></${component}>`;

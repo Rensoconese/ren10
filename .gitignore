@@ -35,6 +35,8 @@ yarn-error.log*
 
 # Testing
 coverage/
+# The per-component test coverage matrix is source, not a coverage report.
+!/tests/coverage/
 .nyc_output/
 test-results/
 tests/**/test-results/

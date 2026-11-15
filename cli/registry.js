@@ -312,9 +312,10 @@ export const REGISTRY = {
     files: ['ren-popover.css', 'ren-popover.js'],
     utils: ['anchor.js', 'dismissable.js', 'focus-trap.js', 'positioning.js'],
     components: [],
-    usage: `<ren-popover>
-  <button slot="trigger">Open</button>
-  <div class="ren-popover">Content</div>
+    usage: `<button id="account-trigger" type="button" data-popover-trigger>Account</button>
+<ren-popover trigger-id="account-trigger" placement="bottom">
+  <div class="ren-popover-header"><strong>Account</strong></div>
+  <div class="ren-popover-body">Signed in as Jane</div>
 </ren-popover>`,
   },
 
@@ -375,12 +376,10 @@ export const REGISTRY = {
     files: ['ren-menu.css', 'ren-menu.js'],
     utils: ['keyboard-nav.js', 'dismissable.js'],
     components: ['context-menu'],
-    usage: `<ren-menu>
-  <button slot="trigger">Menu</button>
-  <ul role="menu" class="ren-menu">
-    <li role="menuitem"><a href="#">Item 1</a></li>
-    <li role="menuitem"><a href="#">Item 2</a></li>
-  </ul>
+    usage: `<button id="actions-trigger" type="button" data-menu-trigger>Actions</button>
+<ren-menu trigger-id="actions-trigger" placement="bottom-start" aria-label="Actions">
+  <button class="ren-menu-item" role="menuitem" type="button" data-value="edit">Edit</button>
+  <button class="ren-menu-item" role="menuitem" type="button" data-value="duplicate">Duplicate</button>
 </ren-menu>`,
   },
 
@@ -440,10 +439,10 @@ export const REGISTRY = {
     files: ['ren-toggle-group.css', 'ren-toggle-group.js'],
     utils: ['debug.js'],
     components: [],
-    usage: `<ren-toggle-group>
-  <button>Left</button>
-  <button>Center</button>
-  <button>Right</button>
+    usage: `<ren-toggle-group type="single" value="left" role="group" aria-label="Alignment">
+  <button class="ren-toggle-group-item" type="button" data-value="left">Left</button>
+  <button class="ren-toggle-group-item" type="button" data-value="center">Center</button>
+  <button class="ren-toggle-group-item" type="button" data-value="right">Right</button>
 </ren-toggle-group>`,
   },
 
@@ -470,11 +469,14 @@ export const REGISTRY = {
     files: ['ren-sheet.css', 'ren-sheet.js'],
     utils: ['id-generator.js'],
     components: [],
-    usage: `<ren-sheet>
-  <button slot="trigger">Open Drawer</button>
-  <aside class="ren-sheet">
-    Content
-  </aside>
+    usage: `<button type="button" data-sheet-trigger="filters">Open filters</button>
+<ren-sheet id="filters" side="right">
+  <header class="ren-sheet-header">
+    <h2 class="ren-sheet-title">Filters</h2>
+    <button type="button" data-sheet-close aria-label="Close">×</button>
+  </header>
+  <div class="ren-sheet-body">Filter controls</div>
+  <footer class="ren-sheet-footer"><button type="button" data-sheet-close="apply">Apply</button></footer>
 </ren-sheet>`,
   },
 

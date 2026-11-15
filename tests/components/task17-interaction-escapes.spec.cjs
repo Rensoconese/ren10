@@ -57,7 +57,7 @@ test.describe('Task 17 interaction escapes', () => {
     await page.goto(`${staticServer.origin}/__task17.html`);
   });
 
-  test('registry context menu supports keyboard, Escape focus return, and reconnect exactly once', async ({ page }) => {
+  test('registry context menu supports keyboard, Escape focus return, and reconnect exactly once', { tag: ['@ren-context-menu', '@keyboard'] }, async ({ page }) => {
     await page.evaluate(async () => {
       const [{ REGISTRY }] = await Promise.all([
         import('/cli/registry.js'),
@@ -119,7 +119,7 @@ test.describe('Task 17 interaction escapes', () => {
     await expect.poll(() => page.evaluate(() => document.activeElement?.id)).toBe('dialog-trigger');
   });
 
-  test('sheet reconciles native Escape close once and restores focus', async ({ page }) => {
+  test('sheet reconciles native Escape close once and restores focus', { tag: ['@ren-sheet', '@keyboard'] }, async ({ page }) => {
     await page.evaluate(async () => {
       document.body.innerHTML = `
         <button id="sheet-trigger">Open</button>
@@ -194,7 +194,7 @@ test.describe('Task 17 interaction escapes', () => {
     await expect(page.locator('#tip-trigger')).toHaveAttribute('aria-describedby', 'help');
   });
 
-  test('dual slider preserves its tuple API and event detail', async ({ page }) => {
+  test('dual slider preserves its tuple API and event detail', { tag: ['@ren-slider', '@keyboard'] }, async ({ page }) => {
     await page.addStyleTag({ path: path.join(
       PKG_ROOT,
       'components/composites/ren-slider/ren-slider.css'

@@ -129,6 +129,13 @@ npm run lint
 `npm run lint` runs Stylelint plus a RenDS token-policy check
 (`scripts/lint-tokens.mjs`). Both must pass.
 
+When you add or change a component's behaviour, keep its test coverage cells
+green: `npm run coverage:check` (also part of `npm run agent:check`) fails when
+a registry component lacks an `a11y`, `runtime`, `lifecycle` or `keyboard` test.
+Tag the test `@ren-<name> @<category>`; never add to
+`tests/coverage/exemptions.json`, which only shrinks
+(`tests/coverage/README.md`).
+
 ## Agent CLI
 
 When the package CLI is available, agents can discover before generating:

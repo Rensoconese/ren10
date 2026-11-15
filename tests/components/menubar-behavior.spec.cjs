@@ -58,7 +58,7 @@ test('clicking a trigger opens its menu without throwing', async ({ page }) => {
   expect(pageErrors, 'opening a menu must not throw').toEqual([]);
 });
 
-test('Escape closes one level at a time, innermost first', async ({ page }) => {
+test('Escape closes one level at a time, innermost first', { tag: ['@ren-menubar', '@keyboard'] }, async ({ page }) => {
   await page.click('#trigger-file');
   await page.hover('#item-recent');
   await expect
@@ -112,7 +112,7 @@ test('a click outside collapses the whole tree at once', async ({ page }) => {
   expect(pageErrors).toEqual([]);
 });
 
-test('arrow keys move between items without leaking into a closed submenu', async ({ page }) => {
+test('arrow keys move between items without leaking into a closed submenu', { tag: ['@ren-menubar', '@keyboard'] }, async ({ page }) => {
   await page.click('#trigger-file');
   await expect.poll(() => focusedId(page)).toBe('item-new');
 

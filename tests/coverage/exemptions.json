@@ -1,0 +1,15 @@
+{
+  "keyboard": {
+    "ren-accordion": "No test toggles a section with Enter or Space yet.",
+    "ren-calendar": "Only the single tabbable day after month navigation is tested (interaction-hardening); moving between days with the arrow keys is not.",
+    "ren-carousel": "No test drives the previous/next controls or the arrow keys yet.",
+    "ren-color-picker": "No test opens the picker or chooses a swatch from the keyboard yet.",
+    "ren-dropzone": "No test opens the file picker with Enter or Space yet.",
+    "ren-form": "No test submits a form from the keyboard yet.",
+    "ren-hover-card": "No test opens it on focus or closes it with Escape yet.",
+    "ren-sidebar": "No test collapses or expands it from the keyboard yet.",
+    "ren-table": "No test activates a sortable header with Enter or Space yet.",
+    "ren-toast": "No test reaches the close or action button from the keyboard yet.",
+    "ren-tooltip": "The contract promises focus-visible open and Escape close; no test presses a key on it yet."
+  }
+}

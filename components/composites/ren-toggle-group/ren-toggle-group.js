@@ -83,6 +83,12 @@ export class RenToggleGroup extends HTMLElement {
     } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
       event.preventDefault();
       nextIndex = (currentIndex - 1 + this.items.length) % this.items.length;
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      nextIndex = this.items.length - 1;
     } else if (event.key === ' ' || event.key === 'Enter') {
       event.preventDefault();
       event.currentTarget.click();

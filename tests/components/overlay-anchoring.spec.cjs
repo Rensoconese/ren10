@@ -247,7 +247,7 @@ for (const overlay of POPOVER_OVERLAYS) {
   });
 }
 
-test('Escape dismisses one layer at a time, innermost first', async ({ page }) => {
+test('Escape dismisses one layer at a time, innermost first', { tag: ['@ren-popover', '@keyboard'] }, async ({ page }) => {
   const isOpen = () =>
     page.evaluate(() => [
       document.getElementById('popover-1').isOpen(),
