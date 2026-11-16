@@ -545,7 +545,7 @@ const PATTERN_MAP = {
   },
 
   'color-picker': {
-    note: 'Debatable: the trigger and its panel are a Disclosure (non-modal popover, as for ren-popover). Inside, the hue and alpha tracks are Sliders.',
+    note: 'Debatable: the trigger and its panel are a Disclosure (non-modal popover, as for ren-popover). Inside, the hue and alpha tracks are Sliders. The saturation/brightness area is a two-dimensional slider (Up/Down drive a second axis, reported in aria-valuetext), which the one-dimensional APG Slider pattern does not describe; its keys and ARIA are held by tests/components/keyboard-contracts.spec.cjs.',
     implements: [
       {
         pattern: 'disclosure',
@@ -553,7 +553,7 @@ const PATTERN_MAP = {
       },
       {
         pattern: 'slider',
-        fixme: 'Enabled once fix/a11y-findings merges: it turns the hue and alpha tracks into real sliders. On main the hue track ignores Home and End.',
+        parts: { slider: '.ren-color-picker-hue, .ren-color-picker-alpha' },
         setup: async (t) => {
           await t.page.locator('.ren-color-picker-trigger').focus();
           await t.press('Enter');
@@ -582,7 +582,6 @@ const PATTERN_MAP = {
       { pattern: 'landmarks' },
       {
         pattern: 'disclosure',
-        fixme: 'Enabled once fix/a11y-findings merges: it gives the collapse toggle aria-expanded. On main the toggle has no state.',
         parts: { button: '.ren-sidebar-toggle', content: '.ren-sidebar-item-text' },
       },
     ],
