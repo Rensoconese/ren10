@@ -10,7 +10,9 @@
  * - Text inputs for manual color entry (HEX, RGB, HSL)
  * - Preset color swatches
  * - EyeDropper API for screen color picking (when available)
- * - Full keyboard navigation (arrow keys, Tab, Enter)
+ * - Full keyboard navigation: the saturation/brightness area, the hue slider
+ *   and the alpha slider are tab stops with slider semantics (arrows,
+ *   Shift+arrows, PageUp/PageDown, Home/End); Tab, Enter and Escape elsewhere
  * - ARIA labels and semantic markup
  * - Smooth Popover API animations
  *
@@ -255,18 +257,12 @@ function hslToRgb(h, s, l, a = 1) {
   };
 }
 
-/**
- * Validate and normalize hex color string
- */
-function normalizeHex(hex) {
-  if (typeof hex !== 'string') return null;
-  hex = hex.trim();
-  if (!hex.startsWith('#')) hex = '#' + hex;
-  const result = hexToRgb(hex);
-  return result ? rgbToHex(result.r, result.g, result.b, result.a) : null;
-}
-
 const COLOR_PICKER_SIDES = new Set(['top', 'right', 'bottom', 'left']);
+
+/** Shift+Arrow and PageUp/PageDown step, in the units of the slider. */
+const LARGE_STEP = 10;
+
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 function normalizeColorPickerSide(value) {
   const side = String(value || 'bottom').toLowerCase().split('-')[0];
@@ -292,6 +288,8 @@ export class RenColorPicker extends HTMLElement {
   #anchorLink = null;
   #isDragging = false;
   #listenerController = null;
+  /** Preset swatch button → the hex the picker reports once that color is picked. */
+  #swatchHex = new WeakMap();
 
   constructor() {
     super();
@@ -467,9 +465,17 @@ export class RenColorPicker extends HTMLElement {
     this.#popover.innerHTML = '';
 
     // ═══ SATURATION/BRIGHTNESS AREA ═══
+    // A two-dimensional slider. ARIA has no 2D role, so it is a slider whose
+    // value is the saturation and whose value text names both axes
+    // (#updateSaturationHandle keeps them current).
     const saturationContainer = document.createElement('div');
     saturationContainer.className = 'ren-color-picker-saturation';
+    saturationContainer.setAttribute('role', 'slider');
     saturationContainer.setAttribute('aria-label', t('colorPicker.saturation'));
+    saturationContainer.setAttribute('aria-roledescription', t('colorPicker.area'));
+    saturationContainer.setAttribute('aria-valuemin', '0');
+    saturationContainer.setAttribute('aria-valuemax', '100');
+    saturationContainer.setAttribute('tabindex', '0');
 
     this.#saturationCanvas = document.createElement('canvas');
     this.#saturationCanvas.className = 'ren-color-picker-saturation-canvas';
@@ -486,6 +492,9 @@ export class RenColorPicker extends HTMLElement {
     this.#updateSaturationHandle();
 
     saturationContainer.addEventListener('mousedown', this.handleSaturationMouseDown);
+    saturationContainer.addEventListener('keydown', (e) => {
+      this.#handleSliderKeydown(e, 'saturation');
+    });
     this.#popover.appendChild(saturationContainer);
 
     // ═══ HUE SLIDER ═══
@@ -493,7 +502,6 @@ export class RenColorPicker extends HTMLElement {
     hueContainer.className = 'ren-color-picker-hue';
     hueContainer.setAttribute('aria-label', t('colorPicker.hue'));
     hueContainer.setAttribute('role', 'slider');
-    hueContainer.setAttribute('aria-valuenow', this.#hsv.h);
     hueContainer.setAttribute('aria-valuemin', '0');
     hueContainer.setAttribute('aria-valuemax', '360');
     hueContainer.setAttribute('aria-orientation', 'horizontal');
@@ -503,14 +511,15 @@ export class RenColorPicker extends HTMLElement {
     hueHandle.className = 'ren-color-picker-hue-handle';
     hueContainer.appendChild(hueHandle);
 
-    this.#updateHueHandle();
-
     hueContainer.addEventListener('mousedown', this.handleHueMouseDown);
     hueContainer.addEventListener('keydown', (e) => {
-      this.#handleHueKeydown(e, hueContainer);
+      this.#handleSliderKeydown(e, 'hue');
     });
 
+    // Attach first: #updateHueHandle() finds the track through the dropdown,
+    // and it is what positions the thumb and writes aria-valuenow.
     this.#popover.appendChild(hueContainer);
+    this.#updateHueHandle();
 
     // ═══ ALPHA SLIDER (Optional) ═══
     if (hasAlpha) {
@@ -518,7 +527,6 @@ export class RenColorPicker extends HTMLElement {
       alphaContainer.className = 'ren-color-picker-alpha';
       alphaContainer.setAttribute('aria-label', t('colorPicker.opacity'));
       alphaContainer.setAttribute('role', 'slider');
-      alphaContainer.setAttribute('aria-valuenow', Math.round(this.#hsv.a * 100));
       alphaContainer.setAttribute('aria-valuemin', '0');
       alphaContainer.setAttribute('aria-valuemax', '100');
       alphaContainer.setAttribute('aria-orientation', 'horizontal');
@@ -532,15 +540,15 @@ export class RenColorPicker extends HTMLElement {
       alphaHandle.className = 'ren-color-picker-alpha-handle';
       alphaContainer.appendChild(alphaHandle);
 
-      this.#updateAlphaGradient();
-      this.#updateAlphaHandle();
-
       alphaContainer.addEventListener('mousedown', this.handleAlphaMouseDown);
       alphaContainer.addEventListener('keydown', (e) => {
-        this.#handleAlphaKeydown(e, alphaContainer);
+        this.#handleSliderKeydown(e, 'alpha');
       });
 
+      // Attach first, for the same reason as the hue track.
       this.#popover.appendChild(alphaContainer);
+      this.#updateAlphaGradient();
+      this.#updateAlphaHandle();
     }
 
     // ═══ COLOR PREVIEW ═══
@@ -678,6 +686,8 @@ export class RenColorPicker extends HTMLElement {
     if (swatches.trim()) {
       const swatchesContainer = document.createElement('div');
       swatchesContainer.className = 'ren-color-picker-swatches';
+      // A label needs a role to hang on.
+      swatchesContainer.setAttribute('role', 'group');
       swatchesContainer.setAttribute('aria-label', t('colorPicker.presets'));
 
       const colors = swatches.split(',').map((s) => s.trim());
@@ -693,18 +703,13 @@ export class RenColorPicker extends HTMLElement {
 
         swatch.appendChild(colorDiv);
         swatch.addEventListener('click', this.handleSwatchClick);
-
-        // Check if this is the current color
-        const normalized = normalizeHex(color);
-        const currentHex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
-        if (normalized === currentHex) {
-          swatch.setAttribute('aria-selected', 'true');
-        }
+        this.#swatchHex.set(swatch, this.#modelHex(color));
 
         swatchesContainer.appendChild(swatch);
       });
 
       this.#popover.appendChild(swatchesContainer);
+      this.#updateSwatches();
     }
   }
 
@@ -758,6 +763,44 @@ export class RenColorPicker extends HTMLElement {
 
     handle.style.left = x + 'px';
     handle.style.top = y + 'px';
+
+    const area = this.#saturationCanvas.parentElement;
+    area.setAttribute('aria-valuenow', this.#hsv.s);
+    area.setAttribute(
+      'aria-valuetext',
+      t('colorPicker.areaValue', { saturation: this.#hsv.s, brightness: this.#hsv.v })
+    );
+  }
+
+  /**
+   * Mark the preset that is the current color. aria-current, because
+   * aria-selected is not a state a button can carry.
+   */
+  #updateSwatches() {
+    const swatches = this.#popover?.querySelectorAll('.ren-color-picker-swatch');
+    if (!swatches || swatches.length === 0) return;
+
+    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const current = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
+
+    swatches.forEach((swatch) => {
+      if (this.#swatchHex.get(swatch) === current) {
+        swatch.setAttribute('aria-current', 'true');
+      } else {
+        swatch.removeAttribute('aria-current');
+      }
+    });
+  }
+
+  /**
+   * Put a track thumb at a percentage of its track. The thumb is shifted back
+   * by the same share of its own width, so it stays inside the track at both
+   * ends: at 100% it would otherwise sit past the edge, where the track's
+   * overflow clips it.
+   */
+  #placeThumb(handle, percent) {
+    handle.style.left = percent + '%';
+    handle.style.translate = `${-percent}%`;
   }
 
   /**
@@ -771,9 +814,10 @@ export class RenColorPicker extends HTMLElement {
     if (!handle) return;
 
     const percent = (this.#hsv.h / 360) * 100;
-    handle.style.left = percent + '%';
+    this.#placeThumb(handle, percent);
 
     hueContainer.setAttribute('aria-valuenow', this.#hsv.h);
+    hueContainer.setAttribute('aria-valuetext', t('colorPicker.hueValue', { value: this.#hsv.h }));
   }
 
   /**
@@ -803,9 +847,13 @@ export class RenColorPicker extends HTMLElement {
     if (!handle) return;
 
     const percent = this.#hsv.a * 100;
-    handle.style.left = percent + '%';
+    this.#placeThumb(handle, percent);
 
     alphaContainer.setAttribute('aria-valuenow', Math.round(percent));
+    alphaContainer.setAttribute(
+      'aria-valuetext',
+      t('colorPicker.opacityValue', { value: Math.round(percent) })
+    );
   }
 
   /* ═════════════════════════════════════════════════════════════════
@@ -829,6 +877,7 @@ export class RenColorPicker extends HTMLElement {
 
   handleSaturationMouseDown(e) {
     e.preventDefault();
+    this.#focusSlider(e.currentTarget);
     this.#isDragging = true;
     this.#dragState = { type: 'saturation' };
 
@@ -840,6 +889,7 @@ export class RenColorPicker extends HTMLElement {
 
   handleHueMouseDown(e) {
     e.preventDefault();
+    this.#focusSlider(e.currentTarget);
     this.#isDragging = true;
     this.#dragState = { type: 'hue' };
 
@@ -851,6 +901,7 @@ export class RenColorPicker extends HTMLElement {
 
   handleAlphaMouseDown(e) {
     e.preventDefault();
+    this.#focusSlider(e.currentTarget);
     this.#isDragging = true;
     this.#dragState = { type: 'alpha' };
 
@@ -858,6 +909,15 @@ export class RenColorPicker extends HTMLElement {
 
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('mouseup', this.handleMouseUp);
+  }
+
+  /**
+   * preventDefault() on mousedown (it stops text selection while dragging)
+   * also stops the click from focusing the slider, so focus it by hand: a
+   * pointer user can then fine-tune with the arrow keys.
+   */
+  #focusSlider(surface) {
+    surface?.focus?.({ preventScroll: true });
   }
 
   handleMouseMove(e) {
@@ -905,12 +965,18 @@ export class RenColorPicker extends HTMLElement {
     const currentIndex = formats.indexOf(this.#format);
     this.#format = formats[(currentIndex + 1) % formats.length];
 
-    // Re-render inputs
+    // Re-render inputs. That rebuilds the whole dropdown, including the button
+    // that was just pressed, so focus is put back on its replacement instead
+    // of being dropped on <body>.
+    const hadFocus = Boolean(this.#popover?.contains(document.activeElement));
     this.#renderDropdownContent(
       this.hasAttribute('alpha'),
       this.getAttribute('swatches') || '',
       this.hasAttribute('disabled')
     );
+    if (hadFocus) {
+      this.#popover.querySelector('.ren-color-picker-format-toggle')?.focus();
+    }
   }
 
   handleSwatchClick(e) {
@@ -939,36 +1005,65 @@ export class RenColorPicker extends HTMLElement {
      KEYBOARD NAVIGATION
      ═════════════════════════════════════════════════════════════════ */
 
-  #handleHueKeydown(e, hueContainer) {
-    const step = e.shiftKey ? 10 : 1;
+  /**
+   * Keyboard for the three slider surfaces: the saturation/brightness area,
+   * the hue slider and the alpha slider.
+   *
+   * Arrows step by 1, Shift+Arrow and PageUp/PageDown by LARGE_STEP, Home/End
+   * jump to the ends. On the two-dimensional area Left/Right (and Home/End)
+   * drive saturation, Up/Down (and PageUp/PageDown) drive brightness. On the
+   * one-axis sliders Up and PageUp raise the value like Right. Hue is a
+   * circle, so its steps wrap around; opacity, saturation and brightness stop
+   * at their ends.
+   *
+   * Each key press emits ren-input and ren-change, like a native range input:
+   * a keyboard step is a committed change, there is no drag to end.
+   */
+  #handleSliderKeydown(e, type) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
 
-    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-      this.#hsv.h = (this.#hsv.h + step) % 360;
-      this.#updateAllViews();
-      this.#emitInput();
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-      this.#hsv.h = (this.#hsv.h - step + 360) % 360;
-      this.#updateAllViews();
-      this.#emitInput();
-      e.preventDefault();
+    const step = e.shiftKey ? LARGE_STEP : 1;
+    let along = 0; // Left/Right axis
+    let across = 0; // Up/Down axis
+    let end = null;
+
+    switch (e.key) {
+      case 'ArrowRight': along = step; break;
+      case 'ArrowLeft': along = -step; break;
+      case 'ArrowUp': across = step; break;
+      case 'ArrowDown': across = -step; break;
+      case 'PageUp': across = LARGE_STEP; break;
+      case 'PageDown': across = -LARGE_STEP; break;
+      case 'Home': end = 'min'; break;
+      case 'End': end = 'max'; break;
+      default: return;
     }
-  }
 
-  #handleAlphaKeydown(e, alphaContainer) {
-    const step = e.shiftKey ? 0.1 : 0.01;
+    e.preventDefault();
 
-    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
-      this.#hsv.a = Math.min(1, this.#hsv.a + step);
-      this.#updateAllViews();
-      this.#emitInput();
-      e.preventDefault();
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
-      this.#hsv.a = Math.max(0, this.#hsv.a - step);
-      this.#updateAllViews();
-      this.#emitInput();
-      e.preventDefault();
+    if (type === 'saturation') {
+      if (end) {
+        this.#hsv.s = end === 'min' ? 0 : 100;
+      } else {
+        this.#hsv.s = clamp(this.#hsv.s + along, 0, 100);
+        this.#hsv.v = clamp(this.#hsv.v + across, 0, 100);
+      }
+    } else if (type === 'hue') {
+      if (end) {
+        this.#hsv.h = end === 'min' ? 0 : 360;
+      } else {
+        this.#hsv.h = (this.#hsv.h + along + across + 360) % 360;
+      }
+    } else if (end) {
+      this.#hsv.a = end === 'min' ? 0 : 1;
+    } else {
+      // Whole percents, so repeated steps never drift (0.57000000000000001).
+      this.#hsv.a = clamp(Math.round(this.#hsv.a * 100) + along + across, 0, 100) / 100;
     }
+
+    this.#updateAllViews();
+    this.#emitInput();
+    this.#emitChange();
   }
 
   /* ═════════════════════════════════════════════════════════════════
@@ -985,9 +1080,7 @@ export class RenColorPicker extends HTMLElement {
     this.#hsv.s = Math.round((x / rect.width) * 100);
     this.#hsv.v = Math.round(100 - (y / rect.height) * 100);
 
-    this.#updateSaturationHandle();
-    this.#updateAlphaGradient();
-    this.#updatePreview();
+    this.#updateAllViews();
     this.#emitInput();
   }
 
@@ -999,12 +1092,7 @@ export class RenColorPicker extends HTMLElement {
     const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
     this.#hsv.h = Math.round((x / rect.width) * 360) % 360;
 
-    this.#drawSaturationCanvas();
-    this.#updateSaturationHandle();
-    this.#updateHueHandle();
-    this.#updateAlphaGradient();
-    this.#updatePreview();
-    this.#updateChannelInputs();
+    this.#updateAllViews();
     this.#emitInput();
   }
 
@@ -1016,8 +1104,7 @@ export class RenColorPicker extends HTMLElement {
     const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
     this.#hsv.a = Math.round((x / rect.width) * 100) / 100;
 
-    this.#updateAlphaHandle();
-    this.#updatePreview();
+    this.#updateAllViews();
     this.#emitInput();
   }
 
@@ -1055,6 +1142,7 @@ export class RenColorPicker extends HTMLElement {
     this.#updateChannelInputs();
     this.#updateHexInput();
     this.#updateTrigger();
+    this.#updateSwatches();
   }
 
   #updatePreview() {
@@ -1114,10 +1202,15 @@ export class RenColorPicker extends HTMLElement {
       swatch.style.backgroundColor = this.#hsvToCss();
     }
 
+    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const hex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
+
     if (value) {
-      const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
-      value.textContent = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
+      value.textContent = hex;
     }
+
+    // The accessible name carries the color, so it has to follow it.
+    this.#trigger.setAttribute('aria-label', t('colorPicker.trigger', { color: hex }));
   }
 
   #hsvToCss() {
@@ -1173,6 +1266,18 @@ export class RenColorPicker extends HTMLElement {
    * Accepts: hex string, rgb/rgba string, hsl/hsla string, or color name
    */
   setValue(color) {
+    const rgb = this.#parseColor(color);
+
+    if (rgb) {
+      this.#hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
+    }
+  }
+
+  /**
+   * Parse a hex string or any CSS color into { r, g, b, a }; null if it is
+   * not a color.
+   */
+  #parseColor(color) {
     let rgb = null;
 
     if (typeof color === 'string') {
@@ -1201,9 +1306,20 @@ export class RenColorPicker extends HTMLElement {
       }
     }
 
-    if (rgb) {
-      this.#hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
-    }
+    return rgb;
+  }
+
+  /**
+   * The hex the picker reports for a color once it is in its HSV model
+   * (whole degrees and percents), so a preset can be compared with the value.
+   */
+  #modelHex(color) {
+    const rgb = this.#parseColor(color);
+    if (!rgb) return null;
+
+    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
+    const model = hsvToRgb(hsv.h, hsv.s, hsv.v, hsv.a);
+    return rgbToHex(model.r, model.g, model.b, model.a);
   }
 
   /**

@@ -8,6 +8,7 @@
  * is what removes a `keyboard` entry from tests/coverage/exemptions.json.
  */
 const { test, expect } = require('@playwright/test');
+const { injectAxe, checkA11y } = require('axe-playwright');
 const { startStaticServer } = require('../utils/static-server.cjs');
 const { ROOT, mountRegistry } = require('../utils/mount-registry.cjs');
 
@@ -507,23 +508,188 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
-  test('ren-color-picker opens from the keyboard, moves hue with arrows and closes on Escape', { tag: ['@ren-color-picker', '@keyboard'] }, async ({ page }) => {
-    const errors = await mount(page, 'color-picker');
+  test('ren-color-picker opens from the keyboard, drives saturation, hue and alpha with the keys and closes on Escape', { tag: ['@ren-color-picker', '@keyboard'] }, async ({ page }) => {
+    // Pure red plus the alpha slider: every axis starts at a known end.
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('value="#5b6cff"', 'value="#ff0000" alpha'));
     const picker = page.locator('ren-color-picker');
     const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    const hex = () => picker.evaluate((el) => el.getValue().hex);
     await trigger.focus();
     await page.keyboard.press('Enter');
     await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+    // The saturation area, the hue slider and the alpha slider are the next three tab stops.
+    const area = page.locator('ren-color-picker .ren-color-picker-saturation');
+    await page.keyboard.press('Tab');
+    await expect(area, 'the saturation area is a tab stop').toBeFocused();
+    await expect(area).toHaveAttribute('aria-valuetext', 'Saturation 100%, brightness 100%');
+    await page.keyboard.press('ArrowLeft');
+    await expect(area, 'Left lowers saturation').toHaveAttribute('aria-valuetext', 'Saturation 99%, brightness 100%');
+    await page.keyboard.press('ArrowDown');
+    await expect(area, 'Down lowers brightness').toHaveAttribute('aria-valuetext', 'Saturation 99%, brightness 99%');
+    await expect.poll(hex, 'the area changes the colour').not.toBe('#ff0000');
+    await page.keyboard.press('Shift+ArrowLeft');
+    await page.keyboard.press('PageDown');
+    await expect(area, 'Shift+Arrow and PageDown take a larger step').toHaveAttribute('aria-valuetext', 'Saturation 89%, brightness 89%');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowUp');
+    await expect(area, 'Right and Up go back').toHaveAttribute('aria-valuetext', 'Saturation 90%, brightness 90%');
+    await page.keyboard.press('PageUp');
+    await page.keyboard.press('PageUp');
+    await expect(area, 'brightness stops at its end').toHaveAttribute('aria-valuetext', 'Saturation 90%, brightness 100%');
+    await page.keyboard.press('Home');
+    await page.keyboard.press('ArrowLeft');
+    await expect(area, 'Home jumps to no saturation and stops there').toHaveAttribute('aria-valuetext', 'Saturation 0%, brightness 100%');
+    await page.keyboard.press('End');
+    await expect(area, 'End jumps to full saturation').toHaveAttribute('aria-valuetext', 'Saturation 100%, brightness 100%');
+    await expect.poll(hex, 'the hue survived the trip through grey').toBe('#ff0000');
+
     const hue = page.locator('ren-color-picker .ren-color-picker-hue');
-    await hue.focus();
-    const before = await picker.evaluate((el) => el.getValue());
+    await page.keyboard.press('Tab');
+    await expect(hue, 'the hue slider is the next tab stop').toBeFocused();
+    await expect(hue).toHaveAttribute('aria-valuenow', '0');
     await page.keyboard.press('Shift+ArrowRight');
-    await expect.poll(() => picker.evaluate((el) => el.getValue()), 'hue arrows change the colour').not.toBe(before);
+    await expect(hue).toHaveAttribute('aria-valuenow', '10');
+    await expect.poll(hex, 'hue arrows change the colour').not.toBe('#ff0000');
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowUp');
+    await expect(hue).toHaveAttribute('aria-valuenow', '12');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('PageUp');
+    await expect(hue).toHaveAttribute('aria-valuenow', '20');
+    await page.keyboard.press('PageDown');
+    await expect(hue).toHaveAttribute('aria-valuenow', '10');
+    await page.keyboard.press('End');
+    await expect(hue).toHaveAttribute('aria-valuenow', '360');
+    await page.keyboard.press('Home');
+    await expect(hue).toHaveAttribute('aria-valuenow', '0');
+    await page.keyboard.press('ArrowLeft');
+    await expect(hue, 'hue is a circle: a step below 0 wraps').toHaveAttribute('aria-valuenow', '359');
+
+    const alpha = page.locator('ren-color-picker .ren-color-picker-alpha');
+    await page.keyboard.press('Tab');
+    await expect(alpha, 'the alpha slider is the next tab stop').toBeFocused();
+    await expect(alpha).toHaveAttribute('aria-valuenow', '100');
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowDown');
+    await expect(alpha).toHaveAttribute('aria-valuenow', '98');
+    await page.keyboard.press('Shift+ArrowLeft');
+    await page.keyboard.press('PageDown');
+    await expect(alpha).toHaveAttribute('aria-valuenow', '78');
+    await expect.poll(() => picker.evaluate((el) => el.getValue().alpha), 'the value carries the opacity').toBe(0.78);
+    await page.keyboard.press('ArrowRight');
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('PageUp');
+    await expect(alpha).toHaveAttribute('aria-valuenow', '90');
+    await page.keyboard.press('Home');
+    await page.keyboard.press('ArrowLeft');
+    await expect(alpha, 'opacity stops at 0').toHaveAttribute('aria-valuenow', '0');
+    await page.keyboard.press('End');
+    await expect(alpha).toHaveAttribute('aria-valuenow', '100');
+
+    await page.keyboard.press('Tab');
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input'), 'the sliders do not trap focus').toBeFocused();
+
+    // Switching format rebuilds the dropdown; focus stays on the toggle.
+    const format = page.locator('ren-color-picker .ren-color-picker-format-toggle');
+    await format.focus();
+    await page.keyboard.press('Enter');
+    await expect(format).toHaveText('RGB');
+    await expect(format, 'the format toggle keeps focus after it is used').toBeFocused();
+
+    await hue.focus();
     await page.keyboard.press('Escape');
     await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     await expect(trigger, 'Escape returns focus to the trigger').toBeFocused();
     await page.keyboard.press(' ');
     await expect(trigger, 'Space opens it too').toHaveAttribute('aria-expanded', 'true');
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-color-picker controls expose their name, role and value, and a key press is a committed change', { tag: ['@ren-color-picker', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('value="#5b6cff"', 'value="#ff0000" alpha swatches="#ff0000,#00ff00"'));
+    await page.evaluate(() => {
+      window.__events = [];
+      const picker = document.querySelector('ren-color-picker');
+      for (const type of ['ren-input', 'ren-change']) picker.addEventListener(type, (event) => window.__events.push(`${type} ${event.detail.hex}`));
+    });
+    const picker = page.locator('ren-color-picker');
+    const hex = () => picker.evaluate((el) => el.getValue().hex);
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+
+    // Found by role and name, the way assistive technology finds them.
+    const area = page.getByRole('slider', { name: 'Color saturation and brightness' });
+    const hue = page.getByRole('slider', { name: 'Color hue' });
+    const alpha = page.getByRole('slider', { name: 'Color opacity' });
+    for (const [slider, min, max, now, text] of [
+      [area, '0', '100', '100', 'Saturation 100%, brightness 100%'],
+      [hue, '0', '360', '0', '0°'],
+      [alpha, '0', '100', '100', '100%'],
+    ]) {
+      await expect(slider).toHaveAttribute('aria-valuemin', min);
+      await expect(slider).toHaveAttribute('aria-valuemax', max);
+      await expect(slider, 'the value is there as soon as the dropdown opens').toHaveAttribute('aria-valuenow', now);
+      await expect(slider).toHaveAttribute('aria-valuetext', text);
+    }
+    await expect(area, 'ARIA has no 2D slider role, so the area says what it is').toHaveAttribute('aria-roledescription', '2D slider');
+    const thumb = page.locator('.ren-color-picker-alpha-handle');
+    await expect(thumb, 'the alpha thumb starts at the value, not at 0').toHaveAttribute('style', /left:\s*100%/);
+    // Both boxes are read in one frame, so the open animation cannot skew them.
+    const overhang = await alpha.evaluate((track) => {
+      const thumbBox = track.querySelector('.ren-color-picker-alpha-handle').getBoundingClientRect();
+      return thumbBox.right - track.getBoundingClientRect().right;
+    });
+    expect(overhang, 'and stays inside the track, where it is not clipped').toBeLessThanOrEqual(0.5);
+
+    // One key press is one committed change, like a native range input.
+    await hue.focus();
+    await page.keyboard.press('PageUp');
+    await expect(hue).toHaveAttribute('aria-valuetext', '10°');
+    const changed = await hex();
+    expect(changed).not.toBe('#ff0000');
+    expect(await page.evaluate(() => window.__events)).toEqual([`ren-input ${changed}`, `ren-change ${changed}`]);
+
+    // Every control that shows the colour follows it, the trigger's name included.
+    await expect(page.getByRole('button', { name: `Color picker, current color ${changed}` })).toHaveCount(1);
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue(changed);
+    await page.keyboard.press('Home');
+    await expect(page.getByRole('button', { name: 'Color picker, current color #ff0000' })).toHaveCount(1);
+
+    // The preset that equals the value is marked current, and only that one.
+    const presets = page.getByRole('group', { name: 'Preset color swatches' }).getByRole('button');
+    await expect(presets.first()).toHaveAttribute('aria-current', 'true');
+    await presets.nth(1).focus();
+    await page.keyboard.press('Enter');
+    await expect.poll(hex).toBe('#00ff00');
+    await expect(presets.nth(1)).toHaveAttribute('aria-current', 'true');
+    await expect(presets.first()).not.toHaveAttribute('aria-current');
+
+    // No ARIA or naming violation anywhere in the open picker, checked while
+    // every state it can carry is present (slider values, a current preset).
+    await injectAxe(page);
+    await checkA11y(page, 'ren-color-picker', {
+      detailedReport: true,
+      axeOptions: { runOnly: { type: 'rule', values: [
+        'aria-allowed-attr', 'aria-prohibited-attr', 'aria-required-attr', 'aria-valid-attr', 'aria-valid-attr-value',
+        'aria-roles', 'aria-allowed-role', 'aria-input-field-name', 'button-name', 'label',
+      ] } },
+    });
+
+    // A press on a track moves the value, keeps every field in step and
+    // focuses the slider, so the arrows can fine-tune from there.
+    const track = await alpha.boundingBox();
+    await page.mouse.click(track.x + track.width / 2, track.y + track.height / 2);
+    await expect(alpha, 'a press focuses the slider').toBeFocused();
+    const pressed = Number(await alpha.getAttribute('aria-valuenow'));
+    expect(pressed).toBeGreaterThan(40);
+    expect(pressed).toBeLessThan(60);
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input'), 'the hex field follows a pointer change').toHaveValue(await hex());
+    await page.keyboard.press('ArrowLeft');
+    await expect(alpha).toHaveAttribute('aria-valuenow', String(pressed - 1));
     expect(errors).toEqual([]);
   });
 

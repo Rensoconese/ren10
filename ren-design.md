@@ -1752,9 +1752,11 @@ HSV canvas + hue slider + alpha + swatches. Supports HEX / RGB / HSL
 output formats and the EyeDropper API where available.
 
 - **Attributes:** `value`, `alpha`, `format`, `swatches`.
-- **API:** `getColor()`, `setColor(hex)`.
-- **A11y:** keyboard-navigable canvas (arrow keys = pixel movement, Shift
-  = large steps), all slider inputs are real `<input type="range">`.
+- **API:** `getValue()`, `setValue(color)`.
+- **A11y:** the saturation/brightness area, the hue slider and the alpha
+  slider are tab stops with `role="slider"` and a current value (arrows
+  step by 1, Shift+arrow or PageUp/PageDown by 10, Home/End jump to the
+  ends); the trigger's name carries the current color.
 
 #### ren-combobox
 
