@@ -92,6 +92,14 @@ jobs:
 
       - run: npm run agent:check
 
+      # tests/coverage/exemptions.json is a debt list: a pull request may pay
+      # it off but not add to it.
+      - name: Coverage exemptions only shrink
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          npm run coverage:check -- --base FETCH_HEAD
+
       - run: npm run test:exports
 
       - run: npm run smoke:cli-copy

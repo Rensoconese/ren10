@@ -35,7 +35,7 @@ const numberMarkup = '<ren-number-field aria-label="Quantity" min="0" max="10" v
 
 for (const activation of ['manual', 'automatic']) {
   for (const disabled of ['disabled', 'aria-disabled="true"']) {
-    test(`tabs ${activation} select the matching panel after skipping ${disabled}`, async ({ page }) => {
+    test(`tabs ${activation} select the matching panel after skipping ${disabled}`, { tag: ['@ren-tabs', '@keyboard'] }, async ({ page }) => {
       await mount(page, 'ren-tabs', tabsMarkup(activation, disabled));
       await page.locator('#tab-a').focus();
       await page.keyboard.press('ArrowRight');
@@ -79,7 +79,7 @@ test('tabs reject disabled clicks and public selection', async ({ page }) => {
   await expect(page.locator('#panel-a')).toBeVisible();
 });
 
-test('combobox keyboard skips disabled options and selects the active enabled option', async ({ page }) => {
+test('combobox keyboard skips disabled options and selects the active enabled option', { tag: ['@ren-combobox', '@keyboard'] }, async ({ page }) => {
   await mount(page, 'ren-combobox', comboMarkup);
   const input = page.getByRole('combobox');
   const a = page.locator('.ren-combobox-item[data-value="a"]');
@@ -107,7 +107,7 @@ test('combobox clicks accept aria-disabled=false and reject true', async ({ page
   await page.getByRole('option', { name: 'A', exact: true }).click();
   await expect(page.locator('input[type="hidden"]')).toHaveValue('a');
 });
-test('combobox cannot activate an all-disabled list', async ({ page }) => {
+test('combobox cannot activate an all-disabled list', { tag: ['@ren-combobox', '@keyboard'] }, async ({ page }) => {
   await mount(page, 'ren-combobox', '<ren-combobox><div class="ren-combobox-item" data-value="blocked" aria-disabled="true">Blocked</div></ren-combobox>');
   await page.getByRole('combobox').focus();
   await page.keyboard.press('ArrowDown');
@@ -117,7 +117,7 @@ test('combobox cannot activate an all-disabled list', async ({ page }) => {
 });
 
 for (const key of ['Enter', 'Space']) {
-  test(`number field native buttons respond to ${key} once`, async ({ page }) => {
+  test(`number field native buttons respond to ${key} once`, { tag: ['@ren-number-field', '@keyboard'] }, async ({ page }) => {
     await mount(page, 'ren-number-field', numberMarkup);
     const input = page.getByRole('spinbutton');
     await page.getByRole('button', { name: 'Increase' }).focus();

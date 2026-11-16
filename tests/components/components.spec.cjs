@@ -79,7 +79,8 @@ async function startStaticServer() {
 }
 
 test.beforeAll(async () => {
-  const { REGISTRY } = await import('../../cli/registry.js');
+  // require, not import(): other specs in this worker require() it, and a mixed load breaks.
+  const { REGISTRY } = require('../../cli/registry.js');
   components = Object.entries(REGISTRY).map(([key, meta]) => {
     const docFile = DOC_PAGE_ALIASES[key] || `${meta.dir}.html`;
     return {

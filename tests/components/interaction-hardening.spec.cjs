@@ -87,7 +87,7 @@ test.describe('Interaction hardening regressions', () => {
     await expect.poll(() => page.evaluate(() => window.__renInvalidCount)).toBe(1);
   });
 
-  test('ren-popover syncs trigger state and restores focus', async ({ page }) => {
+  test('ren-popover syncs trigger state and restores focus', { tag: ['@ren-popover', '@keyboard'] }, async ({ page }) => {
     await page.goto(`${staticServer.origin}/tests/components/fixtures/popover-focus.html`);
     await page.evaluate(() => customElements.whenDefined('ren-popover'));
 
@@ -258,7 +258,7 @@ test.describe('Interaction hardening regressions', () => {
     })).toBe(false);
   });
 
-  test('ren-command keeps focus in the search input after global shortcut opens', async ({ page }) => {
+  test('ren-command keeps focus in the search input after global shortcut opens', { tag: ['@ren-command', '@keyboard'] }, async ({ page }) => {
     await page.goto(`${staticServer.origin}/tests/components/fixtures/lifecycle-cleanup.html`);
     await expect.poll(() => page.evaluate(() => typeof window.mountAuditComponents)).toBe('function');
 

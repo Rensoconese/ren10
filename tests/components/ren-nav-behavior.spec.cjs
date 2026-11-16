@@ -61,7 +61,7 @@ const activeElementName = (page) => page.evaluate(() => {
 });
 
 test.describe('ren-nav focus management', () => {
-  test('Escape closes the open menu and returns focus from the panel to the toggle', async ({ page }) => {
+  test('Escape closes the open menu and returns focus from the panel to the toggle', { tag: ['@ren-nav', '@keyboard'] }, async ({ page }) => {
     const { toggle, panel } = await mountNav(page);
     await toggle.click();
     await expect(panel).toBeVisible();
@@ -74,7 +74,7 @@ test.describe('ren-nav focus management', () => {
     await expect.poll(() => activeElementName(page)).toBe('toggle');
   });
 
-  test('Escape with focus on the toggle keeps focus there', async ({ page }) => {
+  test('Escape with focus on the toggle keeps focus there', { tag: ['@ren-nav', '@keyboard'] }, async ({ page }) => {
     const { toggle } = await mountNav(page);
     await toggle.click();
     await toggle.focus();

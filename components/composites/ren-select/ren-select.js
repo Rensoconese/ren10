@@ -148,6 +148,11 @@ export class RenSelect extends HTMLElement {
    */
   setupComponent() {
     this.classList.add('ren-select');
+    // The host carries data-state="open|closed", and base/utilities.css hides
+    // every [data-state="closed"] that lacks data-keep. The host holds the
+    // trigger, so without data-keep the whole control vanished the first time
+    // it closed and could never be opened again.
+    this.setAttribute('data-keep', '');
     this.syncPlacement();
 
     // Check for size variant
@@ -484,11 +489,11 @@ export class RenSelect extends HTMLElement {
         e.stopPropagation();
 
         if (!isOpen) {
+          // open() already activates the selected option, or the first one.
+          // A deferred activateFirst() here used to override that, so
+          // reopening a select that had a value jumped back to the first
+          // option, and a key pressed right after opening was lost.
           this.open();
-          // Focus first item
-          setTimeout(() => {
-            this.#keyboardNav?.activateFirst();
-          }, 0);
         } else {
           this.#keyboardNav?.activateNext();
         }
@@ -500,10 +505,10 @@ export class RenSelect extends HTMLElement {
 
         if (!isOpen) {
           this.open();
-          // Focus last item
-          setTimeout(() => {
+          // With no value yet, ArrowUp starts from the last option.
+          if (this.#selectedValue == null || this.#selectedValue.length === 0) {
             this.#keyboardNav?.activateLast();
-          }, 0);
+          }
         } else {
           this.#keyboardNav?.activatePrevious();
         }

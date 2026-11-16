@@ -43,8 +43,16 @@ const listPages = (dir) =>
 
 const DOCS = [...listPages(''), ...listPages('components'), ...listPages('foundations')];
 
+// A component page (docs/components/ren-dialog.html) is that component's a11y
+// coverage: its describe carries `@ren-dialog @a11y`, which `npm run
+// coverage:check` counts (tests/coverage/README.md).
+const coverageTags = (page) => {
+  const match = page.match(/^components\/(ren-[a-z-]+)\.html$/);
+  return match ? [`@${match[1]}`, '@a11y'] : [];
+};
+
 for (const page of DOCS) {
-  test.describe(`docs/${page} — WCAG 2.1 AA`, () => {
+  test.describe(`docs/${page} — WCAG 2.1 AA`, { tag: coverageTags(page) }, () => {
     test.beforeEach(async ({ page: pw }, testInfo) => {
       // Scan settled content: entry fades otherwise cause transient contrast failures.
       await pw.emulateMedia({ reducedMotion: 'reduce' });

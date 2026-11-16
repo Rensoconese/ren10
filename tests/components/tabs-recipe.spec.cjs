@@ -5,7 +5,7 @@ let server;
 test.beforeAll(async () => { server = await startStaticServer(path.resolve(__dirname, '../..')); });
 test.afterAll(async () => { await server.close(); });
 
-test('published tabs recipe supports hash, Back and keyboard with the real API', async ({ page }) => {
+test('published tabs recipe supports hash, Back and keyboard with the real API', { tag: ['@ren-tabs', '@keyboard'] }, async ({ page }) => {
   await page.goto(`${server.origin}/docs/recipes.html`);
   const recipe = await page.locator('#tabbed-settings pre code').innerText();
   await page.setContent(`<link rel="stylesheet" href="${server.origin}/index.css">${recipe}`);
