@@ -186,6 +186,10 @@ export class RenNumberField extends HTMLElement {
     if (this.input.disabled || this.decrementBtn.disabled) return;
     e.preventDefault();
 
+    // One repeat at a time. A second press (the other stepper, a second
+    // finger) used to overwrite the handles and orphan the running timers:
+    // the first repeat then never stopped, not on release and not on removal.
+    this.clearPressTimers();
     this.decrement();
 
     /* ═══ START LONG PRESS REPEAT ═══ */
@@ -222,6 +226,7 @@ export class RenNumberField extends HTMLElement {
     if (this.input.disabled || this.incrementBtn.disabled) return;
     e.preventDefault();
 
+    this.clearPressTimers();
     this.increment();
 
     /* ═══ START LONG PRESS REPEAT ═══ */
