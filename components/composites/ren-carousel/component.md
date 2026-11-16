@@ -78,7 +78,7 @@ accessibility:
     - "Active slide / active dot use aria-current=\"true\"; never communicate the active state through color alone."
     - "Keyboard: Left/Right arrows traverse slides; arrow buttons and dots are real <button> elements with :focus-visible rings."
     - "Touch targets on .ren-carousel-prev/.ren-carousel-next stay ≥ 44px (min-width / min-height enforced in CSS)."
-    - "Autoplay must pause on hover / focus / data-autoplay removal; aria-busy=\"true\" disables interaction during transitions."
+    - "Autoplay must pause on hover / focus / data-autoplay removal; set aria-busy=\"true\" yourself while slides load (the CSS dims the carousel and blocks pointer input); the component does not set it during transitions."
     - "Respect prefers-reduced-motion: scroll-behavior becomes auto and the autoplay progress bar shows the final frame instead of animating."
 ```
 

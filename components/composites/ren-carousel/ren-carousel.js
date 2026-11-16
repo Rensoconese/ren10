@@ -466,7 +466,16 @@ export class RenCarousel extends HTMLElement {
         this._prevButton.removeAttribute('disabled');
         this._nextButton.removeAttribute('disabled');
       } else {
-        // Without loop, hide/disable arrows at boundaries
+        // Without loop, hide/disable arrows at boundaries. Disabling the
+        // focused arrow would drop keyboard focus to <body> (and the next
+        // arrow key with it), so focus moves to the opposite arrow first.
+        if (atStart && document.activeElement === this._prevButton && !atEnd) {
+          this._nextButton.focus();
+        }
+        if (atEnd && document.activeElement === this._nextButton && !atStart) {
+          this._prevButton.focus();
+        }
+
         if (atStart) {
           this.setAttribute('data-at-start', '');
           this._prevButton.setAttribute('disabled', '');

@@ -24,6 +24,7 @@ export class RenHoverCard extends HTMLElement {
     this.handleTriggerFocusOut = this.handleTriggerFocusOut.bind(this);
     this.handleCardMouseEnter = this.handleCardMouseEnter.bind(this);
     this.handleCardMouseLeave = this.handleCardMouseLeave.bind(this);
+    this.handleDocumentKeyDown = this.handleDocumentKeyDown.bind(this);
   }
 
   connectedCallback() {
@@ -88,6 +89,7 @@ export class RenHoverCard extends HTMLElement {
 
     this.card.addEventListener('mouseenter', this.handleCardMouseEnter);
     this.card.addEventListener('mouseleave', this.handleCardMouseLeave);
+    document.addEventListener('keydown', this.handleDocumentKeyDown, true);
   }
 
   disconnectedCallback() {
@@ -102,6 +104,7 @@ export class RenHoverCard extends HTMLElement {
       this.card.removeEventListener('mouseenter', this.handleCardMouseEnter);
       this.card.removeEventListener('mouseleave', this.handleCardMouseLeave);
     }
+    document.removeEventListener('keydown', this.handleDocumentKeyDown, true);
 
     this.anchorLink?.release();
     this.anchorLink = null;
@@ -164,6 +167,20 @@ export class RenHoverCard extends HTMLElement {
   handleTriggerFocusOut() {
     this.clearTimeouts();
     this.hideTimeout = setTimeout(() => this.hide(), this.hideDelay);
+  }
+
+  /* ═══ ESCAPE DISMISSES (WCAG 1.4.13) ═══
+     popover="manual" has no light dismiss. Only an open card consumes the
+     key, so an enclosing dialog does not also close on the same press. */
+  handleDocumentKeyDown(event) {
+    if (event.key !== 'Escape') return;
+    if (this.isOpen) {
+      event.preventDefault();
+      this.clearTimeouts();
+      this.hide();
+    } else {
+      this.clearShowTimeout();
+    }
   }
 
   /* ═══ CARD MOUSE ENTER (GRACE AREA) ═══ */

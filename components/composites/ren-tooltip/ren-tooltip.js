@@ -128,6 +128,20 @@ export class RenTooltip extends HTMLElement {
     // Touch events for long-press detection
     this.#trigger.addEventListener('touchstart', (e) => this.handleTouchStart(e), { signal });
     this.#trigger.addEventListener('touchend', (e) => this.handleTouchEnd(e), { signal });
+
+    // Escape dismisses without moving the pointer or focus (WCAG 1.4.13).
+    // popover="manual" has no built-in light dismiss, so it is wired here.
+    // Only an open tooltip consumes the key, so an enclosing dialog does not
+    // also close on the same press.
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      if (this.isOpen()) {
+        e.preventDefault();
+        this.hide();
+      } else {
+        this.clearTimeouts();
+      }
+    }, { capture: true, signal });
   }
 
   /**

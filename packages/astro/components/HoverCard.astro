@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-hover-card class:list={className} {...rest}><slot /></ren-hover-card>
+<button class:list={className} {...rest}><slot /></button>
 
 <script>
   import 'ren10/components/composites/ren-hover-card/ren-hover-card.js';
