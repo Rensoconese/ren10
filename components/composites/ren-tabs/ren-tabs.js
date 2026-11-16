@@ -49,6 +49,7 @@ export class RenTabs extends HTMLElement {
     this._tabs = [];
     this._panels = [];
     this._selectedIndex = -1;
+    this._listenerController = null;
   }
 
   /**
@@ -66,6 +67,10 @@ export class RenTabs extends HTMLElement {
       this._nav.detach();
       this._nav = null;
     }
+    // connectedCallback wires the click listener again: without this, every
+    // reconnect stacked one more, and one click fired ren-tab-change twice.
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   /**
@@ -131,7 +136,11 @@ export class RenTabs extends HTMLElement {
     }
 
     // Listen for clicks on tabs
-    this._tabList.addEventListener('click', this._handleTabClick.bind(this));
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    this._tabList.addEventListener('click', this._handleTabClick.bind(this), {
+      signal: this._listenerController.signal,
+    });
   }
 
   /**

@@ -342,10 +342,12 @@ export const REGISTRY = {
     utils: ['keyboard-nav.js', 'id-generator.js', 'debug.js'],
     components: [],
     usage: `<ren-tabs>
-  <button role="tab">Tab 1</button>
-  <button role="tab">Tab 2</button>
-  <div role="tabpanel">Content 1</div>
-  <div role="tabpanel">Content 2</div>
+  <div class="ren-tab-list" role="tablist">
+    <button class="ren-tab" role="tab">Tab 1</button>
+    <button class="ren-tab" role="tab">Tab 2</button>
+  </div>
+  <div class="ren-tab-panel" role="tabpanel">Content 1</div>
+  <div class="ren-tab-panel" role="tabpanel" hidden>Content 2</div>
 </ren-tabs>`,
   },
 
