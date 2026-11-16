@@ -314,6 +314,17 @@
   transform: translateY(-50%);
 }
 
+/* ═══ SLIDER FOCUS ═══ */
+/* The saturation area, the hue slider and the alpha slider are tab stops.
+   The ring is drawn outside the track, where it reads against any hue. */
+.ren-color-picker-saturation:focus-visible,
+.ren-color-picker-hue:focus-visible,
+.ren-color-picker-alpha:focus-visible {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+}
+
 /* ═══ COLOR PREVIEW SWATCH ═══ */
 .ren-color-picker-preview {
   display: flex;
@@ -552,7 +563,7 @@
   border-color: var(--color-border);
 }
 
-.ren-color-picker-swatch[aria-selected="true"] {
+.ren-color-picker-swatch[aria-current="true"] {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
 }

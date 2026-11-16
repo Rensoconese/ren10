@@ -71,8 +71,12 @@ const defaultLocale = {
 
   colorPicker: {
     saturation: 'Color saturation and brightness',
+    area: '2D slider',
+    areaValue: 'Saturation {saturation}%, brightness {brightness}%',
     hue: 'Color hue',
+    hueValue: '{value}°',
     opacity: 'Color opacity',
+    opacityValue: '{value}%',
     current: 'Current',
     hexValue: 'Hex color value',
     formatToggle: 'Toggle color format between HEX, RGB, and HSL',
@@ -423,8 +427,12 @@ registerLocale('es', {
 
   colorPicker: {
     saturation: 'Saturación y brillo del color',
+    area: 'Control deslizante 2D',
+    areaValue: 'Saturación {saturation}%, brillo {brightness}%',
     hue: 'Tono del color',
+    hueValue: '{value}°',
     opacity: 'Opacidad del color',
+    opacityValue: '{value}%',
     current: 'Actual',
     hexValue: 'Valor hexadecimal del color',
     formatToggle: 'Alternar formato de color entre HEX, RGB y HSL',

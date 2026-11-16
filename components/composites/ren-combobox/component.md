@@ -80,6 +80,7 @@ accessibility:
     - "Name the combobox: set aria-label or aria-labelledby on <ren-combobox> (the component moves it onto the generated input) or wrap it in a <label>. The placeholder is not a label."
     - "List has role=\"listbox\" and each item has role=\"option\"; do not nest interactive controls inside an option."
     - "Keyboard contract: Arrow Down opens / moves down, Arrow Up moves up, Enter selects, Escape closes; preserve all four."
+    - "Hover moves aria-activedescendant only when the pointer really moves: a list that opens or scrolls under a resting pointer leaves the highlighted option to the keyboard."
     - "Selected option sets aria-selected=\"true\"; selection is announced — never communicate via color alone."
     - "Disabled options set aria-disabled=\"true\" AND ignore activation in JS (pointer-events styling is not enough)."
     - "Loading state uses an aria-live region (or aria-busy on the input) so AT users know results are pending."
