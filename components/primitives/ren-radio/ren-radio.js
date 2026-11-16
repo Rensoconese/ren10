@@ -25,8 +25,9 @@
  *     </label>
  *   </ren-radio-group>
  *
- * Arrow keys navigate between radios.
- * Selecting a radio via arrow keys also checks it.
+ * Arrow keys navigate between radios (Right/Down next, Left/Up previous,
+ * wrapping). Selecting a radio via arrow keys also checks it. Space checks the
+ * focused radio. The group's tab stop is the checked radio, or the first one.
  */
 
 import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
@@ -39,6 +40,7 @@ export class RenRadioGroup extends HTMLElement {
   constructor() {
     super();
     this._nav = null;
+    this._handleChange = this._handleChange.bind(this);
   }
 
   connectedCallback() {
@@ -51,31 +53,15 @@ export class RenRadioGroup extends HTMLElement {
     const radios = this.querySelectorAll('input[type="radio"]');
     if (radios.length === 0) return;
 
-    // Set up keyboard navigation using roving tabindex
-    const orientation = this.getAttribute('orientation') || 'vertical';
-
-    this._nav = createKeyboardNav(this, {
-      selector: 'input[type="radio"]',
-      orientation,
-      loop: true,
-      typeahead: false,
-      focusOnHover: false,
-      onActivate: (radio, index) => {
-        // When arrow key navigation moves to a radio, check it
-        radio.checked = true;
-        // Dispatch change event to match native behavior
-        radio.dispatchEvent(new Event('change', { bubbles: true }));
-      },
-      onSelect: null,
-    });
-
-    this._nav.attach();
+    this._attachNav();
+    this.addEventListener('change', this._handleChange);
 
     // Update class based on orientation
     this._updateOrientationClass();
   }
 
   disconnectedCallback() {
+    this.removeEventListener('change', this._handleChange);
     if (this._nav) {
       this._nav.detach();
       this._nav = null;
@@ -88,21 +74,58 @@ export class RenRadioGroup extends HTMLElement {
       // Detach and reattach nav with new orientation
       if (this._nav) {
         this._nav.detach();
-        const orientation = this.getAttribute('orientation') || 'vertical';
-        this._nav = createKeyboardNav(this, {
-          selector: 'input[type="radio"]',
-          orientation,
-          loop: true,
-          typeahead: false,
-          focusOnHover: false,
-          onActivate: (radio, index) => {
-            radio.checked = true;
-            radio.dispatchEvent(new Event('change', { bubbles: true }));
-          },
-          onSelect: null,
-        });
-        this._nav.attach();
+        this._attachNav();
       }
+    }
+  }
+
+  /**
+   * Arrow-key navigation with a roving tabindex. Enter and Space are left to
+   * the native radio (no onSelect), so Space checks the focused radio.
+   * @private
+   */
+  _attachNav() {
+    this._nav = createKeyboardNav(this, {
+      selector: 'input[type="radio"]',
+      // All four arrows move within a radio group, whichever way it is laid
+      // out (APG Radio Group). The `orientation` attribute is layout only.
+      orientation: 'both',
+      loop: true,
+      typeahead: false,
+      focusOnHover: false,
+      onActivate: (radio) => {
+        // When arrow key navigation moves to a radio, check it. Moving the
+        // tab stop onto a radio that is already checked is not a change.
+        if (radio.checked) return;
+        radio.checked = true;
+        // Dispatch change event to match native behavior
+        radio.dispatchEvent(new Event('change', { bubbles: true }));
+      },
+      onSelect: null,
+    });
+
+    this._nav.attach();
+    this._syncTabStop();
+  }
+
+  /**
+   * The group's single tab stop is the checked radio, or the first one when
+   * nothing is checked (APG Radio Group). Without this a radio checked in the
+   * markup, or from script, was left at tabindex="-1" and Tab skipped it.
+   * @private
+   */
+  _syncTabStop() {
+    if (!this._nav) return;
+    const radios = this._nav.getItems();
+    const checked = radios.findIndex((radio) => radio.checked);
+    if (checked !== -1 && checked !== this._nav.activeIndex) {
+      this._nav.setActiveIndex(checked);
+    }
+  }
+
+  _handleChange(event) {
+    if (event.target instanceof HTMLInputElement && event.target.type === 'radio') {
+      this._syncTabStop();
     }
   }
 

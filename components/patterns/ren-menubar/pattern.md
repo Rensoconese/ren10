@@ -78,7 +78,8 @@ accessibility:
   required:
     - "Container has role=\"menubar\" and each <button> is a real menuitem with role=\"menuitem|menuitemcheckbox|menuitemradio\"."
     - "Triggers expose aria-haspopup=\"menu\" and aria-expanded reflects the open/closed state of the associated menu."
-    - "Roving tabindex: only one focusable item at a time; arrow keys move focus. The component manages this — do not set tabindex manually on every item."
+    - "Roving tabindex: the menubar is one tab stop (the trigger that last had focus; the first one initially) and menu items are tabindex=\"-1\". Arrow Left/Right and Home/End move focus along the bar without opening anything; Arrow Down, Enter or Space open a trigger's menu on its first item; inside a menu Arrow Left/Right move to the neighbouring menu. Tab leaves the menubar and closes every menu. The component manages this — do not set tabindex manually."
+    - "Each menu is named by its trigger: the component points aria-labelledby on the role=\"menu\" element at the trigger (generating an id when needed) unless you supply aria-label or aria-labelledby. Enter / Space activate an item with a real click, so click listeners run for keyboard users too."
     - "Checkbox / radio items expose aria-checked; the visual check (::before) must not be the only state cue."
     - "Disabled items use [data-disabled] AND pointer-events: none (CSS handles the latter)."
     - "Focus-visible outline uses --color-accent — never strip without restoring a visible alternative."

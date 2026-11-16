@@ -75,7 +75,8 @@ accessibility:
     - "Real <input type=\"radio\"> elements so the browser handles single-selection, form submission, and assistive-tech announcement."
     - ".ren-radio label has min-height: var(--touch-min) so the whole row is a 44px touch target."
     - "Visible :focus-visible ring on .ren-radio-control driven by --color-focus-ring (the native input is visually hidden but focus is delegated to its sibling)."
-    - "<ren-radio-group> sets role=\"radiogroup\" and supports arrow-key navigation (Up/Down vertical, Left/Right horizontal) with loop; selection follows focus."
+    - "<ren-radio-group> sets role=\"radiogroup\" and supports arrow-key navigation (Right/Down next, Left/Up previous, in either orientation) with loop; selection follows focus."
+    - "The group has one tab stop: the checked radio, or the first radio when none is checked. Space checks the focused radio (native behaviour, never intercepted)."
     - "Disabled options use <input disabled> (handled via :has(input:disabled)) — do not rely on opacity alone."
     - "Provide a group label via <legend> inside <fieldset> or aria-label / aria-labelledby on <ren-radio-group>."
 ```
@@ -92,7 +93,7 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<ren-radio-group>
+<ren-radio-group aria-label="Plan">
   <label class="ren-radio"><input type="radio" name="plan" value="basic"><span class="ren-radio-control"></span><span>Basic</span></label>
   <label class="ren-radio"><input type="radio" name="plan" value="pro"><span class="ren-radio-control"></span><span>Pro</span></label>
 </ren-radio-group>

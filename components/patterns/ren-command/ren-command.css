@@ -51,6 +51,14 @@
   }
 }
 
+/* A closed <dialog> must not render. `display: flex` above is an author
+   rule, so it beats the browser's own `dialog:not([open]) { display: none }`
+   and left the palette painted on the page before it was ever opened and
+   after every close. */
+dialog.ren-command:not([open]) {
+  display: none;
+}
+
 @keyframes ren-command-in {
   from {
     opacity: 0;

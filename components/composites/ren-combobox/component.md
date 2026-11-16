@@ -77,6 +77,7 @@ tokenPolicy:
 accessibility:
   required:
     - "Input has role=\"combobox\", aria-expanded reflecting list visibility, aria-controls pointing to the .ren-combobox-list id, and aria-activedescendant pointing to the highlighted option."
+    - "Name the combobox: set aria-label or aria-labelledby on <ren-combobox> (the component moves it onto the generated input) or wrap it in a <label>. The placeholder is not a label."
     - "List has role=\"listbox\" and each item has role=\"option\"; do not nest interactive controls inside an option."
     - "Keyboard contract: Arrow Down opens / moves down, Arrow Up moves up, Enter selects, Escape closes; preserve all four."
     - "Selected option sets aria-selected=\"true\"; selection is announced — never communicate via color alone."
@@ -96,7 +97,7 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<ren-combobox name="country" placeholder="Search a country">
+<ren-combobox name="country" aria-label="Country" placeholder="Search a country">
   <div class="ren-combobox-item" data-value="ar">Argentina</div>
   <div class="ren-combobox-item" data-value="uy">Uruguay</div>
 </ren-combobox>
@@ -139,6 +140,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- `aria-label` / `aria-labelledby` written on `<ren-combobox>` are moved onto the generated `role="combobox"` input when the element connects; the host has no role, so a name left there would be ignored. `aria-selected` marks the committed value, while the option being browsed is exposed through `aria-activedescendant`.
 - The generated placeholder, empty row, and loading row come from `utils/i18n.js` (`combobox.placeholder` / `noResults` / `loading`) and are resolved once, when the element connects — call `setLocale()` before the combobox is inserted, because a later locale change does not relabel already-generated nodes.
 
 ## Related Files

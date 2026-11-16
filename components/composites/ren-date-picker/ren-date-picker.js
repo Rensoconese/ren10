@@ -233,9 +233,10 @@ export class RenDatePicker extends HTMLElement {
   handleTriggerKeyDown(event) {
     if (this.hasAttribute('disabled')) return;
 
+    // Enter and Space do what a click does: open, or close when already open.
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.open();
+      this.isOpen ? this.close() : this.open();
     }
 
     if (event.key === 'Escape') {

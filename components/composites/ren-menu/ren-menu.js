@@ -63,6 +63,7 @@ export class RenMenu extends HTMLElement {
   #dismissable = null;
   #animationFrame = null;
   #boundItemClick = null;
+  #boundMenuKeydown = null;
   #boundTriggerClick = null;
   #boundTriggerKeydown = null;
   #returnFocus = true;
@@ -203,6 +204,23 @@ export class RenMenu extends HTMLElement {
     this.#boundItemClick = this.#boundItemClick || ((e) => this.handleItemClick(e));
     this.removeEventListener('click', this.#boundItemClick);
     this.addEventListener('click', this.#boundItemClick);
+    this.#boundMenuKeydown = this.#boundMenuKeydown || ((e) => this.handleMenuKeydown(e));
+    this.removeEventListener('keydown', this.#boundMenuKeydown);
+    this.addEventListener('keydown', this.#boundMenuKeydown);
+  }
+
+  /**
+   * Tab leaves the menu and closes it (APG Menu). Focus goes back to the
+   * trigger first and the key is not prevented, so the browser moves on from
+   * the trigger in the direction the user asked for. The closing menu must not
+   * pull focus back afterwards.
+   * @private
+   */
+  handleMenuKeydown(e) {
+    if (e.key !== 'Tab' || !this.#isOpen) return;
+    this.#returnFocus = false;
+    if (this.#trigger && document.contains(this.#trigger)) this.#trigger.focus();
+    this.close();
   }
 
   /* ═══ TRIGGER HANDLING ═══ */
@@ -367,14 +385,22 @@ export class RenMenu extends HTMLElement {
       typeahead: true,
       focusOnHover: true,
       onActivate: (item) => {
+        // The roving util marks the active item tabindex="0". A menu is never
+        // a page tab stop (APG: every item in a menu is tabindex="-1"), and
+        // an item left at 0 would catch the Tab that is leaving the menu.
+        item.setAttribute('tabindex', '-1');
         item.focus();
       },
       onSelect: (item) => {
-        this.handleItemSelect(item);
+        // Enter and Space activate the item the way a pointer does: with a
+        // real click, so click listeners on an item also run for keyboard
+        // users. The delegated click handler then selects it.
+        item.click();
       },
     });
 
     this.#keyboardNav.attach();
+    this.#keyboardNav.getItems().forEach((item) => item.setAttribute('tabindex', '-1'));
   }
 
   /**
@@ -583,6 +609,9 @@ export class RenMenu extends HTMLElement {
 
     if (this.#boundItemClick) {
       this.removeEventListener('click', this.#boundItemClick);
+    }
+    if (this.#boundMenuKeydown) {
+      this.removeEventListener('keydown', this.#boundMenuKeydown);
     }
 
     if (this.#trigger) {

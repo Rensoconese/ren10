@@ -53,6 +53,9 @@ const ITEM_SELECTOR =
   '[role="menuitemradio"]:not(.ren-menubar-trigger)';
 const MENU_SELECTOR = '.ren-menubar-menu';
 
+// For ids the component has to invent so a menu can name its trigger.
+let generatedIds = 0;
+
 export class RenMenubar extends HTMLElement {
   /** @type {AbortController|null} */
   #listeners = null;
@@ -134,9 +137,20 @@ export class RenMenubar extends HTMLElement {
       trigger.setAttribute('aria-haspopup', 'menu');
       trigger.setAttribute('aria-expanded', 'false');
       trigger.setAttribute('role', 'menuitem');
+      // Roving tabindex: the menubar is one tab stop. The first trigger holds
+      // it until another trigger takes focus (APG Menubar).
+      trigger.setAttribute('tabindex', index === 0 ? '0' : '-1');
+      trigger.addEventListener('focus', () => this.#setTabStop(index), { signal });
       trigger.addEventListener('click', () => this.toggleMenu(index), { signal });
       trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e, index), { signal });
       trigger.addEventListener('mouseenter', () => this.handleTriggerMouseenter(index), { signal });
+
+      // A menu is named by the item that opens it.
+      const menu = this.menus[index];
+      if (menu && !menu.hasAttribute('aria-label') && !menu.hasAttribute('aria-labelledby')) {
+        if (!trigger.id) trigger.id = `ren-menubar-trigger-${++generatedIds}`;
+        menu.setAttribute('aria-labelledby', trigger.id);
+      }
     });
 
     // Set up menu items at every depth (top-level panels and nested submenus).
@@ -158,7 +172,35 @@ export class RenMenubar extends HTMLElement {
       parentItem.setAttribute('aria-haspopup', 'menu');
       parentItem.setAttribute('aria-expanded', 'false');
       panel.setAttribute('hidden', '');
+      if (!panel.hasAttribute('aria-label') && !panel.hasAttribute('aria-labelledby')) {
+        if (!parentItem.id) parentItem.id = `ren-menubar-item-${++generatedIds}`;
+        panel.setAttribute('aria-labelledby', parentItem.id);
+      }
     });
+  }
+
+  /**
+   * Move the menubar's single tab stop to the trigger at `index`.
+   * @private
+   */
+  #setTabStop(index) {
+    this.triggers.forEach((trigger, i) => {
+      trigger.setAttribute('tabindex', i === index ? '0' : '-1');
+    });
+  }
+
+  /**
+   * Arrow keys on the menubar itself. With every menu closed they only move
+   * focus along the bar; while a menu is open the next trigger's menu opens
+   * in its place, which is what APG describes for leaving a submenu sideways.
+   * @private
+   */
+  #moveAlongBar(index) {
+    if (this.activeMenuIndex !== -1) {
+      this.openMenu(index);
+      return;
+    }
+    this.triggers[index].focus();
   }
 
   /* ===================================================================
@@ -492,14 +534,19 @@ export class RenMenubar extends HTMLElement {
     if (key === 'ArrowRight') {
       event.preventDefault();
       const nextIndex = (triggerIndex + 1) % this.triggers.length;
-      this.openMenu(nextIndex);
+      this.#moveAlongBar(nextIndex);
     }
 
     // ArrowLeft: move to previous trigger
     if (key === 'ArrowLeft') {
       event.preventDefault();
       const prevIndex = (triggerIndex - 1 + this.triggers.length) % this.triggers.length;
-      this.openMenu(prevIndex);
+      this.#moveAlongBar(prevIndex);
+    }
+
+    // Tab leaves the menubar; whatever is open closes without taking focus.
+    if (key === 'Tab') {
+      this.closeAll({ focusTrigger: false });
     }
 
     // ArrowDown: open menu
@@ -511,13 +558,13 @@ export class RenMenubar extends HTMLElement {
     // Home: first trigger
     if (key === 'Home') {
       event.preventDefault();
-      this.openMenu(0);
+      this.#moveAlongBar(0);
     }
 
     // End: last trigger
     if (key === 'End') {
       event.preventDefault();
-      this.openMenu(this.triggers.length - 1);
+      this.#moveAlongBar(this.triggers.length - 1);
     }
   }
 
@@ -615,8 +662,17 @@ export class RenMenubar extends HTMLElement {
       if (this.#isSubmenuParent(item)) {
         this.openSubmenu(item, { focusFirst: true });
       } else {
-        this.activateItem(item);
+        // A real click, so click listeners on the item run for keyboard
+        // users too; handleItemClick then activates it.
+        item.click();
       }
+    }
+
+    // Tab leaves the menubar and closes every menu. Focus goes back to the
+    // owning trigger first and the key is not prevented, so the browser moves
+    // on from the menubar's tab stop in the direction the user asked for.
+    if (key === 'Tab') {
+      this.closeAll({ focusTrigger: true });
     }
 
     // Escape is owned by the shared dismissable layer stack: the capture-phase

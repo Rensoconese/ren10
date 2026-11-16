@@ -37,6 +37,10 @@ import { createKeyboardNav } from '../../../utils/keyboard-nav.js';
 import { autoId } from '../../../utils/id-generator.js';
 import { renWarn } from '../../../utils/debug.js';
 
+// What a keyboard user can Tab to. A panel that starts with one of these is
+// reachable already; any other panel becomes a tab stop itself.
+const TABBABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
+
 export class RenTabs extends HTMLElement {
   static get observedAttributes() {
     return ['activation', 'orientation', 'default-value'];
@@ -49,6 +53,9 @@ export class RenTabs extends HTMLElement {
     this._tabs = [];
     this._panels = [];
     this._selectedIndex = -1;
+    this._syncingTabStop = false;
+    this._ownPanelTabStops = new WeakSet();
+    this._handleFocusOut = this._handleFocusOut.bind(this);
   }
 
   /**
@@ -62,6 +69,7 @@ export class RenTabs extends HTMLElement {
    * Lifecycle: Element removed from DOM
    */
   disconnectedCallback() {
+    this._tabList?.removeEventListener('focusout', this._handleFocusOut);
     if (this._nav) {
       this._nav.detach();
       this._nav = null;
@@ -113,6 +121,17 @@ export class RenTabs extends HTMLElement {
       }
     });
 
+    // The name belongs on the tablist. <ren-tabs> has no role, so aria-label
+    // or aria-labelledby written on it is ignored by assistive tech: move it
+    // to the element that carries role="tablist".
+    for (const attribute of ['aria-label', 'aria-labelledby']) {
+      if (!this.hasAttribute(attribute)) continue;
+      if (!this._tabList.hasAttribute('aria-label') && !this._tabList.hasAttribute('aria-labelledby')) {
+        this._tabList.setAttribute(attribute, this.getAttribute(attribute));
+      }
+      this.removeAttribute(attribute);
+    }
+
     // Initialize an inactive state even when no tab can be selected.
     this._selectedIndex = -1;
     this._wireAria();
@@ -132,6 +151,11 @@ export class RenTabs extends HTMLElement {
 
     // Listen for clicks on tabs
     this._tabList.addEventListener('click', this._handleTabClick.bind(this));
+
+    // In manual activation the arrow keys move focus without selecting. When
+    // focus then leaves the tab list, the tab stop goes back to the selected
+    // tab, so Tab re-enters on the active tab (APG Tabs).
+    this._tabList.addEventListener('focusout', this._handleFocusOut);
   }
 
   /**
@@ -179,6 +203,8 @@ export class RenTabs extends HTMLElement {
       typeahead: false,
       focusOnHover: false,
       onActivate: (tab) => {
+        // Moving the tab stop back onto the selected tab is not navigation.
+        if (this._syncingTabStop) return;
         // Arrow key navigation
         if (activation === 'automatic') {
           // Automatic: immediately select the tab
@@ -235,6 +261,8 @@ export class RenTabs extends HTMLElement {
     });
 
     this._selectedIndex = index;
+    this._syncTabStop();
+    this._syncPanelTabStop();
 
     // Dispatch custom event
     const panel = this._panels[index];
@@ -251,6 +279,67 @@ export class RenTabs extends HTMLElement {
       })
     );
     return true;
+  }
+
+  /**
+   * Keep the tab list's single tab stop on the selected tab.
+   * @private
+   */
+  _syncTabStop() {
+    const selected = this._tabs[this._selectedIndex];
+    if (!this._nav || !selected) return;
+    const index = this._nav.getItems().indexOf(selected);
+    if (index === -1 || index === this._nav.activeIndex) return;
+    this._syncingTabStop = true;
+    this._nav.setActiveIndex(index);
+    this._syncingTabStop = false;
+  }
+
+  /**
+   * Make the visible panel reachable with Tab. APG: the panel is the next tab
+   * stop after the tab list unless its first meaningful content is focusable.
+   * An author-written tabindex is never touched.
+   * @private
+   */
+  _syncPanelTabStop() {
+    this._panels.forEach((panel, index) => {
+      const owned = this._ownPanelTabStops.has(panel);
+      if (panel.hasAttribute('tabindex') && !owned) return;
+      if (index === this._selectedIndex && !this._startsWithFocusable(panel)) {
+        panel.setAttribute('tabindex', '0');
+        this._ownPanelTabStops.add(panel);
+      } else if (owned) {
+        panel.removeAttribute('tabindex');
+        this._ownPanelTabStops.delete(panel);
+      }
+    });
+  }
+
+  /**
+   * Whether the first thing with content in a panel is focusable.
+   * @private
+   */
+  _startsWithFocusable(panel) {
+    const walker = document.createTreeWalker(panel, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (node.textContent.trim()) return false;
+      } else if (node.matches(TABBABLE)) {
+        return true;
+      } else if (node.matches('img, svg, picture, video, canvas, iframe')) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Focus left the tab list: the selected tab is the way back in.
+   * @private
+   */
+  _handleFocusOut(event) {
+    if (this._tabList.contains(event.relatedTarget)) return;
+    this._syncTabStop();
   }
 
   /**
