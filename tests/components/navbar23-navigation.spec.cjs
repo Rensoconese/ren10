@@ -10,7 +10,7 @@
  * mega intro (title/description/CTA) + three product cards (portrait media,
  * name, variant, price, badge); two header actions; one toggle; one chevron.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -54,9 +54,6 @@ async function gotoNavbar23Block(page, origin) {
 test.describe('Navbar Mega Menu Product Intro (navbar23)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);

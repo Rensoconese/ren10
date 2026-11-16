@@ -6,7 +6,7 @@
  * Phase A RED: production HTML is intentionally absent; these tests must fail
  * for missing anatomy / 404, not for broken suite wiring.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -78,9 +78,6 @@ async function openMobileNested(page) {
 test.describe('Navbar Mega Menu Categories Products (navbar30)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 25000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
