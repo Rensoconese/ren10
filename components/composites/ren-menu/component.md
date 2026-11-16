@@ -77,6 +77,7 @@ accessibility:
     - "<ren-menu> sets role=\"menu\" on itself and forces role=\"menuitem\" / \"menuitemcheckbox\" / \"menuitemradio\" on its children — do not override."
     - "Trigger receives aria-haspopup=\"menu\", aria-controls=\"<menu-id>\", and aria-expanded that flips with open()/close()."
     - "Keyboard contract: ArrowDown/ArrowUp on the trigger opens the menu; Arrow keys navigate vertically with loop; Home/End jump to first/last; typeahead matches printable characters; Enter/Space selects."
+    - "Hover focuses an item only when the pointer really moves: a menu that opens or scrolls under a resting pointer leaves focus to the keyboard."
     - "Checkbox / radio items toggle aria-checked; radio items reset siblings within .ren-menu-radio-group (or the menu root) before activating themselves."
     - "Dismissable layer closes on Escape and outside click via the shared dismissable util; do not block its event listeners."
     - "Danger items rely on a paired text label (Delete, Remove) — color alone (--color-danger-subtle) is not sufficient."

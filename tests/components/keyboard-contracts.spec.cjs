@@ -20,6 +20,64 @@ const mount = (page, key, edit) => mountRegistry(page, server.origin, key, edit)
 
 const focusedText = (page) => page.evaluate(() => document.activeElement?.textContent?.trim() ?? null);
 
+// ── Resting-pointer helpers ──
+// A list that opens or scrolls under a pointer that is not moving must leave
+// the active item to the keyboard. These drive the three things a browser can
+// do in that situation.
+
+const centreOf = async (locator) => {
+  const box = await locator.boundingBox();
+  return { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+};
+
+/** Park the pointer and return the coordinates the browser reported for that move. */
+async function parkPointer(page, { x, y }) {
+  await page.evaluate(() => {
+    window.__rest = null;
+    document.addEventListener('pointermove', (event) => {
+      window.__rest = { x: event.clientX, y: event.clientY, screenX: event.screenX, screenY: event.screenY };
+    }, { capture: true, once: true });
+  });
+  await page.mouse.move(x, y);
+  await expect.poll(() => page.evaluate(() => window.__rest), 'the browser reports the parked position').not.toBeNull();
+  return page.evaluate(() => window.__rest);
+}
+
+/**
+ * Let the browser re-target hover onto whatever now sits under the resting
+ * pointer; the boundary events of that re-targeting are what used to move the
+ * active item. Not an assertion: an engine that never re-targets cannot show
+ * the defect either, so the wait just ends after a second.
+ */
+const letHoverSettle = (page, { x, y }) => page.evaluate(([px, py]) => new Promise((resolve) => {
+  const deadline = performance.now() + 1000;
+  const check = () => {
+    if (document.elementFromPoint(px, py)?.matches(':hover') || performance.now() > deadline) resolve();
+    else requestAnimationFrame(check);
+  };
+  check();
+}), [x, y]);
+
+/**
+ * What some engines add after a scroll: a move event on the element under the
+ * pointer that repeats the resting coordinates. Sent twice, because a guard
+ * that only skips the first event would still follow the second.
+ */
+const repeatRestingMove = (page, rest) => page.evaluate((at) => {
+  const target = document.elementFromPoint(at.x, at.y);
+  for (let i = 0; i < 2; i += 1) {
+    target.dispatchEvent(new PointerEvent('pointermove', {
+      bubbles: true, pointerType: 'mouse', clientX: at.x, clientY: at.y, screenX: at.screenX, screenY: at.screenY,
+    }));
+  }
+}, rest);
+
+/** Really move the pointer: two moves, so the second differs from the first. */
+async function movePointerOnto(page, { x, y }) {
+  await page.mouse.move(x - 3, y - 3);
+  await page.mouse.move(x, y);
+}
+
 test.describe('keyboard contracts', () => {
   test('ren-dialog closes on Escape, and not when no-escape is set', { tag: ['@ren-dialog', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'dialog');
@@ -120,8 +178,6 @@ test.describe('keyboard contracts', () => {
 
   test('ren-select opens from the keyboard, selects with Enter and returns focus on Escape', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'select');
-    // focusOnHover: a resting pointer over the list would move the active option.
-    await page.mouse.move(1, 1000);
     const trigger = page.locator('ren-select [data-select-trigger]');
     await trigger.focus();
     await page.keyboard.press('ArrowDown');
@@ -144,6 +200,219 @@ test.describe('keyboard contracts', () => {
     await expect(trigger).toBeFocused();
     expect(errors).toEqual([]);
   });
+
+  test('ren-select leaves the active option to the keyboard when the list opens or scrolls under a resting pointer', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'select', (usage) => usage.replace(
+      /<div data-select-item data-value="a"[\s\S]*Option B<\/div>/,
+      Array.from({ length: 30 }, (_, i) => `<div data-select-item data-value="v${i}" role="option">Option ${i}</div>`).join('\n')
+    ));
+    const trigger = page.locator('ren-select [data-select-trigger]');
+    const option = (n) => page.getByRole('option', { name: `Option ${n}`, exact: true });
+    const highlighted = page.locator('ren-select [data-highlighted]');
+
+    // Learn where the list opens, close it, and park the pointer over its fourth option.
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(option(3)).toBeVisible();
+    const spot = await centreOf(option(3));
+    await page.keyboard.press('Escape');
+    await expect(trigger).toBeFocused();
+    const rest = await parkPointer(page, spot);
+
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await letHoverSettle(page, rest);
+    await expect(option(0), 'opening under the pointer keeps the first option active').toBeFocused();
+    await expect(highlighted).toHaveText('Option 0');
+
+    // Walk past the fold: now the list scrolls under the pointer.
+    for (let n = 1; n <= 12; n += 1) {
+      await page.keyboard.press('ArrowDown');
+      await expect(option(n), `ArrowDown ${n} moves to option ${n}`).toBeFocused();
+    }
+    expect(await page.locator('ren-select [data-select-content]').evaluate((list) => list.scrollTop), 'the list scrolled').toBeGreaterThan(0);
+    await letHoverSettle(page, rest);
+    await repeatRestingMove(page, rest);
+    await expect(highlighted, 'scrolling under the pointer keeps the keyboard option active').toHaveText('Option 12');
+    await page.keyboard.press('ArrowDown');
+    await expect(option(13), 'the next key continues from the keyboard position').toBeFocused();
+    await expect(highlighted).toHaveText('Option 13');
+
+    // A pointer that really moves takes over again.
+    await movePointerOnto(page, rest);
+    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="option"]').textContent.trim(), rest);
+    expect(underPointer).not.toBe('Option 13');
+    await expect(highlighted, 'real pointer movement highlights the option under it').toHaveText(underPointer);
+
+    // ...and the next key hands the list back to the keyboard.
+    const afterPointer = `Option ${Number(underPointer.replace('Option ', '')) + 1}`;
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted).toHaveText(afterPointer);
+    await repeatRestingMove(page, rest);
+    await expect(highlighted, 'the pointer rests again after a key press').toHaveText(afterPointer);
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-menu keeps keyboard focus when its items scroll under a resting pointer', { tag: ['@ren-menu', '@keyboard'] }, async ({ page }) => {
+    // Short viewport: the menu is taller than the page and scrolls.
+    await page.setViewportSize({ width: 800, height: 320 });
+    const errors = await mount(page, 'menu', (usage) => usage.replace(
+      /<button class="ren-menu-item"[\s\S]*Duplicate<\/button>/,
+      Array.from({ length: 16 }, (_, i) => `<button class="ren-menu-item" role="menuitem" type="button" data-value="i${i}">Item ${i}</button>`).join('\n')
+    ));
+    const trigger = page.locator('[data-menu-trigger]');
+    const item = (n) => page.getByRole('menuitem', { name: `Item ${n}`, exact: true });
+
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(item(0)).toBeFocused();
+    const spot = await centreOf(item(2));
+    await page.keyboard.press('Escape');
+    await expect(trigger).toBeFocused();
+    const rest = await parkPointer(page, spot);
+
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await letHoverSettle(page, rest);
+    await expect(item(0), 'opening under the pointer focuses the first item').toBeFocused();
+    for (let n = 1; n <= 10; n += 1) {
+      await page.keyboard.press('ArrowDown');
+      await expect(item(n), `ArrowDown ${n} moves to item ${n}`).toBeFocused();
+    }
+    expect(await page.locator('ren-menu').evaluate((menu) => menu.scrollTop), 'the menu scrolled').toBeGreaterThan(0);
+    await letHoverSettle(page, rest);
+    await repeatRestingMove(page, rest);
+    await expect(item(10), 'scrolling under the pointer keeps keyboard focus').toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(item(11)).toBeFocused();
+
+    await movePointerOnto(page, rest);
+    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="menuitem"]').textContent.trim(), rest);
+    expect(underPointer).not.toBe('Item 11');
+    await expect.poll(() => focusedText(page), 'real pointer movement focuses the item under it').toBe(underPointer);
+
+    // ...and the next key hands the menu back to the keyboard.
+    const afterPointer = `Item ${Number(underPointer.replace('Item ', '')) + 1}`;
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(() => focusedText(page)).toBe(afterPointer);
+    await repeatRestingMove(page, rest);
+    await expect.poll(() => focusedText(page), 'the pointer rests again after a key press').toBe(afterPointer);
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-combobox leaves the highlighted option to the keyboard when the list opens or scrolls under a resting pointer', { tag: ['@ren-combobox', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'combobox', (usage) => usage.replace(
+      /<div class="ren-combobox-item"[\s\S]*Brazil<\/div>/,
+      Array.from({ length: 30 }, (_, i) => `<div class="ren-combobox-item" role="option" data-value="c${i}">Country ${i}</div>`).join('\n')
+    ));
+    const input = page.getByRole('combobox');
+    const option = (n) => page.getByRole('option', { name: `Country ${n}`, exact: true });
+    const active = () => input.evaluate((el) => document.getElementById(el.getAttribute('aria-activedescendant') ?? '')?.textContent.trim() ?? null);
+
+    await input.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(option(3)).toBeVisible();
+    const spot = await centreOf(option(3));
+    await page.keyboard.press('Escape');
+    await expect(input).toHaveAttribute('aria-expanded', 'false');
+    const rest = await parkPointer(page, spot);
+
+    await page.keyboard.press('ArrowDown');
+    await expect(input).toHaveAttribute('aria-expanded', 'true');
+    await letHoverSettle(page, rest);
+    await expect.poll(active, 'opening under the pointer highlights the first option').toBe('Country 0');
+    for (let n = 1; n <= 12; n += 1) {
+      await page.keyboard.press('ArrowDown');
+      await expect.poll(active, `ArrowDown ${n} moves to option ${n}`).toBe(`Country ${n}`);
+    }
+    expect(await page.locator('ren-combobox .ren-combobox-list').evaluate((list) => list.scrollTop), 'the list scrolled').toBeGreaterThan(0);
+    await letHoverSettle(page, rest);
+    await repeatRestingMove(page, rest);
+    await expect.poll(active, 'scrolling under the pointer keeps the keyboard option').toBe('Country 12');
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(active).toBe('Country 13');
+    await expect(page.locator('ren-combobox [data-highlighted]')).toHaveText('Country 13');
+
+    await movePointerOnto(page, rest);
+    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="option"]').textContent.trim(), rest);
+    expect(underPointer).not.toBe('Country 13');
+    await expect.poll(active, 'real pointer movement highlights the option under it').toBe(underPointer);
+
+    const afterPointer = `Country ${Number(underPointer.replace('Country ', '')) + 1}`;
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(active).toBe(afterPointer);
+    await repeatRestingMove(page, rest);
+    await expect.poll(active, 'the pointer rests again after a key press').toBe(afterPointer);
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-command leaves the highlighted item to the keyboard when the palette opens under a resting pointer', { tag: ['@ren-command', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'command', (usage) => usage.replace(
+      '<li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>',
+      '<li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>\n      <li><button type="button" class="ren-command-item" data-value="paste">Paste</button></li>\n      <li><button type="button" class="ren-command-item" data-value="cut">Cut</button></li>'
+    ));
+    const dialog = page.locator('ren-command dialog');
+    const highlighted = page.locator('ren-command .ren-command-item[data-highlighted]');
+
+    await page.keyboard.press('Control+K');
+    await expect(dialog).toHaveJSProperty('open', true);
+    const spot = await centreOf(page.locator('.ren-command-item', { hasText: 'Paste' }));
+    await page.keyboard.press('Escape');
+    await expect(dialog).toHaveJSProperty('open', false);
+    const rest = await parkPointer(page, spot);
+
+    await page.keyboard.press('Control+K');
+    await expect(dialog).toHaveJSProperty('open', true);
+    await letHoverSettle(page, rest);
+    await repeatRestingMove(page, rest);
+    await expect(highlighted, 'opening under the pointer highlights the first item').toHaveText('Save');
+
+    await movePointerOnto(page, rest);
+    await expect(highlighted, 'real pointer movement highlights the item under it').toHaveText('Paste');
+
+    // The next key continues from there and hands the list back to the keyboard.
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted).toHaveText('Cut');
+    await repeatRestingMove(page, rest);
+    await expect(highlighted, 'the pointer rests again after a key press').toHaveText('Cut');
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-menubar keeps keyboard focus when a menu opens under a resting pointer', { tag: ['@ren-menubar', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'menubar', (usage) => usage.replace(
+      '<button type="button" class="ren-menubar-item" role="menuitem">Open</button>',
+      '<button type="button" class="ren-menubar-item" role="menuitem">Open</button>\n      <button type="button" class="ren-menubar-item" role="menuitem">Save</button>'
+    ));
+    const file = page.getByRole('menuitem', { name: 'File', exact: true });
+    const item = (name) => page.getByRole('menuitem', { name, exact: true });
+
+    await file.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(item('New')).toBeFocused();
+    const spot = await centreOf(item('Save'));
+    await page.keyboard.press('Escape');
+    await expect(file).toBeFocused();
+    const rest = await parkPointer(page, spot);
+
+    await page.keyboard.press('ArrowDown');
+    await expect(file).toHaveAttribute('aria-expanded', 'true');
+    await letHoverSettle(page, rest);
+    await repeatRestingMove(page, rest);
+    await expect(item('New'), 'opening under the pointer focuses the first item').toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(item('Open'), 'ArrowDown moves on from the first item').toBeFocused();
+    await repeatRestingMove(page, rest);
+    await expect(item('Open'), 'the pointer still rests').toBeFocused();
+
+    await movePointerOnto(page, rest);
+    await expect(item('Save'), 'real pointer movement focuses the item under it').toBeFocused();
+    await page.keyboard.press('ArrowUp');
+    await expect(item('Open')).toBeFocused();
+    await repeatRestingMove(page, rest);
+    await expect(item('Open'), 'the pointer rests again after a key press').toBeFocused();
+    expect(errors).toEqual([]);
+  });
+
   test('ren-accordion toggles sections with Enter and Space, one open at a time', { tag: ['@ren-accordion', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'accordion');
     const sections = page.locator('ren-accordion details');

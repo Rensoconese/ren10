@@ -63,6 +63,15 @@ export class RenMenubar extends HTMLElement {
   /** Open submenus, innermost last. Each entry owns its own layer. */
   #submenuStack = [];
 
+  /**
+   * Hover guard. After a key press the pointer has to really move before it
+   * may move focus or switch menus; see #pointerReallyMoved().
+   */
+  #hoverSuspended = false;
+  #restingPoint = null;
+  /** Trigger or item the pointer is on, so a move within it runs once. */
+  #hovered = null;
+
   constructor() {
     super();
     this.triggers = [];
@@ -136,7 +145,6 @@ export class RenMenubar extends HTMLElement {
       trigger.setAttribute('role', 'menuitem');
       trigger.addEventListener('click', () => this.toggleMenu(index), { signal });
       trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e, index), { signal });
-      trigger.addEventListener('mouseenter', () => this.handleTriggerMouseenter(index), { signal });
     });
 
     // Set up menu items at every depth (top-level panels and nested submenus).
@@ -148,8 +156,15 @@ export class RenMenubar extends HTMLElement {
       }
       item.addEventListener('click', (e) => this.handleItemClick(e, item), { signal });
       item.addEventListener('keydown', (e) => this.handleItemKeydown(e, item), { signal });
-      item.addEventListener('mouseenter', () => this.handleItemMouseenter(item), { signal });
     });
+
+    // Hover (focus an item, glide between menus, open a submenu) follows real
+    // pointer movement only. pointermove, not mouseenter: a menu that opens or
+    // scrolls under a resting pointer fires mouseenter on whatever lands there.
+    menubarEl.addEventListener('pointermove', (e) => this.#handlePointerMove(e), { signal });
+    menubarEl.addEventListener('pointerleave', () => { this.#hovered = null; }, { signal });
+    // Any key means the keyboard is driving, wherever focus is in the menubar.
+    menubarEl.addEventListener('keydown', () => this.#suspendHover(), { capture: true, signal });
 
     // Submenu parents advertise their popup and start collapsed.
     menubarEl.querySelectorAll('.ren-menubar-submenu').forEach((parentItem) => {
@@ -230,6 +245,68 @@ export class RenMenubar extends HTMLElement {
   #eventItem(event) {
     const target = event.target instanceof Element ? event.target : null;
     return target?.closest(ITEM_SELECTOR) || null;
+  }
+
+  /* ===================================================================
+     POINTER HOVER
+     =================================================================== */
+
+  /**
+   * The keyboard is driving, so hover stays out of the way until the pointer
+   * really moves.
+   * @private
+   */
+  #suspendHover() {
+    this.#hoverSuspended = true;
+    this.#restingPoint = null;
+    this.#hovered = null;
+  }
+
+  /**
+   * True once the pointer has moved since the keyboard last drove the menubar.
+   *
+   * Browsers re-target hover when content moves under a pointer that is not
+   * moving, and some add a move event that repeats the last coordinates.
+   * Following those would hand focus to wherever the pointer rests, so a
+   * keyboard user would lose their place. The first position seen after a key
+   * press is only recorded; hover takes over again when a later pointermove
+   * reports different screen coordinates (the ones that stay put while the
+   * page or an ancestor frame scrolls).
+   * @private
+   */
+  #pointerReallyMoved(event) {
+    if (!this.#hoverSuspended) return true;
+
+    const rest = this.#restingPoint;
+    const moved = rest !== null && (rest.x !== event.screenX || rest.y !== event.screenY);
+    this.#restingPoint = { x: event.screenX, y: event.screenY };
+    if (moved) this.#hoverSuspended = false;
+    return moved;
+  }
+
+  /**
+   * Route real pointer movement to the trigger or item under it, once per
+   * element entered.
+   * @private
+   */
+  #handlePointerMove(event) {
+    if (event.pointerType === 'touch' || !this.#pointerReallyMoved(event)) return;
+
+    const target = event.target instanceof Element ? event.target : null;
+    // The nearest trigger, item or panel: padding of a nested panel belongs to
+    // the panel, not to the submenu item that contains it.
+    const hovered =
+      target?.closest(`.ren-menubar-trigger, ${ITEM_SELECTOR}, ${MENU_SELECTOR}`) || null;
+    if (hovered === this.#hovered) return;
+    this.#hovered = hovered;
+    if (!hovered || hovered.matches(MENU_SELECTOR)) return;
+
+    const triggerIndex = this.triggers.indexOf(hovered);
+    if (triggerIndex !== -1) {
+      this.handleTriggerMouseenter(triggerIndex);
+    } else {
+      this.handleItemMouseenter(hovered);
+    }
   }
 
   /* ===================================================================

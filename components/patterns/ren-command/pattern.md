@@ -79,6 +79,7 @@ accessibility:
     - "The input is a real <input type=\"text\"> with an accessible name (label or aria-label like \"Search commands\")."
     - "The component injects a [role=\"status\"][aria-live=\"polite\"] region announcing result counts on every filter — do not remove it."
     - "Items must be real <button> elements (or role=\"option\" rows) so Enter / Space / click all work uniformly."
+    - "Hover moves the [data-highlighted] item only when the pointer really moves: a palette that opens under a resting pointer keeps the first item highlighted."
     - "Disabled items use aria-disabled=\"true\" AND pointer-events: none (the CSS handles the latter)."
     - "The shortcut hint inside .ren-command-kbd is decorative; do not rely on it as the only affordance — Escape and click-outside must both close."
 ```
