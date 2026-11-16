@@ -99,9 +99,13 @@ test.describe('ren-sidebar collapse preference persistence', () => {
       await page.evaluate(() => customElements.whenDefined('ren-sidebar'));
       await expect(page.locator('ren-sidebar')).not.toHaveAttribute('data-collapsed', '');
 
+      // The toggle announces the same state the layout shows.
+      await expect(page.locator('.ren-sidebar-toggle')).toHaveAttribute('aria-expanded', 'true');
+
       await page.setViewportSize(DESKTOP_VIEWPORT);
 
       await expect(page.locator('ren-sidebar')).toHaveAttribute('data-collapsed', '');
+      await expect(page.locator('.ren-sidebar-toggle')).toHaveAttribute('aria-expanded', 'false');
       expect(await readCollapsePreference(page)).toBe('true');
     });
 
@@ -134,6 +138,8 @@ test.describe('ren-sidebar collapse preference persistence', () => {
       await page.goto(`${staticServer.origin}${FIXTURE}`);
       await page.evaluate(() => customElements.whenDefined('ren-sidebar'));
       await expect(page.locator('ren-sidebar')).toHaveAttribute('data-collapsed', '');
+      // Restored from storage, before any interaction: the toggle already says collapsed.
+      await expect(page.locator('.ren-sidebar-toggle')).toHaveAttribute('aria-expanded', 'false');
 
       await page.setViewportSize(MOBILE_VIEWPORT);
       await expect(page.locator('ren-sidebar')).not.toHaveAttribute('data-collapsed', '');
@@ -153,10 +159,12 @@ test.describe('ren-sidebar collapse preference persistence', () => {
 
       await page.locator('.ren-sidebar-toggle').click();
       await expect(page.locator('ren-sidebar')).toHaveAttribute('data-collapsed', '');
+      await expect(page.locator('.ren-sidebar-toggle')).toHaveAttribute('aria-expanded', 'false');
       expect(await readCollapsePreference(page)).toBe('true');
 
       await page.locator('.ren-sidebar-toggle').click();
       await expect(page.locator('ren-sidebar')).not.toHaveAttribute('data-collapsed', '');
+      await expect(page.locator('.ren-sidebar-toggle')).toHaveAttribute('aria-expanded', 'true');
       expect(await readCollapsePreference(page)).toBe('false');
     });
   });

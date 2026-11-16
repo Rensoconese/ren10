@@ -2091,8 +2091,10 @@ persistence, and tooltips when collapsed.
 - **API:** `toggleMenu()`, `setActiveItem(href)`, `openMobileMenu()`,
   `isCollapsed` getter.
 - **Events:** `ren-sidebar-toggle { collapsed }`.
-- **Keyboard:** Escape closes mobile overlay.
-- **A11y:** `aria-current="page"` on the active item; when collapsed,
+- **Keyboard:** Escape closes mobile overlay and returns focus to the
+  control that opened it.
+- **A11y:** `aria-current="page"` on the active item; `aria-expanded` on
+  the collapse toggle, kept in sync by the component; when collapsed,
   each item exposes its label via `data-tooltip` → `ren-tooltip` so
   the sidebar remains usable.
 

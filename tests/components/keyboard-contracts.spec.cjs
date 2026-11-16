@@ -78,6 +78,12 @@ async function movePointerOnto(page, { x, y }) {
   await page.mouse.move(x, y);
 }
 
+/** Resize a mounted page and make sure it hears about it. */
+async function resizeViewport(page, size) {
+  await page.setViewportSize(size);
+  await page.evaluate(() => window.dispatchEvent(new Event('resize')));
+}
+
 test.describe('keyboard contracts', () => {
   test('ren-dialog closes on Escape, and not when no-escape is set', { tag: ['@ren-dialog', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'dialog');
@@ -600,6 +606,120 @@ test.describe('keyboard contracts', () => {
     await expect(sidebar).toHaveAttribute('data-open', '');
     await page.keyboard.press('Escape');
     await expect(sidebar).not.toHaveAttribute('data-open', '');
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-sidebar toggle reports aria-expanded, including the collapsed state restored from storage', { tag: ['@ren-sidebar', '@keyboard'] }, async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    const errors = await mount(page, 'sidebar');
+    const sidebar = page.locator('ren-sidebar');
+    const toggle = page.locator('ren-sidebar .ren-sidebar-toggle');
+    await expect(toggle, 'expanded on first visit').toHaveAttribute('aria-expanded', 'true');
+    await toggle.focus();
+    await page.keyboard.press('Enter');
+    await expect(sidebar).toHaveAttribute('data-collapsed', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await page.keyboard.press(' ');
+    await expect(sidebar).not.toHaveAttribute('data-collapsed', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    // A collapsed preference from an earlier visit is announced on load, before any click.
+    await mountRegistry(page, server.origin, 'sidebar', undefined, {
+      beforeMount: (fixture) => fixture.evaluate(() => localStorage.setItem('ren-sidebar-collapsed', 'true')),
+    });
+    await expect(sidebar).toHaveAttribute('data-collapsed', '');
+    await expect(toggle, 'restored collapsed state').toHaveAttribute('aria-expanded', 'false');
+
+    // The mobile overlay always renders expanded, whatever is stored.
+    await resizeViewport(page, { width: 480, height: 800 });
+    await expect(sidebar).not.toHaveAttribute('data-collapsed', '');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await resizeViewport(page, { width: 1280, height: 800 });
+    await expect(sidebar).toHaveAttribute('data-collapsed', '');
+    await expect(toggle, 'back on desktop the preference applies again').toHaveAttribute('aria-expanded', 'false');
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-sidebar returns focus to the opener however the mobile overlay closes', { tag: ['@ren-sidebar', '@keyboard'] }, async ({ page }) => {
+    await page.setViewportSize({ width: 480, height: 800 });
+    const errors = await mount(page, 'sidebar', (usage) => usage
+      .replace('<ren-sidebar ', '<ren-sidebar id="primary-nav" ')
+      .replace('</nav>', '  <button class="ren-sidebar-item" type="button">Sign out</button>\n  </nav>\n  <button type="button" id="close-nav">Close navigation</button>')
+      .replace('</ren-sidebar>', '</ren-sidebar>\n<div class="ren-sidebar-overlay"></div>\n<button type="button" id="open-nav">Menu</button>\n<button type="button" id="elsewhere">Elsewhere</button>'));
+    await page.evaluate(() => {
+      const sidebar = document.querySelector('ren-sidebar');
+      document.getElementById('open-nav').addEventListener('click', () => sidebar.toggleMenu());
+      document.getElementById('close-nav').addEventListener('click', () => sidebar.closeMobileMenu());
+    });
+    const sidebar = page.locator('ren-sidebar');
+    const opener = page.locator('#open-nav');
+    const link = page.locator('ren-sidebar a.ren-sidebar-item').first();
+    const openFromKeyboard = async () => {
+      await opener.focus();
+      await page.keyboard.press('Enter');
+      await expect(sidebar).toHaveAttribute('data-open', '');
+    };
+    const expectClosedWithFocusOnOpener = async (path) => {
+      await expect(sidebar).not.toHaveAttribute('data-open', '');
+      await expect(opener, `${path} returns focus to the opener`).toBeFocused();
+    };
+
+    await openFromKeyboard();
+    await link.focus();
+    await page.keyboard.press('Escape');
+    await expectClosedWithFocusOnOpener('Escape');
+
+    // Escape is the user dismissing the overlay, so it works from anywhere.
+    await openFromKeyboard();
+    await page.evaluate(() => document.activeElement.blur());
+    await page.keyboard.press('Escape');
+    await expectClosedWithFocusOnOpener('Escape with focus on the page');
+
+    await openFromKeyboard();
+    await link.focus();
+    // Click the backdrop beside the drawer.
+    await page.locator('.ren-sidebar-overlay').click({ position: { x: 440, y: 400 } });
+    await expectClosedWithFocusOnOpener('the backdrop');
+
+    await openFromKeyboard();
+    await page.locator('#close-nav').focus();
+    await page.keyboard.press('Enter');
+    await expectClosedWithFocusOnOpener('a close control inside the drawer');
+
+    await openFromKeyboard();
+    await page.getByRole('button', { name: 'Sign out' }).focus();
+    await page.keyboard.press('Enter');
+    await expectClosedWithFocusOnOpener('activating an item');
+
+    await openFromKeyboard();
+    await link.focus();
+    await sidebar.evaluate((el) => el.closeMobileMenu());
+    await expectClosedWithFocusOnOpener('closeMobileMenu() with focus inside');
+
+    // A close from code must not pull focus away from an unrelated control.
+    await openFromKeyboard();
+    await page.locator('#elsewhere').focus();
+    await sidebar.evaluate((el) => el.closeMobileMenu());
+    await expect(sidebar).not.toHaveAttribute('data-open', '');
+    await expect(page.locator('#elsewhere'), 'focus outside the drawer is left alone').toBeFocused();
+
+    // Nothing focused at open time (Safari does not focus a clicked button):
+    // the control that declares aria-controls is the opener.
+    await opener.evaluate((button) => button.setAttribute('aria-controls', 'primary-nav'));
+    await page.evaluate(() => document.activeElement.blur());
+    await sidebar.evaluate((el) => el.openMobileMenu());
+    await expect(sidebar).toHaveAttribute('data-open', '');
+    await link.focus();
+    await page.keyboard.press('Escape');
+    await expectClosedWithFocusOnOpener('Escape, with the opener known only through aria-controls,');
+
+    // Growing to desktop drops the overlay but keeps the sidebar on screen,
+    // so focus inside it stays where the user put it.
+    await openFromKeyboard();
+    await link.focus();
+    await resizeViewport(page, { width: 1280, height: 800 });
+    await expect(sidebar).not.toHaveAttribute('data-open', '');
+    await expect(link, 'focus stays in the sidebar when it becomes a desktop sidebar').toBeFocused();
     expect(errors).toEqual([]);
   });
 
