@@ -18,9 +18,26 @@
  * use primitive tokens or literal colors (color-picker hue gradients, autofill
  * native styling, etc.). Each exemption is
  * documented inline and mirrored in `scripts/lint-tokens.mjs`.
+ *
+ * A third goal covers right-to-left: box-model longhands that name a physical
+ * side (`margin-left`, `padding-right`, `border-left`, a physical corner
+ * radius) are rejected, because each has a logical twin that mirrors under
+ * `dir="rtl"` for free. `left` / `right` offsets are deliberately not
+ * linted: most of the ones that remain are correct (a `left: 50%` centring
+ * pair, a `left: 0; right: 0` stretch, the arrow of a `data-side="left"`
+ * popover), and the generated RTL smoke (tests/components/rtl-smoke.spec.cjs)
+ * is what catches the ones that are not. A glyph drawn from two borders of a
+ * rotated box is the exception that needs a physical border; disable the rule
+ * on that line and say why.
  */
 
 const PRIMITIVE_TOKEN_REGEX = '/var\\(\\s*--(blue|gray|grey|red|green|orange|yellow|teal|purple|pink)-/';
+
+const PHYSICAL_BOX_PROPS = [
+  '/^(margin|padding)-(left|right)$/',
+  '/^border-(left|right)(-(width|style|color))?$/',
+  '/^border-(top|bottom)-(left|right)-radius$/',
+];
 
 const COLOR_PROPS = '/^(color|background|background-color|fill|stroke|outline|outline-color|caret-color|column-rule-color|text-decoration-color|accent-color|border|border-color|border-(top|right|bottom|left|inline|inline-start|inline-end|block|block-start|block-end)-color|box-shadow|text-shadow|filter|backdrop-filter)$/';
 
@@ -80,6 +97,15 @@ export default {
     'function-calc-no-unspaced-operator': null,
     'function-name-case': null,
     'no-unknown-custom-properties': null,
+
+    // Right-to-left: physical box-model longhands do not mirror.
+    'property-disallowed-list': [
+      PHYSICAL_BOX_PROPS,
+      {
+        message: (property) =>
+          `"${property}" names a physical side and does not mirror under dir="rtl". Use the logical property (margin-inline-start, padding-inline-end, border-inline-start, border-start-start-radius…). See tests/coverage/README.md.`,
+      },
+    ],
   },
 
   overrides: [

@@ -10,6 +10,8 @@
  *   lifecycle  every JS component with a custom element: lifecycle methods are
  *              idempotent and it survives disconnect/reconnect
  *   keyboard   every JS composite and pattern: a test drives it with keys
+ *   rtl        every component, CSS-only ones included: under dir="rtl" it stays
+ *              on screen and mirrors its LTR layout (tests/components/rtl-smoke.spec.cjs)
  *
  * A test proves a cell by carrying two Playwright tags: the component
  * (`@ren-dialog`) and the category (`@keyboard`). Tests are read with
@@ -33,7 +35,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard'];
+export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'rtl'];
 export const EXEMPTIONS_PATH = 'tests/coverage/exemptions.json';
 const SUITES = ['tests/components/playwright.config.cjs', 'tests/a11y/playwright.config.cjs'];
 
@@ -49,6 +51,9 @@ export function requiredCells(registry) {
     if (hasJs) required.push('runtime');
     if (hasJs && mountsElement) required.push('lifecycle');
     if (hasJs && (entry.layer === 'composites' || entry.layer === 'patterns')) required.push('keyboard');
+    // Direction reaches CSS as much as JS: a physical `left` is an RTL defect
+    // in a component that ships no script at all.
+    required.push('rtl');
     return { component: entry.dir, layer: entry.layer, required };
   });
 }

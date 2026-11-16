@@ -20,6 +20,9 @@ const fullCoverage = report(
   spec('toolbar docs', ['@ren-toolbar', '@a11y']),
   spec('toolbar mounts', ['@ren-toolbar', '@runtime']),
   spec('toolbar keys', ['@ren-toolbar', '@keyboard']),
+  spec('badge rtl', ['@ren-badge', '@rtl']),
+  spec('menu rtl', ['@ren-menu', '@rtl']),
+  spec('toolbar rtl', ['@ren-toolbar', '@rtl']),
 );
 
 const run = (reports, exemptions = {}, baseExemptions = null) => {
@@ -29,10 +32,10 @@ const run = (reports, exemptions = {}, baseExemptions = null) => {
 
 test('what a component owes follows its layer, its JS and its usage', () => {
   const owed = Object.fromEntries(requiredCells(registry).map((cell) => [cell.component, cell.required]));
-  assert.deepEqual(owed['ren-badge'], ['a11y']);
-  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard']);
+  assert.deepEqual(owed['ren-badge'], ['a11y', 'rtl']);
+  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'rtl']);
   // No ren-* element in its usage: nothing to disconnect, so no lifecycle cell.
-  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard']);
+  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard', 'rtl']);
 });
 
 test('full coverage passes', () => {
@@ -77,3 +80,40 @@ test('describe-level tags count for every test inside', () => {
   const { covered } = coveredCells([nested]);
   assert.ok(covered.get('ren-menu').has('keyboard'));
 });
+
+test('every component owes rtl, with or without JS', () => {
+  for (const cell of requiredCells(registry)) {
+    assert.ok(cell.required.includes('rtl'), `${cell.component} owes rtl`);
+  }
+  // A CSS-only primitive owes nothing else that needs a browser to mount it.
+  assert.ok(!requiredCells(registry).find((cell) => cell.component === 'ren-badge').required.includes('runtime'));
+});
+
+test('a component without an rtl test fails, CSS-only or not', () => {
+  const withoutRtl = (title) => report(...fullCoverage.suites[0].specs.filter((s) => s.title !== title));
+  assert.match(run([withoutRtl('badge rtl')]).problems.join('\n'), /ren-badge has no @rtl test/);
+  const result = run([withoutRtl('menu rtl')]);
+  assert.match(result.problems.join('\n'), /ren-menu has no @rtl test/);
+  assert.deepEqual(result.totals.rtl, { required: 3, covered: 2, exempt: 0, missing: 1 });
+  assert.equal(result.rows.find((row) => row.component === 'ren-menu').status.rtl, 'missing');
+});
+
+test('one test may prove rtl for several components, and another category at once', () => {
+  const shared = report(
+    ...fullCoverage.suites[0].specs.filter((s) => !s.tags.includes('@rtl')),
+    spec('disclosure chevrons', ['@ren-badge', '@ren-menu', '@rtl']),
+    spec('toolbar arrows under rtl', ['@ren-toolbar', '@rtl', '@keyboard']),
+  );
+  const result = run([shared]);
+  assert.deepEqual(result.problems, []);
+  assert.equal(result.totals.rtl.covered, 3);
+});
+
+test('rtl exemptions follow the same shrink-only rules', () => {
+  const withoutRtl = report(...fullCoverage.suites[0].specs.filter((s) => s.title !== 'toolbar rtl'));
+  const exemptions = { rtl: { 'ren-toolbar': 'new debt' } };
+  // The base has no rtl key at all, as every base did before the category existed.
+  assert.match(run([withoutRtl], exemptions, { keyboard: {} }).problems.join('\n'), /rtl\.ren-toolbar is a new exemption/);
+  assert.match(run([fullCoverage], exemptions).problems.join('\n'), /rtl\.ren-toolbar is covered now, remove the exemption/);
+});
+
