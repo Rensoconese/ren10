@@ -6,7 +6,7 @@
  * Isolated packet suite. Phase A RED: production HTML is intentionally absent
  * until genuine failing evidence is recorded.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const {
@@ -41,9 +41,6 @@ async function gotoCategoryCollectionsBlock(page, origin) {
 test.describe('Navbar Mega Menu Category Collections (navbar27)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 25000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);

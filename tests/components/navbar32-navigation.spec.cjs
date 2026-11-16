@@ -3,7 +3,7 @@
  * Isolated Navbar 32 — logo-left permanent CTA + always-visible left drawer.
  * Does not extend blocks-navigation.spec.cjs (parallel worker ownership).
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const { startStaticServer } = require('../utils/static-server.cjs');
@@ -86,9 +86,6 @@ async function expectFullyVisibleTouchTarget(page, selector, label) {
 test.describe('Navbar Logo CTA Left Drawer (navbar32)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);

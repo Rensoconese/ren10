@@ -10,7 +10,7 @@
  * two category groups × five title-only destinations; promo (title, description,
  * CTA, square media); two header actions; one toggle; one chevron.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect, focusInView } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -54,9 +54,6 @@ async function gotoNavbar25Block(page, origin) {
 test.describe('Navbar Mega Menu Categories Promo (navbar25)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
@@ -323,7 +320,7 @@ test.describe('Navbar Mega Menu Categories Promo (navbar25)', () => {
 
       const target = page.locator(dest.selector).first();
       await expect(target).toBeVisible();
-      await target.focus();
+      await focusInView(target);
       await target.click();
 
       await expect(disclosure, `${dest.name} closes details`).not.toHaveAttribute('open', '');

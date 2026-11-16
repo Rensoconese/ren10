@@ -4,7 +4,7 @@
  * Isolated suite for the parallel Relume→Ren10 worker. Uses shared
  * tests/utils/static-server.cjs and tests/utils/block-quality.cjs without editing them.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect, focusInView } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -48,9 +48,6 @@ async function gotoProductRailBlock(page, origin) {
 test.describe('Navbar Mega Menu Product Rail (navbar24)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 25000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
@@ -267,7 +264,7 @@ test.describe('Navbar Mega Menu Product Rail (navbar24)', () => {
 
       const target = page.locator(dest.selector).first();
       await expect(target).toBeVisible();
-      await target.focus();
+      await focusInView(target);
       await target.click();
 
       await expect(disclosure, `${dest.name} closes details`).not.toHaveAttribute('open', '');

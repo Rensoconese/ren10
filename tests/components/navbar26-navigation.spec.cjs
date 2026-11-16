@@ -9,7 +9,7 @@
 // @ts-check
 const path = require('node:path');
 const fs = require('node:fs');
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const { startStaticServer } = require('../utils/static-server.cjs');
 const {
@@ -47,7 +47,9 @@ const RENDER_MATRIX = JSON.parse(
  * @param {string} origin
  */
 async function gotoBlock(page, origin) {
-  const response = await page.goto(`${origin}${BLOCK_PATH}`, { waitUntil: 'domcontentloaded' });
+  // Wait for `load`, not DOMContentLoaded: until <ren-nav> has upgraded, the
+  // block's `ren-nav:not(:defined)` fallback CSS lays the page out as no-JS.
+  const response = await page.goto(`${origin}${BLOCK_PATH}`);
   expect(response, 'HTTP response for navbar26 block').toBeTruthy();
   expect(
     response.status(),
@@ -81,9 +83,6 @@ async function openMobileShell(page) {
 test.describe('Navbar 26 Category Promo Mega Menu (navbar26)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 4000, navigationTimeout: 12000 });
-  test.describe.configure({ timeout: 30000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);

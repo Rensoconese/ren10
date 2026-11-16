@@ -19,6 +19,9 @@ concurrency:
 #   - a11y and components run on [chromium, firefox, webkit]:
 #       * Chromium is the primary engine. Failures BLOCK the run.
 #       * Firefox and WebKit failures also block the run.
+#       * components runs one worker per runner. Firefox and WebKit are
+#         split into two shards rather than two workers: with two Firefox
+#         workers on one runner, eight to nine tests per run stalled for 5-30 s.
 #       * The playwright configs detect PLAYWRIGHT_BROWSER and skip
 #         Mobile/Tablet projects for Firefox (Firefox doesn't support
 #         isMobile: true; Chromium and WebKit do).
@@ -176,7 +179,9 @@ jobs:
           - browser: chromium
             shard: 1/1
           - browser: firefox
-            shard: 1/1
+            shard: 1/2
+          - browser: firefox
+            shard: 2/2
           - browser: webkit
             shard: 1/2
           - browser: webkit
@@ -210,12 +215,16 @@ jobs:
         env:
           PLAYWRIGHT_BROWSER: ${{ matrix.browser }}
 
-      - name: Upload Playwright report on failure
-        if: failure()
+      # The list reporter writes no playwright-report; failed attempts leave
+      # their trace in test-results. Upload on green runs too, so a test that
+      # only passed on retry can still be diagnosed.
+      - name: Upload Playwright traces of failed attempts
+        if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: playwright-report-components-${{ matrix.browser }}-${{ strategy.job-index }}
-          path: playwright-report
+          name: playwright-traces-components-${{ matrix.browser }}-${{ strategy.job-index }}
+          path: test-results
+          if-no-files-found: ignore
           retention-days: 14
 
   visual:

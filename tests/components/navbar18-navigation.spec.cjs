@@ -3,7 +3,7 @@
  * Isolated Navbar 18 (nav-logo-cta-overlay-grid) — always-overlay link grid.
  * Does not modify shared blocks-navigation.spec.cjs.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const {

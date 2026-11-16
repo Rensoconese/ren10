@@ -3,7 +3,7 @@
  * Isolated Navbar 19 suite — Logo-Left Center-Links Site-Panel block.
  * Does not edit shared blocks-navigation.spec.cjs.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -47,9 +47,6 @@ async function gotoNavbar19Block(page, origin) {
 test.describe('Navbar Logo Left Center Links Site Panel (navbar19)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 25000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
