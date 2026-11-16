@@ -131,8 +131,8 @@ npm run lint
 
 When you add or change a component's behaviour, keep its test coverage cells
 green: `npm run coverage:check` (also part of `npm run agent:check`) fails when
-a registry component lacks an `a11y`, `runtime`, `lifecycle`, `keyboard` or
-`pattern` test it owes (`tests/coverage/README.md` says which component owes what).
+a registry component lacks an `a11y`, `runtime`, `lifecycle`, `keyboard`,
+`pattern` or `rtl` test it owes (`tests/coverage/README.md` says which component owes what).
 Tag the test `@ren-<name> @<category>`; never add to
 `tests/coverage/exemptions.json`, which only shrinks
 (`tests/coverage/README.md`).

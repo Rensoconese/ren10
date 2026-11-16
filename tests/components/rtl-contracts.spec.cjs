@@ -145,7 +145,7 @@ test.describe('rtl contracts: arrow keys follow the visual direction', () => {
   test('ren-radio: in a horizontal group ArrowLeft moves to the next radio', { tag: ['@ren-radio', '@rtl'] }, async ({ page }) => {
     const errors = await mount(page, 'radio', {
       edit: (usage) => usage
-        .replace('<ren-radio-group>', '<ren-radio-group orientation="horizontal">')
+        .replace(/<ren-radio-group\b/, '<ren-radio-group orientation="horizontal"')
         .replace('</ren-radio-group>', '  <label class="ren-radio">\n    <input type="radio" name="option" value="c">\n    <span class="ren-radio-control"></span>\n    <span>Option C</span>\n  </label>\n</ren-radio-group>'),
     });
     const focusedValue = () => page.evaluate(() => document.activeElement?.getAttribute('value') ?? document.activeElement?.querySelector?.('input')?.value ?? null);
@@ -238,7 +238,17 @@ test.describe('rtl contracts: arrow keys follow the visual direction', () => {
 
     expect((await rectOf(trigger('Edit'))).center, 'the menubar itself runs right to left').toBeLessThan((await rectOf(trigger('File'))).center);
 
+    // A closed bar only moves focus (APG Menubar): ArrowLeft is "next" here too.
     await trigger('File').focus();
+    await page.keyboard.press('ArrowLeft');
+    await expect(trigger('Edit'), 'ArrowLeft moves to the next trigger, on the left').toBeFocused();
+    expect(await expanded(), 'nothing opens on a closed bar').toEqual([]);
+    await page.keyboard.press('ArrowRight');
+    await expect(trigger('File'), 'ArrowRight moves back').toBeFocused();
+
+    // With a menu open, the same keys open the neighbouring menu.
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(expanded).toEqual(['File']);
     await page.keyboard.press('ArrowLeft');
     await expect.poll(expanded, 'ArrowLeft moves to the next menu, on the left').toEqual(['Edit']);
     await page.keyboard.press('ArrowLeft');
