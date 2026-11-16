@@ -45,6 +45,7 @@ canonicalImports:
     - "rends/components/composites/ren-dropzone/ren-dropzone.js"
   notes:
     - "JS is exposed as initDropZone(el) — call it explicitly on each .ren-dropzone, there is no auto-upgrade custom element."
+    - "destroyDropZone(el) removes the listeners initDropZone(el) added; call it when a dropzone is torn down but its element stays in the page."
     - "Without the JS, the CSS still renders a styled file input target, but you lose the dragover state, the dispatched event, and the file array shape."
 
 requiredMarkup:

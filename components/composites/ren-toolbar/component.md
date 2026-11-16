@@ -46,6 +46,7 @@ canonicalImports:
     - "rends/components/composites/ren-toolbar/ren-toolbar.js"
   notes:
     - "JS is required for the roving tabindex pattern: import initToolbar / initAllToolbars from ren-toolbar.js."
+    - "destroyToolbar(el) removes the keyboard listener initToolbar(el) added; call it when a toolbar is torn down but its element stays in the page."
     - "If the page already imports rends/components/index.css, do not import the CSS again."
 
 requiredMarkup:
