@@ -3,10 +3,18 @@ const { test, expect } = require('@playwright/test');
 const path = require('node:path');
 const { startStaticServer } = require('../utils/static-server.cjs');
 
+// Every block whose controller defers its pointerleave check to the next
+// animation frame. A block missing from this list can still close (or refuse
+// to open) under a resting pointer when a leave and a re-entry share a frame.
 for (const [block, root, prefix] of [
   ['nav-mega-menu-card-grid', '[data-rmcg-root]', '.rmcg'],
   ['nav-mega-menu-topics-collection-cards', '[data-rmcc-root]', '.rmcc'],
   ['nav-mega-menu-overlay-collections', '[data-rmoc-root]', '.rmoc'],
+  ['nav-mega-menu-product-intro', '[data-rn23-root]', '.rn23'],
+  ['nav-mega-menu-product-rail', '[data-rmpr-root]', '.rmpr'],
+  ['nav-mega-menu-categories-promo', '[data-rn25-root]', '.rn25'],
+  ['nav-mega-menu-category-collections', '[data-rmcc-root]', '.rmcc'],
+  ['nav-mega-menu-categories-products', '[data-rmcp-root]', '.rmcp'],
 ]) {
   test.describe(block, () => {
     let staticServer;
