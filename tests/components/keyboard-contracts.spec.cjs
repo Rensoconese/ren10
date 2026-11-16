@@ -8,53 +8,15 @@
  * is what removes a `keyboard` entry from tests/coverage/exemptions.json.
  */
 const { test, expect } = require('@playwright/test');
-const path = require('node:path');
 const { startStaticServer } = require('../utils/static-server.cjs');
-const { REGISTRY } = require('../../cli/registry.js');
-
-const ROOT = path.resolve(__dirname, '../..');
-const FIXTURE = '/tests/components/fixtures/runtime-smoke.html';
+const { ROOT, mountRegistry } = require('../utils/mount-registry.cjs');
 
 let server;
 test.beforeAll(async () => { server = await startStaticServer(ROOT); });
 test.afterAll(async () => { await server?.close(); });
 
-function assetsFor(key, seen = new Set()) {
-  const entry = REGISTRY[key];
-  const files = [];
-  for (const dep of entry.components ?? []) {
-    if (seen.has(dep) || !REGISTRY[dep]) continue;
-    seen.add(dep);
-    files.push(...assetsFor(dep, seen));
-  }
-  for (const file of entry.files ?? []) files.push(`/components/${entry.layer}/${entry.dir}/${file}`);
-  return files;
-}
-
 /** Mount registry usage (optionally edited) with its CSS, then import its JS. */
-async function mount(page, key, edit = (usage) => usage) {
-  const errors = [];
-  page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto(`${server.origin}${FIXTURE}`);
-  const assets = assetsFor(key);
-  // Inline <script> in a usage snippet would not run through innerHTML anyway.
-  const markup = edit(REGISTRY[key].usage).replace(/<script[\s\S]*?<\/script>/g, '');
-  await page.evaluate(([sheets, html]) => {
-    for (const href of sheets) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      document.head.appendChild(link);
-    }
-    document.getElementById('host').innerHTML = html;
-  }, [assets.filter((a) => a.endsWith('.css')), markup]);
-  await page.evaluate((sources) => Promise.all(sources.map((src) => import(src))), assets.filter((a) => a.endsWith('.js')));
-  const tag = markup.match(/<(ren-[a-z-]+)/)?.[1];
-  if (tag) {
-    await page.waitForFunction((name) => customElements.get(name) !== undefined, tag);
-  }
-  return errors;
-}
+const mount = (page, key, edit) => mountRegistry(page, server.origin, key, edit);
 
 const focusedText = (page) => page.evaluate(() => document.activeElement?.textContent?.trim() ?? null);
 

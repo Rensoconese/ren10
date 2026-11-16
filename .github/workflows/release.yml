@@ -20,7 +20,7 @@ permissions:
 jobs:
   verify:
     name: Verify (lint + package + a11y + components + visual)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04  # Playwright 1.59 cannot install browsers on ubuntu-latest (26.04); see ci.yml
     permissions:
       contents: read
     steps:
