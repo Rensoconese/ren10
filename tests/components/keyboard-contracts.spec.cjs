@@ -342,7 +342,11 @@ test.describe('keyboard contracts', () => {
     await trigger.blur();
     await trigger.focus();
     await expect.poll(isOpen).toBe(true);
+    // Keep the next focus target inside the page: Shift+Tab off the first
+    // tab stop leaves the document, and Firefox fires no focusout for that.
+    await page.evaluate(() => document.getElementById('profile-trigger').insertAdjacentHTML('beforebegin', '<button type="button" id="before-trigger">Before</button>'));
     await page.keyboard.press('Shift+Tab');
+    await expect(page.locator('#before-trigger')).toBeFocused();
     await expect.poll(isOpen, 'moving focus away closes it').toBe(false);
     expect(errors).toEqual([]);
   });
