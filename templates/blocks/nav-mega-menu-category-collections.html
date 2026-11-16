@@ -883,6 +883,8 @@
 
       /** Pointer is inside disclosure + panel hit region on desktop. */
       let pointerInside = false;
+      /** Invalidate deferred leave work after a newer pointer/activation event. */
+      let pointerEpoch = 0;
       /** True after hover-only open; first pointer click pins (clears this). */
       let hoverTransient = false;
       /** Desktop pointer click pinned open — survives pointerleave until second click. */
@@ -895,6 +897,7 @@
       }
 
       function resetHoverFlags() {
+        pointerEpoch += 1;
         hoverTransient = false;
         pointerPinned = false;
         ignoreHoverUntilLeave = false;
@@ -903,6 +906,7 @@
 
       function closeDisclosure(returnFocus) {
         if (!disclosure.open) return;
+        pointerEpoch += 1;
         disclosure.open = false;
         hoverTransient = false;
         pointerPinned = false;
@@ -911,6 +915,7 @@
 
       function openDisclosure(source = 'programmatic') {
         if (disclosure.open) return;
+        pointerEpoch += 1;
         disclosure.open = true;
         hoverTransient = source === 'hover';
         pointerPinned = source === 'click' || source === 'programmatic';
@@ -1054,6 +1059,7 @@
       summary.addEventListener(
         'click',
         (event) => {
+          pointerEpoch += 1;
           event.stopImmediatePropagation();
           if (!isDesktop()) return;
 
@@ -1089,6 +1095,7 @@
       );
 
       function openFromDesktopPointer() {
+        pointerEpoch += 1;
         if (!isDesktop() || ignoreHoverUntilLeave) return;
         pointerInside = true;
         if (!disclosure.open) openDisclosure('hover');
@@ -1109,8 +1116,12 @@
         (event) => {
           if (!isDesktop()) return;
           const { clientX, clientY } = event;
+          const leaveEpoch = ++pointerEpoch;
+          // Release suppression on the actual leave, before a fast re-entry.
+          if (!isPointerInHoverZone(clientX, clientY)) ignoreHoverUntilLeave = false;
+          // Defer so elementFromPoint / geometry see the post-leave position.
           requestAnimationFrame(() => {
-            if (!isDesktop()) return;
+            if (signal.aborted || !isDesktop() || leaveEpoch !== pointerEpoch) return;
             if (isPointerInHoverZone(clientX, clientY)) {
               pointerInside = true;
               return;
@@ -1128,6 +1139,7 @@
         'pointermove',
         (event) => {
           if (!isDesktop() || !disclosure.open || pointerPinned) return;
+          pointerEpoch += 1;
           if (isPointerInHoverZone(event.clientX, event.clientY)) {
             pointerInside = true;
             return;

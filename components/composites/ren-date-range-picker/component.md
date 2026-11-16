@@ -77,9 +77,9 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Trigger is a real <button type=\"button\"> with aria-haspopup=\"dialog\" and aria-expanded synced to the dropdown state."
+    - "Trigger is a real <button type=\"button\"> with aria-haspopup=\"dialog\" and aria-expanded synced to the dropdown state; Enter/Space toggle it like a click does."
     - "Dropdown is role=\"dialog\" with aria-label=\"Date range selection\" (the default-locale value of dateRangePicker.label) and focuses the first preset (or first calendar day) on open."
-    - "Preset listbox uses role=\"listbox\" with each .ren-date-range-preset as role=\"option\"; the active preset sets aria-selected=\"true\"."
+    - "Preset listbox uses role=\"listbox\" with each .ren-date-range-preset as role=\"option\"; every option carries aria-selected (\"true\" on the active preset, \"false\" on the rest). It is one tab stop: Arrow Up/Down, Home and End move between presets, Enter/Space applies one."
     - ".ren-date-range-summary uses aria-live=\"polite\" so changes to the draft range are announced."
     - "Escape closes via Cancel semantics (reverts draft to confirmed); outside-click does the same — do not silently apply."
     - "Apply button is disabled (real disabled attribute) until both draftStart and draftEnd are present; do not bypass via aria-disabled alone."

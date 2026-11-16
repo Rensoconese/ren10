@@ -46,6 +46,16 @@ export function initContextMenu(menuOrId) {
 
   const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
 
+  // A menu is one composite widget: its items are reached with the arrow
+  // keys, never with Tab (APG Menu). Items without an author tabindex are
+  // taken out of the page tab sequence; focus() still reaches them.
+  const takeItemsOutOfTabOrder = () => {
+    menu.querySelectorAll('.ren-menu-item, [role^="menuitem"]').forEach((item) => {
+      if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', '-1');
+    });
+  };
+  takeItemsOutOfTabOrder();
+
   // Dismiss behavior (click outside, Escape) runs through the shared layer
   // stack so nested/sibling overlays dismiss innermost-first instead of every
   // open overlay reacting to the same document-level event. `excludeElements`
@@ -121,7 +131,8 @@ export function initContextMenu(menuOrId) {
       menu.style.top = `${Math.max(8, y - rect.height)}px`;
     }
 
-    // Focus first item
+    // Focus first item (items added since init join the roving set first)
+    takeItemsOutOfTabOrder();
     const firstItem = menu.querySelector(itemSelector);
     firstItem?.focus();
 
@@ -173,6 +184,11 @@ export function initContextMenu(menuOrId) {
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       document.activeElement?.click();
+      close();
+    } else if (e.key === 'Tab') {
+      // Tab leaves the menu and closes it. close() puts focus back on the
+      // trigger first, and the key is not prevented, so the browser then
+      // moves on from the trigger in the direction the user asked for.
       close();
     }
   }, { signal: controller.signal });

@@ -10,6 +10,9 @@
  *   lifecycle  every JS component with a custom element: lifecycle methods are
  *              idempotent and it survives disconnect/reconnect
  *   keyboard   every JS composite and pattern: a test drives it with keys
+ *   pattern    every component in the APG pattern map
+ *              (tests/utils/apg/pattern-map.cjs): it follows the WAI-ARIA
+ *              Authoring Practices pattern it implements
  *   rtl        every component, CSS-only ones included: under dir="rtl" it stays
  *              on screen and mirrors its LTR layout (tests/components/rtl-smoke.spec.cjs)
  *
@@ -35,14 +38,20 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'rtl'];
+export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern', 'rtl'];
 export const EXEMPTIONS_PATH = 'tests/coverage/exemptions.json';
+export const PATTERN_MAP_PATH = 'tests/utils/apg/pattern-map.cjs';
 const SUITES = ['tests/components/playwright.config.cjs', 'tests/a11y/playwright.config.cjs'];
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
-/** Registry entries → what each component owes. Mirrors runtime-smoke's filters. */
-export function requiredCells(registry) {
+/**
+ * Registry entries → what each component owes. Mirrors runtime-smoke's filters.
+ * `patternMap` is the APG pattern map, keyed like the registry: exactly the
+ * components it lists owe a `pattern` test.
+ */
+export function requiredCells(registry, { patternMap = {} } = {}) {
+  const patternDirs = new Set(Object.keys(patternMap).map((key) => registry[key]?.dir));
   return Object.values(registry).map((entry) => {
     const hasJs = (entry.files ?? []).some((file) => file.endsWith('.js'));
     const usage = entry.usage ?? '';
@@ -51,11 +60,19 @@ export function requiredCells(registry) {
     if (hasJs) required.push('runtime');
     if (hasJs && mountsElement) required.push('lifecycle');
     if (hasJs && (entry.layer === 'composites' || entry.layer === 'patterns')) required.push('keyboard');
+    if (patternDirs.has(entry.dir)) required.push('pattern');
     // Direction reaches CSS as much as JS: a physical `left` is an RTL defect
     // in a component that ships no script at all.
     required.push('rtl');
     return { component: entry.dir, layer: entry.layer, required };
   });
+}
+
+/** Pattern map keys that name no registry component: the map and the registry drifted. */
+export function patternMapProblems(registry, patternMap = {}) {
+  return Object.keys(patternMap)
+    .filter((key) => !registry[key])
+    .map((key) => `${PATTERN_MAP_PATH}: "${key}" is not a registry component`);
 }
 
 /** Playwright JSON list output → Map<component, Map<category, test titles[]>>. */
@@ -69,6 +86,8 @@ export function coveredCells(reports) {
       const categories = CATEGORIES.filter((category) => tags.has(category));
       const components = [...tags].filter((tag) => tag.startsWith('ren-'));
       if (!categories.length && !components.length) continue;
+      // A test declared with test.fixme / test.skip never runs: it proves nothing.
+      if (spec.tests?.length && spec.tests.every((run) => run.annotations?.some((note) => note.type === 'fixme' || note.type === 'skip'))) continue;
       if (!categories.length || !components.length) {
         stray.push(`${spec.file ?? file}:${spec.line} "${spec.title}" needs both a @ren-* tag and a category tag`);
         continue;
@@ -164,10 +183,12 @@ async function main(argv) {
   const base = baseIndex === -1 ? null : argv[baseIndex + 1];
 
   const { REGISTRY } = await import(pathToFileURL(path.join(root, 'cli/registry.js')).href);
+  const { PATTERN_MAP: patternMap } = createRequire(import.meta.url)(path.join(root, PATTERN_MAP_PATH));
   const { covered, stray } = coveredCells(SUITES.map(listTests));
+  stray.push(...patternMapProblems(REGISTRY, patternMap));
   const exemptions = JSON.parse(readFileSync(path.join(root, EXEMPTIONS_PATH), 'utf8'));
   const baseExemptions = base ? readBaseExemptions(base) : null;
-  const result = evaluate({ cells: requiredCells(REGISTRY), covered, stray, exemptions, baseExemptions });
+  const result = evaluate({ cells: requiredCells(REGISTRY, { patternMap }), covered, stray, exemptions, baseExemptions });
 
   if (flag('--json')) {
     console.log(JSON.stringify(result, null, 2));

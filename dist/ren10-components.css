@@ -6440,6 +6440,9 @@
       }
     }
   }
+  .ren-color-picker-dropdown:not(:popover-open) {
+    display: none;
+  }
   .ren-color-picker-dropdown[data-side=bottom],
   .ren-color-picker-dropdown:not([data-side]) {
     position-area: bottom span-all;
@@ -6563,6 +6566,13 @@
     box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.3);
     pointer-events: none;
     transform: translateY(-50%);
+  }
+  .ren-color-picker-saturation:focus-visible,
+  .ren-color-picker-hue:focus-visible,
+  .ren-color-picker-alpha:focus-visible {
+    outline: none;
+    border-color: var(--color-input-border-focus);
+    box-shadow: 0 0 0 3px var(--color-input-focus-ring);
   }
   .ren-color-picker-preview {
     display: flex;
@@ -6757,7 +6767,7 @@
     transform: scale(1.05);
     border-color: var(--color-border);
   }
-  .ren-color-picker-swatch[aria-selected=true] {
+  .ren-color-picker-swatch[aria-current=true] {
     border-color: var(--color-accent);
     box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
   }
@@ -7820,6 +7830,9 @@
         animation: none;
       }
     }
+  }
+  dialog.ren-command:not([open]) {
+    display: none;
   }
   @keyframes ren-command-in {
     from {

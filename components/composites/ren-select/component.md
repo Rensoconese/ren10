@@ -83,6 +83,7 @@ accessibility:
     - "Trigger exposes aria-expanded on open/close and aria-disabled when inert; native <button> Enter/Space activation must be preserved."
     - "Listbox container carries role=\"listbox\"; each option carries role=\"option\" and aria-selected reflects the selected value."
     - "Roving highlight on options uses [data-highlighted]; only one option may be highlighted at a time."
+    - "Hover moves the highlight only when the pointer really moves: a list that opens or scrolls under a resting pointer leaves the active option to the keyboard."
     - "Trigger meets the 44px touch target via min-height: var(--touch-min); .ren-select-sm is only acceptable in non-touch contexts."
     - "Escape closes the listbox and returns focus to the trigger; outside click dismisses without stealing focus elsewhere."
     - "Disabled state combines :disabled (or aria-disabled=\"true\") with pointer-events: none on items so click and keypress both no-op."

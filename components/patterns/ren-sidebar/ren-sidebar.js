@@ -17,6 +17,8 @@ class RenSidebar extends HTMLElement {
     this._navItems = [];
     this._listenerController = null;
     this._storageKey = STORAGE_KEY;
+    /** Control that had focus when the mobile overlay opened. */
+    this._opener = null;
   }
 
   connectedCallback() {
@@ -30,6 +32,7 @@ class RenSidebar extends HTMLElement {
 
   disconnectedCallback() {
     this._removeEventListeners();
+    this._opener = null;
   }
 
   _initElements() {
@@ -63,7 +66,7 @@ class RenSidebar extends HTMLElement {
     // Close on Escape (mobile)
     document.addEventListener('keydown', (e) => {
       if (e.key === KEYBOARD_CODES.Escape && this._isMobile && this._isOpen) {
-        this._closeMenu();
+        this._closeMenu({ returnFocus: 'always' });
       }
     }, { signal });
 
@@ -78,7 +81,7 @@ class RenSidebar extends HTMLElement {
         const overlay = this.nextElementSibling;
         if (overlay && overlay.classList.contains('ren-sidebar-overlay')) {
           if (overlay.contains(e.target)) {
-            this._closeMenu();
+            this._closeMenu({ returnFocus: 'always' });
           }
         }
       }
@@ -104,6 +107,9 @@ class RenSidebar extends HTMLElement {
     const changed = this._isCollapsed !== isCollapsed;
     this._isCollapsed = isCollapsed;
     this.toggleAttribute('data-collapsed', isCollapsed);
+    // Every path that changes the collapsed state runs through here (toggle,
+    // restored preference, viewport change), so the toggle's state cannot drift.
+    this._toggleBtn?.setAttribute('aria-expanded', String(!isCollapsed));
 
     if (persist) {
       this._writeCollapsedState(isCollapsed);
@@ -116,13 +122,54 @@ class RenSidebar extends HTMLElement {
 
   _openMenu() {
     if (!this._isMobile) return;
+    if (!this._isOpen) {
+      // Whatever has focus now is what opened the overlay (the caller's
+      // button, still focused inside its click handler).
+      const active = document.activeElement;
+      this._opener =
+        active instanceof HTMLElement && active !== document.body && !this.contains(active)
+          ? active
+          : null;
+    }
     this._isOpen = true;
     this.setAttribute('data-open', '');
   }
 
-  _closeMenu() {
+  /**
+   * Close the mobile overlay and put focus back on the control that opened it.
+   * The closed overlay sits off-canvas, so focus left inside it is focus the
+   * user can no longer see.
+   *
+   * @param {Object} [options]
+   * @param {'always'|'if-inside'|'never'} [options.returnFocus]
+   *   'always' for a dismissal the user made (Escape, backdrop);
+   *   'if-inside' (default) for calls from code, which must not pull focus
+   *   away from an unrelated control;
+   *   'never' when the sidebar stays on screen (back on desktop).
+   */
+  _closeMenu({ returnFocus = 'if-inside' } = {}) {
+    const wasOpen = this._isOpen;
     this._isOpen = false;
     this.removeAttribute('data-open');
+    if (!wasOpen) return;
+
+    const opener = this._opener?.isConnected ? this._opener : this._findController();
+    this._opener = null;
+    if (!opener || returnFocus === 'never') return;
+    if (returnFocus === 'always' || this.contains(document.activeElement)) {
+      opener.focus();
+    }
+  }
+
+  /**
+   * Fallback opener: a control outside the sidebar that declares
+   * aria-controls="<sidebar id>". Needed when nothing had focus at open time
+   * (Safari does not focus a button on click).
+   */
+  _findController() {
+    if (!this.id) return null;
+    const controllers = document.querySelectorAll(`[aria-controls~="${CSS.escape(this.id)}"]`);
+    return Array.from(controllers).find((control) => !this.contains(control)) || null;
   }
 
   _updateMobileState() {
@@ -137,8 +184,9 @@ class RenSidebar extends HTMLElement {
     }
 
     // Back on desktop: drop the overlay and re-apply the stored preference.
+    // The sidebar is back in the flow, so focus inside it stays where it is.
     if (this._isOpen) {
-      this._closeMenu();
+      this._closeMenu({ returnFocus: 'never' });
     }
 
     if (wasMobile) {

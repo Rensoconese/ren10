@@ -142,10 +142,32 @@ test('combobox click accepts aria-disabled=false but rejects true', (t) => {
 test('combobox hover cannot highlight disabled options', (t) => {
   const { host, input, list, options } = comboFixture(t);
   host.open();
-  fire(list, 'mouseover', { target: options[0] });
+  // Hover follows real pointer movement only, so each move reports a new position.
+  const moveOver = (option, at) => fire(list, 'pointermove', { target: option, screenX: at, screenY: at });
+  moveOver(options[0], 10);
+  moveOver(options[0], 12);
   assert.equal(input.hasAttribute('aria-activedescendant'), false);
   key(input, 'Enter');
   assert.equal(host.value, '');
+  // Control: the same movement over an enabled option does highlight it.
+  moveOver(options[1], 14);
+  moveOver(options[1], 16);
+  assert.equal(input.getAttribute('aria-activedescendant'), options[1].id);
+  moveOver(options[0], 18);
+  assert.equal(input.getAttribute('aria-activedescendant'), options[1].id, 'a disabled option never takes the highlight');
+});
+test('combobox hover ignores a pointer that did not move', (t) => {
+  const { host, input, list, options } = comboFixture(t);
+  host.open();
+  // The list opened under a resting pointer: every event repeats one position.
+  fire(list, 'pointermove', { target: options[1], screenX: 10, screenY: 10 });
+  fire(list, 'pointermove', { target: options[1], screenX: 10, screenY: 10 });
+  assert.equal(input.hasAttribute('aria-activedescendant'), false);
+  key(input, 'ArrowDown');
+  assert.equal(input.getAttribute('aria-activedescendant'), options[1].id);
+  fire(list, 'pointermove', { target: options[3], screenX: 10, screenY: 10 });
+  fire(list, 'pointermove', { target: options[3], screenX: 10, screenY: 10 });
+  assert.equal(input.getAttribute('aria-activedescendant'), options[1].id, 'a key press makes the pointer prove it moved again');
 });
 
 for (const direction of ['increment', 'decrement']) {

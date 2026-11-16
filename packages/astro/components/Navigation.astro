@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-nav class:list={['ren-nav', className]} {...rest}><slot /></ren-nav>
+<ren-nav class:list={className} {...rest}><slot /></ren-nav>
 
 <script>
   import 'ren10/components/patterns/ren-nav/ren-nav.js';

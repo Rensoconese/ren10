@@ -74,7 +74,7 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Wrap the carousel with role=\"region\" (or role=\"group\") and an accessible name so screen readers can label the collection."
+    - "Wrap the carousel with role=\"region\" (or role=\"group\") and an accessible name so screen readers can label the collection. The carousel and its slides carry aria-roledescription (\"carousel\" / \"slide\"), so labels leave those words out: slides are labelled \"1 of 3\", and your own aria-label should not say \"carousel\"."
     - "Active slide / active dot use aria-current=\"true\"; never communicate the active state through color alone."
     - "Keyboard: Left/Right arrows traverse slides; arrow buttons and dots are real <button> elements with :focus-visible rings."
     - "Touch targets on .ren-carousel-prev/.ren-carousel-next stay ≥ 44px (min-width / min-height enforced in CSS)."

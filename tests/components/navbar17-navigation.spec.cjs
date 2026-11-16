@@ -5,7 +5,7 @@
  *
  * Does not edit the shared blocks-navigation suite.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -74,9 +74,6 @@ async function setTheme(page, theme) {
 test.describe('Navbar Logo Left Fullscreen Menu Social (navbar17)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 25000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
