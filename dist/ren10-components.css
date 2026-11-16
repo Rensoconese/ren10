@@ -285,6 +285,9 @@
     background-position: right var(--space-3) center;
     padding-inline-end: var(--space-10);
   }
+  select.ren-input:dir(rtl) {
+    background-position: left var(--space-3) center;
+  }
   @supports (appearance: base-select) {
     select.ren-input,
     select.ren-input::picker(select) {
@@ -397,7 +400,7 @@
   }
   .ren-input-icon {
     position: absolute;
-    left: var(--space-3);
+    inset-inline-start: var(--space-3);
     color: var(--color-text-muted);
     pointer-events: none;
     display: flex;
@@ -408,7 +411,7 @@
   }
   .ren-input-icon-end {
     position: absolute;
-    right: var(--space-3);
+    inset-inline-end: var(--space-3);
     color: var(--color-text-muted);
     pointer-events: none;
     display: flex;
@@ -596,7 +599,7 @@
     content: "";
     position: absolute;
     top: 2px;
-    left: 2px;
+    inset-inline-start: 2px;
     width: var(--ren-switch-thumb-size);
     height: var(--ren-switch-thumb-size);
     background-color: var(--ren-switch-thumb-color);
@@ -609,6 +612,9 @@
   }
   .ren-switch > input:checked + .ren-switch-track::after {
     transform: translateX(calc(var(--ren-switch-width) - var(--ren-switch-height)));
+  }
+  .ren-switch:dir(rtl) > input:checked + .ren-switch-track::after {
+    transform: translateX(calc(var(--ren-switch-height) - var(--ren-switch-width)));
   }
   .ren-switch:hover > .ren-switch-track {
     background-color: var(--color-fill-hover);
@@ -625,6 +631,9 @@
   }
   .ren-switch:active > input:checked + .ren-switch-track::after {
     transform: translateX(calc(var(--ren-switch-width) - var(--ren-switch-height) - 6px));
+  }
+  .ren-switch:dir(rtl):active > input:checked + .ren-switch-track::after {
+    transform: translateX(calc(var(--ren-switch-height) - var(--ren-switch-width) + 6px));
   }
   .ren-switch:has(input:disabled) {
     opacity: 0.5;
@@ -820,6 +829,20 @@
     }
     100% {
       transform: translateX(500%);
+    }
+  }
+  .ren-progress-indeterminate:dir(rtl) .ren-progress-bar {
+    animation-name: ren-progress-slide-rtl;
+  }
+  @keyframes ren-progress-slide-rtl {
+    0% {
+      transform: translateX(100%);
+    }
+    50% {
+      transform: translateX(-500%);
+    }
+    100% {
+      transform: translateX(-500%);
     }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -1152,6 +1175,9 @@
     text-decoration: none;
     display: inline;
   }
+  .ren-link-external:dir(rtl)::after {
+    content: " ↖";
+  }
   .ren-link-nav {
     display: flex;
     align-items: center;
@@ -1181,7 +1207,7 @@
   .ren-link-skip {
     position: absolute;
     top: -100%;
-    left: var(--space-3);
+    inset-inline-start: var(--space-3);
     padding: var(--space-2) var(--space-4);
     background-color: var(--color-accent);
     color: var(--color-on-accent);
@@ -1635,7 +1661,7 @@
   .ren-avatar-status {
     position: absolute;
     bottom: 0;
-    right: 0;
+    inset-inline-end: 0;
     width: 0.75rem;
     height: 0.75rem;
     border-radius: var(--radius-full);
@@ -2796,7 +2822,7 @@
   .ren-menu-checkbox-item[aria-checked=true]::after {
     width: 8px;
     height: 4px;
-    border-inline-start: 2px solid white;
+    border-left: 2px solid white;
     border-bottom: 2px solid white;
     transform: translateY(-55%) rotate(-45deg);
   }
@@ -3363,7 +3389,7 @@
   .ren-toast-progress {
     position: absolute;
     bottom: 0;
-    left: 0;
+    inset-inline-start: 0;
     height: 2px;
     background-color: var(--color-accent);
     transition: width linear;
@@ -3527,7 +3553,7 @@
     padding: 0;
     background:
       linear-gradient(
-        to right,
+        var(--slider-fill-to, to right),
         var(--color-accent) 0%,
         var(--color-accent) var(--value, 0%),
         var(--color-fill-active) var(--value, 0%),
@@ -3619,7 +3645,7 @@
       height: 4px;
       background:
         linear-gradient(
-          to right,
+          var(--slider-fill-to, to right),
           var(--color-accent) 0%,
           var(--color-accent) var(--value, 0%),
           var(--color-fill-active) var(--value, 0%),
@@ -3637,7 +3663,7 @@
       height: 8px;
       background:
         linear-gradient(
-          to right,
+          var(--slider-fill-to, to right),
           var(--color-accent) 0%,
           var(--color-accent) var(--value, 0%),
           var(--color-fill-active) var(--value, 0%),
@@ -3656,7 +3682,7 @@
     &.ren-slider-success input[type=range] {
       background:
         linear-gradient(
-          to right,
+          var(--slider-fill-to, to right),
           var(--color-success) 0%,
           var(--color-success) var(--value, 0%),
           var(--color-fill-active) var(--value, 0%),
@@ -3671,7 +3697,7 @@
     &.ren-slider-warning input[type=range] {
       background:
         linear-gradient(
-          to right,
+          var(--slider-fill-to, to right),
           var(--color-warning) 0%,
           var(--color-warning) var(--value, 0%),
           var(--color-fill-active) var(--value, 0%),
@@ -3686,7 +3712,7 @@
     &.ren-slider-danger input[type=range] {
       background:
         linear-gradient(
-          to right,
+          var(--slider-fill-to, to right),
           var(--color-danger) 0%,
           var(--color-danger) var(--value, 0%),
           var(--color-fill-active) var(--value, 0%),
@@ -3698,6 +3724,10 @@
         background: var(--color-danger);
       }
     }
+  }
+  .ren-slider-track:dir(rtl):not(.ren-slider-vertical),
+  .ren-slider-range:dir(rtl) {
+    --slider-fill-to: to left;
   }
   .ren-slider-track {
     &.ren-slider-vertical {
@@ -3726,7 +3756,7 @@
       border-radius: var(--radius-full);
       background:
         linear-gradient(
-          to right,
+          var(--slider-fill-to, to right),
           var(--color-fill-active) 0 var(--value-start, 0%),
           var(--ren-slider-fill-color, var(--color-accent)) var(--value-start, 0%) var(--value-end, 100%),
           var(--color-fill-active) var(--value-end, 100%) 100%);
@@ -3819,7 +3849,7 @@
   .ren-slider-track input[type=range] {
     background-image:
       linear-gradient(
-        to right,
+        var(--slider-fill-to, to right),
         var(--ren-slider-fill-color, var(--color-accent)) 0%,
         var(--ren-slider-fill-color, var(--color-accent)) var(--value, 0%),
         var(--ren-slider-track-bg, var(--color-fill-active)) var(--value, 0%),
@@ -4176,7 +4206,8 @@
     max-height: 100%;
     touch-action: none;
     &[data-side=right] {
-      inset-inline-end: 0;
+      right: 0;
+      left: auto;
       top: 0;
       bottom: 0;
       width: min(24rem, 90vw);
@@ -4187,7 +4218,8 @@
       translate: 0 0;
     }
     &[data-side=left] {
-      inset-inline-start: 0;
+      left: 0;
+      right: auto;
       top: 0;
       bottom: 0;
       width: min(24rem, 90vw);
@@ -4770,14 +4802,18 @@
   }
   .ren-number-field-decrement {
     border-inline-end: var(--stroke-1) solid var(--color-border);
-    border-radius: var(--radius-md) 0 0 var(--radius-md);
+    border-radius: 0;
+    border-start-start-radius: var(--radius-md);
+    border-end-start-radius: var(--radius-md);
     &::before {
       content: "−";
     }
   }
   .ren-number-field-increment {
     border-inline-start: var(--stroke-1) solid var(--color-border);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    border-radius: 0;
+    border-start-end-radius: var(--radius-md);
+    border-end-end-radius: var(--radius-md);
     &::before {
       content: "+";
     }
@@ -4822,10 +4858,14 @@
       font-size: var(--text-sm);
     }
     & .ren-number-field-decrement {
-      border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+      border-radius: 0;
+      border-start-start-radius: var(--radius-sm);
+      border-end-start-radius: var(--radius-sm);
     }
     & .ren-number-field-increment {
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      border-radius: 0;
+      border-start-end-radius: var(--radius-sm);
+      border-end-end-radius: var(--radius-sm);
     }
     & .ren-number-field-input {
       padding: var(--space-1) var(--space-2);
@@ -4843,10 +4883,14 @@
       font-size: var(--text-lg);
     }
     & .ren-number-field-decrement {
-      border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+      border-radius: 0;
+      border-start-start-radius: var(--radius-lg);
+      border-end-start-radius: var(--radius-lg);
     }
     & .ren-number-field-increment {
-      border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+      border-radius: 0;
+      border-start-end-radius: var(--radius-lg);
+      border-end-end-radius: var(--radius-lg);
     }
     & .ren-number-field-input {
       padding: var(--space-3) var(--space-4);
@@ -4879,6 +4923,10 @@
     align-items: center;
     gap: var(--space-2);
     flex-wrap: wrap;
+    direction: ltr;
+  }
+  .ren-otp:dir(rtl) {
+    justify-content: flex-end;
   }
   .ren-otp-slot {
     display: flex;
@@ -5158,7 +5206,7 @@
       &::after {
         content: "";
         position: absolute;
-        right: -4px;
+        inset-inline-end: -4px;
         top: 0;
         bottom: 0;
         width: 50%;
@@ -5173,7 +5221,7 @@
       &::before {
         content: "";
         position: absolute;
-        left: -4px;
+        inset-inline-start: -4px;
         top: 0;
         bottom: 0;
         width: 50%;
@@ -5504,6 +5552,9 @@
   .ren-date-picker.ren-date-picker-range .ren-date-picker-value::after {
     content: " → ";
     margin: 0 var(--space-1);
+  }
+  .ren-date-picker.ren-date-picker-range:dir(rtl) .ren-date-picker-value::after {
+    content: " ← ";
   }
   .ren-date-picker[disabled] {
     opacity: 0.6;
@@ -6003,7 +6054,7 @@
   }
   .ren-carousel-fade .ren-carousel-slide {
     position: absolute;
-    left: 0;
+    inset-inline-start: 0;
     top: 0;
     width: 100%;
     opacity: 0;
@@ -6037,10 +6088,10 @@
     transition: var(--transition-tactile);
   }
   .ren-carousel-prev {
-    left: var(--space-3);
+    inset-inline-start: var(--space-3);
   }
   .ren-carousel-next {
-    right: var(--space-3);
+    inset-inline-end: var(--space-3);
   }
   .ren-carousel-prev::before {
     content: "‹";
@@ -6099,11 +6150,11 @@
     }
     .ren-carousel-viewport::scroll-button(inline-start) {
       content: "‹";
-      left: var(--space-3, 0.75rem);
+      inset-inline-start: var(--space-3, 0.75rem);
     }
     .ren-carousel-viewport::scroll-button(inline-end) {
       content: "›";
-      right: var(--space-3, 0.75rem);
+      inset-inline-end: var(--space-3, 0.75rem);
     }
     .ren-carousel-viewport::scroll-button(inline-start):hover,
     .ren-carousel-viewport::scroll-button(inline-end):hover {
@@ -6227,10 +6278,10 @@
       font-size: 16px;
     }
     .ren-carousel-prev {
-      left: var(--space-2);
+      inset-inline-start: var(--space-2);
     }
     .ren-carousel-next {
-      right: var(--space-2);
+      inset-inline-end: var(--space-2);
     }
     .ren-carousel-dots {
       gap: var(--space-1);
@@ -6445,6 +6496,11 @@
       opacity: 1;
       transform: scale(1);
     }
+  }
+  .ren-color-picker-saturation,
+  .ren-color-picker-hue,
+  .ren-color-picker-alpha {
+    direction: ltr;
   }
   .ren-color-picker-saturation {
     position: relative;
@@ -7219,6 +7275,9 @@
       overlay var(--duration-enter) var(--ease-enter) allow-discrete,
       display var(--duration-enter) var(--ease-enter) allow-discrete;
   }
+  .ren-context-menu:dir(rtl) {
+    transform-origin: top right;
+  }
   .ren-context-menu:popover-open,
   .ren-context-menu.ren-open {
     opacity: 1;
@@ -7506,6 +7565,16 @@
         transform: translateX(-100%);
         width: var(--sidebar-width);
       }
+      &:dir(rtl) {
+        transform: translateX(100%);
+        &[data-open] {
+          transform: translateX(0);
+          box-shadow: -4px 0 12px rgb(0 0 0 / 0.15);
+        }
+        &[data-collapsed] {
+          transform: translateX(100%);
+        }
+      }
     }
   }
   .ren-sidebar-header {
@@ -7731,7 +7800,8 @@
   .ren-command {
     position: fixed;
     top: 50%;
-    inset-inline-start: 50%;
+    left: 50%;
+    right: auto;
     transform: translate(-50%, -50%);
     max-width: 32rem;
     width: 100%;
@@ -9484,6 +9554,9 @@
     font-size: 0.75em;
     color: var(--color-text-muted);
     transition: transform var(--duration-state) var(--ease-enter, ease);
+  }
+  .ren-ai-tool-call-header:dir(rtl)::before {
+    transform: scaleX(-1);
   }
   .ren-ai-tool-call[open] > .ren-ai-tool-call-header::before {
     transform: rotate(90deg);
