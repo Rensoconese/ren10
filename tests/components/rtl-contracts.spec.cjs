@@ -11,8 +11,8 @@
  *                opens a submenu): ArrowRight under LTR, ArrowLeft under RTL.
  *                Up/Down, Home/End and PageUp/PageDown keep their meaning, and
  *                Home is still the first item in DOM order. This is what Radix
- *                (RovingFocusGroup, Menu, Slider), React Aria (calendar, slider)
- *                and native range and radio inputs do.
+ *                (RovingFocusGroup, Menu, Slider) and React Aria (calendar,
+ *                slider) do, and what a native range input does in Chromium.
  *   Sides        `top|bottom|left|right` are physical and never flip, on an
  *                anchored overlay or a sheet. Words that follow the direction
  *                say so: `start|end` alignment, `inline-start|inline-end` sides.
@@ -486,9 +486,9 @@ test.describe('rtl contracts: sides are physical, alignment is logical', () => {
       const popover = page.locator('ren-popover');
       await expect(popover).toBeVisible();
       const anchor = await rectOf(page.locator('#account-trigger'));
-      const panel = await rectOf(popover);
-      if (side === 'right') expect(panel.left, 'right is the physical right').toBeGreaterThanOrEqual(anchor.right - TOLERANCE);
-      else expect(panel.right, 'left is the physical left').toBeLessThanOrEqual(anchor.left + TOLERANCE);
+      // Polled: without CSS anchor positioning the overlay is placed by script, a frame later.
+      if (side === 'right') await expect.poll(async () => (await rectOf(popover)).left, 'right is the physical right').toBeGreaterThanOrEqual(anchor.right - TOLERANCE);
+      else await expect.poll(async () => (await rectOf(popover)).right, 'left is the physical left').toBeLessThanOrEqual(anchor.left + TOLERANCE);
       expect(errors).toEqual([]);
     }
   });
@@ -500,10 +500,43 @@ test.describe('rtl contracts: sides are physical, alignment is logical', () => {
       const tooltip = page.locator('ren-tooltip');
       await expect(tooltip).toBeVisible();
       const anchor = await rectOf(page.locator('.ren-tooltip-trigger'));
-      const panel = await rectOf(tooltip);
-      if (side === 'left') expect(panel.right, 'left is the physical left').toBeLessThanOrEqual(anchor.left + TOLERANCE);
-      else expect(panel.left, 'right is the physical right').toBeGreaterThanOrEqual(anchor.right - TOLERANCE);
+      if (side === 'left') await expect.poll(async () => (await rectOf(tooltip)).right, 'left is the physical left').toBeLessThanOrEqual(anchor.left + TOLERANCE);
+      else await expect.poll(async () => (await rectOf(tooltip)).left, 'right is the physical right').toBeGreaterThanOrEqual(anchor.right - TOLERANCE);
       expect(errors).toEqual([]);
+    }
+  });
+
+  test('side placements keep their gap between the overlay and its trigger', { tag: ['@ren-popover', '@ren-tooltip', '@ren-date-picker', '@ren-date-range-picker', '@ren-color-picker', '@rtl'] }, async ({ page }) => {
+    // [registry key, usage placed on `side`, how to open, trigger, overlay]
+    const overlays = [
+      ['popover', (usage, side) => usage.replace('placement="bottom"', `placement="${side}"`), (host) => host.open(), '#account-trigger', 'ren-popover'],
+      ['tooltip', (usage, side) => usage.replace('placement="top"', `placement="${side}"`), (host) => host.show(), '.ren-tooltip-trigger', 'ren-tooltip'],
+      ['date-picker', (usage, side) => `<ren-date-picker placement="${side}"></ren-date-picker>`, (host) => host.open(), '.ren-date-picker-trigger', '.ren-date-picker-dropdown'],
+      ['date-range-picker', (usage, side) => `<ren-date-range-picker placement="${side}"></ren-date-range-picker>`, (host) => host.open(), '.ren-date-range-trigger', '.ren-date-range-dropdown'],
+      ['color-picker', (usage, side) => usage.replace('placement="bottom"', `placement="${side}"`), (host) => host.querySelector('.ren-color-picker-trigger').click(), '.ren-color-picker-trigger', '.ren-color-picker-dropdown'],
+    ];
+    for (const [key, place, open, triggerSelector, overlaySelector] of overlays) {
+      for (const side of ['right', 'left']) {
+        // Distance from the trigger to the overlay on the asked side; negative when it is on the other one.
+        const gap = async (dir) => {
+          // A narrow host in a wide viewport: room for the overlay on either side.
+          const errors = await mount(page, key, { dir, inset: 500, edit: (usage) => place(usage, side) });
+          await page.locator(`ren-${key}`).evaluate(open);
+          const overlay = page.locator(overlaySelector);
+          await expect(overlay).toBeVisible();
+          const read = async () => {
+            const anchor = await rectOf(page.locator(triggerSelector));
+            const panel = await rectOf(overlay);
+            return side === 'right' ? panel.left - anchor.right : anchor.left - panel.right;
+          };
+          await expect.poll(read, `${key} placement="${side}" under ${dir} is on the ${side}`).toBeGreaterThan(-TOLERANCE);
+          expect(errors).toEqual([]);
+          return read();
+        };
+        const ltr = await gap('ltr');
+        expect(ltr, `${key} placement="${side}" leaves a gap under LTR`).toBeGreaterThan(2);
+        expect(Math.abs((await gap('rtl')) - ltr), `${key} placement="${side}" keeps the same gap under RTL`).toBeLessThanOrEqual(TOLERANCE);
+      }
     }
   });
 
@@ -525,11 +558,11 @@ test.describe('rtl contracts: sides are physical, alignment is logical', () => {
       const dialog = page.locator('ren-sheet dialog');
       await expect(dialog).toHaveJSProperty('open', true);
       await expect(dialog, `${side} under ${dir} resolves to ${edge}`).toHaveAttribute('data-side', edge);
-      const panel = await rectOf(dialog);
       const viewport = await page.evaluate(() => document.documentElement.clientWidth);
-      expect(panel.width, 'a side sheet does not span the viewport').toBeLessThan(viewport * 0.6);
-      if (edge === 'right') expect(Math.abs(panel.right - viewport), `${side} under ${dir} is attached to the right edge`).toBeLessThanOrEqual(TOLERANCE);
-      else expect(Math.abs(panel.left), `${side} under ${dir} is attached to the left edge`).toBeLessThanOrEqual(TOLERANCE);
+      expect((await rectOf(dialog)).width, 'a side sheet does not span the viewport').toBeLessThan(viewport * 0.6);
+      // Polled: the sheet slides in, and is only against its edge once it has arrived.
+      if (edge === 'right') await expect.poll(async () => Math.abs((await rectOf(dialog)).right - viewport), `${side} under ${dir} is attached to the right edge`).toBeLessThanOrEqual(TOLERANCE);
+      else await expect.poll(async () => Math.abs((await rectOf(dialog)).left), `${side} under ${dir} is attached to the left edge`).toBeLessThanOrEqual(TOLERANCE);
       expect(errors).toEqual([]);
     }
   });
