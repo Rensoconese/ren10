@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-popover class:list={className} {...rest}><slot /></ren-popover>
+<button class:list={className} {...rest}><slot /></button>
 
 <script>
   import 'ren10/components/composites/ren-popover/ren-popover.js';
