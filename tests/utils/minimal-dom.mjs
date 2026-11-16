@@ -92,6 +92,9 @@ export function installMinimalDOM() {
   document.documentElement = { lang: 'en' };
   document.createElement = (tag) => new TestElement(tag);
   document.createDocumentFragment = () => new TestElement('#fragment');
+  // No layout here, so no direction either: components that ask which way the
+  // text runs (to decide what ArrowLeft means) get the default.
+  globalThis.getComputedStyle = () => ({ direction: 'ltr' });
 }
 
 export function element(tag, attributes = {}, text = '') {
