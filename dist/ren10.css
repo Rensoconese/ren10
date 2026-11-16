@@ -5674,9 +5674,7 @@
   }
   .ren-popover[data-side=right] {
     position-area: right span-all;
-    margin-block: 0;
-    margin-inline-start: var(--space-2);
-    margin-inline-end: 0;
+    margin: 0 0 0 var(--space-2);
     & .ren-popover-arrow {
       left: -4px;
       top: 50%;
@@ -5685,9 +5683,7 @@
   }
   .ren-popover[data-side=left] {
     position-area: left span-all;
-    margin-block: 0;
-    margin-inline-start: 0;
-    margin-inline-end: var(--space-2);
+    margin: 0 var(--space-2) 0 0;
     & .ren-popover-arrow {
       right: -4px;
       top: 50%;
@@ -5839,9 +5835,7 @@
   }
   .ren-tooltip[data-side=right] {
     position-area: right span-all;
-    margin-block: 0;
-    margin-inline-start: var(--space-1);
-    margin-inline-end: 0;
+    margin: 0 0 0 var(--space-1);
     & .ren-tooltip-arrow {
       left: -3px;
       top: 50%;
@@ -5850,9 +5844,7 @@
   }
   .ren-tooltip[data-side=left] {
     position-area: left span-all;
-    margin-block: 0;
-    margin-inline-start: 0;
-    margin-inline-end: var(--space-1);
+    margin: 0 var(--space-1) 0 0;
     & .ren-tooltip-arrow {
       right: -3px;
       top: 50%;
@@ -9067,15 +9059,11 @@
   }
   .ren-date-picker-dropdown[data-side=right] {
     position-area: right span-all;
-    margin-block: 0;
-    margin-inline-start: var(--space-2);
-    margin-inline-end: 0;
+    margin: 0 0 0 var(--space-2);
   }
   .ren-date-picker-dropdown[data-side=left] {
     position-area: left span-all;
-    margin-block: 0;
-    margin-inline-start: 0;
-    margin-inline-end: var(--space-2);
+    margin: 0 var(--space-2) 0 0;
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
     .ren-date-picker-dropdown {
@@ -9328,15 +9316,11 @@
   }
   .ren-date-range-dropdown[data-side=right] {
     position-area: right span-all;
-    margin-block: 0;
-    margin-inline-start: var(--space-2);
-    margin-inline-end: 0;
+    margin: 0 0 0 var(--space-2);
   }
   .ren-date-range-dropdown[data-side=left] {
     position-area: left span-all;
-    margin-block: 0;
-    margin-inline-start: 0;
-    margin-inline-end: var(--space-2);
+    margin: 0 var(--space-2) 0 0;
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
     .ren-date-range-dropdown {
@@ -10062,15 +10046,11 @@
   }
   .ren-color-picker-dropdown[data-side=right] {
     position-area: right span-all;
-    margin-block: 0;
-    margin-inline-start: var(--space-2);
-    margin-inline-end: 0;
+    margin: 0 0 0 var(--space-2);
   }
   .ren-color-picker-dropdown[data-side=left] {
     position-area: left span-all;
-    margin-block: 0;
-    margin-inline-start: 0;
-    margin-inline-end: var(--space-2);
+    margin: 0 var(--space-2) 0 0;
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
     .ren-color-picker-dropdown {
