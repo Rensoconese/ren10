@@ -216,7 +216,7 @@
   "devDependencies": {
     "magicast": "file:vendor/magicast-0.5.4-ren10.1.tgz",
     "@playwright/test": "^1.59.1",
-    "astro": "^7.1.6",
+    "astro": "^7.4.12",
     "axe-core": "^4.11.3",
     "axe-playwright": "^2.2.2",
     "esbuild": "0.28.1",
