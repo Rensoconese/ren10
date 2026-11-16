@@ -43,13 +43,17 @@ const supportsDetailsName = (() => {
     const d2 = document.createElement('details');
     d1.name = 'test';
     d2.name = 'test';
-    d1.open = true;
-    d2.open = true;
     const container = document.createElement('div');
     container.append(d1, d2);
     document.body.append(container);
+    // Exclusivity is enforced when `open` is set on a connected element, so
+    // the pair is inserted first. (Opening both while detached and inserting
+    // them afterwards closes the inserted one instead, which made this check
+    // report false on every browser and forced the async JS fallback.)
+    d1.open = true;
+    d2.open = true;
     // If native exclusive works, opening d2 should close d1
-    const works = !d1.open;
+    const works = !d1.open && d2.open;
     container.remove();
     return works;
   } catch {

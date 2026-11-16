@@ -410,11 +410,8 @@ export class RenTable extends HTMLElement {
       this._navigateCells(target, key);
     }
 
-    // Enter to sort (on header)
-    if (key === 'Enter' && target.classList.contains('ren-th-sortable')) {
-      event.preventDefault();
-      target.click();
-    }
+    // Enter/Space on a sortable header is handled by the header's own
+    // listener; sorting here as well ran the sort twice per key press.
   }
 
   /**
@@ -533,7 +530,12 @@ export class RenTable extends HTMLElement {
    * @private
    */
   _sortVisibleRows() {
-    if (!this.#sortColumn || !this.#sortDirection) return;
+    if (!this.#sortColumn || !this.#sortDirection) {
+      // Unsorted means source order, not whatever the last sort left behind.
+      const visible = new Set(this.#visibleRows);
+      this.#visibleRows = this.#rows.filter((row) => visible.has(row));
+      return;
+    }
 
     const columnIndex = this.#headerCells.findIndex(
       (cell) => cell.getAttribute('data-column') === this.#sortColumn
@@ -649,6 +651,18 @@ export class RenTable extends HTMLElement {
     const visibleIndexByRow = new Map(
       this.#visibleRows.map((row, visibleIndex) => [row, visibleIndex])
     );
+
+    // Sorting has to move the rows, not only decide which page they land on.
+    // Rows are only moved when the order changed, so focus inside a row is
+    // not disturbed by renders that keep the order (selection, paging).
+    const tbody = this.#rows[0]?.parentElement;
+    if (tbody) {
+      const order = [...this.#visibleRows, ...this.#rows.filter((row) => !visibleIndexByRow.has(row))];
+      const current = [...tbody.children].filter((child) => order.includes(child));
+      if (order.some((row, i) => current[i] !== row)) {
+        order.forEach((row) => tbody.appendChild(row));
+      }
+    }
 
     this.#rows.forEach((row) => {
       const visibleIndex = visibleIndexByRow.get(row);

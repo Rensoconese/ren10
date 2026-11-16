@@ -345,8 +345,10 @@
       "name": "Tooltip",
       "exportName": "Tooltip",
       "import": "@ren10/astro/components/Tooltip",
-      "rootTag": "ren-tooltip",
-      "defaultClasses": [],
+      "rootTag": "button",
+      "defaultClasses": [
+        "ren-tooltip-trigger"
+      ],
       "layer": "composites",
       "contract": "ren10/components/composites/ren-tooltip/component.md",
       "css": [
@@ -505,7 +507,7 @@
       "name": "Hover Card",
       "exportName": "HoverCard",
       "import": "@ren10/astro/components/HoverCard",
-      "rootTag": "ren-hover-card",
+      "rootTag": "button",
       "defaultClasses": [],
       "layer": "composites",
       "contract": "ren10/components/composites/ren-hover-card/component.md",
@@ -789,9 +791,7 @@
       "exportName": "Table",
       "import": "@ren10/astro/components/Table",
       "rootTag": "ren-table",
-      "defaultClasses": [
-        "ren-table"
-      ],
+      "defaultClasses": [],
       "layer": "patterns",
       "contract": "ren10/components/patterns/ren-table/pattern.md",
       "css": [
@@ -807,9 +807,7 @@
       "exportName": "Form",
       "import": "@ren10/astro/components/Form",
       "rootTag": "ren-form",
-      "defaultClasses": [
-        "ren-form"
-      ],
+      "defaultClasses": [],
       "layer": "patterns",
       "contract": "ren10/components/patterns/ren-form/pattern.md",
       "css": [

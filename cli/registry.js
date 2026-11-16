@@ -327,9 +327,10 @@ export const REGISTRY = {
     files: ['ren-tooltip.css', 'ren-tooltip.js'],
     utils: ['anchor.js', 'positioning.js'],
     components: [],
-    usage: `<ren-tooltip content="Help text">
-  <button>Hover me</button>
-</ren-tooltip>`,
+    usage: `<button class="ren-tooltip-trigger" type="button" aria-label="More information">
+  Info
+  <ren-tooltip placement="top">More information</ren-tooltip>
+</button>`,
   },
 
   tabs: {
@@ -488,9 +489,12 @@ export const REGISTRY = {
     files: ['ren-hover-card.css', 'ren-hover-card.js'],
     utils: ['anchor.js', 'debug.js', 'id-generator.js'],
     components: [],
-    usage: `<ren-hover-card>
-  <button>Hover me</button>
-  <div class="ren-hover-card-content">Preview content</div>
+    usage: `<button id="profile-trigger" type="button">Jane Doe</button>
+<ren-hover-card data-hover-trigger="#profile-trigger">
+  <div class="ren-hover-card">
+    <div class="ren-hover-card-header"><h3>Jane Doe</h3></div>
+    <div class="ren-hover-card-body">Product designer</div>
+  </div>
 </ren-hover-card>`,
   },
 
@@ -565,11 +569,12 @@ export const REGISTRY = {
     files: ['ren-carousel.css', 'ren-carousel.js'],
     utils: ['i18n.js', 'debug.js'],
     components: [],
-    usage: `<ren-carousel auto-play interval="5000">
-  <div class="ren-carousel-slide">Slide 1</div>
-  <div class="ren-carousel-slide">Slide 2</div>
-  <button aria-label="Previous">←</button>
-  <button aria-label="Next">→</button>
+    usage: `<ren-carousel aria-label="Featured articles">
+  <div class="ren-carousel-viewport">
+    <div class="ren-carousel-slide">Slide 1</div>
+    <div class="ren-carousel-slide">Slide 2</div>
+    <div class="ren-carousel-slide">Slide 3</div>
+  </div>
 </ren-carousel>`,
   },
 
@@ -613,10 +618,7 @@ export const REGISTRY = {
     files: ['ren-color-picker.css', 'ren-color-picker.js'],
     utils: ['anchor.js', 'i18n.js'],
     components: [],
-    usage: `<ren-color-picker value="#5b6cff">
-  <input type="color">
-  <input type="text" class="ren-color-picker-hex">
-</ren-color-picker>`,
+    usage: `<ren-color-picker value="#5b6cff" placement="bottom"></ren-color-picker>`,
   },
 
   'context-menu': {
@@ -719,11 +721,16 @@ export const REGISTRY = {
     files: ['ren-sidebar.css', 'ren-sidebar.js'],
     utils: [],
     components: [],
-    usage: `<ren-sidebar class="ren-sidebar">
-  <nav class="ren-sidebar-nav">
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
+    usage: `<ren-sidebar class="ren-sidebar" aria-label="Primary">
+  <nav class="ren-sidebar-nav" aria-label="Main">
+    <a class="ren-sidebar-item" href="#dashboard">
+      <span class="ren-sidebar-item-text">Dashboard</span>
+    </a>
+    <a class="ren-sidebar-item" href="#projects">
+      <span class="ren-sidebar-item-text">Projects</span>
+    </a>
   </nav>
+  <button class="ren-sidebar-toggle" type="button" aria-label="Toggle sidebar"></button>
 </ren-sidebar>`,
   },
 
@@ -757,13 +764,21 @@ export const REGISTRY = {
     files: ['ren-table.css', 'ren-table.js'],
     utils: ['debug.js'],
     components: [],
-    usage: `<ren-table class="ren-table">
-  <thead>
-    <tr><th>Name</th><th>Email</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>John</td><td>john@example.com</td></tr>
-  </tbody>
+    usage: `<ren-table>
+  <div class="ren-table-wrapper">
+    <table class="ren-table">
+      <thead class="ren-table-header">
+        <tr>
+          <th class="ren-th ren-th-sortable" data-column="name">Name</th>
+          <th class="ren-th">Email</th>
+        </tr>
+      </thead>
+      <tbody class="ren-table-body">
+        <tr class="ren-tr" data-row-id="1"><td class="ren-td">John</td><td class="ren-td">john@example.com</td></tr>
+        <tr class="ren-tr" data-row-id="2"><td class="ren-td">Ana</td><td class="ren-td">ana@example.com</td></tr>
+      </tbody>
+    </table>
+  </div>
 </ren-table>`,
   },
 
@@ -775,12 +790,19 @@ export const REGISTRY = {
     files: ['ren-form.css', 'ren-form.js', 'serialize.js'],
     utils: [],
     components: ['field'],
-    usage: `<ren-form class="ren-form">
-  <ren-field>
-    <label>Email</label>
-    <input type="email" required>
-  </ren-field>
-  <button type="submit">Submit</button>
+    usage: `<ren-form data-validate="onTouched">
+  <form class="ren-form ren-stack" novalidate>
+    <div class="ren-form-error-summary" role="alert" tabindex="-1" hidden>
+      <strong>Please fix the following errors:</strong>
+      <ul></ul>
+    </div>
+    <ren-field data-rules="required|email">
+      <label>Email</label>
+      <input class="ren-input" type="email" name="email" autocomplete="email" required>
+      <span data-error></span>
+    </ren-field>
+    <button class="ren-btn" type="submit">Submit</button>
+  </form>
 </ren-form>`,
   },
 

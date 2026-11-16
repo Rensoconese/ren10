@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-form class:list={['ren-form', className]} {...rest}><slot /></ren-form>
+<ren-form class:list={className} {...rest}><slot /></ren-form>
 
 <script>
   import 'ren10/components/patterns/ren-form/ren-form.js';

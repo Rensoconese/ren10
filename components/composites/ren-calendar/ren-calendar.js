@@ -73,6 +73,12 @@ export class RenCalendar extends HTMLElement {
 
   /* ═══ RENDER CALENDAR ═══ */
   render() {
+    /* Rendering replaces every button, so remember where keyboard focus was
+       (a day, or the prev/next control) and put it back afterwards. */
+    const active = this.contains(document.activeElement) ? document.activeElement : null;
+    const restoreFocus = active?.classList.contains('ren-calendar-day') ? 'day'
+      : ['ren-calendar-prev', 'ren-calendar-next'].find((name) => active?.classList.contains(name)) ?? null;
+
     this.innerHTML = '';
     this.classList.add('ren-calendar');
 
@@ -216,6 +222,12 @@ export class RenCalendar extends HTMLElement {
 
     /* ═══ SET TABINDEX FOR FOCUS MANAGEMENT ═══ */
     this.updateTabIndex();
+
+    if (restoreFocus === 'day') {
+      this.querySelector('.ren-calendar-day[tabindex="0"]')?.focus();
+    } else if (restoreFocus) {
+      this.querySelector(`.${restoreFocus}`)?.focus();
+    }
   }
 
   /* ═══ UPDATE TABINDEX FOR ROVING TABINDEX PATTERN ═══ */
@@ -414,15 +426,15 @@ export class RenCalendar extends HTMLElement {
       return;
     }
 
-    if (key === 'PageUp') {
+    if (key === 'PageUp' || key === 'PageDown') {
       event.preventDefault();
-      this.handlePrevMonth();
-      return;
-    }
-
-    if (key === 'PageDown') {
-      event.preventDefault();
-      this.handleNextMonth();
+      // Same day in the adjacent month, clamped to its length (Mar 31 → Apr 30).
+      const step = key === 'PageUp' ? -1 : 1;
+      const day = date.getDate();
+      const lastDay = new Date(date.getFullYear(), date.getMonth() + step + 1, 0).getDate();
+      this.focusedDate = new Date(date.getFullYear(), date.getMonth() + step, Math.min(day, lastDay));
+      if (step < 0) this.handlePrevMonth();
+      else this.handleNextMonth();
       return;
     }
   }

@@ -14,7 +14,7 @@ export interface Props {
 const { class: className, ...rest } = Astro.props;
 ---
 
-<ren-table class:list={['ren-table', className]} {...rest}><slot /></ren-table>
+<ren-table class:list={className} {...rest}><slot /></ren-table>
 
 <script>
   import 'ren10/components/patterns/ren-table/ren-table.js';
