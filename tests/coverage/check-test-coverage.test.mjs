@@ -20,6 +20,8 @@ const fullCoverage = report(
   spec('toolbar docs', ['@ren-toolbar', '@a11y']),
   spec('toolbar mounts', ['@ren-toolbar', '@runtime']),
   spec('toolbar keys', ['@ren-toolbar', '@keyboard']),
+  spec('menu leaks', ['@ren-menu', '@leaks']),
+  spec('toolbar leaks', ['@ren-toolbar', '@leaks']),
 );
 
 const run = (reports, exemptions = {}, baseExemptions = null) => {
@@ -30,9 +32,9 @@ const run = (reports, exemptions = {}, baseExemptions = null) => {
 test('what a component owes follows its layer, its JS and its usage', () => {
   const owed = Object.fromEntries(requiredCells(registry).map((cell) => [cell.component, cell.required]));
   assert.deepEqual(owed['ren-badge'], ['a11y']);
-  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard']);
+  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'leaks']);
   // No ren-* element in its usage: nothing to disconnect, so no lifecycle cell.
-  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard']);
+  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard', 'leaks']);
 });
 
 test('full coverage passes', () => {
@@ -76,4 +78,26 @@ test('describe-level tags count for every test inside', () => {
   const nested = { suites: [{ file: 'y.spec.cjs', suites: [{ title: 'menu', specs: [spec('opens', ['@ren-menu', '@keyboard'])] }] }] };
   const { covered } = coveredCells([nested]);
   assert.ok(covered.get('ren-menu').has('keyboard'));
+});
+
+test('leaks is owed by everything that ships JS, with or without a custom element', () => {
+  const owed = Object.fromEntries(requiredCells(registry).map((cell) => [cell.component, cell.required]));
+  assert.ok(!owed['ren-badge'].includes('leaks'), 'CSS only: nothing to leak');
+  assert.ok(owed['ren-menu'].includes('leaks'));
+  // Initialised by a function: it still adds listeners, so it still owes a teardown test.
+  assert.ok(owed['ren-toolbar'].includes('leaks'));
+  assert.equal(run([fullCoverage]).totals.leaks.required, 2);
+});
+
+test('a chromium-only retention test does not cover the leaks cell', () => {
+  // leaks.spec.cjs tags only the cross-browser accounting test `@ren-* @leaks`.
+  // The heap check is skipped on firefox and webkit and carries neither tag,
+  // so it is ignored here: not a stray, and not coverage.
+  const withoutLeaks = fullCoverage.suites[0].specs.filter((s) => !s.tags.includes('@leaks'));
+  const result = run([report(...withoutLeaks, spec('menu instances are collected', ['@retention']))]);
+  const problems = result.problems.join('\n');
+  assert.match(problems, /ren-menu has no @leaks test/);
+  assert.match(problems, /ren-toolbar has no @leaks test/);
+  assert.doesNotMatch(problems, /needs both/);
+  assert.equal(result.totals.leaks.missing, 2);
 });
