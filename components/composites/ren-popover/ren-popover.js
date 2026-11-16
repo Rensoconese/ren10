@@ -11,6 +11,37 @@ function normalizePlacement(value, fallback = 'bottom') {
 }
 
 /**
+ * Without CSS Anchor Positioning the popover is placed against its trigger's
+ * parent, which then has to be positioned. This maps each parent the fallback
+ * positioned to the number of connected popovers relying on it, so the inline
+ * style is taken back when the last of them goes. A parent the author already
+ * positioned is never recorded and never touched.
+ */
+const positionedParents = new WeakMap();
+
+function retainPositionedParent(parent) {
+  const users = positionedParents.get(parent) ?? 0;
+  if (users === 0) {
+    if (getComputedStyle(parent).position !== 'static') return null;
+    parent.style.position = 'relative';
+  }
+  positionedParents.set(parent, users + 1);
+  return parent;
+}
+
+function releasePositionedParent(parent) {
+  const users = positionedParents.get(parent) ?? 0;
+  if (users > 1) {
+    positionedParents.set(parent, users - 1);
+    return;
+  }
+  positionedParents.delete(parent);
+  // Only what the fallback wrote: a value someone changed since stays.
+  if (parent.style.position === 'relative') parent.style.removeProperty('position');
+  if (parent.getAttribute('style') === '') parent.removeAttribute('style');
+}
+
+/**
  * Popover component with CSS Anchor Positioning and native Popover API
  *
  * Displays content relative to a trigger element with automatic viewport collision
@@ -34,6 +65,7 @@ export class RenPopover extends HTMLElement {
   #triggerController = null;
   #anchorLink = null;
   #dismissLayer = null;
+  #positionedParent = null;
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
@@ -121,10 +153,11 @@ export class RenPopover extends HTMLElement {
     if (RenPopover.supportsAnchor) {
       this.#anchorLink = createAnchorLink(this.#trigger, this, 'ren-popover');
     } else {
-      // Fallback: ensure trigger can be positioned relative to
-      if (getComputedStyle(this.#trigger.parentElement).position === 'static') {
-        this.#trigger.parentElement.style.position = 'relative';
-      }
+      // Fallback: ensure trigger can be positioned relative to. The parent is
+      // not ours, so what is written on it is undone in cleanup().
+      this.#releasePositionedParent();
+      const parent = this.#trigger.parentElement;
+      this.#positionedParent = parent ? retainPositionedParent(parent) : null;
     }
 
     // Wire up popovertarget if not already set
@@ -276,6 +309,12 @@ export class RenPopover extends HTMLElement {
     this.#dismissLayer = null;
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#releasePositionedParent();
+  }
+
+  #releasePositionedParent() {
+    if (this.#positionedParent) releasePositionedParent(this.#positionedParent);
+    this.#positionedParent = null;
   }
 
   #focusInitialElement() {
