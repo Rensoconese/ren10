@@ -170,7 +170,10 @@
 .ren-menu-checkbox-item[aria-checked="true"]::after {
   width: 8px;
   height: 4px;
-  border-inline-start: 2px solid white;
+  /* Physical: these two borders, rotated, draw the tick. A logical border
+     moves to the other side under RTL and the tick comes out as a hook. */
+  /* stylelint-disable-next-line property-disallowed-list -- a drawn glyph, not a box edge */
+  border-left: 2px solid white;
   border-bottom: 2px solid white;
   transform: translateY(-55%) rotate(-45deg);
 }

@@ -201,6 +201,17 @@
   }
 }
 
+/* ═══ DIRECTION ═══
+   The spectrum is not mirrored under dir="rtl": hue runs red to red and
+   saturation grows to the right in every script, as in a native colour picker.
+   Pinning the direction keeps the gradients, the handles (placed with a
+   physical `left`) and the arrow keys in agreement. */
+.ren-color-picker-saturation,
+.ren-color-picker-hue,
+.ren-color-picker-alpha {
+  direction: ltr;
+}
+
 /* ═══ SATURATION/BRIGHTNESS AREA ═══ */
 .ren-color-picker-saturation {
   position: relative;

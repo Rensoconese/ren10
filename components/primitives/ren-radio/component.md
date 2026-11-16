@@ -130,6 +130,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: in a group with `orientation="horizontal"`, ArrowLeft moves to the next radio and ArrowRight to the previous one under `dir="rtl"`. The vertical default uses ArrowUp/ArrowDown and ignores direction.
 
 ## Related Files
 

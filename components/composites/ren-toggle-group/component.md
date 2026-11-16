@@ -139,6 +139,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: under `dir="rtl"` ArrowLeft moves to the next item and ArrowRight to the previous one, so the arrow always points at the item it moves to. ArrowUp/ArrowDown, Home and End are unchanged.
 
 ## Related Files
 

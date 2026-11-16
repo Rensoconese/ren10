@@ -32,6 +32,16 @@
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
+  /* A code is read left to right in every script, like a phone number. The
+     slots keep that order under dir="rtl", so slot 1 stays the leftmost and
+     ArrowLeft/ArrowRight keep pointing at the slot they move to. */
+  direction: ltr;
+}
+
+/* Still part of an RTL page: the group as a whole sits at the inline-start
+   (right) edge, only the order inside it is fixed. */
+.ren-otp:dir(rtl) {
+  justify-content: flex-end;
 }
 
 /* ═══ INDIVIDUAL SLOT ═══ */

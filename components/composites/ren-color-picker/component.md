@@ -164,6 +164,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: the saturation area, the hue and alpha tracks and their handles are not mirrored under `dir="rtl"` (they keep `direction: ltr`, as a native colour picker does). The trigger, labels and inputs around them mirror.
 
 ## Related Files
 

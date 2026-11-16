@@ -237,6 +237,12 @@
   margin: 0 var(--space-1);
 }
 
+/* From start to end: under RTL the end is on the left, and an arrow is not a
+   character the bidi algorithm mirrors. */
+.ren-date-picker.ren-date-picker-range:dir(rtl) .ren-date-picker-value::after {
+  content: ' ← ';
+}
+
 /* ═══ DISABLED STATE ═══ */
 .ren-date-picker[disabled] {
   opacity: 0.6;

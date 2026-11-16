@@ -216,6 +216,7 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 - The toggle button has an `aria-label` (`"Toggle sidebar"`).
 - Mobile overlay closes on Escape and outside click.
 - Persistence respects user choice; do not auto-collapse on every visit.
+- Right-to-left: the sidebar sits on the inline-start edge. Under `dir="rtl"` the mobile drawer hides past, and slides in from, the right edge.
 
 ## Anti-Patterns
 

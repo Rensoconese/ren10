@@ -7,7 +7,7 @@
  * Features:
  * - Light DOM (no Shadow DOM)
  * - CSS scroll-snap for performant horizontal scrolling
- * - Keyboard navigation (Arrow Left/Right)
+ * - Keyboard navigation (Arrow Left/Right, swapped under dir="rtl")
  * - Touch swipe support (native scroll-snap)
  * - Auto-generated pagination dots
  * - Optional next/prev navigation arrows
@@ -631,12 +631,17 @@ export class RenCarousel extends HTMLElement {
   }
 
   _onKeydown(e) {
+    // Arrows follow the slides on screen: the next slide enters from the
+    // inline-end side, so under RTL ArrowLeft is "next".
+    const rtl = getComputedStyle(this).direction === 'rtl';
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      this.prev();
+      if (rtl) this.next();
+      else this.prev();
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      this.next();
+      if (rtl) this.prev();
+      else this.next();
     } else if (e.key === ' ' || e.key === 'Enter') {
       // Allow space/enter on dots
       if (e.target.classList.contains('ren-carousel-dot')) {

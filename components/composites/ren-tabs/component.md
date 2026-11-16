@@ -144,6 +144,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: horizontal tabs follow the tabs on screen. Under `dir="rtl"` ArrowLeft moves to the next tab and ArrowRight to the previous one; Home and End are unchanged, and `orientation="vertical"` ignores direction.
 
 ## Related Files
 

@@ -398,14 +398,18 @@ export class RenCalendar extends HTMLElement {
       return;
     }
 
-    if (key === 'ArrowLeft') {
+    // The grid mirrors under RTL (the week runs right to left), so the arrow
+    // that points at the next day is ArrowLeft there.
+    const rtl = getComputedStyle(this).direction === 'rtl';
+
+    if (key === (rtl ? 'ArrowRight' : 'ArrowLeft')) {
       event.preventDefault();
       const newIndex = Math.max(0, index - 1);
       this.focusDateAtIndex(newIndex);
       return;
     }
 
-    if (key === 'ArrowRight') {
+    if (key === (rtl ? 'ArrowLeft' : 'ArrowRight')) {
       event.preventDefault();
       const newIndex = Math.min(totalDates - 1, index + 1);
       this.focusDateAtIndex(newIndex);

@@ -106,9 +106,15 @@ export function initContextMenu(menuOrId) {
     dismissLayer.updateOptions({ triggerElement: returnTrigger });
     dismissLayer.activate();
 
-    // Adjust if overflows viewport
+    // The menu opens toward the inline-end side of the pointer: to its right
+    // under LTR, to its left under RTL, as native context menus do. Either way
+    // it flips to the other side of the pointer when it would leave the viewport.
     const rect = menu.getBoundingClientRect();
-    if (rect.right > window.innerWidth) {
+    const rtl = getComputedStyle(menu).direction === 'rtl';
+    if (rtl) {
+      const left = x - rect.width;
+      menu.style.left = `${left >= 0 ? left : Math.min(x, Math.max(8, window.innerWidth - rect.width - 8))}px`;
+    } else if (rect.right > window.innerWidth) {
       menu.style.left = `${Math.max(8, x - rect.width)}px`;
     }
     if (rect.bottom > window.innerHeight) {
@@ -139,7 +145,9 @@ export function initContextMenu(menuOrId) {
       e.preventDefault();
       const rect = trigger.getBoundingClientRect();
       returnTrigger = trigger;
-      show(rect.left + 8, rect.bottom + 8, e.target);
+      // Keyboard has no pointer: anchor just inside the trigger's inline-start corner.
+      const rtl = getComputedStyle(trigger).direction === 'rtl';
+      show(rtl ? rect.right - 8 : rect.left + 8, rect.bottom + 8, e.target);
     }, { signal: controller.signal });
   });
 

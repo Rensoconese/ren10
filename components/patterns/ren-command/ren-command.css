@@ -4,7 +4,13 @@
 .ren-command {
   position: fixed;
   top: 50%;
-  inset-inline-start: 50%;
+  /* Physical on purpose: the centring translate below is physical. A logical
+     inset anchored the right edge under RTL and pushed the palette half its
+     width off screen. The opposite inset is released too: the UA sheet gives a
+     <dialog> `inset-inline: 0`, which over-constrained the box and, through
+     `margin: auto`, left it 64px off-centre under LTR. */
+  left: 50%;
+  right: auto;
   transform: translate(-50%, -50%);
   max-width: 32rem;
   width: 100%;

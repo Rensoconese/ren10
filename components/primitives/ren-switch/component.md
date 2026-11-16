@@ -134,6 +134,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone — the thumb position is the primary visual signal.
 - This contract is CSS-first; do not introduce JavaScript unless the source component already owns that behavior.
+- Right-to-left: the switch mirrors under `dir="rtl"`. Off rests on the inline-start side (the right) and on travels to the inline-end side (the left).
 
 ## Related Files
 

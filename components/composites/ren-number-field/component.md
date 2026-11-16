@@ -138,6 +138,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - The auto-generated stepper `aria-label`s come from `utils/i18n.js` and are resolved once while the DOM is built, so call `setLocale()` before the component upgrades — a locale change after mount does not relabel existing steppers.
+- Right-to-left: the decrement and increment buttons swap sides under `dir="rtl"` (decrement on the right) and keep their rounded corners on the outside of the group.
 
 ## Related Files
 

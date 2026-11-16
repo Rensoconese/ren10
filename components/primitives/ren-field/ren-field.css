@@ -99,6 +99,11 @@ select.ren-input {
   padding-inline-end: var(--space-10);
 }
 
+/* The chevron sits in the inline-end padding, which is on the left under RTL. */
+select.ren-input:dir(rtl) {
+  background-position: left var(--space-3) center;
+}
+
 @supports (appearance: base-select) {
   /* ── Opt-in ── */
   select.ren-input,
@@ -242,7 +247,7 @@ select.ren-input {
 
 .ren-input-icon {
   position: absolute;
-  left: var(--space-3);
+  inset-inline-start: var(--space-3);
   color: var(--color-text-muted);
   pointer-events: none;
   display: flex;
@@ -255,7 +260,7 @@ select.ren-input {
 
 .ren-input-icon-end {
   position: absolute;
-  right: var(--space-3);
+  inset-inline-end: var(--space-3);
   color: var(--color-text-muted);
   pointer-events: none;
   display: flex;

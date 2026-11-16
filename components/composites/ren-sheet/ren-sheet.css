@@ -34,8 +34,15 @@ ren-sheet {
   max-height: 100%;
   touch-action: none; /* Prevent scroll chaining; swipe-to-dismiss handled by JS */
 
+  /* `left` and `right` are physical: the slide-in translate, the shadow and
+     the dismiss swipe are, so the insets are too. The opposite inset must be
+     released: the UA sheet gives every <dialog> `inset-inline: 0`, and with a
+     fixed width that over-constrains the box, so it sat on the inline-start
+     edge whatever `side` said — a "right" sheet opened on the left under LTR.
+     `side="inline-start|inline-end"` resolves to one of these in JS. */
   &[data-side='right'] {
-    inset-inline-end: 0;
+    right: 0;
+    left: auto;
     top: 0;
     bottom: 0;
 
@@ -50,7 +57,8 @@ ren-sheet {
   }
 
   &[data-side='left'] {
-    inset-inline-start: 0;
+    left: 0;
+    right: auto;
     top: 0;
     bottom: 0;
 

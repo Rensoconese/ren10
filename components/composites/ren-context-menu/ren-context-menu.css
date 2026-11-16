@@ -56,6 +56,12 @@
     display var(--duration-enter) var(--ease-enter) allow-discrete;
 }
 
+/* Under RTL the menu hangs to the left of the pointer, so it grows from its
+   top-right corner. */
+.ren-context-menu:dir(rtl) {
+  transform-origin: top right;
+}
+
 .ren-context-menu:popover-open,
 .ren-context-menu.ren-open {
   opacity: 1;

@@ -121,7 +121,7 @@
 
 .ren-carousel-fade .ren-carousel-slide {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: 0;
   width: 100%;
   opacity: 0;
@@ -161,13 +161,15 @@
   transition: var(--transition-tactile);
 }
 
-/* Arrow positioning */
+/* Arrow positioning. Logical: "previous" sits where the slides come from, which
+   is the right edge under RTL. The chevrons are U+2039 / U+203A, bidi-mirrored
+   characters, so the glyph turns with the direction and keeps pointing out. */
 .ren-carousel-prev {
-  left: var(--space-3);
+  inset-inline-start: var(--space-3);
 }
 
 .ren-carousel-next {
-  right: var(--space-3);
+  inset-inline-end: var(--space-3);
 }
 
 /* Arrow chevron using ::before pseudo-element */
@@ -250,12 +252,12 @@
 
   .ren-carousel-viewport::scroll-button(inline-start) {
     content: '‹';
-    left: var(--space-3, 0.75rem);
+    inset-inline-start: var(--space-3, 0.75rem);
   }
 
   .ren-carousel-viewport::scroll-button(inline-end) {
     content: '›';
-    right: var(--space-3, 0.75rem);
+    inset-inline-end: var(--space-3, 0.75rem);
   }
 
   .ren-carousel-viewport::scroll-button(inline-start):hover,
@@ -414,11 +416,11 @@
   }
 
   .ren-carousel-prev {
-    left: var(--space-2);
+    inset-inline-start: var(--space-2);
   }
 
   .ren-carousel-next {
-    right: var(--space-2);
+    inset-inline-end: var(--space-2);
   }
 
   .ren-carousel-dots {

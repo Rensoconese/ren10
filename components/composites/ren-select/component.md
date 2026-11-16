@@ -197,6 +197,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: the list opens under its trigger in either direction. The side in `placement` is physical; `-start` / `-end` follow the text direction.
 
 ## Related Files
 

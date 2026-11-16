@@ -60,7 +60,7 @@
   content: '';
   position: absolute;
   top: 2px;
-  left: 2px;
+  inset-inline-start: 2px;
   width: var(--ren-switch-thumb-size);   /* 27px */
   height: var(--ren-switch-thumb-size);
   background-color: var(--ren-switch-thumb-color);
@@ -80,6 +80,12 @@
 
 .ren-switch > input:checked + .ren-switch-track::after {
   transform: translateX(calc(var(--ren-switch-width) - var(--ren-switch-height)));
+}
+
+/* The switch mirrors: "off" rests on the inline-start side and "on" travels to
+   the inline-end side, which is to the left under RTL. */
+.ren-switch:dir(rtl) > input:checked + .ren-switch-track::after {
+  transform: translateX(calc(var(--ren-switch-height) - var(--ren-switch-width)));
 }
 
 /* Hover */
@@ -104,6 +110,10 @@
 
 .ren-switch:active > input:checked + .ren-switch-track::after {
   transform: translateX(calc(var(--ren-switch-width) - var(--ren-switch-height) - 6px));
+}
+
+.ren-switch:dir(rtl):active > input:checked + .ren-switch-track::after {
+  transform: translateX(calc(var(--ren-switch-height) - var(--ren-switch-width) + 6px));
 }
 
 /* Disabled */

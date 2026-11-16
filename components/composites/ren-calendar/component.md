@@ -163,6 +163,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: the week runs right to left under `dir="rtl"`, so ArrowLeft moves to the next day and ArrowRight to the previous one, and the previous-month button is the one on the right. ArrowUp/ArrowDown, Home/End and PageUp/PageDown are unchanged. Range caps reach toward the rest of the range.
 
 ## Related Files
 
