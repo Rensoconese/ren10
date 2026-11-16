@@ -5,7 +5,8 @@
  * A component is mounted twice, once per direction, from the same registry
  * usage. Everything the specs assert is a visible outcome: where a box ends up,
  * which item has focus, which slide is in view. Nothing here reads a raw
- * `scrollLeft` (browsers disagree on its sign under RTL) or waits on a timer.
+ * `scrollLeft` (browsers disagree on its sign under RTL), and the only waiting
+ * is for layout to stop changing.
  */
 const { REGISTRY, mountRegistry } = require('./mount-registry.cjs');
 
@@ -114,21 +115,32 @@ function readBoxes(physicalSelectors = []) {
   return { boxes, elements: all.length, clientWidth: width, scrollWidth: document.documentElement.scrollWidth };
 }
 
+/** Reads that must agree, and the gap between them, before layout counts as settled. */
+const QUIET_READS = 4;
+const QUIET_GAP_MS = 60;
+
 /**
- * Read the boxes once layout stops changing (two identical reads a frame apart).
+ * Read the boxes once layout has stopped changing.
+ *
+ * "Stopped" means several identical reads in a row, spaced in page time. One
+ * frame of agreement is not enough: components move focus into a surface a
+ * moment after opening it (a 100ms timer in the date pickers), and focusing an
+ * element can scroll or re-place its container. The window outlasts that, and
+ * any change restarts it, so a slow machine waits longer instead of reading early.
+ *
  * @param {import('@playwright/test').Page} page
  * @param {string[]} [physicalSelectors] surfaces that keep a physical side
  */
 async function settledBoxes(page, physicalSelectors = []) {
-  let previous = '';
   let snapshot = await page.evaluate(readBoxes, physicalSelectors);
-  for (let attempt = 0; attempt < 40; attempt += 1) {
-    const current = JSON.stringify(snapshot);
-    if (current === previous) return snapshot;
-    previous = current;
-    await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    snapshot = await page.evaluate(readBoxes, physicalSelectors);
+  let agreed = 1;
+  for (let attempt = 0; attempt < 80 && agreed < QUIET_READS; attempt += 1) {
+    await page.evaluate((gap) => new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve), gap)), QUIET_GAP_MS);
+    const next = await page.evaluate(readBoxes, physicalSelectors);
+    agreed = JSON.stringify(next) === JSON.stringify(snapshot) ? agreed + 1 : 1;
+    snapshot = next;
   }
+  if (agreed < QUIET_READS) throw new Error('layout never settled: boxes were still moving after 80 reads');
   return snapshot;
 }
 
