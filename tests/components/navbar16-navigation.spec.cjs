@@ -8,7 +8,7 @@
  * six primary title-only links only inside a full-viewport overlay; overlay footer
  * with one contact + five socials; zero dropdowns/chevrons.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -50,9 +50,6 @@ async function gotoNavbar16Block(page, origin) {
 test.describe('Navbar Logo Left Action Overlay Menu (navbar16)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);

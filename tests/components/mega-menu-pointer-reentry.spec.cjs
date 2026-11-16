@@ -4,8 +4,8 @@ const path = require('node:path');
 const { startStaticServer } = require('../utils/static-server.cjs');
 
 // Every block whose controller defers its pointerleave check to the next
-// animation frame. A block missing from this list can still close (or refuse
-// to open) under a resting pointer when a leave and a re-entry share a frame.
+// animation frame. A leave and a re-entry inside one frame must not close the
+// menu, or keep it shut, under a resting pointer.
 for (const [block, root, prefix] of [
   ['nav-mega-menu-card-grid', '[data-rmcg-root]', '.rmcg'],
   ['nav-mega-menu-topics-collection-cards', '[data-rmcc-root]', '.rmcc'],
