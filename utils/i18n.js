@@ -28,7 +28,7 @@
  *   t('dialog.close'); // "Cerrar"
  *
  *   // Template parameters
- *   t('carousel.slideOf', { current: 3, total: 10 }); // "Slide 3 of 10"
+ *   t('carousel.slideOf', { current: 3, total: 10 }); // "3 of 10"
  *
  *   // Pluralization (pipe-separated)
  *   t('dateRangePicker.daysSelected', { count: 1 }); // "1 day"
@@ -43,13 +43,16 @@ const defaultLocale = {
     nextMonth: 'Next month ({month})',
   },
 
+  // The carousel and its slides carry aria-roledescription "carousel" and
+  // "slide", which screen readers speak after the label: the labels must not
+  // repeat those words (APG Carousel).
   carousel: {
-    label: 'Image carousel',
+    label: 'Gallery',
     pagination: 'Carousel pagination',
     goToSlide: 'Go to slide {index}',
     previous: 'Previous slide',
     next: 'Next slide',
-    slideOf: 'Slide {current} of {total}',
+    slideOf: '{current} of {total}',
   },
 
   combobox: {
@@ -60,6 +63,7 @@ const defaultLocale = {
   },
 
   command: {
+    label: 'Command palette',
     placeholder: 'Type a command or search...',
     noResults: 'No results found',
     resultsAvailable: '{count} result available|{count} results available',
@@ -67,8 +71,12 @@ const defaultLocale = {
 
   colorPicker: {
     saturation: 'Color saturation and brightness',
+    area: '2D slider',
+    areaValue: 'Saturation {saturation}%, brightness {brightness}%',
     hue: 'Color hue',
+    hueValue: '{value}°',
     opacity: 'Color opacity',
+    opacityValue: '{value}%',
     current: 'Current',
     hexValue: 'Hex color value',
     formatToggle: 'Toggle color format between HEX, RGB, and HSL',
@@ -279,7 +287,7 @@ if (typeof document !== 'undefined') {
  *
  * @example
  *   t('dialog.close'); // "Close"
- *   t('carousel.slideOf', { current: 3, total: 10 }); // "Slide 3 of 10"
+ *   t('carousel.slideOf', { current: 3, total: 10 }); // "3 of 10"
  *   t('dateRangePicker.daysSelected', { count: 7 }); // "7 days"
  */
 export function t(key, params = {}) {
@@ -395,12 +403,12 @@ registerLocale('es', {
   },
 
   carousel: {
-    label: 'Carrusel de imágenes',
+    label: 'Galería',
     pagination: 'Paginación del carrusel',
     goToSlide: 'Ir a la diapositiva {index}',
     previous: 'Diapositiva anterior',
     next: 'Siguiente diapositiva',
-    slideOf: 'Diapositiva {current} de {total}',
+    slideOf: '{current} de {total}',
   },
 
   combobox: {
@@ -411,6 +419,7 @@ registerLocale('es', {
   },
 
   command: {
+    label: 'Paleta de comandos',
     placeholder: 'Escribe un comando o busca...',
     noResults: 'No se encontraron resultados',
     resultsAvailable: '{count} resultado disponible|{count} resultados disponibles',
@@ -418,8 +427,12 @@ registerLocale('es', {
 
   colorPicker: {
     saturation: 'Saturación y brillo del color',
+    area: 'Control deslizante 2D',
+    areaValue: 'Saturación {saturation}%, brillo {brightness}%',
     hue: 'Tono del color',
+    hueValue: '{value}°',
     opacity: 'Opacidad del color',
+    opacityValue: '{value}%',
     current: 'Actual',
     hexValue: 'Valor hexadecimal del color',
     formatToggle: 'Alternar formato de color entre HEX, RGB y HSL',

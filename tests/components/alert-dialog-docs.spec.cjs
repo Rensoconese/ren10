@@ -24,7 +24,7 @@ test('live alert dialog opens modally and requires an explicit choice', async ({
   expect(response?.status()).toBe(200);
 
   const trigger = page.getByRole('button', { name: 'Delete account' }).first();
-  const dialog = page.getByRole('dialog', { name: 'Delete this account?' });
+  const dialog = page.getByRole('alertdialog', { name: 'Delete this account?' });
   await trigger.click();
   await expect(dialog).toBeVisible();
   await expect(dialog).toHaveAttribute('open', '');

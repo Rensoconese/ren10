@@ -53,7 +53,7 @@ requiredMarkup:
   - "Each tab trigger is a real <button role=\"tab\" class=\"ren-tab\">; never use <a> or <div> for the trigger."
   - "Tab triggers and tabpanels must match 1:1 in document order; the component pairs them by index."
   - "Inactive panels carry the hidden attribute (the component toggles it); do not use display: none manually."
-  - "Provide aria-label on <ren-tabs> when there are multiple tablists on the page, so screen-readers can distinguish them."
+  - "Name the tab list: put aria-label (or aria-labelledby) on the role=\"tablist\" element, or on <ren-tabs> — the component moves a name written on the host onto the tablist, because the host has no role."
 
 forbiddenPatterns:
   - "Wrapping a <a href> as the tab trigger — tabs change the visible panel, they are not navigation links."
@@ -74,8 +74,8 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Triggers are real <button role=\"tab\"> with aria-selected reflecting state and tabindex managed by roving (only the selected tab is tabindex=0)."
-    - "Tabpanels carry role=\"tabpanel\" and an aria-labelledby pointing at their trigger id (the component fills this in)."
+    - "Triggers are real <button role=\"tab\"> with aria-selected reflecting state and tabindex managed by roving: the arrow keys move the tab stop with focus, and once focus leaves the tab list the selected tab is the only tabindex=0, so Tab always re-enters on the active tab."
+    - "Tabpanels carry role=\"tabpanel\" and an aria-labelledby pointing at their trigger id (the component fills this in). The visible panel gets tabindex=\"0\" unless its first content is itself focusable, so Tab moves from the tab list into the panel; an author-written tabindex is left alone."
     - "Arrow Left/Right (horizontal) or Up/Down (vertical) moves focus; Home / End jump to first / last; Enter / Space activate in manual mode."
     - "The .ren-tab meets touch target via min-height: var(--size-lg); do not shrink it below this in touch contexts."
     - "Active tab is distinguished by color AND the underline / pill / enclosed visual — never rely on color alone."
@@ -144,6 +144,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: horizontal tabs follow the tabs on screen. Under `dir="rtl"` ArrowLeft moves to the next tab and ArrowRight to the previous one; Home and End are unchanged, and `orientation="vertical"` ignores direction.
 
 ## Related Files
 

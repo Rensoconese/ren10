@@ -67,7 +67,9 @@ function clampToViewport(position, size, limit, overflowPadding, clampPadding) {
  *   normalise their own attribute (and own its default) first; an unrecognised
  *   value falls back to 'bottom' rather than producing NaN coordinates.
  * @param {'center'|'start'|'end'} [options.align='center'] - Cross-axis alignment:
- *   centred on the trigger, or flush with its leading / trailing edge.
+ *   centred on the trigger, or flush with its leading / trailing edge. Above or
+ *   below the trigger the edges are logical: under dir="rtl" `start` lines up
+ *   the right edges. `side` itself is physical and never mirrors.
  * @param {number} [options.offset=8] - Gap between trigger and overlay.
  * @param {number} [options.overflowPadding=0] - Viewport inset that must stay
  *   clear for a position to count as fitting. Drives both the flip decision and
@@ -90,7 +92,14 @@ export function computeOverlayPosition(trigger, overlay, options = {}) {
   } = options;
 
   const triggerRect = trigger.getBoundingClientRect();
-  const overlayRect = overlay.getBoundingClientRect();
+  // Layout size, not the painted box. Overlays are measured while an open
+  // animation still scales them, and `left`/`top` place the unscaled box: a
+  // far-edge alignment computed from the scaled width lands a few pixels off.
+  const paintedRect = overlay.getBoundingClientRect();
+  const overlayRect = {
+    width: overlay.offsetWidth || paintedRect.width,
+    height: overlay.offsetHeight || paintedRect.height,
+  };
   const viewport = { width: window.innerWidth, height: window.innerHeight };
 
   const preferred = SIDES.has(side) ? side : 'bottom';
@@ -132,10 +141,16 @@ export function computeOverlayPosition(trigger, overlay, options = {}) {
     mainPosition = positionFor(opposite);
   }
 
+  // `start` / `end` name the inline edges when the overlay sits above or below
+  // the trigger, so they swap sides with the trigger's direction.
+  const rtl = isVertical && getComputedStyle(trigger).direction === 'rtl';
+  const leading = rtl ? 'end' : 'start';
+  const trailing = rtl ? 'start' : 'end';
+
   let crossPosition;
-  if (align === 'start') {
+  if (align === leading) {
     crossPosition = cross.start;
-  } else if (align === 'end') {
+  } else if (align === trailing) {
     crossPosition = cross.end - cross.size;
   } else {
     crossPosition = cross.start + (cross.end - cross.start - cross.size) / 2;

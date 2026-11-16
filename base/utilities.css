@@ -54,7 +54,7 @@
 .ren-skip-link {
   position: absolute;
   top: -100%;
-  left: var(--space-4);
+  inset-inline-start: var(--space-4);
   z-index: var(--z-max);
   padding: var(--space-2) var(--space-4);
   background-color: var(--color-accent);

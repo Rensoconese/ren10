@@ -78,7 +78,7 @@ accessibility:
     - "Trigger is a real <button type=\"button\"> with aria-haspopup=\"dialog\" and aria-expanded that flips true/false as the dropdown opens and closes."
     - "Trigger min-height is var(--touch-min) so the tap target meets 44px; do not reduce it for touch contexts."
     - ":focus-visible on the trigger and presets must show the --color-accent outline; do not remove it without restoring an equivalent ring."
-    - "Escape closes the dropdown; Enter/Space on the trigger opens it; opening focuses the first non-disabled .ren-calendar-day."
+    - "Escape closes the dropdown; Enter/Space on the trigger toggles it like a click does; opening focuses the first non-disabled .ren-calendar-day."
     - "Error/success states (.ren-date-picker-error, .ren-date-picker-success) must be paired with a text message — do not rely on border color alone."
     - "Closing returns focus to the trigger; do not break this contract when overriding open()/close()."
 ```
@@ -155,6 +155,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: the calendar it opens follows `ren-calendar` (ArrowLeft is the next day under `dir="rtl"`), and the arrow between the two dates of a range points from start to end (`←`).
 
 ## Related Files
 

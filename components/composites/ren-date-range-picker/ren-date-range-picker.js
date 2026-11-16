@@ -354,12 +354,25 @@ export class RenDateRangePicker extends HTMLElement {
         btn.className = 'ren-date-range-preset';
         btn.setAttribute('type', 'button');
         btn.setAttribute('role', 'option');
+        btn.setAttribute('aria-selected', 'false');
         btn.setAttribute('data-preset', key);
         btn.textContent = t(preset.labelKey);
 
         btn.addEventListener('click', () => this.applyPreset(key));
         presetsEl.appendChild(btn);
       });
+
+      // The presets are a listbox, so they behave like one (APG Listbox): a
+      // single tab stop, and the arrow keys, Home and End move between
+      // options. Enter and Space stay native button activation.
+      presetsEl.addEventListener('keydown', (event) => this.handlePresetKeyDown(event));
+      presetsEl.addEventListener('focusin', (event) => this.setPresetTabStop(event.target.closest('.ren-date-range-preset')));
+      // Once focus leaves, the way back in is the selected preset, or the first.
+      presetsEl.addEventListener('focusout', (event) => {
+        if (presetsEl.contains(event.relatedTarget)) return;
+        this.setPresetTabStop(presetsEl.querySelector('.ren-date-range-preset[aria-selected="true"]') || presetsEl.querySelector('.ren-date-range-preset'));
+      });
+      this.setPresetTabStop(presetsEl.querySelector('.ren-date-range-preset'), presetsEl);
 
       inner.appendChild(presetsEl);
     }
@@ -536,9 +549,10 @@ export class RenDateRangePicker extends HTMLElement {
   handleTriggerKeyDown(event) {
     if (this.hasAttribute('disabled')) return;
 
+    // Enter and Space do what a click does: open, or close when already open.
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      this.open();
+      this.isOpen ? this.close() : this.open();
     }
 
     if (event.key === 'Escape') {
@@ -634,14 +648,43 @@ export class RenDateRangePicker extends HTMLElement {
   /* ═══ UPDATE PRESET BUTTON HIGHLIGHT ═══ */
   updatePresetHighlight() {
     const presetBtns = this.querySelectorAll('.ren-date-range-preset');
+    let selected = null;
     presetBtns.forEach((btn) => {
       const key = btn.getAttribute('data-preset');
-      if (key === this.activePreset) {
-        btn.setAttribute('aria-selected', 'true');
-      } else {
-        btn.removeAttribute('aria-selected');
-      }
+      // Every option says whether it is selected; an option with no
+      // aria-selected at all reads as "not selectable".
+      btn.setAttribute('aria-selected', key === this.activePreset ? 'true' : 'false');
+      if (key === this.activePreset) selected = btn;
     });
+    // The listbox is entered on its selected option, or its first one.
+    if (!this.querySelector('.ren-date-range-presets')?.contains(document.activeElement)) {
+      this.setPresetTabStop(selected || presetBtns[0]);
+    }
+  }
+
+  /* ═══ PRESET LISTBOX: ONE TAB STOP ═══ */
+  setPresetTabStop(option, list = this.querySelector('.ren-date-range-presets')) {
+    if (!option || !list) return;
+    list.querySelectorAll('.ren-date-range-preset').forEach((btn) => {
+      btn.setAttribute('tabindex', btn === option ? '0' : '-1');
+    });
+  }
+
+  /* ═══ PRESET LISTBOX: ARROW KEYS, HOME, END ═══ */
+  handlePresetKeyDown(event) {
+    const options = [...event.currentTarget.querySelectorAll('.ren-date-range-preset')];
+    const current = options.indexOf(document.activeElement);
+    if (current === -1) return;
+
+    let next = -1;
+    if (event.key === 'ArrowDown') next = Math.min(current + 1, options.length - 1);
+    else if (event.key === 'ArrowUp') next = Math.max(current - 1, 0);
+    else if (event.key === 'Home') next = 0;
+    else if (event.key === 'End') next = options.length - 1;
+    if (next === -1) return;
+
+    event.preventDefault();
+    options[next].focus();
   }
 
   /* ═══ UPDATE FOOTER SUMMARY ═══ */
@@ -726,7 +769,8 @@ export class RenDateRangePicker extends HTMLElement {
 
     /* ═══ FOCUS FIRST PRESET OR CALENDAR ═══ */
     setTimeout(() => {
-      const firstPreset = this.querySelector('.ren-date-range-preset');
+      const firstPreset = this.querySelector('.ren-date-range-preset[aria-selected="true"]')
+        || this.querySelector('.ren-date-range-preset');
       if (firstPreset) {
         firstPreset.focus();
       } else {

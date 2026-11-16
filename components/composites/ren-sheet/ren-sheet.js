@@ -18,7 +18,9 @@
  *   <button data-sheet-trigger="filters">Open</button>
  *
  * Attributes:
- *   side         — "right" | "left" | "top" | "bottom" (default "right")
+ *   side         — "right" | "left" | "top" | "bottom" (default "right"), or
+ *                  "inline-end" | "inline-start" to follow the text direction.
+ *                  "left" and "right" are physical and never mirror.
  *   size         — "sm" | "md" | "lg" | "xl" | "full" (default "md")
  *   open         — reflects show()/close()
  *   dismissible  — if "false", only the close button dismisses
@@ -124,12 +126,20 @@ export class RenSheet extends HTMLElement {
     this.appendChild(this.#dialog);
   }
 
+  /**
+   * The physical edge the sheet is attached to. `left` / `right` mean what
+   * they say under any direction; `inline-start` / `inline-end` resolve
+   * against the host's direction, so the panel, its slide-in, its shadow and
+   * the swipe that dismisses it all agree on one side.
+   */
   #getSide() {
-    return (
+    const side =
       this.getAttribute('side') ||
       this.getAttribute('data-side') ||
-      'right'
-    );
+      'right';
+    if (side !== 'inline-start' && side !== 'inline-end') return side;
+    const rtl = getComputedStyle(this).direction === 'rtl';
+    return (side === 'inline-end') === rtl ? 'left' : 'right';
   }
 
   #getSize() {
@@ -217,6 +227,9 @@ export class RenSheet extends HTMLElement {
   show() {
     if (!this.#dialog || this.#dialog.open) return;
     this.#returnFocus = document.activeElement;
+    // A logical side depends on a direction that may have been set, or
+    // changed, after the element upgraded.
+    this.#dialog.setAttribute('data-side', this.#getSide());
     this.#dialog.showModal();
     this.setAttribute('open', '');
 

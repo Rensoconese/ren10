@@ -77,10 +77,16 @@ export class RenToggleGroup extends HTMLElement {
     const currentIndex = this.items.indexOf(event.currentTarget);
     let nextIndex = currentIndex;
 
-    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+    // Left/Right follow the items on screen: under RTL the next item is to
+    // the left. Up/Down keep their meaning in either direction.
+    const rtl = getComputedStyle(this).direction === 'rtl';
+    const forwardKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const backwardKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+
+    if (event.key === forwardKey || event.key === 'ArrowDown') {
       event.preventDefault();
       nextIndex = (currentIndex + 1) % this.items.length;
-    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+    } else if (event.key === backwardKey || event.key === 'ArrowUp') {
       event.preventDefault();
       nextIndex = (currentIndex - 1 + this.items.length) % this.items.length;
     } else if (event.key === 'Home') {

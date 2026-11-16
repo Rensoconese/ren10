@@ -172,6 +172,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - This contract is CSS-first; do not introduce JavaScript unless the source component already owns that behavior.
+- Right-to-left: a closed `.ren-ai-tool-call` points its disclosure marker at the inline-end side (left under `dir="rtl"`); open, it points down in either direction.
 
 ## Related Files
 

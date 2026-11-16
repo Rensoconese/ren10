@@ -34,7 +34,7 @@
 
   /* ═══ TRACK FILL WITH CSS VARIABLE ═══ */
   background: linear-gradient(
-    to right,
+    var(--slider-fill-to, to right),
     var(--color-accent) 0%,
     var(--color-accent) var(--value, 0%),
     var(--color-fill-active) var(--value, 0%),
@@ -146,7 +146,7 @@
   &.ren-slider-sm input[type="range"] {
     height: 4px;
     background: linear-gradient(
-      to right,
+      var(--slider-fill-to, to right),
       var(--color-accent) 0%,
       var(--color-accent) var(--value, 0%),
       var(--color-fill-active) var(--value, 0%),
@@ -167,7 +167,7 @@
   &.ren-slider-lg input[type="range"] {
     height: 8px;
     background: linear-gradient(
-      to right,
+      var(--slider-fill-to, to right),
       var(--color-accent) 0%,
       var(--color-accent) var(--value, 0%),
       var(--color-fill-active) var(--value, 0%),
@@ -190,7 +190,7 @@
 .ren-slider-track {
   &.ren-slider-success input[type="range"] {
     background: linear-gradient(
-      to right,
+      var(--slider-fill-to, to right),
       var(--color-success) 0%,
       var(--color-success) var(--value, 0%),
       var(--color-fill-active) var(--value, 0%),
@@ -208,7 +208,7 @@
 
   &.ren-slider-warning input[type="range"] {
     background: linear-gradient(
-      to right,
+      var(--slider-fill-to, to right),
       var(--color-warning) 0%,
       var(--color-warning) var(--value, 0%),
       var(--color-fill-active) var(--value, 0%),
@@ -226,7 +226,7 @@
 
   &.ren-slider-danger input[type="range"] {
     background: linear-gradient(
-      to right,
+      var(--slider-fill-to, to right),
       var(--color-danger) 0%,
       var(--color-danger) var(--value, 0%),
       var(--color-fill-active) var(--value, 0%),
@@ -241,6 +241,15 @@
       background: var(--color-danger);
     }
   }
+}
+
+/* ═══ RIGHT-TO-LEFT ═══
+   A native range input mirrors under dir="rtl": the minimum is on the right
+   and the thumb travels left as the value grows. Gradients have no logical
+   direction keyword, so the fill is told to start from the same side. */
+.ren-slider-track:dir(rtl):not(.ren-slider-vertical),
+.ren-slider-range:dir(rtl) {
+  --slider-fill-to: to left;
 }
 
 /* ═══ VERTICAL ORIENTATION ═══ */
@@ -274,7 +283,7 @@
     height: 6px;
     border-radius: var(--radius-full);
     background: linear-gradient(
-      to right,
+      var(--slider-fill-to, to right),
       var(--color-fill-active) 0 var(--value-start, 0%),
       var(--ren-slider-fill-color, var(--color-accent)) var(--value-start, 0%) var(--value-end, 100%),
       var(--color-fill-active) var(--value-end, 100%) 100%
@@ -363,6 +372,6 @@
 }
 .ren-slider-track input[type="range"]::-webkit-slider-thumb { inline-size: var(--ren-slider-thumb-size, 20px); block-size: var(--ren-slider-thumb-size, 20px); background: var(--ren-slider-thumb-bg, var(--color-surface)); border-color: var(--ren-slider-thumb-border, var(--color-accent)); box-shadow: var(--ren-slider-thumb-shadow, var(--shadow-sm)); }
 .ren-slider-track input[type="range"]::-moz-range-thumb { inline-size: var(--ren-slider-thumb-size, 20px); block-size: var(--ren-slider-thumb-size, 20px); background: var(--ren-slider-thumb-bg, var(--color-surface)); border-color: var(--ren-slider-thumb-border, var(--color-accent)); box-shadow: var(--ren-slider-thumb-shadow, var(--shadow-sm)); }
-.ren-slider-track input[type="range"] { background-image: linear-gradient(to right, var(--ren-slider-fill-color, var(--color-accent)) 0%, var(--ren-slider-fill-color, var(--color-accent)) var(--value, 0%), var(--ren-slider-track-bg, var(--color-fill-active)) var(--value, 0%), var(--ren-slider-track-bg, var(--color-fill-active)) 100%); }
+.ren-slider-track input[type="range"] { background-image: linear-gradient(var(--slider-fill-to, to right), var(--ren-slider-fill-color, var(--color-accent)) 0%, var(--ren-slider-fill-color, var(--color-accent)) var(--value, 0%), var(--ren-slider-track-bg, var(--color-fill-active)) var(--value, 0%), var(--ren-slider-track-bg, var(--color-fill-active)) 100%); }
 
 }

@@ -6,7 +6,7 @@
  * Uses only public DOM/ARIA contracts. Does not access private custom-element
  * properties. Relies on tests/utils/static-server.cjs and block-quality.cjs.
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect, focusInView } = require('../utils/navbar-harness.cjs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
 const { startStaticServer } = require('../utils/static-server.cjs');
@@ -40,9 +40,6 @@ async function gotoBlock(page, origin) {
 test.describe('Navbar 28 — Topics Collection Cards Mega Menu (navbar28)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 25000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
@@ -348,7 +345,7 @@ test.describe('Navbar 28 — Topics Collection Cards Mega Menu (navbar28)', () =
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     const peer = page.locator('#rmcc-primary-links > li > a.ren-nav-link').first();
-    await peer.focus();
+    await focusInView(peer);
     await peer.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(disclosure).not.toHaveAttribute('open', '');

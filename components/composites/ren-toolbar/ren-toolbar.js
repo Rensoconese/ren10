@@ -2,7 +2,8 @@
    RenDS — Toolbar Keyboard Navigation
    ============================================
    Implements WAI-ARIA Toolbar pattern:
-   - Arrow Left/Right: move between items
+   - Arrow Left/Right: move between items (swapped under dir="rtl",
+     so the arrow always points at the item it moves to)
    - Home: first item
    - End: last item
    - Tab: exits toolbar
@@ -36,13 +37,16 @@ export function initToolbar(toolbar) {
     [...toolbar.querySelectorAll('.ren-toolbar-item:not(:disabled):not([aria-disabled="true"])')];
 
   const isVertical = toolbar.classList.contains('ren-toolbar-vertical');
-  const prevKey = isVertical ? 'ArrowUp' : 'ArrowLeft';
-  const nextKey = isVertical ? 'ArrowDown' : 'ArrowRight';
 
   toolbar.addEventListener('keydown', (e) => {
     const items = getItems();
     const current = items.indexOf(document.activeElement);
     if (current === -1) return;
+
+    // Horizontal arrows are visual: under RTL the next item is to the left.
+    const rtl = !isVertical && getComputedStyle(toolbar).direction === 'rtl';
+    const prevKey = isVertical ? 'ArrowUp' : rtl ? 'ArrowRight' : 'ArrowLeft';
+    const nextKey = isVertical ? 'ArrowDown' : rtl ? 'ArrowLeft' : 'ArrowRight';
 
     let next = -1;
 

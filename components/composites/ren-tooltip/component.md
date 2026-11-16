@@ -133,6 +133,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: `placement` names a physical side. `left` and `right` do not flip under `dir="rtl"`.
 
 ## Related Files
 

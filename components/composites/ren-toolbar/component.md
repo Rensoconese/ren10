@@ -142,6 +142,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: in a horizontal toolbar ArrowLeft moves to the next item and ArrowRight to the previous one under `dir="rtl"`. Home and End are unchanged, and `.ren-toolbar-vertical` ignores direction.
 
 ## Related Files
 

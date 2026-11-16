@@ -81,6 +81,12 @@
   display: inline;
 }
 
+/* Arrows are not bidi-mirrored characters: the "leaves this page" arrow has to
+   be told to point at the inline-end side. */
+.ren-link-external:dir(rtl)::after {
+  content: ' ↖';
+}
+
 /* ─── Nav link (block-level, with padding for touch target) ─── */
 .ren-link-nav {
   display: flex;
@@ -118,7 +124,7 @@
 .ren-link-skip {
   position: absolute;
   top: -100%;
-  left: var(--space-3);
+  inset-inline-start: var(--space-3);
   padding: var(--space-2) var(--space-4);
   background-color: var(--color-accent);
   color: var(--color-on-accent);

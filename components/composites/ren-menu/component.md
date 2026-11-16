@@ -76,7 +76,8 @@ accessibility:
   required:
     - "<ren-menu> sets role=\"menu\" on itself and forces role=\"menuitem\" / \"menuitemcheckbox\" / \"menuitemradio\" on its children — do not override."
     - "Trigger receives aria-haspopup=\"menu\", aria-controls=\"<menu-id>\", and aria-expanded that flips with open()/close()."
-    - "Keyboard contract: ArrowDown/ArrowUp on the trigger opens the menu; Arrow keys navigate vertically with loop; Home/End jump to first/last; typeahead matches printable characters; Enter/Space selects."
+    - "Keyboard contract: ArrowDown/ArrowUp on the trigger opens the menu; Arrow keys navigate vertically with loop; Home/End jump to first/last; typeahead matches printable characters; Enter/Space selects by dispatching a real click on the item, so click listeners run for keyboard users too. Tab closes the menu and moves on from the trigger; every item stays tabindex=\"-1\"."
+    - "Hover focuses an item only when the pointer really moves: a menu that opens or scrolls under a resting pointer leaves focus to the keyboard."
     - "Checkbox / radio items toggle aria-checked; radio items reset siblings within .ren-menu-radio-group (or the menu root) before activating themselves."
     - "Dismissable layer closes on Escape and outside click via the shared dismissable util; do not block its event listeners."
     - "Danger items rely on a paired text label (Delete, Remove) — color alone (--color-danger-subtle) is not sufficient."
@@ -156,6 +157,7 @@ Theme through these public custom properties before reaching for selectors.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - Agent safety: a destructive or outward-facing `menuitem` (Delete, Send, Publish) carries `data-agent-confirm="<what it does>"` on that item only, unless it opens a confirmation dialog — then the dialog's confirming button carries it. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
+- Right-to-left: the side in `placement` (`top`, `bottom`, `left`, `right`) is physical and never flips; the `-start` / `-end` half follows the text direction, so `bottom-start` lines the menu up with the trigger's right edge under `dir="rtl"`. The tick of a checked item is not mirrored.
 
 ## Related Files
 

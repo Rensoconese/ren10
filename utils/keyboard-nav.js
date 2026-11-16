@@ -7,7 +7,8 @@
  * Implements "roving tabindex" pattern (WAI-ARIA APG):
  * - Only the active item has tabindex="0"
  * - All other items have tabindex="-1"
- * - Arrow keys move between items
+ * - Arrow keys move between items; in a horizontal collection Left/Right
+ *   follow the text direction, so under dir="rtl" ArrowLeft is "next"
  * - Home/End jump to first/last
  * - Typeahead search finds items by text
  *
@@ -38,7 +39,9 @@
  * @param {boolean} options.loop - Wrap around at first/last item
  * @param {boolean} options.typeahead - Enable type-to-search
  * @param {number} options.typeaheadTimeout - Ms before clearing search buffer
- * @param {boolean} options.focusOnHover - Focus items on mouse hover
+ * @param {boolean} options.focusOnHover - Activate items the pointer moves onto.
+ *   Only real pointer movement counts: a list that opens or scrolls under a
+ *   resting pointer never changes the active item.
  * @param {Function|null} options.onActivate - Callback when active item changes (arrow keys)
  * @param {Function|null} options.onSelect - Callback when item is selected (Enter/Space)
  * @param {string} options.activeAttribute - Data attribute for active state
@@ -62,6 +65,11 @@ export function createKeyboardNav(container, options = {}) {
   let typeaheadBuffer = '';
   let typeaheadTimer = null;
 
+  // Hover guard (focusOnHover). While suspended, the pointer has to really
+  // move before it may change the active item; see handlePointerMove().
+  let hoverSuspended = true;
+  let restingPoint = null;
+
   // ─── Item Management ───
 
   function getItems() {
@@ -79,7 +87,16 @@ export function createKeyboardNav(container, options = {}) {
 
   // ─── Activation (roving tabindex) ───
 
+  /**
+   * Activate an item from the keyboard or from code. The keyboard is driving
+   * from here on, so hover stays out of the way until the pointer really moves.
+   */
   function activateItem(index, shouldFocus = true) {
+    suspendHover();
+    setActiveItem(index, shouldFocus);
+  }
+
+  function setActiveItem(index, shouldFocus) {
     const items = getItems();
     if (items.length === 0) return;
 
@@ -167,11 +184,21 @@ export function createKeyboardNav(container, options = {}) {
   // ─── Event Handlers ───
 
   function handleKeyDown(event) {
+    // Any key means the keyboard is driving, including keys the browser
+    // handles itself (PageDown scrolling the list under a resting pointer).
+    suspendHover();
+
     const items = getItems();
     if (items.length === 0) return;
 
     const isVertical = orientation === 'vertical' || orientation === 'both';
     const isHorizontal = orientation === 'horizontal' || orientation === 'both';
+
+    // Left/Right are visual keys: the one pointing at the inline-end side
+    // moves forward. Read per key press so a `dir` change needs no re-attach.
+    const rtl = isHorizontal && getComputedStyle(container).direction === 'rtl';
+    const nextKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const previousKey = rtl ? 'ArrowRight' : 'ArrowLeft';
 
     let handled = false;
 
@@ -190,14 +217,14 @@ export function createKeyboardNav(container, options = {}) {
         }
         break;
 
-      case 'ArrowRight':
+      case nextKey:
         if (isHorizontal) {
           activateNext();
           handled = true;
         }
         break;
 
-      case 'ArrowLeft':
+      case previousKey:
         if (isHorizontal) {
           activatePrevious();
           handled = true;
@@ -216,26 +243,20 @@ export function createKeyboardNav(container, options = {}) {
 
       case 'Enter':
       case ' ':
-        if (event.key === ' ' && typeahead) {
-          // Space might be typeahead
-          // Only select if no typeahead buffer
-          if (typeaheadBuffer === '') {
-            const item = getActiveItem();
-            if (item) {
-              onSelect?.(item, activeIndex);
-              handled = true;
-            }
-          } else {
-            handleTypeahead(' ');
-            handled = true;
-          }
-        } else {
+        if (event.key === ' ' && typeahead && typeaheadBuffer !== '') {
+          // Space inside a typeahead search is part of the search string.
+          handleTypeahead(' ');
+          handled = true;
+        } else if (onSelect) {
           const item = getActiveItem();
           if (item) {
-            onSelect?.(item, activeIndex);
+            onSelect(item, activeIndex);
             handled = true;
           }
         }
+        // With no onSelect the key belongs to the item itself: a native radio
+        // checks on Space, a button clicks. Claiming it here used to swallow
+        // Space on an unchecked radio.
         break;
 
       default:
@@ -253,13 +274,47 @@ export function createKeyboardNav(container, options = {}) {
     }
   }
 
-  function handleMouseEnter(event) {
-    if (!focusOnHover) return;
+  // ─── Pointer hover (focusOnHover) ───
+  //
+  // Browsers re-target hover when content moves under a pointer that is not
+  // moving. A list that opens or scrolls beneath a resting pointer fires
+  // pointerover / mouseenter on whatever lands there, and some engines add a
+  // move event that repeats the last coordinates. Activating on those hands
+  // the active item to wherever the pointer happens to rest, so a keyboard
+  // user loses their place (and, in a scrolling list, can never get past the
+  // item under the pointer).
+  //
+  // So only pointermove is listened to, and after every keyboard or
+  // programmatic activation the pointer must prove that it moved: the first
+  // position seen is only recorded, and hover takes over again once a later
+  // pointermove reports different screen coordinates. Screen coordinates are
+  // the ones that stay put while the page or an ancestor frame scrolls.
 
-    const items = getItems();
-    const index = items.indexOf(event.target.closest(selector));
-    if (index !== -1) {
-      activateItem(index, false); // Don't steal keyboard focus
+  function suspendHover() {
+    hoverSuspended = true;
+    restingPoint = null;
+  }
+
+  function pointerReallyMoved(event) {
+    if (!hoverSuspended) return true;
+
+    const moved =
+      restingPoint !== null &&
+      (restingPoint.x !== event.screenX || restingPoint.y !== event.screenY);
+    restingPoint = { x: event.screenX, y: event.screenY };
+    if (moved) hoverSuspended = false;
+    return moved;
+  }
+
+  function handlePointerMove(event) {
+    // A finger dragging over the list is scrolling it, not hovering.
+    if (event.pointerType === 'touch') return;
+    if (!pointerReallyMoved(event)) return;
+
+    const target = event.target instanceof Element ? event.target.closest(selector) : null;
+    const index = target ? getItems().indexOf(target) : -1;
+    if (index !== -1 && index !== activeIndex) {
+      setActiveItem(index, false); // Don't steal keyboard focus
     }
   }
 
@@ -295,15 +350,14 @@ export function createKeyboardNav(container, options = {}) {
     attached = true;
 
     initializeTabindex();
+    suspendHover();
 
     container.addEventListener('keydown', handleKeyDown);
     container.addEventListener('focusin', handleFocusIn);
 
     if (focusOnHover) {
-      const items = getItems();
-      items.forEach((item) => {
-        item.addEventListener('mouseenter', handleMouseEnter);
-      });
+      // Delegated, so items added after attach() are covered too.
+      container.addEventListener('pointermove', handlePointerMove);
     }
   }
 
@@ -315,10 +369,7 @@ export function createKeyboardNav(container, options = {}) {
     container.removeEventListener('focusin', handleFocusIn);
 
     if (focusOnHover) {
-      const items = getItems();
-      items.forEach((item) => {
-        item.removeEventListener('mouseenter', handleMouseEnter);
-      });
+      container.removeEventListener('pointermove', handlePointerMove);
     }
 
     clearTimeout(typeaheadTimer);

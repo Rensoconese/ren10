@@ -60,6 +60,7 @@ export class TestElement extends EventTarget {
   set name(value) { this.setAttribute('name', value); }
   contains(element) { return element === this || this.children.some((child) => child.contains(element)); }
   get firstChild() { return this.children[0] || null; }
+  get nodeType() { return 1; }
   matches(selector) {
     return selector.split(',').some((part) => {
       const tag = part.trim().match(/^[a-z][\w-]*/i)?.[0];
@@ -92,6 +93,18 @@ export function installMinimalDOM() {
   document.documentElement = { lang: 'en' };
   document.createElement = (tag) => new TestElement(tag);
   document.createDocumentFragment = () => new TestElement('#fragment');
+  // Elements only, in document order: this DOM has no text nodes.
+  globalThis.Node = { ELEMENT_NODE: 1, TEXT_NODE: 3 };
+  globalThis.NodeFilter = { SHOW_ELEMENT: 1, SHOW_TEXT: 4 };
+  const descendants = (root) => root.children.flatMap((child) => [child, ...descendants(child)]);
+  document.createTreeWalker = (root) => {
+    const nodes = descendants(root);
+    let index = -1;
+    return { nextNode: () => nodes[++index] ?? null };
+  };
+  // No layout here, so no direction either: components that ask which way the
+  // text runs (to decide what ArrowLeft means) get the default.
+  globalThis.getComputedStyle = () => ({ direction: 'ltr' });
 }
 
 export function element(tag, attributes = {}, text = '') {

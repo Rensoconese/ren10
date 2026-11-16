@@ -11,7 +11,9 @@ jobs:
       matrix:
         browser: [chromium, firefox, webkit]
     continue-on-error: ${{ matrix.browser != 'chromium' }}
-    runs-on: ubuntu-latest
+    # Playwright 1.59 cannot install browsers on ubuntu-latest (26.04); keep in
+    # step with the jobs pinned in ci.yml.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6

@@ -53,6 +53,9 @@ const ITEM_SELECTOR =
   '[role="menuitemradio"]:not(.ren-menubar-trigger)';
 const MENU_SELECTOR = '.ren-menubar-menu';
 
+// For ids the component has to invent so a menu can name its trigger.
+let generatedIds = 0;
+
 export class RenMenubar extends HTMLElement {
   /** @type {AbortController|null} */
   #listeners = null;
@@ -62,6 +65,15 @@ export class RenMenubar extends HTMLElement {
 
   /** Open submenus, innermost last. Each entry owns its own layer. */
   #submenuStack = [];
+
+  /**
+   * Hover guard. After a key press the pointer has to really move before it
+   * may move focus or switch menus; see #pointerReallyMoved().
+   */
+  #hoverSuspended = false;
+  #restingPoint = null;
+  /** Trigger or item the pointer is on, so a move within it runs once. */
+  #hovered = null;
 
   constructor() {
     super();
@@ -134,9 +146,18 @@ export class RenMenubar extends HTMLElement {
       trigger.setAttribute('aria-haspopup', 'menu');
       trigger.setAttribute('aria-expanded', 'false');
       trigger.setAttribute('role', 'menuitem');
+      // Roving tabindex: the menubar is one tab stop. The first trigger holds
+      // it until another trigger takes focus (APG Menubar).
+      trigger.setAttribute('tabindex', index === 0 ? '0' : '-1');
+      trigger.addEventListener('focus', () => this.#setTabStop(index), { signal });
       trigger.addEventListener('click', () => this.toggleMenu(index), { signal });
       trigger.addEventListener('keydown', (e) => this.handleTriggerKeydown(e, index), { signal });
-      trigger.addEventListener('mouseenter', () => this.handleTriggerMouseenter(index), { signal });
+      // A menu is named by the item that opens it.
+      const menu = this.menus[index];
+      if (menu && !menu.hasAttribute('aria-label') && !menu.hasAttribute('aria-labelledby')) {
+        if (!trigger.id) trigger.id = `ren-menubar-trigger-${++generatedIds}`;
+        menu.setAttribute('aria-labelledby', trigger.id);
+      }
     });
 
     // Set up menu items at every depth (top-level panels and nested submenus).
@@ -148,8 +169,15 @@ export class RenMenubar extends HTMLElement {
       }
       item.addEventListener('click', (e) => this.handleItemClick(e, item), { signal });
       item.addEventListener('keydown', (e) => this.handleItemKeydown(e, item), { signal });
-      item.addEventListener('mouseenter', () => this.handleItemMouseenter(item), { signal });
     });
+
+    // Hover (focus an item, glide between menus, open a submenu) follows real
+    // pointer movement only. pointermove, not mouseenter: a menu that opens or
+    // scrolls under a resting pointer fires mouseenter on whatever lands there.
+    menubarEl.addEventListener('pointermove', (e) => this.#handlePointerMove(e), { signal });
+    menubarEl.addEventListener('pointerleave', () => { this.#hovered = null; }, { signal });
+    // Any key means the keyboard is driving, wherever focus is in the menubar.
+    menubarEl.addEventListener('keydown', () => this.#suspendHover(), { capture: true, signal });
 
     // Submenu parents advertise their popup and start collapsed.
     menubarEl.querySelectorAll('.ren-menubar-submenu').forEach((parentItem) => {
@@ -158,7 +186,35 @@ export class RenMenubar extends HTMLElement {
       parentItem.setAttribute('aria-haspopup', 'menu');
       parentItem.setAttribute('aria-expanded', 'false');
       panel.setAttribute('hidden', '');
+      if (!panel.hasAttribute('aria-label') && !panel.hasAttribute('aria-labelledby')) {
+        if (!parentItem.id) parentItem.id = `ren-menubar-item-${++generatedIds}`;
+        panel.setAttribute('aria-labelledby', parentItem.id);
+      }
     });
+  }
+
+  /**
+   * Move the menubar's single tab stop to the trigger at `index`.
+   * @private
+   */
+  #setTabStop(index) {
+    this.triggers.forEach((trigger, i) => {
+      trigger.setAttribute('tabindex', i === index ? '0' : '-1');
+    });
+  }
+
+  /**
+   * Arrow keys on the menubar itself. With every menu closed they only move
+   * focus along the bar; while a menu is open the next trigger's menu opens
+   * in its place, which is what APG describes for leaving a submenu sideways.
+   * @private
+   */
+  #moveAlongBar(index) {
+    if (this.activeMenuIndex !== -1) {
+      this.openMenu(index);
+      return;
+    }
+    this.triggers[index].focus();
   }
 
   /* ===================================================================
@@ -230,6 +286,68 @@ export class RenMenubar extends HTMLElement {
   #eventItem(event) {
     const target = event.target instanceof Element ? event.target : null;
     return target?.closest(ITEM_SELECTOR) || null;
+  }
+
+  /* ===================================================================
+     POINTER HOVER
+     =================================================================== */
+
+  /**
+   * The keyboard is driving, so hover stays out of the way until the pointer
+   * really moves.
+   * @private
+   */
+  #suspendHover() {
+    this.#hoverSuspended = true;
+    this.#restingPoint = null;
+    this.#hovered = null;
+  }
+
+  /**
+   * True once the pointer has moved since the keyboard last drove the menubar.
+   *
+   * Browsers re-target hover when content moves under a pointer that is not
+   * moving, and some add a move event that repeats the last coordinates.
+   * Following those would hand focus to wherever the pointer rests, so a
+   * keyboard user would lose their place. The first position seen after a key
+   * press is only recorded; hover takes over again when a later pointermove
+   * reports different screen coordinates (the ones that stay put while the
+   * page or an ancestor frame scrolls).
+   * @private
+   */
+  #pointerReallyMoved(event) {
+    if (!this.#hoverSuspended) return true;
+
+    const rest = this.#restingPoint;
+    const moved = rest !== null && (rest.x !== event.screenX || rest.y !== event.screenY);
+    this.#restingPoint = { x: event.screenX, y: event.screenY };
+    if (moved) this.#hoverSuspended = false;
+    return moved;
+  }
+
+  /**
+   * Route real pointer movement to the trigger or item under it, once per
+   * element entered.
+   * @private
+   */
+  #handlePointerMove(event) {
+    if (event.pointerType === 'touch' || !this.#pointerReallyMoved(event)) return;
+
+    const target = event.target instanceof Element ? event.target : null;
+    // The nearest trigger, item or panel: padding of a nested panel belongs to
+    // the panel, not to the submenu item that contains it.
+    const hovered =
+      target?.closest(`.ren-menubar-trigger, ${ITEM_SELECTOR}, ${MENU_SELECTOR}`) || null;
+    if (hovered === this.#hovered) return;
+    this.#hovered = hovered;
+    if (!hovered || hovered.matches(MENU_SELECTOR)) return;
+
+    const triggerIndex = this.triggers.indexOf(hovered);
+    if (triggerIndex !== -1) {
+      this.handleTriggerMouseenter(triggerIndex);
+    } else {
+      this.handleItemMouseenter(hovered);
+    }
   }
 
   /* ===================================================================
@@ -483,23 +601,40 @@ export class RenMenubar extends HTMLElement {
      =================================================================== */
 
   /**
+   * Left/Right as the component reasons about them: "ArrowRight" means "toward
+   * the inline-end side", which is where the next menu sits and where a
+   * submenu opens. Under dir="rtl" that side is on the left, so the two keys
+   * swap; every other key passes through.
+   */
+  #inlineKey(key) {
+    if (key !== 'ArrowLeft' && key !== 'ArrowRight') return key;
+    if (getComputedStyle(this).direction !== 'rtl') return key;
+    return key === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft';
+  }
+
+  /**
    * Handle keyboard events on trigger buttons
    */
   handleTriggerKeydown(event, triggerIndex) {
-    const { key } = event;
+    const key = this.#inlineKey(event.key);
 
-    // ArrowRight: move to next trigger
+    // ArrowRight (inline-end): move to next trigger
     if (key === 'ArrowRight') {
       event.preventDefault();
       const nextIndex = (triggerIndex + 1) % this.triggers.length;
-      this.openMenu(nextIndex);
+      this.#moveAlongBar(nextIndex);
     }
 
-    // ArrowLeft: move to previous trigger
+    // ArrowLeft (inline-start): move to previous trigger
     if (key === 'ArrowLeft') {
       event.preventDefault();
       const prevIndex = (triggerIndex - 1 + this.triggers.length) % this.triggers.length;
-      this.openMenu(prevIndex);
+      this.#moveAlongBar(prevIndex);
+    }
+
+    // Tab leaves the menubar; whatever is open closes without taking focus.
+    if (key === 'Tab') {
+      this.closeAll({ focusTrigger: false });
     }
 
     // ArrowDown: open menu
@@ -511,13 +646,13 @@ export class RenMenubar extends HTMLElement {
     // Home: first trigger
     if (key === 'Home') {
       event.preventDefault();
-      this.openMenu(0);
+      this.#moveAlongBar(0);
     }
 
     // End: last trigger
     if (key === 'End') {
       event.preventDefault();
-      this.openMenu(this.triggers.length - 1);
+      this.#moveAlongBar(this.triggers.length - 1);
     }
   }
 
@@ -565,7 +700,7 @@ export class RenMenubar extends HTMLElement {
   handleItemKeydown(event, item) {
     if (this.#eventItem(event) !== item) return;
 
-    const { key } = event;
+    const key = this.#inlineKey(event.key);
     const menu = item.closest(MENU_SELECTOR);
     if (!menu) return;
 
@@ -587,7 +722,8 @@ export class RenMenubar extends HTMLElement {
       if (prevItem) this.focusItem(prevItem);
     }
 
-    // ArrowRight: open submenu, else move to the next menubar menu
+    // ArrowRight (inline-end, where submenus open): open submenu, else move
+    // to the next menubar menu
     if (key === 'ArrowRight') {
       event.preventDefault();
       if (this.#isSubmenuParent(item)) {
@@ -598,7 +734,8 @@ export class RenMenubar extends HTMLElement {
       }
     }
 
-    // ArrowLeft: close submenu (focus the parent item), else previous menu
+    // ArrowLeft (inline-start): close submenu (focus the parent item), else
+    // previous menu
     if (key === 'ArrowLeft') {
       event.preventDefault();
       if (inSubmenu) {
@@ -615,8 +752,17 @@ export class RenMenubar extends HTMLElement {
       if (this.#isSubmenuParent(item)) {
         this.openSubmenu(item, { focusFirst: true });
       } else {
-        this.activateItem(item);
+        // A real click, so click listeners on the item run for keyboard
+        // users too; handleItemClick then activates it.
+        item.click();
       }
+    }
+
+    // Tab leaves the menubar and closes every menu. Focus goes back to the
+    // owning trigger first and the key is not prevented, so the browser moves
+    // on from the menubar's tab stop in the direction the user asked for.
+    if (key === 'Tab') {
+      this.closeAll({ focusTrigger: true });
     }
 
     // Escape is owned by the shared dismissable layer stack: the capture-phase

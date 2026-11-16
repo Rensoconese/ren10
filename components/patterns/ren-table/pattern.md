@@ -170,6 +170,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: columns run right to left under `dir="rtl"`. ArrowLeft moves focus to the next column and ArrowRight to the previous one; a resize handle sits on its column's inline-end edge (the left) and widens the column when dragged left.
 
 ## Events
 

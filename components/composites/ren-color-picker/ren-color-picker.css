@@ -152,6 +152,14 @@
   }
 }
 
+/* A closed popover must not render. `display: flex` above is an author
+   rule, so it beats the browser's own
+   `[popover]:not(:popover-open) { display: none }` and left the panel painted
+   on the page after it closed (and an empty box before it ever opened). */
+.ren-color-picker-dropdown:not(:popover-open) {
+  display: none;
+}
+
 .ren-color-picker-dropdown[data-side="bottom"],
 .ren-color-picker-dropdown:not([data-side]) {
   position-area: bottom span-all;
@@ -169,16 +177,15 @@
 
 .ren-color-picker-dropdown[data-side="right"] {
   position-area: right span-all;
-  margin-block: 0;
-  margin-inline-start: var(--space-2);
-  margin-inline-end: 0;
+  /* Physical, like the side: the gap sits between the overlay and its trigger.
+     As a logical margin it moved to the far side under RTL and the overlay
+     touched the trigger. */
+  margin: 0 0 0 var(--space-2);
 }
 
 .ren-color-picker-dropdown[data-side="left"] {
   position-area: left span-all;
-  margin-block: 0;
-  margin-inline-start: 0;
-  margin-inline-end: var(--space-2);
+  margin: 0 var(--space-2) 0 0;
 }
 
 @supports not ((anchor-name: --ren-anchor) and
@@ -199,6 +206,17 @@
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* ═══ DIRECTION ═══
+   The spectrum is not mirrored under dir="rtl": hue runs red to red and
+   saturation grows to the right in every script, as in a native colour picker.
+   Pinning the direction keeps the gradients, the handles (placed with a
+   physical `left`) and the arrow keys in agreement. */
+.ren-color-picker-saturation,
+.ren-color-picker-hue,
+.ren-color-picker-alpha {
+  direction: ltr;
 }
 
 /* ═══ SATURATION/BRIGHTNESS AREA ═══ */
@@ -304,6 +322,17 @@
   box-shadow: 0 0 0 1px rgb(0, 0, 0, 0.3);
   pointer-events: none;
   transform: translateY(-50%);
+}
+
+/* ═══ SLIDER FOCUS ═══ */
+/* The saturation area, the hue slider and the alpha slider are tab stops.
+   The ring is drawn outside the track, where it reads against any hue. */
+.ren-color-picker-saturation:focus-visible,
+.ren-color-picker-hue:focus-visible,
+.ren-color-picker-alpha:focus-visible {
+  outline: none;
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-input-focus-ring);
 }
 
 /* ═══ COLOR PREVIEW SWATCH ═══ */
@@ -544,7 +573,7 @@
   border-color: var(--color-border);
 }
 
-.ren-color-picker-swatch[aria-selected="true"] {
+.ren-color-picker-swatch[aria-current="true"] {
   border-color: var(--color-accent);
   box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
 }

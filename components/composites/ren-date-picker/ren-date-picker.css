@@ -139,16 +139,15 @@
 
 .ren-date-picker-dropdown[data-side="right"] {
   position-area: right span-all;
-  margin-block: 0;
-  margin-inline-start: var(--space-2);
-  margin-inline-end: 0;
+  /* Physical, like the side: the gap sits between the overlay and its trigger.
+     As a logical margin it moved to the far side under RTL and the overlay
+     touched the trigger. */
+  margin: 0 0 0 var(--space-2);
 }
 
 .ren-date-picker-dropdown[data-side="left"] {
   position-area: left span-all;
-  margin-block: 0;
-  margin-inline-start: 0;
-  margin-inline-end: var(--space-2);
+  margin: 0 var(--space-2) 0 0;
 }
 
 /* ═══ FALLBACK POSITIONING (no complete anchor support) ═══ */
@@ -235,6 +234,12 @@
 .ren-date-picker.ren-date-picker-range .ren-date-picker-value::after {
   content: ' → ';
   margin: 0 var(--space-1);
+}
+
+/* From start to end: under RTL the end is on the left, and an arrow is not a
+   character the bidi algorithm mirrors. */
+.ren-date-picker.ren-date-picker-range:dir(rtl) .ren-date-picker-value::after {
+  content: ' ← ';
 }
 
 /* ═══ DISABLED STATE ═══ */

@@ -52,7 +52,7 @@ canonicalImports:
 
 requiredMarkup:
   - "Declare the trigger region with data-context=\"<menu-id>\" on any element; do not use inline oncontextmenu attributes."
-  - "Menu root is <ren-context-menu id=\"<menu-id>\">; the component applies the .ren-context-menu, role=menu, and manual popover semantics."
+  - "Menu root is <ren-context-menu id=\"<menu-id>\" aria-label=\"…\">; the component applies the .ren-context-menu, role=menu, and manual popover semantics. The aria-label names the menu: no button controls it, so nothing else can."
   - "Items are real <button class=\"ren-menu-item\"> elements; separators are <hr class=\"ren-menu-separator\">."
   - "Destructive actions use .ren-menu-item-danger (defined in ren-menu.css); do not invent custom danger classes."
   - "Position is set by JS — do not write inline top/left on the menu element."
@@ -78,7 +78,7 @@ tokenPolicy:
 accessibility:
   required:
     - "Menu root has role=\"menu\" (set by JS) and each .ren-menu-item has role=\"menuitem\"; do not nest interactive controls inside items."
-    - "Keyboard: Arrow Up/Down moves focus across items, Home/End jump to first/last, Escape closes the menu, Enter / Space activates."
+    - "Keyboard: Arrow Up/Down moves focus across items, Home/End jump to first/last, Escape closes the menu, Enter / Space activates. Tab closes the menu and moves on from the trigger; items are tabindex=\"-1\" (set by the component), so Tab never walks through them."
     - "Escape closes only the topmost overlay: with the menu open inside a dialog (or under a popover) one Escape dismisses the menu and leaves the host open."
     - "Trigger must be reachable by keyboard via Shift+F10 (or the dedicated context-menu key) — never gate the menu behind right-click only."
     - "Disabled items set aria-disabled=\"true\" AND skip in keyboard navigation order."
@@ -99,9 +99,9 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 
 ```html
 <div data-context="editor-actions" tabindex="0">Right-click me</div>
-<ren-context-menu id="editor-actions">
-  <button class="ren-menu-item" role="menuitem">Copy</button>
-  <button class="ren-menu-item" role="menuitem">Paste</button>
+<ren-context-menu id="editor-actions" aria-label="Editor actions">
+  <button class="ren-menu-item" role="menuitem" type="button">Copy</button>
+  <button class="ren-menu-item" role="menuitem" type="button">Paste</button>
 </ren-context-menu>
 ```
 
@@ -135,6 +135,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - Agent safety: a destructive or outward-facing `menuitem` carries `data-agent-confirm="<what it does>"` on that item only, unless it opens a confirmation dialog — then the dialog's confirming button carries it. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
+- Right-to-left: the menu opens toward the inline-end side of the pointer, to its left under `dir="rtl"` as native context menus do, and flips to the other side when it would leave the viewport.
 
 ## Related Files
 

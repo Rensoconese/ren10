@@ -74,7 +74,7 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Wrap the carousel with role=\"region\" (or role=\"group\") and an accessible name so screen readers can label the collection."
+    - "Wrap the carousel with role=\"region\" (or role=\"group\") and an accessible name so screen readers can label the collection. The carousel and its slides carry aria-roledescription (\"carousel\" / \"slide\"), so labels leave those words out: slides are labelled \"1 of 3\", and your own aria-label should not say \"carousel\"."
     - "Active slide / active dot use aria-current=\"true\"; never communicate the active state through color alone."
     - "Keyboard: Left/Right arrows traverse slides; arrow buttons and dots are real <button> elements with :focus-visible rings."
     - "Touch targets on .ren-carousel-prev/.ren-carousel-next stay ≥ 44px (min-width / min-height enforced in CSS)."
@@ -155,6 +155,7 @@ Theme through these public custom properties before reaching for selectors.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - Generated labels (host `aria-label`, slide `aria-label`, dots container, prev/next buttons) come from `utils/i18n.js` and are resolved once while the DOM is built, so call `setLocale()` before the component upgrades — a locale change after mount does not relabel existing carousels.
+- Right-to-left: slides run right to left under `dir="rtl"`. ArrowLeft shows the next slide and ArrowRight the previous one, and the previous/next buttons swap sides (previous on the right).
 
 ## Related Files
 

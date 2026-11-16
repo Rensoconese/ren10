@@ -36,8 +36,14 @@ export class RenHoverCard extends HTMLElement {
       return;
     }
 
-    /* ═══ ENSURE CARD HAS CLASS ═══ */
+    /* ═══ ENSURE CARD HAS CLASS AND ROLE ═══
+       The trigger points at the card with aria-describedby, which is the
+       tooltip wiring; the card therefore has to be a role="tooltip" surface
+       even when the markup leaves the role out. */
     this.card.classList.add('ren-hover-card');
+    if (!this.card.hasAttribute('role')) {
+      this.card.setAttribute('role', 'tooltip');
+    }
 
     /* ═══ SET UP POPOVER ATTRIBUTE ═══ */
     if (!this.card.hasAttribute('popover')) {

@@ -193,6 +193,7 @@ Input with leading icon:
 - Focus rings must remain visible — do not strip outline without restoring.
 - Disabled fields use `disabled` on the control. `aria-disabled` is only
   acceptable when the disabled state must remain focusable.
+- Right-to-left: `.ren-input-icon` sits on the inline-start side and `.ren-input-icon-end` on the inline-end side, and a `select.ren-input` keeps its chevron in the inline-end padding.
 
 ## Anti-Patterns
 

@@ -8,7 +8,7 @@
  * + Logo-Left Menu-Center Dropdown (navbar13)
  * + Floating Logo-Left Menu-Right Actions (navbar14 RED).
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
@@ -994,10 +994,6 @@ test.describe('Navbar Mega Menu Featured (navbar6)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
 
-  // Keep RED failures fast: absent selectors should not burn the default 30s action timeout.
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
-
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
   });
@@ -1634,10 +1630,6 @@ test.describe('Navbar Mega Menu Icons (navbar7)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
 
-  // Keep RED failures fast: absent selectors should not burn the default 30s action timeout.
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
-
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
   });
@@ -2269,10 +2261,6 @@ async function gotoLinkRailBlock(page, origin) {
 test.describe('Navbar Mega Menu Link Rail (navbar8)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  // Keep RED failures fast: absent selectors should not burn the default 30s action timeout.
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
@@ -2906,9 +2894,6 @@ async function gotoFooterMegaBlock(page, origin) {
 test.describe('Navbar Mega Menu Footer (navbar9)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
@@ -3549,9 +3534,6 @@ test.describe('Navbar Mega Menu Card Grid (navbar10)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
 
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
-
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
   });
@@ -4169,9 +4151,6 @@ const RN11_RENDER_MATRIX = JSON.parse(
 test.describe('Navbar Logo Left Menu Right Dropdown (navbar11)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
@@ -4802,9 +4781,6 @@ const RN12_RENDER_MATRIX = JSON.parse(
 test.describe('Navbar Logo Left Menu Right Grouped (navbar12)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 5000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 30000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
@@ -5479,9 +5455,6 @@ const RN13_RENDER_MATRIX = JSON.parse(
 test.describe('Navbar Logo Left Menu Center Dropdown (navbar13)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();
@@ -6180,9 +6153,6 @@ const RN14_RENDER_MATRIX = JSON.parse(
 test.describe('Navbar Floating Logo Left Menu Right Actions (navbar14)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer();

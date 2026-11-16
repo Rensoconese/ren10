@@ -49,7 +49,7 @@ canonicalImports:
 
 requiredMarkup:
   - "Place the trigger element immediately before <ren-hover-card>, OR set data-hover-trigger=\"<selector>\" on the host to point at a remote trigger."
-  - "Inside <ren-hover-card> include a real element with class=\"ren-hover-card\" (the JS will add popover=\"manual\" and the .ren-hover-card class if missing)."
+  - "Inside <ren-hover-card> include a real element with class=\"ren-hover-card\" (the JS will add popover=\"manual\", role=\"tooltip\" and the .ren-hover-card class if missing)."
   - "Use .ren-hover-card-header / -body / -footer as the three layout slots; headers should contain a real <h3> or <h4> for the accessible heading."
   - "The trigger receives aria-expanded and aria-describedby (pointing at the card) automatically — do not write either in markup, and never add aria-haspopup=\"tooltip\": \"tooltip\" is not an allowed aria-haspopup value."
   - "Give the card an id if you want a stable aria-describedby reference; without one the component generates a unique id on the card."

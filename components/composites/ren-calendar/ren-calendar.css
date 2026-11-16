@@ -218,7 +218,8 @@
     &::after {
       content: '';
       position: absolute;
-      right: -4px;
+      /* Toward the rest of the range: the following days, on the inline-end side. */
+      inset-inline-end: -4px;
       top: 0;
       bottom: 0;
       width: 50%;
@@ -236,7 +237,8 @@
     &::before {
       content: '';
       position: absolute;
-      left: -4px;
+      /* Toward the rest of the range: the preceding days, on the inline-start side. */
+      inset-inline-start: -4px;
       top: 0;
       bottom: 0;
       width: 50%;

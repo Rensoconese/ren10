@@ -172,6 +172,7 @@ Theme through these public custom properties before reaching for selectors.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - The viewport `aria-label` comes from `utils/i18n.js` (`toast.region`) and is resolved when the viewport connects, while each toast's close-button label (`toast.close`) is resolved when that toast is created — call `setLocale()` before the viewport is inserted so both read the intended locale.
+- Right-to-left: `data-position` names a physical corner and does not flip under `dir="rtl"`; choose `bottom-left` or `top-left` for a right-to-left layout. The toast content mirrors, and the countdown bar drains toward the inline-start edge.
 
 ## Related Files
 

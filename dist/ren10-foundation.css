@@ -1753,6 +1753,9 @@
     background-position: right var(--space-3) center;
     padding-inline-end: var(--space-10);
   }
+  select:dir(rtl) {
+    background-position: left var(--space-3) center;
+  }
   @supports (appearance: base-select) {
     select,
     select::picker(select) {
@@ -2020,6 +2023,12 @@
   details[open] > summary::after {
     transform: rotate(45deg);
   }
+  summary:dir(rtl)::after {
+    transform: rotate(45deg);
+  }
+  details[open] > summary:dir(rtl)::after {
+    transform: rotate(-45deg);
+  }
   summary::-webkit-details-marker {
     display: none;
   }
@@ -2102,7 +2111,7 @@
   .ren-skip-link {
     position: absolute;
     top: -100%;
-    left: var(--space-4);
+    inset-inline-start: var(--space-4);
     z-index: var(--z-max);
     padding: var(--space-2) var(--space-4);
     background-color: var(--color-accent);
@@ -3530,6 +3539,9 @@
       z-index: var(--z-max);
       animation: ren-scale-x linear both;
       animation-timeline: scroll(root);
+    }
+    .ren-scroll-progress:dir(rtl) {
+      transform-origin: right;
     }
     .ren-scroll-reveal {
       opacity: 0;

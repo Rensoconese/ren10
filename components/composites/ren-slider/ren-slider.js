@@ -134,8 +134,15 @@ export class RenSlider extends HTMLElement {
     return this.classList.contains('ren-slider-vertical');
   }
 
+  /** True when the track runs right to left: the minimum is on the right. */
+  isRtl() {
+    return !this.isVerticalRange() && getComputedStyle(this).direction === 'rtl';
+  }
+
+  /** Pointer position along the track, growing with the value. */
   pointerPosition(event) {
-    return this.isVerticalRange() ? -event.clientY : event.clientX;
+    if (this.isVerticalRange()) return -event.clientY;
+    return this.isRtl() ? -event.clientX : event.clientX;
   }
 
   valueFromPointer(input, event) {
@@ -143,9 +150,11 @@ export class RenSlider extends HTMLElement {
     const min = Number(input.min || 0);
     const max = Number(input.max || 100);
     const step = input.step === 'any' ? 0 : Number(input.step || 1);
-    const ratio = this.isVerticalRange()
-      ? Math.max(0, Math.min(1, (rect.bottom - event.clientY) / rect.height))
-      : Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    let ratio;
+    if (this.isVerticalRange()) ratio = (rect.bottom - event.clientY) / rect.height;
+    else if (this.isRtl()) ratio = (rect.right - event.clientX) / rect.width;
+    else ratio = (event.clientX - rect.left) / rect.width;
+    ratio = Math.max(0, Math.min(1, ratio));
     let value = min + ratio * (max - min);
     if (step > 0) value = min + Math.round((value - min) / step) * step;
     return Math.max(min, Math.min(max, value));

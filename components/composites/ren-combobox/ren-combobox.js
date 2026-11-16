@@ -64,6 +64,12 @@ export class RenCombobox extends HTMLElement {
   #highlightedIndex = -1;
   #upgraded = false;
   #dismissLayer = null;
+  /**
+   * Hover guard. While suspended the pointer has to really move before it may
+   * change the highlighted option; see #pointerReallyMoved().
+   */
+  #hoverSuspended = true;
+  #restingPoint = null;
 
   connectedCallback() {
     if (this.#upgraded) {
@@ -130,6 +136,17 @@ export class RenCombobox extends HTMLElement {
     this.#input.placeholder = this.getAttribute('placeholder') || t('combobox.placeholder');
     if (this.hasAttribute('disabled')) this.#input.disabled = true;
     autoId(this.#input, 'combobox-input');
+
+    // Move a host-level name onto the input. The host is a custom element
+    // with no role, so aria-label there is ignored by assistive tech, and the
+    // generated input would be left with its placeholder as its only name.
+    // Same adoption ren-number-field and ren-select do.
+    for (const attribute of ['aria-label', 'aria-labelledby']) {
+      if (this.hasAttribute(attribute)) {
+        this.#input.setAttribute(attribute, this.getAttribute(attribute));
+        this.removeAttribute(attribute);
+      }
+    }
 
     // List
     this.#list = document.createElement('div');
@@ -235,12 +252,16 @@ export class RenCombobox extends HTMLElement {
       }
     });
 
-    this.#list.addEventListener('mouseover', (e) => {
+    // Hover highlights an option only when the pointer really moved onto it.
+    // pointermove, not mouseover: a list that opens or scrolls under a resting
+    // pointer fires mouseover on whatever lands there.
+    this.#list.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch' || !this.#pointerReallyMoved(e)) return;
       const item = e.target.closest('.ren-combobox-item');
       if (!item || item.hidden) return;
       const visible = this.#getNavigableItems();
       const idx = visible.indexOf(item);
-      if (idx !== -1) this.#highlight(idx);
+      if (idx !== -1 && idx !== this.#highlightedIndex) this.#highlight(idx);
     });
 
     // Dismissal (outside pointerdown, Escape) runs through the shared layer
@@ -256,7 +277,38 @@ export class RenCombobox extends HTMLElement {
     });
   }
 
+  /**
+   * The keyboard is driving (a key, typed text, or the list just opened), so
+   * hover stays out of the way until the pointer really moves.
+   */
+  #suspendHover() {
+    this.#hoverSuspended = true;
+    this.#restingPoint = null;
+  }
+
+  /**
+   * True once the pointer has moved since the keyboard last drove the list.
+   *
+   * Browsers re-target hover when content moves under a pointer that is not
+   * moving, and some add a move event that repeats the last coordinates.
+   * Following those would hand the highlight to wherever the pointer rests, so
+   * a keyboard user would lose their place. The first position seen after a
+   * suspension is only recorded; hover takes over again when a later
+   * pointermove reports different screen coordinates (the ones that stay put
+   * while the page or an ancestor frame scrolls).
+   */
+  #pointerReallyMoved(event) {
+    if (!this.#hoverSuspended) return true;
+
+    const rest = this.#restingPoint;
+    const moved = rest !== null && (rest.x !== event.screenX || rest.y !== event.screenY);
+    this.#restingPoint = { x: event.screenX, y: event.screenY };
+    if (moved) this.#hoverSuspended = false;
+    return moved;
+  }
+
   #onInput(e) {
+    this.#suspendHover();
     const query = e.target.value;
 
     if (this.hasAttribute('async')) {
@@ -275,6 +327,7 @@ export class RenCombobox extends HTMLElement {
   }
 
   #onKeydown(e) {
+    this.#suspendHover();
     const visible = this.#getNavigableItems();
 
     switch (e.key) {
@@ -435,6 +488,7 @@ export class RenCombobox extends HTMLElement {
   open() {
     if (this.#isOpen) return;
     this.#isOpen = true;
+    this.#suspendHover();
     this.#list.hidden = false;
     this.#input.setAttribute('aria-expanded', 'true');
     this.#dismissLayer?.activate();

@@ -46,6 +46,16 @@ export function initContextMenu(menuOrId) {
 
   const isOpen = () => menu.matches(':popover-open') || menu.classList.contains('ren-open');
 
+  // A menu is one composite widget: its items are reached with the arrow
+  // keys, never with Tab (APG Menu). Items without an author tabindex are
+  // taken out of the page tab sequence; focus() still reaches them.
+  const takeItemsOutOfTabOrder = () => {
+    menu.querySelectorAll('.ren-menu-item, [role^="menuitem"]').forEach((item) => {
+      if (!item.hasAttribute('tabindex')) item.setAttribute('tabindex', '-1');
+    });
+  };
+  takeItemsOutOfTabOrder();
+
   // Dismiss behavior (click outside, Escape) runs through the shared layer
   // stack so nested/sibling overlays dismiss innermost-first instead of every
   // open overlay reacting to the same document-level event. `excludeElements`
@@ -106,16 +116,23 @@ export function initContextMenu(menuOrId) {
     dismissLayer.updateOptions({ triggerElement: returnTrigger });
     dismissLayer.activate();
 
-    // Adjust if overflows viewport
+    // The menu opens toward the inline-end side of the pointer: to its right
+    // under LTR, to its left under RTL, as native context menus do. Either way
+    // it flips to the other side of the pointer when it would leave the viewport.
     const rect = menu.getBoundingClientRect();
-    if (rect.right > window.innerWidth) {
+    const rtl = getComputedStyle(menu).direction === 'rtl';
+    if (rtl) {
+      const left = x - rect.width;
+      menu.style.left = `${left >= 0 ? left : Math.min(x, Math.max(8, window.innerWidth - rect.width - 8))}px`;
+    } else if (rect.right > window.innerWidth) {
       menu.style.left = `${Math.max(8, x - rect.width)}px`;
     }
     if (rect.bottom > window.innerHeight) {
       menu.style.top = `${Math.max(8, y - rect.height)}px`;
     }
 
-    // Focus first item
+    // Focus first item (items added since init join the roving set first)
+    takeItemsOutOfTabOrder();
     const firstItem = menu.querySelector(itemSelector);
     firstItem?.focus();
 
@@ -139,7 +156,9 @@ export function initContextMenu(menuOrId) {
       e.preventDefault();
       const rect = trigger.getBoundingClientRect();
       returnTrigger = trigger;
-      show(rect.left + 8, rect.bottom + 8, e.target);
+      // Keyboard has no pointer: anchor just inside the trigger's inline-start corner.
+      const rtl = getComputedStyle(trigger).direction === 'rtl';
+      show(rtl ? rect.right - 8 : rect.left + 8, rect.bottom + 8, e.target);
     }, { signal: controller.signal });
   });
 
@@ -165,6 +184,11 @@ export function initContextMenu(menuOrId) {
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       document.activeElement?.click();
+      close();
+    } else if (e.key === 'Tab') {
+      // Tab leaves the menu and closes it. close() puts focus back on the
+      // trigger first, and the key is not prevented, so the browser then
+      // moves on from the trigger in the direction the user asked for.
       close();
     }
   }, { signal: controller.signal });

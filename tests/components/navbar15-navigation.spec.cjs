@@ -13,7 +13,7 @@
  * - Mobile top row keeps brand + action + toggle
  * - Desktop brand presents an up-icon instead of the logo mark treatment
  */
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('../utils/navbar-harness.cjs');
 const fs = require('node:fs');
 const path = require('node:path');
 const { injectAxe, checkA11y } = require('axe-playwright');
@@ -57,9 +57,6 @@ const RN15_RENDER_MATRIX = JSON.parse(
 test.describe('Navbar Floating Bottom Logo Left Menu Actions (navbar15)', () => {
   /** @type {{ origin: string, close: () => Promise<void> }} */
   let staticServer;
-
-  test.use({ actionTimeout: 3000, navigationTimeout: 10000 });
-  test.describe.configure({ timeout: 20000 });
 
   test.beforeAll(async () => {
     staticServer = await startStaticServer(PKG_ROOT);
