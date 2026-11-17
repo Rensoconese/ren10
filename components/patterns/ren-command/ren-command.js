@@ -12,6 +12,24 @@ const KEYBOARD_CODES = {
   ArrowUp: 'ArrowUp'
 };
 
+// ─── Did the pointer really move? ───
+// Screen coordinates stay put while the page or an ancestor frame scrolls, so
+// they are the ones to compare. Some engines report the same screen position
+// for every pointer event; until two events have disagreed on it, the viewport
+// position is compared as well (it stays put while the page itself scrolls).
+let screenPositionVaries = false;
+
+function pointerPosition(event) {
+  return { x: event.screenX, y: event.screenY, cx: event.clientX, cy: event.clientY };
+}
+
+function pointerMovedFrom(rest, event) {
+  if (rest === null) return false;
+  const screenMoved = rest.x !== event.screenX || rest.y !== event.screenY;
+  if (screenMoved) screenPositionVaries = true;
+  return screenMoved || (!screenPositionVaries && (rest.cx !== event.clientX || rest.cy !== event.clientY));
+}
+
 class RenCommand extends HTMLElement {
   constructor() {
     super();
@@ -186,15 +204,13 @@ class RenCommand extends HTMLElement {
    * Following those would hand the highlight to wherever the pointer rests, so
    * a keyboard user would lose their place. The first position seen after a
    * suspension is only recorded; hover takes over again when a later
-   * pointermove reports different screen coordinates (the ones that stay put
-   * while the page or an ancestor frame scrolls).
+   * pointermove reports a different position; see pointerMovedFrom().
    */
   _pointerReallyMoved(event) {
     if (!this._hoverSuspended) return true;
 
-    const rest = this._restingPoint;
-    const moved = rest !== null && (rest.x !== event.screenX || rest.y !== event.screenY);
-    this._restingPoint = { x: event.screenX, y: event.screenY };
+    const moved = pointerMovedFrom(this._restingPoint, event);
+    this._restingPoint = pointerPosition(event);
     if (moved) this._hoverSuspended = false;
     return moved;
   }

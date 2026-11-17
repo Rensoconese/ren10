@@ -56,6 +56,24 @@ const MENU_SELECTOR = '.ren-menubar-menu';
 // For ids the component has to invent so a menu can name its trigger.
 let generatedIds = 0;
 
+// ─── Did the pointer really move? ───
+// Screen coordinates stay put while the page or an ancestor frame scrolls, so
+// they are the ones to compare. Some engines report the same screen position
+// for every pointer event; until two events have disagreed on it, the viewport
+// position is compared as well (it stays put while the page itself scrolls).
+let screenPositionVaries = false;
+
+function pointerPosition(event) {
+  return { x: event.screenX, y: event.screenY, cx: event.clientX, cy: event.clientY };
+}
+
+function pointerMovedFrom(rest, event) {
+  if (rest === null) return false;
+  const screenMoved = rest.x !== event.screenX || rest.y !== event.screenY;
+  if (screenMoved) screenPositionVaries = true;
+  return screenMoved || (!screenPositionVaries && (rest.cx !== event.clientX || rest.cy !== event.clientY));
+}
+
 export class RenMenubar extends HTMLElement {
   /** @type {AbortController|null} */
   #listeners = null;
@@ -311,16 +329,14 @@ export class RenMenubar extends HTMLElement {
    * Following those would hand focus to wherever the pointer rests, so a
    * keyboard user would lose their place. The first position seen after a key
    * press is only recorded; hover takes over again when a later pointermove
-   * reports different screen coordinates (the ones that stay put while the
-   * page or an ancestor frame scrolls).
+   * reports a different position; see pointerMovedFrom().
    * @private
    */
   #pointerReallyMoved(event) {
     if (!this.#hoverSuspended) return true;
 
-    const rest = this.#restingPoint;
-    const moved = rest !== null && (rest.x !== event.screenX || rest.y !== event.screenY);
-    this.#restingPoint = { x: event.screenX, y: event.screenY };
+    const moved = pointerMovedFrom(this.#restingPoint, event);
+    this.#restingPoint = pointerPosition(event);
     if (moved) this.#hoverSuspended = false;
     return moved;
   }
