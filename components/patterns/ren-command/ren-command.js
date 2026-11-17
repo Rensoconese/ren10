@@ -12,6 +12,12 @@ const KEYBOARD_CODES = {
   ArrowUp: 'ArrowUp'
 };
 
+/** A key that enters or deletes text in the search field. */
+function isTextEntryKey(event) {
+  if (event.ctrlKey || event.metaKey || event.altKey) return false;
+  return event.key === 'Backspace' || (event.key.length === 1 && event.key !== ' ');
+}
+
 // ─── Did the pointer really move? ───
 // Screen coordinates stay put while the page or an ancestor frame scrolls, so
 // they are the ones to compare. Some engines report the same screen position
@@ -104,8 +110,11 @@ class RenCommand extends HTMLElement {
     // Input events
     if (this._input) {
       this._input.addEventListener('input', (e) => this._handleInput(e), { signal });
-      this._input.addEventListener('keydown', (e) => this._handleKeydown(e), { signal });
     }
+    // Keys are handled for the whole palette, not only the search field: the
+    // arrows move focus onto the items, and from there a handler on the field
+    // alone heard nothing, so the list could be walked one step and no further.
+    this._dialog.addEventListener('keydown', (e) => this._handleKeydown(e), { signal });
 
     // Item selection
     this._items.forEach((item, index) => {
@@ -235,6 +244,7 @@ class RenCommand extends HTMLElement {
   }
 
   _handleKeydown(e) {
+    const onItem = this._items.includes(e.target);
     switch (e.key) {
       case KEYBOARD_CODES.ArrowDown:
         e.preventDefault();
@@ -244,17 +254,25 @@ class RenCommand extends HTMLElement {
         e.preventDefault();
         this._moveHighlight(-1);
         break;
-      case KEYBOARD_CODES.Enter:
+      case KEYBOARD_CODES.Enter: {
+        // Any other control in the palette keeps its own Enter.
+        if (e.target !== this._input && !onItem) break;
         e.preventDefault();
         const visibleItem = this._getVisibleItems()[this._highlightedIndex];
         if (visibleItem) {
           this._selectItem(this._items.indexOf(visibleItem));
         }
         break;
+      }
       case KEYBOARD_CODES.Escape:
         e.preventDefault();
         this._close();
         break;
+      default:
+        // Typing goes on filtering after the arrows moved focus to an item:
+        // the field takes focus before the key's text is entered. Space is
+        // left alone; on an item it activates the button.
+        if (onItem && this._input && isTextEntryKey(e)) this._input.focus();
     }
   }
 
@@ -265,7 +283,8 @@ class RenCommand extends HTMLElement {
         return;
       }
 
-      const title = item.querySelector('.ren-command-item-title')?.textContent || '';
+      // An item without a title element is its own text: `<button>Save</button>`.
+      const title = item.querySelector('.ren-command-item-title')?.textContent ?? item.textContent ?? '';
       const description = item.querySelector('.ren-command-item-description')?.textContent || '';
       const keywords = item.getAttribute('data-keywords') || '';
       const searchableText = `${title} ${description} ${keywords}`.toLowerCase();
@@ -350,17 +369,13 @@ class RenCommand extends HTMLElement {
   }
 
   _updateUI({ focus = false } = {}) {
-    const visibleItems = this._getVisibleItems();
-    visibleItems.forEach((item, index) => {
-      if (index === this._highlightedIndex) {
-        item.setAttribute('data-highlighted', '');
-        if (focus) {
-          item.focus();
-        }
-      } else {
-        item.removeAttribute('data-highlighted');
-      }
+    const highlighted = this._getVisibleItems()[this._highlightedIndex];
+    // Every item, not only the visible ones: an item the filter just hid would
+    // otherwise keep the highlight next to the one that took its place.
+    this._items.forEach((item) => {
+      item.toggleAttribute('data-highlighted', item === highlighted);
     });
+    if (focus) highlighted?.focus();
   }
 
   _selectItem(itemIndex) {

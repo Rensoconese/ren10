@@ -403,6 +403,79 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-command walks the whole list with the arrow keys, keeps filtering after them and selects once', { tag: ['@ren-command', '@keyboard'] }, async ({ page }) => {
+    // A control of the page's own inside the palette, next to the list.
+    const errors = await mount(page, 'command', (usage) => fourCommands(usage).replace(
+      '<div class="ren-command-empty" hidden>',
+      '<button type="button" id="palette-help">Help</button>\n    <div class="ren-command-empty" hidden>'
+    ));
+    const dialog = page.locator('ren-command dialog');
+    const input = page.locator('.ren-command-input');
+    // Strict: a second highlighted item, even a hidden one, fails the check.
+    const highlighted = page.locator('ren-command .ren-command-item[data-highlighted]');
+    const shown = page.locator('ren-command .ren-command-item:visible');
+    await page.evaluate(() => {
+      window.__selected = [];
+      document.addEventListener('ren-command-select', (event) => window.__selected.push(event.detail.value));
+    });
+    const selected = () => page.evaluate(() => window.__selected);
+
+    await page.keyboard.press('Control+K');
+    await expect(input).toBeFocused();
+    await expect(highlighted).toHaveText('Save');
+
+    // Every press, not only the first: the arrows move focus onto the items,
+    // and the keys have to keep working from there.
+    for (const name of ['Copy', 'Paste', 'Cut']) {
+      await page.keyboard.press('ArrowDown');
+      await expect(highlighted, `ArrowDown reaches ${name}`).toHaveText(name);
+    }
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted, 'ArrowDown wraps from the last item to the first').toHaveText('Save');
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted, 'ArrowUp wraps from the first item to the last').toHaveText('Cut');
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted).toHaveText('Paste');
+
+    // Enter belongs to whatever has focus: on another control it is that
+    // control's own key, and selects nothing.
+    await page.evaluate(() => {
+      window.__helped = 0;
+      document.getElementById('palette-help').addEventListener('click', () => { window.__helped += 1; });
+    });
+    await page.locator('#palette-help').focus();
+    await page.keyboard.press('Enter');
+    expect(await page.evaluate(() => window.__helped), 'Enter activates the focused control').toBe(1);
+    await expect(dialog).toHaveJSProperty('open', true);
+    expect(await selected(), 'and selects no item').toEqual([]);
+
+    // Enter on an item the arrows reached selects it, once.
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted).toHaveText('Copy');
+    await page.keyboard.press('Enter');
+    await expect(dialog).toHaveJSProperty('open', false);
+    expect(await selected(), 'one selection, of the highlighted item').toEqual(['copy']);
+
+    // Typing filters the items the registry usage ships (plain text, no title
+    // element), also after an arrow key has moved focus off the search field.
+    await page.keyboard.press('Control+K');
+    await expect(input).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted).toHaveText('Copy');
+    await page.keyboard.type('cu');
+    await expect(input, 'typing lands in the search field').toHaveValue('cu');
+    await expect(shown, 'the list is filtered to what matches').toHaveText(['Cut']);
+    await expect(highlighted, 'the match is the highlighted item').toHaveText('Cut');
+    await page.keyboard.press('Backspace');
+    await expect(shown).toHaveText(['Copy', 'Cut']);
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted).toHaveText('Cut');
+    await page.keyboard.press('Enter');
+    await expect(dialog).toHaveJSProperty('open', false);
+    expect(await selected()).toEqual(['copy', 'cut']);
+    expect(errors).toEqual([]);
+  });
+
   test('ren-command leaves the highlighted item to the keyboard when the palette opens under a resting pointer', { tag: ['@ren-command', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'command', fourCommands);
     const dialog = page.locator('ren-command dialog');
