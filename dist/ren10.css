@@ -11150,9 +11150,11 @@
       height: 100dvh;
       width: var(--sidebar-width);
       transform: translateX(-100%);
-      transition: transform var(--duration-enter) var(--ease-state-change);
+      visibility: hidden;
+      transition: transform var(--duration-enter) var(--ease-state-change), visibility var(--duration-enter) var(--ease-state-change);
       &[data-open] {
         transform: translateX(0);
+        visibility: visible;
         box-shadow: 4px 0 12px rgb(0 0 0 / 0.15);
       }
       &[data-collapsed] {

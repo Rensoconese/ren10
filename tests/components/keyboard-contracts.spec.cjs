@@ -1017,6 +1017,40 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-sidebar keeps a closed mobile drawer out of the Tab order', { tag: ['@ren-sidebar', '@keyboard'] }, async ({ page }) => {
+    await page.setViewportSize({ width: 480, height: 800 });
+    const errors = await mount(page, 'sidebar', (usage) => `<button type="button" id="open-nav">Menu</button>\n${usage}\n<button type="button" id="after-nav">After</button>`);
+    await page.evaluate(() => {
+      document.getElementById('open-nav').addEventListener('click', () => document.querySelector('ren-sidebar').toggleMenu());
+    });
+    const sidebar = page.locator('ren-sidebar');
+    const opener = page.locator('#open-nav');
+    const links = page.locator('ren-sidebar a.ren-sidebar-item');
+
+    // Closed, the drawer is off canvas: focus there is focus nobody can see.
+    await opener.focus();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after-nav'), 'Tab skips the links of the closed drawer').toBeFocused();
+    await expect(links.first()).toBeHidden();
+
+    // Open, its links are the next stops.
+    await opener.focus();
+    await page.keyboard.press('Enter');
+    await expect(sidebar).toHaveAttribute('data-open', '');
+    await expect(links.first()).toBeVisible();
+    await page.keyboard.press('Tab');
+    await expect(links.first(), 'Tab reaches the first link of the open drawer').toBeFocused();
+
+    // Closed again, they are out of the order once more.
+    await page.keyboard.press('Escape');
+    await expect(sidebar).not.toHaveAttribute('data-open', '');
+    await expect(opener).toBeFocused();
+    await expect(links.first(), 'the drawer is hidden again once it has slid out').toBeHidden();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after-nav')).toBeFocused();
+    expect(errors).toEqual([]);
+  });
+
   test('ren-sidebar returns focus to the opener however the mobile overlay closes', { tag: ['@ren-sidebar', '@keyboard'] }, async ({ page }) => {
     await page.setViewportSize({ width: 480, height: 800 });
     const errors = await mount(page, 'sidebar', (usage) => usage
