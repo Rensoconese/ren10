@@ -53,21 +53,30 @@ export class RenButton extends HTMLElement {
     // If not, create one
     this._button = this.querySelector('button, a, [role="button"]');
 
+    let created = null;
     if (!this._button) {
       // Wrap content in a button
-      const button = document.createElement('button');
-      button.setAttribute('type', 'button');
+      created = document.createElement('button');
+      created.setAttribute('type', 'button');
 
       // Move children into the button
       while (this.firstChild) {
-        button.appendChild(this.firstChild);
+        created.appendChild(this.firstChild);
       }
-      this.appendChild(button);
-      this._button = button;
+      this._button = created;
     }
 
     this._updateClasses();
     this._updateState();
+
+    // A generated button goes in only now, fully built. Giving it its classes
+    // after inserting it is a class change on a connected element, and
+    // Chromium up to at least 147 then keeps that element in its
+    // style-invalidation bookkeeping when a sibling-combinator rule mentions
+    // the class (`.ren-btn-group > .ren-btn + .ren-btn`). The entry outlives
+    // the removal, and through the button's parent pointer it kept every
+    // <ren-button> ever created alive for the life of the document.
+    if (created) this.appendChild(created);
   }
 
   attributeChangedCallback() {
