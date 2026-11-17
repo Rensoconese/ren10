@@ -46,6 +46,25 @@
  * @param {string} options.activeAttribute - Data attribute for active state
  * @returns {Object} Navigation controller
  */
+
+// ─── Did the pointer really move? ───
+// Screen coordinates stay put while the page or an ancestor frame scrolls, so
+// they are the ones to compare. Some engines report the same screen position
+// for every pointer event; until two events have disagreed on it, the viewport
+// position is compared as well (it stays put while the page itself scrolls).
+let screenPositionVaries = false;
+
+function pointerPosition(event) {
+  return { x: event.screenX, y: event.screenY, cx: event.clientX, cy: event.clientY };
+}
+
+function pointerMovedFrom(rest, event) {
+  if (rest === null) return false;
+  const screenMoved = rest.x !== event.screenX || rest.y !== event.screenY;
+  if (screenMoved) screenPositionVaries = true;
+  return screenMoved || (!screenPositionVaries && (rest.cx !== event.clientX || rest.cy !== event.clientY));
+}
+
 export function createKeyboardNav(container, options = {}) {
   const {
     selector = '[role="option"], [role="menuitem"], [role="tab"], li',
@@ -286,8 +305,7 @@ export function createKeyboardNav(container, options = {}) {
   // So only pointermove is listened to, and after every keyboard or
   // programmatic activation the pointer must prove that it moved: the first
   // position seen is only recorded, and hover takes over again once a later
-  // pointermove reports different screen coordinates. Screen coordinates are
-  // the ones that stay put while the page or an ancestor frame scrolls.
+  // pointermove reports a different position; see pointerMovedFrom().
 
   function suspendHover() {
     hoverSuspended = true;
@@ -297,10 +315,8 @@ export function createKeyboardNav(container, options = {}) {
   function pointerReallyMoved(event) {
     if (!hoverSuspended) return true;
 
-    const moved =
-      restingPoint !== null &&
-      (restingPoint.x !== event.screenX || restingPoint.y !== event.screenY);
-    restingPoint = { x: event.screenX, y: event.screenY };
+    const moved = pointerMovedFrom(restingPoint, event);
+    restingPoint = pointerPosition(event);
     if (moved) hoverSuspended = false;
     return moved;
   }
