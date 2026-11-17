@@ -38,11 +38,19 @@ async function parkPointer(page, { x, y }) {
     document.addEventListener('pointermove', (event) => {
       window.__rest = { x: event.clientX, y: event.clientY, screenX: event.screenX, screenY: event.screenY };
     }, { capture: true, once: true });
+    // What the page is told from here on, for the message of a failed check.
+    window.__moves = [];
+    document.addEventListener('pointermove', (event) => {
+      window.__moves.push(`${event.isTrusted ? 'real' : 'synthetic'} ${event.clientX},${event.clientY} screen ${event.screenX},${event.screenY} on ${event.target?.className || event.target?.localName}`);
+    }, { capture: true });
   });
   await page.mouse.move(x, y);
   await expect.poll(() => page.evaluate(() => window.__rest), 'the browser reports the parked position').not.toBeNull();
   return page.evaluate(() => window.__rest);
 }
+
+/** The last pointermove events the page saw: engines differ in what they deliver. */
+const pointerLog = (page) => page.evaluate(() => `pointermove events seen: ${JSON.stringify((window.__moves ?? []).slice(-6))}`);
 
 /**
  * Let the browser re-target hover onto whatever now sits under the resting
@@ -84,10 +92,15 @@ const moveWithFixedScreen = (locator, { x, y }) => locator.evaluate((el, at) => 
   }));
 }, { x, y });
 
-/** Really move the pointer: two moves, so the second differs from the first. */
+/**
+ * Really move the pointer. It ends a few pixels from where it rested, still on
+ * the same item: an engine may deliver only the last of several moves, and a
+ * pointer that ends exactly where it rested has not moved.
+ */
 async function movePointerOnto(page, { x, y }) {
-  await page.mouse.move(x - 3, y - 3);
-  await page.mouse.move(x, y);
+  await page.mouse.move(x + 2, y + 2);
+  await page.mouse.move(x + 4, y + 4);
+  return { x: x + 4, y: y + 4 };
 }
 
 /** Resize a mounted page and make sure it hears about it. */
@@ -257,10 +270,10 @@ test.describe('keyboard contracts', () => {
     await expect(highlighted).toHaveText('Option 13');
 
     // A pointer that really moves takes over again.
-    await movePointerOnto(page, rest);
-    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="option"]').textContent.trim(), rest);
+    const moved = await movePointerOnto(page, rest);
+    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="option"]').textContent.trim(), moved);
     expect(underPointer).not.toBe('Option 13');
-    await expect(highlighted, 'real pointer movement highlights the option under it').toHaveText(underPointer);
+    await expect(highlighted, `real pointer movement highlights the option under it (${await pointerLog(page)})`).toHaveText(underPointer);
 
     // ...and the next key hands the list back to the keyboard.
     const afterPointer = `Option ${Number(underPointer.replace('Option ', '')) + 1}`;
@@ -304,10 +317,10 @@ test.describe('keyboard contracts', () => {
     await page.keyboard.press('ArrowDown');
     await expect(item(11)).toBeFocused();
 
-    await movePointerOnto(page, rest);
-    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="menuitem"]').textContent.trim(), rest);
+    const moved = await movePointerOnto(page, rest);
+    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="menuitem"]').textContent.trim(), moved);
     expect(underPointer).not.toBe('Item 11');
-    await expect.poll(() => focusedText(page), 'real pointer movement focuses the item under it').toBe(underPointer);
+    await expect.poll(() => focusedText(page), `real pointer movement focuses the item under it (${await pointerLog(page)})`).toBe(underPointer);
 
     // ...and the next key hands the menu back to the keyboard.
     const afterPointer = `Item ${Number(underPointer.replace('Item ', '')) + 1}`;
@@ -351,10 +364,10 @@ test.describe('keyboard contracts', () => {
     await expect.poll(active).toBe('Country 13');
     await expect(page.locator('ren-combobox [data-highlighted]')).toHaveText('Country 13');
 
-    await movePointerOnto(page, rest);
-    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="option"]').textContent.trim(), rest);
+    const moved = await movePointerOnto(page, rest);
+    const underPointer = await page.evaluate(({ x, y }) => document.elementFromPoint(x, y).closest('[role="option"]').textContent.trim(), moved);
     expect(underPointer).not.toBe('Country 13');
-    await expect.poll(active, 'real pointer movement highlights the option under it').toBe(underPointer);
+    await expect.poll(active, `real pointer movement highlights the option under it (${await pointerLog(page)})`).toBe(underPointer);
 
     const afterPointer = `Country ${Number(underPointer.replace('Country ', '')) + 1}`;
     await page.keyboard.press('ArrowDown');
@@ -386,7 +399,7 @@ test.describe('keyboard contracts', () => {
     await expect(highlighted, 'opening under the pointer highlights the first item').toHaveText('Save');
 
     await movePointerOnto(page, rest);
-    await expect(highlighted, 'real pointer movement highlights the item under it').toHaveText('Paste');
+    await expect(highlighted, `real pointer movement highlights the item under it (${await pointerLog(page)})`).toHaveText('Paste');
 
     // The next key continues from there and hands the list back to the keyboard.
     await page.keyboard.press('ArrowDown');
@@ -423,7 +436,7 @@ test.describe('keyboard contracts', () => {
     await expect(item('Open'), 'the pointer still rests').toBeFocused();
 
     await movePointerOnto(page, rest);
-    await expect(item('Save'), 'real pointer movement focuses the item under it').toBeFocused();
+    await expect(item('Save'), `real pointer movement focuses the item under it (${await pointerLog(page)})`).toBeFocused();
     await page.keyboard.press('ArrowUp');
     await expect(item('Open')).toBeFocused();
     await repeatRestingMove(page, rest);
