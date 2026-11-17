@@ -867,8 +867,10 @@ test.describe('rtl contracts: what is not directional does not mirror', () => {
     const ltr = await handles('ltr');
     const rtl = await handles('rtl');
     expect(rtl.direction, 'the spectrum is an LTR island').toBe('ltr');
-    expect(rtl.saturation, 'same colour, same place on the same gradient').toBe(ltr.saturation);
-    expect(rtl.hue).toBe(ltr.hue);
+    // Within two points: the panel may still be easing in when it is measured,
+    // and a mirrored handle would be some thirty points away.
+    expect(Math.abs(rtl.saturation - ltr.saturation), 'same colour, same place on the same gradient').toBeLessThanOrEqual(2);
+    expect(Math.abs(rtl.hue - ltr.hue), 'the hue handle too').toBeLessThanOrEqual(2);
     // #5b6cff is a saturated colour: its handle is well right of the middle.
     expect(rtl.saturation).toBeGreaterThan(55);
   });
