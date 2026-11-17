@@ -48,6 +48,7 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 const { REGISTRY, ROOT, FIXTURE, mountRegistry } = require('../utils/mount-registry.cjs');
 const { installResourceAccounting, takeSnapshot, acquisitionSites, pending, residue, judge } = require('../utils/resource-accounting.cjs');
 const { STATES, installDriver, driver, driveAndRemove } = require('../utils/leak-driver.cjs');
+const { describeSurvivors } = require('../utils/heap-retainers.cjs');
 
 /** Mount, drive and remove this many times per state. Two is what tells "per instance" from "once". */
 const ROUNDS = 2;
@@ -329,12 +330,15 @@ async function accountFor(page, subject, { settle: settleTimeout = SETTLE_TIMEOU
 
 /**
  * Chromium only. Mount, drive and remove the subject as accountFor does, on a
- * page without the accounting (which would itself hold the instances), and
- * return a function that counts what a full garbage collection leaves alive.
+ * page without the accounting (which would itself hold the instances).
  *
  * @param {import('@playwright/test').Page} page
  * @param {Subject} subject
- * @returns {Promise<() => Promise<Record<string, number>>>}
+ * @returns {Promise<{
+ *   survivors: () => Promise<Record<string, number>>,
+ *   diagnose: (keys: string[]) => Promise<string>,
+ * }>} `survivors` counts what a full garbage collection leaves alive, per element
+ *   class; `diagnose` says where those survivors are and what holds them
  */
 async function removeAndProbe(page, subject) {
   await subject.mount(page, (fixture) => installDriver(fixture, subject.driver));
@@ -403,7 +407,18 @@ async function removeAndProbe(page, subject) {
       await driver(page, subject.driver.root ? 'clear' : 'retire');
     }
   }
-  return survivors;
+
+  /** For a red run: a count does not say whether the component or the browser holds the node. */
+  const diagnose = async (keys) => {
+    const reports = [];
+    for (const key of keys) {
+      reports.push(await describeSurvivors(client, key === ROOTS
+        ? { label: 'function-initialised roots', expression: '(window.__leakProbes ?? []).map((ref) => ref.deref()).filter(Boolean)' }
+        : { tag: key }));
+    }
+    return reports.join('\n\n');
+  };
+  return { survivors, diagnose };
 }
 
 /** The classes (or roots) that still have live instances. */
@@ -422,20 +437,62 @@ for (const subject of subjects()) {
 
     // No @ren-* / @leaks tags: this test is skipped outside chromium, so it
     // must not be what covers the matrix cell.
-    test('removed instances are garbage-collected', { tag: '@retention' }, async ({ page, browserName, colorScheme }) => {
+    test('removed instances are garbage-collected', { tag: '@retention' }, async ({ page, browserName, colorScheme }, testInfo) => {
       test.skip(browserName !== 'chromium', 'reads the heap over CDP; the accounting test covers every browser');
       test.skip(colorScheme === 'dark', ONE_SCHEME);
       test.setTimeout(90_000);
-      const survivors = await removeAndProbe(page, subject);
+      const { survivors, diagnose } = await removeAndProbe(page, subject);
       // Polled: a timer that is still pending may hold an instance until it fires.
-      await expect.poll(async () => alive(await survivors()), {
-        message: `${subject.name}: removed elements are still reachable after garbage collection`,
-        timeout: 8000,
-        intervals: [50, 100, 250, 500],
-      }).toEqual({});
+      let left = {};
+      await expect.poll(async () => {
+        left = alive(await survivors());
+        return left;
+      }, { timeout: 8000, intervals: [50, 100, 250, 500] }).toEqual({}).catch(() => {});
+      if (Object.keys(left).length === 0) return;
+
+      // The failure has to say what holds them: this may run on a browser
+      // build nobody has locally, where the holder can be the engine itself.
+      const report = await diagnose(Object.keys(left));
+      await testInfo.attach('what-holds-the-survivors.txt', { body: report, contentType: 'text/plain' });
+      expect(left, `${subject.name}: removed elements are still reachable after garbage collection (${browserName} ${page.context().browser()?.version()})\n\n${report}\n`).toEqual({});
     });
   });
 }
+
+/**
+ * A browser can keep a removed node reachable on its own, with no reference
+ * from page code, and then the retention test above fails for something the
+ * component did not hold. One case is known:
+ *
+ * Chromium up to at least 147 (the build Playwright 1.59 installs; 156 does
+ * not do it) keeps an element in the style engine's pending-invalidation
+ * table when one of its classes changes while it is connected and a
+ * sibling-combinator rule mentions that class (`.ren-btn-group > .ren-btn +
+ * .ren-btn`). The entry survives the removal, and the element's parent
+ * pointer keeps everything above it alive. ren-button tripped it by inserting
+ * its generated <button> first and classing it afterwards: every <ren-button>
+ * ever created stayed in memory.
+ *
+ * The retention test catches that only on an affected Chromium, which is not
+ * the one most people run locally. This pins the cause on every browser: the
+ * generated button must be complete before it enters the page.
+ */
+test('leaks: ren-button builds its generated button before inserting it', async ({ page, colorScheme }) => {
+  test.skip(colorScheme === 'dark', ONE_SCHEME);
+  await mountRegistry(page, server.origin, 'button', undefined, {
+    // Before the module loads: record every attribute change on a node that is in the page.
+    beforeMount: (fixture) => fixture.evaluate(() => {
+      const g = /** @type {any} */ (window);
+      g.__connectedChanges = [];
+      new MutationObserver((records) => {
+        for (const record of records) g.__connectedChanges.push(`<${/** @type {Element} */ (record.target).localName}> ${record.attributeName}`);
+      }).observe(document.getElementById('host'), { subtree: true, attributes: true });
+    }),
+  });
+  await expect(page.locator('ren-button button.ren-btn')).toHaveCount(3);
+  const changes = await page.evaluate(() => /** @type {any} */ (window).__connectedChanges);
+  expect(changes.filter((change) => change.startsWith('<button>')), 'attributes set on the generated button after it was inserted').toEqual([]);
+});
 
 /**
  * The same accounting with the newest platform features switched off, so the
@@ -568,12 +625,19 @@ test.describe('leaks: the checks catch what they claim to', () => {
     expect(verdicts(problems)).toEqual({ [SINGLETON]: 'constant', [stale]: 'stale' });
   });
 
-  test('a retained instance is reported, a released one is not', { tag: '@retention' }, async ({ page, browserName }) => {
+  test('a retained instance is reported with what holds it, a released one is not', { tag: '@retention' }, async ({ page, browserName }) => {
     test.skip(browserName !== 'chromium', 'reads the heap over CDP');
     const retained = await removeAndProbe(page, fixture('instance'));
-    expect(await retained()).toEqual({ 'ren-leaky-fixture': ROUNDS * states.length });
+    expect(await retained.survivors()).toEqual({ 'ren-leaky-fixture': ROUNDS * states.length });
+    // And the diagnosis a red run would print names the holder: the fixture's
+    // module-level `retained` array. Checked here so it is known to work on
+    // whatever Chromium build CI runs before it is ever needed there.
+    const report = await retained.diagnose(['ren-leaky-fixture']);
+    expect(report).toContain(`<ren-leaky-fixture>: ${ROUNDS * states.length} alive after garbage collection.`);
+    expect(report).toContain('"connected":false');
+    expect(report).toMatch(/--retained \(context\)--> Array \[object\]/);
 
     const released = await removeAndProbe(page, fixture(''));
-    await expect.poll(async () => alive(await released()), { timeout: 8000 }).toEqual({});
+    await expect.poll(async () => alive(await released.survivors()), { timeout: 8000 }).toEqual({});
   });
 });

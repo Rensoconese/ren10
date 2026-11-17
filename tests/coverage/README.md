@@ -168,3 +168,14 @@ Two things in `leaks.spec.cjs` need a decision when a component changes:
 A second test per component forces a garbage collection over CDP and checks
 that no instance of the element class survives. It only runs on Chromium, so it
 carries no `@ren-*` or `@leaks` tag and never covers a cell.
+
+When it fails, the message says what holds the survivors
+(`tests/utils/heap-retainers.cjs`): whether they are connected, whether they
+are or contain `document.activeElement`, and the shortest chain of references
+from a garbage-collection root to them, read from a heap snapshot. Read the
+chain from the bottom. A script object on the way (a `Context`, a closure, an
+`Array`, a listener) means page code holds the element. Only engine nodes
+between the document and the element mean the browser holds it on its own,
+which depends on the Chromium build: CI runs the one Playwright installs, not
+the one on your machine. The known case is in the comment above the
+`ren-button builds its generated button before inserting it` test.
