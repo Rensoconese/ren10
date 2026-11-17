@@ -84,6 +84,12 @@ const defaultLocale = {
     presets: 'Preset color swatches',
     trigger: 'Color picker, current color {color}',
     swatch: 'Color {color}',
+    channelRed: 'Red',
+    channelGreen: 'Green',
+    channelBlue: 'Blue',
+    channelHue: 'Hue',
+    channelSaturation: 'Saturation',
+    channelLightness: 'Lightness',
   },
 
   dateRangePicker: {
@@ -440,6 +446,12 @@ registerLocale('es', {
     presets: 'Muestras de color predefinidas',
     trigger: 'Selector de color, color actual {color}',
     swatch: 'Color {color}',
+    channelRed: 'Rojo',
+    channelGreen: 'Verde',
+    channelBlue: 'Azul',
+    channelHue: 'Tono',
+    channelSaturation: 'Saturación',
+    channelLightness: 'Luminosidad',
   },
 
   dateRangePicker: {

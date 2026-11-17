@@ -607,26 +607,26 @@ export class RenColorPicker extends HTMLElement {
     let channels = [];
     if (this.#format === 'rgb') {
       channels = [
-        { label: 'R', value: rgb.r, min: 0, max: 255, key: 'r' },
-        { label: 'G', value: rgb.g, min: 0, max: 255, key: 'g' },
-        { label: 'B', value: rgb.b, min: 0, max: 255, key: 'b' },
+        { label: 'R', name: t('colorPicker.channelRed'), value: rgb.r, min: 0, max: 255, key: 'r' },
+        { label: 'G', name: t('colorPicker.channelGreen'), value: rgb.g, min: 0, max: 255, key: 'g' },
+        { label: 'B', name: t('colorPicker.channelBlue'), value: rgb.b, min: 0, max: 255, key: 'b' },
       ];
     } else if (this.#format === 'hsl') {
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b, rgb.a);
       channels = [
-        { label: 'H', value: hsl.h, min: 0, max: 360, key: 'h' },
-        { label: 'S', value: hsl.s, min: 0, max: 100, key: 's' },
-        { label: 'L', value: hsl.l, min: 0, max: 100, key: 'l' },
+        { label: 'H', name: t('colorPicker.channelHue'), value: hsl.h, min: 0, max: 360, key: 'h' },
+        { label: 'S', name: t('colorPicker.channelSaturation'), value: hsl.s, min: 0, max: 100, key: 's' },
+        { label: 'L', name: t('colorPicker.channelLightness'), value: hsl.l, min: 0, max: 100, key: 'l' },
       ];
     } else {
       channels = [
-        { label: 'R', value: rgb.r, min: 0, max: 255, key: 'r' },
-        { label: 'G', value: rgb.g, min: 0, max: 255, key: 'g' },
-        { label: 'B', value: rgb.b, min: 0, max: 255, key: 'b' },
+        { label: 'R', name: t('colorPicker.channelRed'), value: rgb.r, min: 0, max: 255, key: 'r' },
+        { label: 'G', name: t('colorPicker.channelGreen'), value: rgb.g, min: 0, max: 255, key: 'g' },
+        { label: 'B', name: t('colorPicker.channelBlue'), value: rgb.b, min: 0, max: 255, key: 'b' },
       ];
     }
 
-    channels.forEach(({ label, value, min, max, key }) => {
+    channels.forEach(({ label, name, value, min, max }) => {
       const channel = document.createElement('div');
       channel.className = 'ren-color-picker-channel';
 
@@ -641,7 +641,8 @@ export class RenColorPicker extends HTMLElement {
       channelInput.max = max;
       channelInput.value = value;
       channelInput.disabled = disabled;
-      channelInput.setAttribute('aria-label', `${label} channel`);
+      // The field is named by the word; the letter beside it is its visible label.
+      channelInput.setAttribute('aria-label', name);
       channelInput.addEventListener('change', this.handleInputChange);
 
       channel.appendChild(channelLabel);

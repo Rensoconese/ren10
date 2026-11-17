@@ -849,6 +849,27 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-color-picker names its channel fields by what they hold, in the active locale', { tag: ['@ren-color-picker', '@a11y'] }, async ({ page }) => {
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('placement="bottom"', 'placement="bottom" format="rgb"'));
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const fields = page.locator('ren-color-picker').getByRole('spinbutton');
+    const names = () => fields.evaluateAll((inputs) => inputs.map((input) => input.getAttribute('aria-label')));
+
+    // A word, not the letter printed beside the field.
+    expect(await names()).toEqual(['Red', 'Green', 'Blue']);
+    await expect(page.getByRole('spinbutton', { name: 'Red', exact: true })).toHaveValue('91');
+
+    // The names come from the catalogue: they follow the locale and the format.
+    await page.evaluate(() => import('/utils/i18n.js').then((i18n) => i18n.setLocale('es')));
+    await page.locator('.ren-color-picker-format-toggle').click();
+    expect(await names(), 'HSL fields under the Spanish locale').toEqual(['Tono', 'Saturación', 'Luminosidad']);
+    await page.evaluate(() => import('/utils/i18n.js').then((i18n) => i18n.setLocale('en')));
+    expect(errors).toEqual([]);
+  });
+
   test('ren-color-picker reports the colour it was given, to the last step', { tag: ['@ren-color-picker', '@runtime'] }, async ({ page }) => {
     // Neither #5b6cff nor #c0ffee has an exact place in the picker's model,
     // which holds hue in whole degrees and the other two in whole percents.
