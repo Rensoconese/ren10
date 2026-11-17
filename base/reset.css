@@ -111,6 +111,15 @@ select {
   color: inherit;
 }
 
+/* ─── A hidden input stays hidden ───
+   Any author `display` on `input` reaches `type="hidden"` too (the classless
+   text-field rule does). Chromium protects hidden inputs from that; WebKit
+   does not, and there the input became a box that takes focus: a Tab stop
+   with no size for every hidden field on the page. */
+input[type="hidden" i] {
+  display: none !important;
+}
+
 /* ─── Textarea ─── */
 textarea {
   field-sizing: content;
