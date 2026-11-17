@@ -3025,6 +3025,7 @@
   .ren-select-content.ren-open {
     visibility: visible;
     opacity: 1;
+    transform: none;
     animation: ren-select-open var(--duration-enter) var(--ease-enter);
   }
   @keyframes ren-select-open {

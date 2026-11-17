@@ -232,6 +232,26 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-select rests at its full size once the opening animation is over', { tag: ['@ren-select', '@runtime'] }, async ({ page }) => {
+    const errors = await mount(page, 'select');
+    const trigger = page.locator('ren-select [data-select-trigger]');
+    const list = page.locator('ren-select [data-select-content]');
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await list.evaluate((el) => Promise.all(el.getAnimations().map((animation) => animation.finished)));
+
+    // The animation ends at scale 1; the list has to stay there. Its closed
+    // state is a little smaller and higher, and that is what showed through.
+    const resting = await list.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      return { drawn: Math.round(box.width * 100) / 100, laidOut: el.offsetWidth, transform: getComputedStyle(el).transform };
+    });
+    expect(resting.transform, 'no transform left on the open list').toBe('none');
+    expect(resting.drawn, 'the list is drawn at the size it is laid out').toBe(resting.laidOut);
+    expect(errors).toEqual([]);
+  });
+
   test('ren-select closes when Tab takes focus away, and leaves focus where Tab put it', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'select', (usage) => `${usage}\n<button type="button" id="after-select">After</button>`);
     const trigger = page.locator('ren-select [data-select-trigger]');
