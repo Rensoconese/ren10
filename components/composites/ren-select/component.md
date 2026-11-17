@@ -160,6 +160,9 @@ Use the docs page and source files listed below for full examples before adding 
 - `open()`, `close()`, `isOpen`, `options`, `selectedOption`, and `refresh()`
   round out the surface; `refresh()` re-reads the options after you add or
   remove them.
+- `close()` returns focus to the trigger; `close({ restoreFocus: false })`
+  leaves focus where it is. The list also closes that way on its own when
+  focus moves to another element of the page, such as Tab out of the list.
 - Multiple selection accumulates and removes values without closing the
   listbox, renders `.ren-select-chip` entries, and submits repeated same-name
   hidden inputs.

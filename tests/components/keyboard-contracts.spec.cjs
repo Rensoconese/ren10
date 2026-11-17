@@ -232,6 +232,37 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-select closes when Tab takes focus away, and leaves focus where Tab put it', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'select', (usage) => `${usage}\n<button type="button" id="after-select">After</button>`);
+    const trigger = page.locator('ren-select [data-select-trigger]');
+    const list = page.locator('ren-select [data-select-content]');
+
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(() => focusedText(page)).toBe('Option B');
+
+    // Tab leaves the listbox. An open list with focus somewhere else on the
+    // page is a popup nothing closes but a click.
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after-select')).toBeFocused();
+    await expect(trigger, 'the list closes behind the focus').toHaveAttribute('aria-expanded', 'false');
+    await expect(list).toBeHidden();
+    await expect(page.locator('#after-select'), 'closing does not pull focus back to the trigger').toBeFocused();
+    expect(await page.locator('ren-select').evaluate((el) => el.value), 'moving through options chose nothing').toBeNull();
+
+    // The control still opens and closes from the keyboard afterwards.
+    await page.keyboard.press('Shift+Tab');
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('Escape');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger, 'Escape still returns focus to the trigger').toBeFocused();
+    expect(errors).toEqual([]);
+  });
+
   test('ren-select leaves the active option to the keyboard when the list opens or scrolls under a resting pointer', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'select', (usage) => usage.replace(
       /<div data-select-item data-value="a"[\s\S]*Option B<\/div>/,
