@@ -617,19 +617,31 @@ export class RenMenubar extends HTMLElement {
      =================================================================== */
 
   /**
+   * Left/Right as the component reasons about them: "ArrowRight" means "toward
+   * the inline-end side", which is where the next menu sits and where a
+   * submenu opens. Under dir="rtl" that side is on the left, so the two keys
+   * swap; every other key passes through.
+   */
+  #inlineKey(key) {
+    if (key !== 'ArrowLeft' && key !== 'ArrowRight') return key;
+    if (getComputedStyle(this).direction !== 'rtl') return key;
+    return key === 'ArrowLeft' ? 'ArrowRight' : 'ArrowLeft';
+  }
+
+  /**
    * Handle keyboard events on trigger buttons
    */
   handleTriggerKeydown(event, triggerIndex) {
-    const { key } = event;
+    const key = this.#inlineKey(event.key);
 
-    // ArrowRight: move to next trigger
+    // ArrowRight (inline-end): move to next trigger
     if (key === 'ArrowRight') {
       event.preventDefault();
       const nextIndex = (triggerIndex + 1) % this.triggers.length;
       this.#moveAlongBar(nextIndex);
     }
 
-    // ArrowLeft: move to previous trigger
+    // ArrowLeft (inline-start): move to previous trigger
     if (key === 'ArrowLeft') {
       event.preventDefault();
       const prevIndex = (triggerIndex - 1 + this.triggers.length) % this.triggers.length;
@@ -704,7 +716,7 @@ export class RenMenubar extends HTMLElement {
   handleItemKeydown(event, item) {
     if (this.#eventItem(event) !== item) return;
 
-    const { key } = event;
+    const key = this.#inlineKey(event.key);
     const menu = item.closest(MENU_SELECTOR);
     if (!menu) return;
 
@@ -726,7 +738,8 @@ export class RenMenubar extends HTMLElement {
       if (prevItem) this.focusItem(prevItem);
     }
 
-    // ArrowRight: open submenu, else move to the next menubar menu
+    // ArrowRight (inline-end, where submenus open): open submenu, else move
+    // to the next menubar menu
     if (key === 'ArrowRight') {
       event.preventDefault();
       if (this.#isSubmenuParent(item)) {
@@ -737,7 +750,8 @@ export class RenMenubar extends HTMLElement {
       }
     }
 
-    // ArrowLeft: close submenu (focus the parent item), else previous menu
+    // ArrowLeft (inline-start): close submenu (focus the parent item), else
+    // previous menu
     if (key === 'ArrowLeft') {
       event.preventDefault();
       if (inSubmenu) {

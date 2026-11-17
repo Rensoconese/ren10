@@ -10,6 +10,7 @@ the tests it needs. `npm run coverage:matrix` prints the full table.
 | `lifecycle` | every JS component whose usage mounts a `ren-*` element | `runtime-smoke`: lifecycle methods are idempotent, and the element survives disconnect and reconnect |
 | `keyboard` | every JS composite and pattern | `tests/components/keyboard-contracts.spec.cjs` and other specs: a test presses the keys the contract promises |
 | `pattern` | every component in the APG pattern map | `tests/components/apg-patterns.spec.cjs`: the component follows the WAI-ARIA Authoring Practices pattern it implements |
+| `rtl` | every component, CSS-only ones included | `tests/components/rtl-smoke.spec.cjs`: mounts the registry usage under `dir="rtl"`; `tests/components/rtl-contracts.spec.cjs`: behaviour that depends on direction |
 
 ## How a test counts
 
@@ -76,3 +77,48 @@ things:
   known gap that is not fixed yet), the `reason`, and an `instead` function
   that asserts what the component does. A recorded rule has to keep failing:
   once the component meets it, the check asks for the record to be deleted.
+## What `rtl` proves
+
+Every component owes `rtl`, not only the ones that ship JS: a physical `left`
+is a right-to-left defect in a stylesheet with no script next to it, and the
+generated smoke covers a CSS-only component at no extra cost.
+
+`rtl-smoke.spec.cjs` generates one test per registry component. It mounts the
+usage under `dir="ltr"` and `dir="rtl"` and, under RTL, requires that nothing
+throws, that the document does not scroll sideways, that no box leaves the
+viewport, and that every block-level box is the mirror image of its LTR
+position. It checks again with the component open: through `open()` or
+`show()`, or through the gesture listed in the spec's `REVEAL` table. A surface
+that keeps a physical side on purpose is listed in `PHYSICAL` with the rule
+that makes it right; it must stay put and its content must mirror inside it.
+
+The smoke cannot see pseudo-elements, glyphs or key handling, so
+`rtl-contracts.spec.cjs` holds the tests for components whose behaviour depends
+on direction. Add one there, tagged `@ren-<name> @rtl`, when a component:
+
+- handles `ArrowLeft` / `ArrowRight`;
+- places something with a `start` / `end` or `inline-*` option, or with a
+  physical side that must not flip;
+- draws a fill, a sweep, a thumb, a chevron or an arrow that follows the
+  reading order;
+- pins part of itself to `direction: ltr`.
+
+The first case is enforced: a test in that spec lists the components whose
+script mentions `ArrowLeft` or `ArrowRight` (or uses the roving-focus helper
+horizontally) and fails when one of them has no contract there.
+
+The rules those tests apply:
+
+| | Rule |
+|---|---|
+| Arrow keys | Left/Right are visual. In a horizontal widget the arrow pointing at the inline-end side moves to the next item or opens a submenu: `ArrowRight` under LTR, `ArrowLeft` under RTL. Up/Down, Home/End and PageUp/PageDown keep their meaning; Home is the first item in DOM order. A vertical widget ignores direction. |
+| Sides | `top`, `bottom`, `left` and `right` are physical and never flip, on an anchored overlay, a sheet or a toast viewport. Options that follow the direction say so: `start` / `end` alignment, `inline-start` / `inline-end` sides. |
+| Flow | What follows the reading order follows the direction: progress and slider fill, the "on" side of a switch, slide order, range caps, leading and trailing icons, directional chevrons and arrows. |
+| Not directional | A tick, a colour spectrum and a down/up chevron are the same in both directions. |
+| LTR islands | A code is read left to right in every script: OTP slots keep their order and their physical arrow keys. |
+
+Write these tests against visible outcomes: which element has focus, where a
+box is relative to another, which slide is in view. Browsers disagree on the
+sign of `scrollLeft` under RTL, so never assert on a raw scroll offset. When a
+computed value is the only handle on something (a pseudo-element, a gradient),
+match it loosely: engines serialise the same value differently.

@@ -13,6 +13,8 @@
  *   pattern    every component in the APG pattern map
  *              (tests/utils/apg/pattern-map.cjs): it follows the WAI-ARIA
  *              Authoring Practices pattern it implements
+ *   rtl        every component, CSS-only ones included: under dir="rtl" it stays
+ *              on screen and mirrors its LTR layout (tests/components/rtl-smoke.spec.cjs)
  *
  * A test proves a cell by carrying two Playwright tags: the component
  * (`@ren-dialog`) and the category (`@keyboard`). Tests are read with
@@ -36,7 +38,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern'];
+export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern', 'rtl'];
 export const EXEMPTIONS_PATH = 'tests/coverage/exemptions.json';
 export const PATTERN_MAP_PATH = 'tests/utils/apg/pattern-map.cjs';
 const SUITES = ['tests/components/playwright.config.cjs', 'tests/a11y/playwright.config.cjs'];
@@ -59,6 +61,9 @@ export function requiredCells(registry, { patternMap = {} } = {}) {
     if (hasJs && mountsElement) required.push('lifecycle');
     if (hasJs && (entry.layer === 'composites' || entry.layer === 'patterns')) required.push('keyboard');
     if (patternDirs.has(entry.dir)) required.push('pattern');
+    // Direction reaches CSS as much as JS: a physical `left` is an RTL defect
+    // in a component that ships no script at all.
+    required.push('rtl');
     return { component: entry.dir, layer: entry.layer, required };
   });
 }

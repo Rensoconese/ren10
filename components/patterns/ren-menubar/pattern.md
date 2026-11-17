@@ -140,6 +140,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: under `dir="rtl"` the menubar runs right to left, so ArrowLeft opens the next menu and ArrowRight the previous one. A submenu opens on the inline-end side (the left): ArrowLeft opens it and ArrowRight closes it.
 
 ## Related Files
 

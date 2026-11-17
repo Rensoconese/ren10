@@ -131,6 +131,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - This contract is CSS-first; do not introduce JavaScript unless the source component already owns that behavior.
+- Right-to-left: the external-link arrow points at the inline-end side (`↖` under `dir="rtl"`), and `.ren-link-skip` appears at the inline-start corner.
 
 ## Related Files
 

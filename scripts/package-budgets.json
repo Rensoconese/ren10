@@ -8,7 +8,7 @@
     "unpackedBytes": { "baseline": 19843719, "allowedDelta": 0, "target": 19843719 },
     "tarballBytes": { "baseline": 5483586, "allowedDelta": 0, "target": 5483586 },
     "fullCssBytes": { "baseline": 520835, "allowedDelta": 0, "target": 520835 },
-    "minCssBytes": { "baseline": 292070, "allowedDelta": 0, "target": 292070 },
+    "minCssBytes": { "baseline": 293211, "allowedDelta": 0, "target": 293211 },
     "knowledgeJsonBytes": { "baseline": 2020762, "allowedDelta": 0, "target": 2020762 },
     "knowledgeSqliteBytes": { "baseline": 6053888, "allowedDelta": 0, "target": 6053888 },
     "sourceRequestCount": { "baseline": 85, "allowedDelta": 0, "target": 85 },
@@ -17,6 +17,7 @@
   },
   "rationale": {
     "package": "Re-baselined DOWN after de-duplicating the knowledge graph: the JSON dropped every node body that was byte-identical to the file the node already points at (the package ships that text once), and the SQLite nodes table dropped its body column (the FTS index already stores what MATCH and snippet() need). Graph went 13.75 MB -> 7.9 MB and the unpacked package 25.4 MB -> 19.6 MB, a 23% cut, with search output byte-identical on both the SQLite and JSON-fallback paths. Earlier growth in this branch (utils/anchor.js and utils/positioning.js, per-instance anchor and layer-stack wiring across nine components, i18n adoption in twelve against an 82-key catalogue, base/layouts.md 62 -> 148 lines) is included in these numbers. Zero growth allowed from here.",
+    "minCssBytes": "Re-baselined UP by 1,141 bytes (292,070 -> 293,211, 0.4%): 7 bytes for the command palette list keeping its height in WebKit (`flex:1 1 auto` instead of `flex:1`), the rest for right-to-left support: direction rules for the sheet, command palette, menu, select, overlays, switch, progress, slider, calendar range caps and directional glyphs, plus the focus rings of the three color picker sliders and the closed-state resets of the command palette and color picker. Every rule is held by a test in tests/components/rtl-*.spec.cjs, keyboard-contracts.spec.cjs or apg-patterns.spec.cjs. Zero growth allowed from here.",
     "requestCount": "Zero growth: the published full bundle needs one stylesheet request.",
     "sourceRequestCount": "The unbundled source graph remains fixed at 85 distinct local stylesheets.",
     "cliRssBytes": "Median of three Node process.resourceUsage() samples; 8 MiB covers runtime/platform allocator variance without a broad ceiling."

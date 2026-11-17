@@ -134,6 +134,7 @@ If no `--ren-*` token is detected here, theme through semantic tokens from `toke
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - Agent safety: `<ren-otp>` renders one input per digit with `autocomplete="off"`, so an agent cannot tell it is a code. Put `data-agent-secret` on `<ren-otp>`; it covers every digit input. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
+- Right-to-left: a code is read left to right in every script. Under `dir="rtl"` the slots keep `direction: ltr` (slot 1 stays the leftmost, ArrowLeft/ArrowRight stay physical) while the group as a whole sits at the inline-start edge. Do not override the direction of `.ren-otp`.
 
 ## Related Files
 

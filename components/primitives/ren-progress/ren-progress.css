@@ -95,6 +95,24 @@
   }
 }
 
+/* The bar starts at the inline-start edge and sweeps toward inline-end. Under
+   RTL it starts on the right, so the sweep runs right to left. */
+.ren-progress-indeterminate:dir(rtl) .ren-progress-bar {
+  animation-name: ren-progress-slide-rtl;
+}
+
+@keyframes ren-progress-slide-rtl {
+  0% {
+    transform: translateX(100%);
+  }
+  50% {
+    transform: translateX(-500%);
+  }
+  100% {
+    transform: translateX(-500%);
+  }
+}
+
 /* Respect prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .ren-progress-indeterminate .ren-progress-bar {

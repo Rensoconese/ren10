@@ -89,10 +89,14 @@
   }
 }
 
-/* ═══ DECREMENT BUTTON (LEFT) ═══ */
+/* ═══ DECREMENT BUTTON (INLINE-START) ═══
+   Logical corners: the button swaps sides under RTL and its rounded corners
+   have to stay on the outside of the group. */
 .ren-number-field-decrement {
   border-inline-end: var(--stroke-1) solid var(--color-border);
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  border-radius: 0;
+  border-start-start-radius: var(--radius-md);
+  border-end-start-radius: var(--radius-md);
 
   /* ═══ MINUS ICON ═══ */
   &::before {
@@ -100,10 +104,12 @@
   }
 }
 
-/* ═══ INCREMENT BUTTON (RIGHT) ═══ */
+/* ═══ INCREMENT BUTTON (INLINE-END) ═══ */
 .ren-number-field-increment {
   border-inline-start: var(--stroke-1) solid var(--color-border);
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-radius: 0;
+  border-start-end-radius: var(--radius-md);
+  border-end-end-radius: var(--radius-md);
 
   /* ═══ PLUS ICON ═══ */
   &::before {
@@ -163,11 +169,15 @@
   }
 
   & .ren-number-field-decrement {
-    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    border-radius: 0;
+    border-start-start-radius: var(--radius-sm);
+    border-end-start-radius: var(--radius-sm);
   }
 
   & .ren-number-field-increment {
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    border-radius: 0;
+    border-start-end-radius: var(--radius-sm);
+    border-end-end-radius: var(--radius-sm);
   }
 
   & .ren-number-field-input {
@@ -190,11 +200,15 @@
   }
 
   & .ren-number-field-decrement {
-    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+    border-radius: 0;
+    border-start-start-radius: var(--radius-lg);
+    border-end-start-radius: var(--radius-lg);
   }
 
   & .ren-number-field-increment {
-    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    border-radius: 0;
+    border-start-end-radius: var(--radius-lg);
+    border-end-end-radius: var(--radius-lg);
   }
 
   & .ren-number-field-input {

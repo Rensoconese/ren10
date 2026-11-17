@@ -500,6 +500,11 @@ select {
   padding-inline-end: var(--space-10);
 }
 
+/* The chevron sits in the inline-end padding, which is on the left under RTL. */
+select:dir(rtl) {
+  background-position: left var(--space-3) center;
+}
+
 /* Modern: appearance: base-select (Chrome 135+, Edge 135+)
    Enables full CSS control over the dropdown picker.
    BOTH select and ::picker(select) must opt in.
@@ -855,6 +860,18 @@ summary::after {
 
 details[open] > summary::after {
   transform: rotate(45deg);
+}
+
+/* The chevron is two borders of a rotated box, and the logical border moves to
+   the other side under RTL. The same rotations then drew "down" for a closed
+   <details> and "left" for an open one; swapped, closed points at the
+   inline-end side and open points down, as under LTR. */
+summary:dir(rtl)::after {
+  transform: rotate(45deg);
+}
+
+details[open] > summary:dir(rtl)::after {
+  transform: rotate(-45deg);
 }
 
 summary::-webkit-details-marker {

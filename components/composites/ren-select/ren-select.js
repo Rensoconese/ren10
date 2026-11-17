@@ -667,6 +667,9 @@ export class RenSelect extends HTMLElement {
    */
   positionContent() {
     const placement = normalizeSelectPlacement(this.getAttribute('placement'));
+    // Size first, so the position is computed for the box that will be shown.
+    this.#content.style.position = 'fixed';
+    this.#content.style.width = `${this.#trigger.offsetWidth}px`;
     // Unlike popover/tooltip the dropdown aligns to a trigger edge instead of
     // centring, keeps a margin from every viewport edge, and clamps on both
     // axes — a listbox pushed off-screen is unusable, not just clipped.
@@ -683,10 +686,12 @@ export class RenSelect extends HTMLElement {
       }
     );
 
-    this.#content.style.position = 'fixed';
     this.#content.style.top = `${top}px`;
     this.#content.style.left = `${left}px`;
-    this.#content.style.width = `${this.#trigger.offsetWidth}px`;
+    // The stylesheet's CSS-only fallback pins `right: 0`. Together with a
+    // width and a `left` that over-constrains the box, and under RTL it is
+    // `left` that gets dropped: the list stuck to the viewport's right edge.
+    this.#content.style.right = 'auto';
     this.#content.setAttribute('data-flipped', flipped ? 'true' : 'false');
     this.#content.setAttribute('data-side', side);
     this.#content.setAttribute('data-align', align);

@@ -9,6 +9,7 @@
  *
  * Attributes:
  *   placement:     'bottom-start' (default) | 'bottom-end' | 'top-start' | 'top-end'
+ *                  (start/end follow the text direction; the side is physical)
  *                  | 'right-start' | 'right-end' | 'left-start' | 'left-end'
  *                  - Controls menu position relative to trigger
  *
@@ -294,7 +295,11 @@ export class RenMenu extends HTMLElement {
     let left = triggerRect.left;
     let top = triggerRect.bottom + gap;
 
-    if (placement.align === 'end') {
+    // `start` / `end` are logical: `bottom-start` lines the menu up with the
+    // trigger's inline-start edge, which is its right edge under dir="rtl".
+    // The side (`top`, `bottom`, `left`, `right`) is physical and stays put.
+    const rtl = getComputedStyle(this.#trigger).direction === 'rtl';
+    if ((placement.align === 'end') !== rtl) {
       left = triggerRect.right - menuRect.width;
     }
 
@@ -508,8 +513,6 @@ export class RenMenu extends HTMLElement {
     this.setupKeyboardNav();
     this.setupDismissable();
 
-    this.positionMenu();
-
     if ('popover' in HTMLElement.prototype) {
       try {
         this.showPopover();
@@ -519,6 +522,11 @@ export class RenMenu extends HTMLElement {
     } else {
       this.classList.add('ren-open');
     }
+
+    // Position once the menu is rendered: an edge that is aligned from the far
+    // side (`end`, or `start` under RTL) needs the menu's real width, and a
+    // hidden menu measures 0.
+    this.positionMenu();
 
     // Reposition on next frame for accuracy
     this.#animationFrame = requestAnimationFrame(() => {

@@ -102,6 +102,9 @@ export function installMinimalDOM() {
     let index = -1;
     return { nextNode: () => nodes[++index] ?? null };
   };
+  // No layout here, so no direction either: components that ask which way the
+  // text runs (to decide what ArrowLeft means) get the default.
+  globalThis.getComputedStyle = () => ({ direction: 'ltr' });
 }
 
 export function element(tag, attributes = {}, text = '') {

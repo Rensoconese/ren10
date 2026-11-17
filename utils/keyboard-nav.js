@@ -7,7 +7,8 @@
  * Implements "roving tabindex" pattern (WAI-ARIA APG):
  * - Only the active item has tabindex="0"
  * - All other items have tabindex="-1"
- * - Arrow keys move between items
+ * - Arrow keys move between items; in a horizontal collection Left/Right
+ *   follow the text direction, so under dir="rtl" ArrowLeft is "next"
  * - Home/End jump to first/last
  * - Typeahead search finds items by text
  *
@@ -212,6 +213,12 @@ export function createKeyboardNav(container, options = {}) {
     const isVertical = orientation === 'vertical' || orientation === 'both';
     const isHorizontal = orientation === 'horizontal' || orientation === 'both';
 
+    // Left/Right are visual keys: the one pointing at the inline-end side
+    // moves forward. Read per key press so a `dir` change needs no re-attach.
+    const rtl = isHorizontal && getComputedStyle(container).direction === 'rtl';
+    const nextKey = rtl ? 'ArrowLeft' : 'ArrowRight';
+    const previousKey = rtl ? 'ArrowRight' : 'ArrowLeft';
+
     let handled = false;
 
     switch (event.key) {
@@ -229,14 +236,14 @@ export function createKeyboardNav(container, options = {}) {
         }
         break;
 
-      case 'ArrowRight':
+      case nextKey:
         if (isHorizontal) {
           activateNext();
           handled = true;
         }
         break;
 
-      case 'ArrowLeft':
+      case previousKey:
         if (isHorizontal) {
           activatePrevious();
           handled = true;

@@ -435,10 +435,12 @@ export class RenTable extends HTMLElement {
         const cellIndex = Array.from(row.cells).indexOf(currentCell);
         nextCell = nextRow.cells[cellIndex];
       }
-    } else if (direction === 'ArrowLeft') {
-      nextCell = currentCell.previousElementSibling || currentCell;
-    } else if (direction === 'ArrowRight') {
-      nextCell = currentCell.nextElementSibling || currentCell;
+    } else if (direction === 'ArrowLeft' || direction === 'ArrowRight') {
+      // Columns run right to left under RTL, so the cell an arrow points at
+      // is the previous sibling for ArrowRight and the next one for ArrowLeft.
+      const rtl = getComputedStyle(this).direction === 'rtl';
+      const forward = (direction === 'ArrowRight') !== rtl;
+      nextCell = (forward ? currentCell.nextElementSibling : currentCell.previousElementSibling) || currentCell;
     }
 
     if (nextCell && nextCell !== currentCell) {
@@ -487,7 +489,10 @@ export class RenTable extends HTMLElement {
   _handleResize(event) {
     if (!this.#resizingColumn) return;
 
-    const delta = event.clientX - this.#resizeStartX;
+    // The handle sits on the column's inline-end edge. Under RTL that is its
+    // left edge, so dragging left is what widens the column.
+    const rtl = getComputedStyle(this).direction === 'rtl';
+    const delta = (event.clientX - this.#resizeStartX) * (rtl ? -1 : 1);
     const newWidth = Math.max(80, this.#resizeStartWidth + delta);
     this.#resizingColumn.style.width = `${newWidth}px`;
   }

@@ -55,7 +55,8 @@ async function mountRegistry(page, origin, key, edit = (usage) => usage, options
     document.getElementById('host').innerHTML = html;
   }, [assets.filter((a) => a.endsWith('.css')), markup]);
   await page.evaluate((sources) => Promise.all(sources.map((src) => import(src))), assets.filter((a) => a.endsWith('.js')));
-  const tag = markup.match(/<(ren-[a-z-]+)/)?.[1];
+  // A CSS-only entry defines no element, however its usage is spelled.
+  const tag = assets.some((a) => a.endsWith('.js')) ? markup.match(/<(ren-[a-z-]+)/)?.[1] : null;
   if (tag) {
     await page.waitForFunction((name) => customElements.get(name) !== undefined, tag);
   }

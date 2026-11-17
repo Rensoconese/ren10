@@ -83,6 +83,22 @@
       transform: translateX(-100%);
       width: var(--sidebar-width);
     }
+
+    /* The drawer is anchored with a logical inset, so under RTL it sits on the
+       right edge. The off-canvas translate is physical and has to point the
+       other way there, or the "closed" drawer slides into view instead of out. */
+    &:dir(rtl) {
+      transform: translateX(100%);
+
+      &[data-open] {
+        transform: translateX(0);
+        box-shadow: -4px 0 12px rgb(0 0 0 / 0.15);
+      }
+
+      &[data-collapsed] {
+        transform: translateX(100%);
+      }
+    }
   }
 }
 

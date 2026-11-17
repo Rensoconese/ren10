@@ -155,6 +155,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: the calendar it opens follows `ren-calendar` (ArrowLeft is the next day under `dir="rtl"`), and the arrow between the two dates of a range points from start to end (`←`).
 
 ## Related Files
 

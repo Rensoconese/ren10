@@ -134,6 +134,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - This contract is CSS-first; do not introduce JavaScript unless the source component already owns that behavior.
+- Right-to-left: `.ren-avatar-status` sits on the inline-end corner (bottom-left under `dir="rtl"`).
 
 ## Related Files
 

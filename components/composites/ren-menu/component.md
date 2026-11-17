@@ -157,6 +157,7 @@ Theme through these public custom properties before reaching for selectors.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - Agent safety: a destructive or outward-facing `menuitem` (Delete, Send, Publish) carries `data-agent-confirm="<what it does>"` on that item only, unless it opens a confirmation dialog — then the dialog's confirming button carries it. See [`docs/agent-safety.md`](../../../docs/agent-safety.md).
+- Right-to-left: the side in `placement` (`top`, `bottom`, `left`, `right`) is physical and never flips; the `-start` / `-end` half follows the text direction, so `bottom-start` lines the menu up with the trigger's right edge under `dir="rtl"`. The tick of a checked item is not mirrored.
 
 ## Related Files
 

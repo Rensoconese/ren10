@@ -587,6 +587,13 @@
   transition: transform var(--duration-state) var(--ease-enter, ease);
 }
 
+/* A closed disclosure points at the inline-end side; U+25B8 is not a
+   bidi-mirrored character, so it is flipped by hand. Open, it points down in
+   either direction (the rule below outranks this one). */
+.ren-ai-tool-call-header:dir(rtl)::before {
+  transform: scaleX(-1);
+}
+
 .ren-ai-tool-call[open] > .ren-ai-tool-call-header::before {
   transform: rotate(90deg);
 }

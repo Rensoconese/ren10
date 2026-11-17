@@ -4537,6 +4537,7 @@
      "--ren-slider-track-height",
      "--ren-slider-track-radius",
      "--shadow-sm",
+     "--slider-fill-to",
      "--space-0-5",
      "--space-1",
      "--transition-tactile",
@@ -16187,6 +16188,14 @@
   },
   {
    "data": {},
+   "body": "--slider-fill-to",
+   "path": "components/composites/ren-slider/ren-slider.css",
+   "id": "token:--slider-fill-to",
+   "type": "token",
+   "name": "--slider-fill-to"
+  },
+  {
+   "data": {},
    "body": "--space-0",
    "path": "components/composites/ren-calendar/ren-calendar.css",
    "id": "token:--space-0",
@@ -23149,6 +23158,13 @@
    "data": {},
    "source": "component:composite:ren-slider",
    "target": "token:--shadow-sm",
+   "type": "uses_token"
+  },
+  {
+   "detail": "",
+   "data": {},
+   "source": "component:composite:ren-slider",
+   "target": "token:--slider-fill-to",
    "type": "uses_token"
   },
   {

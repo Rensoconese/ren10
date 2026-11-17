@@ -48,7 +48,7 @@ canonicalImports:
     - "If the page already imports rends/components/index.css, do not import the CSS again."
 
 requiredMarkup:
-  - "<ren-sheet id=\"...\" side=\"right|left|top|bottom\"> is the host; do not replace the inner <dialog> the component generates with a <div>."
+  - "<ren-sheet id=\"...\" side=\"right|left|top|bottom|inline-start|inline-end\"> is the host; do not replace the inner <dialog> the component generates with a <div>."
   - "Header / body / footer slots use .ren-sheet-header, .ren-sheet-body, .ren-sheet-footer in that order so the body grows and the footer pins to the bottom."
   - "Provide .ren-sheet-title as a real heading; it supplies the accessible name when no aria-label is set on <ren-sheet>."
   - "Close affordances use [data-sheet-close]; triggers elsewhere on the page use [data-sheet-trigger=\"<id>\"]."
@@ -144,6 +144,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: `side="left"` and `side="right"` are physical edges and do not flip under `dir="rtl"`. Use `side="inline-start"` or `side="inline-end"` for a sheet that follows the text direction; the component resolves it to `data-side="left"` or `data-side="right"` each time it opens, so the slide-in, the shadow and the dismiss swipe agree.
 
 ## Related Files
 

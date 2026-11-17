@@ -151,6 +151,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
+- Right-to-left: the native range input mirrors under `dir="rtl"` (minimum on the right). The track fill starts from the same side and dragging a range thumb reads the pointer from the right edge. Arrow keys are the browser's own.
 
 ## Related Files
 
