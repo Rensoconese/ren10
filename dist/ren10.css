@@ -7812,26 +7812,6 @@
       }
       translate: 0 0;
     }
-    &[data-side=bottom] {
-      bottom: 0;
-      inset-inline: 0;
-      width: 100vw;
-      max-height: 85dvh;
-      @starting-style {
-        translate: 0 100%;
-      }
-      translate: 0 0;
-    }
-    &[data-side=top] {
-      top: 0;
-      inset-inline: 0;
-      width: 100vw;
-      max-height: 85dvh;
-      @starting-style {
-        translate: 0 -100%;
-      }
-      translate: 0 0;
-    }
     &.-sm {
       width: min(18rem, 90vw);
     }
@@ -7847,6 +7827,28 @@
     &.-full {
       width: 100vw;
       height: 100dvh;
+    }
+    &[data-side=bottom] {
+      bottom: 0;
+      top: auto;
+      inset-inline: 0;
+      width: 100vw;
+      max-height: 85dvh;
+      @starting-style {
+        translate: 0 100%;
+      }
+      translate: 0 0;
+    }
+    &[data-side=top] {
+      top: 0;
+      bottom: auto;
+      inset-inline: 0;
+      width: 100vw;
+      max-height: 85dvh;
+      @starting-style {
+        translate: 0 -100%;
+      }
+      translate: 0 0;
     }
     transition: translate var(--duration-enter) var(--ease-enter), opacity var(--duration-enter) var(--ease-enter);
     transition-behavior: allow-discrete;
@@ -7926,7 +7928,7 @@
     }
   }
   .ren-sheet-body {
-    flex: 1;
+    flex: 1 1 auto;
     padding: var(--space-6);
     overflow-y: auto;
     overflow-x: hidden;
