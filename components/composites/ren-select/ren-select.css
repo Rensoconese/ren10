@@ -153,6 +153,9 @@
 .ren-select-content.ren-open {
   visibility: visible;
   opacity: 1;
+  /* Where the opening animation ends. Without it the closed transform showed
+     through once the animation was over, and the open list sat 2% small. */
+  transform: none;
   animation: ren-select-open var(--duration-enter) var(--ease-enter);
 }
 

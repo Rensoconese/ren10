@@ -387,6 +387,15 @@ export class RenSelect extends HTMLElement {
     // Item selection
     this.#content.addEventListener('click', (e) => this.handleItemClick(e), { signal });
 
+    // Focus that moves to another element of the page (Tab out of the list)
+    // closes the list behind it. Without this the list stayed open with focus
+    // elsewhere. A null relatedTarget is the window losing focus, or a press on
+    // something that takes none; the dismissable layer owns outside presses.
+    this.addEventListener('focusout', (e) => {
+      if (!this.#isOpen || !(e.relatedTarget instanceof Node) || this.contains(e.relatedTarget)) return;
+      this.close({ restoreFocus: false });
+    }, { signal });
+
     // Setup keyboard navigation in content
     this.setupKeyboardNav();
 
@@ -621,8 +630,10 @@ export class RenSelect extends HTMLElement {
 
   /**
    * Close the dropdown
+   * @param {{ restoreFocus?: boolean }} [options] `restoreFocus: false` leaves
+   *   focus where it is, for a close caused by focus having moved elsewhere.
    */
-  close() {
+  close({ restoreFocus = true } = {}) {
     if (!this.#isOpen) return;
 
     this.#isOpen = false;
@@ -656,7 +667,7 @@ export class RenSelect extends HTMLElement {
     this.#scrollController = null;
 
     // Return focus to trigger
-    this.#trigger.focus();
+    if (restoreFocus) this.#trigger.focus();
 
     this.dispatchEvent(new CustomEvent('ren-select-close', { bubbles: true }));
   }

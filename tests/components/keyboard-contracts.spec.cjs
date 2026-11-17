@@ -232,6 +232,57 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-select rests at its full size once the opening animation is over', { tag: ['@ren-select', '@runtime'] }, async ({ page }) => {
+    const errors = await mount(page, 'select');
+    const trigger = page.locator('ren-select [data-select-trigger]');
+    const list = page.locator('ren-select [data-select-content]');
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await list.evaluate((el) => Promise.all(el.getAnimations().map((animation) => animation.finished)));
+
+    // The animation ends at scale 1; the list has to stay there. Its closed
+    // state is a little smaller and higher, and that is what showed through.
+    const resting = await list.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      return { drawn: Math.round(box.width * 100) / 100, laidOut: el.offsetWidth, transform: getComputedStyle(el).transform };
+    });
+    expect(resting.transform, 'no transform left on the open list').toBe('none');
+    expect(resting.drawn, 'the list is drawn at the size it is laid out').toBe(resting.laidOut);
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-select closes when Tab takes focus away, and leaves focus where Tab put it', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'select', (usage) => `${usage}\n<button type="button" id="after-select">After</button>`);
+    const trigger = page.locator('ren-select [data-select-trigger]');
+    const list = page.locator('ren-select [data-select-content]');
+
+    await trigger.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(() => focusedText(page)).toBe('Option B');
+
+    // Tab leaves the listbox. An open list with focus somewhere else on the
+    // page is a popup nothing closes but a click.
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after-select')).toBeFocused();
+    await expect(trigger, 'the list closes behind the focus').toHaveAttribute('aria-expanded', 'false');
+    await expect(list).toBeHidden();
+    await expect(page.locator('#after-select'), 'closing does not pull focus back to the trigger').toBeFocused();
+    expect(await page.locator('ren-select').evaluate((el) => el.value), 'moving through options chose nothing').toBeNull();
+
+    // The control still opens and closes from the keyboard afterwards.
+    await page.keyboard.press('Shift+Tab');
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await page.keyboard.press('Escape');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(trigger, 'Escape still returns focus to the trigger').toBeFocused();
+    expect(errors).toEqual([]);
+  });
+
   test('ren-select leaves the active option to the keyboard when the list opens or scrolls under a resting pointer', { tag: ['@ren-select', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'select', (usage) => usage.replace(
       /<div data-select-item data-value="a"[\s\S]*Option B<\/div>/,
@@ -281,6 +332,37 @@ test.describe('keyboard contracts', () => {
     await expect(highlighted).toHaveText(afterPointer);
     await repeatRestingMove(page, rest);
     await expect(highlighted, 'the pointer rests again after a key press').toHaveText(afterPointer);
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-menu reopened while its close is still animating stays open', { tag: ['@ren-menu', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'menu');
+    const trigger = page.locator('[data-menu-trigger]');
+    const menu = page.locator('ren-menu');
+    const first = page.getByRole('menuitem', { name: 'Edit' });
+
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await expect(first).toBeFocused();
+
+    // Close and open again before the closing animation is over, as two quick
+    // presses on the trigger do. The close that was still pending used to run
+    // afterwards and hide the menu it no longer belonged to.
+    await menu.evaluate((el) => { el.close(); el.open(); });
+    // Longer than any close animation: the late close has had its chance.
+    await page.waitForTimeout(400);
+    await expect(trigger, 'the trigger reports the menu it opened').toHaveAttribute('aria-expanded', 'true');
+    await expect(first, 'the reopened menu is on screen').toBeVisible();
+    await expect(first, 'with focus on its first item').toBeFocused();
+
+    // And it is one menu in one state: the keys work and Escape closes it.
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('menuitem', { name: 'Duplicate' })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(first).toBeHidden();
+    await expect(trigger).toBeFocused();
     expect(errors).toEqual([]);
   });
 
@@ -400,6 +482,79 @@ test.describe('keyboard contracts', () => {
       const item = page.locator('.ren-command-item', { hasText: name });
       await expect.poll(async () => commandAt(page, await centreOf(item)), `${name} is on screen at its own centre`).toBe(name);
     }
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-command walks the whole list with the arrow keys, keeps filtering after them and selects once', { tag: ['@ren-command', '@keyboard'] }, async ({ page }) => {
+    // A control of the page's own inside the palette, next to the list.
+    const errors = await mount(page, 'command', (usage) => fourCommands(usage).replace(
+      '<div class="ren-command-empty" hidden>',
+      '<button type="button" id="palette-help">Help</button>\n    <div class="ren-command-empty" hidden>'
+    ));
+    const dialog = page.locator('ren-command dialog');
+    const input = page.locator('.ren-command-input');
+    // Strict: a second highlighted item, even a hidden one, fails the check.
+    const highlighted = page.locator('ren-command .ren-command-item[data-highlighted]');
+    const shown = page.locator('ren-command .ren-command-item:visible');
+    await page.evaluate(() => {
+      window.__selected = [];
+      document.addEventListener('ren-command-select', (event) => window.__selected.push(event.detail.value));
+    });
+    const selected = () => page.evaluate(() => window.__selected);
+
+    await page.keyboard.press('Control+K');
+    await expect(input).toBeFocused();
+    await expect(highlighted).toHaveText('Save');
+
+    // Every press, not only the first: the arrows move focus onto the items,
+    // and the keys have to keep working from there.
+    for (const name of ['Copy', 'Paste', 'Cut']) {
+      await page.keyboard.press('ArrowDown');
+      await expect(highlighted, `ArrowDown reaches ${name}`).toHaveText(name);
+    }
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted, 'ArrowDown wraps from the last item to the first').toHaveText('Save');
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted, 'ArrowUp wraps from the first item to the last').toHaveText('Cut');
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted).toHaveText('Paste');
+
+    // Enter belongs to whatever has focus: on another control it is that
+    // control's own key, and selects nothing.
+    await page.evaluate(() => {
+      window.__helped = 0;
+      document.getElementById('palette-help').addEventListener('click', () => { window.__helped += 1; });
+    });
+    await page.locator('#palette-help').focus();
+    await page.keyboard.press('Enter');
+    expect(await page.evaluate(() => window.__helped), 'Enter activates the focused control').toBe(1);
+    await expect(dialog).toHaveJSProperty('open', true);
+    expect(await selected(), 'and selects no item').toEqual([]);
+
+    // Enter on an item the arrows reached selects it, once.
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted).toHaveText('Copy');
+    await page.keyboard.press('Enter');
+    await expect(dialog).toHaveJSProperty('open', false);
+    expect(await selected(), 'one selection, of the highlighted item').toEqual(['copy']);
+
+    // Typing filters the items the registry usage ships (plain text, no title
+    // element), also after an arrow key has moved focus off the search field.
+    await page.keyboard.press('Control+K');
+    await expect(input).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted).toHaveText('Copy');
+    await page.keyboard.type('cu');
+    await expect(input, 'typing lands in the search field').toHaveValue('cu');
+    await expect(shown, 'the list is filtered to what matches').toHaveText(['Cut']);
+    await expect(highlighted, 'the match is the highlighted item').toHaveText('Cut');
+    await page.keyboard.press('Backspace');
+    await expect(shown).toHaveText(['Copy', 'Cut']);
+    await page.keyboard.press('ArrowDown');
+    await expect(highlighted).toHaveText('Cut');
+    await page.keyboard.press('Enter');
+    await expect(dialog).toHaveJSProperty('open', false);
+    expect(await selected()).toEqual(['copy', 'cut']);
     expect(errors).toEqual([]);
   });
 
@@ -714,6 +869,108 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-color-picker names its channel fields by what they hold, in the active locale', { tag: ['@ren-color-picker', '@a11y'] }, async ({ page }) => {
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('placement="bottom"', 'placement="bottom" format="rgb"'));
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const fields = page.locator('ren-color-picker').getByRole('spinbutton');
+    const names = () => fields.evaluateAll((inputs) => inputs.map((input) => input.getAttribute('aria-label')));
+
+    // A word, not the letter printed beside the field.
+    expect(await names()).toEqual(['Red', 'Green', 'Blue']);
+    await expect(page.getByRole('spinbutton', { name: 'Red', exact: true })).toHaveValue('91');
+
+    // The names come from the catalogue: they follow the locale and the format.
+    await page.evaluate(() => import('/utils/i18n.js').then((i18n) => i18n.setLocale('es')));
+    await page.locator('.ren-color-picker-format-toggle').click();
+    expect(await names(), 'HSL fields under the Spanish locale').toEqual(['Tono', 'Saturación', 'Luminosidad']);
+    await page.evaluate(() => import('/utils/i18n.js').then((i18n) => i18n.setLocale('en')));
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-color-picker shows a colour set from script, before and after it has been opened', { tag: ['@ren-color-picker', '@runtime'] }, async ({ page }) => {
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('placement="bottom"', 'placement="bottom" swatches="#123456,#abcdef"'));
+    const picker = page.locator('ren-color-picker');
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await page.evaluate(() => {
+      window.__events = [];
+      const el = document.querySelector('ren-color-picker');
+      for (const type of ['ren-input', 'ren-change']) el.addEventListener(type, () => window.__events.push(type));
+    });
+
+    // Never opened: the trigger is all there is to update.
+    await picker.evaluate((el) => el.setValue('#123456'));
+    await expect(trigger, 'the trigger is named after the new colour').toHaveAttribute('aria-label', 'Color picker, current color #123456');
+    await expect(trigger.locator('.ren-color-picker-trigger-value')).toHaveText('#123456');
+    expect(await trigger.locator('.ren-color-picker-trigger-swatch').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(18, 52, 86)');
+
+    // Open: every control that shows the colour follows it.
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const presets = page.getByRole('group', { name: 'Preset color swatches' }).getByRole('button');
+    await expect(presets.first()).toHaveAttribute('aria-current', 'true');
+    await picker.evaluate((el) => el.setValue('#abcdef'));
+    await expect(trigger).toHaveAttribute('aria-label', 'Color picker, current color #abcdef');
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue('#abcdef');
+    await expect(presets.nth(1)).toHaveAttribute('aria-current', 'true');
+    await expect(presets.first()).not.toHaveAttribute('aria-current');
+
+    // Something that is not a colour changes nothing.
+    await picker.evaluate((el) => el.setValue('not a colour'));
+    await expect(trigger).toHaveAttribute('aria-label', 'Color picker, current color #abcdef');
+
+    // A value set from script is not the user changing it: no events.
+    expect(await page.evaluate(() => window.__events)).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-color-picker reports the colour it was given, to the last step', { tag: ['@ren-color-picker', '@runtime'] }, async ({ page }) => {
+    // Neither #5b6cff nor #c0ffee has an exact place in the picker's model,
+    // which holds hue in whole degrees and the other two in whole percents.
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('placement="bottom"', 'placement="bottom" swatches="#5b6cff,#c0ffee"'));
+    const picker = page.locator('ren-color-picker');
+    const hex = () => picker.evaluate((el) => el.getValue().hex);
+    await page.evaluate(() => {
+      window.__changes = [];
+      document.querySelector('ren-color-picker').addEventListener('ren-change', (event) => window.__changes.push(event.detail.hex));
+    });
+
+    expect(await hex(), 'the value attribute comes back as written').toBe('#5b6cff');
+    await expect(page.getByRole('button', { name: 'Color picker, current color #5b6cff' })).toHaveCount(1);
+
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const presets = page.getByRole('group', { name: 'Preset color swatches' }).getByRole('button');
+    await expect(presets.first(), 'the preset with the same colour is the current one').toHaveAttribute('aria-current', 'true');
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue('#5b6cff');
+
+    // Choosing a preset is choosing that colour, not its neighbour.
+    await presets.nth(1).focus();
+    await page.keyboard.press('Enter');
+    expect(await page.evaluate(() => window.__changes)).toEqual(['#c0ffee']);
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue('#c0ffee');
+    await expect(presets.nth(1)).toHaveAttribute('aria-current', 'true');
+
+    // A control that moves changes the colour; moved back, it is the same colour again.
+    await page.getByRole('slider', { name: 'Color hue' }).focus();
+    await page.keyboard.press('ArrowRight');
+    expect(await hex()).not.toBe('#c0ffee');
+    await expect(presets.nth(1)).not.toHaveAttribute('aria-current');
+    await page.keyboard.press('ArrowLeft');
+    expect(await hex(), 'back on the same step, the colour is the one that was chosen').toBe('#c0ffee');
+
+    for (const colour of ['#123456', '#abcdef', '#fedcba', '#bada55', '#336699', '#0a0b0c', '#7f7f7f']) {
+      await picker.evaluate((el, value) => el.setValue(value), colour);
+      expect(await hex(), `${colour} comes back as written`).toBe(colour);
+    }
+    expect(errors).toEqual([]);
+  });
+
   test('ren-color-picker controls expose their name, role and value, and a key press is a committed change', { tag: ['@ren-color-picker', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'color-picker', (usage) => usage.replace('value="#5b6cff"', 'value="#ff0000" alpha swatches="#ff0000,#00ff00"'));
     await page.evaluate(() => {
@@ -910,6 +1167,40 @@ test.describe('keyboard contracts', () => {
     await resizeViewport(page, { width: 1280, height: 800 });
     await expect(sidebar).toHaveAttribute('data-collapsed', '');
     await expect(toggle, 'back on desktop the preference applies again').toHaveAttribute('aria-expanded', 'false');
+    expect(errors).toEqual([]);
+  });
+
+  test('ren-sidebar keeps a closed mobile drawer out of the Tab order', { tag: ['@ren-sidebar', '@keyboard'] }, async ({ page }) => {
+    await page.setViewportSize({ width: 480, height: 800 });
+    const errors = await mount(page, 'sidebar', (usage) => `<button type="button" id="open-nav">Menu</button>\n${usage}\n<button type="button" id="after-nav">After</button>`);
+    await page.evaluate(() => {
+      document.getElementById('open-nav').addEventListener('click', () => document.querySelector('ren-sidebar').toggleMenu());
+    });
+    const sidebar = page.locator('ren-sidebar');
+    const opener = page.locator('#open-nav');
+    const links = page.locator('ren-sidebar a.ren-sidebar-item');
+
+    // Closed, the drawer is off canvas: focus there is focus nobody can see.
+    await opener.focus();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after-nav'), 'Tab skips the links of the closed drawer').toBeFocused();
+    await expect(links.first()).toBeHidden();
+
+    // Open, its links are the next stops.
+    await opener.focus();
+    await page.keyboard.press('Enter');
+    await expect(sidebar).toHaveAttribute('data-open', '');
+    await expect(links.first()).toBeVisible();
+    await page.keyboard.press('Tab');
+    await expect(links.first(), 'Tab reaches the first link of the open drawer').toBeFocused();
+
+    // Closed again, they are out of the order once more.
+    await page.keyboard.press('Escape');
+    await expect(sidebar).not.toHaveAttribute('data-open', '');
+    await expect(opener).toBeFocused();
+    await expect(links.first(), 'the drawer is hidden again once it has slid out').toBeHidden();
+    await page.keyboard.press('Tab');
+    await expect(page.locator('#after-nav')).toBeFocused();
     expect(errors).toEqual([]);
   });
 

@@ -72,34 +72,6 @@ ren-sheet {
     translate: 0 0;
   }
 
-  &[data-side='bottom'] {
-    bottom: 0;
-    inset-inline: 0;
-
-    width: 100vw;
-    max-height: 85dvh;
-
-    @starting-style {
-      translate: 0 100%;
-    }
-
-    translate: 0 0;
-  }
-
-  &[data-side='top'] {
-    top: 0;
-    inset-inline: 0;
-
-    width: 100vw;
-    max-height: 85dvh;
-
-    @starting-style {
-      translate: 0 -100%;
-    }
-
-    translate: 0 0;
-  }
-
   /* Size variants */
   &.-sm {
     width: min(18rem, 90vw);
@@ -120,6 +92,42 @@ ren-sheet {
   &.-full {
     width: 100vw;
     height: 100dvh;
+  }
+
+  /* `top` and `bottom` release the opposite inset for the same reason as the
+     side sheets above: a modal <dialog> also gets `inset-block: 0`, and with a
+     content-sized height the box kept its top edge, so a "bottom" sheet opened
+     at the top. They come after the size variants because a size is the width
+     of a side sheet: one that runs along a block edge spans the viewport
+     whatever its size, the default `md` included. */
+  &[data-side='bottom'] {
+    bottom: 0;
+    top: auto;
+    inset-inline: 0;
+
+    width: 100vw;
+    max-height: 85dvh;
+
+    @starting-style {
+      translate: 0 100%;
+    }
+
+    translate: 0 0;
+  }
+
+  &[data-side='top'] {
+    top: 0;
+    bottom: auto;
+    inset-inline: 0;
+
+    width: 100vw;
+    max-height: 85dvh;
+
+    @starting-style {
+      translate: 0 -100%;
+    }
+
+    translate: 0 0;
   }
 
   /* Transitions — semantic tokens keep sheet in sync with ren-dialog and
@@ -234,7 +242,9 @@ ren-sheet {
 }
 
 .ren-sheet-body {
-  flex: 1;
+  /* `auto` basis, not `flex: 1`: WebKit resolves a 0% basis to zero when the
+     sheet has both block insets set, which squeezed the body to its padding. */
+  flex: 1 1 auto;
   padding: var(--space-6);
 
   overflow-y: auto;

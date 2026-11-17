@@ -174,6 +174,7 @@ Theme through these public custom properties before reaching for selectors.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - Right-to-left: the calendars it opens follow `ren-calendar` (ArrowLeft is the next day under `dir="rtl"`).
+- Layout: the dropdown is two calendars wide (`--ren-calendar-width` each, wider on coarse pointers) and never wider than the viewport; the compact stacked layout comes from the `ren-date-range` container query, and at 680px and below the dropdown is a full-width bottom sheet.
 
 ## Related Files
 

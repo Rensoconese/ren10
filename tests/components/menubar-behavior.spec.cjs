@@ -97,6 +97,46 @@ test('activating an item with the mouse fires its action and closes the menu', a
   expect(pageErrors).toEqual([]);
 });
 
+test('an open submenu is on screen beside its parent, and its items take a click', { tag: ['@ren-menubar', '@runtime'] }, async ({ page }) => {
+  const selected = [];
+  await page.exposeFunction('recordSelect', (value) => selected.push(value));
+  await page.evaluate(() =>
+    document
+      .querySelector('ren-menubar')
+      // @ts-ignore - test bridge
+      ?.addEventListener('ren-menubar-select', (event) => window.recordSelect(event.detail.item.id))
+  );
+
+  await page.click('#trigger-file');
+  await page.hover('#item-recent');
+  await expect.poll(() => expanded(page, 'item-recent')).toBe('true');
+
+  // The submenu panel is a child of its item and sits beside the parent panel.
+  // A parent that clips its overflow leaves it open, in the accessibility tree,
+  // and nowhere on screen: every box still reports a position.
+  const hit = (id) => page.evaluate((elementId) => {
+    const box = document.getElementById(elementId).getBoundingClientRect();
+    const at = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+    return at?.id || at?.className || at?.localName || 'nothing';
+  }, id);
+  await expect.poll(() => hit('item-doc-one'), 'a pointer on the first submenu item hits that item').toBe('item-doc-one');
+  await expect.poll(() => hit('item-doc-two')).toBe('item-doc-two');
+
+  const [parent, submenu] = await page.evaluate(() => ['#item-recent', '#item-doc-one'].map((selector) => {
+    const box = document.querySelector(selector).closest('.ren-menubar-menu').getBoundingClientRect();
+    return { left: box.left, right: box.right };
+  }));
+  expect(submenu.left, 'the submenu opens beside the parent panel, not over it').toBeGreaterThanOrEqual(parent.right);
+
+  await page.mouse.click(...(await page.locator('#item-doc-two').evaluate((el) => {
+    const box = el.getBoundingClientRect();
+    return [box.left + box.width / 2, box.top + box.height / 2];
+  })));
+  await expect.poll(() => selected, 'a click where the submenu item is selects it').toEqual(['item-doc-two']);
+  await expect.poll(() => expanded(page, 'trigger-file')).toBe('false');
+  expect(pageErrors).toEqual([]);
+});
+
 test('a click outside collapses the whole tree at once', async ({ page }) => {
   await page.click('#trigger-file');
   await page.hover('#item-recent');

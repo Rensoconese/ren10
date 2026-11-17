@@ -507,6 +507,14 @@ export class RenMenu extends HTMLElement {
   open() {
     if (this.#isOpen) return;
 
+    // A close still waiting for its animation would run after this and hide
+    // the menu it no longer belongs to, with the trigger reporting it closed.
+    if (this.#closeTimer) {
+      clearTimeout(this.#closeTimer);
+      this.#closeTimer = null;
+      this.removeAttribute('data-closing');
+    }
+
     this.#isOpen = true;
     this.#returnFocus = true;
     this.setAttribute('data-state', 'open');

@@ -517,6 +517,10 @@ test.describe('rtl contracts: sides are physical, alignment is logical', () => {
   });
 
   test('side placements keep their gap between the overlay and its trigger', { tag: ['@ren-popover', '@ren-tooltip', '@ren-date-picker', '@ren-date-range-picker', '@ren-color-picker', '@rtl'] }, async ({ page }) => {
+    // Room beside the trigger for the widest of these, the date range dropdown
+    // with its two calendars: an overlay that does not fit on the asked side is
+    // moved to another one, and then there is no gap to compare.
+    await page.setViewportSize({ width: 1700, height: 1024 });
     // [registry key, usage placed on `side`, how to open, trigger, overlay]
     const overlays = [
       ['popover', (usage, side) => usage.replace('placement="bottom"', `placement="${side}"`), (host) => host.open(), '#account-trigger', 'ren-popover'],
@@ -530,7 +534,7 @@ test.describe('rtl contracts: sides are physical, alignment is logical', () => {
         // Distance from the trigger to the overlay on the asked side; negative when it is on the other one.
         const gap = async (dir) => {
           // A narrow host in a wide viewport: room for the overlay on either side.
-          const errors = await mount(page, key, { dir, inset: 500, edit: (usage) => place(usage, side) });
+          const errors = await mount(page, key, { dir, inset: 700, edit: (usage) => place(usage, side) });
           await page.locator(`ren-${key}`).evaluate(open);
           const overlay = page.locator(overlaySelector);
           await expect(overlay).toBeVisible();

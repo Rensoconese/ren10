@@ -268,7 +268,16 @@
               }
             }
           ],
-          "members": [],
+          "members": [
+            {
+              "kind": "method",
+              "name": "getValue"
+            },
+            {
+              "kind": "method",
+              "name": "setValue"
+            }
+          ],
           "cssProperties": [
             {
               "name": "--ren-cp-bg"

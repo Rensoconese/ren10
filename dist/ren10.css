@@ -1326,6 +1326,9 @@
     font: inherit;
     color: inherit;
   }
+  input[type=hidden i] {
+    display: none !important;
+  }
   textarea {
     field-sizing: content;
     min-height: 3lh;
@@ -6616,6 +6619,7 @@
   .ren-select-content.ren-open {
     visibility: visible;
     opacity: 1;
+    transform: none;
     animation: ren-select-open var(--duration-enter) var(--ease-enter);
   }
   @keyframes ren-select-open {
@@ -7812,26 +7816,6 @@
       }
       translate: 0 0;
     }
-    &[data-side=bottom] {
-      bottom: 0;
-      inset-inline: 0;
-      width: 100vw;
-      max-height: 85dvh;
-      @starting-style {
-        translate: 0 100%;
-      }
-      translate: 0 0;
-    }
-    &[data-side=top] {
-      top: 0;
-      inset-inline: 0;
-      width: 100vw;
-      max-height: 85dvh;
-      @starting-style {
-        translate: 0 -100%;
-      }
-      translate: 0 0;
-    }
     &.-sm {
       width: min(18rem, 90vw);
     }
@@ -7847,6 +7831,28 @@
     &.-full {
       width: 100vw;
       height: 100dvh;
+    }
+    &[data-side=bottom] {
+      bottom: 0;
+      top: auto;
+      inset-inline: 0;
+      width: 100vw;
+      max-height: 85dvh;
+      @starting-style {
+        translate: 0 100%;
+      }
+      translate: 0 0;
+    }
+    &[data-side=top] {
+      top: 0;
+      bottom: auto;
+      inset-inline: 0;
+      width: 100vw;
+      max-height: 85dvh;
+      @starting-style {
+        translate: 0 -100%;
+      }
+      translate: 0 0;
     }
     transition: translate var(--duration-enter) var(--ease-enter), opacity var(--duration-enter) var(--ease-enter);
     transition-behavior: allow-discrete;
@@ -7926,7 +7932,7 @@
     }
   }
   .ren-sheet-body {
-    flex: 1;
+    flex: 1 1 auto;
     padding: var(--space-6);
     overflow-y: auto;
     overflow-x: hidden;
@@ -9348,11 +9354,17 @@
   .ren-date-range-inner {
     container-type: inline-size;
     container-name: ren-date-range;
+    inline-size: min(2 * var(--ren-calendar-width, 280px) + 2 * var(--space-3) + 3px, 100vw - 2 * var(--space-4));
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+  }
+  @media (any-pointer: coarse), (pointer: coarse) {
+    .ren-date-range-inner {
+      inline-size: min(2 * max(var(--ren-calendar-width, 0px), 7 * (var(--touch-min) + var(--stroke-1)) + var(--space-4) + 2 * var(--stroke-1)) + 2 * var(--space-3) + 3px, 100vw - 2 * var(--space-4));
+    }
   }
   .ren-date-range-presets {
     display: flex;
@@ -9521,6 +9533,8 @@
     .ren-date-range-dropdown {
       position: fixed !important;
       inset: auto 0 0 0 !important;
+      position-area: none !important;
+      inline-size: auto;
       max-width: none;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       max-height: 85vh;
@@ -9534,6 +9548,9 @@
         translate: 0 100%;
         opacity: 0;
       }
+    }
+    .ren-date-range-inner {
+      inline-size: auto;
     }
   }
   @keyframes ren-date-range-mobile-in {
@@ -11137,9 +11154,11 @@
       height: 100dvh;
       width: var(--sidebar-width);
       transform: translateX(-100%);
-      transition: transform var(--duration-enter) var(--ease-state-change);
+      visibility: hidden;
+      transition: transform var(--duration-enter) var(--ease-state-change), visibility var(--duration-enter) var(--ease-state-change);
       &[data-open] {
         transform: translateX(0);
+        visibility: visible;
         box-shadow: 4px 0 12px rgb(0 0 0 / 0.15);
       }
       &[data-collapsed] {
@@ -12407,7 +12426,14 @@
     z-index: var(--z-popover);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+  }
+  .ren-menubar-menu > :first-child {
+    border-start-start-radius: calc(var(--radius-md) - 1px);
+    border-start-end-radius: calc(var(--radius-md) - 1px);
+  }
+  .ren-menubar-menu > :last-child {
+    border-end-start-radius: calc(var(--radius-md) - 1px);
+    border-end-end-radius: calc(var(--radius-md) - 1px);
   }
   .ren-menubar-menu:not([hidden]) {
     display: flex;

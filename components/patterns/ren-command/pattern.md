@@ -156,6 +156,8 @@ Theme through these public custom properties before reaching for selectors.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 - The empty-result announcement comes from `utils/i18n.js` (`command.noResults`) and is resolved when the announcement is written — call `setLocale()` before the palette is used, because the author-supplied `.ren-command-empty` and input placeholder markup is never re-translated.
 - Right-to-left: the palette stays centred in the viewport under `dir="rtl"`; its content mirrors.
+- Keyboard: Up/Down walk the visible items and wrap, moving focus onto the item; Enter selects the highlighted item from the search field or from an item; typing or Backspace with focus on an item returns to the search field and filters. Enter on any other control inside the palette is that control's own key.
+- An item is searched by its `.ren-command-item-title` and `.ren-command-item-description` text plus `data-keywords`; an item with no title element is searched by its own text.
 
 ## Related Files
 

@@ -72,10 +72,16 @@
     height: 100dvh;
     width: var(--sidebar-width);
     transform: translateX(-100%);
-    transition: transform var(--duration-enter) var(--ease-state-change);
+    /* Off canvas is also out of the Tab order and the accessibility tree: the
+       links of a closed drawer took focus where nothing showed it. A
+       `visibility` transition holds `visible` for its whole duration, so the
+       drawer hides after it has slid out and shows before it slides in. */
+    visibility: hidden;
+    transition: transform var(--duration-enter) var(--ease-state-change), visibility var(--duration-enter) var(--ease-state-change);
 
     &[data-open] {
       transform: translateX(0);
+      visibility: visible;
       box-shadow: 4px 0 12px rgb(0 0 0 / 0.15);
     }
 

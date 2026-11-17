@@ -122,6 +122,11 @@ Use the docs page and source files listed below for full examples before adding 
 one `ren-close` with `detail.returnValue`, while clearing host `open` and
 restoring focus to the opener.
 
+`side="top"` and `side="bottom"` attach the sheet to that edge of the viewport.
+It spans the viewport width and grows with its content up to 85% of the
+viewport height; past that the body scrolls. The size variants set the width of
+a `left` / `right` sheet and do not narrow a top or bottom one.
+
 ## Public Token API
 
 - `--ren-sheet-backdrop`
