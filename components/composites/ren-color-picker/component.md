@@ -146,6 +146,12 @@ Use the docs page and source files listed below for full examples before adding 
 - `:focus-visible`
 - `:hover`
 
+A color given to the picker (the `value` attribute, `setValue()`, a preset, a
+typed hex or channel value) is the color it reports: `getValue()`, `ren-input`
+and `ren-change` return it unchanged until a slider moves. The sliders work in
+whole degrees and percents, so a color reached by moving one is the nearest
+color on that grid.
+
 ## Public Token API
 
 - `--ren-cp-bg`

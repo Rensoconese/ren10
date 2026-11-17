@@ -849,6 +849,50 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-color-picker reports the colour it was given, to the last step', { tag: ['@ren-color-picker', '@runtime'] }, async ({ page }) => {
+    // Neither #5b6cff nor #c0ffee has an exact place in the picker's model,
+    // which holds hue in whole degrees and the other two in whole percents.
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('placement="bottom"', 'placement="bottom" swatches="#5b6cff,#c0ffee"'));
+    const picker = page.locator('ren-color-picker');
+    const hex = () => picker.evaluate((el) => el.getValue().hex);
+    await page.evaluate(() => {
+      window.__changes = [];
+      document.querySelector('ren-color-picker').addEventListener('ren-change', (event) => window.__changes.push(event.detail.hex));
+    });
+
+    expect(await hex(), 'the value attribute comes back as written').toBe('#5b6cff');
+    await expect(page.getByRole('button', { name: 'Color picker, current color #5b6cff' })).toHaveCount(1);
+
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const presets = page.getByRole('group', { name: 'Preset color swatches' }).getByRole('button');
+    await expect(presets.first(), 'the preset with the same colour is the current one').toHaveAttribute('aria-current', 'true');
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue('#5b6cff');
+
+    // Choosing a preset is choosing that colour, not its neighbour.
+    await presets.nth(1).focus();
+    await page.keyboard.press('Enter');
+    expect(await page.evaluate(() => window.__changes)).toEqual(['#c0ffee']);
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue('#c0ffee');
+    await expect(presets.nth(1)).toHaveAttribute('aria-current', 'true');
+
+    // A control that moves changes the colour; moved back, it is the same colour again.
+    await page.getByRole('slider', { name: 'Color hue' }).focus();
+    await page.keyboard.press('ArrowRight');
+    expect(await hex()).not.toBe('#c0ffee');
+    await expect(presets.nth(1)).not.toHaveAttribute('aria-current');
+    await page.keyboard.press('ArrowLeft');
+    expect(await hex(), 'back on the same step, the colour is the one that was chosen').toBe('#c0ffee');
+
+    for (const colour of ['#123456', '#abcdef', '#fedcba', '#bada55', '#336699', '#0a0b0c', '#7f7f7f']) {
+      await picker.evaluate((el, value) => el.setValue(value), colour);
+      expect(await hex(), `${colour} comes back as written`).toBe(colour);
+    }
+    expect(errors).toEqual([]);
+  });
+
   test('ren-color-picker controls expose their name, role and value, and a key press is a committed change', { tag: ['@ren-color-picker', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'color-picker', (usage) => usage.replace('value="#5b6cff"', 'value="#ff0000" alpha swatches="#ff0000,#00ff00"'));
     await page.evaluate(() => {

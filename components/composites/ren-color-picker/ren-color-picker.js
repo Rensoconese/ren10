@@ -280,6 +280,14 @@ export class RenColorPicker extends HTMLElement {
 
   #isOpen = false;
   #hsv = { h: 0, s: 100, v: 100, a: 1 };
+  /**
+   * The colour as it was given (a value, a preset, a typed hex), with the
+   * model position it maps to. The model holds hue in whole degrees and the
+   * other two in whole percents, far fewer positions than there are colours,
+   * so a colour read back through it comes out a step away. While the model
+   * still sits where that colour put it, #rgb() answers with the colour.
+   */
+  #given = null;
   #format = 'hex'; // 'hex', 'rgb', 'hsl'
   #saturationCanvas = null;
   #dragState = null;
@@ -436,7 +444,7 @@ export class RenColorPicker extends HTMLElement {
     trigger.type = 'button';
     if (disabled) trigger.disabled = true;
 
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     const hex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
 
     trigger.innerHTML = `
@@ -568,7 +576,7 @@ export class RenColorPicker extends HTMLElement {
 
     const value = document.createElement('div');
     value.className = 'ren-color-picker-preview-value';
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     value.textContent = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
 
     info.appendChild(label);
@@ -703,7 +711,7 @@ export class RenColorPicker extends HTMLElement {
 
         swatch.appendChild(colorDiv);
         swatch.addEventListener('click', this.handleSwatchClick);
-        this.#swatchHex.set(swatch, this.#modelHex(color));
+        this.#swatchHex.set(swatch, this.#presetHex(color));
 
         swatchesContainer.appendChild(swatch);
       });
@@ -780,7 +788,7 @@ export class RenColorPicker extends HTMLElement {
     const swatches = this.#popover?.querySelectorAll('.ren-color-picker-swatch');
     if (!swatches || swatches.length === 0) return;
 
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     const current = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
 
     swatches.forEach((swatch) => {
@@ -830,7 +838,7 @@ export class RenColorPicker extends HTMLElement {
     const gradient = alphaContainer.querySelector('.ren-color-picker-alpha-gradient');
     if (!gradient) return;
 
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, 1);
+    const rgb = this.#rgb();
     const color = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
 
     gradient.style.background = `linear-gradient(to right, rgba(0,0,0,0), ${color})`;
@@ -949,8 +957,7 @@ export class RenColorPicker extends HTMLElement {
     if (input.classList.contains('ren-color-picker-hex-input')) {
       const rgb = hexToRgb(value);
       if (rgb) {
-        const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
-        this.#hsv = hsv;
+        this.#setFromRgb(rgb);
         this.#updateAllViews();
         this.#emitChange();
       }
@@ -1114,19 +1121,12 @@ export class RenColorPicker extends HTMLElement {
 
     const values = Array.from(inputs).map((inp) => parseFloat(inp.value) || 0);
 
-    if (this.#format === 'rgb') {
-      const [r, g, b] = values;
-      const hsv = rgbToHsv(r, g, b, this.#hsv.a);
-      this.#hsv = hsv;
-    } else if (this.#format === 'hsl') {
+    if (this.#format === 'hsl') {
       const [h, s, l] = values;
-      const rgb = hslToRgb(h, s, l, this.#hsv.a);
-      const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
-      this.#hsv = hsv;
+      this.#setFromRgb(hslToRgb(h, s, l, this.#hsv.a));
     } else {
       const [r, g, b] = values;
-      const hsv = rgbToHsv(r, g, b, this.#hsv.a);
-      this.#hsv = hsv;
+      this.#setFromRgb({ r, g, b, a: this.#hsv.a });
     }
 
     this.#updateAllViews();
@@ -1154,7 +1154,7 @@ export class RenColorPicker extends HTMLElement {
     }
 
     if (value) {
-      const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+      const rgb = this.#rgb();
       value.textContent = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
     }
   }
@@ -1163,7 +1163,7 @@ export class RenColorPicker extends HTMLElement {
     const input = this.#popover?.querySelector('.ren-color-picker-hex-input');
     if (!input) return;
 
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     input.value = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
   }
 
@@ -1171,7 +1171,7 @@ export class RenColorPicker extends HTMLElement {
     const inputs = this.#popover?.querySelectorAll('.ren-color-picker-channel-input');
     if (!inputs || inputs.length === 0) return;
 
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
 
     if (this.#format === 'rgb') {
       const values = [rgb.r, rgb.g, rgb.b];
@@ -1202,7 +1202,7 @@ export class RenColorPicker extends HTMLElement {
       swatch.style.backgroundColor = this.#hsvToCss();
     }
 
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     const hex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
 
     if (value) {
@@ -1214,7 +1214,7 @@ export class RenColorPicker extends HTMLElement {
   }
 
   #hsvToCss() {
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     if (this.#hsv.a < 1) {
       return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
     }
@@ -1226,7 +1226,7 @@ export class RenColorPicker extends HTMLElement {
      ═════════════════════════════════════════════════════════════════ */
 
   #emitInput() {
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     const hex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
     const rgbStr = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b, rgb.a);
@@ -1242,7 +1242,7 @@ export class RenColorPicker extends HTMLElement {
   }
 
   #emitChange() {
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     const hex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
     const rgbStr = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b, rgb.a);
@@ -1269,8 +1269,28 @@ export class RenColorPicker extends HTMLElement {
     const rgb = this.#parseColor(color);
 
     if (rgb) {
-      this.#hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
+      this.#setFromRgb(rgb);
     }
+  }
+
+  /** Move the model to a colour, and keep the colour itself. */
+  #setFromRgb({ r, g, b, a = 1 }) {
+    const clampChannel = (n) => Math.min(255, Math.max(0, Math.round(n)));
+    const rgb = { r: clampChannel(r), g: clampChannel(g), b: clampChannel(b) };
+    this.#hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, a);
+    this.#given = { h: this.#hsv.h, s: this.#hsv.s, v: this.#hsv.v, rgb };
+  }
+
+  /**
+   * The current colour as { r, g, b, a }: the given colour while hue,
+   * saturation and brightness are where it put them, the model's own
+   * conversion once a control has moved. Opacity is always the model's.
+   */
+  #rgb() {
+    const { h, s, v, a } = this.#hsv;
+    const given = this.#given;
+    if (given && given.h === h && given.s === s && given.v === v) return { ...given.rgb, a };
+    return hsvToRgb(h, s, v, a);
   }
 
   /**
@@ -1309,17 +1329,10 @@ export class RenColorPicker extends HTMLElement {
     return rgb;
   }
 
-  /**
-   * The hex the picker reports for a color once it is in its HSV model
-   * (whole degrees and percents), so a preset can be compared with the value.
-   */
-  #modelHex(color) {
+  /** The hex of a preset's own colour, to compare with the current value. */
+  #presetHex(color) {
     const rgb = this.#parseColor(color);
-    if (!rgb) return null;
-
-    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b, rgb.a);
-    const model = hsvToRgb(hsv.h, hsv.s, hsv.v, hsv.a);
-    return rgbToHex(model.r, model.g, model.b, model.a);
+    return rgb ? rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a) : null;
   }
 
   /**
@@ -1327,7 +1340,7 @@ export class RenColorPicker extends HTMLElement {
    * Returns: { hex, rgb, hsl, alpha }
    */
   getValue() {
-    const rgb = hsvToRgb(this.#hsv.h, this.#hsv.s, this.#hsv.v, this.#hsv.a);
+    const rgb = this.#rgb();
     const hex = rgbToHex(rgb.r, rgb.g, rgb.b, rgb.a);
     const rgbStr = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${rgb.a})`;
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b, rgb.a);
