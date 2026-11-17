@@ -53,6 +53,7 @@ export class RenTabs extends HTMLElement {
     this._tabs = [];
     this._panels = [];
     this._selectedIndex = -1;
+    this._listenerController = null;
     this._syncingTabStop = false;
     this._ownPanelTabStops = new WeakSet();
     this._handleFocusOut = this._handleFocusOut.bind(this);
@@ -74,6 +75,10 @@ export class RenTabs extends HTMLElement {
       this._nav.detach();
       this._nav = null;
     }
+    // connectedCallback wires the click listener again: without this, every
+    // reconnect stacked one more, and one click fired ren-tab-change twice.
+    this._listenerController?.abort();
+    this._listenerController = null;
   }
 
   /**
@@ -150,12 +155,15 @@ export class RenTabs extends HTMLElement {
     }
 
     // Listen for clicks on tabs
-    this._tabList.addEventListener('click', this._handleTabClick.bind(this));
+    this._listenerController?.abort();
+    this._listenerController = new AbortController();
+    const { signal } = this._listenerController;
+    this._tabList.addEventListener('click', this._handleTabClick.bind(this), { signal });
 
     // In manual activation the arrow keys move focus without selecting. When
     // focus then leaves the tab list, the tab stop goes back to the selected
     // tab, so Tab re-enters on the active tab (APG Tabs).
-    this._tabList.addEventListener('focusout', this._handleFocusOut);
+    this._tabList.addEventListener('focusout', this._handleFocusOut, { signal });
   }
 
   /**

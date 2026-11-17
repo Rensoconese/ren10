@@ -495,6 +495,7 @@ Drag-and-drop file upload area with visual feedback.
 ```
 
 **Events:** `ren-files-added` (detail: {files})
+**Teardown:** `destroyDropZone(el)` removes the listeners `initDropZone(el)` added.
 **Accessibility:** File input as fallback, drag-over feedback.
 
 ---

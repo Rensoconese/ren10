@@ -15,6 +15,9 @@
  *              Authoring Practices pattern it implements
  *   rtl        every component, CSS-only ones included: under dir="rtl" it stays
  *              on screen and mirrors its LTR layout (tests/components/rtl-smoke.spec.cjs)
+ *   leaks      every component that ships JS: removed from the page, it gives
+ *              back its listeners, timers, frames and observers
+ *              (tests/components/leaks.spec.cjs)
  *
  * A test proves a cell by carrying two Playwright tags: the component
  * (`@ren-dialog`) and the category (`@keyboard`). Tests are read with
@@ -38,7 +41,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern', 'rtl'];
+export const CATEGORIES = ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern', 'rtl', 'leaks'];
 export const EXEMPTIONS_PATH = 'tests/coverage/exemptions.json';
 export const PATTERN_MAP_PATH = 'tests/utils/apg/pattern-map.cjs';
 const SUITES = ['tests/components/playwright.config.cjs', 'tests/a11y/playwright.config.cjs'];
@@ -64,6 +67,8 @@ export function requiredCells(registry, { patternMap = {} } = {}) {
     // Direction reaches CSS as much as JS: a physical `left` is an RTL defect
     // in a component that ships no script at all.
     required.push('rtl');
+    // Any JS can leak, custom element or init function, so the rule is the one `runtime` uses.
+    if (hasJs) required.push('leaks');
     return { component: entry.dir, layer: entry.layer, required };
   });
 }

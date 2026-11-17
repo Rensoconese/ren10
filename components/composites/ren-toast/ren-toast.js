@@ -57,6 +57,12 @@ const VALID_POSITIONS = new Set([
   'bottom-center',
 ]);
 
+/* ─── Per-viewport timer book-keeping ─── */
+
+// Declared before the class: connectedCallback reads it, and define() runs
+// connectedCallback for viewports already in the page.
+const timerStore = new WeakMap(); // viewport → { timers: Map<id, {timerId, remaining, startedAt}>, paused: bool }
+
 /* ─── Custom element (convenience) ─── */
 
 export class RenToastViewport extends HTMLElement {
@@ -86,22 +92,25 @@ export class RenToastViewport extends HTMLElement {
     this.addEventListener('focusout', (e) => {
       if (!this.contains(e.relatedTarget)) resumeTimersFor(this);
     }, { signal });
+
+    // Back in the document: the countdowns frozen on disconnect carry on.
+    resumeTimersFor(this);
   }
 
   disconnectedCallback() {
     this._listenerController?.abort();
     this._listenerController = null;
-    resumeTimersFor(this);
+    // A removed viewport must not keep its auto-dismiss timers running: each
+    // one holds the viewport and its toasts until it fires, up to the full
+    // duration. Freeze them with the time they have left; reconnecting
+    // resumes them (which also covers a viewport removed while hovered).
+    pauseTimersFor(this);
   }
 }
 
 if (!customElements.get('ren-toast-viewport')) {
   customElements.define('ren-toast-viewport', RenToastViewport);
 }
-
-/* ─── Per-viewport timer book-keeping ─── */
-
-const timerStore = new WeakMap(); // viewport → { timers: Map<id, {timerId, remaining, startedAt}>, paused: bool }
 
 function getStore(viewport) {
   let store = timerStore.get(viewport);
@@ -128,7 +137,12 @@ function pauseTimersFor(viewport) {
     if (toastEl) {
       const progress = toastEl.querySelector('.ren-toast-progress');
       if (progress) {
-        const width = getComputedStyle(progress).width;
+        // A detached viewport has no computed style: derive the bar from the
+        // time that is left instead.
+        const total = parseFloat(toastEl.getAttribute('data-duration'));
+        const width = viewport.isConnected
+          ? getComputedStyle(progress).width
+          : `${total > 0 ? Math.min(100, (info.remaining / total) * 100) : 100}%`;
         progress.style.transition = 'none';
         progress.style.width = width;
       }
@@ -141,7 +155,8 @@ function resumeTimersFor(viewport) {
   if (!store.paused) return;
   store.paused = false;
   for (const [id, info] of store.timers.entries()) {
-    if (info.remaining > 0) {
+    // >= 0: a countdown frozen at its last millisecond still has to fire.
+    if (info.remaining >= 0) {
       info.startedAt = Date.now();
       info.timerId = setTimeout(() => dismissToast(viewport, id), info.remaining);
       // Resume progress bar
@@ -162,6 +177,8 @@ function resumeTimersFor(viewport) {
 
 /* ─── Viewport resolution ─── */
 
+// Held weakly: the cache must not keep a viewport that was removed from the
+// page alive until the next toast happens to replace it.
 let _autoViewport = null;
 
 function resolveViewport(preferredId) {
@@ -169,20 +186,22 @@ function resolveViewport(preferredId) {
     const v = document.getElementById(preferredId);
     if (v) return v;
   }
-  if (_autoViewport && document.body.contains(_autoViewport)) {
-    return _autoViewport;
+  const cached = _autoViewport?.deref();
+  if (cached && document.body.contains(cached)) {
+    return cached;
   }
   // Look for any existing viewport in the page
   const existing = document.querySelector('.ren-toast-viewport, ren-toast-viewport');
   if (existing) {
-    _autoViewport = existing;
+    _autoViewport = new WeakRef(existing);
     return existing;
   }
   // Auto-create
-  _autoViewport = document.createElement('ren-toast-viewport');
-  _autoViewport.setAttribute('data-position', 'bottom-right');
-  document.body.appendChild(_autoViewport);
-  return _autoViewport;
+  const created = document.createElement('ren-toast-viewport');
+  created.setAttribute('data-position', 'bottom-right');
+  document.body.appendChild(created);
+  _autoViewport = new WeakRef(created);
+  return created;
 }
 
 /* ─── Toast construction ─── */

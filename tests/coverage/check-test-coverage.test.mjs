@@ -23,6 +23,8 @@ const fullCoverage = report(
   spec('badge rtl', ['@ren-badge', '@rtl']),
   spec('menu rtl', ['@ren-menu', '@rtl']),
   spec('toolbar rtl', ['@ren-toolbar', '@rtl']),
+  spec('menu leaks', ['@ren-menu', '@leaks']),
+  spec('toolbar leaks', ['@ren-toolbar', '@leaks']),
 );
 
 const run = (reports, exemptions = {}, baseExemptions = null) => {
@@ -33,9 +35,9 @@ const run = (reports, exemptions = {}, baseExemptions = null) => {
 test('what a component owes follows its layer, its JS and its usage', () => {
   const owed = Object.fromEntries(requiredCells(registry).map((cell) => [cell.component, cell.required]));
   assert.deepEqual(owed['ren-badge'], ['a11y', 'rtl']);
-  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'rtl']);
+  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'rtl', 'leaks']);
   // No ren-* element in its usage: nothing to disconnect, so no lifecycle cell.
-  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard', 'rtl']);
+  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard', 'rtl', 'leaks']);
 });
 
 test('full coverage passes', () => {
@@ -92,9 +94,9 @@ const runWithPatterns = (reports, exemptions = {}, baseExemptions = null) => {
 
 test('only the components in the pattern map owe a pattern test', () => {
   const owed = Object.fromEntries(requiredCells(registry, { patternMap }).map((cell) => [cell.component, cell.required]));
-  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern', 'rtl']);
+  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern', 'rtl', 'leaks']);
   assert.deepEqual(owed['ren-badge'], ['a11y', 'rtl']);
-  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard', 'rtl']);
+  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard', 'rtl', 'leaks']);
   // Without a map nobody owes it, so the other categories are judged alone.
   assert.ok(requiredCells(registry).every((cell) => !cell.required.includes('pattern')));
 });
@@ -167,3 +169,25 @@ test('rtl exemptions follow the same shrink-only rules', () => {
   assert.match(run([fullCoverage], exemptions).problems.join('\n'), /rtl\.ren-toolbar is covered now, remove the exemption/);
 });
 
+
+test('leaks is owed by everything that ships JS, with or without a custom element', () => {
+  const owed = Object.fromEntries(requiredCells(registry).map((cell) => [cell.component, cell.required]));
+  assert.ok(!owed['ren-badge'].includes('leaks'), 'CSS only: nothing to leak');
+  assert.ok(owed['ren-menu'].includes('leaks'));
+  // Initialised by a function: it still adds listeners, so it still owes a teardown test.
+  assert.ok(owed['ren-toolbar'].includes('leaks'));
+  assert.equal(run([fullCoverage]).totals.leaks.required, 2);
+});
+
+test('a chromium-only retention test does not cover the leaks cell', () => {
+  // leaks.spec.cjs tags only the cross-browser accounting test `@ren-* @leaks`.
+  // The heap check is skipped on firefox and webkit and carries neither tag,
+  // so it is ignored here: not a stray, and not coverage.
+  const withoutLeaks = fullCoverage.suites[0].specs.filter((s) => !s.tags.includes('@leaks'));
+  const result = run([report(...withoutLeaks, spec('menu instances are collected', ['@retention']))]);
+  const problems = result.problems.join('\n');
+  assert.match(problems, /ren-menu has no @leaks test/);
+  assert.match(problems, /ren-toolbar has no @leaks test/);
+  assert.doesNotMatch(problems, /needs both/);
+  assert.equal(result.totals.leaks.missing, 2);
+});

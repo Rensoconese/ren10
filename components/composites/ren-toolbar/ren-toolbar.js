@@ -15,6 +15,10 @@
    Or auto-init all:
      import { initAllToolbars } from './ren-toolbar.js';
      initAllToolbars();
+
+   Teardown (a view that goes away):
+     import { destroyToolbar } from './ren-toolbar.js';
+     destroyToolbar(document.querySelector('.ren-toolbar'));
    ============================================ */
 
 /**
@@ -63,6 +67,19 @@ export function initToolbar(toolbar) {
       items[next].focus();
     }
   }, { signal: controller.signal });
+}
+
+/**
+ * Undo initToolbar(): remove its keyboard listener. The element and its
+ * tabindex values are left as they are. Safe to call on an element that was
+ * never initialised, and initToolbar() can be called again afterwards.
+ *
+ * @param {HTMLElement} toolbar
+ */
+export function destroyToolbar(toolbar) {
+  if (!toolbar) return;
+  toolbarControllers.get(toolbar)?.abort();
+  toolbarControllers.delete(toolbar);
 }
 
 /**
