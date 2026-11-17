@@ -315,6 +315,37 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-menu reopened while its close is still animating stays open', { tag: ['@ren-menu', '@keyboard'] }, async ({ page }) => {
+    const errors = await mount(page, 'menu');
+    const trigger = page.locator('[data-menu-trigger]');
+    const menu = page.locator('ren-menu');
+    const first = page.getByRole('menuitem', { name: 'Edit' });
+
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await expect(first).toBeFocused();
+
+    // Close and open again before the closing animation is over, as two quick
+    // presses on the trigger do. The close that was still pending used to run
+    // afterwards and hide the menu it no longer belonged to.
+    await menu.evaluate((el) => { el.close(); el.open(); });
+    // Longer than any close animation: the late close has had its chance.
+    await page.waitForTimeout(400);
+    await expect(trigger, 'the trigger reports the menu it opened').toHaveAttribute('aria-expanded', 'true');
+    await expect(first, 'the reopened menu is on screen').toBeVisible();
+    await expect(first, 'with focus on its first item').toBeFocused();
+
+    // And it is one menu in one state: the keys work and Escape closes it.
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('menuitem', { name: 'Duplicate' })).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+    await expect(first).toBeHidden();
+    await expect(trigger).toBeFocused();
+    expect(errors).toEqual([]);
+  });
+
   test('ren-menu keeps keyboard focus when its items scroll under a resting pointer', { tag: ['@ren-menu', '@keyboard'] }, async ({ page }) => {
     // Short viewport: the menu is taller than the page and scrolls.
     await page.setViewportSize({ width: 800, height: 320 });
