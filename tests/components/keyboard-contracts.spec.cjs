@@ -73,6 +73,17 @@ const repeatRestingMove = (page, rest) => page.evaluate((at) => {
   }
 }, rest);
 
+/**
+ * A pointermove as an engine with no usable screen position reports it: the
+ * same screenX/screenY whatever the pointer does (WebKit under automation).
+ * The viewport position is passed in, so two events can share one exactly.
+ */
+const moveWithFixedScreen = (locator, { x, y }) => locator.evaluate((el, at) => {
+  el.dispatchEvent(new PointerEvent('pointermove', {
+    bubbles: true, pointerType: 'mouse', screenX: 0, screenY: 0, clientX: at.x, clientY: at.y,
+  }));
+}, { x, y });
+
 /** Really move the pointer: two moves, so the second differs from the first. */
 async function movePointerOnto(page, { x, y }) {
   await page.mouse.move(x - 3, y - 3);
@@ -417,6 +428,60 @@ test.describe('keyboard contracts', () => {
     await expect(item('Open')).toBeFocused();
     await repeatRestingMove(page, rest);
     await expect(item('Open'), 'the pointer rests again after a key press').toBeFocused();
+    expect(errors).toEqual([]);
+  });
+
+  test('hover still follows a moving pointer when the engine reports one screen position for every event', { tag: ['@ren-select', '@ren-combobox', '@ren-command', '@ren-menubar', '@keyboard'] }, async ({ page }) => {
+    // Only synthetic events here: one real move would tell the page that
+    // screen positions vary, and the fallback under test would never run.
+    const moveOnto = async (locator) => {
+      const at = await centreOf(locator);
+      await moveWithFixedScreen(locator, { x: at.x - 3, y: at.y - 3 });
+      await moveWithFixedScreen(locator, at);
+      return at;
+    };
+
+    // ren-select: utils/keyboard-nav.js, which ren-menu shares.
+    let errors = await mount(page, 'select');
+    await page.locator('ren-select [data-select-trigger]').focus();
+    await page.keyboard.press('ArrowDown');
+    const highlighted = page.locator('ren-select [data-highlighted]');
+    const optionB = page.getByRole('option', { name: 'Option B', exact: true });
+    await expect(highlighted).toHaveText('Option A');
+    const at = await moveOnto(optionB);
+    await expect(highlighted, 'ren-select: a pointer whose viewport position changes is moving').toHaveText('Option B');
+    await page.keyboard.press('ArrowUp');
+    await expect(highlighted).toHaveText('Option A');
+    await moveWithFixedScreen(optionB, at);
+    await moveWithFixedScreen(optionB, at);
+    await expect(highlighted, 'ren-select: the same position twice is a resting pointer').toHaveText('Option A');
+    expect(errors).toEqual([]);
+
+    errors = await mount(page, 'combobox');
+    const input = page.getByRole('combobox');
+    const active = () => input.evaluate((el) => document.getElementById(el.getAttribute('aria-activedescendant') ?? '')?.textContent.trim() ?? null);
+    await input.focus();
+    await page.keyboard.press('ArrowDown');
+    await expect.poll(active).toBe('Argentina');
+    await moveOnto(page.getByRole('option', { name: 'Brazil', exact: true }));
+    await expect.poll(active, 'ren-combobox: a pointer whose viewport position changes is moving').toBe('Brazil');
+    expect(errors).toEqual([]);
+
+    errors = await mount(page, 'command');
+    await page.locator('ren-command').evaluate((host) => host.open());
+    const commandItem = page.locator('ren-command .ren-command-item[data-highlighted]');
+    await expect(commandItem).toHaveText('Save');
+    await moveOnto(page.locator('.ren-command-item', { hasText: 'Copy' }));
+    await expect(commandItem, 'ren-command: a pointer whose viewport position changes is moving').toHaveText('Copy');
+    expect(errors).toEqual([]);
+
+    errors = await mount(page, 'menubar');
+    await page.getByRole('menuitem', { name: 'File', exact: true }).focus();
+    await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('menuitem', { name: 'New', exact: true })).toBeFocused();
+    const open = page.getByRole('menuitem', { name: 'Open', exact: true });
+    await moveOnto(open);
+    await expect(open, 'ren-menubar: a pointer whose viewport position changes is moving').toBeFocused();
     expect(errors).toEqual([]);
   });
 
