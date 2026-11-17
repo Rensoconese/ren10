@@ -10107,6 +10107,13 @@
     pointer-events: none;
     transform: translateY(-50%);
   }
+  .ren-color-picker-saturation:focus-visible,
+  .ren-color-picker-hue:focus-visible,
+  .ren-color-picker-alpha:focus-visible {
+    outline: none;
+    border-color: var(--color-input-border-focus);
+    box-shadow: 0 0 0 3px var(--color-input-focus-ring);
+  }
   .ren-color-picker-preview {
     display: flex;
     gap: var(--space-2);
@@ -10300,7 +10307,7 @@
     transform: scale(1.05);
     border-color: var(--color-border);
   }
-  .ren-color-picker-swatch[aria-selected=true] {
+  .ren-color-picker-swatch[aria-current=true] {
     border-color: var(--color-accent);
     box-shadow: 0 0 0 2px var(--color-surface), 0 0 0 4px var(--color-accent);
   }
@@ -11425,7 +11432,7 @@
     overflow-y: auto;
     max-height: 18rem;
     padding: var(--ren-space-1, 0.25rem);
-    flex: 1;
+    flex: 1 1 auto;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
     &::-webkit-scrollbar {

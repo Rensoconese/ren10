@@ -13,10 +13,11 @@ The dashboard / app-shell sidebar pattern in RenDS. Owns:
 - Persistent layout with `.ren-sidebar-layout` (sidebar + main content).
 - Desktop collapsed / expanded states (`[data-collapsed]`).
 - Mobile overlay state (`[data-open]`) with backdrop and Escape / outside
-  click dismissal.
+  click dismissal, and focus return to the control that opened it.
 - Active item state via `aria-current="page"` plus `.active`.
 - Persistence of collapse state in `localStorage`.
-- Toggle button + keyboard support.
+- Toggle button + keyboard support, with `aria-expanded` kept in sync with
+  the collapsed state.
 
 Sidebar items are real `<a>` (for routes) or `<button>` (for actions); they
 are *not* `ren-link` / `ren-btn` — sidebar styling owns their chrome.
@@ -65,7 +66,8 @@ requiredMarkup:
   - "Wrap items in <nav class=\"ren-sidebar-nav\"> with <a class=\"ren-sidebar-item\"> children."
   - "Use aria-current=\"page\" on the active item; the .active class is for styling parity."
   - "Provide an aria-label on <ren-sidebar> when multiple navigation landmarks exist on the page."
-  - "Toggle button uses .ren-sidebar-toggle and aria-label (the icon alone is not a name)."
+  - "Toggle button uses .ren-sidebar-toggle and aria-label (the icon alone is not a name). The component writes aria-expanded on it; do not set or update it by hand."
+  - "The control that opens the mobile overlay lives outside <ren-sidebar>, calls toggleMenu() / openMobileMenu() from its click handler, and carries aria-controls=\"<sidebar id>\" so focus can return to it."
 
 forbiddenPatterns:
   - "Wrapping non-nav content in <nav class=\"ren-sidebar-nav\">."
@@ -85,9 +87,10 @@ accessibility:
   required:
     - "Wrap items in a real <nav> landmark."
     - "Active item uses aria-current=\"page\"."
-    - "Toggle button has aria-label and toggles aria-expanded if it controls disclosure."
+    - "Toggle button has aria-label; the component keeps aria-expanded on it in sync with the collapsed state (\"true\" expanded, \"false\" collapsed), including the state restored from localStorage."
     - "Collapsed icon-only items must keep accessible names from their link text (do not hide it from AT)."
     - "Mobile overlay closes on Escape and outside click."
+    - "Closing the mobile overlay returns focus to the control that opened it: always on Escape and backdrop click, and on a close from code or from an item when focus was inside the sidebar."
 ```
 
 ## Required CSS / JS Imports
@@ -153,6 +156,11 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 - Host states:
   - `[data-collapsed]` — desktop collapsed (icon-only).
   - `[data-open]` — mobile overlay open.
+- Toggle state: `aria-expanded` on `.ren-sidebar-toggle`, written by the
+  component (`"true"` expanded, `"false"` collapsed). It follows every change
+  of the collapsed state: the toggle itself, the preference restored from
+  `localStorage` on load, and the mobile breakpoint (the overlay always
+  renders expanded).
 - Active item: `.active` class plus `aria-current="page"` on the
   current `.ren-sidebar-item`.
 - Methods: `toggleMenu()`, `openMobileMenu()`, `closeMobileMenu()`,
@@ -161,6 +169,17 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 - Event: `ren-sidebar-toggle` (`detail.collapsed`).
 - Persistence: collapse state stored in `localStorage` under
   `ren-sidebar-collapsed`.
+- Mobile focus return: the overlay remembers the control that had focus when
+  it opened (the button whose click handler called `toggleMenu()` /
+  `openMobileMenu()`). When nothing had focus — Safari does not focus a
+  clicked button — it falls back to the first control outside the sidebar
+  with `aria-controls="<sidebar id>"`. Closing moves focus there:
+  - always on Escape and on a backdrop click;
+  - on `closeMobileMenu()`, `toggleMenu()` and item activation only when
+    focus was inside the sidebar, so a close from code never pulls focus
+    away from an unrelated control;
+  - never when the viewport grows past the mobile breakpoint, because the
+    sidebar stays on screen.
 
 ## Variants and Public Selectors
 
@@ -190,6 +209,7 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 | `[aria-disabled]`      | Disabled item (still focusable).       |
 | `[data-collapsed]`     | Desktop collapsed (icon-only) state.   |
 | `[data-open]`          | Mobile overlay open.                   |
+| `.ren-sidebar-toggle[aria-expanded]` | `"true"` expanded, `"false"` collapsed; written by the component. |
 | `:focus-visible`       | Keyboard focus on an item or toggle.   |
 
 ## Public Token API
@@ -213,8 +233,11 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 - The current route uses `aria-current="page"`.
 - Collapsed icon-only items must keep accessible names — do not hide the
   text label from screen readers.
-- The toggle button has an `aria-label` (`"Toggle sidebar"`).
-- Mobile overlay closes on Escape and outside click.
+- The toggle button has an `aria-label` (`"Toggle sidebar"`) and an
+  `aria-expanded` the component keeps in sync with the collapsed state.
+- Mobile overlay closes on Escape and outside click, and focus returns to
+  the control that opened it (see *Mobile focus return* above). Give that
+  control `aria-controls="<sidebar id>"`.
 - Persistence respects user choice; do not auto-collapse on every visit.
 
 ## Anti-Patterns
@@ -240,4 +263,6 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 - Run component / docs a11y coverage on collapse / mobile overlay flows.
 - Run `npm run lint` after token / selector changes.
 - Manually verify keyboard navigation: Tab through items, Escape closes
-  the mobile overlay.
+  the mobile overlay and focus lands back on the control that opened it.
+- `tests/components/keyboard-contracts.spec.cjs` covers the toggle's
+  `aria-expanded` and focus return on every close path.

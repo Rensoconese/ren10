@@ -79,6 +79,7 @@ accessibility:
     - "Input has role=\"combobox\", aria-expanded reflecting list visibility, aria-controls pointing to the .ren-combobox-list id, and aria-activedescendant pointing to the highlighted option."
     - "List has role=\"listbox\" and each item has role=\"option\"; do not nest interactive controls inside an option."
     - "Keyboard contract: Arrow Down opens / moves down, Arrow Up moves up, Enter selects, Escape closes; preserve all four."
+    - "Hover moves aria-activedescendant only when the pointer really moves: a list that opens or scrolls under a resting pointer leaves the highlighted option to the keyboard."
     - "Selected option sets aria-selected=\"true\"; selection is announced — never communicate via color alone."
     - "Disabled options set aria-disabled=\"true\" AND ignore activation in JS (pointer-events styling is not enough)."
     - "Loading state uses an aria-live region (or aria-busy on the input) so AT users know results are pending."

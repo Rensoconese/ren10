@@ -79,6 +79,7 @@ accessibility:
     - "Container has role=\"menubar\" and each <button> is a real menuitem with role=\"menuitem|menuitemcheckbox|menuitemradio\"."
     - "Triggers expose aria-haspopup=\"menu\" and aria-expanded reflects the open/closed state of the associated menu."
     - "Roving tabindex: only one focusable item at a time; arrow keys move focus. The component manages this — do not set tabindex manually on every item."
+    - "Hover (focus an item, glide to another menu, open a submenu) follows real pointer movement only: after a key press, a menu that opens or scrolls under a resting pointer leaves focus to the keyboard."
     - "Checkbox / radio items expose aria-checked; the visual check (::before) must not be the only state cue."
     - "Disabled items use [data-disabled] AND pointer-events: none (CSS handles the latter)."
     - "Focus-visible outline uses --color-accent — never strip without restoring a visible alternative."

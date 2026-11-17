@@ -12,6 +12,24 @@ const KEYBOARD_CODES = {
   ArrowUp: 'ArrowUp'
 };
 
+// ─── Did the pointer really move? ───
+// Screen coordinates stay put while the page or an ancestor frame scrolls, so
+// they are the ones to compare. Some engines report the same screen position
+// for every pointer event; until two events have disagreed on it, the viewport
+// position is compared as well (it stays put while the page itself scrolls).
+let screenPositionVaries = false;
+
+function pointerPosition(event) {
+  return { x: event.screenX, y: event.screenY, cx: event.clientX, cy: event.clientY };
+}
+
+function pointerMovedFrom(rest, event) {
+  if (rest === null) return false;
+  const screenMoved = rest.x !== event.screenX || rest.y !== event.screenY;
+  if (screenMoved) screenPositionVaries = true;
+  return screenMoved || (!screenPositionVaries && (rest.cx !== event.clientX || rest.cy !== event.clientY));
+}
+
 class RenCommand extends HTMLElement {
   constructor() {
     super();
@@ -27,6 +45,10 @@ class RenCommand extends HTMLElement {
     this._shortcutKey = 'k';
     this._shortcutMeta = 'ctrl';
     this._listenerController = null;
+    // Hover guard: while suspended the pointer has to really move before it
+    // may change the highlighted item. See _pointerReallyMoved().
+    this._hoverSuspended = true;
+    this._restingPoint = null;
   }
 
   connectedCallback() {
@@ -69,9 +91,15 @@ class RenCommand extends HTMLElement {
     // Item selection
     this._items.forEach((item, index) => {
       item.addEventListener('click', () => this._selectItem(index), { signal });
-      item.addEventListener('mouseenter', () => this._setHighlighted(index), { signal });
       item.addEventListener('focus', () => this._setHighlighted(index), { signal });
     });
+
+    // Hover highlights an item only when the pointer really moved onto it.
+    // pointermove, not mouseenter: a list that opens or scrolls under a resting
+    // pointer fires mouseenter on whatever lands there.
+    this.addEventListener('pointermove', (e) => this._handlePointerMove(e), { signal });
+    // Any key means the keyboard is driving, wherever focus is in the palette.
+    this.addEventListener('keydown', () => this._suspendHover(), { capture: true, signal });
 
     // Dialog close
     if (this._dialog && this._dialog.tagName === 'DIALOG') {
@@ -107,6 +135,7 @@ class RenCommand extends HTMLElement {
   }
 
   _open() {
+    this._suspendHover();
     if (this._dialog.tagName === 'DIALOG') {
       this._dialog.showModal?.();
     } else {
@@ -139,7 +168,46 @@ class RenCommand extends HTMLElement {
     return this.style.display !== 'none';
   }
 
+  /**
+   * The keyboard is driving (a key, typed text, or the palette just opened),
+   * so hover stays out of the way until the pointer really moves.
+   */
+  _suspendHover() {
+    this._hoverSuspended = true;
+    this._restingPoint = null;
+  }
+
+  /**
+   * True once the pointer has moved since the keyboard last drove the list.
+   *
+   * Browsers re-target hover when content moves under a pointer that is not
+   * moving, and some add a move event that repeats the last coordinates.
+   * Following those would hand the highlight to wherever the pointer rests, so
+   * a keyboard user would lose their place. The first position seen after a
+   * suspension is only recorded; hover takes over again when a later
+   * pointermove reports a different position; see pointerMovedFrom().
+   */
+  _pointerReallyMoved(event) {
+    if (!this._hoverSuspended) return true;
+
+    const moved = pointerMovedFrom(this._restingPoint, event);
+    this._restingPoint = pointerPosition(event);
+    if (moved) this._hoverSuspended = false;
+    return moved;
+  }
+
+  _handlePointerMove(event) {
+    if (event.pointerType === 'touch' || !this._pointerReallyMoved(event)) return;
+
+    const item = event.target instanceof Element ? event.target.closest('.ren-command-item') : null;
+    const index = item ? this._items.indexOf(item) : -1;
+    if (index !== -1 && !item.hasAttribute('data-highlighted')) {
+      this._setHighlighted(index);
+    }
+  }
+
   _handleInput(e) {
+    this._suspendHover();
     const query = e.target.value.toLowerCase().trim();
     this._lastQuery = query;
     this._filterItems(query);

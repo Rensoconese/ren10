@@ -1752,9 +1752,11 @@ HSV canvas + hue slider + alpha + swatches. Supports HEX / RGB / HSL
 output formats and the EyeDropper API where available.
 
 - **Attributes:** `value`, `alpha`, `format`, `swatches`.
-- **API:** `getColor()`, `setColor(hex)`.
-- **A11y:** keyboard-navigable canvas (arrow keys = pixel movement, Shift
-  = large steps), all slider inputs are real `<input type="range">`.
+- **API:** `getValue()`, `setValue(color)`.
+- **A11y:** the saturation/brightness area, the hue slider and the alpha
+  slider are tab stops with `role="slider"` and a current value (arrows
+  step by 1, Shift+arrow or PageUp/PageDown by 10, Home/End jump to the
+  ends); the trigger's name carries the current color.
 
 #### ren-combobox
 
@@ -2091,8 +2093,10 @@ persistence, and tooltips when collapsed.
 - **API:** `toggleMenu()`, `setActiveItem(href)`, `openMobileMenu()`,
   `isCollapsed` getter.
 - **Events:** `ren-sidebar-toggle { collapsed }`.
-- **Keyboard:** Escape closes mobile overlay.
-- **A11y:** `aria-current="page"` on the active item; when collapsed,
+- **Keyboard:** Escape closes mobile overlay and returns focus to the
+  control that opened it.
+- **A11y:** `aria-current="page"` on the active item; `aria-expanded` on
+  the collapse toggle, kept in sync by the component; when collapsed,
   each item exposes its label via `data-tooltip` → `ren-tooltip` so
   the sidebar remains usable.
 

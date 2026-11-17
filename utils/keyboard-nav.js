@@ -38,12 +38,33 @@
  * @param {boolean} options.loop - Wrap around at first/last item
  * @param {boolean} options.typeahead - Enable type-to-search
  * @param {number} options.typeaheadTimeout - Ms before clearing search buffer
- * @param {boolean} options.focusOnHover - Focus items on mouse hover
+ * @param {boolean} options.focusOnHover - Activate items the pointer moves onto.
+ *   Only real pointer movement counts: a list that opens or scrolls under a
+ *   resting pointer never changes the active item.
  * @param {Function|null} options.onActivate - Callback when active item changes (arrow keys)
  * @param {Function|null} options.onSelect - Callback when item is selected (Enter/Space)
  * @param {string} options.activeAttribute - Data attribute for active state
  * @returns {Object} Navigation controller
  */
+
+// ─── Did the pointer really move? ───
+// Screen coordinates stay put while the page or an ancestor frame scrolls, so
+// they are the ones to compare. Some engines report the same screen position
+// for every pointer event; until two events have disagreed on it, the viewport
+// position is compared as well (it stays put while the page itself scrolls).
+let screenPositionVaries = false;
+
+function pointerPosition(event) {
+  return { x: event.screenX, y: event.screenY, cx: event.clientX, cy: event.clientY };
+}
+
+function pointerMovedFrom(rest, event) {
+  if (rest === null) return false;
+  const screenMoved = rest.x !== event.screenX || rest.y !== event.screenY;
+  if (screenMoved) screenPositionVaries = true;
+  return screenMoved || (!screenPositionVaries && (rest.cx !== event.clientX || rest.cy !== event.clientY));
+}
+
 export function createKeyboardNav(container, options = {}) {
   const {
     selector = '[role="option"], [role="menuitem"], [role="tab"], li',
@@ -62,6 +83,11 @@ export function createKeyboardNav(container, options = {}) {
   let typeaheadBuffer = '';
   let typeaheadTimer = null;
 
+  // Hover guard (focusOnHover). While suspended, the pointer has to really
+  // move before it may change the active item; see handlePointerMove().
+  let hoverSuspended = true;
+  let restingPoint = null;
+
   // ─── Item Management ───
 
   function getItems() {
@@ -79,7 +105,16 @@ export function createKeyboardNav(container, options = {}) {
 
   // ─── Activation (roving tabindex) ───
 
+  /**
+   * Activate an item from the keyboard or from code. The keyboard is driving
+   * from here on, so hover stays out of the way until the pointer really moves.
+   */
   function activateItem(index, shouldFocus = true) {
+    suspendHover();
+    setActiveItem(index, shouldFocus);
+  }
+
+  function setActiveItem(index, shouldFocus) {
     const items = getItems();
     if (items.length === 0) return;
 
@@ -167,6 +202,10 @@ export function createKeyboardNav(container, options = {}) {
   // ─── Event Handlers ───
 
   function handleKeyDown(event) {
+    // Any key means the keyboard is driving, including keys the browser
+    // handles itself (PageDown scrolling the list under a resting pointer).
+    suspendHover();
+
     const items = getItems();
     if (items.length === 0) return;
 
@@ -253,13 +292,44 @@ export function createKeyboardNav(container, options = {}) {
     }
   }
 
-  function handleMouseEnter(event) {
-    if (!focusOnHover) return;
+  // ─── Pointer hover (focusOnHover) ───
+  //
+  // Browsers re-target hover when content moves under a pointer that is not
+  // moving. A list that opens or scrolls beneath a resting pointer fires
+  // pointerover / mouseenter on whatever lands there, and some engines add a
+  // move event that repeats the last coordinates. Activating on those hands
+  // the active item to wherever the pointer happens to rest, so a keyboard
+  // user loses their place (and, in a scrolling list, can never get past the
+  // item under the pointer).
+  //
+  // So only pointermove is listened to, and after every keyboard or
+  // programmatic activation the pointer must prove that it moved: the first
+  // position seen is only recorded, and hover takes over again once a later
+  // pointermove reports a different position; see pointerMovedFrom().
 
-    const items = getItems();
-    const index = items.indexOf(event.target.closest(selector));
-    if (index !== -1) {
-      activateItem(index, false); // Don't steal keyboard focus
+  function suspendHover() {
+    hoverSuspended = true;
+    restingPoint = null;
+  }
+
+  function pointerReallyMoved(event) {
+    if (!hoverSuspended) return true;
+
+    const moved = pointerMovedFrom(restingPoint, event);
+    restingPoint = pointerPosition(event);
+    if (moved) hoverSuspended = false;
+    return moved;
+  }
+
+  function handlePointerMove(event) {
+    // A finger dragging over the list is scrolling it, not hovering.
+    if (event.pointerType === 'touch') return;
+    if (!pointerReallyMoved(event)) return;
+
+    const target = event.target instanceof Element ? event.target.closest(selector) : null;
+    const index = target ? getItems().indexOf(target) : -1;
+    if (index !== -1 && index !== activeIndex) {
+      setActiveItem(index, false); // Don't steal keyboard focus
     }
   }
 
@@ -295,15 +365,14 @@ export function createKeyboardNav(container, options = {}) {
     attached = true;
 
     initializeTabindex();
+    suspendHover();
 
     container.addEventListener('keydown', handleKeyDown);
     container.addEventListener('focusin', handleFocusIn);
 
     if (focusOnHover) {
-      const items = getItems();
-      items.forEach((item) => {
-        item.addEventListener('mouseenter', handleMouseEnter);
-      });
+      // Delegated, so items added after attach() are covered too.
+      container.addEventListener('pointermove', handlePointerMove);
     }
   }
 
@@ -315,10 +384,7 @@ export function createKeyboardNav(container, options = {}) {
     container.removeEventListener('focusin', handleFocusIn);
 
     if (focusOnHover) {
-      const items = getItems();
-      items.forEach((item) => {
-        item.removeEventListener('mouseenter', handleMouseEnter);
-      });
+      container.removeEventListener('pointermove', handlePointerMove);
     }
 
     clearTimeout(typeaheadTimer);

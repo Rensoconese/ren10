@@ -53,8 +53,8 @@ requiredMarkup:
   - "Root <ren-color-picker> is the consumer-authored host; its JS generates the trigger button and .ren-color-picker-dropdown popover."
   - "Trigger is a real <button class=\"ren-color-picker-trigger\"> with aria-expanded reflecting popover state."
   - "Saturation/brightness area renders a <canvas class=\"ren-color-picker-saturation-canvas\"> inside .ren-color-picker-saturation; do not replace with a gradient div."
-  - "Hue handle and alpha handle are decorative thumbs (no tab stops) — keyboard input lives on the hex / channel inputs."
-  - "Swatch grid items are real <button class=\"ren-color-picker-swatch\"> with aria-selected on the active swatch."
+  - "The component generates three slider surfaces, each a tab stop with role=\"slider\", an aria-label and aria-valuemin / aria-valuemax / aria-valuenow / aria-valuetext: .ren-color-picker-saturation (two-dimensional), .ren-color-picker-hue and, with the alpha attribute, .ren-color-picker-alpha. The handles inside them (.ren-color-picker-saturation-handle, .ren-color-picker-hue-handle, .ren-color-picker-alpha-handle) are decorative. Do not strip the role, the tab stop or the value attributes."
+  - "Swatch grid items are real <button class=\"ren-color-picker-swatch\"> inside a role=\"group\" container; the preset equal to the current color carries aria-current=\"true\", kept in sync by the component."
   - "Use placement=\"bottom\" by default; the host and .ren-color-picker-dropdown mirror the preferred side to data-side."
 
 forbiddenPatterns:
@@ -77,9 +77,11 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Trigger button has aria-haspopup=\"dialog\" (or appropriate) and aria-expanded reflects the dropdown state."
+    - "Trigger button has aria-haspopup=\"dialog\" (or appropriate) and aria-expanded reflects the dropdown state; its aria-label names the current color and follows every change."
     - "All inputs (.ren-color-picker-hex-input, .ren-color-picker-channel-input) have associated <label> via .ren-color-picker-channel-label or aria-label."
-    - "The saturation area is operable via keyboard (Arrow keys move the handle in 1% steps; Shift+Arrow in larger steps)."
+    - "The saturation/brightness area is a focusable two-dimensional slider (role=\"slider\", aria-roledescription \"2D slider\"): Left/Right change saturation and Up/Down change brightness in 1% steps, Shift+Arrow in 10% steps, PageUp/PageDown move brightness by 10%, Home/End jump to 0% / 100% saturation. aria-valuenow is the saturation and aria-valuetext reads both axes."
+    - "The hue slider and the alpha slider are tab stops with role=\"slider\": arrows step by 1 (degree / percent), Shift+Arrow and PageUp/PageDown by 10, Home/End jump to the ends. Hue wraps around; opacity stops at 0% and 100%."
+    - "Every control in the dropdown is reachable with Tab in visual order (area, hue, alpha, hex, channels, format toggle, eyedropper, swatches); Escape closes it and returns focus to the trigger."
     - "Focus rings use --color-input-focus-ring; never set outline: none without restoring box-shadow ring."
     - "Color is never communicated by hue alone — value text appears alongside the swatch (preview label + value)."
     - "Animations honor prefers-reduced-motion (open animation and transitions are clamped to 0.01ms)."
@@ -135,8 +137,9 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## States And Attributes
 
+- `[aria-current]` — on the preset swatch that equals the current color.
 - `[aria-expanded]`
-- `[aria-selected]`
+- `[aria-valuenow]` / `[aria-valuetext]` — on the three slider surfaces.
 - `[data-side]`
 - `placement`
 - `:disabled`
@@ -165,6 +168,36 @@ Theme through these public custom properties before reaching for selectors.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
 
+### Keyboard
+
+The trigger opens the dropdown with Enter or Space; Escape closes it and
+returns focus to the trigger. Inside, the saturation/brightness area, the hue
+slider and the alpha slider are the first three tab stops, each a
+`role="slider"` with a name and a current value.
+
+| Key | Saturation / brightness area | Hue slider | Alpha slider |
+|---|---|---|---|
+| Left / Right | saturation −1% / +1% | hue −1° / +1° | opacity −1% / +1% |
+| Up / Down | brightness +1% / −1% | hue +1° / −1° | opacity +1% / −1% |
+| Shift + arrow | the same, by 10 | the same, by 10 | the same, by 10 |
+| Page Up / Page Down | brightness +10% / −10% | hue +10° / −10° | opacity +10% / −10% |
+| Home / End | saturation 0% / 100% | hue 0° / 360° | opacity 0% / 100% |
+
+- The area is two-dimensional, which ARIA has no role for: it is a slider
+  whose `aria-valuenow` is the saturation and whose `aria-valuetext` reads
+  both axes ("Saturation 72%, brightness 94%"), with
+  `aria-roledescription="2D slider"`.
+- Hue is a circle, so its steps wrap (one step below 0° is 359°). Saturation,
+  brightness and opacity stop at their ends.
+- A key press on a slider dispatches `ren-input` and then `ren-change`, like
+  a native range input. A pointer drag dispatches `ren-input` while it moves
+  and `ren-change` on release.
+- A pointer press on a slider also focuses it, so the arrows can fine-tune
+  from where the pointer left it.
+- The format toggle rebuilds the fields and keeps focus on itself.
+- The strings (`aria-label`, value text, role description) come from
+  `utils/i18n.js` under `colorPicker.*`.
+
 ## Related Files
 
 - `components/composites/ren-color-picker/ren-color-picker.css`
@@ -177,6 +210,7 @@ Theme through these public custom properties before reaching for selectors.
 ## Test Expectations
 
 - Run component or docs a11y coverage when markup, states, or ARIA change.
+- `tests/components/keyboard-contracts.spec.cjs` drives every key in the table above and checks the name, role and value of each control (including an axe pass over the open dropdown).
 - Run CSS lint when selectors, tokens, or visual states change.
 - Manually verify light/dark themes when color, surface, border, or shadow behavior changes.
 
