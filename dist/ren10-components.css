@@ -7909,7 +7909,7 @@
     overflow-y: auto;
     max-height: 18rem;
     padding: var(--ren-space-1, 0.25rem);
-    flex: 1;
+    flex: 1 1 auto;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
     &::-webkit-scrollbar {

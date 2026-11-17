@@ -29,7 +29,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 - `tests/components/keyboard-contracts.spec.cjs` drives ren-dialog, ren-menu, ren-toggle-group, ren-toolbar, ren-otp, ren-select, ren-accordion, ren-calendar, ren-carousel, ren-color-picker, ren-dropzone, ren-form, ren-hover-card, ren-sidebar, ren-table, ren-toast and ren-tooltip through the keys their contracts promise, using the registry usage that `ren10 add` prints.
 
 ### Changed
-- The minified CSS budget (`scripts/package-budgets.json`, `minCssBytes`) is re-baselined from 292,070 to 293,204 bytes (0.4%) for the right-to-left rules and the focus and closed-state fixes above; the reason is recorded in the file.
+- The minified CSS budget (`scripts/package-budgets.json`, `minCssBytes`) is re-baselined from 292,070 to 293,211 bytes (0.4%) for the right-to-left rules and the focus, closed-state and WebKit palette fixes in this release; the reason is recorded in the file.
 - `@ren10/astro`: the generated `Navigation` wrapper no longer puts `class="ren-nav"` on the `<ren-nav>` host. The class belongs to the inner `<nav class="ren-nav">`, as the contract and the corrected registry usage say.
 - `ren-carousel`: slides are labelled "1 of 3" instead of "Slide 1 of 3", and the fallback label is "Gallery" instead of "Image carousel" (`carousel.slideOf`, `carousel.label` in `utils/i18n.js`, English and Spanish). The elements already carry `aria-roledescription`, so the old labels were announced as "Slide 1 of 3, slide" and "Image carousel, carousel".
 - `ren-color-picker`: the preset swatch that equals the current color is marked `aria-current="true"` instead of `aria-selected="true"` (not a valid state on a button; axe `aria-allowed-attr`). It is re-synced after every change and the swatch container has `role="group"`. Style `.ren-color-picker-swatch[aria-current="true"]` if you targeted the old attribute.
@@ -44,6 +44,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 - `tests/utils/mount-registry.cjs` holds the helper that mounts a component's registry usage with its CSS and JS, so per-component contract specs share one mount.
 
 ### Fixed
+- `ren-command`: the palette shows its results in Safari and other WebKit browsers. The list was laid out with no height there, so the open palette was a search field with nothing under it: the items existed and answered the keyboard, clipped out of view. `.ren-command-list` now sizes from its content (`flex: 1 1 auto` instead of `flex: 1`).
 - Right-to-left: horizontal arrow keys follow the direction. Under `dir="rtl"` ArrowLeft moves to the next item, and ArrowRight back, in ren-tabs, horizontal ren-radio, ren-toggle-group, ren-toolbar, ren-menubar (where it also opens a submenu), ren-carousel, ren-calendar and the date pickers, and ren-table. Up/Down, Home/End and PageUp/PageDown are unchanged.
 - `ren-sheet`: `side="right"` opened on the left, in either direction: the browser's `inset-inline: 0` on `<dialog>` over-constrained the box. `left` and `right` are now physical edges under any direction.
 - `ren-command`: the palette was pushed half off screen under RTL and sat 64px off-centre under LTR.
