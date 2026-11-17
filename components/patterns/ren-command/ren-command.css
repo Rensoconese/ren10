@@ -146,7 +146,9 @@ dialog.ren-command:not([open]) {
   overflow-y: auto;
   max-height: 18rem;
   padding: var(--ren-space-1, 0.25rem);
-  flex: 1;
+  /* `auto` basis, not `flex: 1`: a 0% basis resolves to zero in WebKit when the
+     dialog has both block insets set, which left the list with no height. */
+  flex: 1 1 auto;
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
 

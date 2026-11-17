@@ -39,6 +39,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 - `tests/utils/mount-registry.cjs` holds the helper that mounts a component's registry usage with its CSS and JS, so per-component contract specs share one mount.
 
 ### Fixed
+- `ren-command`: the palette shows its results in Safari and other WebKit browsers. The list was laid out with no height there, so the open palette was a search field with nothing under it: the items existed and answered the keyboard, clipped out of view. `.ren-command-list` now sizes from its content (`flex: 1 1 auto` instead of `flex: 1`).
 - `ren-command`: the closed palette was painted on the page before it was ever opened and after every close. `.ren-command { display: flex }` is an author rule, so it beat the browser's `dialog:not([open]) { display: none }`. The dialog also had no accessible name; it takes `aria-label` / `aria-labelledby` from the `<dialog>` or from `<ren-command>`, and falls back to the localized "Command palette".
 - `ren-color-picker`: the panel stayed on screen after it closed, and an empty box showed before the first open, for the same reason on a popover (`display: flex` over `[popover]:not(:popover-open)`).
 - `ren-radio`: Space on a focused, unchecked radio did nothing, because the roving-tabindex util claimed Enter and Space even with no handler for them. A radio checked in the markup or from script was left at `tabindex="-1"`, so Tab skipped the group; the tab stop is now the checked radio, or the first one. All four arrow keys are handled by the component in either orientation.

@@ -377,17 +377,44 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  /** Registry usage of the palette with four items instead of two. */
+  const fourCommands = (usage) => usage.replace(
+    '<li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>',
+    '<li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>\n      <li><button type="button" class="ren-command-item" data-value="paste">Paste</button></li>\n      <li><button type="button" class="ren-command-item" data-value="cut">Cut</button></li>'
+  );
+
+  /** The palette item a pointer at that point would hit, or null. */
+  const commandAt = (page, point) => page.evaluate(({ x, y }) => (
+    document.elementFromPoint(x, y)?.closest('.ren-command-item')?.textContent.trim() ?? null
+  ), point);
+
+  test('ren-command shows every item of the open palette where the pointer can reach it', { tag: ['@ren-command', '@runtime'] }, async ({ page }) => {
+    const errors = await mount(page, 'command', fourCommands);
+    await page.keyboard.press('Control+K');
+    await expect(page.locator('ren-command dialog')).toHaveJSProperty('open', true);
+
+    // A box is not enough: a list squeezed to no height clips its items away
+    // and each one still reports where it would have been. That is how the
+    // palette rendered in WebKit, with only the search field on screen.
+    for (const name of ['Save', 'Copy', 'Paste', 'Cut']) {
+      const item = page.locator('.ren-command-item', { hasText: name });
+      await expect.poll(async () => commandAt(page, await centreOf(item)), `${name} is on screen at its own centre`).toBe(name);
+    }
+    expect(errors).toEqual([]);
+  });
+
   test('ren-command leaves the highlighted item to the keyboard when the palette opens under a resting pointer', { tag: ['@ren-command', '@keyboard'] }, async ({ page }) => {
-    const errors = await mount(page, 'command', (usage) => usage.replace(
-      '<li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>',
-      '<li><button type="button" class="ren-command-item" data-value="copy">Copy</button></li>\n      <li><button type="button" class="ren-command-item" data-value="paste">Paste</button></li>\n      <li><button type="button" class="ren-command-item" data-value="cut">Cut</button></li>'
-    ));
+    const errors = await mount(page, 'command', fourCommands);
     const dialog = page.locator('ren-command dialog');
     const highlighted = page.locator('ren-command .ren-command-item[data-highlighted]');
+    const paste = page.locator('.ren-command-item', { hasText: 'Paste' });
 
     await page.keyboard.press('Control+K');
     await expect(dialog).toHaveJSProperty('open', true);
-    const spot = await centreOf(page.locator('.ren-command-item', { hasText: 'Paste' }));
+    // Measure once the opening animation has stopped moving the item.
+    await expect.poll(async () => commandAt(page, await centreOf(paste)), 'Paste is on screen').toBe('Paste');
+    await dialog.evaluate((el) => Promise.all(el.getAnimations().map((animation) => animation.finished)));
+    const spot = await centreOf(paste);
     await page.keyboard.press('Escape');
     await expect(dialog).toHaveJSProperty('open', false);
     const rest = await parkPointer(page, spot);
@@ -395,6 +422,8 @@ test.describe('keyboard contracts', () => {
     await page.keyboard.press('Control+K');
     await expect(dialog).toHaveJSProperty('open', true);
     await letHoverSettle(page, rest);
+    // Otherwise everything below would pass without a pointer over any item.
+    await expect.poll(() => commandAt(page, rest), 'the palette reopened with Paste under the resting pointer').toBe('Paste');
     await repeatRestingMove(page, rest);
     await expect(highlighted, 'opening under the pointer highlights the first item').toHaveText('Save');
 
