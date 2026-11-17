@@ -152,6 +152,10 @@ and `ren-change` return it unchanged until a slider moves. The sliders work in
 whole degrees and percents, so a color reached by moving one is the nearest
 color on that grid.
 
+`setValue(color)` takes a hex string or any CSS color, updates everything that
+shows the color (trigger, sliders, fields, current preset) and dispatches no
+event. A string that is not a color is ignored.
+
 ## Public Token API
 
 - `--ren-cp-bg`

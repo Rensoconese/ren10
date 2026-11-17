@@ -890,6 +890,43 @@ test.describe('keyboard contracts', () => {
     expect(errors).toEqual([]);
   });
 
+  test('ren-color-picker shows a colour set from script, before and after it has been opened', { tag: ['@ren-color-picker', '@runtime'] }, async ({ page }) => {
+    const errors = await mount(page, 'color-picker', (usage) => usage.replace('placement="bottom"', 'placement="bottom" swatches="#123456,#abcdef"'));
+    const picker = page.locator('ren-color-picker');
+    const trigger = page.locator('ren-color-picker .ren-color-picker-trigger');
+    await page.evaluate(() => {
+      window.__events = [];
+      const el = document.querySelector('ren-color-picker');
+      for (const type of ['ren-input', 'ren-change']) el.addEventListener(type, () => window.__events.push(type));
+    });
+
+    // Never opened: the trigger is all there is to update.
+    await picker.evaluate((el) => el.setValue('#123456'));
+    await expect(trigger, 'the trigger is named after the new colour').toHaveAttribute('aria-label', 'Color picker, current color #123456');
+    await expect(trigger.locator('.ren-color-picker-trigger-value')).toHaveText('#123456');
+    expect(await trigger.locator('.ren-color-picker-trigger-swatch').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(18, 52, 86)');
+
+    // Open: every control that shows the colour follows it.
+    await trigger.focus();
+    await page.keyboard.press('Enter');
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    const presets = page.getByRole('group', { name: 'Preset color swatches' }).getByRole('button');
+    await expect(presets.first()).toHaveAttribute('aria-current', 'true');
+    await picker.evaluate((el) => el.setValue('#abcdef'));
+    await expect(trigger).toHaveAttribute('aria-label', 'Color picker, current color #abcdef');
+    await expect(page.locator('ren-color-picker .ren-color-picker-hex-input')).toHaveValue('#abcdef');
+    await expect(presets.nth(1)).toHaveAttribute('aria-current', 'true');
+    await expect(presets.first()).not.toHaveAttribute('aria-current');
+
+    // Something that is not a colour changes nothing.
+    await picker.evaluate((el) => el.setValue('not a colour'));
+    await expect(trigger).toHaveAttribute('aria-label', 'Color picker, current color #abcdef');
+
+    // A value set from script is not the user changing it: no events.
+    expect(await page.evaluate(() => window.__events)).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+
   test('ren-color-picker reports the colour it was given, to the last step', { tag: ['@ren-color-picker', '@runtime'] }, async ({ page }) => {
     // Neither #5b6cff nor #c0ffee has an exact place in the picker's model,
     // which holds hue in whole degrees and the other two in whole percents.

@@ -334,7 +334,7 @@ export class RenColorPicker extends HTMLElement {
     this.#format = ['hex', 'rgb', 'hsl'].includes(format) ? format : 'hex';
 
     // ═══ PARSE INITIAL COLOR ═══
-    this.setValue(value);
+    this.#setColor(value);
 
     // ═══ RENDER TRIGGER ═══
     this.#renderTrigger(disabled);
@@ -992,7 +992,7 @@ export class RenColorPicker extends HTMLElement {
     const colorDiv = swatch.querySelector('.ren-color-picker-swatch-color');
     const color = colorDiv.style.backgroundColor;
 
-    this.setValue(color);
+    this.#setColor(color);
     this.#updateAllViews();
     this.#emitChange();
   }
@@ -1001,7 +1001,7 @@ export class RenColorPicker extends HTMLElement {
     try {
       const eyeDropper = new EyeDropper();
       const result = await eyeDropper.open();
-      this.setValue(result.sRGBHex);
+      this.#setColor(result.sRGBHex);
       this.#updateAllViews();
       this.#emitChange();
     } catch {
@@ -1265,13 +1265,21 @@ export class RenColorPicker extends HTMLElement {
   /**
    * Set the color value
    * Accepts: hex string, rgb/rgba string, hsl/hsla string, or color name
+   *
+   * Everything that shows the color follows it. No event is dispatched: a
+   * value set from script is not the user changing it.
    */
   setValue(color) {
-    const rgb = this.#parseColor(color);
+    if (this.#setColor(color)) this.#updateAllViews();
+  }
 
-    if (rgb) {
-      this.#setFromRgb(rgb);
-    }
+  /** Take a color into the model; false if it is not a color. */
+  #setColor(color) {
+    const rgb = this.#parseColor(color);
+    if (!rgb) return false;
+
+    this.#setFromRgb(rgb);
+    return true;
   }
 
   /** Move the model to a colour, and keep the colour itself. */
@@ -1310,6 +1318,9 @@ export class RenColorPicker extends HTMLElement {
         // Use temporary element to parse CSS color
         const div = document.createElement('div');
         div.style.color = color;
+        // A string that is not a color is not kept. Without this check the
+        // element computed to the page's text color and that was returned.
+        if (div.style.color === '') return null;
         document.body.appendChild(div);
         const computed = getComputedStyle(div).color;
         document.body.removeChild(div);

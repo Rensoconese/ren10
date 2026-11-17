@@ -46,6 +46,8 @@ consolidates them and starts formal version tracking with 0.7.0.
 - `tests/utils/mount-registry.cjs` holds the helper that mounts a component's registry usage with its CSS and JS, so per-component contract specs share one mount.
 
 ### Fixed
+- `ren-color-picker`: `setValue()` updates what the picker shows. It changed the value and left the trigger, its accessible name, the sliders, the fields and the current preset on the old color until the next interaction. It dispatches no event, as before.
+- `ren-color-picker`: a string that is not a color is ignored by `setValue()` and by the `value` attribute. It was read as the page's text color, so `setValue('oops')` set black.
 - `ren-select`: the open list is drawn at its full size. The open state never reset the transform of the closed one, so once the opening animation ended the list sat at 98% scale, 4px above its place.
 - `ren-color-picker`: the RGB and HSL channel fields are named by the word for what they hold ("Red", "Hue", …) from `utils/i18n.js` (`colorPicker.channel*`, English and Spanish). They were named "R channel", "H channel" in English under every locale.
 - `ren-color-picker`: the picker reports the color it was given. Its model holds hue in whole degrees and saturation and brightness in whole percents, and every value went through it, so `value="#5b6cff"` came back from `getValue()` and `ren-change` as `#5c6cff`, and choosing a preset chose its neighbour. The given color (the `value` attribute, `setValue()`, a preset, a typed hex or channel value) is now kept and returned until a slider moves; a preset is current when its own color equals the value.
