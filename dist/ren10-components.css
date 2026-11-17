@@ -8829,7 +8829,14 @@
     z-index: var(--z-popover);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+  }
+  .ren-menubar-menu > :first-child {
+    border-start-start-radius: calc(var(--radius-md) - 1px);
+    border-start-end-radius: calc(var(--radius-md) - 1px);
+  }
+  .ren-menubar-menu > :last-child {
+    border-end-start-radius: calc(var(--radius-md) - 1px);
+    border-end-end-radius: calc(var(--radius-md) - 1px);
   }
   .ren-menubar-menu:not([hidden]) {
     display: flex;

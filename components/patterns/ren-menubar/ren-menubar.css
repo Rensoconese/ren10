@@ -89,7 +89,19 @@
   z-index: var(--z-popover);
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+}
+
+/* The panel does not clip its overflow: a submenu is a child of its item and
+   sits beside the panel, so clipping hid every submenu. The first and last
+   items follow the panel's corners instead. */
+.ren-menubar-menu > :first-child {
+  border-start-start-radius: calc(var(--radius-md) - 1px);
+  border-start-end-radius: calc(var(--radius-md) - 1px);
+}
+
+.ren-menubar-menu > :last-child {
+  border-end-start-radius: calc(var(--radius-md) - 1px);
+  border-end-end-radius: calc(var(--radius-md) - 1px);
 }
 
 /* Visible state for menu open */
