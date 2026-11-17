@@ -5759,11 +5759,17 @@
   .ren-date-range-inner {
     container-type: inline-size;
     container-name: ren-date-range;
+    inline-size: min(2 * var(--ren-calendar-width, 280px) + 2 * var(--space-3) + 3px, 100vw - 2 * var(--space-4));
     background: var(--color-surface-raised);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
     overflow: hidden;
+  }
+  @media (any-pointer: coarse), (pointer: coarse) {
+    .ren-date-range-inner {
+      inline-size: min(2 * max(var(--ren-calendar-width, 0px), 7 * (var(--touch-min) + var(--stroke-1)) + var(--space-4) + 2 * var(--stroke-1)) + 2 * var(--space-3) + 3px, 100vw - 2 * var(--space-4));
+    }
   }
   .ren-date-range-presets {
     display: flex;
@@ -5932,6 +5938,8 @@
     .ren-date-range-dropdown {
       position: fixed !important;
       inset: auto 0 0 0 !important;
+      position-area: none !important;
+      inline-size: auto;
       max-width: none;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       max-height: 85vh;
@@ -5945,6 +5953,9 @@
         translate: 0 100%;
         opacity: 0;
       }
+    }
+    .ren-date-range-inner {
+      inline-size: auto;
     }
   }
   @keyframes ren-date-range-mobile-in {

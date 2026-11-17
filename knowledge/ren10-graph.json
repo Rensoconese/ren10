@@ -3903,11 +3903,14 @@
      "--label-weight",
      "--radius-lg",
      "--radius-md",
+     "--ren-calendar-width",
      "--shadow-lg",
      "--space-1",
      "--space-1-5",
      "--space-2",
      "--space-3",
+     "--space-4",
+     "--stroke-1",
      "--touch-min",
      "--transition-tactile",
      "--weight-semibold",
@@ -13901,7 +13904,7 @@
   {
    "data": {},
    "body": "--ren-calendar-width",
-   "path": "components/composites/ren-calendar/ren-calendar.css",
+   "path": "components/composites/ren-date-range-picker/ren-date-range-picker.css",
    "id": "token:--ren-calendar-width",
    "type": "token",
    "name": "--ren-calendar-width"
@@ -19643,6 +19646,13 @@
    "detail": "",
    "data": {},
    "source": "component:composite:ren-date-range-picker",
+   "target": "token:--ren-calendar-width",
+   "type": "uses_token"
+  },
+  {
+   "detail": "",
+   "data": {},
+   "source": "component:composite:ren-date-range-picker",
    "target": "token:--shadow-lg",
    "type": "uses_token"
   },
@@ -19672,6 +19682,20 @@
    "data": {},
    "source": "component:composite:ren-date-range-picker",
    "target": "token:--space-3",
+   "type": "uses_token"
+  },
+  {
+   "detail": "",
+   "data": {},
+   "source": "component:composite:ren-date-range-picker",
+   "target": "token:--space-4",
+   "type": "uses_token"
+  },
+  {
+   "detail": "",
+   "data": {},
+   "source": "component:composite:ren-date-range-picker",
+   "target": "token:--stroke-1",
    "type": "uses_token"
   },
   {

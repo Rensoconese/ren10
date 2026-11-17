@@ -203,11 +203,25 @@
 .ren-date-range-inner {
   container-type: inline-size;
   container-name: ren-date-range;
+  /* A size container contributes no intrinsic width, and the popup around it
+     shrinks to fit. With nothing giving the wrapper a width the dropdown was
+     two borders wide and the compact query below always saw a narrow
+     container. It is two calendars, their padding and the divider wide, capped
+     to the viewport. */
+  inline-size: min(2 * var(--ren-calendar-width, 280px) + 2 * var(--space-3) + 3px, 100vw - 2 * var(--space-4));
   background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
+}
+
+@media (any-pointer: coarse), (pointer: coarse) {
+  /* The same sum with the width ren-calendar.css gives a calendar whose days
+     are touch targets. */
+  .ren-date-range-inner {
+    inline-size: min(2 * max(var(--ren-calendar-width, 0px), 7 * (var(--touch-min) + var(--stroke-1)) + var(--space-4) + 2 * var(--stroke-1)) + 2 * var(--space-3) + 3px, 100vw - 2 * var(--space-4));
+  }
 }
 
 /* ═══ PRESETS SIDEBAR ═══ */
@@ -423,6 +437,10 @@
   .ren-date-range-dropdown {
     position: fixed !important;
     inset: auto 0 0 0 !important;
+    /* Out of the anchored area and across the whole row: `position-area`
+       centres the box on the trigger, and a popover is fit-content wide. */
+    position-area: none !important;
+    inline-size: auto;
     max-width: none;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     max-height: 85vh;
@@ -440,6 +458,9 @@
     }
   }
 
+  .ren-date-range-inner {
+    inline-size: auto;
+  }
 }
 
 @keyframes ren-date-range-mobile-in {
