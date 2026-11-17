@@ -46,8 +46,8 @@ canonicalImports:
     - "The component uses the same --ren-dialog-* token namespace as ren-dialog, so token overrides cascade."
 
 requiredMarkup:
-  - "The root element is a real <dialog class=\"ren-alert-dialog\">; never substitute a <div role=\"alertdialog\">."
-  - "Provide a .ren-alert-dialog-title (heading) and a .ren-alert-dialog-description so AT can announce the decision."
+  - "The root element is a real <dialog class=\"ren-alert-dialog\" role=\"alertdialog\">; never substitute a <div role=\"alertdialog\">. The role tells assistive tech this dialog interrupts for a decision."
+  - "Provide a .ren-alert-dialog-title (heading) and a .ren-alert-dialog-description, and point aria-labelledby / aria-describedby on the <dialog> at their ids, so AT announces the decision."
   - "Actions live inside .ren-alert-dialog-actions and use real <button> elements (.ren-btn-secondary + .ren-btn-danger or similar)."
   - "Each button calls dialog.close('cancel' | 'confirm' | …) so the consumer can read returnValue on the close event."
   - "Use .ren-alert-dialog-icon-danger or .ren-alert-dialog-icon-warning on the icon slot for severity — do not invent new severity classes."
@@ -72,7 +72,7 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Use a real <dialog> so the browser exposes role=\"dialog\" + aria-modal automatically; add aria-labelledby pointing to .ren-alert-dialog-title."
+    - "Use a real <dialog role=\"alertdialog\"> opened with showModal() so the browser provides the modal behaviour; add aria-labelledby pointing to .ren-alert-dialog-title and aria-describedby pointing to .ren-alert-dialog-description."
     - "Open with showModal(); the backdrop becomes inert so background content is unreachable to keyboard / AT."
     - "The destructive button must be visually distinct (.ren-btn-danger) AND announced by its text — never rely on color alone."
     - "Focus must move into the dialog on open and return to the trigger on close (native <dialog> behavior)."
@@ -92,7 +92,7 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<dialog class="ren-alert-dialog" aria-labelledby="delete-title" aria-describedby="delete-description" closedby="none">
+<dialog class="ren-alert-dialog" role="alertdialog" aria-labelledby="delete-title" aria-describedby="delete-description" closedby="none">
   <h2 id="delete-title" class="ren-alert-dialog-title">Delete project?</h2>
   <p id="delete-description" class="ren-alert-dialog-description">This cannot be undone.</p>
   <form method="dialog" class="ren-alert-dialog-actions">

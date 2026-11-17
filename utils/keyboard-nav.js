@@ -255,26 +255,20 @@ export function createKeyboardNav(container, options = {}) {
 
       case 'Enter':
       case ' ':
-        if (event.key === ' ' && typeahead) {
-          // Space might be typeahead
-          // Only select if no typeahead buffer
-          if (typeaheadBuffer === '') {
-            const item = getActiveItem();
-            if (item) {
-              onSelect?.(item, activeIndex);
-              handled = true;
-            }
-          } else {
-            handleTypeahead(' ');
-            handled = true;
-          }
-        } else {
+        if (event.key === ' ' && typeahead && typeaheadBuffer !== '') {
+          // Space inside a typeahead search is part of the search string.
+          handleTypeahead(' ');
+          handled = true;
+        } else if (onSelect) {
           const item = getActiveItem();
           if (item) {
-            onSelect?.(item, activeIndex);
+            onSelect(item, activeIndex);
             handled = true;
           }
         }
+        // With no onSelect the key belongs to the item itself: a native radio
+        // checks on Space, a button clicks. Claiming it here used to swallow
+        // Space on an unchecked radio.
         break;
 
       default:

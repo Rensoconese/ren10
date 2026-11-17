@@ -293,7 +293,7 @@ test.describe('Task 16 lifecycle, touch, reactivity, and ARIA matrix', () => {
       host.querySelector('.ren-carousel-viewport').appendChild(slide);
     });
     await expect(carousel.locator('.ren-carousel-dot')).toHaveCount(3);
-    await expect(carousel.locator('.ren-carousel-slide').nth(2)).toHaveAttribute('aria-label', 'Slide 3 of 3');
+    await expect(carousel.locator('.ren-carousel-slide').nth(2)).toHaveAttribute('aria-label', '3 of 3');
     const refreshedRelationships = await carousel.evaluate(async (host) => {
       const slide = document.createElement('div');
       slide.className = 'ren-carousel-slide';

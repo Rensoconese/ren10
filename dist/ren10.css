@@ -9984,6 +9984,9 @@
       }
     }
   }
+  .ren-color-picker-dropdown:not(:popover-open) {
+    display: none;
+  }
   .ren-color-picker-dropdown[data-side=bottom],
   .ren-color-picker-dropdown:not([data-side]) {
     position-area: bottom span-all;
@@ -11356,6 +11359,9 @@
         animation: none;
       }
     }
+  }
+  dialog.ren-command:not([open]) {
+    display: none;
   }
   @keyframes ren-command-in {
     from {

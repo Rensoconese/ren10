@@ -152,6 +152,14 @@
   }
 }
 
+/* A closed popover must not render. `display: flex` above is an author
+   rule, so it beats the browser's own
+   `[popover]:not(:popover-open) { display: none }` and left the panel painted
+   on the page after it closed (and an empty box before it ever opened). */
+.ren-color-picker-dropdown:not(:popover-open) {
+  display: none;
+}
+
 .ren-color-picker-dropdown[data-side="bottom"],
 .ren-color-picker-dropdown:not([data-side]) {
   position-area: bottom span-all;

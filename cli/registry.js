@@ -84,7 +84,7 @@ export const REGISTRY = {
     files: ['ren-radio.css', 'ren-radio.js'],
     utils: ['keyboard-nav.js'],
     components: [],
-    usage: `<ren-radio-group>
+    usage: `<ren-radio-group aria-label="Option">
   <label class="ren-radio">
     <input type="radio" name="option" value="a">
     <span class="ren-radio-control"></span>
@@ -341,11 +341,13 @@ export const REGISTRY = {
     files: ['ren-tabs.css', 'ren-tabs.js'],
     utils: ['keyboard-nav.js', 'id-generator.js', 'debug.js'],
     components: [],
-    usage: `<ren-tabs>
-  <button role="tab">Tab 1</button>
-  <button role="tab">Tab 2</button>
-  <div role="tabpanel">Content 1</div>
-  <div role="tabpanel">Content 2</div>
+    usage: `<ren-tabs aria-label="Account settings">
+  <div class="ren-tab-list" role="tablist">
+    <button class="ren-tab" role="tab">Profile</button>
+    <button class="ren-tab" role="tab">Security</button>
+  </div>
+  <div class="ren-tab-panel" role="tabpanel">Profile settings</div>
+  <div class="ren-tab-panel" role="tabpanel">Security settings</div>
 </ren-tabs>`,
   },
 
@@ -426,9 +428,10 @@ export const REGISTRY = {
     files: ['ren-slider.css', 'ren-slider.js'],
     utils: ['debug.js'],
     components: [],
-    usage: `<ren-slider min="0" max="100" value="50">
-  <input type="range">
-  <output>50</output>
+    usage: `<ren-slider show-value>
+  <div class="ren-slider-track">
+    <input type="range" min="0" max="100" step="1" value="50" aria-label="Volume">
+  </div>
 </ren-slider>`,
   },
 
@@ -455,7 +458,7 @@ export const REGISTRY = {
     files: ['ren-combobox.css', 'ren-combobox.js'],
     utils: ['id-generator.js', 'dismissable.js', 'i18n.js'],
     components: [],
-    usage: `<ren-combobox placeholder="Search a country">
+    usage: `<ren-combobox aria-label="Country" placeholder="Search a country">
   <div class="ren-combobox-item" role="option" data-value="ar">Argentina</div>
   <div class="ren-combobox-item" role="option" data-value="br">Brazil</div>
   <div class="ren-combobox-empty" hidden>No results</div>
@@ -519,10 +522,7 @@ export const REGISTRY = {
     files: ['ren-number-field.css', 'ren-number-field.js'],
     utils: ['i18n.js'],
     components: [],
-    usage: `<ren-number-field>
-  <label>Quantity</label>
-  <input type="number" min="0" max="10">
-</ren-number-field>`,
+    usage: `<ren-number-field min="0" max="10" step="1" value="2" aria-label="Quantity"></ren-number-field>`,
   },
 
   otp: {
@@ -555,10 +555,7 @@ export const REGISTRY = {
     files: ['ren-date-picker.css', 'ren-date-picker.js'],
     utils: ['anchor.js', 'i18n.js'],
     components: ['calendar'],
-    usage: `<ren-date-picker>
-  <input type="date">
-  <ren-calendar></ren-calendar>
-</ren-date-picker>`,
+    usage: `<ren-date-picker name="start-date" placement="bottom"></ren-date-picker>`,
   },
 
   carousel: {
@@ -586,9 +583,9 @@ export const REGISTRY = {
     files: ['ren-alert-dialog.css'],
     utils: [],
     components: [],
-    usage: `<dialog class="ren-alert-dialog" role="alertdialog" aria-labelledby="ad-title">
-  <h2 id="ad-title">Delete project?</h2>
-  <p>This action cannot be undone.</p>
+    usage: `<dialog class="ren-alert-dialog" role="alertdialog" aria-labelledby="ad-title" aria-describedby="ad-description">
+  <h2 id="ad-title" class="ren-alert-dialog-title">Delete project?</h2>
+  <p id="ad-description" class="ren-alert-dialog-description">This action cannot be undone.</p>
   <div class="ren-alert-dialog-actions">
     <button class="ren-btn">Cancel</button>
     <button class="ren-btn ren-btn-danger">Delete</button>
@@ -631,9 +628,9 @@ export const REGISTRY = {
     components: [],
     styles: ['menu'],
     usage: `<div class="ren-context-menu-trigger" data-context="editor-actions" tabindex="0">Right-click me</div>
-<ren-context-menu id="editor-actions">
-  <button class="ren-menu-item" role="menuitem">Copy</button>
-  <button class="ren-menu-item" role="menuitem">Paste</button>
+<ren-context-menu id="editor-actions" aria-label="Editor actions">
+  <button class="ren-menu-item" role="menuitem" type="button">Copy</button>
+  <button class="ren-menu-item" role="menuitem" type="button">Paste</button>
 </ren-context-menu>`,
   },
 
@@ -704,12 +701,15 @@ export const REGISTRY = {
     files: ['ren-nav.css', 'ren-nav.js'],
     utils: [],
     components: [],
-    usage: `<ren-nav class="ren-nav">
-  <a href="/" class="ren-nav-brand">Logo</a>
-  <ul class="ren-nav-menu">
-    <li><a href="/home">Home</a></li>
-    <li><a href="/about">About</a></li>
-  </ul>
+    usage: `<ren-nav>
+  <nav class="ren-nav" aria-label="Primary">
+    <a class="ren-nav-brand" href="/">Logo</a>
+    <ul id="primary-links" class="ren-nav-links">
+      <li><a class="ren-nav-link" href="/home" aria-current="page">Home</a></li>
+      <li><a class="ren-nav-link" href="/about">About</a></li>
+    </ul>
+    <button class="ren-nav-toggle" type="button" aria-expanded="false" aria-controls="primary-links" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </nav>
 </ren-nav>`,
   },
 
@@ -745,7 +745,7 @@ export const REGISTRY = {
     usage: `<ren-command>
   <dialog class="ren-command">
     <div class="ren-command-input-wrapper">
-      <input class="ren-command-input" type="text" placeholder="Type a command…">
+      <input class="ren-command-input" type="text" placeholder="Type a command…" aria-label="Search commands">
     </div>
     <ul class="ren-command-list">
       <li><button type="button" class="ren-command-item" data-value="save">Save</button></li>
@@ -766,7 +766,7 @@ export const REGISTRY = {
     components: [],
     usage: `<ren-table>
   <div class="ren-table-wrapper">
-    <table class="ren-table">
+    <table class="ren-table" aria-label="Team members">
       <thead class="ren-table-header">
         <tr>
           <th class="ren-th ren-th-sortable" data-column="name">Name</th>

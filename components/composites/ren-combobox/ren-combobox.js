@@ -155,6 +155,17 @@ export class RenCombobox extends HTMLElement {
     if (this.hasAttribute('disabled')) this.#input.disabled = true;
     autoId(this.#input, 'combobox-input');
 
+    // Move a host-level name onto the input. The host is a custom element
+    // with no role, so aria-label there is ignored by assistive tech, and the
+    // generated input would be left with its placeholder as its only name.
+    // Same adoption ren-number-field and ren-select do.
+    for (const attribute of ['aria-label', 'aria-labelledby']) {
+      if (this.hasAttribute(attribute)) {
+        this.#input.setAttribute(attribute, this.getAttribute(attribute));
+        this.removeAttribute(attribute);
+      }
+    }
+
     // List
     this.#list = document.createElement('div');
     this.#list.className = 'ren-combobox-list';

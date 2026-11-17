@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { coveredCells, evaluate, requiredCells } from '../../scripts/check-test-coverage.mjs';
+import { coveredCells, evaluate, patternMapProblems, requiredCells } from '../../scripts/check-test-coverage.mjs';
 
 const registry = {
   badge: { dir: 'ren-badge', layer: 'primitives', files: ['ren-badge.css'], usage: '<span class="ren-badge">New</span>' },
@@ -76,4 +76,54 @@ test('describe-level tags count for every test inside', () => {
   const nested = { suites: [{ file: 'y.spec.cjs', suites: [{ title: 'menu', specs: [spec('opens', ['@ren-menu', '@keyboard'])] }] }] };
   const { covered } = coveredCells([nested]);
   assert.ok(covered.get('ren-menu').has('keyboard'));
+});
+
+/* ── pattern: APG conformance, owed by the components in the pattern map ── */
+
+const patternMap = { menu: { implements: [{ pattern: 'menu-button' }] } };
+const runWithPatterns = (reports, exemptions = {}, baseExemptions = null) => {
+  const { covered, stray } = coveredCells(reports);
+  stray.push(...patternMapProblems(registry, patternMap));
+  return evaluate({ cells: requiredCells(registry, { patternMap }), covered, stray, exemptions, baseExemptions });
+};
+
+test('only the components in the pattern map owe a pattern test', () => {
+  const owed = Object.fromEntries(requiredCells(registry, { patternMap }).map((cell) => [cell.component, cell.required]));
+  assert.deepEqual(owed['ren-menu'], ['a11y', 'runtime', 'lifecycle', 'keyboard', 'pattern']);
+  assert.deepEqual(owed['ren-badge'], ['a11y']);
+  assert.deepEqual(owed['ren-toolbar'], ['a11y', 'runtime', 'keyboard']);
+  // Without a map nobody owes it, so the other categories are judged alone.
+  assert.ok(requiredCells(registry).every((cell) => !cell.required.includes('pattern')));
+});
+
+test('a mapped component needs a @pattern test', () => {
+  assert.match(runWithPatterns([fullCoverage]).problems.join('\n'), /ren-menu has no @pattern test/);
+  const withPattern = report(...fullCoverage.suites[0].specs, spec('menu follows the APG Menu Button pattern', ['@ren-menu', '@pattern']));
+  const result = runWithPatterns([withPattern]);
+  assert.deepEqual(result.problems, []);
+  assert.deepEqual(result.totals.pattern, { required: 1, covered: 1, exempt: 0, missing: 0 });
+  assert.equal(result.rows.find((row) => row.component === 'ren-badge').status.pattern, 'n/a');
+});
+
+test('the pattern category arrives covered: a new exemption for it is refused', () => {
+  const exemptions = { pattern: { 'ren-menu': 'later' } };
+  assert.match(runWithPatterns([fullCoverage], exemptions, { keyboard: {} }).problems.join('\n'), /pattern\.ren-menu is a new exemption/);
+  // And a component outside the map cannot be exempted from what it does not owe.
+  assert.match(runWithPatterns([fullCoverage], { pattern: { 'ren-badge': 'no pattern' } }).problems.join('\n'), /pattern\.ren-badge is not required/);
+});
+
+test('a pattern map entry that is not in the registry is reported', () => {
+  assert.deepEqual(patternMapProblems(registry, patternMap), []);
+  assert.match(patternMapProblems(registry, { ...patternMap, menuu: {} }).join('\n'), /"menuu" is not a registry component/);
+});
+
+test('a test declared fixme or skip covers nothing', () => {
+  const declared = (type) => ({ ...spec('menu follows the APG Menu pattern', ['@ren-menu', '@pattern']), tests: [{ annotations: [{ type }] }, { annotations: [{ type }] }] });
+  for (const type of ['fixme', 'skip']) {
+    const waiting = report(...fullCoverage.suites[0].specs, declared(type));
+    assert.match(runWithPatterns([waiting]).problems.join('\n'), /ren-menu has no @pattern test/, type);
+  }
+  // A test that runs in at least one project still counts.
+  const partly = { ...declared('fixme'), tests: [{ annotations: [{ type: 'fixme' }] }, { annotations: [] }] };
+  assert.deepEqual(runWithPatterns([report(...fullCoverage.suites[0].specs, partly)]).problems, []);
 });

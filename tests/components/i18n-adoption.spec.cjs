@@ -23,19 +23,26 @@ const { startStaticServer } = require('../utils/static-server.cjs');
 const ROOT = path.resolve(__dirname, '../..');
 const FIXTURE = '/tests/components/fixtures/i18n-locale.html';
 
-/** Accessible names as they must read in each locale. */
+/**
+ * Accessible names as they must read in each locale.
+ *
+ * `carousel` is the one deliberate change since adoption: the fallback label
+ * used to be "Image carousel", and the element's aria-roledescription already
+ * says "carousel", so it was announced twice (APG Carousel; checked by
+ * apg-patterns.spec.cjs).
+ */
 const EXPECTED = {
   en: {
     decrease: 'Decrease',
     increase: 'Increase',
-    carousel: 'Image carousel',
+    carousel: 'Gallery',
     previous: 'Previous slide',
     next: 'Next slide',
   },
   es: {
     decrease: 'Disminuir',
     increase: 'Aumentar',
-    carousel: 'Carrusel de imágenes',
+    carousel: 'Galería',
     previous: 'Diapositiva anterior',
     next: 'Siguiente diapositiva',
   },

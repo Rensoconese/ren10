@@ -739,9 +739,7 @@
       "exportName": "Navigation",
       "import": "@ren10/astro/components/Navigation",
       "rootTag": "ren-nav",
-      "defaultClasses": [
-        "ren-nav"
-      ],
+      "defaultClasses": [],
       "layer": "patterns",
       "contract": "ren10/components/patterns/ren-nav/pattern.md",
       "css": [

@@ -76,6 +76,7 @@ tokenPolicy:
 accessibility:
   required:
     - "Render as a real <dialog> so focus trap, Escape, and inert background come from the browser."
+    - "The dialog needs a name: set aria-label / aria-labelledby on the <dialog> (or on <ren-command>, which hands it to the dialog). Without one the component falls back to the localized \"Command palette\" (command.label)."
     - "The input is a real <input type=\"text\"> with an accessible name (label or aria-label like \"Search commands\")."
     - "The component injects a [role=\"status\"][aria-live=\"polite\"] region announcing result counts on every filter — do not remove it."
     - "Items must be real <button> elements (or role=\"option\" rows) so Enter / Space / click all work uniformly."
@@ -96,7 +97,7 @@ If the page already imports `rends/components/index.css`, do not import the CSS 
 ## Canonical Markup
 
 ```html
-<ren-command><dialog class="ren-command"><div class="ren-command-input-wrapper"><input class="ren-command-input" type="text" aria-label="Search commands"></div><ul class="ren-command-list"><li><button class="ren-command-item" type="button" data-value="save">Save</button></li></ul><div class="ren-command-empty" hidden>No commands found</div></dialog></ren-command>
+<ren-command><dialog class="ren-command" aria-label="Command palette"><div class="ren-command-input-wrapper"><input class="ren-command-input" type="text" aria-label="Search commands"></div><ul class="ren-command-list"><li><button class="ren-command-item" type="button" data-value="save">Save</button></li></ul><div class="ren-command-empty" hidden>No commands found</div></dialog></ren-command>
 
 ```
 

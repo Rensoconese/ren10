@@ -68,6 +68,25 @@ class RenCommand extends HTMLElement {
       // Fallback: ensure we have a dialog
       this._dialog = this;
     }
+    this._nameDialog();
+  }
+
+  /**
+   * A dialog needs an accessible name. Use the one written on <ren-command>
+   * (which has no role of its own, so the name is moved onto the dialog), and
+   * fall back to the localized "Command palette".
+   * @private
+   */
+  _nameDialog() {
+    const dialog = this._dialog;
+    if (dialog === this || dialog.hasAttribute('aria-label') || dialog.hasAttribute('aria-labelledby')) return;
+    for (const attribute of ['aria-labelledby', 'aria-label']) {
+      if (!this.hasAttribute(attribute)) continue;
+      dialog.setAttribute(attribute, this.getAttribute(attribute));
+      this.removeAttribute(attribute);
+      return;
+    }
+    dialog.setAttribute('aria-label', t('command.label'));
   }
 
   _initElements() {
