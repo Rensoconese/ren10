@@ -1,4 +1,4 @@
-# RenDS essentials · v0.14.1
+# RenDS essentials · v0.15.0
 
 The compact entry contract for agents. Read this first for any RenDS / ren10
 UI task, then load detail only when the task needs it. `ren-design.md` stays

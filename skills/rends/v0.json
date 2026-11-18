@@ -3,14 +3,14 @@
   "referenceWorkspace": {
     "sources": [
       {
-        "id": "github-repo:Rensoconese/ren10:v0.14.1",
+        "id": "github-repo:Rensoconese/ren10:v0.15.0",
         "type": "github-repo",
         "repo": {
           "org": "Rensoconese",
           "name": "ren10"
         },
-        "ref": "v0.14.1",
-        "mountPath": "/vercel/share/v0-reference-workspace-sources/Rensoconese/ren10/v0.14.1"
+        "ref": "v0.15.0",
+        "mountPath": "/vercel/share/v0-reference-workspace-sources/Rensoconese/ren10/v0.15.0"
       }
     ]
   },

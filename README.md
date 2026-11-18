@@ -10,7 +10,7 @@ A vanilla, accessible, atomic design system. No framework required.
 
 Built with pure HTML, CSS, and Web Components. You own the code — copy what you need, override what you want, no build step required.
 
-Current version: **0.14.1** (source checkout). The published npm version is shown by the badge above;
+Current version: **0.15.0** (source checkout). The published npm version is shown by the badge above;
 see the [registry status](https://rensoconese.github.io/ren10/docs/astro.md#public-registry-status-and-owner-action) before installing the Astro adapter.
 
 [Documentation](https://rensoconese.github.io/ren10/docs/) · [Components](https://rensoconese.github.io/ren10/docs/components.html) · [Theme Builder](https://rensoconese.github.io/ren10/create/)

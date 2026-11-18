@@ -2,7 +2,7 @@
 # ────────────────────────────────────────────────────────────
 # RenDS — ren-design.md
 # A vanilla, accessible, atomic design system.
-# v0.14.1 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
+# v0.15.0 · Default theme · WCAG 2.1 AA baseline, AAA opt-in
 # ────────────────────────────────────────────────────────────
 #
 # This is the RenDS-specific design contract for agents. It is not
@@ -19,7 +19,7 @@
 
 system:
   name: RenDS
-  version: 0.14.1
+  version: 0.15.0
   package: ren10
   license: MIT
   repo: https://github.com/Rensoconese/ren10
