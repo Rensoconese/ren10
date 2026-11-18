@@ -116,7 +116,7 @@
     "./components/**/*.js"
   ],
   "scripts": {
-    "test:security-dependencies": "node --test scripts/security-dependencies.test.mjs scripts/braces-regression.test.mjs",
+    "test:security-dependencies": "node --test scripts/security-dependencies.test.mjs scripts/braces-regression.test.mjs scripts/picomatch-regression.test.mjs",
     "lint:css": "stylelint \"components/**/*.css\" \"base/**/*.css\" \"tokens/**/*.css\"",
     "lint:tokens": "node scripts/lint-tokens.mjs",
     "lint:contracts": "node scripts/check-css-contracts.mjs",
@@ -206,7 +206,8 @@
   },
   "overrides": {
     "magicast": "$magicast",
-    "braces": "$braces"
+    "braces": "$braces",
+    "picomatch": "$picomatch"
   },
   "peerDependenciesMeta": {
     "playwright": {
@@ -227,6 +228,7 @@
     "stylelint": "^17.11.0",
     "stylelint-config-standard": "^40.0.0",
     "braces": "file:vendor/braces-3.0.3-ren10.1.tgz",
-    "acorn": "^8.17.0"
+    "acorn": "^8.17.0",
+    "picomatch": "file:vendor/picomatch-4.0.7-ren10.1.tgz"
   }
 }
