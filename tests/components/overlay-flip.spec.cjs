@@ -82,7 +82,10 @@ async function open(page, overlay) {
   else await trigger.focus();
   const surface = page.locator(overlay.surface);
   await expect(surface).toBeVisible();
-  await surface.evaluate((el) => Promise.all(el.getAnimations().map((animation) => animation.finished.catch(() => {}))));
+  // Two frames first: WebKit lists the entry transition only once it has
+  // started, and measured mid-way the overlay is up to 4px off its resting place.
+  await surface.evaluate((el) => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    .then(() => Promise.all(el.getAnimations().map((animation) => animation.finished.catch(() => {})))));
 }
 
 /** Where the open surface is: which side of its trigger, how far, and whether it is on screen. */

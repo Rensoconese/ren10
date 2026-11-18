@@ -213,11 +213,25 @@ export function keepPlacedWhileOpen(overlay, place) {
   const controller = new AbortController();
   let viewport = null;
   let resizing = null;
+  let frame = 0;
   const stop = () => {
     viewport?.abort();
     viewport = null;
     resizing?.disconnect();
     resizing = null;
+    cancelAnimationFrame(frame);
+    frame = 0;
+  };
+  // Placing can change the overlay's size again (it shrinks to fit at an
+  // edge), so a resize places it on the next frame, not inside the observer
+  // callback: that would be a ResizeObserver loop, which WebKit reports as an
+  // error.
+  const placeNextFrame = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      place();
+    });
   };
 
   overlay.addEventListener('toggle', (event) => {
@@ -229,7 +243,7 @@ export function keepPlacedWhileOpen(overlay, place) {
     window.addEventListener('scroll', place, { capture: true, passive: true, signal });
     window.addEventListener('resize', place, { passive: true, signal });
     if (typeof ResizeObserver === 'function') {
-      resizing = new ResizeObserver(() => place());
+      resizing = new ResizeObserver(placeNextFrame);
       resizing.observe(overlay);
     }
   }, { signal: controller.signal });
