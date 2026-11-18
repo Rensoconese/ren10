@@ -30,7 +30,7 @@ selectionCriteria:
     - "Hover or keyboard-focus over a trigger should reveal a richer-than-tooltip preview (header + body + footer)."
     - "The preview is informational and non-essential — user can ignore it without losing access to the action."
     - "Show/hide should respect intent: 200ms show delay, 300ms hide grace area so the cursor can move into the card."
-    - "Need anchor positioning via position-area + viewport flip via CSS position-try-fallbacks (no JS positioning)."
+    - "Need anchor positioning via position-area + viewport flip via CSS position-try-fallbacks (JS places the card only where CSS anchor positioning is unsupported)."
     - "Trigger keyboard accessibility via focusin/focusout, not just :hover."
   avoidWhen:
     - "The trigger is a primary action and the disclosure is required for the task — use ren-popover (click-driven) or ren-dialog."
@@ -128,6 +128,10 @@ This component exposes no `--ren-*` token. The anchor name is generated per
 instance by `ren-hover-card.js` and is not a themeable value — a shared name
 would resolve to the last matching trigger in tree order and mis-place every
 card but the last one.
+
+While the card is open it carries `data-placed-side` (`bottom`, or `top` once
+`position-try-fallbacks` has flipped it above its trigger), and its `::before`
+arrow moves to the edge that faces the trigger. Without CSS anchor positioning the component places the card by script instead: `position: fixed`, with `left`/`top` written when it opens and again on scroll, resize and a change in its size while it is open.
 
 Theme through semantic tokens from `tokens/tokens.md` and avoid selector
 overrides.

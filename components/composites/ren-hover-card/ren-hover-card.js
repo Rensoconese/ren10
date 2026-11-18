@@ -1,15 +1,20 @@
 /* ═══ REN HOVER CARD WEB COMPONENT ═══ */
 
-import { createAnchorLink } from '../../../utils/anchor.js';
+import { createAnchorLink, supportsAnchorPositioning, trackPlacedSide } from '../../../utils/anchor.js';
+import { keepPlacedWhileOpen, placeOverlay } from '../../../utils/positioning.js';
 import { renWarn } from '../../../utils/debug.js';
 import { autoId } from '../../../utils/id-generator.js';
 
 export class RenHoverCard extends HTMLElement {
+  static supportsAnchor = supportsAnchorPositioning();
+
   constructor() {
     super();
     this.card = null;
     this.trigger = null;
     this.anchorLink = null;
+    this.placedSide = null;
+    this.following = null;
     this.describedById = null;
     this.showDelay = 200;
     this.hideDelay = 300;
@@ -85,7 +90,20 @@ export class RenHoverCard extends HTMLElement {
        A shared `anchor-name` resolves to the last matching element in tree
        order, which would render every hover card against the final trigger. */
     this.anchorLink?.release();
-    this.anchorLink = createAnchorLink(this.trigger, this.card, 'ren-hover-card');
+    this.following?.release();
+    this.following = null;
+    if (RenHoverCard.supportsAnchor) {
+      this.anchorLink = createAnchorLink(this.trigger, this.card, 'ren-hover-card');
+    } else {
+      /* Without anchor positioning the card is placed by script, below its
+         trigger unless only the space above fits, and again on every scroll
+         and resize while it is open. */
+      this.anchorLink = null;
+      this.following = keepPlacedWhileOpen(this.card, () => placeOverlay(this.trigger, this.card, { side: 'bottom' }));
+    }
+    /* The arrow follows the side the card lands on, flipped or not. */
+    this.placedSide?.release();
+    this.placedSide = trackPlacedSide(this.card, () => this.trigger, 'bottom');
 
     /* ═══ ATTACH EVENT LISTENERS ═══ */
     this.trigger.addEventListener('mouseenter', this.handleTriggerMouseEnter);
@@ -114,6 +132,10 @@ export class RenHoverCard extends HTMLElement {
 
     this.anchorLink?.release();
     this.anchorLink = null;
+    this.placedSide?.release();
+    this.placedSide = null;
+    this.following?.release();
+    this.following = null;
 
     this.unlinkDescription();
 
@@ -205,6 +227,7 @@ export class RenHoverCard extends HTMLElement {
 
     this.clearTimeouts();
     this.card.showPopover();
+    if (!RenHoverCard.supportsAnchor) placeOverlay(this.trigger, this.card, { side: 'bottom' });
     this.trigger.setAttribute('aria-expanded', 'true');
     this.isOpen = true;
 

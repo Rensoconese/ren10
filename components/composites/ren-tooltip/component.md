@@ -50,7 +50,7 @@ canonicalImports:
 requiredMarkup:
   - "Pair a .ren-tooltip-trigger (real <button> or focusable element) with a .ren-tooltip element referenced via the popover API (popovertarget / id linkage)."
   - "The tooltip carries popover attribute so it lives in the top layer; do not implement it as a plain absolutely-positioned <div>."
-  - "Include .ren-tooltip-arrow as a child of .ren-tooltip when an arrow is desired; position is driven by [data-side]."
+  - "Include .ren-tooltip-arrow as a child of .ren-tooltip when an arrow is desired; it is placed by [data-placed-side], the side the tooltip actually landed on after any flip, and by [data-side] until that is measured."
   - "Set the desired side on the tooltip via data-side=\"top|right|bottom|left\"; CSS uses position-area + position-try-fallbacks: flip-block for safe placement."
   - "Tooltip content must be plain text — no buttons, links, or form fields (those break the contract; use ren-popover instead)."
 
@@ -108,7 +108,10 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## States And Attributes
 
+- `[data-placed-side]`
 - `[data-side]`
+
+`data-side` is the side asked for. `data-placed-side` is set while the tooltip is open to the side of the trigger it actually landed on, which differs after `position-try-fallbacks` flips it; the arrow follows it. Without CSS anchor positioning the component places the tooltip by script instead: `position: fixed`, with `left`/`top` written when it opens and again on scroll, resize and a change in its size while it is open.
 
 ## Public Token API
 

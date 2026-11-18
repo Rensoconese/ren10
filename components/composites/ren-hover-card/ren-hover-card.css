@@ -49,13 +49,27 @@
     margin-inline-start: -4px;
   }
 
+  /* `position-try-fallbacks` puts the card above its trigger when there is no
+     room below. `data-placed-side` is the side it is actually on, measured by
+     trackPlacedSide() in utils/anchor.js while it is open; the arrow moves to
+     the bottom edge and points down at the trigger. */
+  &[data-placed-side="top"]::before {
+    top: auto;
+    bottom: -4px;
+    transform: rotate(225deg);
+  }
+
   /* ═══ FALLBACK POSITIONING ═══ */
   @supports not ((anchor-name: --ren-anchor) and
     (position-anchor: --ren-anchor) and
     (position-area: bottom span-all)) {
+    /* Fixed, like the anchored path, so `left`/`top` are viewport coordinates
+       wherever the page has scrolled to; the script writes them on open and
+       again while the page scrolls. It also leaves the gap from the trigger,
+       so the per-side margins are dropped. */
     position: fixed;
-    top: auto;
-    left: auto;
+    inset: auto;
+    margin: 0;
   }
 
   /* ═══ VIEWPORT EDGE HANDLING ═══ */

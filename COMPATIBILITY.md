@@ -17,4 +17,14 @@ browsers retain the JS positioning and native dialog/menu fallbacks. Provide a
   Firefox flip it. `tests/components/overlay-flip.spec.cjs` probes the engine
   with a bare anchored box and skips the flip assertion, with this reason,
   where the engine does not flip.
+- Only Chromium can style an anchored box by the fallback it took
+  (`@container anchored(fallback: …)`). The arrows of `ren-popover`,
+  `ren-tooltip` and `ren-hover-card` therefore follow a `data-placed-side`
+  attribute that the component measures while the overlay is open, the same
+  in every engine.
+- Without CSS anchor positioning (Safari before 26, older Chromium and
+  Firefox) the six anchored overlays are placed by script: `position: fixed`,
+  `left`/`top` written when they open and again on scroll, resize and a change
+  in their size. `tests/components/overlay-no-anchor.spec.cjs` checks it with
+  anchor positioning turned off in the engine.
 

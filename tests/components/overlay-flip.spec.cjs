@@ -34,6 +34,8 @@ test.afterAll(async () => { await server?.close(); });
 
 /**
  * Where each overlay opens when it has the room (`side`), and how it is opened.
+ * Those with an `arrow` (a child element, or the surface's own `::before`)
+ * have to point it at the trigger on whichever side they land.
  * `anchored` ones are placed by CSS anchor positioning and flip only if the
  * engine does; the other two are placed by script.
  * The two hover overlays are opened by focus, which they answer the same way:
@@ -44,9 +46,9 @@ const OVERLAYS = [
   { key: 'date-range-picker', anchored: true, trigger: '.ren-date-range-trigger', surface: '.ren-date-range-dropdown', side: 'below', open: 'click' },
   { key: 'date-picker', anchored: true, trigger: '.ren-date-picker-trigger', surface: '.ren-date-picker-dropdown', side: 'below', open: 'click' },
   { key: 'color-picker', anchored: true, trigger: '.ren-color-picker-trigger', surface: '.ren-color-picker-dropdown', side: 'below', open: 'click' },
-  { key: 'popover', anchored: true, trigger: '#account-trigger', surface: 'ren-popover', side: 'below', open: 'click' },
-  { key: 'tooltip', anchored: true, trigger: '.ren-tooltip-trigger', surface: 'ren-tooltip', side: 'above', open: 'focus' },
-  { key: 'hover-card', anchored: true, trigger: '#profile-trigger', surface: '.ren-hover-card[popover]', side: 'below', open: 'focus' },
+  { key: 'popover', anchored: true, trigger: '#account-trigger', surface: 'ren-popover', side: 'below', open: 'click', arrow: '.ren-popover-arrow' },
+  { key: 'tooltip', anchored: true, trigger: '.ren-tooltip-trigger', surface: 'ren-tooltip', side: 'above', open: 'focus', arrow: '.ren-tooltip-arrow' },
+  { key: 'hover-card', anchored: true, trigger: '#profile-trigger', surface: '.ren-hover-card[popover]', side: 'below', open: 'focus', arrow: '::before' },
   { key: 'select', trigger: '[data-select-trigger]', surface: '[data-select-content]', side: 'below', open: 'click' },
   { key: 'menu', trigger: '#actions-trigger', surface: 'ren-menu', side: 'below', open: 'click' },
 ];
@@ -174,6 +176,44 @@ function describePlacement(page, overlay) {
   }, [overlay.trigger, overlay.surface, overlay.side]);
 }
 
+/**
+ * Which edge of the surface its arrow sits on: the one nearest the arrow's
+ * centre. A pseudo-element has no box of its own to measure, so its centre is
+ * worked out from its used `top` and height.
+ */
+function arrowEdge(page, overlay) {
+  return page.evaluate(([surfaceSelector, arrowSelector]) => {
+    const surface = document.querySelector(surfaceSelector);
+    const box = surface.getBoundingClientRect();
+    let centre;
+    if (arrowSelector.startsWith('::')) {
+      const style = getComputedStyle(surface, arrowSelector);
+      centre = box.top + parseFloat(getComputedStyle(surface).borderTopWidth) + parseFloat(style.top) + parseFloat(style.height) / 2;
+    } else {
+      const arrow = surface.querySelector(arrowSelector).getBoundingClientRect();
+      centre = arrow.top + arrow.height / 2;
+    }
+    return Math.abs(centre - box.top) <= Math.abs(centre - box.bottom) ? 'top' : 'bottom';
+  }, [overlay.surface, overlay.arrow]);
+}
+
+/** The arrow is on the edge of the surface that faces the trigger. */
+async function expectArrowTowardTrigger(page, overlay, side) {
+  if (!overlay.arrow) return;
+  const facing = side === 'above' ? 'bottom' : 'top';
+  await expect.poll(() => arrowEdge(page, overlay), { message: `${overlay.key} opened ${side} its trigger has its arrow on its ${facing} edge, pointing at the trigger` }).toBe(facing);
+}
+
+/**
+ * Whether the arrow is on the edge that faces the trigger, wherever the
+ * surface is now. Measured in one go, so a surface that moves between two
+ * reads cannot pass by accident.
+ */
+function arrowFacesTrigger(page, overlay) {
+  return Promise.all([measure(page, overlay), arrowEdge(page, overlay)])
+    .then(([at, edge]) => ({ side: at.side, arrow: edge, facing: (at.side === 'above' ? 'bottom' : 'top') === edge }));
+}
+
 /** The surface has settled on `side`, on screen and next to its trigger. */
 async function expectBeside(page, overlay, side, scrollY) {
   // Anchor resolution can land a frame after the surface is visible.
@@ -203,6 +243,7 @@ for (const overlay of OVERLAYS) {
 
     await open(page, overlay);
     const opened = await expectBeside(page, overlay, overlay.side, scrollY);
+    await expectArrowTowardTrigger(page, overlay, overlay.side);
 
     // The page moves under an open overlay: it goes with its trigger.
     await page.evaluate(() => window.scrollBy(0, 60));
@@ -222,6 +263,17 @@ for (const overlay of OVERLAYS) {
 
     await open(page, overlay);
     await expectBeside(page, overlay, OTHER[overlay.side], scrollY);
+    // Flipped, the arrow goes with it: it still points at the trigger.
+    await expectArrowTowardTrigger(page, overlay, OTHER[overlay.side]);
+
+    if (overlay.arrow) {
+      // Scrolled until there is room on its own side again, the overlay may
+      // stay flipped or go back (engines differ); the arrow follows either way.
+      // A big jump is the hard case: for a frame after it the engine still
+      // reports the overlay where it was.
+      await page.evaluate((delta) => window.scrollBy(0, delta), overlay.side === 'below' ? 500 : -500);
+      await expect.poll(async () => (await arrowFacesTrigger(page, overlay)).facing, { message: `${overlay.key}'s arrow still points at its trigger after the page scrolls` }).toBe(true);
+    }
     expect(errors).toEqual([]);
   });
 }

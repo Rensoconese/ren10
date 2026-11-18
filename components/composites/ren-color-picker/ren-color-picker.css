@@ -194,9 +194,15 @@
 @supports not ((anchor-name: --ren-anchor) and
   (position-anchor: --ren-anchor) and
   (position-area: bottom span-all)) {
-  .ren-color-picker-dropdown {
-    position: absolute;
+  .ren-color-picker-dropdown,
+  .ren-color-picker-dropdown[data-side] {
+    /* Fixed, like the anchored path, so `left`/`top` are viewport coordinates
+       wherever the page has scrolled to; the script writes them on open and
+       again while the page scrolls. It also leaves the gap from the trigger,
+       so the per-side margins are dropped. */
+    position: fixed;
     inset: auto;
+    margin: 0;
   }
 }
 

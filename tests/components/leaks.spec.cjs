@@ -502,7 +502,7 @@ test('leaks: ren-button builds its generated button before inserting it', async 
  * component too (ren-popover positions its trigger's parent).
  */
 test.describe('leaks: fallback paths', () => {
-  const FALLBACKS = ['ren-popover', 'ren-tooltip', 'ren-color-picker', 'ren-date-picker', 'ren-date-range-picker', 'ren-dialog'];
+  const FALLBACKS = ['ren-popover', 'ren-tooltip', 'ren-hover-card', 'ren-color-picker', 'ren-date-picker', 'ren-date-range-picker', 'ren-dialog'];
   const withoutNewFeatures = (page) => page.evaluate(() => {
     const supports = CSS.supports.bind(CSS);
     CSS.supports = (...args) => (/anchor|position-area/.test(args.join(' ')) ? false : supports(...args));

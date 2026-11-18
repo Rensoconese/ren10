@@ -15,6 +15,7 @@
   ══════════════════════════════════════════════════════════════════ */
 
 import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { keepPlacedWhileOpen, placeOverlay } from '../../../utils/positioning.js';
 import { t } from '../../../utils/i18n.js';
 
 const DATE_PICKER_SIDES = new Set(['top', 'right', 'bottom', 'left']);
@@ -48,6 +49,7 @@ export class RenDatePicker extends HTMLElement {
   static supportsAnchor = supportsAnchorPositioning();
 
   #anchorLink = null;
+  #following = null;
 
   constructor() {
     super();
@@ -151,6 +153,8 @@ export class RenDatePicker extends HTMLElement {
 
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#following?.release();
+    this.#following = null;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -168,8 +172,15 @@ export class RenDatePicker extends HTMLElement {
   linkAnchor() {
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#following?.release();
+    this.#following = null;
 
-    if (!RenDatePicker.supportsAnchor) return;
+    /* Without anchor positioning the dropdown is placed by script, and again
+       on every scroll and resize while it is open. */
+    if (!RenDatePicker.supportsAnchor) {
+      this.#following = keepPlacedWhileOpen(this.dropdown, () => placeOverlay(this.trigger, this.dropdown));
+      return;
+    }
 
     this.#anchorLink = createAnchorLink(this.trigger, this.dropdown, 'ren-date-picker');
   }
@@ -314,6 +325,7 @@ export class RenDatePicker extends HTMLElement {
       /* ═══ FALLBACK FOR UNSUPPORTED BROWSERS ═══ */
       this.dropdown.style.display = 'block';
     }
+    if (!RenDatePicker.supportsAnchor) placeOverlay(this.trigger, this.dropdown);
 
     this.isOpen = true;
 
