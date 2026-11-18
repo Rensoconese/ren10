@@ -56,6 +56,27 @@ if (!bracesEntry || bracesEntry.name !== '@ren10/braces' || bracesEntry.version 
     }
   }
 }
+// Same for picomatch (GHSA-fc5q-39xc-vjpf): one private 4.x derivative serves
+// the whole tree, so no package may keep a nested upstream copy of its own.
+const picomatchCopies = Object.keys(lock.packages ?? {}).filter((key) => key.endsWith('node_modules/picomatch'));
+const picomatchEntry = lock.packages?.['node_modules/picomatch'];
+if (picomatchCopies.length !== 1 || !picomatchEntry || picomatchEntry.name !== '@ren10/picomatch' || picomatchEntry.version !== '4.0.7-ren10.1') {
+  errors.push(`The reviewed private patched picomatch artifact must be the only picomatch in the tree, found ${picomatchCopies.join(', ') || 'none'}`);
+} else {
+  const tarball = 'vendor/picomatch-4.0.7-ren10.1.tgz';
+  const manifestPath = 'node_modules/picomatch/package.json';
+  if (pkg.overrides?.picomatch !== '$picomatch' || pkg.devDependencies?.picomatch !== `file:${tarball}`) errors.push('The picomatch override must resolve the pinned root artifact');
+  if (!existsSync(tarball) || `sha512-${createHash('sha512').update(readFileSync(tarball)).digest('base64')}` !== picomatchEntry.integrity) errors.push('Patched picomatch tarball integrity does not match the lock');
+  if (!existsSync(manifestPath)) errors.push('Installed patched picomatch manifest is required');
+  else {
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+    if (manifest.name !== '@ren10/picomatch' || manifest.version !== '4.0.7-ren10.1' || manifest.ren10Patch?.upstreamName !== 'picomatch' || manifest.ren10Patch?.upstreamVersion !== '4.0.7' || manifest.ren10Patch?.advisory !== 'GHSA-fc5q-39xc-vjpf') errors.push('Patched picomatch identity or security provenance is invalid');
+    for (const file of ['index.js', 'posix.js', 'lib/constants.js', 'lib/parse.js', 'lib/picomatch.js', 'lib/scan.js', 'lib/utils.js']) {
+      const installed = `node_modules/picomatch/${file}`;
+      if (!existsSync(installed) || createHash('sha256').update(readFileSync(installed)).digest('hex') !== manifest.ren10Patch?.codeHashes?.[file]) errors.push(`Patched picomatch code integrity failed: ${file}`);
+    }
+  }
+}
 // Unmodified upstream browser bundles are hash-checked instead of rewritten by
 // the authored-source style linter. Keep the existing HTML SRI checks enabled.
 const builderHtml = existsSync('create/index.html') ? readFileSync('create/index.html', 'utf8') : '';

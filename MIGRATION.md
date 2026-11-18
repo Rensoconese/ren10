@@ -11,6 +11,14 @@ Review these if you styled or scripted around the old behaviour:
   `position: fixed` instead of `absolute`, so they flip by the room on screen
   on a scrolled page. Remove any override that set their `position`, and any
   workaround that scrolled or repositioned them by hand.
+- `ren-popover`, `ren-tooltip`, `ren-hover-card`: the arrow follows the side
+  the overlay actually landed on, exposed as `data-placed-side` while it is
+  open. Custom arrow styles keyed on `data-side` alone point the wrong way
+  after a flip; key them on `data-placed-side`.
+- In a browser without CSS anchor positioning, all six anchored overlays are
+  now placed next to their trigger by script, with inline `left` and `top`,
+  and follow it while the page scrolls. Before, four of them opened in the
+  top left corner. Remove local fallbacks that positioned them yourself.
 - `<ren-calendar>` is a block-level card `--ren-calendar-width` wide (280px by
   default) wherever it is placed. In a plain block parent it used to stretch to
   the parent's width; set the token if you relied on that.

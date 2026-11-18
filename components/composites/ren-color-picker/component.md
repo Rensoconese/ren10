@@ -46,7 +46,7 @@ canonicalImports:
   notes:
     - "If the page already imports rends/components/index.css, do not import the CSS again."
     - "JS is required: HSV ↔ HEX / RGB / HSL conversion, canvas painting, drag handles, and the popover open/close are all implemented in JS."
-    - "The dropdown uses the native Popover API plus CSS anchor positioning via position-area; older browsers fall back to local absolute positioning."
+    - "The dropdown uses the native Popover API plus CSS anchor positioning via position-area; browsers without anchor positioning get it placed by script (position: fixed, left/top written on open and again on scroll, resize and size changes while it is open)."
     - "JS pairs each trigger with its own dropdown by generating a unique anchor name per instance and applying it inline; the stylesheet declares no shared name, so several pickers can coexist on one page without stealing each other's position."
 
 requiredMarkup:

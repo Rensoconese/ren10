@@ -139,8 +139,9 @@ instance and writes it inline — `anchor-name` on that instance's trigger,
 coexist on one page. Removing a picker from the DOM removes only the inline
 values it injected. Setting `anchor-name` inline on the trigger yourself wins:
 the component points the dropdown at your name and leaves it in place. Browsers
-without anchor positioning fall back to the fixed-position rules already in the
-stylesheet.
+without anchor positioning get the dropdown placed by script: `position: fixed`,
+with `left`/`top` written when it opens and again on scroll, resize and a change
+in its size while it is open. The narrow-viewport sheet still wins.
 
 ## States And Attributes
 

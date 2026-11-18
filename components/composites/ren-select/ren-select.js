@@ -828,7 +828,7 @@ export class RenSelect extends HTMLElement {
     this.querySelector(':scope > .ren-select-chips[data-ren-select-chips]')?.remove();
 
     // Clear trigger content
-    this.#trigger.innerHTML = '';
+    this.#trigger.replaceChildren();
 
     if (this.hasAttribute('multiple') && this.#selectedValue.length > 0) {
       const chips = document.createElement('span');

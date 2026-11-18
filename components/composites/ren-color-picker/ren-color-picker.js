@@ -37,6 +37,7 @@
  */
 
 import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { keepPlacedWhileOpen, placeOverlay } from '../../../utils/positioning.js';
 import { t } from '../../../utils/i18n.js';
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -294,6 +295,7 @@ export class RenColorPicker extends HTMLElement {
   #popover = null;
   #trigger = null;
   #anchorLink = null;
+  #following = null;
   #isDragging = false;
   #listenerController = null;
   /** Preset swatch button → the hex the picker reports once that color is picked. */
@@ -394,6 +396,8 @@ export class RenColorPicker extends HTMLElement {
     this.#listenerController = null;
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#following?.release();
+    this.#following = null;
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('mouseup', this.handleMouseUp);
   }
@@ -415,9 +419,17 @@ export class RenColorPicker extends HTMLElement {
   #linkAnchor() {
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#following?.release();
+    this.#following = null;
 
-    if (!RenColorPicker.supportsAnchor) return;
     if (!this.#trigger || !this.#popover) return;
+    /* Without anchor positioning the dropdown is placed by script when it
+       opens (it opens through `popovertarget`, so on its toggle event), and
+       again on every scroll and resize while it is open. */
+    if (!RenColorPicker.supportsAnchor) {
+      this.#following = keepPlacedWhileOpen(this.#popover, () => placeOverlay(this.#trigger, this.#popover));
+      return;
+    }
 
     this.#anchorLink = createAnchorLink(this.#trigger, this.#popover, 'ren-color-picker');
   }
@@ -470,7 +482,7 @@ export class RenColorPicker extends HTMLElement {
     if (!this.#popover) return;
 
     // Clear existing content
-    this.#popover.innerHTML = '';
+    this.#popover.replaceChildren();
 
     // ═══ SATURATION/BRIGHTNESS AREA ═══
     // A two-dimensional slider. ARIA has no 2D role, so it is a slider whose

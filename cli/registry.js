@@ -490,7 +490,7 @@ export const REGISTRY = {
     dir: 'ren-hover-card',
     description: 'Card that appears on hover/focus',
     files: ['ren-hover-card.css', 'ren-hover-card.js'],
-    utils: ['anchor.js', 'debug.js', 'id-generator.js'],
+    utils: ['anchor.js', 'debug.js', 'id-generator.js', 'positioning.js'],
     components: [],
     usage: `<button id="profile-trigger" type="button">Jane Doe</button>
 <ren-hover-card data-hover-trigger="#profile-trigger">
@@ -553,7 +553,7 @@ export const REGISTRY = {
     dir: 'ren-date-picker',
     description: 'Input with calendar dropdown',
     files: ['ren-date-picker.css', 'ren-date-picker.js'],
-    utils: ['anchor.js', 'i18n.js'],
+    utils: ['anchor.js', 'i18n.js', 'positioning.js'],
     components: ['calendar'],
     usage: `<ren-date-picker name="start-date" placement="bottom"></ren-date-picker>`,
   },
@@ -613,7 +613,7 @@ export const REGISTRY = {
     dir: 'ren-color-picker',
     description: 'Color input with swatches, hex field, and native picker',
     files: ['ren-color-picker.css', 'ren-color-picker.js'],
-    utils: ['anchor.js', 'i18n.js'],
+    utils: ['anchor.js', 'i18n.js', 'positioning.js'],
     components: [],
     usage: `<ren-color-picker value="#5b6cff" placement="bottom"></ren-color-picker>`,
   },
@@ -640,7 +640,7 @@ export const REGISTRY = {
     dir: 'ren-date-range-picker',
     description: 'Two-calendar picker for start/end date selection',
     files: ['ren-date-range-picker.css', 'ren-date-range-picker.js'],
-    utils: ['anchor.js', 'i18n.js'],
+    utils: ['anchor.js', 'i18n.js', 'positioning.js'],
     components: ['calendar'],
     usage: `<ren-date-range-picker>
   <input type="text" placeholder="Start">

@@ -29,7 +29,7 @@ selectionCriteria:
   useWhen:
     - "Click on a trigger should reveal a small contextual surface (filters, mini-form, info card) anchored to that trigger."
     - "You need anchor-positioned placement (top/right/bottom/left) via position-area with automatic viewport flip via position-try-fallbacks."
-    - "Need click-outside + Escape dismissal and a visible arrow caret that re-rotates per [data-side]."
+    - "Need click-outside + Escape dismissal and a visible arrow caret that points at the trigger on whichever side the popover lands, flipped or not ([data-placed-side])."
     - "Need progressive enhancement: anchor positioning in modern browsers, the shared JS positioning fallback elsewhere."
     - "Need header / body / footer slots inside the popover surface, with native role=\"dialog\" + aria-modal=\"false\"."
   avoidWhen:
@@ -59,7 +59,7 @@ forbiddenPatterns:
   - "Manually wiring trigger.addEventListener('click', popover.show) — the host already attaches its click + dismissable listeners."
   - "Calling showPopover() directly while bypassing open() — aria-modal, data-state, and ren-open event won't fire."
   - "Hardcoding inline left/top values — let CSS position-anchor + position-area + position-try-fallbacks handle placement and flips (or the shared JS positioning fallback)."
-  - "Removing the .ren-popover-arrow element — the [data-side] rules rotate it per side; without it the visual anchor cue disappears."
+  - "Removing the .ren-popover-arrow element — the [data-placed-side] rules (falling back to [data-side]) place and rotate it per side; without it the visual anchor cue disappears."
   - "Using ren-popover purely as a click-bound tooltip — accessibility expectations differ; use ren-tooltip for short, non-interactive text."
 
 tokenPolicy:
@@ -77,7 +77,7 @@ accessibility:
     - "<ren-popover> sets role=\"dialog\" with aria-modal=\"false\" (non-modal by design). Do not set aria-modal=\"true\" or apply focus trapping."
     - "Trigger must be a focusable, real interactive element; click + Enter/Space activation come from native button semantics."
     - "Escape closes the popover via the document keydown handler; outside-click closes via the document click handler — do not stopPropagation on container click outside these targets."
-    - "When CSS anchor positioning is unsupported the host applies left/top to the popover element; do not overlay your own positioning style or the flip logic breaks."
+    - "When CSS anchor positioning is unsupported the host applies left/top to the popover element (position: fixed, placed again on scroll, resize and size changes while open); do not overlay your own positioning style or the flip logic breaks."
     - "Reduced motion strips the transform animation (opacity-only); keep the @media (prefers-reduced-motion: reduce) block intact."
     - "Avoid putting form submit buttons that affect the page outside the popover surface — keep the interaction self-contained within the dialog role."
 ```
@@ -116,8 +116,11 @@ Use the docs page and source files listed below for full examples before adding 
 
 ## States And Attributes
 
+- `[data-placed-side]`
 - `[data-popover-trigger]`
 - `[data-side]`
+
+`data-side` is the side asked for. `data-placed-side` is set while the popover is open to the side of the trigger it actually landed on, which differs after `position-try-fallbacks` flips it; the arrow follows it. Both are written by the component.
 
 ## Public Token API
 

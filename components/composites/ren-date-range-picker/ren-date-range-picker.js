@@ -33,6 +33,7 @@
    ══════════════════════════════════════════════════════════════════ */
 
 import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
+import { keepPlacedWhileOpen, placeOverlay } from '../../../utils/positioning.js';
 import { t } from '../../../utils/i18n.js';
 
 /* ═══ PRESET DEFINITIONS ═══
@@ -185,6 +186,7 @@ export class RenDateRangePicker extends HTMLElement {
 
   /* ═══ PER-INSTANCE ANCHOR LINK (trigger ↔ dropdown) ═══ */
   #anchorLink = null;
+  #following = null;
 
   constructor() {
     super();
@@ -281,6 +283,8 @@ export class RenDateRangePicker extends HTMLElement {
   #releaseAnchor() {
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#following?.release();
+    this.#following = null;
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -293,7 +297,7 @@ export class RenDateRangePicker extends HTMLElement {
   render() {
     /* ═══ DROP THE PREVIOUS ANCHOR LINK — THE OLD NODES ARE ABOUT TO GO ═══ */
     this.#releaseAnchor();
-    this.innerHTML = '';
+    this.replaceChildren();
     this.classList.add('ren-date-range-picker');
 
     /* ═══ TRIGGER BUTTON ═══ */
@@ -447,8 +451,14 @@ export class RenDateRangePicker extends HTMLElement {
        trigger in tree order and every dropdown on the page would render
        against that one. The name is therefore generated per instance and
        applied inline. */
+    this.#following?.release();
+    this.#following = null;
     if (RenDateRangePicker.supportsAnchor) {
       this.#anchorLink = createAnchorLink(trigger, dropdown, 'ren-date-range-picker');
+    } else {
+      /* Without anchor positioning the dropdown is placed by script, and
+         again on every scroll and resize while it is open. */
+      this.#following = keepPlacedWhileOpen(dropdown, () => placeOverlay(this.trigger, this.dropdown));
     }
 
     this.syncPlacement();
@@ -755,6 +765,7 @@ export class RenDateRangePicker extends HTMLElement {
     } catch {
       this.dropdown.style.display = 'block';
     }
+    if (!RenDateRangePicker.supportsAnchor) placeOverlay(this.trigger, this.dropdown);
 
     this.isOpen = true;
 

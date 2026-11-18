@@ -66,3 +66,36 @@ it does not pass visitor headers into shared-cache reuse methods. Regression
 checks preserve this boundary. Reassess before adding a proxy cache, custom image
 fetcher, SSR auth/session caching or forwarding visitor headers. Upstream issue:
 https://github.com/kornelski/http-cache-semantics/issues/56
+
+## Picomatch private security derivative
+
+`picomatch-4.0.7-ren10.1.tgz` is named `@ren10/picomatch`, private, and built
+from the integrity-pinned upstream 4.0.7 artifact. It is not an upstream
+release. GHSA-fc5q-39xc-vjpf: a repeated extglob (`+(…)`, `*(…)`) whose body
+holds a bare `*` compiles to a nested unbounded quantifier, so `+(*)` against
+a 28-character path took 21.7 s on picomatch 2.3.2. Upstream only marks such a
+body risky when a branch is nothing but wildcards and there is more than one
+branch. The derivative marks every body with a bare `*` (not the `*(` of a
+nested extglob) risky, so it compiles to its escaped literal, as upstream
+already does for the bodies it recognises. Cost: `+(a*)` or `src/+(*).js`
+match only their own text. Nothing in this repository's tooling uses such a
+glob; `scripts/picomatch-regression.test.mjs` records the trade-off.
+
+One copy serves the whole tree. Root `overrides` maps every `picomatch` range
+to it, including the `^2.x` ranges of micromatch (stylelint, fast-glob) and
+anymatch (unstorage). Picomatch 4 keeps the 2.x API those packages call
+(`scan`, `parse`, `makeRe`, `lib/utils`); 6,306 matches, scans and compiled
+regexes across 30 patterns, 34 paths and six option sets were identical
+between upstream 2.3.2 and this derivative on 18 November 2026.
+`check:supply-chain` fails if any nested upstream copy reappears in the lock.
+
+```sh
+npm pack picomatch@4.0.7 --ignore-scripts --pack-destination /tmp
+node scripts/vendor-picomatch.mjs /tmp/picomatch-4.0.7.tgz
+npm run test:security-dependencies
+npm run check:supply-chain
+```
+
+Re-running the generator must produce the identical tarball hash. Retire this
+override when an upstream release closes GHSA-fc5q-39xc-vjpf; inspect the
+artifact and repeat the regression, clean-install and full-suite checks.
