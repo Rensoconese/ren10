@@ -34,17 +34,19 @@ test.afterAll(async () => { await server?.close(); });
 
 /**
  * Where each overlay opens when it has the room (`side`), and how it is opened.
+ * `anchored` ones are placed by CSS anchor positioning and flip only if the
+ * engine does; the other two are placed by script.
  * The two hover overlays are opened by focus, which they answer the same way:
  * a browser re-sends the pointer's last position after a scroll, and a hover
  * made right after one can be undone by it.
  */
 const OVERLAYS = [
-  { key: 'date-range-picker', trigger: '.ren-date-range-trigger', surface: '.ren-date-range-dropdown', side: 'below', open: 'click' },
-  { key: 'date-picker', trigger: '.ren-date-picker-trigger', surface: '.ren-date-picker-dropdown', side: 'below', open: 'click' },
-  { key: 'color-picker', trigger: '.ren-color-picker-trigger', surface: '.ren-color-picker-dropdown', side: 'below', open: 'click' },
-  { key: 'popover', trigger: '#account-trigger', surface: 'ren-popover', side: 'below', open: 'click' },
-  { key: 'tooltip', trigger: '.ren-tooltip-trigger', surface: 'ren-tooltip', side: 'above', open: 'focus' },
-  { key: 'hover-card', trigger: '#profile-trigger', surface: '.ren-hover-card[popover]', side: 'below', open: 'focus' },
+  { key: 'date-range-picker', anchored: true, trigger: '.ren-date-range-trigger', surface: '.ren-date-range-dropdown', side: 'below', open: 'click' },
+  { key: 'date-picker', anchored: true, trigger: '.ren-date-picker-trigger', surface: '.ren-date-picker-dropdown', side: 'below', open: 'click' },
+  { key: 'color-picker', anchored: true, trigger: '.ren-color-picker-trigger', surface: '.ren-color-picker-dropdown', side: 'below', open: 'click' },
+  { key: 'popover', anchored: true, trigger: '#account-trigger', surface: 'ren-popover', side: 'below', open: 'click' },
+  { key: 'tooltip', anchored: true, trigger: '.ren-tooltip-trigger', surface: 'ren-tooltip', side: 'above', open: 'focus' },
+  { key: 'hover-card', anchored: true, trigger: '#profile-trigger', surface: '.ren-hover-card[popover]', side: 'below', open: 'focus' },
   { key: 'select', trigger: '[data-select-trigger]', surface: '[data-select-content]', side: 'below', open: 'click' },
   { key: 'menu', trigger: '#actions-trigger', surface: 'ren-menu', side: 'below', open: 'click' },
 ];
@@ -94,6 +96,35 @@ function measure(page, overlay) {
       scrollY: Math.round(window.scrollY),
     };
   }, [overlay.trigger, overlay.surface]);
+}
+
+/**
+ * Whether this engine flips a bare anchored box at the spot the trigger is in:
+ * `position: fixed`, on the overlay's own anchor and side, given `flip-block`.
+ *
+ * WebKit 26.4 does not at the bottom edge of a page that has scrolled. It
+ * keeps the box below the fold, where WebKit 26.6, Chromium and Firefox put it
+ * above (the same engine does flip at the top edge, and flips an absolute box,
+ * which is wrong for the other reasons in the header). An anchored overlay has
+ * nothing but the engine's flip, so where a bare box stays put there is no
+ * component behaviour to assert.
+ */
+async function engineFlipsHere(page, overlay) {
+  const anchor = await page.locator(overlay.surface).evaluate((el) => el.style.positionAnchor || getComputedStyle(el).positionAnchor);
+  // No anchor would leave the probe unplaced and read as "does not flip".
+  expect(anchor, `${overlay.key} ties its surface to an anchor`).toMatch(/^--/);
+  return page.evaluate(async ([triggerSelector, name, side]) => {
+    const probe = document.createElement('div');
+    probe.setAttribute('popover', 'manual');
+    probe.style.cssText = `position:fixed;inset:auto;margin:0;padding:0;border:0;inline-size:80px;block-size:120px;position-anchor:${name};position-area:${side === 'below' ? 'bottom' : 'top'} span-all;position-try-fallbacks:flip-block`;
+    document.body.appendChild(probe);
+    probe.showPopover();
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    const box = probe.getBoundingClientRect();
+    const trigger = document.querySelector(triggerSelector).getBoundingClientRect();
+    probe.remove();
+    return side === 'below' ? box.bottom <= trigger.top + 1 : box.top >= trigger.bottom - 1;
+  }, [overlay.trigger, anchor, overlay.side]);
 }
 
 /**
@@ -185,6 +216,9 @@ for (const overlay of OVERLAYS) {
     await placeTrigger(page, overlay, 'tight');
     const scrollY = await page.evaluate(() => Math.round(window.scrollY));
     expect(scrollY, 'the page has scrolled').toBeGreaterThan(1000);
+    if (overlay.anchored) {
+      test.skip(!(await engineFlipsHere(page, overlay)), 'this engine keeps a bare fixed anchored box on its own side at this edge of a scrolled page (WebKit 26.4; 26.6 flips it), so the overlay has no flip to rely on');
+    }
 
     await open(page, overlay);
     await expectBeside(page, overlay, OTHER[overlay.side], scrollY);
