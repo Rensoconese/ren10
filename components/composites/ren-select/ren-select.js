@@ -582,6 +582,13 @@ export class RenSelect extends HTMLElement {
       }
     }
 
+    // Position the list before anything in it takes focus. Until then it hangs
+    // under the trigger where the stylesheet puts it, and focusing an option
+    // there makes the browser scroll the page to it: near the bottom of the
+    // viewport the page jumped and the list then opened below instead of
+    // flipping above.
+    this.positionContent();
+
     // Attach keyboard nav
     if (this.#keyboardNav) {
       this.#keyboardNav.attach();
@@ -603,9 +610,6 @@ export class RenSelect extends HTMLElement {
     if (this.#dismissable) {
       this.#dismissable.activate();
     }
-
-    // Position content
-    this.positionContent();
 
     // Reposition on scroll
     this.#scrollController?.abort();

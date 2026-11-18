@@ -69,6 +69,7 @@ export class RenMenu extends HTMLElement {
   #boundTriggerKeydown = null;
   #returnFocus = true;
   #closeTimer = null;
+  #viewportController = null;
 
   constructor() {
     super();
@@ -536,6 +537,15 @@ export class RenMenu extends HTMLElement {
     // hidden menu measures 0.
     this.positionMenu();
 
+    // The menu is fixed at coordinates read from its trigger. Keep them current
+    // while it is open, or the page scrolls away under a menu that stays put.
+    this.#viewportController?.abort();
+    this.#viewportController = new AbortController();
+    const { signal } = this.#viewportController;
+    const reposition = () => this.positionMenu();
+    window.addEventListener('scroll', reposition, { capture: true, passive: true, signal });
+    window.addEventListener('resize', reposition, { signal });
+
     // Reposition on next frame for accuracy
     this.#animationFrame = requestAnimationFrame(() => {
       this.positionMenu();
@@ -561,6 +571,8 @@ export class RenMenu extends HTMLElement {
     this.setAttribute('data-state', 'closed');
     this.teardownKeyboardNav();
     this.teardownDismissable();
+    this.#viewportController?.abort();
+    this.#viewportController = null;
 
     // Add closing animation class
     this.setAttribute('data-closing', '');
@@ -618,6 +630,8 @@ export class RenMenu extends HTMLElement {
     if (this.#closeTimer) clearTimeout(this.#closeTimer);
     this.teardownKeyboardNav();
     this.teardownDismissable();
+    this.#viewportController?.abort();
+    this.#viewportController = null;
 
     if (this.#animationFrame) {
       cancelAnimationFrame(this.#animationFrame);

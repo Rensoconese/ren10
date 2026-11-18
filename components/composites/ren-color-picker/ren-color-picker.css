@@ -117,7 +117,10 @@
    ren-color-picker.js — see the note on .ren-color-picker-trigger. Only the
    placement geometry lives here. */
 .ren-color-picker-dropdown {
-  position: absolute;
+  /* Fixed, not absolute: an absolute box in the top layer is placed against the
+     first screenful of the page, so on a scrolled page the flip measured room
+     that was not on screen. */
+  position: fixed;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   inset: auto;

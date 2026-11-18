@@ -115,7 +115,10 @@
    `position-anchor` is injected inline by the component, pointing at the
    per-instance name on its own trigger (see the trigger block above). */
 .ren-date-range-dropdown {
-  position: absolute;
+  /* Fixed, not absolute: an absolute box in the top layer is placed against the
+     first screenful of the page, so on a scrolled page the flip measured room
+     that was not on screen. */
+  position: fixed;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   inset: auto;
