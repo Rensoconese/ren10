@@ -2011,7 +2011,7 @@
     display: none;
   }
   .ren-popover {
-    position: absolute;
+    position: fixed;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -2175,7 +2175,7 @@
     transition-timing-function: var(--ren-popover-easing, var(--ease-out));
   }
   .ren-tooltip {
-    position: absolute;
+    position: fixed;
     background: var(--ren-tooltip-bg, var(--color-text));
     color: var(--ren-tooltip-color, var(--color-text-inverted));
     border-radius: var(--radius-md);
@@ -4411,7 +4411,7 @@
     background: var(--ren-sheet-backdrop, var(--color-overlay));
   }
   .ren-hover-card {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     inset: auto;
     margin-block-start: var(--space-2);
@@ -5047,6 +5047,7 @@
     }
   }
   .ren-calendar {
+    display: block;
     container-type: inline-size;
     container-name: ren-calendar;
     background: var(--color-surface-raised);
@@ -5430,7 +5431,7 @@
     }
   }
   .ren-date-picker-dropdown {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     position-try-fallbacks:
       flip-block,
@@ -5568,6 +5569,9 @@
     .ren-date-picker-dropdown {
       position: fixed !important;
       inset: auto 0 0 0 !important;
+      position-area: none !important;
+      margin: 0 !important;
+      inline-size: auto;
       max-width: none;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       max-height: 80vh;
@@ -5581,6 +5585,9 @@
         translate: 0 100%;
         opacity: 0;
       }
+    }
+    .ren-date-picker-dropdown .ren-calendar {
+      inline-size: auto;
     }
   }
   @keyframes ren-date-picker-mobile-in {
@@ -5689,7 +5696,7 @@
     }
   }
   .ren-date-range-dropdown {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     position-try-fallbacks:
       flip-block,
@@ -6421,7 +6428,7 @@
     font-size: var(--label-size);
   }
   .ren-color-picker-dropdown {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     position-try-fallbacks:
       flip-block,
@@ -8142,6 +8149,7 @@
     border-bottom: 1px solid var(--color-border);
   }
   .ren-th {
+    position: relative;
     padding: var(--space-3) var(--space-4);
     text-align: start;
     font-weight: var(--label-weight);
