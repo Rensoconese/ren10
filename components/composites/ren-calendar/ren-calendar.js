@@ -79,7 +79,7 @@ export class RenCalendar extends HTMLElement {
     const restoreFocus = active?.classList.contains('ren-calendar-day') ? 'day'
       : ['ren-calendar-prev', 'ren-calendar-next'].find((name) => active?.classList.contains(name)) ?? null;
 
-    this.innerHTML = '';
+    this.replaceChildren();
     this.classList.add('ren-calendar');
 
     /* ═══ BUILD HEADER ═══ */

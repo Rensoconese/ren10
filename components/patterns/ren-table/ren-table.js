@@ -577,13 +577,13 @@ export class RenTable extends HTMLElement {
 
     // Only render pagination if there are rows
     if (this.#visibleRows.length === 0) {
-      paginationDiv.innerHTML = '';
+      paginationDiv.replaceChildren();
       return;
     }
 
     const totalPages = Math.ceil(this.#visibleRows.length / this.#pageSize);
     if (totalPages <= 1) {
-      paginationDiv.innerHTML = '';
+      paginationDiv.replaceChildren();
       return;
     }
 
