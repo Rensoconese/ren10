@@ -9,6 +9,10 @@
 
 /* ═══ BASE CONTAINER ═══ */
 .ren-calendar {
+  /* The class is on the <ren-calendar> host, and a custom element is inline
+     until told otherwise. As an inline box it had no width, and its padding
+     and border did not hold the header and the grid. */
+  display: block;
   container-type: inline-size;
   container-name: ren-calendar;
   background: var(--color-surface-raised);

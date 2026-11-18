@@ -274,6 +274,12 @@
   .ren-date-picker-dropdown {
     position: fixed !important;
     inset: auto 0 0 0 !important;
+    /* Out of the anchored area and across the whole row: `position-area`
+       centres the box on the trigger, a popover is fit-content wide, and each
+       placement adds a gap that belongs beside a trigger, not round a sheet. */
+    position-area: none !important;
+    margin: 0 !important;
+    inline-size: auto;
     max-width: none;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     max-height: 80vh;
@@ -291,6 +297,10 @@
     }
   }
 
+  /* The calendar takes the sheet's width instead of its own. */
+  .ren-date-picker-dropdown .ren-calendar {
+    inline-size: auto;
+  }
 }
 
 @keyframes ren-date-picker-mobile-in {

@@ -25,6 +25,24 @@ function normalizeDatePickerSide(value) {
   return DATE_PICKER_SIDES.has(side) ? side : 'bottom';
 }
 
+/**
+ * Call a method of the picker's calendar, now or once it is a calendar.
+ *
+ * Nothing orders this module after ren-calendar.js. Loaded first, the calendar
+ * element it creates has not been upgraded and has no methods yet: calling one
+ * threw from connectedCallback, and an initial `value` never reached the
+ * trigger or the form.
+ */
+function callCalendar(picker, method, ...args) {
+  if (typeof picker.calendar?.[method] === 'function') {
+    picker.calendar[method](...args);
+    return;
+  }
+  customElements.whenDefined?.('ren-calendar').then(() => {
+    if (picker.calendar?.isConnected) picker.calendar[method]?.(...args);
+  });
+}
+
 export class RenDatePicker extends HTMLElement {
   static observedAttributes = ['placement'];
   static supportsAnchor = supportsAnchorPositioning();
@@ -306,9 +324,12 @@ export class RenDatePicker extends HTMLElement {
     /* ═══ FOCUS CALENDAR ═══ */
     setTimeout(() => {
       if (this.calendar) {
-        const firstDay = this.calendar.querySelector('.ren-calendar-day:not([disabled])');
-        if (firstDay) {
-          firstDay.focus();
+        // The calendar's own tab stop: the selected day, else today, else the
+        // first day it can offer.
+        const day = this.calendar.querySelector('.ren-calendar-day[tabindex="0"]:not([disabled])')
+          ?? this.calendar.querySelector('.ren-calendar-day:not([disabled])');
+        if (day) {
+          day.focus();
         }
       }
     }, 100);
@@ -448,14 +469,14 @@ export class RenDatePicker extends HTMLElement {
   setValue(value) {
     if (this.mode === 'single' && typeof value === 'string') {
       this.selectedValue = this.parseDate(value);
-      this.calendar.setValue(value);
+      callCalendar(this, 'setValue', value);
       this.updateTrigger(this.formatDate(this.selectedValue));
     } else if (this.mode === 'range' && value && typeof value === 'object') {
       this.selectedRange = {
         start: this.parseDate(value.start),
         end: this.parseDate(value.end),
       };
-      this.calendar.setRange(value.start, value.end);
+      callCalendar(this, 'setRange', value.start, value.end);
       const formatted = `${this.formatDate(this.selectedRange.start)} → ${this.formatDate(this.selectedRange.end)}`;
       this.updateTrigger(formatted);
     }

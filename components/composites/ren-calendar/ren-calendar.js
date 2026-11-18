@@ -553,7 +553,14 @@ export class RenCalendar extends HTMLElement {
   /* ═══ SET VALUE ═══ */
   setValue(value) {
     if (this.mode === 'single' && typeof value === 'string') {
-    this.selectedDate = this.parseDate(value);
+      const parsed = this.parseDate(value);
+      this.selectedDate = parsed;
+      // Show the month the value is in, as the `value` attribute does on
+      // connect. A date in another month was selected and nowhere on screen.
+      if (!isNaN(parsed)) {
+        this.currentDate = new Date(parsed);
+        this.focusedDate = null;
+      }
       this.render();
     } else if (this.mode === 'range' && value && typeof value === 'object') {
       this.rangeStart = this.parseDate(value.start);
