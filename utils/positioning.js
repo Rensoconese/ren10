@@ -166,3 +166,92 @@ export function computeOverlayPosition(trigger, overlay, options = {}) {
 
   return { x, y, side: finalSide, align, flipped };
 }
+
+/**
+ * Place a `position: fixed` overlay beside its trigger by script, on the side
+ * its `data-side` asks for (flipped when only the other side has room), for
+ * engines without CSS anchor positioning. Writes `left` and `top`; a rule
+ * that sets them with `!important`, such as a narrow-viewport sheet, still
+ * wins.
+ *
+ * @param {Element|null} trigger
+ * @param {HTMLElement|null} overlay
+ * @param {{ side?: string, offset?: number }} [options] - `side` defaults to
+ *   the overlay's `data-side`, else 'bottom'
+ * @returns {string|null} The side it was placed on
+ */
+export function placeOverlay(trigger, overlay, options = {}) {
+  if (!trigger || !overlay) return null;
+  const { side = overlay.getAttribute('data-side') || 'bottom', offset = 8 } = options;
+  const { x, y, side: placed } = computeOverlayPosition(trigger, overlay, { side, offset });
+  overlay.style.left = `${x}px`;
+  overlay.style.top = `${y}px`;
+  return placed;
+}
+
+/**
+ * Keep a script-placed overlay against its trigger for as long as it is open.
+ *
+ * For engines without CSS anchor positioning. `place` is the caller's own
+ * routine (usually computeOverlayPosition() written to `left`/`top` of a
+ * `position: fixed` overlay); this runs it when the overlay opens, once it is
+ * laid out and has a size, and again on every scroll and resize until it
+ * closes, so the overlay goes with its trigger instead of staying where the
+ * viewport was when it opened. Scroll is listened for in the capture phase,
+ * so a scrolling container moves it too. A change in the overlay's own size
+ * places it again as well: some fill their content as they open, and a box
+ * measured empty is centred on the wrong point.
+ *
+ * @param {HTMLElement|null} overlay - Element with the `popover` attribute
+ * @param {() => void} place - Writes the overlay's position
+ * @returns {{ release: () => void }}
+ */
+export function keepPlacedWhileOpen(overlay, place) {
+  const noop = { release() {} };
+  if (!overlay || typeof window === 'undefined') return noop;
+
+  const controller = new AbortController();
+  let viewport = null;
+  let resizing = null;
+  let frame = 0;
+  const stop = () => {
+    viewport?.abort();
+    viewport = null;
+    resizing?.disconnect();
+    resizing = null;
+    cancelAnimationFrame(frame);
+    frame = 0;
+  };
+  // Placing can change the overlay's size again (it shrinks to fit at an
+  // edge), so a resize places it on the next frame, not inside the observer
+  // callback: that would be a ResizeObserver loop, which WebKit reports as an
+  // error.
+  const placeNextFrame = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      place();
+    });
+  };
+
+  overlay.addEventListener('toggle', (event) => {
+    stop();
+    if (event.newState !== 'open') return;
+    place();
+    viewport = new AbortController();
+    const { signal } = viewport;
+    window.addEventListener('scroll', place, { capture: true, passive: true, signal });
+    window.addEventListener('resize', place, { passive: true, signal });
+    if (typeof ResizeObserver === 'function') {
+      resizing = new ResizeObserver(placeNextFrame);
+      resizing.observe(overlay);
+    }
+  }, { signal: controller.signal });
+
+  return {
+    release() {
+      controller.abort();
+      stop();
+    },
+  };
+}

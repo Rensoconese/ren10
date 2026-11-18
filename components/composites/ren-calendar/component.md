@@ -153,6 +153,9 @@ overlapping. The calendar uses a minimum width derived from the touch target,
 padding and borders; compact styling does not compress the interactive tracks.
 In hosts narrower than this minimum, provide a horizontal scroll container.
 
+The element is a block-level card `--ren-calendar-width` wide (280px by
+default), wherever it is placed. Resize it with that token, not with `width`.
+
 Theme through these public custom properties before reaching for selectors.
 
 ## Accessibility Contract

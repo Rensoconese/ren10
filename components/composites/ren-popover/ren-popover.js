@@ -1,5 +1,5 @@
-import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
-import { computeOverlayPosition } from '../../../utils/positioning.js';
+import { createAnchorLink, supportsAnchorPositioning, trackPlacedSide } from '../../../utils/anchor.js';
+import { computeOverlayPosition, keepPlacedWhileOpen } from '../../../utils/positioning.js';
 import { createDismissable } from '../../../utils/dismissable.js';
 import { FOCUSABLE_SELECTOR } from '../../../utils/focus-trap.js';
 
@@ -66,6 +66,8 @@ export class RenPopover extends HTMLElement {
   #anchorLink = null;
   #dismissLayer = null;
   #positionedParent = null;
+  #placedSide = null;
+  #following = null;
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
@@ -77,6 +79,13 @@ export class RenPopover extends HTMLElement {
     this.setupPopover();
     this.findTrigger();
     this.attachTriggerListener();
+    // The arrow follows the side the popover lands on, flipped or not.
+    this.#placedSide?.release();
+    this.#placedSide = trackPlacedSide(this, () => this.#trigger, 'bottom');
+    // Without anchor positioning the popover is placed by script: again on
+    // every scroll and resize while it is open, so it stays on its trigger.
+    this.#following?.release();
+    this.#following = RenPopover.supportsAnchor ? null : keepPlacedWhileOpen(this, () => this.positionPopover());
   }
 
   disconnectedCallback() {
@@ -220,7 +229,6 @@ export class RenPopover extends HTMLElement {
   open() {
     if (this.isOpen()) return;
 
-    this.positionPopover();
     this.setAttribute('data-state', 'open');
 
     if ('popover' in HTMLElement.prototype) {
@@ -232,6 +240,8 @@ export class RenPopover extends HTMLElement {
     } else {
       this.classList.add('ren-open');
     }
+    // Placed once it is shown: until then it has no size to place.
+    this.positionPopover();
 
     // Popover is explicitly non-modal (see component.md).
     // No aria-modal or focus trap — those are for ren-dialog / ren-sheet.
@@ -309,6 +319,10 @@ export class RenPopover extends HTMLElement {
     this.#dismissLayer = null;
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#placedSide?.release();
+    this.#placedSide = null;
+    this.#following?.release();
+    this.#following = null;
     this.#releasePositionedParent();
   }
 

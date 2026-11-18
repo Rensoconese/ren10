@@ -11,7 +11,10 @@ ren-popover:not(:defined) {
 }
 
 .ren-popover {
-  position: absolute;
+  /* Fixed, not absolute: an absolute box in the top layer is placed against the
+     first screenful of the page, so on a scrolled page the flip measured room
+     that was not on screen. */
+  position: fixed;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -81,12 +84,6 @@ ren-popover:not(:defined) {
   margin-block-start: var(--space-2);
   margin-block-end: 0;
   margin-inline: 0;
-
-  & .ren-popover-arrow {
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%) rotate(225deg);
-  }
 }
 
 /* Top */
@@ -95,12 +92,6 @@ ren-popover:not(:defined) {
   margin-block-start: 0;
   margin-block-end: var(--space-2);
   margin-inline: 0;
-
-  & .ren-popover-arrow {
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%) rotate(45deg);
-  }
 }
 
 /* Right */
@@ -110,24 +101,43 @@ ren-popover:not(:defined) {
      As a logical margin it moved to the far side under RTL and the overlay
      touched the trigger. */
   margin: 0 0 0 var(--space-2);
-
-  & .ren-popover-arrow {
-    left: -4px;
-    top: 50%;
-    transform: translateY(-50%) rotate(135deg);
-  }
 }
 
 /* Left */
 .ren-popover[data-side="left"] {
   position-area: left span-all;
   margin: 0 var(--space-2) 0 0;
+}
 
-  & .ren-popover-arrow {
-    right: -4px;
-    top: 50%;
-    transform: translateY(-50%) rotate(315deg);
-  }
+/* ═══ ARROW: ON THE SIDE THE POPOVER LANDED ON ═══
+   `data-side` is the side asked for; `position-try-fallbacks` may put the
+   popover on the other side of its trigger when there is no room.
+   `data-placed-side` is the side it is actually on, measured by
+   trackPlacedSide() in utils/anchor.js while it is open, so the arrow keeps
+   pointing at the trigger after a flip. Until it is measured, the side asked
+   for. */
+.ren-popover:is([data-placed-side="bottom"], :not([data-placed-side]):is([data-side="bottom"], :not([data-side]))) .ren-popover-arrow {
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(225deg);
+}
+
+.ren-popover:is([data-placed-side="top"], :not([data-placed-side])[data-side="top"]) .ren-popover-arrow {
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.ren-popover:is([data-placed-side="right"], :not([data-placed-side])[data-side="right"]) .ren-popover-arrow {
+  left: -4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(135deg);
+}
+
+.ren-popover:is([data-placed-side="left"], :not([data-placed-side])[data-side="left"]) .ren-popover-arrow {
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(315deg);
 }
 
 /* ═══ POPOVER SECTIONS ═══ */
@@ -177,9 +187,15 @@ ren-popover:not(:defined) {
 @supports not ((anchor-name: --ren-anchor) and
   (position-anchor: --ren-anchor) and
   (position-area: bottom span-all)) {
-  .ren-popover {
-    position: absolute;
-    inset: auto auto auto auto;
+  .ren-popover,
+  .ren-popover[data-side] {
+    /* Fixed, like the anchored path, so `left`/`top` are viewport coordinates
+       wherever the page has scrolled to; the script writes them on open and
+       again while the page scrolls. It also leaves the gap from the trigger,
+       so the per-side margins are dropped. */
+    position: fixed;
+    inset: auto;
+    margin: 0;
   }
 
   [data-popover-trigger],

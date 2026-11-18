@@ -5605,7 +5605,7 @@
     display: none;
   }
   .ren-popover {
-    position: absolute;
+    position: fixed;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
@@ -5658,40 +5658,40 @@
     margin-block-start: var(--space-2);
     margin-block-end: 0;
     margin-inline: 0;
-    & .ren-popover-arrow {
-      top: -4px;
-      left: 50%;
-      transform: translateX(-50%) rotate(225deg);
-    }
   }
   .ren-popover[data-side=top] {
     position-area: top span-all;
     margin-block-start: 0;
     margin-block-end: var(--space-2);
     margin-inline: 0;
-    & .ren-popover-arrow {
-      bottom: -4px;
-      left: 50%;
-      transform: translateX(-50%) rotate(45deg);
-    }
   }
   .ren-popover[data-side=right] {
     position-area: right span-all;
     margin: 0 0 0 var(--space-2);
-    & .ren-popover-arrow {
-      left: -4px;
-      top: 50%;
-      transform: translateY(-50%) rotate(135deg);
-    }
   }
   .ren-popover[data-side=left] {
     position-area: left span-all;
     margin: 0 var(--space-2) 0 0;
-    & .ren-popover-arrow {
-      right: -4px;
-      top: 50%;
-      transform: translateY(-50%) rotate(315deg);
-    }
+  }
+  .ren-popover:is([data-placed-side=bottom], :not([data-placed-side]):is([data-side=bottom], :not([data-side]))) .ren-popover-arrow {
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(225deg);
+  }
+  .ren-popover:is([data-placed-side=top], :not([data-placed-side])[data-side=top]) .ren-popover-arrow {
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .ren-popover:is([data-placed-side=right], :not([data-placed-side])[data-side=right]) .ren-popover-arrow {
+    left: -4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(135deg);
+  }
+  .ren-popover:is([data-placed-side=left], :not([data-placed-side])[data-side=left]) .ren-popover-arrow {
+    right: -4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(315deg);
   }
   .ren-popover-header {
     margin-bottom: var(--space-2);
@@ -5726,9 +5726,11 @@
     }
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
-    .ren-popover {
-      position: absolute;
-      inset: auto auto auto auto;
+    .ren-popover,
+    .ren-popover[data-side] {
+      position: fixed;
+      inset: auto;
+      margin: 0;
     }
     [data-popover-trigger],
     .ren-popover-trigger {
@@ -5769,7 +5771,7 @@
     transition-timing-function: var(--ren-popover-easing, var(--ease-out));
   }
   .ren-tooltip {
-    position: absolute;
+    position: fixed;
     background: var(--ren-tooltip-bg, var(--color-text));
     color: var(--ren-tooltip-color, var(--color-text-inverted));
     border-radius: var(--radius-md);
@@ -5818,11 +5820,6 @@
     margin-block-start: var(--space-1);
     margin-block-end: 0;
     margin-inline: 0;
-    & .ren-tooltip-arrow {
-      top: -3px;
-      left: 50%;
-      transform: translateX(-50%) rotate(225deg);
-    }
   }
   .ren-tooltip[data-side=top],
   .ren-tooltip:not([data-side]) {
@@ -5830,29 +5827,34 @@
     margin-block-start: 0;
     margin-block-end: var(--space-1);
     margin-inline: 0;
-    & .ren-tooltip-arrow {
-      bottom: -3px;
-      left: 50%;
-      transform: translateX(-50%) rotate(45deg);
-    }
   }
   .ren-tooltip[data-side=right] {
     position-area: right span-all;
     margin: 0 0 0 var(--space-1);
-    & .ren-tooltip-arrow {
-      left: -3px;
-      top: 50%;
-      transform: translateY(-50%) rotate(135deg);
-    }
   }
   .ren-tooltip[data-side=left] {
     position-area: left span-all;
     margin: 0 var(--space-1) 0 0;
-    & .ren-tooltip-arrow {
-      right: -3px;
-      top: 50%;
-      transform: translateY(-50%) rotate(315deg);
-    }
+  }
+  .ren-tooltip:is([data-placed-side=bottom], :not([data-placed-side])[data-side=bottom]) .ren-tooltip-arrow {
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(225deg);
+  }
+  .ren-tooltip:is([data-placed-side=top], :not([data-placed-side]):is([data-side=top], :not([data-side]))) .ren-tooltip-arrow {
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .ren-tooltip:is([data-placed-side=right], :not([data-placed-side])[data-side=right]) .ren-tooltip-arrow {
+    left: -3px;
+    top: 50%;
+    transform: translateY(-50%) rotate(135deg);
+  }
+  .ren-tooltip:is([data-placed-side=left], :not([data-placed-side])[data-side=left]) .ren-tooltip-arrow {
+    right: -3px;
+    top: 50%;
+    transform: translateY(-50%) rotate(315deg);
   }
   @media (prefers-reduced-motion: reduce) {
     .ren-tooltip {
@@ -5870,9 +5872,11 @@
     }
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: top span-all)) {
-    .ren-tooltip {
-      position: absolute;
-      inset: auto auto auto auto;
+    .ren-tooltip,
+    .ren-tooltip[data-side] {
+      position: fixed;
+      inset: auto;
+      margin: 0;
     }
     .ren-tooltip-trigger {
       position: relative;
@@ -8005,7 +8009,7 @@
     background: var(--ren-sheet-backdrop, var(--color-overlay));
   }
   .ren-hover-card {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     inset: auto;
     margin-block-start: var(--space-2);
@@ -8035,10 +8039,15 @@
       left: 50%;
       margin-inline-start: -4px;
     }
+    &[data-placed-side=top]::before {
+      top: auto;
+      bottom: -4px;
+      transform: rotate(225deg);
+    }
     @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
       position: fixed;
-      top: auto;
-      left: auto;
+      inset: auto;
+      margin: 0;
     }
     @supports (position-try-fallbacks: flip-block) {
       position-try-fallbacks: flip-block;
@@ -8641,6 +8650,7 @@
     }
   }
   .ren-calendar {
+    display: block;
     container-type: inline-size;
     container-name: ren-calendar;
     background: var(--color-surface-raised);
@@ -9024,7 +9034,7 @@
     }
   }
   .ren-date-picker-dropdown {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     position-try-fallbacks:
       flip-block,
@@ -9072,10 +9082,11 @@
     margin: 0 var(--space-2) 0 0;
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
-    .ren-date-picker-dropdown {
+    .ren-date-picker-dropdown,
+    .ren-date-picker-dropdown[data-side] {
       position: fixed;
-      top: auto;
-      left: auto;
+      inset: auto;
+      margin: 0;
     }
   }
   @starting-style {
@@ -9162,6 +9173,9 @@
     .ren-date-picker-dropdown {
       position: fixed !important;
       inset: auto 0 0 0 !important;
+      position-area: none !important;
+      margin: 0 !important;
+      inline-size: auto;
       max-width: none;
       border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       max-height: 80vh;
@@ -9175,6 +9189,9 @@
         translate: 0 100%;
         opacity: 0;
       }
+    }
+    .ren-date-picker-dropdown .ren-calendar {
+      inline-size: auto;
     }
   }
   @keyframes ren-date-picker-mobile-in {
@@ -9283,7 +9300,7 @@
     }
   }
   .ren-date-range-dropdown {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     position-try-fallbacks:
       flip-block,
@@ -9329,10 +9346,11 @@
     margin: 0 var(--space-2) 0 0;
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
-    .ren-date-range-dropdown {
+    .ren-date-range-dropdown,
+    .ren-date-range-dropdown[data-side] {
       position: fixed;
-      top: auto;
-      left: auto;
+      inset: auto;
+      margin: 0;
     }
   }
   @starting-style {
@@ -10015,7 +10033,7 @@
     font-size: var(--label-size);
   }
   .ren-color-picker-dropdown {
-    position: absolute;
+    position: fixed;
     position-area: bottom span-all;
     position-try-fallbacks:
       flip-block,
@@ -10073,9 +10091,11 @@
     margin: 0 var(--space-2) 0 0;
   }
   @supports not ((anchor-name: --ren-anchor) and (position-anchor: --ren-anchor) and (position-area: bottom span-all)) {
-    .ren-color-picker-dropdown {
-      position: absolute;
+    .ren-color-picker-dropdown,
+    .ren-color-picker-dropdown[data-side] {
+      position: fixed;
       inset: auto;
+      margin: 0;
     }
   }
   @keyframes ren-color-picker-open {
@@ -11736,6 +11756,7 @@
     border-bottom: 1px solid var(--color-border);
   }
   .ren-th {
+    position: relative;
     padding: var(--space-3) var(--space-4);
     text-align: start;
     font-weight: var(--label-weight);

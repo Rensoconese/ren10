@@ -1,5 +1,5 @@
-import { createAnchorLink, supportsAnchorPositioning } from '../../../utils/anchor.js';
-import { computeOverlayPosition } from '../../../utils/positioning.js';
+import { createAnchorLink, supportsAnchorPositioning, trackPlacedSide } from '../../../utils/anchor.js';
+import { computeOverlayPosition, keepPlacedWhileOpen } from '../../../utils/positioning.js';
 
 const PLACEMENTS = new Set(['top', 'right', 'bottom', 'left']);
 
@@ -31,6 +31,8 @@ export class RenTooltip extends HTMLElement {
   #touchTimer = null;
   #listenerController = null;
   #anchorLink = null;
+  #placedSide = null;
+  #following = null;
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'placement' && oldValue !== newValue) {
@@ -42,6 +44,13 @@ export class RenTooltip extends HTMLElement {
     this.setupTooltip();
     this.findTrigger();
     this.attachTriggerListeners();
+    // The arrow follows the side the tooltip lands on, flipped or not.
+    this.#placedSide?.release();
+    this.#placedSide = trackPlacedSide(this, () => this.#trigger, 'top');
+    // Without anchor positioning the tooltip is placed by script: again on
+    // every scroll and resize while it is open, so it stays on its trigger.
+    this.#following?.release();
+    this.#following = RenTooltip.supportsAnchor ? null : keepPlacedWhileOpen(this, () => this.positionTooltip());
   }
 
   disconnectedCallback() {
@@ -256,7 +265,6 @@ export class RenTooltip extends HTMLElement {
     if (this.isOpen()) return;
 
     this.clearTimeouts();
-    this.positionTooltip();
     this.setAttribute('data-state', 'open');
 
     if ('popover' in HTMLElement.prototype) {
@@ -268,6 +276,8 @@ export class RenTooltip extends HTMLElement {
     } else {
       this.classList.add('ren-open');
     }
+    // Placed once it is shown: until then it has no size to place.
+    this.positionTooltip();
 
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
   }
@@ -315,6 +325,10 @@ export class RenTooltip extends HTMLElement {
     this.#listenerController = null;
     this.#anchorLink?.release();
     this.#anchorLink = null;
+    this.#placedSide?.release();
+    this.#placedSide = null;
+    this.#following?.release();
+    this.#following = null;
     if (this.#trigger) {
       const describedBy = (this.#trigger.getAttribute('aria-describedby') || '')
         .split(/\s+/)

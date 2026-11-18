@@ -95,7 +95,10 @@
 .ren-date-picker-dropdown {
   /* `position-anchor` is injected inline per instance by ren-date-picker.js,
      paired with the matching `anchor-name` on that instance's trigger. */
-  position: absolute;
+  /* Fixed, not absolute: an absolute box in the top layer is placed against the
+     first screenful of the page, so on a scrolled page the flip measured room
+     that was not on screen. */
+  position: fixed;
   position-area: bottom span-all;
   position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
   inset: auto;
@@ -154,10 +157,15 @@
 @supports not ((anchor-name: --ren-anchor) and
   (position-anchor: --ren-anchor) and
   (position-area: bottom span-all)) {
-  .ren-date-picker-dropdown {
+  .ren-date-picker-dropdown,
+  .ren-date-picker-dropdown[data-side] {
+    /* Fixed, like the anchored path, so `left`/`top` are viewport coordinates
+       wherever the page has scrolled to; the script writes them on open and
+       again while the page scrolls. It also leaves the gap from the trigger,
+       so the per-side margins are dropped. */
     position: fixed;
-    top: auto;
-    left: auto;
+    inset: auto;
+    margin: 0;
   }
 }
 
@@ -271,6 +279,12 @@
   .ren-date-picker-dropdown {
     position: fixed !important;
     inset: auto 0 0 0 !important;
+    /* Out of the anchored area and across the whole row: `position-area`
+       centres the box on the trigger, a popover is fit-content wide, and each
+       placement adds a gap that belongs beside a trigger, not round a sheet. */
+    position-area: none !important;
+    margin: 0 !important;
+    inline-size: auto;
     max-width: none;
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
     max-height: 80vh;
@@ -288,6 +302,10 @@
     }
   }
 
+  /* The calendar takes the sheet's width instead of its own. */
+  .ren-date-picker-dropdown .ren-calendar {
+    inline-size: auto;
+  }
 }
 
 @keyframes ren-date-picker-mobile-in {
