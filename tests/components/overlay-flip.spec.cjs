@@ -96,13 +96,65 @@ function measure(page, overlay) {
   }, [overlay.trigger, overlay.surface]);
 }
 
+/**
+ * What a failed placement needs to be read from a CI log, where the engine is
+ * not at hand: the viewport as the page sees it, the box the engine lays
+ * `position: fixed` against, the trigger, the surface and its placement
+ * styles, and where the same engine puts a bare anchored box at this spot,
+ * fixed and absolute, when it is given the same flip.
+ */
+function describePlacement(page, overlay) {
+  return page.evaluate(async ([triggerSelector, surfaceSelector, side]) => {
+    const edges = (el) => {
+      const rect = el.getBoundingClientRect();
+      return `top ${Math.round(rect.top)} bottom ${Math.round(rect.bottom)} left ${Math.round(rect.left)} right ${Math.round(rect.right)}`;
+    };
+    const surface = document.querySelector(surfaceSelector);
+    const style = getComputedStyle(surface);
+    const add = (cssText, popover) => {
+      const el = document.createElement('div');
+      if (popover) el.setAttribute('popover', 'manual');
+      el.style.cssText = cssText;
+      document.body.appendChild(el);
+      if (popover) el.showPopover();
+      return el;
+    };
+    const fixed = add('position:fixed;inset:0;visibility:hidden;pointer-events:none', false);
+    const fixedArea = edges(fixed);
+    fixed.remove();
+
+    const anchor = surface.style.positionAnchor || style.positionAnchor;
+    const bare = {};
+    for (const position of ['fixed', 'absolute']) {
+      const el = add(`position:${position};inset:auto;margin:0;padding:0;border:0;inline-size:80px;block-size:120px;position-anchor:${anchor};position-area:${side === 'below' ? 'bottom' : 'top'} span-all;position-try-fallbacks:flip-block`, true);
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      bare[position] = edges(el);
+      el.remove();
+    }
+    return {
+      engine: navigator.userAgent,
+      viewport: `innerHeight ${window.innerHeight} clientHeight ${document.documentElement.clientHeight} visual ${Math.round(window.visualViewport?.height ?? -1)} at ${Math.round(window.visualViewport?.offsetTop ?? -1)} scrollY ${Math.round(window.scrollY)}`,
+      fixedArea,
+      trigger: edges(document.querySelector(triggerSelector)),
+      surface: edges(surface),
+      surfaceStyle: `position ${style.position}; position-area ${style.positionArea}; position-try-fallbacks ${style.positionTryFallbacks}; position-anchor ${anchor}; margin ${style.margin}`,
+      bareBoxWithFlipBlock: bare,
+    };
+  }, [overlay.trigger, overlay.surface, overlay.side]);
+}
+
 /** The surface has settled on `side`, on screen and next to its trigger. */
 async function expectBeside(page, overlay, side, scrollY) {
   // Anchor resolution can land a frame after the surface is visible.
-  await expect.poll(async () => {
-    const at = await measure(page, overlay);
-    return { side: at.side, nextToItsTrigger: at.gap >= 0 && at.gap <= MAX_GAP };
-  }, { message: `${overlay.key} opens ${side} its trigger` }).toEqual({ side, nextToItsTrigger: true });
+  try {
+    await expect.poll(async () => {
+      const at = await measure(page, overlay);
+      return { side: at.side, nextToItsTrigger: at.gap >= 0 && at.gap <= MAX_GAP };
+    }, { message: `${overlay.key} opens ${side} its trigger` }).toEqual({ side, nextToItsTrigger: true });
+  } catch (error) {
+    error.message += `\n\nPlacement: ${JSON.stringify(await describePlacement(page, overlay), null, 2)}`;
+    throw error;
+  }
   const at = await measure(page, overlay);
   expect(at.onScreen, `${overlay.key} is inside the viewport`).toBe(true);
   expect(at.scrollY, `opening ${overlay.key} does not scroll the page`).toBe(scrollY);
