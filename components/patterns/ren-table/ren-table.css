@@ -110,6 +110,10 @@ ren-table {
 }
 
 .ren-th {
+  /* Holds this column's resize handle. Without it the handle of a column that
+     is not sortable was placed against the header row, at the far edge of the
+     table (and in WebKit against the wrapper, over every row). */
+  position: relative;
   padding: var(--space-3) var(--space-4);
   text-align: start;
   font-weight: var(--label-weight);
