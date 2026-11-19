@@ -3542,6 +3542,7 @@
      ".ren-carousel-no-counter",
      ".ren-carousel-no-dots",
      ".ren-carousel-prev",
+     ".ren-carousel-rotation",
      ".ren-carousel-slide",
      ".ren-carousel-viewport"
     ],
@@ -5370,6 +5371,7 @@
      ".ren-th",
      ".ren-th-pinned",
      ".ren-th-resize",
+     ".ren-th-sort",
      ".ren-th-sortable",
      ".ren-tr"
     ],
@@ -9135,6 +9137,14 @@
   },
   {
    "data": {},
+   "body": ".ren-carousel-rotation",
+   "path": "components/composites/ren-carousel/ren-carousel.css",
+   "id": "selector:.ren-carousel-rotation",
+   "type": "selector",
+   "name": ".ren-carousel-rotation"
+  },
+  {
+   "data": {},
    "body": ".ren-carousel-slide",
    "path": "components/composites/ren-carousel/ren-carousel.css",
    "id": "selector:.ren-carousel-slide",
@@ -12148,6 +12158,14 @@
    "id": "selector:.ren-th-resize",
    "type": "selector",
    "name": ".ren-th-resize"
+  },
+  {
+   "data": {},
+   "body": ".ren-th-sort",
+   "path": "components/patterns/ren-table/ren-table.css",
+   "id": "selector:.ren-th-sort",
+   "type": "selector",
+   "name": ".ren-th-sort"
   },
   {
    "data": {},
@@ -17610,6 +17628,13 @@
    "data": {},
    "source": "component:composite:ren-carousel",
    "target": "selector:.ren-carousel-prev",
+   "type": "exposes_selector"
+  },
+  {
+   "detail": "",
+   "data": {},
+   "source": "component:composite:ren-carousel",
+   "target": "selector:.ren-carousel-rotation",
    "type": "exposes_selector"
   },
   {
@@ -28075,6 +28100,13 @@
    "data": {},
    "source": "component:pattern:ren-table",
    "target": "selector:.ren-th-resize",
+   "type": "exposes_selector"
+  },
+  {
+   "detail": "",
+   "data": {},
+   "source": "component:pattern:ren-table",
+   "target": "selector:.ren-th-sort",
    "type": "exposes_selector"
   },
   {

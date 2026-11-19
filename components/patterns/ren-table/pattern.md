@@ -51,7 +51,7 @@ canonicalImports:
 
 requiredMarkup:
   - "Root is <ren-table data-page-size=\"…\"> wrapping a <div class=\"ren-table-wrapper\"> > <table class=\"ren-table\">."
-  - "Header row uses <thead class=\"ren-table-header\"><tr><th class=\"ren-th\">…</th></tr></thead>; sortable headers add .ren-th-sortable + data-column=\"<key>\"."
+  - "Header row uses <thead class=\"ren-table-header\"><tr><th class=\"ren-th\">…</th></tr></thead>; sortable headers add .ren-th-sortable + data-column=\"<key>\". The component moves the header text into a <button type=\"button\" class=\"ren-th-sort\"> (or uses one the markup already ships), which is the sort control."
   - "Body uses <tbody class=\"ren-table-body\">; its rows are <tr class=\"ren-tr\" data-row-id=\"…\"> with <td class=\"ren-td\"> cells. Selection uses class .ren-table-select on both th/td and a real <input type=\"checkbox\" aria-label=\"Select row\">."
   - "Pagination chrome goes in <div class=\"ren-table-pagination\"> with .ren-table-pagination-info + .ren-table-pagination-controls containing buttons carrying [data-page-prev] / [data-page-next] / [data-page-size-select]."
   - "Toolbar lives in <div class=\"ren-table-toolbar\"> and the search box must include the [data-table-search] attribute so the JS wires filtering."
@@ -60,6 +60,7 @@ requiredMarkup:
 forbiddenPatterns:
   - "Replacing <table> with <div role=\"table\"> — kills native keyboard / screen-reader support."
   - "Implementing sort by clicking a non-th element — sort affordance must live on <th class=\"ren-th-sortable\">."
+  - "tabindex on a <th> or <td>: cells are not focusable; the sort control is the .ren-th-sort button inside the header."
   - "Setting [data-sort] manually from consumer code — the component owns asc/desc cycling."
   - "Custom checkbox UI inside .ren-table-select — keep the native <input type=\"checkbox\"> (accent-color is themed via --color-accent)."
   - "Toggling rows with display: none for filtering — let the JS manage row visibility through its filter pipeline."
@@ -78,12 +79,12 @@ tokenPolicy:
 
 accessibility:
   required:
-    - "Use a real <table> with <thead> / <tbody>; sortable <th> elements set aria-sort=\"ascending|descending|none\" mirroring [data-sort]."
+    - "Use a real <table> with <thead> / <tbody>; sortable <th> elements set aria-sort=\"ascending|descending|none\" mirroring [data-sort]. The cell is not a Tab stop: its .ren-th-sort <button> is, and sorts with Enter, Space or a click (APG sortable table)."
     - "Selection checkboxes are real <input type=\"checkbox\"> with aria-label (\"Select all\" / \"Select row N\"); rows reflect state via aria-selected=\"true\" on <tr>."
     - "Pagination buttons are real <button> with min-width/height of 44px (--touch-min); disabled state uses the disabled attribute, not opacity alone."
     - "Loading state sets [data-loading] on <ren-table> and exposes pointer-events: none on rows; pair with an aria-live announcement so SR users hear \"Loading…\" / \"Loaded N rows\"."
     - "Empty state must include a visible .ren-table-empty-title text; do not rely on icon alone."
-    - "Focus rings on <th>, <td>, .ren-tr (:focus-within), and pagination buttons all use --color-accent — never strip without restoring a visible alternative."
+    - "Focus rings on .ren-th-sort, .ren-tr (:focus-within), and pagination buttons all use --color-accent — never strip without restoring a visible alternative."
 ```
 
 ## Required Imports
@@ -170,7 +171,7 @@ Theme through these public custom properties before reaching for selectors.
 - Respect reduced motion by using RenDS duration/easing tokens only.
 - Do not communicate state through color alone.
 - Keep JS behavior progressive: the visual structure should remain understandable before enhancement.
-- Right-to-left: columns run right to left under `dir="rtl"`. ArrowLeft moves focus to the next column and ArrowRight to the previous one; a resize handle sits on its column's inline-end edge (the left) and widens the column when dragged left.
+- Right-to-left: columns run right to left under `dir="rtl"`. ArrowLeft moves focus to the sort button of the next sortable column and ArrowRight to the previous one; a resize handle sits on its column's inline-end edge (the left) and widens the column when dragged left.
 
 ## Events
 

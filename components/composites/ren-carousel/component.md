@@ -46,7 +46,7 @@ canonicalImports:
   notes:
     - "If the page already imports rends/components/index.css, do not import the CSS again."
     - "JS handles arrow generation, dot pagination, autoplay timer, and aria-current bookkeeping; CSS-only fallback offers scroll-snap + the native ::scroll-button() pseudos when supported."
-    - "Add data-autoplay to enable autoplay; pair with data-autoplay-duration=\"5000\" (ms) for the progress bar."
+    - "Set autoplay=\"5000\" (ms) to rotate the slides. The component then adds a rotation control (.ren-carousel-rotation) and sets data-autoplay / data-autoplay-duration while the slides rotate, which drive the progress bar."
 
 requiredMarkup:
   - "<ren-carousel> wraps a single <div class=\"ren-carousel-viewport\"> which contains <div class=\"ren-carousel-slide\"> children."
@@ -78,7 +78,7 @@ accessibility:
     - "Active slide / active dot use aria-current=\"true\"; never communicate the active state through color alone."
     - "Keyboard: Left/Right arrows traverse slides; arrow buttons and dots are real <button> elements with :focus-visible rings."
     - "Touch targets on .ren-carousel-prev/.ren-carousel-next stay ≥ 44px (min-width / min-height enforced in CSS)."
-    - "Autoplay must pause on hover / focus / data-autoplay removal; set aria-busy=\"true\" yourself while slides load (the CSS dims the carousel and blocks pointer input); the component does not set it during transitions."
+    - "Autoplay has a visible rotation control, first in the carousel's Tab sequence, whose label says what it does (\"Stop slide rotation\" / \"Start slide rotation\"; APG Carousel, WCAG 2.2.2). Rotation pauses while the pointer is over the carousel; keyboard focus entering the carousel stops it until the rotation control (or resume()) starts it again. pause() and resume() do what the control does; set aria-busy=\"true\" yourself while slides load (the CSS dims the carousel and blocks pointer input); the component does not set it during transitions."
     - "Respect prefers-reduced-motion: scroll-behavior becomes auto and the autoplay progress bar shows the final frame instead of animating."
 ```
 

@@ -142,16 +142,14 @@ export class RenTable extends HTMLElement {
     // Sorting
     this.#headerCells.forEach((cell, index) => {
       if (cell.classList.contains('ren-th-sortable')) {
-        cell.addEventListener('click', () => this._handleSort(cell, index), { signal });
-        cell.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this._handleSort(cell, index);
-          }
-        }, { signal });
-        cell.setAttribute('tabindex', '0');
-        cell.setAttribute('role', 'columnheader');
-        cell.setAttribute('aria-sort', 'none');
+        // The header cell stays a plain columnheader that carries aria-sort;
+        // the control is a real <button> inside it, as in APG's sortable
+        // table. A button gives Enter and Space for free, is announced as
+        // something to press, and keeps the cell itself out of the Tab order.
+        const button = RenTable.sortButtonOf(cell);
+        button.addEventListener('click', () => this._handleSort(cell, index), { signal });
+        cell.removeAttribute('tabindex');
+        if (!cell.hasAttribute('aria-sort')) cell.setAttribute('aria-sort', 'none');
       }
     });
 
@@ -236,6 +234,28 @@ export class RenTable extends HTMLElement {
       }, { signal });
     });
     this.#rowCheckboxes = checkboxes;
+  }
+
+  /**
+   * The sort button of a sortable header cell. Markup may ship it
+   * (`<th class="ren-th ren-th-sortable"><button type="button"
+   * class="ren-th-sort">Name</button></th>`); otherwise the header's content
+   * is moved into a new one, leaving the resize handle outside it.
+   * @param {HTMLTableCellElement} cell
+   * @returns {HTMLButtonElement}
+   */
+  static sortButtonOf(cell) {
+    const existing = cell.querySelector(':scope > .ren-th-sort');
+    if (existing) return existing;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'ren-th-sort';
+    for (const node of [...cell.childNodes]) {
+      if (node.nodeType === Node.ELEMENT_NODE && node.classList.contains('ren-th-resize')) continue;
+      button.append(node);
+    }
+    cell.prepend(button);
+    return button;
   }
 
   /**
@@ -404,49 +424,30 @@ export class RenTable extends HTMLElement {
       }
     }
 
-    // Arrow keys for navigation
-    if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+    // Arrow keys move between the sort buttons of the header row.
+    if (['ArrowLeft', 'ArrowRight'].includes(key) && target.classList.contains('ren-th-sort')) {
       event.preventDefault();
-      this._navigateCells(target, key);
+      this._navigateCells(target.closest('th'), key);
     }
-
-    // Enter/Space on a sortable header is handled by the header's own
-    // listener; sorting here as well ran the sort twice per key press.
   }
 
   /**
-   * Navigate between cells with arrow keys
+   * Move focus to the sort button of the next sortable header in the
+   * direction of an arrow key.
    * @private
    */
   _navigateCells(currentCell, direction) {
-    let nextCell = currentCell;
-
-    if (direction === 'ArrowUp') {
-      const row = currentCell.closest('tr');
-      const prevRow = row?.previousElementSibling;
-      if (prevRow) {
-        const cellIndex = Array.from(row.cells).indexOf(currentCell);
-        nextCell = prevRow.cells[cellIndex];
-      }
-    } else if (direction === 'ArrowDown') {
-      const row = currentCell.closest('tr');
-      const nextRow = row?.nextElementSibling;
-      if (nextRow) {
-        const cellIndex = Array.from(row.cells).indexOf(currentCell);
-        nextCell = nextRow.cells[cellIndex];
-      }
-    } else if (direction === 'ArrowLeft' || direction === 'ArrowRight') {
-      // Columns run right to left under RTL, so the cell an arrow points at
-      // is the previous sibling for ArrowRight and the next one for ArrowLeft.
-      const rtl = getComputedStyle(this).direction === 'rtl';
-      const forward = (direction === 'ArrowRight') !== rtl;
-      nextCell = (forward ? currentCell.nextElementSibling : currentCell.previousElementSibling) || currentCell;
-    }
-
-    if (nextCell && nextCell !== currentCell) {
-      nextCell.focus();
-    }
+    // Columns run right to left under RTL, so the cell an arrow points at
+    // is the previous sibling for ArrowRight and the next one for ArrowLeft.
+    const rtl = getComputedStyle(this).direction === 'rtl';
+    const forward = (direction === 'ArrowRight') !== rtl;
+    let cell = currentCell;
+    do {
+      cell = forward ? cell.nextElementSibling : cell.previousElementSibling;
+    } while (cell && !cell.querySelector(':scope > .ren-th-sort'));
+    cell?.querySelector(':scope > .ren-th-sort').focus();
   }
+
 
   /**
    * Setup column resizing

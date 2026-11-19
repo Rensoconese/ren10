@@ -28,8 +28,9 @@
  *   next() — go to next slide
  *   prev() — go to previous slide
  *   goTo(index) — jump to specific slide
- *   pause() — pause autoplay
- *   resume() — resume autoplay
+ *   pause() — stop rotation until resume() or the rotation control
+ *   resume() — start rotation again
+ *   rotating — whether the slides are rotating right now
  *
  * Events:
  *   ren-slide-change: detail = { index, total, id }
@@ -70,6 +71,7 @@ export class RenCarousel extends HTMLElement {
     this._prevButton = null;
     this._nextButton = null;
     this._counterElement = null;
+    this._rotationButton = null;
 
     this._currentIndex = 0;
     this._totalSlides = 0;
@@ -83,6 +85,11 @@ export class RenCarousel extends HTMLElement {
     this._nextSlideId = 0;
 
     this._autoplayMs = 0;
+    // Rotation stopped for good, by the rotation control or by keyboard focus
+    // entering the carousel; only the rotation control starts it again (APG).
+    this._rotationStopped = false;
+    // Paused while the pointer is over the carousel; resumes when it leaves.
+    this._hovered = false;
     this._shouldLoop = false;
     this._slidePerView = 1;
     this._isFade = false;
@@ -98,12 +105,13 @@ export class RenCarousel extends HTMLElement {
     this._observeContent();
     this._attachReducedMotionListener();
     this._attachEventListeners();
-    if (this._autoplayMs > 0) {
-      this._startAutoplay();
-    }
+    // A stop survives a reconnect; reduced motion starts out stopped.
+    this._rotationStopped = this._rotationStopped || this._prefersReducedMotion();
+    this._syncRotation();
   }
 
   disconnectedCallback() {
+    this._hovered = false;
     this._stopAutoplay();
     if (this._intersectionObserver) {
       this._intersectionObserver.disconnect();
@@ -143,11 +151,8 @@ export class RenCarousel extends HTMLElement {
     switch (name) {
       case 'autoplay':
         this._autoplayMs = newValue ? parseInt(newValue, 10) : 0;
-        if (this._autoplayMs > 0) {
-          this._startAutoplay();
-        } else {
-          this._stopAutoplay();
-        }
+        if (this._viewport) this._createRotationButton();
+        this._syncRotation();
         break;
       case 'loop':
         this._shouldLoop = this.hasAttribute('loop');
@@ -186,6 +191,8 @@ export class RenCarousel extends HTMLElement {
     this.querySelector('.ren-carousel-dots')?.remove();
     this.querySelectorAll('.ren-carousel-prev, .ren-carousel-next').forEach((el) => el.remove());
     this.querySelector('.ren-carousel-counter')?.remove();
+    this.querySelector(':scope > .ren-carousel-rotation')?.remove();
+    this._rotationButton = null;
     // Set up ARIA attributes
     this.setAttribute('role', 'group');
     this.setAttribute('aria-roledescription', 'carousel');
@@ -252,6 +259,7 @@ export class RenCarousel extends HTMLElement {
     });
 
     // Create navigation elements
+    this._createRotationButton();
     this._createDots();
     this._createArrows();
     this._createCounter();
@@ -415,10 +423,11 @@ export class RenCarousel extends HTMLElement {
       slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
       this._setCurrentIndex(index);
 
-      // Reset autoplay timer when navigating
-      if (this._autoplayMs > 0) {
+      // Navigating restarts the interval, if rotation is running at all: a
+      // slide picked by hand gets a full turn before the next one.
+      if (this._isAutoplayActive) {
         this._stopAutoplay();
-        this._startAutoplay();
+        this._syncRotation();
       }
     }
   }
@@ -519,11 +528,8 @@ export class RenCarousel extends HTMLElement {
     if (!this._reducedMotionQuery) return;
 
     this._handleReducedMotionChange = (event) => {
-      if (event.matches) {
-        this._stopAutoplay();
-      } else if (this._autoplayMs > 0) {
-        this._startAutoplay();
-      }
+      if (event.matches) this._rotationStopped = true;
+      this._syncRotation();
     };
 
     this._reducedMotionQuery.addEventListener?.('change', this._handleReducedMotionChange);
@@ -539,10 +545,6 @@ export class RenCarousel extends HTMLElement {
 
   _startAutoplay() {
     if (this._autoplayInterval || this._autoplayMs <= 0) return;
-    if (this._prefersReducedMotion()) {
-      this._stopAutoplay();
-      return;
-    }
 
     this._isAutoplayActive = true;
     this.setAttribute('data-autoplay', '');
@@ -566,14 +568,59 @@ export class RenCarousel extends HTMLElement {
     this._syncLiveRegion();
   }
 
+  /** Stop rotation, as the rotation control does. */
   pause() {
-    this._stopAutoplay();
+    this._rotationStopped = true;
+    this._syncRotation();
   }
 
+  /** Start rotation again, as the rotation control does. */
   resume() {
-    if (this._autoplayMs > 0) {
-      this._startAutoplay();
+    this._rotationStopped = false;
+    this._syncRotation();
+  }
+
+  /** Whether the slides are rotating right now. */
+  get rotating() {
+    return this._isAutoplayActive;
+  }
+
+  /**
+   * Run or stop the interval from the state: rotation runs only with an
+   * autoplay interval, while nobody has stopped it and the pointer is not
+   * over the carousel. Keeps the rotation control's label in step.
+   */
+  _syncRotation() {
+    const run = this._autoplayMs > 0 && this._slides.length > 1 && !this._rotationStopped && !this._hovered;
+    if (run) this._startAutoplay();
+    else this._stopAutoplay();
+    if (this._rotationButton) {
+      // The label says what pressing it does; APG changes the label instead
+      // of using aria-pressed.
+      const stopped = this._rotationStopped;
+      this._rotationButton.setAttribute('aria-label', t(stopped ? 'carousel.startRotation' : 'carousel.stopRotation'));
+      this._rotationButton.toggleAttribute('data-stopped', stopped);
     }
+  }
+
+  /**
+   * The rotation control (APG Carousel, WCAG 2.2.2): the first thing in the
+   * carousel's Tab sequence, present only when it rotates on its own.
+   */
+  _createRotationButton() {
+    this.querySelector(':scope > .ren-carousel-rotation')?.remove();
+    this._rotationButton = null;
+    if (!(this._autoplayMs > 0) || this._slides.length < 2) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'ren-carousel-rotation';
+    button.setAttribute('aria-controls', this._viewport.id || (this._viewport.id = `${this.id}-viewport`));
+    button.addEventListener('click', () => {
+      this._rotationStopped = !this._rotationStopped;
+      this._syncRotation();
+    });
+    this.prepend(button);
+    this._rotationButton = button;
   }
 
   /* ═══ EVENT LISTENERS ═══ */
@@ -585,31 +632,34 @@ export class RenCarousel extends HTMLElement {
 
     // Pause autoplay on hover
     this._handleMouseEnter = () => {
-      if (this._isAutoplayActive) {
-        this._stopAutoplay();
-      }
+      this._hovered = true;
+      this._syncRotation();
     };
     this._handleMouseLeave = () => {
-      if (this._autoplayMs > 0) {
-        this._startAutoplay();
-      }
+      this._hovered = false;
+      this._syncRotation();
     };
     this.addEventListener('mouseenter', this._handleMouseEnter);
     this.addEventListener('mouseleave', this._handleMouseLeave);
 
-    // Pause autoplay on focus
+    // Keyboard focus anywhere in the carousel stops rotation for good: it
+    // stays stopped when focus leaves, until the rotation control starts it
+    // (APG Carousel). A pointer click that focuses something is covered by
+    // the hover pause instead, so clicking "Stop" is not undone by the focus
+    // the click itself moves.
+    this._pointerPressed = false;
+    this._handlePointerDown = () => { this._pointerPressed = true; };
+    this._handlePointerUp = () => { this._pointerPressed = false; };
+    this.addEventListener('pointerdown', this._handlePointerDown, true);
+    this.addEventListener('pointerup', this._handlePointerUp, true);
+    this.addEventListener('pointercancel', this._handlePointerUp, true);
     this._handleFocus = () => {
-      if (this._isAutoplayActive) {
-        this._stopAutoplay();
-      }
-    };
-    this._handleBlur = () => {
-      if (this._autoplayMs > 0) {
-        this._startAutoplay();
+      if (this._autoplayMs > 0 && !this._rotationStopped && !this._pointerPressed) {
+        this._rotationStopped = true;
+        this._syncRotation();
       }
     };
     this.addEventListener('focus', this._handleFocus, true);
-    this.addEventListener('blur', this._handleBlur, true);
   }
 
   _detachEventListeners() {
@@ -625,8 +675,10 @@ export class RenCarousel extends HTMLElement {
     if (this._handleFocus) {
       this.removeEventListener('focus', this._handleFocus, true);
     }
-    if (this._handleBlur) {
-      this.removeEventListener('blur', this._handleBlur, true);
+    if (this._handlePointerDown) {
+      this.removeEventListener('pointerdown', this._handlePointerDown, true);
+      this.removeEventListener('pointerup', this._handlePointerUp, true);
+      this.removeEventListener('pointercancel', this._handlePointerUp, true);
     }
   }
 

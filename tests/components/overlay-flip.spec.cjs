@@ -51,6 +51,8 @@ const OVERLAYS = [
   { key: 'hover-card', anchored: true, trigger: '#profile-trigger', surface: '.ren-hover-card[popover]', side: 'below', open: 'focus', arrow: '::before' },
   { key: 'select', trigger: '[data-select-trigger]', surface: '[data-select-content]', side: 'below', open: 'click' },
   { key: 'menu', trigger: '#actions-trigger', surface: 'ren-menu', side: 'below', open: 'click' },
+  // An inline absolute list, not a top-layer overlay: script picks the side.
+  { key: 'combobox', trigger: '.ren-combobox-input', surface: '.ren-combobox-list', side: 'below', open: 'click' },
 ];
 
 const OTHER = { above: 'below', below: 'above' };

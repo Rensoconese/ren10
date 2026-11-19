@@ -386,12 +386,13 @@ test.describe('rtl contracts: arrow keys follow the visual direction', () => {
     const errors = await mount(page, 'table', { edit: (usage) => usage.replace('<th class="ren-th">Email</th>', '<th class="ren-th ren-th-sortable" data-column="email">Email</th>') });
     const name = page.locator('ren-table th', { hasText: 'Name' });
     const email = page.locator('ren-table th', { hasText: 'Email' });
+    const sortBy = (header) => header.locator('button.ren-th-sort');
     expect((await rectOf(email)).center, 'columns run right to left').toBeLessThan((await rectOf(name)).center);
-    await name.focus();
+    await sortBy(name).focus();
     await page.keyboard.press('ArrowLeft');
-    await expect(email, 'ArrowLeft moves to the column on the left').toBeFocused();
+    await expect(sortBy(email), 'ArrowLeft moves to the column on the left').toBeFocused();
     await page.keyboard.press('ArrowRight');
-    await expect(name).toBeFocused();
+    await expect(sortBy(name)).toBeFocused();
 
     const handle = await rectOf(name.locator('.ren-th-resize'));
     const before = (await rectOf(name)).width;

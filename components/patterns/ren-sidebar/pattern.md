@@ -65,7 +65,7 @@ requiredMarkup:
   - "<ren-sidebar> is the sidebar root; main content goes in a sibling <main class=\"ren-sidebar-main\">."
   - "Wrap items in <nav class=\"ren-sidebar-nav\"> with <a class=\"ren-sidebar-item\"> children."
   - "Use aria-current=\"page\" on the active item; the .active class is for styling parity."
-  - "Provide an aria-label on <ren-sidebar> when multiple navigation landmarks exist on the page."
+  - "Name the <nav class=\"ren-sidebar-nav\"> with aria-label when the page has more than one navigation landmark. <ren-sidebar> has no role, so a label on it is not announced."
   - "Toggle button uses .ren-sidebar-toggle and aria-label (the icon alone is not a name). The component writes aria-expanded on it; do not set or update it by hand."
   - "The control that opens the mobile overlay lives outside <ren-sidebar>, calls toggleMenu() / openMobileMenu() from its click handler, and carries aria-controls=\"<sidebar id>\" so focus can return to it."
 
@@ -74,6 +74,7 @@ forbiddenPatterns:
   - "Using ren-btn / ren-link as sidebar items — use .ren-sidebar-item directly."
   - "Hardcoded sidebar widths in inline styles; use --ren-sidebar-width."
   - "Manually toggling display: none for the mobile overlay; use the [data-open] state."
+  - "aria-label on <ren-sidebar>: it has no role, so assistive technology ignores the name. Label the inner <nav>."
 
 tokenPolicy:
   allowed:
@@ -106,7 +107,7 @@ App shell with sidebar + main:
 
 ```html
 <div class="ren-sidebar-layout">
-  <ren-sidebar class="ren-sidebar" aria-label="Primary">
+  <ren-sidebar class="ren-sidebar">
     <div class="ren-sidebar-header">
       <a class="ren-sidebar-item" href="/" aria-label="Home">
         <span class="ren-sidebar-item-icon" aria-hidden="true">⌂</span>
@@ -228,8 +229,9 @@ sidebar.addEventListener('ren-sidebar-toggle', (e) => console.log(e.detail.colla
 
 ## Accessibility Contract
 
-- Wrap items in a real `<nav>` landmark and label the sidebar with
-  `aria-label` when multiple nav landmarks exist on the page.
+- Wrap items in a real `<nav>` landmark and name that `<nav>` with
+  `aria-label` when the page has more than one navigation landmark.
+  `<ren-sidebar>` itself has no role: a label on it is not announced.
 - The current route uses `aria-current="page"`.
 - Collapsed icon-only items must keep accessible names — do not hide the
   text label from screen readers.

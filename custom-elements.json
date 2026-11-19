@@ -184,7 +184,16 @@
               }
             }
           ],
-          "members": [],
+          "members": [
+            {
+              "kind": "method",
+              "name": "pause"
+            },
+            {
+              "kind": "method",
+              "name": "resume"
+            }
+          ],
           "cssProperties": [
             {
               "name": "--ren-carousel-arrow-size"

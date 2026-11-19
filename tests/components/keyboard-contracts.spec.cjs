@@ -1290,9 +1290,11 @@ test.describe('keyboard contracts', () => {
   test('ren-table sorts a header with Enter and Space, one step per key press', { tag: ['@ren-table', '@keyboard'] }, async ({ page }) => {
     const errors = await mount(page, 'table');
     const header = page.locator('ren-table th.ren-th-sortable');
+    const button = header.locator('button.ren-th-sort');
     const firstName = () => page.locator('ren-table tbody tr:first-child td:first-child').textContent();
-    await header.focus();
-    await expect(header).toBeFocused();
+    await expect(header, 'the header cell is not a Tab stop; its button is').not.toHaveAttribute('tabindex');
+    await button.focus();
+    await expect(button).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(header, 'Enter sorts ascending once').toHaveAttribute('aria-sort', 'ascending');
     await expect.poll(firstName).toBe('Ana');

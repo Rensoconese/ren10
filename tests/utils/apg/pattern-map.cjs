@@ -77,7 +77,8 @@ const CAROUSEL_PARTS = {
   slide: '.ren-carousel-slide',
   previous: '.ren-carousel-prev',
   next: '.ren-carousel-next',
-  control: '.ren-carousel-prev, .ren-carousel-next, .ren-carousel-dot',
+  rotation: '.ren-carousel-rotation',
+  control: '.ren-carousel-rotation, .ren-carousel-prev, .ren-carousel-next, .ren-carousel-dot',
   pickerGroup: '.ren-carousel-dots',
   picker: '.ren-carousel-dot',
 };
@@ -498,38 +499,7 @@ const PATTERN_MAP = {
         edit: (usage) => usage.replace('<ren-carousel ', '<ren-carousel autoplay="60000" '),
         parts: CAROUSEL_PARTS,
         actions: CAROUSEL_ACTIONS,
-        deviations: [
-          ...CAROUSEL_PICKER_DEVIATIONS,
-          {
-            rule: 'rotation-control',
-            kind: 'defect',
-            reason: 'An autoplay carousel has no button to stop and restart rotation: it only pauses while it is hovered or holds focus, and offers pause() / resume() to scripts. APG (and WCAG 2.2.2) ask for a visible control. Not fixed here: a new visible control needs a design decision and new visual baselines.',
-            instead: async (t) => {
-              await t.expect(t.page.locator('ren-carousel button')).toHaveCount(await t.part('control').count());
-              const scriptable = await t.part('carousel').evaluate((el) => typeof el.pause === 'function' && typeof el.resume === 'function');
-              t.expect(scriptable, 'pause() and resume() are the only way to stop rotation for good').toBe(true);
-            },
-          },
-          {
-            rule: 'rotation-stays-stopped',
-            kind: 'defect',
-            reason: 'Rotation resumes as soon as focus leaves the carousel, because there is no rotation control to restart it with. Fixed together with the missing control.',
-            instead: async (t) => {
-              await t.before.focus();
-              await t.expect.poll(() => t.act('isRotating'), 'rotation resumes on blur').toBe(true);
-            },
-          },
-          {
-            rule: 'rotation-control-first',
-            kind: 'defect',
-            reason: 'There is no rotation control to come first (see rotation-control).',
-            instead: async (t) => {
-              await t.tabInto();
-              await t.expect.poll(() => t.part('carousel').evaluate((el) => el.contains(document.activeElement)), 'Tab enters the carousel').toBe(true);
-              await t.expect.poll(() => t.act('isRotating'), 'focus inside the carousel stops rotation').toBe(false);
-            },
-          },
-        ],
+        deviations: CAROUSEL_PICKER_DEVIATIONS,
       },
     ],
   },
@@ -608,7 +578,7 @@ const PATTERN_MAP = {
         // Sort by the first sortable column; returns its index.
         sort: async (t) => {
           const header = t.page.locator('ren-table th.ren-th-sortable').first();
-          await header.focus();
+          await header.locator('button.ren-th-sort').focus();
           await t.press('Enter');
           return header.evaluate((th) => th.cellIndex);
         },
@@ -621,17 +591,6 @@ const PATTERN_MAP = {
           return 'no';
         }, column),
       },
-      deviations: [{
-        rule: 'cells-not-focusable',
-        kind: 'defect',
-        reason: 'A sortable header is itself the control: the <th> takes tabindex="0" and sorts on Enter and Space, with no button role to say it can be activated. APG\'s sortable table puts a real <button> inside the header cell. Not fixed here: it changes the header markup, its CSS and the visual baselines.',
-        instead: async (t) => {
-          const header = t.page.locator('ren-table th.ren-th-sortable').first();
-          await t.expect(header).toHaveAttribute('tabindex', '0');
-          await t.expect(header).toHaveAttribute('aria-sort', /^(none|ascending|descending)$/);
-          await t.expect(t.page.locator('ren-table td[tabindex], ren-table th:not(.ren-th-sortable)[tabindex]')).toHaveCount(0);
-        },
-      }],
     }],
   },
 

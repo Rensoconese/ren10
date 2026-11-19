@@ -11,6 +11,17 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+### Fixed
+- `ren-table`: a sortable column is sorted with a real `<button class="ren-th-sort">` inside its header, as in APG's sortable table. The `<th>` itself was the control (`tabindex="0"`, Enter and Space), was not announced as something to press, and made a table cell focusable. The component moves the header text into the button, or uses one the markup ships; the cell keeps `aria-sort`. ArrowLeft and ArrowRight move between the sort buttons. The sort indicator moved with it: restyle `.ren-th-sortable::after` as `.ren-th-sort::after`.
+- `ren-carousel` with `autoplay`: a rotation control (`.ren-carousel-rotation`, "Stop slide rotation" / "Start slide rotation") is the first control in the carousel's Tab sequence (APG Carousel, WCAG 2.2.2). There was no way to stop rotation for good: it paused while hovered or focused and started again as soon as the pointer or focus left. Keyboard focus entering the carousel now stops rotation until the control starts it; hovering still only pauses it. Under reduced motion it starts stopped, and the control can start it. `pause()` and `resume()` do what the control does; `rotating` says whether it is rotating.
+- `ren-combobox`: the list opens above the input when it does not fit below and has more room above (or the other way round with `placement="top"`), and stays on the side with room while the page scrolls or filtering changes its height. Near the bottom of the viewport it opened below the fold.
+- `ren-sidebar`: the documented markup put `aria-label` on `<ren-sidebar>`, which has no role, so the name was never announced. Name the inner `<nav class="ren-sidebar-nav">` instead; the docs, examples and registry usage now do.
+
+### Validation
+- The APG map records no defects left: the table's `cells-not-focusable` and the autoplay carousel's `rotation-control`, `rotation-stays-stopped` and `rotation-control-first` are checked as written.
+- `tests/components/carousel-rotation.spec.cjs`: the rotation control with the pointer (a click that focuses the control does not undo itself), under reduced motion, across a reconnect, and added or removed with `autoplay`.
+- `tests/components/overlay-flip.spec.cjs` covers `ren-combobox`: it opens on the side with room on a scrolled page and follows its input.
+
 ## [0.15.0] — 2026-11-17
 
 ### Added
