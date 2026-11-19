@@ -17,7 +17,7 @@ that observation does not determine the availability of later releases.
 ### Local tarball install
 
 Build and pack both packages from the same trusted checkout. These commands
-assume the checkout is version 0.14.1; if using a different version, use the
+assume the checkout is version 0.15.0; if using a different version, use the
 filenames printed by `npm pack`. Packing is local and does not publish to npm.
 
 ```bash
@@ -39,7 +39,7 @@ npm does not try to fetch `@ren10/astro` from the registry:
 ```bash
 cp -R ren10/starters/astro my-astro-site
 cd my-astro-site
-npm install ../ren10-packages/ren10-0.14.1.tgz ../ren10-packages/ren10-astro-0.14.1.tgz
+npm install ../ren10-packages/ren10-0.15.0.tgz ../ren10-packages/ren10-astro-0.15.0.tgz
 npm run build
 npm run dev
 ```
@@ -55,14 +55,14 @@ repository as `@ren10/astro`: the repository root package is `ren10`.
 To check availability without installing anything:
 
 ```bash
-npm view ren10@0.14.1 version --registry=https://registry.npmjs.org
-npm view @ren10/astro@0.14.1 version --registry=https://registry.npmjs.org
+npm view ren10@0.15.0 version --registry=https://registry.npmjs.org
+npm view @ren10/astro@0.15.0 version --registry=https://registry.npmjs.org
 ```
 
 If both queries succeed, consumers can use:
 
 ```bash
-npm install astro@^7 ren10@^0.14.1 @ren10/astro@^0.14.1
+npm install astro@^7 ren10@^0.15.0 @ren10/astro@^0.15.0
 ```
 
 If a query returns E404, use the local tarballs above. An npm owner must

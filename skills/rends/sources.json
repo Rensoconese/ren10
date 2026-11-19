@@ -2,12 +2,12 @@
   "version": 1,
   "package": {
     "name": "ren10",
-    "version": "0.14.1"
+    "version": "0.15.0"
   },
   "github": {
     "org": "Rensoconese",
     "repo": "ren10",
-    "ref": "v0.14.1"
+    "ref": "v0.15.0"
   },
   "allowedRoots": [
     "ren-design.md",

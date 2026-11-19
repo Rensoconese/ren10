@@ -226,7 +226,7 @@ file, the CLI manifest, and the colocated contracts; it must not become a
 second source of truth.
 
 <!-- RENDS:START -->
-RenDS v0.14.1 · vanilla HTML/CSS/JS · Light DOM · 53 components · 335 blocks
+RenDS v0.15.0 · vanilla HTML/CSS/JS · Light DOM · 53 components · 335 blocks
 
 READ FIRST: `ren-essentials.md` (≈8 KB: rules, tokens, layouts, routing; same as
 `npx ren10 docs design --dense`). Load `ren-design.md` (≈97 KB) only for exact values or rationale.

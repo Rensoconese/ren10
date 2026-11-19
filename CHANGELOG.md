@@ -11,6 +11,8 @@ consolidates them and starts formal version tracking with 0.7.0.
 
 ## [Unreleased]
 
+## [0.15.0] — 2026-11-17
+
 ### Added
 - `leaks` category in the per-component test coverage matrix (`tests/coverage/README.md`): every component that ships JS (32) now proves that, once it is removed from the page, it gives back what it acquired outside its own subtree. `tests/components/leaks.spec.cjs` mounts, drives (pointer, focus, keys, lifecycle methods, one disconnect and reconnect) and removes each component six times, in three states: idle, open, and removed in the task that opened it. `tests/utils/resource-accounting.cjs` counts listeners on `window`, `document`, `matchMedia()` results, `visualViewport` and any node that stays in the page (honouring `once` and `AbortSignal`), `setInterval` and pending `setTimeout`, animation frames, Mutation/Resize/IntersectionObservers that were not disconnected, and nodes and attributes left on `<html>`, `<head>` and `<body>`; after every removal the count must be back at the baseline taken before the module loaded, and a reconnect must not add a second copy of a listener. Module-level singletons are declared in the spec and checked not to grow. A Chromium-only companion test forces a garbage collection over CDP and checks that no instance of the element class survives; seven more tests run the fallback branches (no CSS Anchor Positioning, no `commandfor`) on every browser; and a fixture element that leaks on purpose proves on every browser that each kind of leak is reported.
 - `destroyDropZone(el)` and `destroyToolbar(el)`: `initDropZone` and `initToolbar` had no teardown, so their listeners could only be dropped by discarding the element. Both are safe to call on an element that was never initialised, and the element can be initialised again afterwards.
@@ -141,6 +143,7 @@ consolidates them and starts formal version tracking with 0.7.0.
 - Picomatch: GHSA-fc5q-39xc-vjpf (exponential backtracking in a repeated extglob around a `*`) had no upstream fix, and `npm audit` failed the package smoke job on it. One private, reproducible 4.0.7 derivative now serves the whole dependency tree, micromatch and anymatch included, with integrity and source-hash checks in `check:supply-chain` and regressions in `test:security-dependencies`. Such a glob now matches only its own text; see `vendor/README.md`. The override covers this repository's own installs only: `ren10` has no dependencies, and an Astro project that uses `@ren10/astro` gets the picomatch its own Astro resolves.
 
 ### Validation
+- `tests/components/overlay-flip.spec.cjs` mounts the eight positioned overlays far down a tall page and checks the side each opens on with and without room, that it is on screen and next to its trigger, that opening does not scroll the page, and that it follows the trigger. `calendar-box.spec.cjs` covers the calendar as a box of its own, the date picker's dropdown, value, focus and narrow-viewport sheet; `table-resize-handles.spec.cjs` the handle of every column in both directions.
 - `tests/components/keyboard-contracts.spec.cjs`: resting-pointer regressions for ren-select, ren-menu, ren-combobox, ren-command and ren-menubar; ren-sidebar focus return on every close path and `aria-expanded` on the toggle; ren-color-picker keys for the three sliders, the name, role and value of every control, and an axe pass over the open dropdown.
 - `runtime-smoke` runs one test per component and phase instead of one test per phase over all components, so a failure names the component.
 - Gate every shipped example and template on no horizontal overflow at 390px, exactly one `<main>`, an unbroken heading outline, and named form controls with JavaScript disabled.
@@ -1636,7 +1639,8 @@ Not formally released. Captured retroactively from `PHASE-6-COMPLETE.md` and
 Not tracked — pre-release iterations. See the `PHASE-*-COMPLETE.md` documents
 at the repository root for narrative history.
 
-[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.14.1...HEAD
+[Unreleased]: https://github.com/Rensoconese/ren10/compare/v0.15.0...HEAD
+[0.15.0]: https://github.com/Rensoconese/ren10/compare/v0.14.1...v0.15.0
 [0.14.1]: https://github.com/Rensoconese/ren10/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/Rensoconese/ren10/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/Rensoconese/ren10/compare/v0.12.0...v0.13.0

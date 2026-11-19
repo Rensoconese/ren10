@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "packageVersion": "0.14.1",
+  "packageVersion": "0.15.0",
   "apiAuthority": {
     "source": "package-contracts-and-cli",
     "contracts": [
