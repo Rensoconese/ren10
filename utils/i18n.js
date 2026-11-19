@@ -53,6 +53,8 @@ const defaultLocale = {
     previous: 'Previous slide',
     next: 'Next slide',
     slideOf: '{current} of {total}',
+    stopRotation: 'Stop slide rotation',
+    startRotation: 'Start slide rotation',
   },
 
   combobox: {
@@ -415,6 +417,8 @@ registerLocale('es', {
     previous: 'Diapositiva anterior',
     next: 'Siguiente diapositiva',
     slideOf: '{current} de {total}',
+    stopRotation: 'Detener la rotación de diapositivas',
+    startRotation: 'Iniciar la rotación de diapositivas',
   },
 
   combobox: {

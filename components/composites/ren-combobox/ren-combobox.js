@@ -82,6 +82,8 @@ export class RenCombobox extends HTMLElement {
   #highlightedIndex = -1;
   #upgraded = false;
   #dismissLayer = null;
+  /** Listeners that keep the open list on the side with room; null while closed. */
+  #following = null;
   /**
    * Hover guard. While suspended the pointer has to really move before it may
    * change the highlighted option; see #pointerReallyMoved().
@@ -108,6 +110,7 @@ export class RenCombobox extends HTMLElement {
 
   disconnectedCallback() {
     this.#dismissLayer?.deactivate();
+    this.#stopFollowing();
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -225,12 +228,64 @@ export class RenCombobox extends HTMLElement {
   }
 
   #syncPlacement() {
-    const side = normalizeComboboxSide(this.getAttribute('placement'));
+    this.#setSide(normalizeComboboxSide(this.getAttribute('placement')));
+    if (this.#isOpen) this.#placeList();
+  }
 
+  #setSide(side) {
     this.setAttribute('data-side', side);
-    if (this.#list) {
-      this.#list.setAttribute('data-side', side);
-    }
+    this.#list?.setAttribute('data-side', side);
+  }
+
+  /**
+   * Open on the side `placement` asks for, or on the other one when the list
+   * does not fit there and has more room on the other. The list is an inline
+   * absolute box, so nothing else flips it: near the bottom of the viewport it
+   * used to open below the fold.
+   */
+  #placeList() {
+    // Layout APIs are missing in a DOM without layout (server, test stubs).
+    if (!this.#list || this.#list.hidden || typeof this.getBoundingClientRect !== 'function') return;
+    const preferred = normalizeComboboxSide(this.getAttribute('placement'));
+    const other = preferred === 'top' ? 'bottom' : 'top';
+    const box = this.getBoundingClientRect();
+    const viewport = window.visualViewport?.height ?? window.innerHeight;
+    const gap = 4; // --space-1 between input and list; only needs to be close
+    const room = { top: box.top - gap, bottom: viewport - box.bottom - gap };
+    const height = this.#list.offsetHeight;
+    this.#setSide(height > room[preferred] && room[other] > room[preferred] ? other : preferred);
+  }
+
+  /** Keep the open list on the side with room while the page scrolls or resizes, or the list changes height. */
+  #startFollowing() {
+    this.#stopFollowing();
+    if (typeof window === 'undefined' || typeof requestAnimationFrame !== 'function') return;
+    const controller = new AbortController();
+    const { signal } = controller;
+    let frame = 0;
+    const schedule = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        this.#placeList();
+      });
+    };
+    window.addEventListener('scroll', schedule, { capture: true, passive: true, signal });
+    window.addEventListener('resize', schedule, { passive: true, signal });
+    // Filtering changes the list's height; placing on the next frame, not
+    // inside the observer callback, avoids a ResizeObserver loop.
+    const resizing = typeof ResizeObserver === 'function' ? new ResizeObserver(schedule) : null;
+    resizing?.observe(this.#list);
+    this.#following = () => {
+      controller.abort();
+      resizing?.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }
+
+  #stopFollowing() {
+    this.#following?.();
+    this.#following = null;
   }
 
   #decorateItems() {
@@ -506,6 +561,8 @@ export class RenCombobox extends HTMLElement {
     this.#isOpen = true;
     this.#suspendHover();
     this.#list.hidden = false;
+    this.#placeList();
+    this.#startFollowing();
     this.#input.setAttribute('aria-expanded', 'true');
     this.#dismissLayer?.activate();
     this.dispatchEvent(new CustomEvent('ren-open', { bubbles: true }));
@@ -515,6 +572,8 @@ export class RenCombobox extends HTMLElement {
     if (!this.#isOpen) return;
     this.#isOpen = false;
     this.#list.hidden = true;
+    this.#stopFollowing();
+    this.#setSide(normalizeComboboxSide(this.getAttribute('placement')));
     this.#input.setAttribute('aria-expanded', 'false');
     this.#input.removeAttribute('aria-activedescendant');
     this.#getItems().forEach((i) => i.removeAttribute('data-highlighted'));

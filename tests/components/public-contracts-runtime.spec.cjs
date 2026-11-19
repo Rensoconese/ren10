@@ -58,7 +58,8 @@ test.describe('Public contract runtime examples', () => {
     });
 
     await expect(page.locator('ren-table table')).toHaveAttribute('role', 'table');
-    await expect(page.locator('ren-table .ren-th-sortable')).toHaveAttribute('tabindex', '0');
+    await expect(page.locator('ren-table .ren-th-sortable')).not.toHaveAttribute('tabindex');
+    await expect(page.locator('ren-table .ren-th-sortable > button.ren-th-sort')).toHaveAttribute('type', 'button');
     await expect(page.locator('ren-table .ren-th-sortable')).toHaveAttribute('aria-sort', 'none');
     expect(diagnostics).toEqual([]);
   });

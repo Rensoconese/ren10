@@ -55,7 +55,7 @@ requiredMarkup:
   - "Use .ren-combobox-item-label and .ren-combobox-item-description inside items for two-line content; do not nest extra layout divs."
   - "Empty state lives in <div class=\"ren-combobox-empty\" hidden> and the loading state in <div class=\"ren-combobox-loading\" hidden>."
   - "Group items inside <div class=\"ren-combobox-group\"> with a leading <div class=\"ren-combobox-group-label\">."
-  - "Use placement=\"bottom\" by default; the host and .ren-combobox-list mirror placement to data-side. Top changes the absolute list fallback to open above the input."
+  - "Use placement=\"bottom\" by default; placement=\"top\" opens the list above the input. The host and .ren-combobox-list carry data-side, the side the list is on: placement, or the other side while the list is open and does not fit there but has more room on the other (checked again on scroll, resize and when filtering changes its height)."
 
 forbiddenPatterns:
   - "Replacing <input> with a contentEditable div — breaks IME, autofill, and form submission."

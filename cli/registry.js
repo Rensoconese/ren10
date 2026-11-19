@@ -721,7 +721,7 @@ export const REGISTRY = {
     files: ['ren-sidebar.css', 'ren-sidebar.js'],
     utils: [],
     components: [],
-    usage: `<ren-sidebar class="ren-sidebar" aria-label="Primary">
+    usage: `<ren-sidebar class="ren-sidebar">
   <nav class="ren-sidebar-nav" aria-label="Main">
     <a class="ren-sidebar-item" href="#dashboard">
       <span class="ren-sidebar-item-text">Dashboard</span>
